@@ -1,0 +1,201 @@
+\makeheading{ 2020-01-22 }
+
+\begin{Example}{}{}
+    Construct $ GF(2^4=16) $.
+
+    \textbf{Solution.} Take $ f(x)=x^4+x+1\in\mathbb{Z}_2[x] $.
+    \begin{itemize}
+        \item $ f $ has no roots in $ \mathbb{Z}_2 $ and hence no linear factors.
+        \item Long division shows that $ x^2+x+1\nmid x^4+x+1 $, so $ f $
+              has no irreducible quadratic factors.
+        \item $ f $ is irreducible over $ \mathbb{Z}_2 $.
+    \end{itemize}
+    Thus, $ GF(16)=\mathbb{Z}_2[x]/(x^4+x+1) $.
+\end{Example}
+
+\section{Properties of Finite Fields}
+
+\begin{Proposition}{Coprimeness and Divisiblity (CAD)}{CAD}
+    $ \dagger $ For all integers $ a $, $ b $ and $ c $, if $ c\mid ab $
+    and $ \gcd(a,c)=1 $, then $ c\mid b $.
+\end{Proposition}
+
+\begin{Lemma}{}{p_divides_p_choose_k}
+    $ \dagger $ For each integer $ k\in[1,p-1] $,
+    \[ p\mid \binom{p}{k} \]
+\end{Lemma}
+
+\begin{Proof}{\Cref{lem:p_divides_p_choose_k}}{}
+    We know that $ \binom{p}{k}\in\mathbb{Z} $ and
+    \[ \binom{p}{k}=\frac{p!}{(p-k)k!} \]
+    Since $ k\geqslant 1 $, then
+    \[ \binom{p}{k}=\frac{p(p-1)\cdots(p-k+1)}{k!} \]
+    Therefore, $ k!\binom{p}{k}=p(p-1)\cdots(p-k+1) $.
+
+    We note that $ p\mid p(p-1)\cdots(p-k+1) $ and therefore
+    $ p\mid k!\binom{p}{k} $. Since $ p $ is prime and $ p>k $,
+    then $ \gcd(p,k!)=1 $. Therefore, by~\Cref{prop:CAD}
+    \[ p\mid \binom{p}{k} \]
+\end{Proof}
+
+\begin{Theorem}{Frosh's Dream}{froshs_dream}
+    Let $ \alpha,\beta\in GF(q) $ where $ \ch(GF(q))=p $.
+    \[ (\alpha + \beta)^p=\alpha^p+\beta^p \]
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:froshs_dream}}{}
+    \[ (\alpha + \beta)^p=\alpha^p+\sum\limits_{k=1}^{p-1}
+        \binom{p}{k}\alpha^k\beta^{p-k}+\beta^p \]
+    By~\Cref{lem:p_divides_p_choose_k},
+    \[ p\mid \binom{p}{k}\implies p\lambda_k=\binom{p}{k} \]
+    where $ \lambda_k\in\mathbb{Z} $ for each $ k\in[1,p-1] $. Hence,
+    \begin{align*}
+        \sum\limits_{k=1}^{p-1}\binom{p}{k}\alpha^k\beta^{p-k}
+         & = \sum\limits_{k=1}^{p-1} (p\lambda_k) \alpha^k\beta^{p-k}                          \\
+         & =\sum\limits_{k=1}^{p-1} (\underbrace{1+\cdots+1}_{p})\lambda_k \alpha^k\beta^{p-k} \\
+         & =0
+    \end{align*}
+    Thus, $ (\alpha + \beta)^p=\alpha^p+\beta^p $.
+\end{Proof}
+
+\begin{Corollary}{}{froshs_dream_ext}
+    Let $ \alpha,\beta\in GF(q) $ where $ \ch(GF(q))=p $.
+    \[ (\alpha+\beta)^{p^m}=\alpha^{p^m}+\beta^{p^m} \]
+    for all $ m\in\mathbb{Z}_{\geqslant 1} $.
+\end{Corollary}
+
+\begin{Proof}{\Cref{cor:froshs_dream_ext}}{} $ \dagger $
+    We prove this result by induction on $ m $, where $ P(m) $ is the statement
+    \[ (\alpha+\beta)^{p^m}=\alpha^{p^m}+\beta^{p^m} \]
+
+    \textbf{Base Case}: The statement $ P(1) $ is given by
+    \[ (\alpha+\beta)^{p}=\alpha^p+\beta^p \]
+    which is clearly true by~\Cref{thm:froshs_dream}.
+
+    \textbf{Inductive Hypothesis}: Assume
+    \[ (\alpha+\beta)^{p^k}=\alpha^{p^k}+\beta^{p^k} \]
+    for an arbitrary integer $ k\geqslant 1 $.
+
+    \textbf{Inductive Conclusion}: We wish to prove $ P(k+1) $
+    which is the statement
+    \[ (\alpha+\beta)^{p^{k+1}}=\alpha^{p^{k+1}}+\beta^{p^{k+1}} \]
+    Starting with the expression on the left-hand side of $ P(k+1) $,
+    we obtain
+    \[ \begin{aligned}
+            (\alpha+\beta)^{p^{k+1}}
+             & =\left[ (\alpha+\beta)^{p} \right]^{p^{k}}                                             \\
+             & =\left( \alpha^p+\beta^p \right)^{p^k}     & \quad & \text{by~\Cref{thm:froshs_dream}} \\
+             & = (\alpha^p)^{p^k}+(\beta^p)^{p^k}         &       & \text{by IH}                      \\
+             & =\alpha^{p^{k+1}}+\beta^{p^{k+1}}
+        \end{aligned}
+    \]
+    The result is true for $ m=k+1 $, and hence holds for all $ m\in\mathbb{Z}_{\geqslant 1} $
+    by the Principle of Mathematical Induction.
+\end{Proof}
+
+\begin{Theorem}{}{aq_is_a}
+    Let $ \alpha\in GF(q) $. Then
+    \[ \alpha^q=\alpha \]
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:aq_is_a}}{}
+    If $ \alpha=0 $, then $ \alpha^q=0=\alpha $.
+
+    If $ \alpha\neq 0 $, let
+    \[ \set{a_1,a_2,\ldots ,a_{q-1}} \]
+    be the distinct non-zero elements in $ GF(q) $. Consider
+    \[ \set{\alpha a_1,\alpha a_2\ldots,\alpha a_{q-1}} \]
+    These are all distinct because otherwise for some $ i\neq j $,
+    $ \alpha a_i=\alpha a_j\implies a_i=a_j $ which is a contradiction.
+    Hence,
+    \[ \set{\alpha a_1,\ldots ,\alpha a_{q-1}\}=\{a_1,\ldots ,a_{q-1}} \]
+    This implies
+    \begin{align*}
+         & (\alpha a_1)\cdots (\alpha a_{q-1})=a_1\cdots a_{q-1}      \\
+         & \implies \alpha^{q-1}(a_1\cdots a_{q-1})=a_1\cdots a_{q-1} \\
+         & \implies \alpha^{q-1}=1
+    \end{align*}
+    since $ a_i $ is non-zero for each $ i\in[1,q-1] $.
+    Thus, since $ \alpha\neq 0 $ we have $ \alpha^q=\alpha $.
+\end{Proof}
+
+\begin{Definition}{}{}
+    Let $ GF(q)^*=GF(q)/\set{0} $.
+\end{Definition}
+
+\begin{Definition}{Order of $\alpha\in GF(q)^*$}{order_of_alpha_in_gf(q)}
+    The \textbf{order of $\symbf{\alpha\in GF(q)^*}$}, denoted
+    $ \ord(\alpha) $, is the smallest positive integer $ t $ such that
+    $ \alpha^t=1 $.
+\end{Definition}
+
+\begin{Example}{}{}
+    How many elements of order $ 1 $ are there in $ GF(q) $?
+
+    \textbf{Solution.} $ \alpha=1 $
+\end{Example}
+
+\begin{Example}{}{}
+    Find $ \ord(x) $ in $ GF(16)=\mathbb{Z}_2/(x^4+x+1) $.
+
+    \textbf{Solution.}
+    \begin{itemize}
+        \item $ x^1=x $
+        \item $ x^2=x^2 $
+        \item $ x^3=x^3 $
+        \item $ x^4=x+1 $
+        \item $ x^5=x^2+x $
+        \item $ x^6=x^3+x^2 $
+        \item $ x^7=x^3+x+1 $
+        \item $ x^8=x^2+1 $
+        \item $ x^9=x^3+x $
+        \item $ x^{10}=x^2+x+1 $
+        \item $ x^{11}=x^3+x^2+x $
+        \item $ x^{12}=x^3+x^2+x+1 $
+        \item $ x^{13}=x^3+x^2+1 $
+        \item $ x^{14}=x^3+1 $
+        \item $ x^{15}\equiv 1\pmod{x^4+x+1} $
+    \end{itemize}
+    Since $ \ord(x)\neq 1,3,5 $ $ \ord(x)\mid 15 $, so we have $ \ord(x)=15 $.
+\end{Example}
+
+\begin{Lemma}{}{t_divides_s}
+    Let $ \alpha\in GF(q)^* $, $ \ord(\alpha)=t $ and $ s\in\mathbb{Z} $.
+    \[ \alpha^s=1\iff t\mid s \]
+\end{Lemma}
+
+\begin{Proof}{\Cref{lem:t_divides_s}}{}
+    Let $ s\in\mathbb{Z} $. By the division algorithm for integers,
+    \[ s=\ell t+r \]
+    where $ 0\leqslant r\leqslant t-1 $. Then
+    \[ \alpha^s=\alpha^{\ell t+r}=(\alpha^t)^\ell \alpha^r=\alpha^r \]
+    So,
+    \begin{align*}
+        \alpha^s=1 & \iff a^r=1                                             \\
+                   & \iff r=0 \qquad\text{since } 0\leqslant r\leqslant t-1 \\
+                   & \iff t\mid s
+    \end{align*}
+\end{Proof}
+
+\begin{Corollary}{}{ord_divides_q1}
+    If $ \alpha\in GF(q)^* $, then $ \ord(\alpha)\mid (q-1) $.
+\end{Corollary}
+
+\begin{Proof}{\Cref{cor:ord_divides_q1}}{}
+    We know $ \alpha^{q-1}=1 $, so $ \ord(\alpha)\mid (q-1) $ by
+    the previous Lemma.
+\end{Proof}
+
+\begin{Definition}{Generator}{generator}
+    An element $ \alpha\in GF(q) $ is a \textbf{generator} of
+    $ GF(q)^* $ if
+    \[ \set{\alpha^i:i\geqslant 0}=GF(q)^* \]
+    That is, $ \alpha $ generates all the non-zero field elements.
+    $ \ord(\alpha)=q-1 $.
+\end{Definition}
+
+\begin{Theorem}{}{}
+    If $ \alpha $ is a generator of $ GF(q)^* $, then
+    \[ \set{\alpha^1,\ldots ,\alpha^{q-1}}=GF(q)^* \]
+\end{Theorem}
+

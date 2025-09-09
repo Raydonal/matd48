@@ -1,0 +1,208 @@
+\makeheading{Lecture 12 | 2020-10-18}
+\section{Multinomial Distribution}
+\begin{Definition}{Multinomial distribution}{}
+    $ (X_1,\ldots,X_k) $ are joint discrete
+    random variables with joint p.f.\ given by
+    \[ f(x_1,\ldots,x_k)=\Prob{X_1=x_1,\ldots,X_k=x_k}=
+        \frac{n!}{x_1!x_2!\cdots x_k!}p_1^{x_1}\cdots p_k^{x_k} \]
+    where $ x_i=0,1,\ldots,n $ ($ i=1,2,\ldots,k $). Furthermore,
+    $ \sum_{i=1}^{k}x_i=n $, $ \sum_{i=1}^{k} p_i=1 $,
+    for $ 0<p_i<1 $ $ i=1,\ldots,k $. Then,
+    $ (X_1,\ldots,X_k) $ follows a \textbf{multinomial distribution}.
+    \[ (X_1,\ldots,X_k)\sim \mult{n;p_1,\ldots,p_k} \]
+\end{Definition}
+\begin{Example}{Possible Application}{}
+    \begin{itemize}
+        \item There are $ k $ boxes and each box
+              has same balls.
+        \item The probability of choosing a ball from the
+              $ i^{\text{th}} $ box is $ p_i $ for $ i=1,2,\ldots,k $.
+        \item We randomly choose $ n $ balls from $ k $ boxes.
+    \end{itemize}
+    Let $ X_i\coloneq $ number of boxes from the
+    $ i^{\text{th}} $ box for $ i=1,2,\ldots,k $. Then,
+    \[ (X_1,\ldots,X_k) \sim \mult{n;p_1,\ldots,p_k} \]
+    Note: if there are only two boxes, then $ X_1\sim \bin{n,p_1} $.
+\end{Example}
+\begin{Proposition}{Properties --- Multinomial Distribution}{prop_multi}
+    If $ (X_1,\ldots,X_k) \sim \mult{n;p_1,\ldots,p_k} $, then
+    \begin{enumerate}[label=(\arabic*)]
+        \item\label{prop_multi1} $ M(t_1,\ldots,t_k)=\E{e^{t_1 X_1+\cdots+t_k X_k}}=
+                  (p_1e^{t_1}+\cdots+p_k e^{t_k})^n $
+              where $ \abs{t_i}<\infty $ for $ i=1,\ldots,k $.
+        \item\label{prop_multi2} $ X_i \sim \bin{n,p_i} $ for $ i=1,\ldots,k $.
+        \item\label{prop_multi3} If $ T=X_i+X_j $ for $ i\neq j $, then
+              $ T \sim \bin{n,p_i+p_j} $
+        \item\label{prop_multi4} $ \Cov{X_i,X_j}=-n p_i p_j  $
+              for $ i\neq j $
+        \item\label{prop_multi5} The conditional probability
+              function of $ X_i $ given $ X_j=x_j $ for $ i\neq j $ is
+              \[ X_i\mid X_j=x_j \sim \bin*{n-x_j,
+                      \frac{p_i}{1-p_j}} \]
+        \item\label{prop_multi6} The conditional distribution of $ X_i $
+              given $ T=X_i+X_j $ for $ i\neq j $ is
+              \[ X_i\mid X_i+X_j \sim \bin*{t,\frac{p_i}{p_i+p_j} } \]
+    \end{enumerate}
+\end{Proposition}
+\begin{Proof}{\Cref{prop:prop_multi}}{}
+    Proof of~\ref{prop_multi1}: Too long
+    for my poor soul to type. Proof requires the Multinomial Theorem.
+
+    Proof of~\ref{prop_multi2}: The moment
+    generating function of $ X_i $ for $ i=1,\ldots,k $ is
+    \[ M(0,\ldots,0,t,0,\ldots,0)=\bigl[p_i e^{t_i}+(1-p_i)\bigr]^n
+        \quad t_i\in\mathbf{R} \]
+    which is the moment generating function of a
+    $ \bin{n,p_i} $ random variable. By~\Cref{thm:uniq_mgf}
+    we have $ X_i \sim \bin{n,p_i} $ for $ i=1,\ldots,k $.
+
+    Proof of~\ref{prop_multi3}: The moment
+    generating function of $ T=X_i+X_j $ for $ i\neq j $ is
+    \begin{align*}
+        M_T(t)
+         & =\E*{e^{tT}}                                                                         \\
+         & =\E*{e^{t(X_i+X_j)}}                                                                 \\
+         & =\E*{e^{t X_i+t X_j}}                                                                \\
+         & =M(0,\ldots,0,t,0,\ldots,0,t,0,\ldots,0)                                             \\
+         & =(p_1+\cdots+p_i e^{t}+\cdots+p_j e^t+\cdots+p_{k-1}+p_k)^n & \quad & t\in\mathbf{R} \\
+         & =\bigl[ (p_i+p_j)e^t+(1-p_i-p_j) \bigr]^n                   &       & t\in\mathbf{R}
+    \end{align*}
+    which is the moment generating function of a
+    $ \bin{n,p_i+p_j} $ random variable. By~\Cref{thm:uniq_mgf}
+    we have $ T \sim \bin{n,p_i+p_j} $ for $ i\neq j $.
+
+    Proof of~\ref{prop_multi4}:
+    By~\ref{prop_multi2} we have $ \E{X_i}=n p_i $, $ \Var{X_i}=np_i(1-p_i) $,
+    and $ \Var{X_j}=np_j(1-p_j) $. By~\ref{prop_multi3} we have
+    $ X_i+X_j \sim \bin{n,p_i+p_j} $, so
+    $ \Var{X_i+X_j}=n(p_i+p_j)(1-p_i-p_j) $.
+    Thus,
+    \[ \Cov{X_i+X_j,X_i+X_j}=\Var{X_i}+\Var{X_j}+2\Cov{X_i,X_j} \]
+    \[ \implies n(p_i+p_j)(1-p_i-p_j)=np_i(1-p_i)+np_j(1-p_j)
+        +2\Cov{X_i,X_j} \]
+    Therefore, $ \Cov{X_i,X_j}=-n p_i p_j $.
+
+    Proof of~\ref{prop_multi5}: There are $ x_j $ outcomes
+    from the $ j^{\text{th}} $ category. Therefore,
+    there are $ (n-x_j) $ balls chosen from the remaining $ (k-1) $
+    boxes. We are not allowed to choose from the $ j^{\text{th}} $ box,
+    we are only allowed to choose from the remaining $ (k-1) $
+    boxes. Therefore, proportionally we get the success probability
+    as $ p_i/(1-p_j) $.
+\end{Proof}
+\begin{Exercise}{}{}
+    Prove property~\ref{prop_multi6} from~\Cref{prop:prop_multi}.
+\end{Exercise}
+\section{Bivariate Normal Distribution}
+\begin{Definition}{Bivariate normal distribution}{}
+    Suppose that $ X_1 $ and $ X_2 $
+    are continuous random variables with joint probability
+    density function
+    \[ f(x_1,x_2)=\frac{1}{2\pi\abs*{\Sigma}^{1/2}}
+        \expon*{-\frac{1}{2}(\symbf{x}-\symbf{\mu})^\top \Sigma^{-1}(\symbf{x}-\symbf{\mu})}\quad(x_1,x_2)\in\mathbf{R}^2     \]
+    Also,
+    \[ \symbf{x}=\begin{pmatrix}
+            x_1 \\
+            x_2
+        \end{pmatrix}_{2\times 1},\quad
+        \symbf{\mu}=\begin{pmatrix}
+            \mu_1 \\
+            \mu_2
+        \end{pmatrix}_{2\times 1},\quad
+        \Sigma=
+        \begin{pmatrix}
+            \sigma_1^2        & p\sigma_1\sigma_2 \\
+            p\sigma_1\sigma_2 & \sigma_2^2
+        \end{pmatrix}_{k\times k} \]
+    and $ \Sigma $ is positive semi-definite. Also,
+    $ \abs*{\Sigma} $ is the determinant of $ \Sigma $.
+    Then, $ \symbf{X}=(X_1,X_2)^\top $ follows a \textbf{bivariate normal distribution},
+    and we write
+    \[ \symbf{X}\sim\Bvn{\symbf{\mu},\Sigma}  \]
+\end{Definition}
+\begin{Remark}{$ \dagger $}{}
+    Alternatively, we could write
+    \begin{align*}
+        f(x_1 & ,x_2)                                          \\
+              & =\frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}
+        \expon*{-\frac{1}{2(1-\rho^2)}
+            \Biggl[ \biggl( \frac{x_1-\mu_1}{\sigma_1}  \biggr)^{\!2}+
+                \biggl( \frac{x_2-\mu_2}{\sigma_2}  \biggr)^{\!2}-
+                \frac{2\rho(x_1-\mu_1)(x_2-\mu_2)}{\sigma_1\sigma_2} \Biggr]}
+    \end{align*}
+\end{Remark}
+\begin{Proposition}{Properties --- Bivariate Normal Distribution}{prop_bvn}
+    \begin{enumerate}[label=(\arabic*)]
+        \item\label{prop_bvn_1}$ X_1,X_2 $ has joint moment generating function
+              \[ M(t_1,t_2)=\E{
+                      e^{t_1X_1+t_2X_2}
+                  }=\expon*{\symbf{t}^\top \symbf{\mu}+\frac{1}{2}\symbf{t}^\top \Sigma
+                      \symbf{t}}\quad \forall \symbf{t}\in\mathbf{R}^2 \]
+        \item\label{prop_bvn_2}Marginally,
+              \[ M_{X_1}(t_1)=M(t_1,0)=\expon*{t_1\mu_1+\frac{1}{2} t_1^2
+                      \sigma_1^2} \]
+              which is the m.g.f.\ of $ \N{\mu_1,\sigma_1^2} $; that is,
+              $ X_1 \sim \N{\mu_1,\sigma_1^2} $. Also,
+              $ \E{X_1}=\mu_1 $ and $ \Var{X_1}=\sigma_1^2 $.
+              \[ M_{X_2}(t_2)=M(0,t_2)=\expon*{t_2\mu_2+\frac{1}{2} t_2^2
+                      \sigma_2^2} \]
+              which is the m.g.f.\ of $ \N{\mu_2,\sigma_2^2} $; that is,
+              $ X_2 \sim \N{\mu_2,\sigma_2^2} $. Also,
+              $ \E{X_2}=\mu_2 $ and $ \Var{X_2}=\sigma_2^2 $.
+        \item\label{prop_bvn_3}Conditional distribution.
+              \[ X_2\mid X_1=x_1 \sim \N*{
+                      \mu_2+\frac{\rho\sigma_2(x_1-\mu_1)}{\sigma_1} ,
+                      \sigma_2^2(1-\rho^2)} \]
+              \[ X_1\mid X_2=x_2 \sim
+                  \N*{\mu_1+\frac{\rho\sigma_1(x_2-\mu_2)}{\sigma_2} ,
+                      \sigma_1^2(1-\rho^2)} \]
+              \[ f_2(x_2\mid x_1)=\frac{f(x_1,x_2)}{f_1(x_1)}  \]
+              \[ f_1(x_1\mid x_2)=\frac{f(x_1,x_2)}{f_2(x_2)}  \]
+        \item\label{prop_bvn_4}$ \Cov{X_1,X_2}=\rho\sigma_1\sigma_2 $
+        \item\label{prop_bvn_5}$ \rho=0\iff X_1\text{ and }X_2 $ are independent.
+        \item\label{prop_bvn_6}Linear transformations of bivariate
+              normal are still normal.
+        \item\label{prop_bvn_7}$ (\symbf{X}-\symbf{\mu})^\top \Sigma^{-1}(\symbf{X}-\symbf{\mu})\sim \chi^2(2) $
+    \end{enumerate}
+\end{Proposition}
+\begin{Proof}{\Cref{prop:prop_bvn}}{}
+    Proof of~\ref{prop_bvn_4}: We want to find $ \E{X_1X_2}=\E{\E{X_1X_2\given X_1}} $.
+
+    Step 1:
+    \[ \E{X_1X_2\given X_1=x_1}=\E{x_1X_2\given X_1=x_1}=
+        x_1\E{X_2\given X_1=x_1}=x_1
+        \biggl(  \mu_2+\frac{\rho\sigma_2(x_1-\mu_1)}{\sigma_1} \biggr) \]
+    Step 2:
+    \[ \E{X_1X_2\given X_1}=X_1
+        \biggl(  \mu_2+\frac{\rho\sigma_2(X_1-\mu_1)}{\sigma_1} \biggr)
+    \]
+    \begin{align*}
+        \E{X_1X_2}
+         & = \E*{X_1\mu_2+\frac{X_1\rho\sigma_2(X_1-\mu_1)}{\sigma_1}}            \\
+         & =\mu_2\E{X_1}+\frac{\rho\sigma_2}{\sigma_1}
+        (\E{X_1^2}-\mu_1\E{X_1})                                                  \\
+         & =\mu_2\mu_1+\frac{\rho\sigma_2}{\sigma_1}( \mu_1^2+\sigma_1^2-\mu_1^2) \\
+         & =\mu_1\mu_2+\rho\sigma_1\sigma_2
+    \end{align*}
+    Thus,
+    \[ \Cov{X_1,X_2}=\E{X_1X_2}-\E{X_1}\E{X_2}=\rho\sigma_1\sigma_2  \]
+    \[ \Corr{X_1,X_2}=\frac{\Cov{X_1,X_2}}{\sqrt{\Var{X_1}\Var{X_2}}}=\rho  \]
+
+    Proof of~\ref{prop_bvn_5}: We know if $ X_1 $ and $ X_2 $ are independent, then $ \rho=0 $.
+    If $ \rho=0 $, e.g., $ X_2\mid X_1=x_1 \sim \N{\mu_2,\sigma_1^2} $
+    and $ X_1\mid X_2=x_2 \sim \N{\mu_1,\sigma_1^2} $.
+    In summary: If joint bivariate normal then uncorrelated = independence.
+
+    Proof of~\ref{prop_bvn_6}: Let $ \symbf{c}=(c_1,c_2)^\top $, then
+    $ \symbf{c}^\top X=c_1X_2+c_2X_2 \sim \N{c_1\mu_1+c_2\mu_2,\symbf{c}^\top \Sigma\symbf{c}} $.
+    Furthermore, if $ A\in\mathbf{R}^{2\times 2} $, and
+    $ \symbf{b}=(b_1,b_2)^\top $, then
+    \[ AX+\symbf{b} \sim \Bvn{A\symbf{\mu}+\symbf{b},A\Sigma A^\top} \]
+    Two linear combinations of BVN is joint BVN.\
+\end{Proof}
+\begin{Remark}{}{}
+    Remark of~\ref{prop_bvn_7}: Note $ \chi^2(1)\coloneq Z^2 $ where $ Z \sim \N{0,1} $.
+    \[ \chi^2(n)=
+        \sum_{i=1}^{n} Z_i^2 \]
+    where $ Z_1,\ldots,Z_n $ are independent $ \N{0,1} $.
+\end{Remark}

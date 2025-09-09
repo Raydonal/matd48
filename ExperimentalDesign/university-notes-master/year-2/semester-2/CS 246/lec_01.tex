@@ -1,0 +1,59 @@
+\chapter{Linux}
+\section{2020-01-07}
+
+\subsection{Linux Shell}
+
+Shell: interface to an OS
+
+Graphical shell: click/touch, intuitive
+
+Command line shell: type commands, not intuitive, more powerful
+
+Stephen Bourne (70s): original UNIX shell
+
+History: C shell (\code{csh}) $ \rightarrow $ Turbo C shell (\code{tcsh}) $ \rightarrow $
+KornShell (\code{ksh}) $ \rightarrow $ Bourne Again Shell (\code{bash})
+
+Check what command line shell: \code{echo \$0}
+
+Go into bash: \code{bash}
+
+\subsection{Linux File System}
+Directories: files that contain files (called folders in Windows), e.g.
+\code{usr}, \code{share}, \code{dict} are all directories
+
+Root (literally a backslash) \code{/}: top directory
+
+Path: location of a file in the file system, e.g. \code{/usr/share/dict/words}
+
+Absolute path: path that starts at the root directory
+
+Relative path: path relative to a directory
+
+The path \code{dict/words}
+relative to \code{/user/share} is \code{/usr/share/dict/words}
+
+\subsection{Commands}
+\begin{itemize}
+      \item NAME\@: \code{ls} $ \rightarrow $ list directory contents.
+            \begin{itemize}
+                  \item SYNOPSIS\@: \code{ls [OPTION]\textellipsis{} [FILE]}
+                  \item DESCRIPTION\@: List information about the non-hidden \code{FILE}s
+                        (current directory by default). Hidden files start with a \code{.}
+                        \code{ls -a} or \code{ls -all} do not ignore entries starting
+                        with a \code{.}; the \code{-a} is an argument
+            \end{itemize}
+      \item NAME\@: \code{pwd} $ \rightarrow $ print name of current/working directory.
+            \begin{itemize}
+                  \item SYNOPSIS\@: \code{pwd [OPTION]\textellipsis}
+                  \item DESCRIPTION\@: Print the full filename of the current working directory.
+            \end{itemize}
+      \item NAME\@: \code{cd} $ \rightarrow $ change the shell working directory.
+            \begin{itemize}
+                  \item \code{..} $ \rightarrow $ parent directory
+                  \item \code{.} $ \rightarrow $ current directory
+                  \item \code{-} $ \rightarrow $ previous directory
+                  \item \code{\textasciitilde} $ \rightarrow $ home directory
+                  \item \code{\textasciitilde{} userid} $ \rightarrow $ \code{userid}'s directory
+            \end{itemize}
+\end{itemize}

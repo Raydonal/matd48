@@ -1,0 +1,53 @@
+\chapter*{Introduction}
+\makeheading{Lecture 1 | 2020-09-08}
+\begin{Definition}{Response variable}{}
+    A \textbf{response} (\textbf{dependent})
+    \textbf{variable} is the primary variable
+    of interest, denoted by a capital
+    roman letter $ Y $.
+\end{Definition}
+\begin{Definition}{Explanatory Variable}{}
+    An \textbf{explanatory} (\textbf{independent}, \textbf{predictor})
+    \textbf{variable} are variables that
+    impact the response, denoted by $ x_i $
+    for $ i=1,\ldots,p $.
+\end{Definition}
+\begin{Definition}{Regression Model}{}
+    A \textbf{regression model}
+    deals with modelling the functional relationship between a response
+    variable and one or more explanatory variables.
+\end{Definition}
+\begin{Example}{Alligators in Florida}{}
+    Let $ Y $ be the length in metres of an alligator
+    and $ x_1\coloneq \{0,1\} $ (male or female).
+    The mass in an alligators stomach consists of
+    fish ($ x_2 $), invertebrates ($ x_3 $),
+    reptiles ($ x_4 $), birds ($ x_5 $),
+    and other ($ x_6,\ldots,x_p $).
+    We imagine we can explain $ Y $ in terms
+    of $ (x_1,\ldots,x_p) $ using some function
+    such that $ Y=f(x_1,\ldots,x_p) $.
+\end{Example}
+In this course, we will be looking at linear models.
+\begin{Definition}{Linear model}{}
+    A general \textbf{linear model} is defined as
+    $ Y=\beta_0+\beta_1x_1+\cdots+\beta_p x_p+\varepsilon $
+    where $ Y $ is the response variable, $ (x_1,\ldots,x_p) $
+    are the $ p $ explanatory variables,
+    $ (\beta_0,\beta_1,\ldots,\beta_p) $
+    are the model parameters, and $ \varepsilon $
+    is the random error. We assume
+    that $ (x_1,\ldots,x_p) $ are fixed constants,
+    $ \beta_0 $ is the intercept of $ Y $,
+    $ (\beta_1,\ldots,\beta_p) $ all quantify effect on $ x_j $
+    on $ Y $, and $ \varepsilon \sim \N{0,\sigma^2} $.
+\end{Definition}
+\begin{Remark}{}{}
+    In general, the model will not perfectly explain the data.
+    \begin{quote}
+        ``All models are wrong, but some are useful.''
+    \end{quote}
+\end{Remark}
+$ Y \sim \N{\beta_0+\beta_1x_1+\cdots+\beta_p x_p,\sigma^2} $
+since $ \E{Y}=\beta_0+\beta_1x_1+\cdots+\beta_p x_p $ and
+$ \Var{Y}=\Var{\varepsilon}=\sigma^2 $.

@@ -1,0 +1,420 @@
+\subsection{Arithmetic For Limits}
+If we can avoid using the definition to find a limit, we should.
+There are certain rules we can follow to compute lots of sequence limits.
+Let's see them now!
+\begin{Theorem}{\href{https://proofwiki.org/wiki/Divergent_Real_Sequence_to_Positive_Infinity/Examples/n\%5Ealpha}{$ n^{\alpha} $}}{}
+    \begin{enumerate}[(1)]
+        \item $ \forall \alpha\in\R_{>0}:\lim\limits_{{n} \to {\infty}}n^\alpha=\infty $.
+        \item $ \forall \alpha\in\R_{<0}:\lim\limits_{{n} \to {\infty}}n^\alpha=0 $.
+        \item $ \lim\limits_{{n} \to {\infty}}n^0=1 $.
+    \end{enumerate}
+\end{Theorem}
+\begin{Theorem}{\href{https://proofwiki.org/wiki/Combination\_Theorem\_for\_Sequences\#Real\_Sequences}{Combination Theorem for Sequences}}{comb_thm_seq}
+    Let $ \sequence{x_n} $ and $ \sequence{y_n} $ be sequences in $ \R $.\smallskip
+
+    Let $ \sequence{x_n} $ and $ \sequence{y_n} $ be convergent to the following limits:
+    \begin{align*}
+        \lim\limits_{{n} \to {\infty}}x_n & =L, \\
+        \lim\limits_{{n} \to {\infty}}y_n & =M.
+    \end{align*}
+    Let $ \lambda,\mu\in\R $.\bigskip
+
+    Then the following results hold:
+    \begin{enumerate}[(1)]
+        \item \textbf{Sum Rule}.
+              \[ \lim\limits_{{n} \to {\infty}}(x_n+y_n)=L+M. \]
+        \item \textbf{Difference Rule}.
+              \[ \lim\limits_{{n} \to {\infty}}(x_n-y_n)=L-M \]
+        \item \textbf{Multiple Rule}.
+              \[ \lim\limits_{{n} \to {\infty}}(\lambda x_n)=\lambda L. \]
+        \item \textbf{Combined Sum Rule}.
+              \[ \lim\limits_{{n} \to {\infty}}(\lambda x_n+\mu y_n)=\lambda L+\mu M. \]
+        \item \textbf{Product Rule}.
+              \[ \lim\limits_{{n} \to {\infty}}(x_n y_n)=LM. \]
+        \item \textbf{Quotient Rule}.
+              \[ \lim\limits_{{n} \to {\infty}}\frac{x_n}{y_n}=\frac{L}{M}\text{ provided that $ M\ne 0. $} \]
+        \item $ \forall k\in\N:\lim\limits_{{n} \to {\infty}}x_{n+k}=L $.
+        \item $ \forall n:x_n=C\implies C=L $.
+    \end{enumerate}
+    \tcblower{}
+    \textbf{Proof}: Exercises, but let's prove (1) as an example.
+    Let $ \varepsilon>0 $ be given. Since $ \lim\limits_{{n} \to {\infty}}x_n=L $,
+    we can find $ N_1\in \N $ so that if $ n\ge N_1 $,
+    we get $ \abs{x_n-L}<\varepsilon/2 $. Also,
+    since $ \lim\limits_{{n} \to {\infty}}y_n=M $, we can find $ N_2\in \N $
+    so that if $ n\ge N_2 $, we have $ \abs{y_n-M}<\varepsilon/2 $.
+    Now, let $ N=\max(N_1,N_2) $. Then, if $ n\ge N $
+    we get
+    \[ \abs{(x_n+y_n)-(L+M)}\le \abs{x_n-L}+\abs{y_n-M}<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon, \]
+    where we used the triangle inequality in the first inequality.
+\end{Theorem}
+\begin{Remark}{}{}
+    To use any of the above properties, the limits need to exist!
+\end{Remark}
+\begin{Example}{}{}
+    \begin{enumerate}[(1)]
+        \item $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{3n+7}{n+2}
+                  =\lim\limits_{{n} \to {\infty}}\frac{3+7/n}{1+2/n}
+                  =\frac{\lim\limits_{{n} \to {\infty}}3+\lim\limits_{{n} \to {\infty}}7/n}{\lim\limits_{{n} \to {\infty}}1+\lim\limits_{{n} \to {\infty}}2/n}
+                  =\frac{3+0}{1+0}
+                  =3 $.
+        \item $ \displaystyle
+                  \lim\limits_{{n} \to {\infty}}\frac{n^3+n^2+1}{2n^3+7n^2-1}
+                  =\lim\limits_{{n} \to {\infty}}\frac{1+1/n+1/n^3}{2+7/n-1/n^3}
+                  =\frac{1+0+0}{2+0+0}
+                  =\frac{1}{2} $.
+        \item $ \displaystyle
+                  \lim\limits_{{n} \to {\infty}}\frac{n+1}{n^2+1}
+                  =\lim\limits_{{n} \to {\infty}}\frac{1/n+1/n^2}{1+1/n^2}
+                  =\frac{0+0}{1+0}
+                  =0 $.
+    \end{enumerate}
+\end{Example}
+\begin{Remark}{}{}
+    You don't need to write ``arithmetic rules''
+    every time, as we \underline{always} use them!
+    Just make sure you show your work!
+\end{Remark}
+\begin{Example}{}{}
+    What if in~\Cref{thm:comb_thm_seq} (6), we had $ M=0 $? Anything can happen!
+    \begin{itemize}
+        \item $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{1/n}{1/n}=1 $
+              even though $ 1/n\to 0 $.
+        \item $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{1/n}{1/n^2}=
+                  \lim\limits_{{n} \to {\infty}}\frac{n^2}{n}=
+                  \lim\limits_{{n} \to {\infty}}n=\infty $.
+        \item $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{1/n^2}{1/n}=
+                  \lim\limits_{{n} \to {\infty}}\frac{1}{n}=0 $.
+    \end{itemize}
+    Hence, we will need to handle these on an individual basis.
+\end{Example}
+However, there is one thing we can say.
+
+\begin{Theorem}{}{}
+    If $ \lim\limits_{{n} \to {\infty}}b_n=0 $
+    and $ \lim\limits_{{n} \to {\infty}}\frac{a_n}{b_n} $
+    exists, then $ \lim\limits_{{n} \to {\infty}}a_n=0 $.
+    \tcblower{}
+    \textbf{Proof}: Suppose $ \lim\limits_{{n} \to {\infty}}b_n=0 $,
+    and say $ \lim\limits_{{n} \to {\infty}}\frac{a_n}{b_n}=k\in\R $,
+    then
+    \[ \lim\limits_{{n} \to {\infty}}a_n=
+        \lim\limits_{{n} \to {\infty}}\frac{a_n}{b_n}=
+        k\cdot 0=0. \]
+\end{Theorem}
+\begin{Corollary}{}{}
+    If $ \lim\limits_{{n} \to {\infty}}b_n=0 $
+    and $ \lim\limits_{{n} \to {\infty}}a_n\ne 0 $,
+    then $ \lim\limits_{{n} \to {\infty}}\frac{a_n}{b_n} $
+    does not exist.
+\end{Corollary}
+\begin{Example}{}{}
+    \[ \lim\limits_{{n} \to {\infty}}\frac{n^3+3n}{n^2+1}=
+        \lim\limits_{{n} \to {\infty}}\frac{1+3/n^2}{1/n+1/n^3}. \]
+    However, the numerator converges to $ 1 $,
+    while the denominator converges to $ 0 $.
+    Therefore, the limit does not exist.
+
+    We could also say
+    \[ \lim\limits_{{n} \to {\infty}}\frac{n^3+3n}{n^2+1}=\infty, \]
+    which means DNE \underline{and} infinitely large!
+\end{Example}
+Let's compute the limit of any ratios of powers of $ n $.
+\begin{Proposition}{}{}
+    \begin{align*}
+        \lim\limits_{{n} \to {\infty}}\frac{b_0+b_1n+b_2n^2+\cdots+b_j n^j}{c_0+c_1n+c_2n^2+\cdots+c_k n^k}
+         & =\lim\limits_{{n} \to {\infty}}\frac{n^j}{n^k}
+        \left[\frac{\displaystyle \frac{b_0}{n^j}+\frac{b_1}{n^{j-1}}+\cdots+b_j}{
+                \displaystyle \frac{c_0}{n^k}+\frac{c_1}{n^{k-1}}+\cdots+c_k
+        }\right]                                          \\
+         & =\begin{cases}
+                \dfrac{b_j}{c_k}, & j=k,                \\
+                0,                & j<k,                \\
+                \infty,           & j>k\land b_j/c_k>0, \\
+                -\infty,          & j>k\land b_k/c_k<0.
+            \end{cases}
+    \end{align*}
+\end{Proposition}
+\begin{Example}{}{}
+    \begin{itemize}
+        \item $ \begin{aligned}[t]
+                      \lim\limits_{{n} \to {\infty}}\frac{3n+2}{2n-1}=\frac{3}{2}.
+                  \end{aligned} $
+        \item $ \begin{aligned}[t]
+                      \lim\limits_{{n} \to {\infty}}\frac{4n^2+5n}{n^3-1}=0.
+                  \end{aligned} $
+        \item $ \begin{aligned}[t]
+                      \lim\limits_{{n} \to {\infty}}\frac{7-n^4}{1+n^3}=-\infty.
+                  \end{aligned} $
+    \end{itemize}
+\end{Example}
+\begin{Remark}{}{}
+    Still show work when writing solutions on a test though (e.g.,
+    dividing by highest power of $ n $).
+\end{Remark}
+\begin{Example}{}{}
+    If we have something that ``looks like'' $ \infty-\infty $,
+    then multiply by the conjugate!
+    \begin{align*}
+        \lim\limits_{{n} \to {\infty}}(\sqrt{n^2-4}-n)
+         & =\lim\limits_{{n} \to {\infty}}(\sqrt{n^2-4}-n) \frac{\sqrt{n^2+4}+n}{\sqrt{n^2+4}+n} \\
+         & =\lim\limits_{{n} \to {\infty}}\frac{n^2+4-n^2}{\sqrt{n^2+4}+n}                       \\
+         & =\lim\limits_{{n} \to {\infty}}\frac{4}{\sqrt{n^2+4}+n}                               \\
+         & =\lim\limits_{{n} \to {\infty}}\frac{4/n}{\sqrt{1+4/n^2}+1}                           \\
+         & =\frac{0}{2}                                                                          \\
+         & =0.
+    \end{align*}
+\end{Example}
+\subsection*{Recursive Sequence Limits}
+We will examine recursive sequences more closely in 1.4,
+but for now, if we know a recursive sequence converges,
+then we can use rule (7) to find the limit!
+\begin{Example}{}{}
+    $ a_1=2 $, $ a_{n+1}=\frac{5+a_n}{2} $.
+    Suppose we know it has a limit, say $ \lim\limits_{{n} \to {\infty}}a_n=L $.
+    Then, using rule (7), we get:
+    \[ L=\lim\limits_{{n} \to {\infty}}a_n=
+        \lim\limits_{{n} \to {\infty}}a_{n+1}=
+        \lim\limits_{{n} \to {\infty}}\frac{5+a_n}{2}=
+        \frac{5+L}{2}. \]
+    Therefore,
+    \[ L=\frac{5+L}{2}\iff 2L=5+L\iff L=5. \]
+\end{Example}
+\section{Squeeze Theorem}
+\begin{Theorem}{\href{https://proofwiki.org/wiki/Squeeze_Theorem\#Sequences\_of\_Real\_Numbers}{Squeeze Theorem for Sequences of Real Numbers}}{}
+    Let $ \sequence{a_n} $, $ \sequence{b_n} $, and $ \sequence{c_n} $
+    be sequences in $ \R $.\smallskip
+
+    Let $ \lim\limits_{{n} \to {\infty}}a_n=L=\lim\limits_{{n} \to {\infty}}c_n $.\smallskip
+
+    \[ \forall n\in\N:a_n\le b_n\le c_n \implies \lim\limits_{{n} \to {\infty}}b_n=L. \]
+    \tcblower{}
+    \textbf{Proof}: Let $ \varepsilon>0 $ be given.
+    Since $ a_n\to L $ and $ c_n\to L $, we can find $ N\in\N $
+    such that if $ n\ge N $, then $ a_n\in(L-\varepsilon,L+\varepsilon) $,
+    and $ c_n\in(L-\varepsilon,L+\varepsilon) $. Then, for $ n\ge N $,
+    \[ L-\varepsilon\le a_n\le b_n\le c_n\le L+\varepsilon, \]
+    so $ b_n\in (L-\varepsilon,L+\varepsilon) $, which means
+    $ \lim\limits_{{n} \to {\infty}}b_n=L $.
+\end{Theorem}
+\begin{Remark}{}{}
+    The Squeeze Theorem is great for dealing with $ \sin/\cos $
+    and $ (-1)^n $.
+\end{Remark}
+\begin{Example}{}{}
+    Compute the following limits.
+    \begin{enumerate}[(1)]
+        \item $ \lim\limits_{{n} \to {\infty}}\frac{(-1)^n}{n^2+1} $.
+        \item $ \lim\limits_{{n} \to {\infty}}\frac{\cos(n^2+7)+7}{n} $.
+    \end{enumerate}
+    \tcblower{}
+    \textbf{Solution}.
+    \begin{enumerate}[(1)]
+        \item Notice that $ \frac{-1}{n^2+1}\le \frac{(-1)^n}{n^2+1}\le \frac{1}{n^2+1} $
+              and $ \lim\limits_{{n} \to {\infty}}\frac{-1}{n^2+1}=0=\lim\limits_{{n} \to {\infty}}\frac{1}{n^2+1} $,
+              so $ \lim\limits_{{n} \to {\infty}}\frac{(-1)^n}{n^2+1}=0 $ by the Squeeze Theorem.
+        \item Notice that $ \frac{6}{n}\le \frac{\cos(n^2+7)+7}{n}\le \frac{8}{n} $,
+              and since $ \lim\limits_{{n} \to {\infty}}\frac{6}{n}=0=\lim\limits_{{n} \to {\infty}}\frac{8}{n} $,
+              we get $ \lim\limits_{{n} \to {\infty}}\frac{\cos(n^2+7)+7}{n}=0 $ by the Squeeze Theorem.
+    \end{enumerate}
+\end{Example}
+\section{Monotone Convergence Theorem}
+First, we need to some terminology.
+% https://proofwiki.org/wiki/Definition:Bounded_Above_Set/Real_Numbers
+% https://proofwiki.org/wiki/Definition:Bounded_Below_Set/Real_Numbers
+% https://proofwiki.org/wiki/Definition:Upper_Bound_of_Set/Real_Numbers
+% https://proofwiki.org/wiki/Definition:Lower_Bound_of_Set/Real_Numbers
+% https://proofwiki.org/wiki/Definition:Bounded_Set/Real_Numbers
+\begin{Definition}{
+        \href{https://proofwiki.org/wiki/Definition:Upper_Bound_of_Set/Real_Numbers}{Upper Bound},
+        \href{https://proofwiki.org/wiki/Definition:Lower_Bound_of_Set/Real_Numbers}{Lower Bound},
+        \href{https://proofwiki.org/wiki/Definition:Bounded_Below_Set/Real_Numbers\#Definition}{Bounded Below},
+        \href{https://proofwiki.org/wiki/Definition:Bounded_Set/Real_Numbers}{Bounded Set}}
+    {}
+    Let $ S\subseteq \R $.\smallskip
+
+    \begin{itemize}
+        \item We say that $ S $ is \textbf{bounded above} if and only if $ S $ admits an upper bound (say, $ \alpha $).
+              In this case,
+              \[ \exists \alpha\in\R:\forall x\in S:x\le \alpha. \]
+        \item We say that $ S $ is \textbf{bounded below} if and only if $ S $ admits a lower bound (say, $ \beta $).
+              In this case,
+              \[ \exists \beta\in\R:\forall x\in S:x\ge \beta. \]
+    \end{itemize}
+    We say that $ S $ \textbf{bounded} if and only if it admits an upper and lower bound (say, $ M $). In this case,
+    \[ \exists M\in\R:\forall x\in S:\abs{x}\le M. \]
+\end{Definition}
+\begin{Example}{}{}
+    If $ S=(-1,1) $, then $ 7 $ is an upper bound and $ -12 $
+    is a lower bound, so $ S $ is bounded. Another example
+    is $ S\subseteq[-5,5] $.
+\end{Example}
+\begin{Definition}{
+        \href{https://proofwiki.org/wiki/Definition:Supremum_of_Set/Real_Numbers}{Supremum},
+        \href{https://proofwiki.org/wiki/Definition:Infimum_of_Set/Real_Numbers}{Infimum}}{}
+    Let $ S\subseteq \R $.\smallskip
+
+    $ \alpha\in\R $ is called the \textbf{supremum} (\textbf{least upper bound})
+    of $ S $ if and only if:
+    \begin{enumerate}[(i)]
+        \item $ \alpha $ is an upper bound of $ S $, and
+        \item $ \alpha\le \alpha' $ for all upper bounds of $ S $.
+    \end{enumerate}
+    The supremum of $ S $ is denoted $ \sup(S) $.\bigskip
+
+    $ \beta\in\R $ is called the \textbf{infimum} (\textbf{greatest lower bound}) if
+    \begin{enumerate}[(i)]
+        \item $ \beta $ is a lower bound of $ S $, and
+        \item $ \beta\ge \beta' $ for all lower bounds of $ S $.
+    \end{enumerate}
+    The infimum of $ S $ is denoted $ \inf(S) $.
+\end{Definition}
+\begin{Remark}{}{}
+    The supremum is also denoted by $ \lub(S) $.\bigskip
+
+    The infimum is also denoted by $ \glb(S) $.
+\end{Remark}
+\begin{Example}{}{}
+    If $ S=\Set{x\in\R:-1\le x\le 1} $, then $ \inf(S)=-1 $ and $ \sup(S)=1 $.
+\end{Example}
+\begin{Definition}{}{}
+    We say that a sequence $ \sequence{a_n} $ is:
+    \begin{itemize}
+        \item \textbf{increasing} if $ a_n<a_{n+1} $,
+        \item \textbf{non-decreasing} if $ a_n\le a_{n+1} $,
+        \item \textbf{decreasing} if $ a_n>a_{n+1} $,
+        \item \textbf{non-increasing} if $ a_n\ge a_{n+1} $,
+        \item \textbf{monotonic} if $ \sequence{a_n} $ is either
+              non-decreasing or non-increasing.
+    \end{itemize}
+\end{Definition}
+Now, we can state the theorem!
+\begin{Theorem}{Monotone Convergence Theorem (MCT)}{}
+    Let $ \sequence{a_n} $ be a non-decreasing (non-increasing) sequence.
+    \begin{enumerate}[(1)]
+        \item If $ \sequence{a_n} $ is bounded above (below), then $ \sequence{a_n} $
+              converges to $ L=\lub(\sequence{a_n}) $ ($ L=\glb(\sequence{a_n}) $).
+        \item If $ \sequence{a_n} $ is not bounded above (below),
+              then $ \sequence{a_n} $ diverges to $ \infty $ ($ -\infty $).
+    \end{enumerate}
+    \tcblower{}
+    \textbf{Proof}: We will prove the non-decreasing/bounded above case,
+    the other case is similar. Suppose $ \sequence{a_n} $ is non-decreasing.
+    \begin{enumerate}[(1)]
+        \item Suppose $ \sequence{a_n} $ is bounded above and let $ L=\lub(\sequence{a_n}) $.
+              Let $ \varepsilon>0 $ be given. Then, $ L-\varepsilon<L $,
+              which means that $ L-\varepsilon $ is \underline{not}
+              an upper bound of $ \sequence{a_n} $ ($ L $ is the \underline{least}
+              upper bound). So, there exists $ N\in\N $ so that $ L-\varepsilon<a_N $.
+              Then, if $ n\ge N $, we have $ L-\varepsilon<a_N\le a_n $
+              since the sequence is non-decreasing. Therefore,
+              for $ n\ge N $, $ L-\varepsilon<a_n\le L<L+\varepsilon $,
+              so the tail of $ \sequence{a_n} $ is in $ (L-\varepsilon,L+\varepsilon) $,
+              which means $ \lim\limits_{{n} \to {\infty}}a_n=L $.
+        \item Suppose $ \sequence{a_n} $ is not bounded above. Let $ M\in\R $
+              be given. We can find $ N\in\N $ so that $ M<a_N $. Then, if
+              $ n\ge N $, we have $ M<a_N<a_n $ ($ \sequence{a_n} $ is non-decreasing).
+              This shows $ \lim\limits_{{n} \to {\infty}}a_n=\infty $.
+    \end{enumerate}
+\end{Theorem}
+\subsubsection{Introduction to Mathematical Induction}
+\begin{Theorem}{\href{https://proofwiki.org/wiki/Principle_of_Mathematical_Induction}{Principle of Mathematical Induction}}{}
+    Let $ P(n) $ be a propositional function depending on $ n\in\N $.\smallskip
+
+    Suppose that:
+    \begin{enumerate}[(1)]
+        \item $ P(1) $ is true
+        \item $ \forall k\in\N:(P(k)\implies P(k+1)) $
+    \end{enumerate}
+    Then:
+    \[ \text{$ P(n) $ is true for all $ n\in\N $}. \]
+\end{Theorem}
+
+We will use the MCT and induction to find the limits of recursive sequences.
+To do this, we follow these steps:
+\begin{enumerate}[(1)]
+    \item Prove the sequence is monotonic.
+    \item Prove the sequence is bounded (above or below).
+    \item Conclude the sequence converges by MCT\@.
+    \item Find the limit using an earlier trick:
+          \[ \lim\limits_{{n} \to {\infty}}a_n=\lim\limits_{{n} \to {\infty}}a_{n+1}. \]
+\end{enumerate}
+Note that the order matters! We can't perform step 4 unless we know
+that the sequence converges.
+\begin{Example}{}{}
+    Let $ \displaystyle  a_1=1 $, $ a_{n+1}=\frac{3+a_n}{2} $ for $ n\ge 1 $. Prove
+    the sequence converges and find its limit.
+    \tcblower{}
+    \textbf{Solution}.
+    \begin{enumerate}[(1)]
+        \item Let's check a few terms: $ a_1=1 $, $ a_2=2 $, $ a_3=5/2 $,
+              so it looks like the sequence is non-decreasing.
+
+              Claim: $ a_n\le a_{n+1} $ for all $ n\in N $.
+              \begin{itemize}
+                  \item Base Case: Is $ a_1\le a_2 $? Yes, since $ a_1=1\le 2=a_2 $.
+                  \item Inductive Hypothesis: Suppose $ a_k\le a_{k+1} $ for
+                        some $ k\ge 1 $.
+                  \item Inductive Step: Since $ a_k\le a_{k+1} $, $ 3+a_{k}\le 3+a_{k+1} $,
+                        which means
+                        \[ \frac{3+a_k}{2}\le \frac{3+a_{k+1}}{2}, \]
+                        that is, $ a_{k+1}\le a_{k+2} $.
+              \end{itemize}
+              Therefore, the sequence is non-decreasing by induction.
+        \item What upper bound should we use? Don't try to guess the $ \lub $
+              at this point, any upper bound will do!
+
+              Claim: $ a_n\le 5 $ for all $ n\in\N $.
+              \begin{itemize}
+                  \item Base Case: $ a_1=1\le 5 $.
+                  \item Inductive Hypothesis: Suppose $ a_k\le 5 $
+                        for some $ k\in\N $.
+                  \item Inductive Step: Since $ a_k\le 5 $, $ 3+a_k\le 8 $,
+                        so $ \frac{3+a_k}{2}\le 4 $. Therefore, $ a_{k+1}\le 4\le 5 $.
+              \end{itemize}
+              Therefore, $ a_n\le 5 $ for all $ n\in\N $ by induction,
+              so the sequence is bounded above.
+        \item Since $ \sequence{a_n} $ is bounded above and non-decreasing,
+              we know $ \sequence{a_n} $ converges by MCT\@.
+        \item Now, we know a limit exists, say $ L=\lim\limits_{{n} \to {\infty}}a_n $.
+              Then,
+              \[ L=\lim\limits_{{n} \to {\infty}}a_n=\lim\limits_{{n} \to {\infty}}a_{n+1}
+                  =\lim\limits_{{n} \to {\infty}}\frac{3+a_n}{2}=\frac{3+L}{2}. \]
+              So,
+              \[ L=\frac{3+L}{2}\iff 2L+3L\iff L=3. \]
+              Therefore, $ \lim\limits_{{n} \to {\infty}}a_n=3 $.
+    \end{enumerate}
+\end{Example}
+\begin{Example}{}{}
+    Let $ a_1=2 $, $ a_{n+1}=7+a_n $ for $ n\ge 1 $. Prove
+    the sequence converges and find its limit.
+    \tcblower{}
+    \textbf{Solution}. Let's check a few terms: $ a_1=2 $, $ a_2=3 $, $ a_3=\sqrt{10} $,
+    so it looks like the sequence is non-decreasing. Let's prove
+    bounded above and non-decreasing in one step!
+    \begin{enumerate}[(1)]
+        \item Claim: $ a_n\le a_{n+1}\le 9 $ for all $ n\in \N $.
+              \begin{itemize}
+                  \item Base Case: $ a_1=2\le 3=a_2 $ and $ a_2=3\le 9 $,
+                        so $ a_1\le a_2\le 9 $.
+                  \item Inductive Hypothesis: Assume
+                        $ a_k\le a_{k+1}\le 9 $ for some $ k\in \N $.
+                  \item Inductive Step: Then,
+                        \begin{align*}
+                             & a_k\le a_{k+1}\le 9                          \\
+                             & \implies 7+a_k\le \sqrt{7+a_{k+1}}\le 4\le 9 \\
+                             & \implies a_{k+1}\le a_{k+2}\le 9.
+                        \end{align*}
+              \end{itemize}
+              So, by induction $ a_n\le a_{n+1}\le 9 $ for all $ n\in \N $.
+        \item The sequence converges by the MCT\@.
+        \item Finally, we need to find the limit. Say $ L=\lim\limits_{{n} \to {\infty}}a_n $.
+              Then,
+              \[ L=\lim\limits_{{n} \to {\infty}}a_{n+1}=\lim\limits_{{n} \to {\infty}}\sqrt{7+a_n}=\sqrt{7+L}; \]
+              see A2Q6 for the last equality. So,
+              \[ L=\sqrt{7+L}\implies L^2=7+L\implies L^2-L-7=0\implies L=\frac{1\pm \sqrt{29}}{2}. \]
+              However, we know $ L=\lub(\sequence{a_n}) $ and $ a_1=2 $. So, $ L\ne \frac{1-\sqrt{29}}{2} $
+              since $ \frac{1-\sqrt{29}}{2}<2 $, that is, it isn't even an upper bound. Hence,
+              \[ L=\frac{1+\sqrt{29}}{2}. \]
+    \end{enumerate}
+\end{Example}

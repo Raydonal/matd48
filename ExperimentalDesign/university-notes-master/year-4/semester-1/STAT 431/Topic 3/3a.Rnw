@@ -1,0 +1,169 @@
+\section*{Topic 3a: Introduction to Poisson GLMs}
+\addcontentsline{toc}{section}{Topic 3a: Introduction to Poisson GLMs}
+\begin{enumerate}[1.]
+      \item \textcolor{Blue}{Setting up a Poisson GLM for Counts}.
+            \begin{itemize}
+                  \item Review of the Poisson distribution as a member of the exponential family.
+                  \item Specification of a Poisson GLM (i.e., Log Linear Regression Model).
+                  \item Derivation of Poisson deviance and deviance residuals.
+            \end{itemize}
+      \item \textcolor{Blue}{Regression for Poisson Processes}.
+            \begin{itemize}
+                  \item Definition of a Poisson Process.
+                  \item Log Linear Regression Model for a Time Homogeneous Poisson Process.
+                  \item Introduction of the offset term.
+            \end{itemize}
+\end{enumerate}
+\subsection*{The Poisson Distribution}
+\addcontentsline{toc}{subsection}{Setting up a Poisson GLM}
+\begin{itemize}
+      \item Recall for $ Y \sim \POI{\mu} $:
+            \[ f(y)=\frac{\mu^y e^{-\mu}}{y!}=\exp[\big]{y\log{\mu}-\mu-\log{y!}}\qquad y=0,1,2,\ldots  \]
+      \item The Poisson is a member of the exponential family with:
+            \[ \theta=\log{\mu},\qquad \phi=1,\qquad b(\theta)=e^{\theta}=\mu \]
+            \[ a(\phi)=1,\qquad c(y;\phi)=-\log{y!} \]
+      \item With mean and variance:
+            \begin{align*}
+                  \E{Y}   & =b^\prime(\theta)=e^{\theta}=\mu        \\
+                  \Var{Y} & =b^{\prime\prime}a(\phi)=e^{\theta}=\mu
+            \end{align*}
+      \item And \textcolor{Blue}{Canonical link}:
+            \[ \theta=\eta=g(\mu)\implies g(\mu)=\log{\mu} \]
+\end{itemize}
+\subsection*{Poisson Likelihood}
+\begin{itemize}
+      \item Now suppose we have a random sample of size $ n $:
+            \[ Y_i \sim \POI{\mu_i},\qquad i=1,2,\ldots,n \]
+      \item \textcolor{Blue}{Response vector}: $ \Vector{y}=(y_1,y_2,\ldots,y_n)^\top $.
+      \item \textcolor{Blue}{Mean vector}: $ \Vector{\mu}=(\mu_1,\mu_2,\ldots,\mu_n)^\top $.
+      \item The likelihood and log-likelihood are:
+            \[ L(\Vector{\mu})=\prod_{i=1}^n \frac{\mu_i^{y_i}e^{-\mu_i}}{y_i!}  \]
+            \[ \ell(\Vector{\mu},\Vector{y})=\sum_{i=1}^{n} \bigl(y_i\log{\mu_i}-\mu_i-\log{y_i!}\bigr) \]
+\end{itemize}
+\subsection*{Log Linear Regression}
+\begin{itemize}
+      \item \textcolor{Blue}{Explanatory variables}: $ \Vector{x}_i=(1,x_{i1},\ldots,x_{ip-1})^\top $, $ i=1,\ldots,n $.
+      \item \textcolor{Blue}{Regression parameters}: $ \Vector{\beta}=(\beta_0,\beta_1,\ldots,\beta_{p-1})^\top $.
+      \item Using the \textcolor{Blue}{Canonical link} (i.e., log link):
+            \[ \log{\mu_i}=\Vector{x}_i^\top \Vector{\beta}=\sum_{j=0}^{p-1} x_{ij}\beta_j \]
+      \item The use of the log link gives the term \textcolor{Red}{log linear regression}.
+      \item We can obtain the log-likelihood in terms of $ \Vector{\beta} $ by substitution:
+            \begin{align*}
+                  \ell(\Vector{\beta};\Vector{y})
+                   & =\sum_{i=1}^{n} \bigl(y_i\log{\mu}_i-\mu_i-\log{y_i!}\bigr)                                                        \\
+                   & =\sum_{i=1}^{n} \bigl(y_i \Vector{x}_i^\top \Vector{\beta}-\exp{\Vector{x_i}^\top \Vector{\beta}}-\log{y_i!}\bigr)
+            \end{align*}
+\end{itemize}
+\subsection*{Estimation of $ \Vector{\beta} $ from log linear regression}
+\begin{itemize}
+      \item The $ j^{\text{th}} $ contribution to the Score vector is:
+            \[ \pdv{\ell}{\beta_j}=\sum_{i=1}^{n}\bigl(y_i x_{ij}-x_{ij}\exp{\Vector{x}_i^\top \Vector{\beta}}\bigr) \]
+      \item The $ (j,k) $ element of the Information Matrix is:
+            \[ -\pdv{\ell}{\beta_j,\beta_k}=\sum_{i=1}^{n} \bigl(x_{ij}x_{ik}\exp{\Vector{x}_i^\top \Vector{\beta}}\bigr) \]
+      \item These can also be found using general exponential family results.
+      \item Use the above to estimate $ \hat{\Vector{\beta}} $ via Fisher Scoring.
+      \item Use \texttt{glm()} function in R with \texttt{family=poisson(link=log)}.
+\end{itemize}
+\subsection*{Inference for $ \Vector{\beta} $ from log linear regression: Wald Tests}
+\begin{center}
+      $ \HN $: $ \beta_k=\beta_{k0} $ versus $ \HA $: $ \beta_k\ne \beta_{k0} $
+\end{center}
+\begin{itemize}
+      \item The general \textcolor{Blue}{Wald Result} for scalar $ \beta_k $ is:
+            \[ (\hat{\beta}_k-\beta_{k0})^2\bigl(I^{kk}(\hat{\Vector{\beta}})\bigr)^{-1} \sim \chi^2_{(1)} \]
+            equivalently $ \dfrac{\hat{\beta}_k-\beta_{k0}}{\se{\hat{\beta}_k}}\sim \N{0,1} $ where $ \se{\hat{\beta}_k}=\sqrt{I^{kk}(\hat{\Vector{\beta}})} $.
+      \item And we can find the $ p $-value of the test using:
+            \[ p=2\Prob*{U>\frac{\abs{\hat{\beta}_k}-\beta_{k0}}{\se{\hat{\beta}_k}}}\qquad\text{where $U \sim \N{0,1}$} \]
+      \item The \texttt{summary()} output gives the test statistics and $p$-values for testing $ \HN $: $ \beta_k=0 $ vs $ \HA $: $ \beta_k\ne 0 $.
+\end{itemize}
+\subsection*{Poisson Deviance/Likelihood Ratio Tests}
+\begin{itemize}
+      \item Let $ \tilde{\mu}_i $ be the MLE under the \textcolor{Blue}{saturated model} (i.e., $ \tilde{\mu}_i=y_i $).
+      \item Let $ \hat{\mu}_i $ be the MLE under a $ p $-dimensional \textcolor{Blue}{constrained model}.
+      \item Recall the Likelihood Ratio or Deviance Statistic has the form:
+            \[ D=-2\log*{\frac{\mathcal{L}(\hat{\mu})}{\mathcal{L}(\tilde{\mu})}}=2\bigl(\ell(\tilde{\mu})-\ell(\hat{\mu})\bigr)\sim \chi^2_{(n-p)} \]
+            asymptotically under the assumption that the constrained model is appropriate.
+      \item For the Poisson we have:
+            \begin{align*}
+                  D
+                   & =2\bigl(\ell(\tilde{\mu})-\ell(\hat{\mu})\bigr)                                                                                                                   \\
+                   & =2\biggl(\sum_{i=1}^{n} \bigl(y_i\log{\tilde{\mu}_i}-\tilde{\mu}_i-\log{y_i!}\bigr)-\sum_{i=1}^{n} \bigl(y_i\log{\hat{\mu}_i}-\hat{\mu}_i-\log{y_i!}\bigr)\biggr) \\
+                   & =2 \sum_{i=1}^{n}\biggl(y_i\log*{\frac{y_i}{\hat{\mu}_i}}-(y_i-\hat{\mu}_i)\biggr)
+            \end{align*}
+      \item Note that the Deviance Statistic has the same form as in the Binomial case:
+            \[ D=2\sum O_i\log*{\frac{O_i}{E_i}} \]
+            provided an intercept is included in the model so that $ \sum (y_i-\hat{\mu}_i)=0 $.
+\end{itemize}
+\subsection*{Poisson Deviance/Likelihood Ratio Tests}
+\begin{itemize}
+      \item Use the Deviance to test nested models:
+            \begin{itemize}
+                  \item $ \HN $: the null model with $ p $ parameters is adequate versus
+                        \[ \log{\mu_i}=\beta_0+\beta_1x_{1i}+\cdots+\beta_{p-1}x_{1p-1} \]
+                  \item $ \HA $: the alternative model with $ q $ parameters ($ p<q $)
+                        \[ \log{\mu_i}=\beta_0+\beta_1x_{1i}+\cdots+\beta_{p-1}x_{1p-1}+\cdots+\beta_{q-1}x_{1q-1} \]
+                  \item With test statistic:
+                        \[ \Delta D=D_0-D_\text{A} \sim \chi^2_{(q-p)}\qquad\text{under $ \HN $} \]
+                  \item The $p$-value for the test is given by:
+                        \[ p\text{-value}=\Prob*{\chi^2_{(q-p)}>\Delta D} \]
+            \end{itemize}
+\end{itemize}
+\subsection*{Deviance Residuals}
+\begin{itemize}
+      \item We can write the Deviance as a sum:
+            \[ D=2 \sum_{i=1}^{n}\biggl(y_i\log*{\frac{y_i}{\hat{\mu}_i}}-(y_i-\hat{\mu}_i)\biggr)=\sum_{i=1}^{n} d_i \]
+      \item The \textcolor{Blue}{Deviance Residuals} are given by:
+            \[ r_i^D=\sign{y_i-\hat{\mu}_i}\sqrt{\abs{d_i}} \]
+            and are approximately $ \N{0,1} $ if $ \HN $ holds.
+\end{itemize}
+\subsection*{Regression for Poisson Processes}
+\addcontentsline{toc}{subsection}{Regression for Poisson Processes}
+\begin{Regular}{Counting Process $ N(t) $}
+      A counting process $ N(t) $ is any non-decreasing integer function of time such that
+      $ N(0)=0 $ and $ N(t) $ is the number of events occurring in $ (0,t] $.
+\end{Regular}
+\begin{itemize}
+      \item \textcolor{Green}{Example}: Suppose events occurred at times $ (2,4,5,7) $:
+            <<echo=FALSE, fig.width=3, fig.height=2.5>>=
+            y <- c(0,1,2,3,4)
+            x <- c(0,2,4,5,7)
+            ggplot() + geom_point(aes(x,y)) + geom_step(aes(x,y))
+            @
+\end{itemize}
+\begin{Regular}{Poisson Process $ N(t) $}
+      A counting process $ N(t) $ is a Poisson process if it satisfies:
+      \begin{enumerate}[1.]
+            \item \textcolor{Blue}{Independent increments}: For $ s_1<t_1<s_2<t_2 $:
+                  \[ N(t_1)-N(s_1)=\text{\# events in $(s_1,t_1]$} \]
+                  is independent of
+                  \[ N(t_2)-N(s_2)=\text{\# events in $(s_2,t_2]$} \]
+            \item The distribution of $ N(t) $ the number of events occurring over $ (0,t] $ is given by:
+                  \[ \Prob[\big]{N(t)=n;\lambda}=\frac{(\lambda t)^n e^{-\lambda t}}{n!},\qquad (n=0,1,2,\ldots)  \]
+      \end{enumerate}
+\end{Regular}
+\subsection*{Regression for Poisson Processes $ N(t) $}
+\begin{itemize}
+      \item $ N(t) $ is a special kind of Poisson random variable with:
+            \[ \E[\big]{N(t)}=\mu(t)=\lambda t \]
+      \item Use the log link to do regression:
+            \[ \log[\big]{\mu(t)}=\log{\lambda t}=\log{\lambda}+\log{t} \]
+      \item $ \lambda= $ \textcolor{Blue}{Rate parameter}.
+      \item $ t= $ \textcolor{Blue}{Length of observation} (data).
+      \item Since $ \lambda $ is constant (not a function of $t$) we call this a \textcolor{Red}{time homogeneous poisson process}.
+\end{itemize}
+For each subject $ i=1,\ldots, n $ we observe:
+\begin{itemize}
+      \item $ N_i(t_i)= $ the number of events observed over $ (0,t_i] $.
+      \item Explanatory variables: $ \Vector{x}_i=(1,x_{i1},\ldots,x_{ip-1})^\top $.
+\end{itemize}
+\begin{Regular}{Log Linear Regression Model for a Time Homogeneous Poisson Process}
+      \begin{align*}
+            \log[\big]{\mu_i(t_i)}
+             & =\log{\lambda_i}+\log{t_i}                  \\
+             & =\Vector{x}_i^\top \Vector{\beta}+\log{t_i}
+      \end{align*}
+\end{Regular}
+\begin{itemize}
+      \item The term $ \log{t_i} $ is called an \textcolor{Red}{offset term}.
+      \item It \emph{explains} some variation in the event counts $ N_i $ across subjects due to differing lengths of observation $ t_i $.
+\end{itemize}

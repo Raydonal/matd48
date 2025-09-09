@@ -1,0 +1,128 @@
+\documentclass[oneside]{book}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage[svgnames]{xcolor}
+\usepackage[a-3u,pdf17]{pdfx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=NavyBlue}
+\usepackage[shortlabels]{enumitem}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{nicematrix}
+\usepackage{derivative}
+\usepackage{etoolbox}
+\usepackage{amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+
+% just to make sure it exists
+\providecommand\given{}%
+% can be useful to refer to this outside \Set
+\newcommand\SetSymbol[1][]{%
+    \nonscript\:#1\vert{}%
+    \allowbreak%
+    \nonscript\:%
+    \mathopen{}}%
+\DeclarePairedDelimiterXPP{\E}[1]{\operatorname{\mathbb{E}}}[]{}{%
+    \renewcommand\given{\SetSymbol[\delimsize]}%
+    \ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\Var}[1]{\operatorname{Var}}(){}{%
+    \renewcommand\given{\SetSymbol[\delimsize]}%
+    \ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\Cov}[1]{\operatorname{Cov}}(){}{%
+    \renewcommand\given{\SetSymbol[\delimsize]}%
+    \ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP\Prob[1]{\operatorname{\mathbb{P}}}(){}{%
+    \renewcommand\given{\SetSymbol[\delimsize]}%
+    \ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP\Ind[1]{\operatorname{\mathbb{I}}}\{\}{}{%
+    \renewcommand\given{\SetSymbol[\delimsize]}%
+    \ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\GCD}[1]{\operatorname{gcd}}\{\}{}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\LN}[1]{\operatorname{ln}}(){}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\MIN}[1]{\operatorname{min}}\{\}{}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\MAX}[1]{\operatorname{max}}\{\}{}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\diag}[1]{\operatorname{diag}}(){}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\sign}[1]{\operatorname{sign}}(){}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\expit}[1]{\operatorname{expit}}(){}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\logit}[1]{\operatorname{logit}}(){}{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterXPP{\order}[1]{\operatorname{o}}(){}{\ifblank{#1}{\:\cdot\:}{#1}}
+
+% Discrete Distributions
+\DeclarePairedDelimiterXPP{\BERN}[1]{\text{BERN}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\BIN}[1]{\text{BIN}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\NBt}[1]{\text{NB}_t}(){}{#1}%
+\DeclarePairedDelimiterXPP{\NBf}[1]{\text{NB}_f}(){}{#1}%
+\DeclarePairedDelimiterXPP{\GEOt}[1]{\text{GEO}_t}(){}{#1}%
+\DeclarePairedDelimiterXPP{\GEOf}[1]{\text{GEO}_f}(){}{#1}%
+\DeclarePairedDelimiterXPP{\DU}[1]{\text{DU}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\HG}[1]{\text{HG}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\POI}[1]{\text{POI}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\MN}[1]{\text{MN}}(){}{#1}%
+
+% Continuous Distributions
+\DeclarePairedDelimiterXPP{\Uniform}[1]{\text{U}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\BetaDist}[1]{\text{Beta}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\Erlang}[1]{\text{Erlang}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\EXP}[1]{\text{EXP}}(){}{#1}%
+
+\DeclarePairedDelimiterX\abs[1]\lvert\rvert{\ifblank{#1}{\:\cdot\:}{#1}}
+\DeclarePairedDelimiterX\Set[1]\{\}{%
+    \renewcommand\given{:}%
+    #1%
+}
+
+\providecommand{\Vector}[1]{\underline{#1}}
+\providecommand{\Matrix}[1]{\boldsymbol{#1}}
+
+\usepackage{stackengine}
+\usepackage[british]{isodate}
+\usepackage[british]{babel}
+\newcommand{\makeheading}[2]%
+{%
+\begin{center}%
+    \makebox[\linewidth]{\raisebox{-.5ex}[0cm][0cm]{\stackanchor{\textcolor{Gray}{\textsc{#1}}}{\emph{\scriptsize\printyearoff#2}}\;}\color{Crimson!50}\hrulefill}%
+\end{center}%
+}%
+
+\usepackage[breakable]{tcolorbox}
+\tcbset{
+    regular/.style={
+        boxrule=0mm,
+        breakable,
+        sharp corners
+    }
+}
+
+\newtcolorbox{Example}{regular,colframe=Green!20!white,colback=Green!10!white}%
+\newtcolorbox{Regular}{regular,colframe=Navy!15!white,colback=Navy!5!white}%
+\newtcolorbox{Result}{regular,colframe=Red!15!white,colback=Red!5!white}%
+
+\title{%
+\LARGE Stochastic Processes 1\\%
+\large STAT 333\\%
+\normalsize Fall 2021 (1219)\thanks{Online Course}}%
+\author{Cameron Roopnarine\thanks{\LaTeX{}er}\and Steve Drekic\thanks{Main Instructor}\and Mirabelle Huynh\thanks{Assisting Instructor}}%
+\date{Last updated: \today}
+
+\usepackage{tikz}
+\usetikzlibrary{petri,calc}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\input{wk_01.tex}
+\input{wk_02.tex}
+\input{wk_03.tex}
+\input{wk_04.tex}
+\input{wk_05.tex}
+\input{wk_06.tex}
+\input{wk_07.tex}
+\input{wk_08.tex}
+\input{wk_09.tex}
+\input{wk_10.tex}
+\input{wk_11.tex}
+\input{wk_12.tex}
+\input{appendix.tex}
+\end{document}

@@ -1,0 +1,268 @@
+{
+  "Begin": {
+    "prefix": [
+      "beg"
+    ],
+    "body": [
+      "\\begin{$1}",
+      "\t$0",
+      "\\end{$1}"
+    ]
+  },
+  "Fraction": {
+    "prefix": [
+      "fr"
+    ],
+    "body": [
+      "\\frac{$1}{$2}$0"
+    ]
+  },
+  "qquad": {
+    "prefix": [
+      "qq"
+    ],
+    "body": [
+      "\\qquad "
+    ]
+  },
+  "Display Math": {
+    "prefix": [
+      "dm"
+    ],
+    "body": [
+      "\\[ $0 \\]\n"
+    ]
+  },
+  "Inline Math": {
+    "prefix": [
+      "im"
+    ],
+    "body": [
+      "$ $0 $"
+    ]
+  },
+  "Definition": {
+    "prefix": [
+      "def"
+    ],
+    "body": [
+      "\\begin{Definition}{$1}{$2}",
+      "\t$0",
+      "\\end{Definition}",
+    ]
+  },
+  "Example": {
+    "prefix": [
+      "ex"
+    ],
+    "body": [
+      "\\begin{Example}{$1}{$2}",
+      "\t$0",
+      "\\end{Example}",
+    ]
+  },
+  "Theorem": {
+    "prefix": [
+      "thm"
+    ],
+    "body": [
+      "\\begin{Theorem}{$1}{$2}",
+      "\t$0",
+      "\\end{Theorem}",
+    ]
+  },
+  "Exercise": {
+    "prefix": [
+      "exer"
+    ],
+    "body": [
+      "\\begin{Exercise}{$1}{$2}",
+      "\t$0",
+      "\\end{Exercise}",
+    ]
+  },
+  "Corollary": {
+    "prefix": [
+      "cor"
+    ],
+    "body": [
+      "\\begin{Corollary}{$1}{$2}",
+      "\t$0",
+      "\\end{Corollary}",
+    ]
+  },
+  "Remark": {
+    "prefix": [
+      "rem"
+    ],
+    "body": [
+      "\\begin{Remark}{$1}{$2}",
+      "\t$0",
+      "\\end{Remark}",
+    ]
+  },
+  "Bold Text": {
+    "prefix": [
+      "tbf"
+    ],
+    "body": [
+      "\\textbf{$1}$0"
+    ]
+  },
+  "Underlined Text": {
+    "prefix": [
+      "ul"
+    ],
+    "body": [
+      "\\underline{$1}$0"
+    ]
+  },
+  "Emphasized Text": {
+    "prefix": [
+      "em"
+    ],
+    "body": [
+      "\\emph{$1}$0"
+    ]
+  },
+  "Sum": {
+    "prefix": [
+      "sum"
+    ],
+    "body": [
+      "\\sum_{$1}^{$2}$0"
+    ]
+  },
+  "Sequence limit": {
+    "prefix": [
+      "sl"
+    ],
+    "body": [
+      "\\lim\\limits_{{n} \\to {\\infty}}$0"
+    ]
+  },
+  "Function limit": {
+    "prefix": [
+      "fl"
+    ],
+    "body": [
+      "\\lim\\limits_{{h} \\to {0}}$0"
+    ]
+  },
+  "Limit": {
+    "prefix": [
+      "lim"
+    ],
+    "body": [
+      "\\lim\\limits_{{$1} \\to {$2}}$0"
+    ]
+  },
+  "Integral": {
+    "prefix": [
+      "dintlim"
+    ],
+    "body": [
+      "\\int_{$1}^{$2}$3\\odif{$4}$0"
+    ]
+  },
+  "Integral no limit": {
+    "prefix": [
+      "dint"
+    ],
+    "body": [
+      "\\int $3\\odif{$4}$0"
+    ]
+  },
+  "Vector": {
+    "prefix": [
+      "vec"
+    ],
+    "body": [
+      "\\Vector{$1}$0"
+    ]
+  },
+  "Matrix": {
+    "prefix": [
+      "mat"
+    ],
+    "body": [
+      "\\Matrix{$1}$0"
+    ]
+  },
+  "Estimate Vector": {
+    "prefix": [
+      "evec"
+    ],
+    "body": [
+      "\\hat{\\Vector{$1}}$0"
+    ]
+  },
+  "Distributed": {
+    "prefix": [
+      "follows"
+    ],
+    "body": [
+      "\\sim $0"
+    ]
+  },
+  "Display Style": {
+    "prefix": [
+      "ds"
+    ],
+    "body": [
+      "\\displaystyle $0"
+    ]
+  },
+  "Text color (Blue)": {
+    "prefix": [
+      "tcb"
+    ],
+    "body": [
+      "\\textcolor{Blue}{$1}$0"
+    ]
+  },
+  "Text color (Red)": {
+    "prefix": [
+      "tcr"
+    ],
+    "body": [
+      "\\textcolor{Red}{$1}$0"
+    ]
+  },
+  "Text color (Green)": {
+    "prefix": [
+      "tcg"
+    ],
+    "body": [
+      "\\textcolor{Green}{$1}$0"
+    ]
+  },
+  "Text color (Pink)": {
+    "prefix": [
+      "tcp"
+    ],
+    "body": [
+      "\\textcolor{HotPink}{$1}$0"
+    ]
+  },
+  "Code": {
+    "prefix": [
+      "co"
+    ],
+    "body": [
+      "\\texttt{$1}$0"
+    ]
+  },
+  "R Code": {
+    "prefix": [
+      "rco"
+    ],
+    "body": [
+      "%\\begin{noindent}",
+      "\t<<$1>>=",
+      "\t$0",
+      "\t@",
+      "%\\end{noindent}"
+    ]
+  },
+}

@@ -1,0 +1,177 @@
+\makeheading{ 2020-01-08 }
+\section{Fundamental Concepts}
+
+\begin{figure}[h]
+    \centering
+    Source
+    $ \rightarrow $
+    $ \underbrace{
+            \underset{\text{(binary strings)}}{\text{Source Encoder}}
+            \rightarrow
+            \underset{\text{(adds redundancy to message)}}{\text{Channel Encoder}}
+            \underset{\overset{\Big\uparrow}{\text{noise}}}{\xrightarrow{\text{Channel}}}
+            \text{Channel Decoder}}_{\text{CO 331}}$
+    $ \rightarrow \text{Source Decoder} \rightarrow \text{Data} $
+\end{figure}
+
+\begin{Definition}{Alphabet}{alphabet}
+    An \textbf{alphabet} $ A $ is a finite set of $ \abs{A}= q\geqslant 2 $ symbols.
+\end{Definition}
+
+\begin{Definition}{Word}{word}
+    A \textbf{word} is a finite sequence (\textbf{tuples} or \textbf{vectors})
+    of symbols from an alphabet $ A $.
+\end{Definition}
+
+\begin{Definition}{Length}{length}
+    The \textbf{length} of a word is the number of symbols in it.
+\end{Definition}
+
+\begin{Definition}{Code}{code}
+    A \textbf{code} $ C $ over $ A $ is a finite set of words in $ A $
+    with $ \abs{C}\geqslant 2 $.
+\end{Definition}
+
+\begin{Definition}{Codeword}{codeword}
+    A \textbf{codeword} $ \symbf{c} $ is a word in a code $ C $.
+\end{Definition}
+
+\begin{Definition}{Block code}{block_code}
+    A \textbf{block code} is a code where all codewords have the same length.
+    A block code $ C $ of length $ n $ containing $ M $ codewords over $ A $
+    is a subset $ C\subseteq A^n $, with $ \abs{C}=M $. We refer to such a block
+    code as an $ [n,M] $-code over $ A $.
+\end{Definition}
+
+\begin{Example}{Block Code}{}
+    Let $ A=\set{0,1} $ and $ C=\set{00000,\,11100,\,00111,\,10101} $.
+    $ C $ is a $ [5,4] $-code over $ \set{0,1} $.
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{@{}ccc@{}}
+            Message & $ \rightarrow $ & Codeword \\
+            \midrule
+            00      & $ \rightarrow $ & 00000    \\
+            10      & $ \rightarrow $ & 11100    \\
+            01      & $ \rightarrow $ & 00111    \\
+            11      & $ \rightarrow $ & 10101    \\
+        \end{tabular}
+    \end{table}
+    The encoding is a one-to-one map.
+\end{Example}
+
+The channel encoder transmits only codewords, but what's received by the channel
+decoder might not be a codeword. For example, suppose the channel decoder
+receives $ \symbf{r}=11001 $. What should it do? In our above example, we can see
+that $ \symbf{r} $ is closest to $ 11100 $ and $ 10101 $ (only two bits are different),
+so it's possible that the codeword was one of those two. However,
+this may not be the case in practice.
+
+\begin{Definition}{Assumptions about the Communications Channel}{}
+    \begin{enumerate}[label=(\Roman*)]
+        \item The channel only transmits symbols from $ A $.
+        \item No symbols are deleted, added, or transposed.
+        \item Errors are random.
+    \end{enumerate}
+\end{Definition}
+
+\begin{Example}{Binary Symmetric Channel (BSC)}{}
+    Let $ A=\set{0,1} $, and $ p $ denote the symbol error probability.
+    The encoding map is:
+    \begin{center}
+        \input{figures/bsc.pdf_tex}
+    \end{center}
+    A similar encoding map can be drawn for $ A=\set{0,1,2} $,
+    with symbol error probability $ \sfrac{p}{2} $.
+
+    Suppose that the symbols transmitted are $ X_1,X_2,\ldots $,
+    and the symbols received are $ Y_1,Y_2,\ldots $. Then for all
+    $ i\geqslant 1 $, $ j\geqslant 1 $, $ k\leqslant q $, the probability
+    that $ Y_i $ is received, given that $ X_i $ is transmitted is:
+    \[ \Prob{Y_i=a_j\given X_i=a_k}=
+        \begin{dcases*}
+            1-p,           & \text{if } $ j=k $      \\
+            \frac{p}{q-1}, & \text{if } $ j\neq{}k $
+        \end{dcases*} \]
+\end{Example}
+
+\begin{Definition}{Notes about the Binary Symmetric Channel}{}
+    \begin{enumerate}[label=(\Roman*)]
+        \item If $ p=0 $, the channel is \textbf{perfect}.
+        \item If $ p=\sfrac{1}{2} $, the channel is \textbf{useless}.
+        \item If $ \sfrac{1}{2}<p\leqslant 1 $, then simply flip all bits that are received.
+        \item WLOG, we can assume $ 0<p<\sfrac{1}{2} $.
+        \item Analogously, for a $ q $-ary channel, we can assume that $ 0<p<\frac{q-1}{q} $.
+    \end{enumerate}
+\end{Definition}
+
+\begin{Definition}{Hamming distance}{hamming_distance}
+    If $ \symbf{x},\symbf{y}\in A^n $, the \textbf{Hamming distance} $ d(\symbf{x},\symbf{y}) $ is
+    the number of coordinate positions in which $ \symbf{x} $ and $ \symbf{y} $ differ.
+\end{Definition}
+
+\begin{Example}{Hamming Distance}{}
+    Let $ \symbf{x} = 10111 $ and $ \symbf{y} = 01010 $. The Hamming distance
+    of $ \symbf{x} $ and $ \symbf{y} $ is $  d(\symbf{x},\symbf{y})=4  $
+    since $ \symbf{x} $ and $ \symbf{y} $ differ in the coordinate positions
+    1, 2, 3, and 5.
+\end{Example}
+
+\begin{Definition}{Hamming distance}{hamming_distance_code}
+    Let $ C $ be an $ [n,M] $-code.
+    The \textbf{Hamming distance $ d $ of a code} $ C $ is
+    \[ d(C)=\min \set{d(\symbf{x},\symbf{y}):\symbf{x},\symbf{y}\in C,\;\symbf{x}\neq \symbf{y}} \]
+\end{Definition}
+
+\begin{Theorem}{Metric}{metric}
+    $ d $ is a \textbf{metric}; that is, for all $ \symbf{x},\symbf{y},\symbf{z}\in A^n $:
+    \begin{enumerate}[label=(\arabic*)]
+        \item\label{thm:metric:1} $ d(\symbf{x},\symbf{y})\geqslant 0 $
+        \item\label{thm:metric:2} $ d(\symbf{x},\symbf{y})=0 $ if and only if
+              $ \symbf{x}=\symbf{y} $
+        \item\label{thm:metric:3} $ d(\symbf{x},\symbf{y})=d(\symbf{y},\symbf{x}) $
+        \item\label{thm:metric:4} (Triangle inequality): $ d(\symbf{x},\symbf{z})\leqslant
+                  d(\symbf{x},\symbf{y})+d(\symbf{y},\symbf{z}) $
+    \end{enumerate}
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:metric}}{}
+
+    Proof of~\ref{thm:metric:1} to~\ref{thm:metric:3} are trivially true.
+
+    Proof of~\ref{thm:metric:4} Let $ \symbf{x},\symbf{y},\symbf{z}\in A^n $. Suppose that $ \symbf{x} $
+    and $ \symbf{z} $ differ in exactly $ a $ positions; that is, $ d(\symbf{x},\symbf{z})=a $.
+    Out of the $ a $ positions in which $ \symbf{x} $ and $ \symbf{z} $ differ,
+    there are $ b $ positions in which $ \symbf{y} $ is identical to
+    $ \symbf{x} $, but not $ \symbf{z} $. Out of the $ a $ positions,
+    there are $ a-b $ positions in which $ \symbf{y} $ is identical to
+    $ \symbf{z} $, but not $ \symbf{x} $. Lastly, in the $ n-a $ positions
+    where $ \symbf{x} $ is identical to $ \symbf{z} $, there are $ c $
+    positions in which $ \symbf{y} $ does not match either
+    $ \symbf{x} $ or $ \symbf{z} $. We can see that
+    $ d(\symbf{x},\symbf{y})=b+C $ and $ d(\symbf{y},\symbf{z})=a-b+C $. We get
+    \[ d(\symbf{x},\symbf{y})+d(\symbf{y},\symbf{z})=(b+C) + (a-b+C)=a+2c\geqslant a \]
+    Therefore $ d $ is a metric.
+\end{Proof}
+
+\begin{Definition}{Rate}{rate}
+    The \textbf{rate} (or \textbf{information rate}) of an $ [n,M] $-code $ C $ over
+    $ A $, is
+    \[ R=\frac{\log_q(M)}{n} \]
+    where $ q=\abs{A} $.
+
+    If the source messages are all $ k $-tuples over $ A $, then $ M=q^k $, so we have
+    \[ R=\frac{\log_q(q^k)}{n}=\frac{k}{n}  \]
+\end{Definition}
+
+\begin{Example}{Rate and Distance of a Code}{}
+    Let $ A=\set{0,1} $ and $ C=\set{00000,\,11100,\,00111,\,10101} $ which is a
+    $ [5,4] $-code over $ \set{0,1} $.
+    \begin{itemize}
+        \item The rate of $ C $ is $ R=\sfrac{2}{5} $.
+        \item The distance of $ C $ is $ d(C)=2 $, since the minimum distance
+              are from the pair of codewords $ 00111 $ and $ 10101 $ which
+              have Hamming distance of $ 2 $ as they differ in coordinate
+              positions $ 1 $ and $ 4 $.
+    \end{itemize}
+\end{Example}

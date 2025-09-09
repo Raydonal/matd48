@@ -1,0 +1,99 @@
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a-3u,pdf17]{pdfx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=Blue}
+\usepackage[theorems,breakable]{tcolorbox}
+\usepackage[shortlabels]{enumitem}
+\usepackage{xfrac}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{derivative}
+\usepackage{interval}
+\intervalconfig{soft open fences,separator symbol={,}}
+\usepackage{graphicx}
+\graphicspath{{./figures/}}
+\usepackage{tikz}
+\usetikzlibrary{patterns,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{samples=100} % possibly uncomment this
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+
+\definecolor{myyellow}{RGB}{255,255,168}
+\definecolor{mypurple}{RGB}{216,216,255}
+\definecolor{mygreen}{RGB}{216,255,216}
+\definecolor{myred}{RGB}{255,216,216}
+\definecolor{mycyan}{RGB}{204,229,229}
+
+\tcbset{
+    common/.style={
+            fonttitle=\bfseries,
+            coltitle=black,
+            boxrule=0pt,
+            breakable
+        },
+    theorem/.style={
+            common,
+            colback=mypurple,
+            colframe=mypurple!95!black,
+            fontupper=\itshape{}
+        },
+}
+
+\newtcbtheorem[number within=section, crefname={definition}{definitions}]
+{Definition}{DEFINITION}{
+    common,
+    colback=myyellow,
+    colframe=myyellow!95!black
+}{def}
+
+\newtcbtheorem[use counter from=Definition, crefname={remark}{remarks}]
+{Remark}{REMARK}{
+    common,
+    colback=mycyan,
+    colframe=mycyan!95!black,
+}{remark}
+
+\newtcbtheorem[use counter from=Definition, crefname={theorem}{theorems}]
+{Theorem}{THEOREM}{
+    theorem
+}{thm}
+
+\newtcbtheorem[no counter]
+{Proof}{Proof of}{
+    common,
+    colframe=black!10,
+    separator sign={\!\!}
+}{pf}
+
+\newtcbtheorem[use counter from=Definition, crefname={example}{examples}]
+{Example}{EXAMPLE}{
+    common,
+    colback=mygreen,
+    colframe=mygreen!95!black,
+}{ex}
+
+\newtcbtheorem[use counter from=Definition, crefname={corollary}{corollaries}]
+{Corollary}{COROLLARY}{
+    theorem
+}{cor}
+
+\newtcbtheorem[use counter from=Definition, crefname={exercise}{exercises}]
+{Exercise}{EXERCISE}{
+    common,
+    colback=myred,
+    colframe=myred!95!black,
+}{exercise}
+
+\newtcbtheorem[use counter from=Definition, crefname={proposition}{propositions}]
+{Proposition}{PROPOSITION}{
+    theorem
+}{prop}
+
+\DeclarePairedDelimiterX\set[1]\{\}{#1}
+\DeclarePairedDelimiterX\norm[1]\lVert\rVert{#1}
+\DeclarePairedDelimiterX\abs[1]\lvert\rvert{#1}

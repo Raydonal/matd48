@@ -1,0 +1,121 @@
+\makeheading{Lecture 10}
+\textbf{MLIW 3: Naïve Bayes' Classifier}
+
+In ML classification, we use evidence to decide what category something
+belongs to. That is,
+\[ P(\text{category}\mid\text{evidence})
+    =\frac{P(\text{cat})P(\text{evidence}\mid\text{cat})}
+    {\sum\limits_{\text{cat }i} P(\text{cat }i)P(\text{evidence}\mid\text{cat }i)} \]
+The Naïve Bayes' Classifier  assumes that if there are multiple pieces of evidence,
+they are conditionally independent (conditional on the category).
+
+A very simple ML example of this is spam detection. Consider the machine
+learning problem of classifying incoming messages as spam. We define:
+\begin{itemize}
+    \item $ A_1= $ message fails rDNS (reverse DNS lookup) check (i.e.\ the ``from'' domain doesn't match)
+    \item $ A_2= $ message is sent to over $ 100 $ people
+    \item $ A_3= $ message contains a link with the URL not matching the alt
+\end{itemize}
+
+We will assume that the $ A_i $'s are independent events, given that a message
+is a spam, and that they are also independent events, given that a message is
+$ \overline{\text{spam}} $.
+
+We estimate
+\begin{itemize}
+    \item $ P(\text{Spam})=0.25 $
+    \item $ P(A_1\mid \text{Spam})=0.3$
+    \item $ P(A_2\mid \text{Spam})=0.2$
+    \item $ P(A_3\mid \text{Spam})=0.1$
+    \item $ P(A_1\mid \overline{\text{Spam}})=0.005$
+    \item $ P(A_2\mid \overline{\text{Spam}})=0.04$
+    \item $ P(A_3\mid \overline{\text{Spam}})=0.05$
+\end{itemize}
+We use Bayes' Theorem:
+
+$ P(\text{Spam}\mid A_1A_2A_3)= $
+\begin{align*}
+     & =\frac{P(A_1A_2A_3\mid\text{Spam})P(\text{Spam})}
+    {P(A_1A_2A_3\mid\text{Spam})P(\text{Spam})+
+    P(A_1A_2A_3\mid\overline{\text{Spam}})P(\overline{\text{Spam}})}                                                             \\
+     & =\frac{P(A_1\mid\text{Spam}) P(A_2\mid\text{Spam}) P(A_3\mid\text{Spam}) P(\text{Spam})}
+    {P(A_1\mid\text{Spam}) P(A_2\mid\text{Spam}) P(A_3\mid\text{Spam})P(\text{Spam})+
+    P(A_1\mid\overline{\text{Spam}}) P(A_2\mid\overline{\text{Spam}}) P(A_3\mid\overline{\text{Spam}})P(\overline{\text{Spam}})} \\
+     & =\frac{(0.3)(0.2)(0.1)(0.25)}{(0.3)(0.2)(0.1)(0.25)+(0.005)(0.04)(0.05)(0.75)}                                            \\
+     & \approx 0.9950
+\end{align*}
+Remember that $ A_1 $, $ A_2 $, and $ A_3 $ are NOT independent!
+They are only conditionally independent, given the type of email.
+
+\chapter{Random Variables}
+
+\section{Random Variables and Probability Functions}
+\begin{defbox}
+    \subsection{Definition (Random Variable)}
+    A \emph{random variable} is a function that assigns a real number to each point in
+    a sample space $S$.
+\end{defbox}
+We typically use $ X,\,Y,\,Z $ as random variables and $ x,\,y,\,z $ as the
+possible values the random variable can take on. There are two types
+of random variables based on the range.
+\begin{defbox}
+    \subsection{Definition (Discrete Random Variables)}
+    \emph{Discrete random variables} take integer values or, more generally, values in a
+    countable set.
+\end{defbox}
+\begin{defbox}
+    \subsection{Definition (Continuous Random Variables)}
+    \emph{Continuous random variables} take values in some interval of real numbers
+    like $(0,1)$ or $(1,\infty)$ or $ (-\infty,\infty) $.
+\end{defbox}
+We can define multiple random variables on the same sample space $ S $. For example,
+roll a fair $ 6 $-sided die $ 3 $ times.
+\[ S=\{(x,y,z)|1\le x, y, z\le 6\} \]
+
+\begin{itemize}
+    \item Let $ X= $ sum on the three die. $range(X) =\{3,\ldots ,18\} $.
+    \item Let $ Y= $ product on the three die. $range(Y) =\{1,\ldots ,216\} $.
+    \item Let $ Z= $ number on the first die. $range(Z) =\{1,\ldots ,6\} $
+    \item Let $ \bar{X}= $ average. $range(\bar{X}) =\{1,\sfrac{4}{3},\ldots ,6\} $
+    \item Let $ W= $ \# of dice that are $ 1 $. $range(W)= \{0,1,2,3\} $
+\end{itemize}
+
+Examples of continuous random variables include:
+\begin{itemize}
+    \item $ T= $ time until an event
+    \item $ P= $ positive in space of a particle
+    \item $ H= $ height of a random person.
+\end{itemize}
+
+For Chapter 5, we will focus on discrete random variables.
+\begin{defbox}
+    \subsection{Definition (Probability Function, Probability Distribution)}
+    Let $X$ be a discrete random variable with $range(X)$ = $A$.
+    The \emph{probability function} of $X$ is the function
+    \[ f(x)=P(X=x) \]
+    for all $ x\in A $.
+
+    The set of pairs $ \{(x,f(x)):x\in A\} $ is called the \emph{probability
+        distribution} of $ X $.
+\end{defbox}
+
+\begin{thmbox}
+    \subsection{Theorem (Properties of Probability Functions)}
+    All probability functions must have the two properties:
+
+    1. $0\le f(x)\le 1 $ for all $ x\in A $
+
+    2. $ \sum\limits_{\text{all }x\in A} f(x)=1 $
+\end{thmbox}
+
+\textbf{Example}
+
+Let $ X= $ \# of dice that are $ 1 $.
+
+\begin{tabular}{| *{5}{>{\centering\arraybackslash}p{1.5cm} |}}
+    \hline
+    $x$    & $0$                & $1$                        & $2$                      & $3$                \\
+    \hline
+    $f(x)$ & $\sfrac{5^3}{6^3}$ & $\sfrac{3\times 5^2}{6^2}$ & $\sfrac{3\times 5}{6^3}$ & $\sfrac{1^3}{6^3}$ \\
+    \hline
+\end{tabular}

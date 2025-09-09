@@ -1,0 +1,210 @@
+\makeheading{Lecture 13 | 2020-10-26}
+\section{Model Selection Criteria}
+Given $ p $ explanatory variables, find the subset
+$ k\leqslant p $ of explanatory variables
+(``reduced model'') that gives us
+the ``best'' model:
+\begin{itemize}
+    \item Goodness of fit.
+    \item Interpretability.
+    \item Predictive performance.
+\end{itemize}
+Some related concepts:
+\begin{enumerate}
+    \item $ F $ tests compare between $ 2 $
+          specific models where test adequacy of
+          a ``reduced'' model (subset, ``nested'')
+          relative to full model.
+
+          \underline{Quiz 4}: $ \beta_1=\beta_2 $
+          in part d-f
+    \item Multicollinearity: can affect interpretability
+          of $ \hat{\beta}_j $ usual interpretation
+          ``holding other variables constant''
+          doesn't really work when $ x_j $ is
+          strongly correlated with other predictors.
+    \item $ R^2 $ is the proportion
+          of variability in the response explained by
+          the regression model. It always increases
+          when adding variables.
+    \item $ \hat{\sigma}^2 $ is estimated residual variable,
+          used for prediction, want $ \hat{\sigma}^2 $ small
+          to give good predictive performance
+\end{enumerate}
+Two key ingredients:
+\begin{itemize}
+    \item Metric (or criterion) for comparing
+          different models with potentially different number
+          of predictors
+    \item Selection/search strategy (which models
+          should we fit and test?)
+\end{itemize}
+Examples of metrics for model selection:
+
+\begin{Definition}{Adjusted $ R^2 $}{}
+    \[ R^2_{\text{adj}}=1-\frac{\SS{Res}/(n-k-1)}{
+            \SS{Total}/(n-1)
+        }=1-\frac{\hat{\sigma}^2}{s^2}  \]
+    for model with $ k $ predictors.
+\end{Definition}
+Compared to
+\[ R^2=1-\frac{\SS{Res}}{\SS{Total}}=1-\frac{\hat{\sigma}^2(n-k-1)}{s^2(n-1)}   \]
+\begin{itemize}
+    \item $ \SS{Res}/(n-k-1) $
+          estimated $ \hat{\sigma}^2 $
+          for model with $ k $ predictors
+    \item $ \SS{Total}/(n-1) $ is the sample variance
+          of responses $ y_i $.
+\end{itemize}
+\begin{align*}
+    R^2_{\text{adj}}=1-\frac{n-1}{n-k-1}(1-R^2)
+     & = 1-\biggl( 1+\frac{k}{n-k-1} \biggr)
+    (1-R^2)                                                               \\
+     & =1-\biggl[ 1(1-R^2)+\biggl( \frac{k}{n-k-1} \biggr)(1-R^2) \biggr] \\
+     & =1-\biggl[ 1-R^2+\biggl( \frac{k}{n-k-1}  \biggr)(1-R^2) \biggr]   \\
+     & =1-1+R^2-\frac{k}{n-k-1} (1-R^2)                                   \\
+     & =R^2-(1-R^2)\frac{k}{n-k-1}
+\end{align*}
+Intuition: $ R^2_{\text{adj}} $
+accounts for number variables in model,
+\emph{penalizes} inclusion of unimportant
+predictors; that is, $ \SS{Res} $
+has little decrease when adding
+such variables. Meanwhile, $ R^2 $
+always increases with more predictors,
+but $ R^2_{\text{adj}} $ can decrease
+if $ \SS{Res} $ change is small.
+
+While $ R^2_{\text{adj}} $ loses its usual
+interpretation of $ R^2 $, but can be used
+as a measure of ``goodness of fit''
+and model selection criterion (e.g.,
+pick subset of predictors that gives the highest
+$ R^2_{\text{adj}} $).
+
+
+\begin{Example}{}{}
+    Given
+    \begin{itemize}
+        \item $ n=25 $
+        \item $ \SS{Total}=20 $
+        \item $ p=6 $
+    \end{itemize}
+    Suppose
+    we're considering on a subset of $ k=4 $
+    predictors, and find:
+
+    \begin{center}
+        \begin{NiceTabular}{|c|c|c|}
+            \toprule
+            & Reduced                                 & Full                                              \\
+            \midrule
+            & $ k=4 $                                 & $ p=6 $                                           \\
+            \midrule
+            $ \SS{Total} $       & $ 20 $                                  & $ 20 $                                            \\
+            \midrule
+            $ \SS{Res} $         & $ 10 $                                  & $ 9.8 $                                           \\
+            \midrule
+            $ R^2 $              & $ 10/20=0.5 $                           & $ 9.8/20=0.49 $                                   \\
+            \midrule
+            $ R^2_{\text{adj}} $ & $ 1-\frac{10/(25-4-1)}{20/(25-1)}=0.4 $ & $ 1-\frac{9.8/(25-6-1)}{20/(25-1)}\approx 0.347 $ \\
+            \midrule
+            $ \hat{\sigma}^2 $   & $ 10/(25-4-1)=0.5 $                     & $ 9.8/(25-6-1)\approx 0.544 $\\
+            \bottomrule
+        \end{NiceTabular}
+    \end{center}
+    \begin{itemize}
+        \item $ n-k-1 $ d.f. Res in reduced
+        \item $ n-p-1 $ d.f. Res in full
+    \end{itemize}
+    Remarks:
+    \begin{itemize}
+        \item $ R^2_{\text{adj}}<R^2 $, but as $ n\to\infty $,
+              $ R^2_{\text{adj}}\to R^2 $.
+        \item Model with higher $ R^2_{\text{adj}} $
+              has lower $ \hat{\sigma}^2 $,
+              thus is a reasonable metric for model selection.
+    \end{itemize}
+\end{Example}
+\begin{Definition}{Akaike Information Criterion (AIC)}{}
+    Let $ n $ be sample size and $ q $ be the number of estimated parameters.
+    \begin{itemize}
+        \item MLR\@: $ q=p+2 $ since we have $ p $ predictors + 1 intercept $ (\beta_0) $ + 1
+              $ (\sigma^2) $.
+    \end{itemize}
+    The \textbf{Akaike information criterion} (AIC) is defined as
+    \[ \text{AIC}=2q-2\ln[L(\hat{\theta})] \]
+    where $ L(\hat{\theta}) $ is the likelihood function evaluated
+    at $ \hat{\theta} $ (parameter estimates).
+\end{Definition}
+\begin{Remark}{}{}
+    \begin{itemize}
+        \item The least square estimates of
+              $ \symbf{\beta} $ are equivalent to maximum likelihood estimates
+              under the usual normal assumptions on $ \symbf{\varepsilon} $.
+        \item $ 2q $ is the penalty for including more predictors.
+              With more parameters, $ L(\hat{\theta}) $
+              increases, offset by penalty $ 2q $.
+        \item The model with lower AIC
+              is preferred; that is, differences in AIC matter not the value itself.
+    \end{itemize}
+\end{Remark}
+\begin{Remark}{$ \dagger $}{}
+    If we want to measure
+    just the \underline{difference} of AIC, we can do
+    \[ \text{AIC}=n\ln \biggl[\frac{\SS{Res}}{n}\biggr]+2q \]
+\end{Remark}
+\begin{Definition}{Bayesian Information Criterion (BIC)}{}
+    Let $ n $ be sample size and $ q $ be the number of estimated parameters.
+    \begin{itemize}
+        \item MLR\@: $ q=p+2 $ since we have $ p $ predictors + 1 intercept $ (\beta_0) $ + 1
+              $ (\sigma^2) $.
+    \end{itemize}
+    The \textbf{Bayesian information criterion} (BIC) is defined as
+    \[ \text{BIC}=q\ln(n)-2\ln[L(\hat{\theta})] \]
+    where $ L(\hat{\theta}) $ is the likelihood function evaluated
+    at $ \hat{\theta} $ (parameter estimates).
+\end{Definition}
+\begin{Remark}{}{}
+    AIC is similar to BIC, but BIC strongly penalizes
+    inclusion of more variables. Note that in BIC,
+    $ q\ln(n) $ depends on sample size.
+\end{Remark}
+\begin{Remark}{$ \dagger $}{}
+    If we want to measure
+    just the \underline{difference} of BIC, we can do
+    \[ \text{BIC}=n\ln\biggl[ \frac{\SS{Res}}{n} \biggr]+q\ln(n) \]
+\end{Remark}
+\underline{Recap}:
+\begin{itemize}
+    \item $ R^2 $, AIC, BIC
+          are all based on comparing the fitted models.
+          In other words, they look at the explanatory power of
+          the model.
+    \item They all have penalties to try to prevent
+          ``overfitting.'' That is, having too many
+          variables might end up modelling
+          spurious relationships that are actually
+          noise.
+\end{itemize}
+
+\subsection*{Mean Square Prediction Error (MSPE)}
+Consider predictive performance of model on \emph{new}
+data; that is, data \emph{not} used in fitting
+of models. ``Is model generalisable to new data?''
+Overfitted models tend to have high prediction error.
+
+For example, via cross-validation schemes.
+We've given 4 examples of metrics/criteria for comparing
+models. Imagine we have $ p $ predictors:
+\[ \begin{matrix}
+        \binom{p}{1} & 1 \text{ predictor}  \\
+        \binom{p}{2} & 2 \text{ predictors} \\
+        \vdots                              \\
+        \binom{p}{p} & p \text{ predictors} \\
+    \end{matrix}
+    \implies
+    \sum_{j=0}^{p}\binom{p}{j}=2^p
+\]
+Occam's Razor: ``The simplest explanation is
+usually the best one.''---William Ockham

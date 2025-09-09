@@ -1,0 +1,231 @@
+\section{Sequences and Their Limits}
+\subsection{Introduction to Subsequences}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Mapping\#Definition_1}{Mapping}}{}
+    A \textbf{mapping} from $ S $ to $ T $ is a binary relation
+    on $ S\times T $ which associates each element of $ S $ with exactly one element of $ T $.
+\end{Definition}
+\begin{Definition}{
+        \href{https://proofwiki.org/wiki/Definition:Domain_(Relation_Theory)/Mapping}{Domain},
+        \href{https://proofwiki.org/wiki/Definition:Codomain_(Relation_Theory)/Mapping}{Codomain}
+    }{}
+    Let $ S $ and $ T $ be sets.\smallskip
+
+    Let $ f\colon S\to T $ be a mapping.\bigskip
+
+    The \textbf{domain} of $ f $ is $ S $, and can be denoted $ \Dom(f) $.\smallskip
+
+    The \textbf{codomain} of $ f $ is $ T $, and can be denoted $ \Cdm(f) $
+\end{Definition}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Subset}{Subset}}{}
+    Let $ S $ and $ T $ be sets.\bigskip
+
+    $ S $ is a \textbf{subset} of $ T $ if and only if all the elements of $ S $ are also elements of $ T $.
+    \[ S\subseteq T\iff \forall x:(x\in S\implies x\in T). \]
+\end{Definition}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Sequence\#Formal_Definition}{Sequence (Formal Definition)}}{}
+    A \textbf{sequence} is a mapping whose domain is a subset of the set of natural numbers $ \N $. For the rest of these notes,
+    $ \N=\Set{1,2,\ldots} $.
+\end{Definition}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Real_Sequence}{Real Sequence}}{}
+    A \textbf{real sequence} is a sequence (usually infinite) whose codomain is $ \R $.
+    \tcblower{}
+    \underline{Notation}: The notation for a real sequence is conventionally of the form
+    $ \sequence{a_n} $, where it is understood that:
+    \begin{itemize}
+        \item the domain of $ \sequence{a_n} $ is $ \N $;
+        \item the codomain of $ \sequence{a_n} $ is $ \R $.
+    \end{itemize}
+    We could think of a sequence as a function $ f\colon \N\to\R $, writing $ f(n)=a_n $.
+\end{Definition}
+Sequences can be defined explicitly (in terms of $ n $) or recursively (in terms of previous terms).
+\begin{Example}{Real Sequence}{}
+    \begin{itemize}
+        \item The first few terms of the real sequence $ \sequence{\frac{1}{n+1}} $ are $ 1/2,1/3,1/4,1/5,\ldots $.
+        \item The first few terms of the real sequence $ \sequence{\sqrt{n+2}}_{n\ge 2} $ are $ \sqrt{4},\sqrt{5},\sqrt{6},\ldots $.
+        \item The first few terms of the real sequence $ \sequence{(-1)^n} $ are $ -1,+1,-1,+1,\ldots $.
+    \end{itemize}
+\end{Example}
+\subsection{Recursively Defined Sequences}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Recursive_Sequence\#Definition}{Recursive Sequence}}{}
+    A \textbf{recursive sequence} is a sequence where each term is defined from earlier terms in the sequence.
+\end{Definition}
+\begin{Example}{Recursive Sequence}{}
+    \begin{itemize}
+        \item $ a_1=1 $, $ a_{n+1}=\sqrt{1+a_n} $, so $ a_1=1 $, $ a_2=\sqrt{2} $, $ a_3=\sqrt{1+\sqrt{2}} $, and so on for $ n\in\N $.
+        \item Fibonacci's sequence: $ a_1=1 $, $ a_2=1 $, $ a_{n+2}=a_{n+1}+a_n $ for $ n\in \N $, i.e.,
+              $ 1,1,2,3,5,8,13,\ldots $.
+    \end{itemize}
+\end{Example}
+\underline{Why study sequences?}
+\begin{itemize}
+    \item Lots of continuous processes can be modelled with discrete data, as we will see.
+    \item We can use recursive sequences to approximate solutions to equations that can't be solved explicitly (Newton's Method).
+    \item For another (ancient) application, see page 14 of the course notes about calculating square roots.
+\end{itemize}
+Our goal now will be to determine how to find the limit of a sequence, that is, find what the value of the terms of the sequence
+are approaching (if it exists).
+\subsection{Subsequences and Tails}
+We may want to build new sequences out of old ones or only discuss what happens to a sequence eventually, that is, after a certain index.
+\begin{Example}{}{}
+    For $ \sequence{\frac{1}{n}} $, if we consider only the odd terms, we get $ 1,1/3,1/5 $, or the $ k\textsuperscript{th} $
+    term is
+    \[ \frac{1}{2k-1} \]
+    for $ k\in\N $.
+    This is called a subsequence.
+\end{Example}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Strictly_Increasing/Sequence/Real_Sequence\#Definition}{Strictly Increasing (Sequence)}}{}
+    Let $ \sequence{a_n} $ be a real sequence.\bigskip
+
+    Then $ \sequence{a_n} $ is \textbf{strictly increasing} if and only if:
+    \[ \forall n\in\N:a_n<a_{n+1}. \]
+\end{Definition}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Subsequence}{Subsequence}}{}
+    Let $ \sequence{a_n} $ be a sequence in a set $ S $.\smallskip
+
+    Let $ \sequence{n_k} $ be a strictly increasing sequence in $ \N $.\bigskip
+
+    Then the composition $ \sequence{a_{n_k}} $ is called a \textbf{subsequence} of $ \sequence{a_n} $.
+\end{Definition}
+\begin{Example}{Subsequence}{}
+    One particular subsequence is $ \sequence{a_k,a_{k+1},a_{k+2}} $ for some $ k\in\N $.
+    This is called the tail of $ \sequence{a_n} $ with cut-off $ k $.
+\end{Example}
+\subsection{Limits of Sequences}
+We are going to see lots of different limits this term, but we will start with sequences.
+\begin{Example}{}{}
+    $ \sequence{\frac{1}{n}} $ seems like it converges to $ 0 $, or that $ 0 $ is the limit of the sequence.
+    We saw this when we plotted the sequence. We will eventually want a formal definition, but let's start intuitively.
+\end{Example}
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Convergent_Sequence/Real_Numbers}{Convergent (Real) Sequence}}{conv_seq}
+    Let $ \sequence{a_n} $ be a real sequence.\bigskip
+
+    $ \sequence{a_n} $ \textbf{converges} to $ L\in\R$ if and only if:
+    \[ \exists L\in\R:\forall \varepsilon\in\R_{>0}: \exists N\in \R_{>0}:\forall n\in\N:(n\ge N\implies \abs{a_n-L}<\varepsilon) \]
+    In this case, we write $ \lim\limits_{{n} \to {\infty}}a_n=L $.
+\end{Definition}
+\begin{Remark}{}{}
+    The negation of~\Cref{def:conv_seq} would be the following.\smallskip
+
+    \[ \forall L\in\R:\exists \varepsilon\in\R_{>0}: \forall N\in \R_{>0}:\exists n\in\N:(n\ge N \land \abs{a_n-L}\ge \varepsilon) \]
+    In this case, we write $ \lim\limits_{{n} \to {\infty}}a_n\ne L $.
+\end{Remark}
+\begin{Remark}{\href{https://proofwiki.org/wiki/Definition:Convergent_Sequence/Note_on_Domain_of_N}{Note on Domain of $ N $}}{}
+    Some sources insist that $ N\in\N $, but this is not strictly necessary and can make proofs more cumbersome.
+\end{Remark}
+\begin{Example}{}{}
+    Prove that $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{1}{n^2}=0 $.
+    \tcblower{}
+    \textbf{Proof}: Let $ \varepsilon>0 $ be arbitrary, and pick $ N>\frac{1}{\sqrt{\varepsilon}} $. If $ n\ge N $,
+    we get
+    \[ \abs*{\frac{1}{n^2}-0}=\frac{1}{n^2}\le \frac{1}{N^2}<\frac{1}{(1/\sqrt{\varepsilon})^2}=\frac{1}{1/\varepsilon}=\varepsilon \]
+    as desired.
+\end{Example}
+\begin{Example}{}{}
+    Prove that $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{n}{2n+3}=\frac{1}{2} $.
+    \tcblower{}
+    \textbf{Proof}: Let $ \varepsilon>0 $ be arbitrary, and pick $ N>\frac{1}{4}\bigl(\frac{3}{\varepsilon}-6\bigr) $.
+    If $ n\ge N $, we get:
+    \[ \abs{a_n-L}=\abs*{\frac{n}{2n+3}-\frac{1}{2}}=\frac{3}{4n+6}\le \frac{3}{4N+6}<\frac{3}{4\bigl(\frac{1}{4}(\frac{3}{\varepsilon}-6)\bigr)+6}=\varepsilon. \]
+    \underline{Aside}: We want
+    \[ \frac{3}{4n+6}<\varepsilon\iff \frac{3}{\varepsilon}<4n+6\iff \frac{3}{\varepsilon}-6<4n\iff \frac{1}{4}\biggl(\frac{3}{\varepsilon}-6\biggr)<n. \]
+\end{Example}
+\begin{Example}{}{}
+    Prove that $ \displaystyle \lim\limits_{{n} \to {\infty}}\frac{n^2}{3n^2+7n}=\frac{1}{3} $.
+    \tcblower{}
+    \textbf{Proof}: Let $ \varepsilon>0 $ be arbitrary, and pick $ N>\frac{7}{9\varepsilon} $.
+    If $ n\ge N $, we get:
+    \[ \abs*{a_n-L}=\abs*{\frac{n^2}{3n^2+7n}-\frac{1}{3}}=\frac{7n}{9n^2+21n}\le \frac{7n}{9n^2}=\frac{7}{9n}\le \frac{7}{9(\frac{7}{9\varepsilon})}=\varepsilon. \]
+    \underline{Aside}: We want
+    \[ \frac{7}{9n}<\varepsilon\iff \frac{7}{9\varepsilon}<n. \]
+\end{Example}
+\begin{Remark}{Avoid Common Mistakes}{}
+    \begin{itemize}
+        \item Don't choose $ \varepsilon $! Let it be arbitrary.
+        \item Never assume $ \abs{a_n-L}<\varepsilon $, make sure you only do work in an aside with that inequality since it is what you
+              are proving.
+        \item In practice, unless you are asked to, do not use this formal definition. We will now try to develop better methods for finding limits.
+        \item One can think of~\Cref{def:conv_seq} as a nested logical statement, hence the order is (mostly) important.
+    \end{itemize}
+\end{Remark}
+\subsection*{Equivalent Definitions of the Limit}
+Note that in~\Cref{def:conv_seq}, $ \abs{a_n-L}<\varepsilon \iff a_n\in(L-\varepsilon,L+\varepsilon) $.
+The collection of $ \sequence{a_n} $ for which
+$ n\ge N $ is the tail of the sequence with cut-off $ N $. So, here's another definition.
+\begin{Definition}{}{}
+    $ \lim\limits_{{n} \to {\infty}}a_n=L \iff \forall \varepsilon\in\R_{>0} $ the interval
+    $ (L-\varepsilon,L+\varepsilon) $ contains a tail of the sequence $ \sequence{a_n} $.
+\end{Definition}
+Let's push it further! Since the above is true for any $ \varepsilon>0 $, if we pick any
+open interval $ (a,b) $ containing $ L $, then we can find a small enough $ \varepsilon>0 $
+so that $ (L-\varepsilon,L+\varepsilon)\subseteq (a,b) $. Therefore, any interval containing
+$ L $ also contains a tail of $ \sequence{a_n} $. Let's collect all of these alternate (but equivalent) definitions together.
+\begin{Theorem}{}{}
+    The following are equivalent:
+    \begin{enumerate}[(1)]
+        \item $ \lim\limits_{{n} \to {\infty}}a_n=L $.
+        \item For any $ \varepsilon>0 $, $ (L-\varepsilon,L+\varepsilon) $ contains a tail of $ \sequence{a_n} $.
+        \item For any $ \varepsilon>0 $, $ (L-\varepsilon,L+\varepsilon) $ contains all but finitely many terms of $ \sequence{a_n} $.
+        \item Every interval $ (a,b) $ containing $ L $ contains a tail of $ \sequence{a_n} $.
+        \item Every interval $ (a,b) $ containing $ L $ contains all but finitely many terms of $ \sequence{a_n} $.
+    \end{enumerate}
+    Clearly, changing finitely many terms of $ \sequence{a_n} $ does not affect the convergence or the limit.
+\end{Theorem}
+\begin{Example}{}{}
+    Can a sequence have more than one limit?
+    Consider $ \sequence{(-1)^n}=-1,1,-1,1,\ldots $, it equals to both $ 1 $ and $ -1 $ infinitely often. Could both $ 1 $ and $ -1 $
+    be the limits? No! Let's prove $ -1 $ isn't a limit.
+    \tcblower{}
+    \textbf{Proof}: Consider the interval $ (-2,0) $. Clearly $ -1\in(-2,0) $, but
+    this interval does not contain any of the infinitely many $ 1 $'s in the sequence. So, $ -1 $
+    is not a limit by (5) above. A similar argument can be used with the interval $ (0,2) $ to show
+    $ 1 $ is also not a limit. So, does $ \sequence{(-1)^n} $ have a limit at all? Let's prove it doesn't!
+    Let $ \varepsilon=1/2 $, and supposed for a contradiction that the sequence converges to $ L\in\R $. That means
+    the interval $ (L-1/2,L+1/2) $ must contain all but finitely many terms of the sequence, that is, but $ 1 $ and $ -1 $
+    must lie in that interval. But the interval is only $ 1 $ unit long! So there is not $ L\in\R $ for which both $ 1 $ and $ -1 $
+    lie inside $ (L-1/2,L+1/2) $. So, $ \sequence{(-1)^n} $ diverges.
+\end{Example}
+A similar argument can be used to prove limits are unique.
+\begin{Theorem}{\href{https://proofwiki.org/wiki/Convergent_Real_Sequence_has_Unique_Limit}{Convergent Real Sequence has Unique Limit}}{}
+    Let $ \sequence{a_n} $ be a sequence in $ \R $.\bigskip
+
+    Then $ \sequence{a_n} $ can have at most one limit.
+    \tcblower{}
+    Click on the title's link for a quality proof.
+\end{Theorem}
+\begin{Remark}{A Remark on Possible Limits}{}
+    If $ a_n\ge 0 $ for all $ n $, then $ \sequence{a_n} $ can't converge to a negative number! If it did, say to $ L<0 $,
+    then the interval $ (L-1,0) $ would contain $ L $ but no terms of the sequence.
+\end{Remark}
+\begin{Theorem}{\href{https://proofwiki.org/wiki/Limit_of_Bounded_Convergent_Sequence_is_Bounded}{Limit of Bounded Convergent Sequence is Bounded}}{}
+    Let $ \sequence{x_n} $, $ \sequence{a_n} $, and $ \sequence{b_n} $ be convergent real sequences.\smallskip
+
+    Let $ \sequence{x_n} $, $ \sequence{a_n} $, and $ \sequence{b_n} $ converge to $ x,a,b\in\R $, respectively.\bigskip
+
+    \[ \exists N\in\N:\forall n\in\N:(n\ge N\implies a_n\le x_n\le b_n)
+        \implies a\le x\le b. \]
+\end{Theorem}
+\begin{itemize}
+    \item Q\@: If $ x_n>0 $ for all $ n $ and $ \lim\limits_{{n} \to {\infty}}x_n=x $ is $ x>0 $?
+    \item A\@: Not necessarily! Consider $ x_n=\frac{1}{n}>0 $, but $ x=0 $.
+\end{itemize}
+\subsection{Divergence to Infinity}
+Consider $ \sequence{a_n}=\sequence{n} $. It is clear that the sequence is getting larger without bound, so $ \lim\limits_{{n} \to {\infty}}a_n $
+does not exist, i.e., $ \sequence{a_n} $ diverges.
+\begin{Definition}{\href{https://proofwiki.org/wiki/Definition:Unbounded_Divergent_Sequence\#Definition}{Divergent Sequence}}{}
+    Let $ \sequence{a_n} $ be a real sequence.\bigskip
+
+    $ \sequence{a_n} $ \textbf{diverges to} $ \infty $ if and only if:
+    \[ \forall M\in\R_{>0}: \exists N\in \R_{>0}:\forall n\in\N:(n\ge N\implies a_n>M) \]
+    In this case, we write $ \lim\limits_{{n} \to {\infty}}a_n=\infty $.\smallskip
+
+    $ \sequence{a_n} $ \textbf{diverges to} $ -\infty $ if and only if:
+    \[ \forall M\in\R_{<0}: \exists N\in \R_{>0}:\forall n\in\N:(n\ge N\implies a_n<M) \]
+    In this case, we write $ \lim\limits_{{n} \to {\infty}}a_n=-\infty $.
+\end{Definition}
+\begin{Example}{}{}
+    Show $ \lim\limits_{{n} \to {\infty}}(1-n)=-\infty $.
+    \tcblower{}
+    \textbf{Proof}: Let $ M<0 $ be arbitrary, and pick $ N>1-M $. If $ n\ge N $, we have
+    \[ a_n=1-n\le 1-N<1-(1-M)=M. \]
+    \underline{Aside}: We want $ 1-n<M\iff 1-M<n $.
+\end{Example}

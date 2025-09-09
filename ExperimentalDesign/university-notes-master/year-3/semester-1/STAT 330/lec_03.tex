@@ -1,0 +1,273 @@
+\makeheading{Lecture 3 | 2020-09-13}
+We first introduce a function that will be used.
+
+\begin{Definition}{Gamma function}{}
+    The \textbf{gamma function},
+    denoted $ \Gamma(\alpha) $ for all $ \alpha>0 $, is given by
+    \[ \Gamma(\alpha)=\int_{0}^{\infty} x^{\alpha-1}e^{-x}\, d{x}  \]
+\end{Definition}
+\begin{Proposition}{Properties of the Gamma Function}{prop_gamma}
+    \begin{enumerate}[label=(\arabic*)]
+        \item\label{gamma_prop_1}$ \Gamma(\alpha)=(\alpha-1)\Gamma(\alpha-1) $ for $ \alpha>1 $
+        \item\label{gamma_prop_2} $ \Gamma(n)=(n-1)! $ when $ n\in\mathbf{Z}^+ $,
+              where $ \Gamma(1)=1 $.
+        \item\label{gamma_prop_3} $ \displaystyle \Gamma\biggl(\frac{1}{2}\biggr)=\sqrt{\pi} $
+    \end{enumerate}
+\end{Proposition}
+\begin{Example}{}{}
+    The p.d.f.\ is given by
+    \[ f(x)=\begin{dcases}
+            \frac{x^{\alpha-1}e^{-x/\beta}}{\Gamma(\alpha)\beta^\alpha} & x>0    \\
+            0                                                           & x\le 0
+        \end{dcases}
+    \]
+    where $ \alpha>0 $ and $ \beta>0 $. $ X \sim \gam{\alpha,\beta} $.
+
+    We also say that $ \alpha $ is the scale parameter and $ \beta $ is the shape parameter
+    for this distribution.
+
+    Verify that $ f(x) $ is a p.d.f.
+
+    \textbf{Solution.} Showing $ f(x)\ge 0 $ is trivial. Now,
+    \[ \int_{-\infty}^{\infty} f(x)\, d{x} =
+        \int_{0}^{\infty} \frac{x^{\alpha-1}e^{-x/\beta}}{\Gamma(\alpha)
+        \beta^{\alpha}} \, d{x}  \]
+    Let $ y=x/\beta\implies x=y\beta $ and $ dx=\beta\,dy $.
+    Therefore,
+    \[\int_{-\infty}^{\infty} f(x)\, d{x} =\int_{0}^{\infty}
+        \frac{y^{\alpha-1}\beta^{\alpha-1}e^{-y}}{\Gamma(\alpha)\beta^\alpha}(\beta)  \, d{y}
+        =\frac{1}{\Gamma(\alpha)}\int_{0}^{\infty} y^{\alpha-1}e^{-y}\, d{y}=1    \]
+\end{Example}
+
+\begin{Example}{}{}
+    Suppose the p.d.f.\ is given by
+    \[ f(x)=\begin{dcases}
+            \frac{\beta}{\theta^\beta}x^{\beta-1}
+            \expon*{-\biggl(\frac{x}{\theta}\biggr)^{\!\beta}} & x>0    \\
+            0                                                  & x\le 0
+        \end{dcases} \]
+    with $ \alpha>0 $ and $ \beta>0 $.
+    $ X \sim \weib{\theta,\beta} $.
+
+    Verify that $ f(x) $ is a p.d.f.
+
+    \textbf{Solution.} $ f(x)\ge 0 $ for every $ x\in\mathbf{R} $. Now,
+    \[ \int_{-\infty}^{\infty} f(x)\, d{x} =
+        \int_{0}^{\infty} \frac{\beta}{\theta^\beta}x^{\beta-1}
+        \expon*{-\biggl(\frac{x}{\theta}\biggr)^{\!\beta}} \, d{x} \]
+    Let $ y=(x/\theta)^\beta \implies
+        x=\theta y^{1/\beta} $ and $ dx=(\theta/\beta) y^{(1/\beta)-1}\,dy $.
+    Therefore,
+    \[ \int_{-\infty}^{\infty} f(x)\, d{x}=\int_{0}^{\infty} \frac{\beta}{\theta^\beta} \theta^{\beta-1}
+        y^{(\beta-1)/\beta}e^{-y}\frac{\theta}{\beta} y^{(1/\beta)-1}\, d{y}
+        =\int_{0}^{\infty} e^{-y}\, d{y}=\Gamma(1)=1  \]
+\end{Example}
+
+\begin{Example}{Normal}{}
+    The p.d.f.\ is given by
+    \[ f(x)=\frac{1}{\sqrt{2\pi}\sigma}\expon*{-\frac{(x-\mu)^2}{2\sigma^2}}  \]
+    for $ x\in\mathbf{R} $, $ -\infty<\mu<\infty $, $ \sigma^2>0 $.
+    Verify that $ f(x) $ is a p.d.f.
+
+    \textbf{Solution.} $ f(x)\ge 0 $ for every $ x\in\mathbf{R} $.
+
+    \underline{Case 1}: $ \mu=0 $ and $ \sigma^2=1 $, then
+    we say $ X $ follows a \textbf{standard normal} distribution.
+    We want to show that
+    \[ \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}}\expon*{-\frac{x^2}{2}} \, d{x}=1  \]
+    Since the function is symmetrical around 0, we have the following equivalent integral.
+    \[ 2\int_{0}^{\infty} \frac{1}{\sqrt{2\pi}}\expon*{-\frac{x^2}{2}} \, d{x}  \]
+    Let $ y=x^2/2\implies x=\sqrt{2y} $
+    and $ dx=\dfrac{\sqrt{2}}{2} y^{-1/2}\,dy $. Therefore,
+    \[ =\frac{2}{\sqrt{2\pi}}\int_{0}^{\infty} e^{-y}\frac{\sqrt{2}}{2} y^{-1/2}\, d{y}
+        =\frac{1}{\sqrt{\pi}}\int_{0}^{\infty} y^{1/2-1}e^{-y}\, d{y}=
+        \biggl(\frac{1}{\sqrt{\pi}}\biggr)\Gamma\biggl(\frac{1}{2}\biggr)=1    \]
+    \underline{Case 2}: For general $ \mu $ and $ \sigma^2 $,
+    \[ \int_{-\infty}^{\infty}  \frac{1}{\sqrt{2\pi}\sigma}\expon*{-\frac{(x-\mu)^2}{2\sigma^2}} \, d{x} \]
+    Let $ z=\dfrac{x-\mu}{\sigma}\implies x=\mu+\sigma z  $
+    and $ dx=\sigma\,dz $. Therefore,
+    \[ =\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}\sigma}
+        \expon*{-\frac{z^2}{2}}\sigma \, d{z}=
+        \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}}\expon*{-\frac{z^2}{2}} \, d{z}=1   \]
+    using Case 1.
+\end{Example}
+\section{Expectation}
+\begin{Definition}{Expectation (Discrete)}{}
+    Suppose $ X $ is a discrete random variable with support
+    $ A $ and p.f. $ f(x) $. Then,
+    \[ \E{X}=\sum\limits_{x\in A}x f(x)  \]
+    if $ \sum\limits_{x\in A}\abs{x}f(x) < \infty $ (finite).
+    If $ \sum\limits_{x\in A}\abs{x}f(x) =\infty $ (infinite), then
+    $ \E{X} $ does not exist.
+\end{Definition}
+
+\begin{Definition}{Expectation (Continuous)}{}
+    Suppose $ X $ is a continuous random variable with support $ A $
+    and p.d.f. $ f(x) $. Then,
+    \[ \E{X}=\int_{-\infty}^{\infty} x f(x)\, d{x}  \]
+    if $ \displaystyle \int_{-\infty}^{\infty} \abs{x}f(x)\, d{x} <\infty $
+    (finite). Similarly,
+    if $ \displaystyle \int_{-\infty}^{\infty} \abs{x}f(x)\, d{x} =\infty $
+    (infinite),
+    then $ \E{X} $ does not exist.
+\end{Definition}
+
+\begin{Example}{Discrete}{}
+    Suppose
+    \[ f(x)=\frac{1}{x(x+1)}=\frac{1}{x} -\frac{1}{x+1}  \]
+    for $ x=1,2,\ldots $. The support set is $ A=\set{1,2,\ldots} $.
+    We note that $ f(x) $ is a p.f.\ since
+    $ f(x)\ge 0 $ and
+    \[ \sum\limits_{x\in A}f(x)=\sum\limits_{x=1}^{\infty}
+        \biggl(\frac{1}{x} -\frac{1}{x+1} \biggr)=
+        1-\frac{1}{2} +\frac{1}{2} -\frac{1}{3} +\cdots=1  \]
+    Find $ \E{X} $.
+
+    \textbf{Solution.}
+    \[ \sum\limits_{x\in A}\abs{x}f(x)=\sum\limits_{x=1}^{\infty}
+        x\biggl( \frac{1}{x} -\frac{1}{x+1} \biggr)
+        =\sum\limits_{x=1}^{\infty} \frac{1}{x+1} =\infty  \]
+    Therefore, $ \E{X} $ does not exist!
+\end{Example}
+
+\begin{Example}{Continuous}{}
+    Let the p.d.f.\ be defined as $ f(x)=\dfrac{1}{x^2+1} $ for
+    $ x\in\mathbf{R} $. This is known as the Cauchy distribution
+    (or Student's T-distribution with 1 degree of freedom). Find $ \E{X} $.
+
+    \textbf{Solution.}
+    \[ \int_{-\infty}^{\infty} \abs{x}f(x)\, d{x} =
+        \int_{-\infty}^{\infty} \abs{x}\frac{1}{x^2+1} \, d{x}=
+        2 \int_{0}^{\infty} \frac{x}{x^2+1} \, d{x} =
+        \bigl[\ln\abs{x^2+1}\bigr]_0^\infty=\infty \]
+    $ \E{X} $ does not exist! The following is \underline{\textbf{wrong}}:
+    \[ \E{X}=\int_{-\infty}^{\infty}x f(x)\, d{x}=
+        \int_{-\infty}^{\infty} \frac{x}{1+x^2} \, d{x}=0  \]
+    since the integral above with $ \abs{x} $ is infinite. You must
+    always remember to check that the $ \E{X} $ is finite
+    (using $ \abs{x} $) for both the discrete and continuous case
+    whenever the support is \textbf{negative}.
+\end{Example}
+
+\begin{Example}{Bernoulli and Binomial Random Variable}{}
+    Suppose $ X \sim \bern{p} $.
+    \[ \Prob{X=1}=p\quad\text{ and }\quad \Prob{X=0}=1-p \]
+    We know $ \E{X}=(1)\Prob{X=1}+(0)\Prob{X=0}=p $.
+
+    Now suppose
+    $ X \sim \bin{n,p} $. Find $ \E{X} $.
+
+    \textbf{Solution.}
+    \[ \E{X}=\sum\limits_{x\in A}x f(x)=\sum\limits_{x=0}^{n} x
+        \binom{n}{x}p^x(1-p)^{n-x}  \]
+    This is hard to do. But, we know we can use the
+    relationship between the Binomial and Bernoulli random variable
+    so,
+    \[ X=\sum\limits_{i=1}^{n} X_i \]
+    Therefore,
+    \[ \E{X}=\E[\bigg]{\sum\limits_{i=1}^{n} X_i}=\sum\limits_{i=1}^{n}
+        \E{X_i}=np \]
+\end{Example}
+\begin{Example}{}{}
+    Suppose for a random variable $ X $ the p.d.f.\ is given by
+    $ f(x)=\dfrac{\theta}{x^{\theta+1}} $
+    for $ x\ge 1 $ and $ 0 $ when $ x<1 $. Assume $ \theta>0 $.
+    Find $ \E{X} $, and determine the values of $ \theta $
+    for which $ \E{X} $ exists.
+
+    \textbf{Solution.}
+    \[ \int_{-\infty}^{\infty} \abs{x}f(x)\, d{x}=
+        \int_{1}^{\infty} (x) \frac{\theta}{x^{\theta+1}} \, d{x}
+        =\theta \int_{1}^{\infty} \frac{1}{x^{\theta}} \, d{x} <\infty
+        \iff \theta>1 \]
+    from MATH 138. Therefore, if $ \theta>1 $ then $ \E{X} $ exists. Also,
+    \[ \E{X}=\int_{-\infty}^{\infty} xf(x)\, d{x}=
+        \int_{1}^{\infty} \frac{\theta x}{x^{\theta+1}} \, d{x}
+        =\theta \int_{1}^{\infty} \frac{1}{x^{\theta}} \, d{x}
+        =\frac{\theta}{\theta-1}   \]
+
+\end{Example}
+
+\begin{Definition}{Expectation (Discrete)}{}
+    If $ X $ is a discrete random variable with probability
+    function $ f(x) $ and support set $ A $,
+    then the \textbf{expectation} of the random variable $ g(X) $
+    is defined by
+    \[ \E{g(X)}=\sum\limits_{x\in A}g(x)f(x) \]
+    provided the sum converges absolutely; that is, provided
+    \[ \sum\limits_{x\in A}\abs{g(x)}f(x)<\infty \]
+\end{Definition}
+
+\begin{Definition}{Expectation (Continuous)}{}
+    If $ X $ is a continuous random variable with p.d.f.
+    $ f(x) $ and support set $ A $,
+    then the \textbf{expectation} of the random variable $ g(X) $
+    is defined by
+    \[ \E{g(X)}=\int_{-\infty}^{\infty} g(x)f(x)\, d{x} \]
+    provided the integral converges absolutely; that is, provided
+    \[ \int_{-\infty}^{\infty} \abs{g(x)}f(x)\, d{x} <\infty \]
+\end{Definition}
+
+\begin{Theorem}{Expectation is a Linear Operator}{exp_linear_op}
+    Suppose $ X $ is a random variable with probability (density)
+    function $ f(x) $, and $ a $ and $ b $ are real constants,
+    and $ g(x) $ and $ h(x) $ are real-valued functions. Then,
+    \[ \E{aX+b}=a\E{X}+b \]
+    \[ \E{a g(X)+b h(X)}=a\E{g(X)}+b\E{h(X)} \]
+\end{Theorem}
+\begin{Definition}{Variance}{}
+    The variance of a random variable is defined as
+    \[ \sigma^2=\Var{X}=\E{(X-\mu)^2} \]
+    where $ \mu=\E{X} $.
+\end{Definition}
+\begin{Definition}{Special Expectations}{}
+    \begin{enumerate}[label=(\Roman*)]
+        \item The $ k^{\text{th}} $ moment (about 0): $ \E{X^k} $
+        \item The $ k^{\text{th}} $ moment about the mean $ \E{(X-\mu)^k} $
+    \end{enumerate}
+\end{Definition}
+\begin{Theorem}{Properties of Variance}{prop_var}
+    If $ X $ is a random variable, then
+    \[ \Var{X}=\E{X^2}-\mu^2 \]
+    where $ \mu=\E{X} $. Note that the
+    variance of $ X $ exists if $ \E{X^2}<\infty $.
+\end{Theorem}
+\begin{Example}{}{}
+    Suppose $ X \sim \poi{\theta} $, the p.f.\ is defined as
+    $ f(x)=\dfrac{\theta^x}{x!} e^{-\theta} $
+    for $ 0\le x\in\mathbf{Z} $. Find $ \E{X} $ and $ \Var{X} $.
+
+    \textbf{Solution.} The support is non-negative, so $ \abs{x}=x $.
+    Therefore,
+    \[ \E{X}=\sum\limits_{x=0}^{\infty} x \frac{\theta^x}{x!} e^{-\theta}
+        =\sum\limits_{x=0}^{\infty} \frac{x}{x!} \theta^x e^{-\theta}
+        =\theta \sum\limits_{x=1}^{\infty} \frac{\theta^{x-1}}{(x-1)!}
+        e^{-\theta}  \]
+    Let $ y=x-1 $, then
+    \[ \E{X}= \theta\sum\limits_{y=0}^{\infty} \frac{\theta^y}{y!} e^{-\theta}=\theta(e^{-\theta})e^{\theta} \]
+    since we know $\displaystyle  e^{\theta}=\sum\limits_{y=0}^{\infty} \frac{\theta^y}{y!} $.
+    Therefore, $ \E{X}= \theta $.
+
+    \[ \Var{X}=\E{X^2}-\mu^2 \]
+    Let's find $ \E{X^2} $:
+    \begin{align*}
+        \E{X^2}
+         & =\sum\limits_{x=0}^{\infty} x^2 \frac{\theta^x}{x!} e^{-\theta}         \\
+         & =\sum\limits_{x=1}^{\infty} \frac{x}{(x-1)!}\theta^x e^{-\theta}        \\
+         & =\sum\limits_{x=1}^{\infty} \frac{(x-1)+1}{(x-1)!} \theta^x e^{-\theta} \\
+         & =\sum\limits_{x=1}^{\infty} \frac{x-1}{(x-1)!}\theta^x e^{-\theta}+
+        \sum\limits_{x=1}^{\infty} \frac{1}{(x-1)!}\theta^x e^{-\theta}
+    \end{align*}
+    Looking at the first sum (since the second sum was computed before
+    and is $ \theta $)
+    \[ \sum\limits_{x=1}^{\infty} \frac{x-1}{(x-1)!}\theta^x e^{-\theta}=
+        \sum\limits_{x=2}^{\infty} \frac{\theta^2}{(x-2)!} \theta^{x-2}e^{-\theta} \]
+    Let $ y=x-2 $:
+    \[ \sum\limits_{x=2}^{\infty} \frac{\theta^2}{(x-2)!} \theta^{x-2}e^{-\theta}=
+        \sum\limits_{y=0}^{\infty}\frac{\theta^2\theta^y}{y!}e^{-\theta}=
+        \theta^2 \]
+    Therefore,
+    \[ \E{X^2}=\theta^2+\theta   \]
+    Therefore,
+    \[ \Var{X}=\E{X^2}-\mu^2=(\theta^2+\theta)-\theta^2=\theta \]
+\end{Example}

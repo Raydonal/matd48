@@ -1,0 +1,70 @@
+\makeheading{Lecture 13}
+
+\section{Negative Binomial Distribution}
+\begin{defbox}
+    \subsection{Definition (Negative Binomial Distribution)}
+    Suppose an experiment follows the Bernoulli trials, and continue
+    doing this experiment until $ k $ success are obtained. Let $ X $
+    be the number of failures obtained before the $ k^{\text{th}} $
+    success. Then $ X $ has a \emph{Negative Binomial distribution}
+    and we write
+    \[ X \sim \nb(k,p) \]
+\end{defbox}
+
+\textbf{Find the probability function, $ f(x)$}
+
+There will be a total of $ (x+k) $ trials ($ x $ F's $ k $ S's)
+and the last trial will be a success. In the first $ (x+k-1) $ trials
+we must have $ x $ failures and $ (k-1) $ successes, where order does not matter
+(the last trial we know it must be a success, that's why we are only looking at
+before the $ k^{\text{th}} $ success!)
+Hence, we have a combination which is $ \binom{x+k-1}{k-1} $. Each order
+will have a probability $ p^k(1-p)^x $. Hence
+\[ f(x)=\binom{x+k-1}{k-1}p^k(1-p)^x \]
+for $ x\in\rinterval{0}{\infty} $.
+
+In a picture:
+\[\overbrace{
+        \underbrace{
+            \text{\_ \_ \_ $\ldots$ \_}\mid}
+        _{x \text{ F's},\,(k-1) \text{ S's}}}^{x+(k-1)\text{ Trials}}
+    \underbrace{ \text{ S } }_{ k^{\text{th}} \text{ S}} \]
+
+\textbf{Example}
+
+How many tails until we get the $10^{\text{th}}$ head on a fair coin?
+
+\textbf{Solution.}
+
+Let $ X= $ \# of tails before the $ 10^{\text{th}} $ head.
+\[ X\sim\nb\left(10,\sfrac{1}{2}\right) \]
+
+\textbf{Example}
+
+If courses were independent with probability $ p $ of passing
+and you need $ 40 $ courses, then the number of failed courses
+would be $ \nb(40,p) $.
+
+\textbf{Example}
+
+Suppose a start-up is looking for $ 5 $ investors. They ask
+investors repeatedly where each independently has a $ 20\% $ chance
+of saying yes. Let $ X= $ total \# of investors that they ask and
+note that $ X $ does not follow a negative binomial distribution.
+Find $ f(x) $ and $ f(10) $.
+
+\textbf{Solution.}
+
+Let $ Y= $ \# who say no before $ 5 $ say yes. We know $ X=Y+5 $.
+\[ Y\sim\nb(5,0.2) \]
+\begin{align*}
+    f(x) & =P(X=x)                                   \\
+         & =P(Y+5=x)                                 \\
+         & =P(Y=x-5)                                 \\
+         & =\binom{(x-5)+5-1}{5-1}(0.2)^5(0.8)^{x-5} \\
+         & =\binom{x-1}{4}(0.2)^5(0.8)^{x-5}
+\end{align*}
+for $ x\in\rinterval{5}{\infty} $.
+\[ f(10)=\binom{9}{4}(0.2)^5(0.8)^5\approx 0.0132\]
+Note that we have $ \binom{9}{4} $ and not $ \binom{10}{5} $ because
+the $10^{\text{th}}$ investor must have said yes.

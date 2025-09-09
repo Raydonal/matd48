@@ -1,0 +1,105 @@
+\chapter{Introduction and Fundamentals}
+\makeheading{2020-01-06}
+\section{An Introduction to Coding Theory}
+
+\begin{figure}[!h]
+    \centering
+    Source
+    $ \rightarrow $
+    $ \underset{\text{(digital data)}}{\text{Source Encoder}} $
+    $ \rightarrow $
+    $ \underset{\text{(encoding algorithm)}}{\text{Channel Encoder}} $
+    $ \underset{\overset{\Big\uparrow}{\text{Noise}}}{\xrightarrow{\text{Channel}}} $
+    $ \underset{\text{(decoding algorithm)}}{\text{Channel Decoder}} $
+    $ \rightarrow $
+    Source Decoder $ \rightarrow $ Data
+\end{figure}
+
+\begin{Example}{Repetition Code}{}
+    \begin{tabularx}{\linewidth}{@{}YYYY@{}}
+        Message $ \rightarrow $ Codeword & Errors/Codeword Detected & Errors/Codeword Corrected & Rate             \\
+        \midrule
+        \midrule
+        \begin{tabular}{@{}c@{}}
+            0 $ \rightarrow $ 0 \\
+            1 $ \rightarrow $ 1
+        \end{tabular}
+                                         & 0                        & 0                         & 1                \\
+        \midrule
+        \begin{tabular}{@{}c@{}}
+            0 $ \rightarrow $ 00 \\
+            1 $ \rightarrow $ 11
+        \end{tabular}
+                                         & 1                        & 0                         & $ \sfrac{1}{2} $ \\
+        \midrule
+        \begin{tabular}{@{}c@{}}
+            0 $ \rightarrow $ 000 \\
+            1 $ \rightarrow $ 111
+        \end{tabular}
+                                         & 2                        & 1                         & $ \sfrac{1}{3} $ \\
+        \midrule
+        \begin{tabular}{@{}c@{}}
+            0 $ \rightarrow $ 00000 \\
+            1 $ \rightarrow $ 11111
+        \end{tabular}
+                                         & 4                        & 2                         & $ \sfrac{1}{5} $ \\
+    \end{tabularx}
+\end{Example}
+
+
+\subsection*{Goal of Coding Theory}
+
+Design codes such that:
+\begin{itemize}
+    \item High information rate
+    \item High error-correcting capability
+    \item Efficient encoding and decoding algorithms
+\end{itemize}
+
+Codes $ \supset $ Block codes $ \supset $  Linear codes
+$ \supset $  Cyclic codes $ \supset $ BCH Codes
+$ \supset $ RS Codes
+
+Codes not covered in this course:
+\begin{itemize}
+    \item Flamming codes.
+    \item Golay codes.
+    \item Raptor codes.
+    \item LDPC codes.
+    \item Turbo codes.
+\end{itemize}
+
+Requirements for this course:
+\begin{itemize}
+    \item MATH 136.
+    \item Not required (but required to take the course): MATH 235.
+    \item Familiarity with: Groups, Fields, Ideals, Rings (these will be taught)
+    \item Useful, if you have completed these you might be bored:
+          PMATH 336, PMATH 334 [or the advanced equivalents].
+\end{itemize}
+
+\subsection*{The Big Picture}
+
+In its broadest sense, coding deals with the reliable, efficient, and secure
+transmissions of data over channels that are subject to inadvertent noise and
+malicious intrusion.
+
+Data source
+$ \rightarrow $
+$ \underset{\text{(data compression)}}{\text{Source encoder}} $
+$ \rightarrow $
+$ \underset{\text{(cryptography; co 487)}}{\text{Encryptory authentication}} $
+$ \rightarrow $
+$ \underset{\text{(error correction codes)}}{\text{Channel encoder}} $
+$ \underset
+    {
+        \overset{\Big\uparrow}{\overset{\text{noise}}{\text{(non-malicious)}}}\qquad
+        \overset{\Big\uparrow}{\overset{\text{adversarial intrusion}}{\text{(malicious)}}}
+    }
+    {\xrightarrow{\text{\qquad\qquad Channel\qquad\qquad}}} $
+$ \rightarrow $
+Decriptory verification
+$ \rightarrow $
+$ \underset{\text{(data decompression)}}{\text{Source decoder}}  $
+$ \rightarrow $
+Data

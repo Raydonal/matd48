@@ -1,0 +1,159 @@
+\makeheading{Lecture 9 | 2020-10-04}
+\section{Conditional Distributions}
+\begin{Definition}{Conditional probability (density) function}{}
+    Suppose that $ X $ and $ Y $ have joint probability
+    (density) function $ f(x,y) $,
+    and marginal probability (density) functions
+    $ f_1(x) $ and $ f_2(y) $ respectively.
+    Suppose also that the support set
+    of $ (X,Y) $ is $ A=\set{(x,y):f(x,y)>0} $.
+
+    The \textbf{conditional probability (density) function}
+    of $ X $ given $ Y=y $ is
+    \[ f_1(x\mid y)=\frac{f(x,y)}{f_2(y)}\quad\text{provided } f_2(y)>0\quad (x,y)\in A \]
+    The \textbf{conditional probability (density) function} of $ Y $ given $ X=x $
+    \[ f_2(y\mid x)=\frac{f(x,y)}{f_1(x)}\quad\text{provided } f_1(x)>0\quad (x,y)\in A \]
+\end{Definition}
+\begin{Proposition}{Properties --- Conditional Probability Function}{}
+    $ f_1(x\mid y) $ and $ f_2(y\mid x) $ are both probability functions;
+    that is,
+    \[ f_1(x\mid y)\ge 0 \quad\text{ and }\quad
+        \sum_{x}f_1(x\mid y)=1\implies f_1(x\mid y)\text{ is a p.f.}\]
+    \[ f_2(y\mid x)\ge 0 \quad\text{ and }\quad
+        \sum_{y}f_2(y\mid x)=1\implies f_2(y\mid x)\text{ is a p.f.}\]
+\end{Proposition}
+\begin{Proposition}{Properties --- Conditional Probability Function}{}
+    $ f_1(x\mid y) $ and $ f_2(y\mid x) $ are both probability density functions;
+    that is,
+    \[ f_1(x\mid y)\ge 0 \quad\text{ and }\quad
+        \int_{-\infty}^{\infty} f_1(x\mid y)\, d{x} =1\implies f_1(x\mid y)\text{ is a p.d.f.}\]
+    \[ f_2(y\mid x)\ge 0 \quad\text{ and }\quad
+        \int_{-\infty}^{\infty} f_2(y\mid x)\, d{y}=1\implies f_2(y\mid x)\text{ is a p.d.f.}\]
+\end{Proposition}
+\begin{Example}{}{}
+    Let $ \displaystyle f(x,y)=\begin{cases}
+            8 x y & 0<y<x<1          \\
+            0     & \text{otherwise}
+        \end{cases}  $
+
+    Find
+    \begin{enumerate}[label=(\roman*)]
+        \item $ f_1(x\mid y) $
+        \item $ f_2(y\mid x) $
+    \end{enumerate}
+    \textbf{Solution.}
+    \begin{enumerate}[label=(\roman*)]
+        \item To find $ f_1(x\mid y) $, we need to calculate
+              $ f_2(y) $.
+              \[ f_2(y)=\int_{y}^{1} 8xy\, d{x}=-4y^3+4y \quad 0<y<1 \]
+
+              By definition,
+              \[ f_1(x\mid y)=\frac{f(x,y)}{f_2(y)}=
+                  \frac{8xy}{4y-4y^3}=\frac{2x}{1-y^2} \quad 0<y<1 \]
+              Given $ 0<y<1 $, the support
+              of $ X $ is $ y<x<1 $.
+        \item To find $ f_2(y\mid x) $, we need to calculate $ f_1(x) $.
+              \[ f_1(x)=\int_{0}^{x} 8xy\, d{y}=4x^3\quad 0<x<1 \]
+              By definition,
+              \[ f_2(y\mid x)=\frac{f(x,y)}{f_1(x)} =\frac{8xy}{4x^3} =\frac{2y}{x^2} \quad 0<x<1 \]
+              Given $ 0<x<1 $, the support of $ Y $ is $ 0<y<x $.
+    \end{enumerate}
+\end{Example}
+\begin{Example}{}{}
+    $ \displaystyle f(x,y)=\begin{cases}
+            x+y & x,y\in\interval{0}{1} \\
+            0   & \text{otherwise}
+        \end{cases} $
+
+    Recall that $ f_1(x)=x+1/2 $ for $ 0\le x\le 1 $ and
+    $ f_2(y)=y+1/2 $ for $ 0\le y\le 1 $. Therefore,
+    \[ f_1(x\mid y)=\frac{f(x,y)}{f_2(y)} =\frac{x+y}{y+1/2} \]
+    Given $ 0\le y\le 1 $, the support of $ X $ is $ 0\le x\le 1 $.
+    \[ f_2(y\mid x)=\frac{x+y}{x+1/2} \]
+    Given $ 0\le x\le 1 $, the support of $ Y $ is $ 0\le y\le 1 $.
+\end{Example}
+\begin{Example}{}{}
+    $ f(x,y)=q^2p^{x+y} $ where $ 0\le x,y\in\mathbf{Z} $. Note we derived
+    that $ f_1(x)=qp^x $ and $ f_2(y)=qp^y $. Therefore,
+    \[ f_1(x\mid y)=\frac{f(x,y)}{f_2(y)} =qp^x=f_1(x) \]
+    \[ f_2(y\mid x)=\frac{f(x,y)}{f_1(x)}=qp^y=f_2(y) \]
+    This is another way to show independence of $ X $ and $ Y $.
+\end{Example}
+\begin{Theorem}{}{}
+    $ X $ and $ Y $ are independent if and only if
+    \begin{enumerate}[label=(\arabic*)]
+        \item $ f_1(x\mid y)=f_1(x) $, and
+        \item $ f_2(y\mid x)=f_2(y) $.
+    \end{enumerate}
+\end{Theorem}
+\begin{Theorem}{Product Rule}{}
+    \[ f(x,y)=f_1(x\mid y)f_2(y)=f_2(y\mid x)f_1(x)  \]
+\end{Theorem}
+\begin{Example}{Product rule}{}
+    Suppose $ Y \sim \poi{\theta} $ and $ X\mid Y=y \sim \bin{y,p} $.
+    Find the marginal p.f.\ of $ X $.
+
+    Before we get to the solution of this problem, let's consider a physical setup.
+    \begin{itemize}
+        \item $ Y $: number of students who go to Tim Hortons
+              in one day. Note that $ Y \sim \poi{\theta} $.
+        \item $ X\mid Y=y $: number of students among
+              these $ y $ visitors
+    \end{itemize}
+    What is the distribution of $ X $? We guess that $ X \sim \poi{\theta p} $.
+
+    \textbf{Solution.}
+    \[ f_1(x\mid y)=\binom{y}{x}p^x (1-p)^{y-x}\quad x=0,1,\ldots,y \]
+    \[ f_2(y)=\frac{\theta^y}{y!}e^{-\theta}\quad 0\le y\in\mathbf{Z}  \]
+    \begin{align*}
+        f(x,y)
+         & =f_1(x\mid y)f_2(y)                                                                         \\
+         & =\biggl( \frac{y!}{x!(y-x)!}p^x(1-p)^{y-x} \biggr)\frac{\theta^y}{y!} e^{-\theta}           \\
+         & =\biggl( \frac{\theta^x p^x}{x!}  \biggr)\frac{\theta^{y-x}(1-p)^{y-x}}{(y-x)!} e^{-\theta}
+    \end{align*}
+    $ (X,Y) $ support is $ x=0,1,\ldots,y $ and $ 0\le y\in\mathbf{Z} $. Therefore,
+    \begin{align*}
+        f_1(x)
+         & =\sum_{y}f(x,y)                                                                                        \\
+         & =\sum_{y=x}^{\infty}
+        \biggl( \frac{(\theta p)^x}{x!} \biggr)\biggl( \frac{(\theta(1-p))^{y-x}}{(y-x)!} e^{-\theta} \biggr)     \\
+         & =\frac{e^{-\theta} (\theta p)^x}{x!} \sum_{h=0}^{\infty} \frac{\bigl[\theta(1-p) \bigr]^h}{h!} & h=y-x \\
+         & =\frac{e^{-\theta} (\theta p)^x}{x!}e^{\theta(1-p)}                                                    \\
+         & =\frac{(\theta p)^x}{x!}e^{-\theta p}
+    \end{align*}
+    Therefore, $ 0\le x\in\mathbf{Z} $ and so $ X \sim \poi{\theta p} $.
+\end{Example}
+\begin{Example}{}{}
+    Suppose $ Y $ has p.d.f. $ \displaystyle f_2(y)=\frac{y^{\alpha-1}}{\Gamma(\alpha)}e^{-y} $
+    for $ y>0 $; that is, $ Y \sim \gam{\alpha,\beta=1}$. The conditional
+    p.d.f.\ of $ X $ given $ Y=y $ is
+    \[ f_1(x\mid y)=ye^{-xy}\quad\text{for }x>0,y>0 \]
+    Find the marginal p.d.f.\ of $ X $.
+
+    \textbf{Solution.} Firstly, find the joint p.d.f.\ of $ (X,Y) $ is
+    \[
+        f(x,y)
+        =f_1(x\mid y)f_2(y)
+        =ye^{-x y} \frac{y^{\alpha-1}}{\Gamma(\alpha)}e^{-y}
+        =\frac{y^{\alpha}}{\Gamma(\alpha)} e^{-(x+1)y}\]
+    The support of $ X $ is $ \ointerval{0}{\infty} $. Recall that
+    the gamma function is
+    $ \displaystyle  \Gamma(\alpha)=\int_{0}^{\infty} x^{\alpha-1}e^{-x}\, d{x} $.
+
+    The marginal p.d.f.\ of $ X $ is
+    \[
+        f_1(x)=\int_{-\infty}^{\infty} f(x,y)\, d{y}
+        =\int_{0}^{\infty} \frac{y^\alpha e^{-(x+1)y}}{\Gamma(\alpha)} \, d{y} \]
+    Let $ t=(x+1)y $, therefore $ y=t/(x+1) $ and $ dy=dt/(x+1) $.
+    \[ \int_{0}^{\infty} \frac{t^\alpha}{(x+1)^\alpha \Gamma(\alpha)}e^{-t}\frac{1}{x+1} \, d{t}
+        =\frac{1}{(x+1)^{\alpha+1}\Gamma(\alpha)}
+        \int_{0}^{\infty} t^{\alpha}e^{-t}\, d{t}=
+        \frac{1}{(x+1)^{\alpha+1}\Gamma(\alpha)}\Gamma(\alpha+1)  \]
+    By~\Cref{prop:prop_gamma}, we know that $ \Gamma(\alpha+1) =(\alpha)\Gamma(\alpha) $.
+    Therefore,
+    \[ \frac{\Gamma(\alpha+1)}{(x+1)^{\alpha+1}\Gamma(\alpha)}=
+        \frac{(\alpha)\Gamma(\alpha)}{(x+1)^{\alpha+1}\Gamma(\alpha)}=
+        \frac{\alpha}{(x+1)^{\alpha+1}} \]
+    That is, $ \displaystyle  f_1(x)=\frac{\alpha}{(x+1)^{\alpha+1}} $
+    and the support of $ X $ is positive.
+\end{Example}

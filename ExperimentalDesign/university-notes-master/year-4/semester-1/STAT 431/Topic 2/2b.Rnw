@@ -1,0 +1,445 @@
+\makeheading{Week 4}{\daterange{2021-09-27}{2021-10-01}}
+\section*{Topic 2b: Binomial (Logistic) Regression Models}
+\addcontentsline{toc}{section}{Topic 2b: Binomial (Logistic) Regression Models}
+\subsection*{2.4 Setting Up a Binomial Regression Model}
+\begin{enumerate}[1.]
+      \item Introduction and Notation.
+      \item Interpretation of $ \beta $ from logistic regression models as log odds ratios.
+      \item Logistic regression analysis of to the Prenatal Care example.
+            \begin{itemize}
+                  \item R Data and Code for fitting GLMs.
+                  \item Hypothesis tests for $ \beta_k $.
+                  \item Confidence Intervals for the OR $ \exp{\beta_k} $.
+            \end{itemize}
+\end{enumerate}
+\subsection*{Introduction and Notation}
+\addcontentsline{toc}{subsection}{Introduction and Notation}
+\begin{itemize}
+      \item \textcolor{Blue}{Outcome/Response variable}: $ \textcolor{Red}{Y_i \sim \BIN{m_i,\pi_i}} $, $ \textcolor{Red}{i=1,2,\ldots,n} $ independently.
+      \item \textcolor{Blue}{Explanatory variables}: $ \Vector{x}_i=(x_{i0},x_{i1},\ldots,x_{i(p-1)})^\top $ with $ x_{i0}=1 $.
+      \item \textcolor{Blue}{Regression parameters}: $ \Vector{\beta}=(\beta_0,\beta_1,\ldots,\beta_{p-1})^\top $.
+      \item \textcolor{Blue}{Linear predictor}: $ \eta_i=\Vector{x}_i^\top \Vector{\beta}=\beta_0+\beta_1x_{i1}+\cdots+\beta_px_{i(p-1)} $.
+      \item Recall multiple linear regression ($ Y_i \sim \N{\mu_i,\sigma^2} $):
+            \[ \E{Y_i}=\mu_i=\eta_i=\Vector{x}_i^\top \Vector{\beta} \]
+      \item Now with the Binomial data this would suggest we use:
+            \[ \E*{\frac{Y_i}{m_i}}=\pi_i=\mu_i=\Vector{x}_i^\top \Vector{\beta} \]
+      \item But this is a bad idea because $ 0<\pi_i<1 $ and we'd have to do constrained maximization to find $ \hat{\pi}_i $.
+      \item We want a \textcolor{Blue}{link function}: $ g(\pi_i)=g(\mu_i)=\Vector{x}_i^\top \Vector{\beta} $ that maps:
+            \[ g\colon(0,1)\to(-\infty,\infty) \]
+      \item Here are some link functions we might consider:
+            \begin{table}[!htbp]
+                  \centering
+                  \begin{NiceTabular}{cl}
+                        \toprule
+                        Identity & $ g(\pi_i)=\pi_i $\\
+                        log-log & $ g(\pi_i)=\log[\big]{-\log{\pi_i}} $\\
+                        complementary log-log & $ g(\pi_i)=\log[\big]{-\log{1-\pi_i}} $\\
+                        $ \text{Probit}^{\dagger} $ & $ g(\pi_i)=\Phi^{-1}(\pi_i) $\\
+                        $ \text{Logit}^{\star} $ & $ g(\pi_i)=\log[\big]{\pi_i/(1-\pi_i)} $\\
+                        \bottomrule
+                        \multicolumn{2}{l}{\footnotesize{$ {}^\dagger $: $ \Phi $ is the cdf for a standard normal random variable.}}\\
+                        \multicolumn{2}{l}{\footnotesize{$ {}^\star $: the canonical link for the Binomial (see Chapter 1).}}
+                  \end{NiceTabular}
+            \end{table}
+\end{itemize}
+\subsection*{Link Functions for the Binomial Distribution}
+% \begin{noindent}
+    <<fig.height=4, fig.width=4, echo = FALSE>>=
+    x <- seq(0,1,by=0.001)
+    plot(x,x,xlim=c(0,1),ylim=c(-6,6), type = "l", col = "red", lwd = 2) # identity
+    lines(x,log(-log(x)), type = "l", col = "darkgoldenrod1", lwd = 2) # log-log
+    lines(x,log(-log(1-x)), type = "l", col = "green", lwd = 2) # complementary log-log
+    lines(x,pnorm(x), type = "l", col = "blue", lwd = 2) # Probit
+    lines(x,log(x/(1-x)), type = "l", col = "purple", lwd = 2) # Logit
+    legend("topleft", legend = c("identity", "loglog", "cloglog", "probit", "logit"),
+lwd = 2, col = c("red","darkgoldenrod1","green","blue","purple"), bty = "n", cex = 0.5)
+    @
+% \end{noindent}
+\subsection*{The Logit Link and Odds Ratios}
+\addcontentsline{toc}{subsection}{The Logit Link and Odds Ratios}
+\begin{itemize}
+      \item The \textcolor{Blue}{Logit link} is the canonical link for the Binomial (see Chapter 1).
+      \item This leads us to a \textcolor{Blue}{Logistic Regression Model}:
+            \[ \log*{\frac{\pi_i}{1-\pi_i}}=\Vector{x}_i^\top \Vector{\beta} \]
+      \item Aside: The inverse of the logit function is called the expit function:
+            \[ \logit{a}=\log*{\frac{a}{1-a}}=b\iff a=\frac{\exp{b}}{1+\exp{b}}=\expit{b} \]
+      \item Next: What is the interpretation of the $ \Vector{\beta} $ parameters in this model?
+\end{itemize}
+\subsection*{Simple Logistic Regression}
+\begin{itemize}
+      \item Consider a simple case of a binomial outcome $ Y_i \sim \BIN{m_i,\pi_i} $ for $ i=0,1 $ and a single binary explanatory variable:
+            \[ x_{i1}=\begin{cases*}
+                        0 & group 0 \\
+                        1 & group 1
+                  \end{cases*} \]
+      \item The simple logistic regression model equation is:
+            \[ \log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1} \]
+      \item When $ x_{i1}=0 $ for $ i=0 $, the model becomes:
+            \[ \log*{\frac{\pi_0}{1-\pi_0}}=\beta_0+\beta_1(0)=\beta_0 \]
+      \item \textcolor{Blue}{$ \beta_0 = $ log odds of response for subjects with $ x_{i1}=0 $}.
+      \item Now let's compare the model with $ x_{i1}=1 $ versus $ x_{i1}=0 $.
+            \begin{table}[!htbp]
+                  \centering
+                  \begin{NiceTabular}{ccrl}
+                        Group & $ (1,x_{i1})^\top $ & $ \eta_i $ & $ =\log[\big]{\pi_i/(1-\pi_i)} $\\
+                        \midrule
+                        1 & $ (1,1)^\top $ & $ \beta_0+\beta_1 $ & $ =\log[\big]{\pi_1/(1-\pi_1)} $\\
+                        0 & $ (1,0)^\top $ & $ \beta_0 $ & $ =\log[\big]{\pi_0/(1-\pi_0)} $\\
+                        \midrule
+                        &&$ \beta_1 $ & $ =\log*{\frac{\pi_1/(1-\pi_1)}{\pi_0/(1-\pi_0)}} $
+                  \end{NiceTabular}
+            \end{table}
+      \item We subtract line 2 from line 1 to isolate $ \beta_1 $ and find its interpretation.
+      \item \textcolor{Blue}{$ \beta_1= $ log odds ratio of response for subjects with $ x_{i1}=1 $ vs $ x_{i1}=0 $}.
+\end{itemize}
+\subsection*{Logistic Regression Models for Prenatal Care Example}
+\begin{itemize}
+      \item \textcolor{Blue}{Response} $ = $ Fetal mortality
+            \[ \textcolor{Blue}{Y_i \sim \BIN{m_i,\pi_i}}\qquad\text{$i=1,2,\ldots,n$ independently} \]
+      \item \textcolor{Blue}{Explanatory Variables}:
+            \begin{align*}
+                  x_{i1} & =\begin{cases*}
+                                  1 & Clinic A \\
+                                  0 & Clinic B
+                            \end{cases*}                                         \\
+                  x_{i2} & =\begin{cases*}
+                                  1 & Intensive level of care \\
+                                  0 & Regular level of care   \\
+                            \end{cases*}                           \\
+                  x_{i3} & =x_{i1}x_{i2}=\begin{cases*}
+                                               1 & Intensive level of care and Clinic A \\
+                                               0 & Otherwise
+                                         \end{cases*}
+            \end{align*}
+      \item We will use the context of this example to interpret regression parameters from
+            multiple logistic regression models.
+      \item See Section 2.4.2 for general interpretations.
+\end{itemize}
+\subsection*{Model 1: Clinic only model}
+\[ \textcolor{Green}{\log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1}} \]
+\begin{table}[!htbp]
+      \centering
+      \begin{NiceTabular}{cccl}
+            Clinic & Level of Care & $ (1,x_{i1})^\top $ & $ \log[\big]{\pi_i/(1-\pi_i)} $\\
+            \midrule
+            A & --- & $ (1,1)^\top $ & $ \beta_0+\beta_1 $\\
+            B & --- & $ (1,0)^\top $ & $ \beta_0 $
+      \end{NiceTabular}
+      \caption{Clinic only model}
+\end{table}
+\begin{itemize}
+      \item $ \beta_0 $ is the \textcolor{Blue}{log odds} of infant mortality for babies born to mothers treated at Clinic B.
+      \item $ \beta_1 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated at Clinic A
+            versus Clinic B.
+\end{itemize}
+\subsection*{Model 2: Main effects model}
+\[ \textcolor{Green}{\log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1}+\beta_2x_{i2}} \]
+\begin{table}[!htbp]
+      \centering
+      \begin{NiceTabular}{cccl}
+            Clinic & Level of Care & $ (1,x_{i1},x_{i2})^\top $ & $ \log[\big]{\pi_i/(1-\pi_i)} $\\
+            \midrule
+            A & Intensive & $ (1,1,1)^\top $ & $ \beta_0+\beta_1+\beta_2 $\\
+            A & Regular & $ (1,1,0)^\top $ & $ \beta_0+\beta_1 $\\
+            B & Intensive & $ (1,0,1)^\top $ & $ \beta_0+\beta_2 $\\
+            B & Regular & $ (1,0,0)^\top $ & $ \beta_0 $
+      \end{NiceTabular}
+      \caption{Main effects model}
+\end{table}
+\begin{itemize}
+      \item $ \beta_0 $ is the \textcolor{Blue}{log odds} of infant mortality for babies born to mothers treated at Clinic
+            B with Regular care.
+      \item $ \beta_1 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated at Clinic A
+            versus Clinic B at the same level of care.
+      \item $ \beta_2 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated with
+            Intensive versus Regular care at the same clinic \textcolor{Red}{(*OR of interest*)}.
+\end{itemize}
+\subsection*{Model 3: Interaction model}
+\[ \textcolor{Green}{\log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i3}} \]
+\begin{table}[!htbp]
+      \centering
+      \begin{NiceTabular}{cccl}
+            Clinic & Level of Care & $ (1,x_{i1},x_{i2},x_{i3})^\top $ & $ \log[\big]{\pi_i/(1-\pi_i)} $\\
+            \midrule
+            A & Intensive & $ (1,1,1,1)^\top $ & $ \beta_0+\beta_1+\beta_2+\beta_3 $\\
+            A & Regular & $ (1,1,0,0)^\top $ & $ \beta_0+\beta_1 $\\
+            B & Intensive & $ (1,0,1,0)^\top $ & $ \beta_0+\beta_2 $\\
+            B & Regular & $ (1,0,0,0)^\top $ & $ \beta_0 $
+      \end{NiceTabular}
+      \caption{Interaction model}
+\end{table}
+\begin{itemize}
+      \item $ \beta_1 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated at Clinic A
+            versus Clinic B at Regular care.
+      \item $ \beta_1+\beta_3 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated at
+            Clinic A versus Clinic B at Intensive care.
+      \item $ \beta_2 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated with
+            Intensive versus Regular care at Clinic B.
+      \item $ \beta_2+\beta_3 $ is the \textcolor{Blue}{log odds ratio} of mortality for babies born to mothers treated with
+            Intensive versus Regular care at Clinic A.
+      \item $ \beta_3 $ is a \textcolor{Blue}{difference is log ratio odds}.
+      \item If $ \beta_3=0 $, then the association between mortality and level of care does not depend on Clinic.
+      \item Equivalently, if $ \beta_3 = 0 $, then the association between mortality and Clinic does not depend on level of care.
+\end{itemize}
+\subsection*{Prediction from Logistic Regression}
+\[ \logit{\pi_i}=\log*{\frac{\pi_i}{1-\pi_i}}=\eta_i\iff \pi_i=\frac{\exp{\eta_i}}{1+\exp{\eta_i}}=\expit{\eta_i} \]
+\begin{itemize}
+      \item Assume we have found $ \hat{\Vector{\beta}} $ using Fisher scoring (R \texttt{glm()} function).
+      \item The fitted value for the \textcolor{Blue}{probability of response} $ \pi_i=\E{Y_i/m_i} $ for explanatory
+            variable(s) $ \Vector{x}_i $ is:
+            \[ \hat{\pi}_i=\hat{\pi}(\Vector{x}_i)=\frac{\exp{\Vector{x}_i^\top \hat{\Vector{\beta}}}}{1+\exp{\Vector{x}_i^\top \hat{\Vector{\beta}}}}=\expit{\Vector{x}_i^\top \hat{\Vector{\beta}}}  \]
+      \item The \textcolor{Blue}{predicted number of responses} is: $ \hat{Y}_i=m_i\hat{\pi}_i $.
+\end{itemize}
+\subsection*{Logistic Regression Analysis of Prenatal Care Data}
+\addcontentsline{toc}{subsection}{Logistic Regression Analysis of Prenatal Care Data}
+\begin{itemize}
+      \item \textcolor{Blue}{Previously}: Analysis using likelihood for $ 2\times 2 $ tables:
+            \begin{table}[!htbp]
+                  \centering
+                  \begin{NiceTabular}{ll}
+                        Odds Ratio (outcome = mortality) & Estimate and \qty{95}{\percent} CI\\
+                        \midrule
+                        Intensive vs Regular & $ 0.51\; (0.30,0.89) $\\
+                        Intensive vs Regular at Clinic A & $ 0.80\; (0.37,1.73) $\\
+                        Intensive vs Regular at Clinic B & $ 1.01\; (0.33,3.10) $\\
+                        \midrule
+                  \end{NiceTabular}
+            \end{table}
+      \item \textcolor{Blue}{Now}:
+            \begin{enumerate}[1.]
+                  \item Use \texttt{glm()} function in R to fit logistic regression models and estimate $ \hat{\Vector{\beta}} $.
+                  \item Extract estimates $ \beta_k $ with $ \log{\text{OR}} $ interpretations.
+                  \item Conduct hypothesis tests for $ \HN $: $ \beta_k=\beta_{k0} $.
+                  \item Calculate \qty{95}{\percent} confidence intervals for $ \beta_k $ and $ \psi=\exp{\beta_k} $.
+                  \item Try to find best fitting model with fewest parameters.
+            \end{enumerate}
+\end{itemize}
+\subsection*{R Data and Code}
+\begin{Example}{Data file \texttt{prenatal.dat}}
+      <<echo=FALSE>>=
+      prenatal.dat = read.table("prenatal.dat", header = T)
+      prenatal.dat
+      @
+\end{Example}
+\begin{itemize}
+      \item The first line contains the variable names/labels.
+      \item We are using indicator variables for the explanatory variables.
+            \begin{itemize}
+                  \item $ x_{i1}=\texttt{clinic}=\Ind{\text{Clinic A}} $.
+                  \item $ x_{i2}=\texttt{loc}=\Ind{\text{Intensive care}} $.
+            \end{itemize}
+      \item The response variable \texttt{y} is the number of events (deaths).
+      \item \texttt{m} is the number of binomial trials (number of mothers).
+\end{itemize}
+% \begin{noindent}
+    <<results = 'hide'>>=
+    # R program for analysis of prenatal care data
+    prenatal.dat <- read.table("prenatal.dat", header = T)
+    # here we construct the response variable for the logistic regression analysis
+    prenatal.dat$resp <- cbind(prenatal.dat$y,prenatal.dat$m-prenatal.dat$y)
+    prenatal.dat
+    # now we fit the model using the glm function and store the result in "model 1"
+    # we indicate "resp" contains a binomial response and that we are using the
+    # logistic link function
+    model1 <- glm(resp~loc,family=binomial(link=logit),data=prenatal.dat)
+    summary(model1)
+    # the "names" function lists the contents of the object "model1" and following
+    # this statement we examine some of the contents of these objects (try it)
+    names(model1)
+    model1$family
+    model1$formula
+    model1$coefficients
+    model1$deviance
+    model1$fitted.values
+    model1$residuals
+    # now we fit a model to examine the relationship between level of care
+    # and mortality adjusting for clinic
+    model2 <- glm(resp~clinic+loc,family=binomial(link=logit),data=prenatal.dat)
+    summary(model2)
+    # here we examine whether the association between loc and mortality depends on
+    # the clinic
+    model3 <- glm(resp~loc+clinic+loc*clinic,family=binomial(link=logit),data=prenatal.dat)
+    summary(model3)
+    # now we examine the marginal relationship between mortality and clinic
+    model4 <- glm(resp~clinic,family=binomial(link=logit),data=prenatal.dat)
+    summary(model4)
+    @
+% \end{noindent}
+\subsection*{Selected R Output}
+Print the augmented dataframe to see what the \textcolor{Blue}{\texttt{resp} variable} $ (Y_i,m_i-Y_i) $ looks like:
+% \begin{noindent}
+    <<>>=
+    # here we construct the response variable for the logistic regression analysis
+    prenatal.dat$resp <- cbind(prenatal.dat$y,prenatal.dat$m-prenatal.dat$y)
+    prenatal.dat
+    @
+% \end{noindent}
+The \textcolor{Blue}{logistic regression} models are fit using the \texttt{glm} commands like:
+% \begin{noindent}
+    <<eval=FALSE>>=
+    # now we fit the model using the glm function and store the result in "model 1"
+    # we indicate "resp" contains a binomial response and that we are using the
+    # logistic link function
+    model1 <- glm(resp~loc,family=binomial(link=logit),data=prenatal.dat)
+    summary(model1)
+    @
+% \end{noindent}
+\subsection*{Fit of Model 1: Level of Care Model}
+\[ \log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_2x_{i2} \]
+% \begin{noindent}
+    <<>>=
+    model1 <- glm(resp~loc,family=binomial(link=logit),data=prenatal.dat)
+    summary(model1)$coefficients
+    @
+% \end{noindent}
+\subsection*{Components of the \texttt{summary()} output for \texttt{glm} objects}
+\begin{itemize}
+      \item \textcolor{Blue}{\texttt{Estimate}}: the maximum likelihood estimates of the regression coefficients $ \hat{\beta}_k $.
+      \item \textcolor{Blue}{\texttt{Std Error}}: estimated standard errors based on the inverse of the information.
+            \[ \se{\hat{\beta}_k}=\sqrt{\bigl(\Matrix{I}^{-1}(\hat{\Vector{\beta}})\bigr)_{kk}}=\sqrt{I^{kk}(\hat{\Vector{\beta}})} \]
+      \item \textcolor{Blue}{\texttt{z value}}: Wald-based test statistics for the hypothesis test:
+            \begin{center}
+                  $ \HN $: $ \beta_k=0 $ vs $ \HA $: $ \beta_k\ne 0 $.
+            \end{center}
+      \item \textcolor{Blue}{\texttt{Pr(>|z|)}}: $ p $-value for the above test.
+\end{itemize}
+\textcolor{Blue}{For this model}:
+\begin{itemize}
+      \item $ \beta_2 $ is the log odds ratio of mortality for babies born to mothers treated with
+            Intensive versus Regular care.
+            \[ \hat{\psi}=\exp{\hat{\beta}_2}=\exp{-0.6670729}=0.51 \]
+\end{itemize}
+\subsection*{Hypothesis test for $ \beta_k $}
+\begin{itemize}
+      \item We may wish to test:
+            \begin{center}
+                  $ \HN $: $ \beta_k=\beta_{k0} $ versus $ \HA $: $ \beta_k\ne \beta_{k0} $
+            \end{center}
+      \item The general \textcolor{Blue}{Wald Result} for scalar $ \beta_k $ is:
+            \[ (\hat{\beta}_k-\beta_{k0})^2\bigl(I^{kk}(\hat{\Vector{\beta}})\bigr)^{-1} \sim \chi^2_1 \]
+            equivalently $ \displaystyle \frac{\hat{\beta}_k-\beta_{k0}}{\se{\hat{\beta}_k}}\sim \N{0,1} $ where $ \se{\hat{\beta}_k}=\sqrt{I^{kk}(\hat{\Vector{\beta}})} $.
+      \item And we can find the $ p $-value of this test using
+            \[ p=2\Prob*{Z>\frac{\abs{\hat{\beta}_k-\beta_{k0}}}{\se{\hat{\beta}_k}}}\qquad\text{where $ Z \sim \N{0,1} $} \]
+      \item The \texttt{summary()} output gives the test statistics and $p$-values for testing
+            \begin{center}
+                  \begin{center}
+                        $ \HN $: $ \beta_k=0 $ vs $ \HA $: $ \beta_k\ne 0 $
+                  \end{center}
+            \end{center}
+\end{itemize}
+\subsection*{Hypothesis test for $ \beta_2 $ from Model 1: Level of Care Model}
+% \begin{noindent}
+            <<>>=
+            summary(model1)$coefficients
+            @
+          % \end{noindent}
+\begin{itemize}
+      \item We wish to test:
+            \begin{center}
+                  $ \HN $: $ \beta_2=0 $ vs $ \HA $: $ \beta_2\ne 0 $
+            \end{center}
+      \item The Wald-based test statistic is:
+            \[ z^\star=\frac{\hat{\beta}_2-0}{\se{\hat{\beta}_2}}=\frac{-0.6671}{0.2785}=-2.3949   \]
+      \item And we can find the $ p $-value of this test using:
+            \[ p=2\Prob{Z>\abs{-2.3949}}=0.0166<0.05 \]
+      \item Therefore, we reject the null hypothesis that $ \beta_2=0 $.
+      \item Equivalently, we reject the null hypothesis that $ \text{OR}=1 $.
+\end{itemize}
+\subsection*{Confidence Interval for the OR}
+\begin{itemize}
+      \item Calculate CI for $ \beta_k=\log{\psi} $ and then exponentiate.
+      \item Recall the \textcolor{Blue}{Wald-based} confidence interval:
+            \[ \hat{\beta}_k\pm 1.96\se{\hat{\beta}_k} \]
+      \item The \textcolor{Blue}{\texttt{Std Error}} from the \texttt{summary()} output is the square root of the diagonal of
+            the inverse of the Information matrix.
+            % \begin{noindent}
+        <<>>=
+        summary(model1)$coefficients
+        summary(model1)$cov.unscaled # The inverse of the Information Matrix
+        sqrt(diag(summary(model1)$cov.unscaled)) # The se of the betas
+        @
+    % \end{noindent}
+\end{itemize}
+\subsection*{Confidence Interval for $ \exp{\beta_2} $ from Model 1: Level of Care Model}
+% \begin{noindent}
+    <<>>=
+    summary(model1)$coefficients
+    @
+% \end{noindent}
+\begin{itemize}
+      \item The \qty{95}{\percent} confidence interval for the OR is:
+            \begin{align*}
+                  \exp[\big]{\hat{\beta}_k\pm 1.96\se{\hat{\beta}_k}}
+                   & =\exp{-0.6671\pm 1.96(0.2785)} \\
+                   & =(\exp{-1.2130},\exp{-0.1211}) \\
+                   & =(0.30,0.89)
+            \end{align*}
+      \item Note: The estimate and \qty{95}{\percent} confidence interval here match those found
+            previously from the $ 2\times 2 $ table analysis.
+\end{itemize}
+\subsection*{Fit of Model 2: Main Effects Model}
+\[ \textcolor{Green}{\log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1}+\beta_2x_{i2}} \]
+% \begin{noindent}
+    <<>>=
+    model2 <- glm(resp~clinic+loc,family=binomial(link=logit),data=prenatal.dat)
+    summary(model2)$coefficients
+    @
+% \end{noindent}
+\begin{itemize}
+      \item \textcolor{Blue}{Odds Ratio for mortality for Intensive versus Regular care, controlling for clinic}:
+            \[ \exp{\hat{\beta}_2}=\exp{-0.1503}=0.860 \]
+\end{itemize}
+\subsection*{Fit of Model 3: Interaction Model}
+\[ \textcolor{Green}{\log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i3}} \]
+% \begin{noindent}
+    <<>>=
+    model3 <- glm(resp~loc+clinic+loc*clinic,family=binomial(link=logit),data=prenatal.dat)
+    summary(model3)$coefficients
+    @
+% \end{noindent}
+\subsection*{Interpretation of Model 3: Interaction Model}
+\begin{table}[!htbp]
+      \centering
+      \begin{NiceTabular}{cccl}
+            Clinic & Level of Care & $ (1,x_{i1},x_{i2},x_{i3})^\top $ & $ \log[\big]{\pi_i/(1-\pi_i)} $\\
+            \midrule
+            A & Intensive & $ (1,1,1,1)^\top $ & $ \beta_0+\beta_1+\beta_2+\beta_3 $\\
+            A & Regular & $ (1,1,0,0)^\top $ & $ \beta_0+\beta_1 $\\
+            B & Intensive & $ (1,0,1,0)^\top $ & $ \beta_0+\beta_2 $\\
+            B & Regular & $ (1,0,0,0)^\top $ & $ \beta_0 $
+      \end{NiceTabular}
+\end{table}
+\begin{itemize}
+      \item \textcolor{Blue}{Odds Ratio for mortality for Intensive vs Regular care, Clinic A}:
+            \[ \exp{\hat{\beta}_2+\hat{\beta}_3}=\exp{0.007643-0.229650}=0.80=\hat{\psi}_\text{A} \]
+      \item \textcolor{Blue}{Odds Ratio for mortality for Intensive vs Regular care, Clinic B}:
+            \[ \exp{\hat{\beta}_2}=\exp{0.007643}=1.01=\hat{\psi}_\text{B} \]
+\end{itemize}
+\subsection*{Fit of Model 4: Clinic Only Model}
+\[ \textcolor{Green}{\log*{\frac{\pi_i}{1-\pi_i}}=\beta_0+\beta_1x_{i1}} \]
+% \begin{noindent}
+    <<>>=
+    model4 <- glm(resp~clinic,family=binomial(link=logit),data=prenatal.dat)
+    summary(model4)$coefficients
+    @
+% \end{noindent}
+\begin{itemize}
+      \item \textcolor{Blue}{Odds Ratio for mortality in Clinic A versus Clinic B}:
+            \[ \exp{\hat{\beta}_1}=\exp{-1.0624}=0.35 \]
+\end{itemize}
+\subsection*{Prenatal Care Wrap-up}
+\begin{itemize}
+      \item Model 4 provides the best fit to the data with the fewest parameters.
+      \item However, the original research question was about the level of care therefore we
+            select \textcolor{Blue}{Model 2} as our final model.
+      \item Odds Ratio for mortality for Intensive versus Regular care, controlling for clinic:
+            \[ \exp{\hat{\beta}_2}=\exp{-0.1503}=0.860 \]
+      \item Exercises:
+            \begin{enumerate}[1.]
+                  \item Conduct a formal hypothesis test of $ \HN $: $ \beta_2=0 $ and confirm $ p $-value in the R output.
+                  \item Show that the \qty{95}{\percent} confidence interval for the OR is $ (0.450,1.643) $.
+                  \item Show that the Odds Ratio for mortality for Clinic B versus Clinic A, controlling for
+                        level of care is:
+                        \[ \exp{-\hat{\beta}_1}=\exp{0.9863}=2.68 \]
+            \end{enumerate}
+\end{itemize}

@@ -1,0 +1,106 @@
+\makeheading{2020-02-03}
+For fixed $ n,q,d $, a perfect code maximizes
+\[ R=\frac{\log_q(M)}{n} \]
+
+\begin{Example}{}{}
+    \begin{itemize}
+        \item $ GF(q)^n $ is a trivial perfect code with $ d=1 $.
+        \item $ C=\set{\underbrace{0\cdots 0}_{n},\underbrace{1\cdots 1}_{n}} $
+              over $ \mathbb{Z}_2 $ is a perfect code if and only if $ n $ is odd.
+    \end{itemize}
+\end{Example}
+
+\begin{Exercise}{}{ex1_a2b}
+    Prove that every perfect code must have odd distance
+    (without referring to~\Cref{thm:tiet}).
+\end{Exercise}
+
+\begin{Proof}{\Cref{exercise:ex1_a2b}}{}
+    Let $ C $ be an even code of even distance $ d=2t $. Then, $ e=\lfloor(d-1)/2\rfloor=t-1 $.
+    Let $ \symbf{c}\in C $ and $ \symbf{r} $ be a vector such that $ d(\symbf{c},\symbf{r})=t $.
+    Note that $ \symbf{r} $ is not in the sphere of radius $ e $ centred at $ \symbf{c} $.
+    Now, if $ \symbf{r} $ were in the sphere of radius $ e $ centred at some codeword
+    $ \symbf{c}^\prime\neq\symbf{c} $, then we would have
+    \[ d(\symbf{c},\symbf{c}^\prime)\leqslant d(\symbf{c},\symbf{r})+d(\symbf{r},\symbf{c}^\prime)\leqslant t+e
+        <d \]
+    which is impossible since the distance of $ C $ is $ d $. Hence, $ \symbf{r} $ is not contained
+    in any of the radius-$ e $ spheres centred at codewords, and so $ C $ is not
+    a perfect code. It follows that a perfect code must have odd distance.
+\end{Proof}
+
+\begin{Theorem}{Tietäväinen, 1973}{tiet}
+    The only perfect codes are:
+    \begin{enumerate}[label=(\arabic*)]
+        \item $ V_n(GF(q)) $.
+        \item The binary replication code of odd length.
+        \item The $ (23,12,7) $-binary Golay code and all codes equivalent to it.
+        \item The $ (11,6,5) $-ternary Golay code and all codes equivalent to it.
+              A generator matrix for this code is:
+              \[ G=\spalignaugmatn{1}{
+                  I_6
+                  {\begin{matrix}
+                      1 & 1 & 1 & 1 & 1 \\
+                      0 & 1 & 2 & 2 & 1 \\
+                      1 & 0 & 1 & 2 & 2 \\
+                      2 & 1 & 0 & 1 & 2 \\
+                      2 & 2 & 1 & 0 & 1 \\
+                      1 & 2 & 2 & 1 & 0
+                  \end{matrix}}}_{6\times{} 11}
+              \]
+        \item The Hamming codes and all codes of the same $ [n,M,d] $ parameters as them
+              with $ d=3 $.
+    \end{enumerate}
+\end{Theorem}
+
+\begin{Definition}{Hamming code of order $ \symbf{r} $ over $ \symbf{GF(q)} $}{}
+    A \textbf{Hamming code of order $\symbf{r}$ over $\symbf{GF(q)}$}
+    is a linear code over $ GF(q) $ with $ n=\dfrac{q^r-1}{q-1}, $ $ k=n-r $
+    and an $ r\times n $ PCM matrix whose columns are non-zero,
+    and no two columns are scalar multiples of each other.
+\end{Definition}
+
+\begin{Example}{}{}
+    A Hamming code of order $ r=3 $ over $ GF(3) $ is a $ (13,10,3) $-code over $ GF(3) $ with
+    PCM\@:
+    \[ H=\spalignaugmat{
+        I_3 {\begin{matrix}
+            1 & 0 & 1 & 2 & 2 & 0 & 2 & 1 & 2 & 1 \\
+            1 & 1 & 0 & 1 & 0 & 1 & 2 & 2 & 1 & 1 \\
+            0 & 1 & 1 & 0 & 1 & 2 & 1 & 2 & 2 & 1
+        \end{matrix}}}_{3\times{} 13} \]
+\end{Example}
+
+\textbf{Observations}:
+\begin{enumerate}[label=(\roman*)]
+    \item For every non-zero vector $ \symbf{v}\in V_r(GF(q)) $, exactly one scalar multiple of $ \symbf{v} $
+          must be a column of a PCM (for the Hamming code of order $ r $ over $ GF(q) $).
+    \item The dimension of the code is indeed $ k $ since $ \rank(\text{PCM})=r=n-k $
+          since $ \lambda_i e_i $ are columns of the PCM\@.
+    \item The Hamming codes have distance 3.
+\end{enumerate}
+
+\begin{Theorem}{}{hamming_perfect}
+    Hamming codes are perfect.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:hamming_perfect}}{}
+    Recall that Hamming codes have $ e=1 $ and $ n=\frac{q^r-1}{q-1} $ with $ r=n-k $.
+    \begin{align*}
+        M \sum\limits_{i=0}^{e} \binom{n}{i}(q-1)^i
+         & =q^{n-r}(1+n(q-1))                               \\
+         & =q^{n-r}\left( 1+\frac{q^r-1}{q-1} (q-1) \right) \\
+         & = q^{n-r}(1+q^r-1)                               \\
+         & =q^{n-r}q^r                                      \\
+         & =q^n
+    \end{align*}
+\end{Proof}
+
+\begin{Definition}{Error vector}{error_vector}
+    Suppose $ \symbf{c}\in C $ is transmitted. Suppose $ \symbf{r}\in V_n(F) $ is received.
+    Then, the \textbf{error vector} is $ \symbf{e}=\symbf{r}-\symbf{c} $.
+\end{Definition}
+
+\begin{Example}{Error Vector}{}
+    Over $ \mathbb{Z}_3 $, if $ \symbf{c}=(120212) $ is sent, and $ \symbf{r}=(122102) $ is received, then
+    the error vector is $ \symbf{e}=(002220) $.
+\end{Example}

@@ -1,0 +1,288 @@
+\section{Implicit Differentiation}
+So far, we have examined derivatives of explicitly-defined functions (e.g., $ y=f(x) $), but what about implicitly-defined functions?
+\begin{Example}{}{}
+    If $ x^2+y^2=1 $, then this isn't even a function (as it does not pass the vertical line test). But, if we divide
+    up the curve into positive and negative parts on the $ y $-axis then it can be a function. Then,
+    we could find the derivative of each piece! The good news is that it doesn't matter if we break it up first!
+    We can differentiate both sides of an implicit equation using the chain rule and solve for $ y $. We do need to assume
+    that the equation defines an implicit function though, more on this later.
+\end{Example}
+\begin{Example}{}{}
+    Find $ y' $ if $ 3x^3 y^3+x^2 y+13x=12 $.
+    \tcblower{}
+    \textbf{Solution}. We let $ y=y(x) $, take the derivative with respect to $ x $ on both sides, and then solve for $ y'(x) $:
+    \begin{align*}
+        \odv*{[3x^3 y(x)^3+x^2 y(x)+13x]}{x}                                           & =\odv*{[12]}{x}                               \\
+        \odv*{[3x^3 y(x)^3]}{x}+\odv*{[x^2 y(x)]}{x}+\odv*{[13x]}{x}                   & =0                                            \\
+        3\bigl( 3x^2y(x)^3+3x^3(3)y(x)^2 y'(x) \bigr) +\bigl(2xy(x)+x^2 y'(x)\bigr)+13 & =0                                            \\
+        9 x^2 y(x)^3 + 9 x^3 y(x)^2 y'(x) + 2 x y(x)+ x^2 y'(x) + 13                   & =0                                            \\
+        9 x^3 y(x)^2 y'(x)+x^2 y'(x)                                                   & =-13-9 x^2 y(x)^3-2 x y(x)                    \\
+        y'(x)\bigl( 9 x^3+x^2\bigr)                                                    & =-13-9 x^2 y(x)^3-2 x y(x)                    \\
+        y'(x)                                                                          & =\frac{-13-9 x^2 y(x)^3-2 x y(x)}{9 x^3+x^2}.
+    \end{align*}
+    Therefore,
+    \[ y'=\frac{-13-9 x^2 y^3-2 x y}{9 x^3+x^2}. \]
+\end{Example}
+\begin{Remark}{}{}
+    We can't always find the derivative of both sides of an equation unless we have a function!
+\end{Remark}
+\begin{Example}{}{}
+    If $ x^2+y^2+1 $, we can show that $ y'=-\frac{x}{y} $, but for which $ (x,y)\in\R^2 $ is this valid for? None!
+    $ x^2+y^2+1\ne 0 $ for \underline{any} $ (x,y)\in \R^2 $, so we differentiated nothing! Another example is
+    if $ 2x=x $, we would differentiate to get $ 2=1 $ (nonsense). The issue is
+    $ 2x=x $ is only true if $ x=0 $, so we can't compute the derivative as we can't take a limit! So be careful, use this power wisely!
+\end{Example}
+\subsection*{Logarithmic Differentiation}
+We can use implicit differentiation to find the derivative of functions of the form
+\[ y=(f(x))^{g(x)},\; f(x)>0 \]
+by taking the ``$ \ln $'' of both sides.
+\begin{Example}{}{}
+    Let $ y=(\ln x)^{\sin x} $ for $ x>1 $. Find $ y' $.
+    \tcblower{}
+    \textbf{Solution}. Let $ y=y(x) $ so that $ y(x)=(\ln x)^{\sin x} $.
+    Taking the logarithm (and then the derivative with respect to $ x $) on both sides gives
+    \begin{align*}
+        \ln y(x)             & =(\sin x) \ln(\ln x)                                                      \\
+        \odv*{[\ln y(x)]}{x} & =\odv*{[(\sin x) \ln(\ln x)]}{x}                                          \\
+        \frac{y'(x)}{y(x)}   & =(\cos x)\ln(\ln x)+\sin x \frac{1}{\ln x}\frac{1}{x}                     \\
+        \implies y'(x)       & =y(x)\biggl[(\cos x)\ln(\ln x)+ \frac{\sin x}{x\ln x}\biggr]              \\
+        \implies y'(x)       & =(\ln x)^{\sin x}\biggl[(\cos x)\ln(\ln x)+ \frac{\sin x}{x\ln x}\biggr].
+    \end{align*}
+\end{Example}
+\begin{Example}{}{}
+    Let $ y=x^{\arctan x} $. Find $ y' $.
+    \tcblower{}
+    \textbf{Solution}. Let $ y=y(x) $ so that $ y(x)=x^{\arctan x} $.
+    Taking the logarithm (and then the derivative with respect to $ x $) on both sides gives
+    \begin{align*}
+        \ln y(x)             & =\arctan(x)\ln x                                                     \\
+        \odv*{[\ln y(x)]}{x} & =\odv*{[\arctan(x)\ln x]}{x}                                         \\
+        \frac{y'(x)}{y(x)}   & =\frac{1}{1+x^2}\ln x+\arctan(x) \frac{1}{x}                         \\
+        \implies y'(x)       & =y(x)\biggl[\frac{\ln x}{1+x^2}+\frac{\arctan x}{x}\biggr]           \\
+        \implies y'(x)       & =x^{\arctan x}\biggl[\frac{\ln x}{1+x^2}+\frac{\arctan x}{x}\biggr]. \\
+    \end{align*}
+\end{Example}
+\section{Local Extrema}
+\begin{Definition}{Local Maximum, Local Minimum}{}
+    Let $ A\subseteq\R $ be open, let $ f\colon A\to\R $, and let $ a\in A $. Then $ f $
+    has a \textbf{local maximum} at $ a $ if and only if
+    \[ \forall x\in A: f(x)\le f(a). \]
+    Similarly, we say $ f $ has a \textbf{local minimum} at $ a $ if and only if
+    \[ \forall x\in A: f(x)\ge f(a). \]
+\end{Definition}
+We also present an equivalent definition.
+\begin{Definition}{Local Maximum, Local Minimum}{}
+    Let $ A\subseteq\R $ be open, let $ f\colon A\to\R $, and let $ a\in A $. Then $ f $
+    has a \textbf{local maximum} at $ a $ if and only if
+    \[ \exists \delta>0:\forall x\in A: \abs{x-a}\le \delta\implies f(x)\le f(a). \]
+    Similarly, we say $ f $ has a \textbf{local minimum} at $ a $ if and only if
+    \[ \exists \delta>0:\forall x\in A: \abs{x-a}\le \delta\implies f(x)\ge f(a). \]
+\end{Definition}
+\begin{Remark}{}{}
+    Local maximum/minimum means max/min \underline{nearby} a point (i.e., in a small neighbourhood).
+    Global max/min means max/min over the entire interval in question. So, global max/mins that occur inside the interval
+    are also local max/mins.
+\end{Remark}
+How do we find local extrema? We will use the following theorem.
+\subsection{The Local Extrema Theorem}
+\begin{Theorem}{Fermat's Theorem/Local Extrema Theorem}{}
+    Let $ A\subseteq \R $ be open, let $ f\colon A\to\R $, and let $ a\in A $. Suppose that $ f $
+    is differentiable at $ a $ and that $ f $ has a local maximum or minimum value at $ a $. Then
+    $ f'(a)=0 $.
+    \tcblower{}
+    \textbf{Proof}: We suppose that $ f $ has a local maximum value at $ a $ (the case that $ f $ has a local minimum
+    value at $ a $ is similar). Choose $ \delta>0 $ so that $ \abs{x-a}\le \delta\implies f(x)\le f(a) $. For
+    $ x\in A $ with $ a<x<a+\delta $, since $ x>a $ and $ f(x)\ge a $ we have $\frac{f(x)-f(a)}{x-a}\ge 0$,
+    and so
+    \[ f'(a)=\lim\limits_{{x} \to {a^+}}\frac{f(x)-f(a)}{x-a}\ge 0 \]
+    by the Comparison Theorem. Similarly, for $ x\in A $ with $ a-\delta\le x<a $, since $ x<a $
+    and $ f(x)\ge f(a) $ we have $ \frac{f(x)-f(a)}{x-a}\le 0 $, and so
+    \[ f'(a)=\lim\limits_{{x} \to {a^-}}\frac{f(x)-f(a)}{x-a}\le 0. \]
+\end{Theorem}
+\begin{itemize}
+    \item Q\@: Is the converse true?
+    \item A\@: No! $ f(x)=x^3 $ has a critical point at $ x=0 $, but $ 0 $ is neither a local max nor a local min.
+    \item Q\@: If $ c $ is a local max/min, then is $ f'(c)=0 $?
+    \item A\@: No! $ f(x)=\abs{x} $ has a local min at $ x=0 $, but $ f'(0) $ does not exist.
+\end{itemize}
+\subsection*{Finding Global Extrema}
+We just saw that if we want to find a local extrema, we should look at points where $ f'=0 $ or $ f' $ does not exist.
+Let's give a name to points like this.
+\begin{Definition}{Critical Point}{}
+    A point $c$ in the \underline{domain} of a function $f$ is called a \textbf{critical point} for $f$ if either
+    $ f'(c)=0 $ or $ f'(c) $ does not exist.
+\end{Definition}
+Now, the EVT guarantees a continuous function
+has a global max/min on a closed interval. Either these are at the endpoints or they are inside, and therefore local max/mins,
+and hence critical points!
+
+So here is the algorithm for finding the global max/min
+of a continuous function $ f(x) $ on $ [a,b] $.
+\begin{enumerate}[(i)]
+    \item Find all critical points of $ f $ in $ [a,b] $.
+    \item Evaluate $ f(a) $, $ f(b) $, and $ f(c) $, where $ c $ are all the critical points.
+    \item The largest value tells you where the global maximum is, and the smallest tells you what the global minimum is.
+\end{enumerate}
+\begin{Example}{}{}
+    Find the global maximum and minimum for $ f(x)=x^3-3x+2 $ on $ [-3,3] $.
+    \tcblower{}
+    \textbf{Solution}. $ f'(x)=3x^2-3=3(x-1)(x+1)=0 $ if $ x=\pm 1 $.
+    These critical points are both inside $ [-3,3] $. Now, we check
+    $ f(-3)=-16 $, $ f(-1)=4 $, $ f(1)=0 $, $ f(3)=20 $. Therefore, the global maximum is at $ (3,20) $ and
+    the global minimum is at $ (-3,-16) $.
+\end{Example}
+\begin{Example}{}{}
+    Find the global maximum and minimum for $ f(x)=1/x $ on $ [3,7] $.
+    \tcblower{}
+    \textbf{Solution}. $ f'(x)=-1/x^2 $ and $ f'(x) $ does not exist if $ x=0 $.
+    However, $ 0 $ is not a critical point of $ f $ since $ 0\notin [3,7] $.
+    So, $ f $ has no critical points. Now, $ f(3)=1/3 $ and $ f(7)=1/7 $, so
+    the global maximum is at $ (3,1/3) $ and the global minimum is at $ (7,1/7) $.
+
+    \begin{Remark}{}{}
+        If we considered $ f(x)=1/x $ on its entire domain $ \Set{x\in\R:x\ne 0} $, then
+        $ x=0 $ is still not a critical point as it's not in the domain of the function.
+    \end{Remark}
+\end{Example}
+We will re-visit this when we discuss curve sketching.
+
+\chapter{The Mean Value Theorem}
+As we will see, the Mean Value Theorem (MVT) has \underline{lots} of applications! But first we should prove it! Let's start with:
+\begin{Theorem}{Rolle's Theorem}{}
+    Let $ f $ be a real function which is continuous on a closed interval
+    $ [a,b] $ and differentiable on the open interval $ (a,b) $.\smallskip
+    Then:
+    \[ \exists c\in(a,b):f'(c)=0. \]
+    \tcblower{}
+    \textbf{Proof}: We consider 3 cases:
+    \begin{itemize}
+        \item Case 1: $ f(x)=0 $ for all $ x\in[a,b] $. Then $ f'(x)=0 $ for all $ x\in(a,b) $,
+              so there are lots of choices for $ c\in(a,b) $ where $ f'(c)=0 $.
+        \item Case 2: There exists a point $ x_0\in(a,b) $ such that $ f(x_0)>0 $. By EVT, $ f $
+              attains its global max on $ [a,b] $ and since $ f(x_0)>0 $, while $ f(a)=f(b)=0 $,
+              we can see that the global max will occur at $ c\in(a,b) $. This means $ c $
+              is a critical point of $ f $, and since $ f'(c) $ exists, it must be the case that $ f'(c)=0 $.
+        \item Case 3: There exists a point $ x_0\in(a,b) $ such that $ f(x_0)<0 $. The proof is left
+              as an exercise (similar to case 2, but use minimum).
+    \end{itemize}
+\end{Theorem}
+\section{The Mean Value Theorem}
+\begin{Theorem}{The Mean Value Theorem (MVT)}{}
+    Let $ f $ be a real function which is continuous on a closed interval
+    $ [a,b] $ and differentiable on the open interval $ (a,b) $.\smallskip
+    Then:
+    \[ \exists c\in(a,b):f'(c)=\frac{f(b)-f(a)}{b-a}. \]
+    \tcblower{}
+    \textbf{Proof}: Define
+    \[ h(x)=f(x)-f(a)-\frac{f(b)-f(a)}{b-a}(x-a). \]
+    Since $ f $ is continuous on $ [a,b] $, so is $ h $. Also,
+    \[ h'(x)=f'(x)-\frac{f(b)-f(a)}{b-a}, \]
+    so $ h'(x) $ exists for $ x\in(a,b) $. Lastly,
+    $ h(a)=h(b)=0 $. Rolle's theorem says there exists $ c\in(a,b) $
+    such that $ h'(c)=0 $. So,
+    \[ 0=f'(c)-\frac{f(b)-f(a)}{b-a}\implies f'(c)=\frac{f(b)-f(a)}{b-a}. \]
+\end{Theorem}
+\begin{Example}{}{}
+    Let $ f(x)=x^2+2x+1 $ and $ x\in[1,2] $. Find the $ c $'s that satisfy the MVT\@.
+    \tcblower{}
+    \textbf{Solution}. Note that
+    \[ \frac{f(2)-f(1)}{2-1}=\frac{(4+4+1)-(1+2+1)}{1}=5. \]
+    Need $ f'(c)=5\implies f'(c)=2c+2\implies 2c+2=5\implies c=3/2 $.
+\end{Example}
+\begin{Remark}{}{}
+    Why do we need continuity at the endpoints?
+    Consider $ f(x)=x $ where $ f(a)=f(b)=0 $, but $ f'(x)\ne 0 $ for any $ x\in(a,b) $.
+\end{Remark}
+\begin{Example}{}{}
+    Can MVT be applied to $ f(x) $?
+    \begin{enumerate}[(1)]
+        \item $ f(x)=\abs{x} $ where $ x\in[-1,1] $. No! $ f'(x) $ DNE at $ x=0 $.
+        \item $ f(x)=\frac{x+1}{x+3} $ where $ x\in[-4,0] $. No! $ f(x) $ is not continuous at $ x=-3 $.
+        \item $ f(x)=e^{-x} $ where $ x\in[-1,1] $. Yes!
+        \item $ f(x)=\sec x $ where $ x\in[0,\pi] $. No! $ \sec x $ is not continuous at $ x=\pi/2 $.
+    \end{enumerate}
+\end{Example}
+\section{Applications of the Mean Value Theorem}
+We will see that the MVT has LOTS of applications!
+\subsection{Antiderivatives}
+\begin{Definition}{Antiderivative (Primitive) of Real Function}{}
+    Let $ F $ be a real function which is continuous on $ [a,b] $ and differentiable on $ (a,b) $.\smallskip
+
+    Let $ f $ be a real function which is continuous on $ (a,b) $.\bigskip
+
+    Let
+    \[ \forall x\in(a,b):F'(x)=f(x), \]
+    where $ F' $ denotes the derivative of $ F $ with respect to $ x $.\bigskip
+
+    Then $ F $ is a \textbf{antiderivative} of $ f $, and is denoted:
+    \[ F=\int f(x)\odif{x}. \]
+    We call $ \int f(x)\odif{x} $ the \textbf{indefinite integral} of $ f $,
+    where $ f(x) $ is the \textbf{integrand}.
+\end{Definition}
+\begin{Example}{}{}
+    $ F(x)=\frac{x^2}{2} $ is an antiderivative of $ f(x)=x $ since $ F'(x)=x $.
+\end{Example}
+\begin{itemize}
+    \item Q\@: Are antiderivatives unique?
+    \item A\@: No! $ \frac{x^2}{2},\frac{x^2}{2}+7,\frac{x^2}{2}-e $ are all antiderivatives of $ f(x)=x $.
+    \item Q\@: Do different antiderivatives differ by a constant?
+    \item A\@: Yes! Let's work towards showing this.
+\end{itemize}
+\begin{Theorem}{Zero Derivative implies Constant Function}{zeroderiv_implies_constant}
+    Let $ f $ be a real function which is continuous on $ [a,b] $
+    and differentiable on $ (a,b) $.\smallskip
+
+    Suppose that:
+    \[ \forall x\in(a,b):f'(x)=0. \]
+    Then $ f $ is constant on $ [a,b] $.
+    \tcblower{}
+    \textbf{Proof}: By MVT,
+    \[ \exists c\in(a,x):f'(c)=\frac{f(x)-f(a)}{x-a}. \]
+    But by our supposition:
+    \[ \forall x\in(a,b):f'(x)=0 \]
+    which means:
+    \[ \forall x\in(a,b):f(x)-f(a)=0 \]
+    and hence:
+    \[ \forall x\in(a,b):f(x)=f(a). \]
+\end{Theorem}
+This tells us that the family of antiderivatives for the function $ f(x)=0 $
+is all the constant functions $ f(x)=c\in\R $.
+
+\begin{Theorem}{Antiderivative Theorem}{}
+    If $ f'(x)=g'(x) $ for all $ x\in I $, then there exists $ \alpha\in\R $
+    such that $ f(x)=g(x)+\alpha $ for all $ x\in I $.
+    \tcblower{}
+    \textbf{Proof}: Suppose $ f'(x)=g'(x) $ for all $ x\in I $. Define $ h(x)=f(x)-g(x) $.
+    Then $ h'(x)=f'(x)-g'(x)=0 $
+    for all $ x\in I $.
+    By~\Cref{thm:zeroderiv_implies_constant},
+    there exists $ \alpha\in\R $ such that $ h(x)=\alpha $ for all $ x\in I $.
+    Therefore, $ f(x)-g(x)=\alpha\implies f(x)=g(x)+\alpha $ for all $ x\in I $.
+\end{Theorem}
+\subsubsection*{Additional Notes on Antiderivatives}
+\begin{Example}{}{}
+    $ \int x\odif{x}=x^2/2+C $, $ \int x^2\odif{x}=x^3/3+C $.
+\end{Example}
+\begin{Theorem}{Integral of Power}{}
+    \[ \forall n\in\R_{\ne -1}: \int x^n\odif{x}=\frac{x^{n+1}}{n+1}+C. \]
+    \tcblower{}
+    \textbf{Proof}: Easy exercise (just differentiate the RHS).
+\end{Theorem}
+Also, if $ F $ is an antiderivative of $ f $ and $ G $
+is an antiderivative of $ g $, then $ \alpha F+\beta G $
+is an antiderivative of $ \alpha f+\beta g $
+since
+\[ \odv*{\bigl(\alpha F(x)+\beta G(x)\bigr)}{x}=\alpha f(x)+\beta g(x). \]
+More generally,
+\[ \int \alpha_1f_1(x)+\cdots+\alpha_n f_n(x)\odif{x}=\alpha_1 \int f_1(x)\odif{x}+\cdots+\alpha_n \int f_n(x)\odif{x}. \]
+\subsubsection*{Some Basic Indefinite Integrals}
+\begin{itemize}
+    \item $ \int \frac{1}{x}\odif{x}=\ln\abs{x}+C $.
+    \item $ \int e^x\odif{x}=e^x+C $.
+    \item $ \int \sin x\odif{x}=-\cos (x)+C $.
+    \item $ \int \cos x\odif{x}=\sin(x)+C $.
+    \item $ \int \sec^2 x\odif{x}=\tan x+C $.
+    \item $ \int \frac{1}{1+x^2}\odif{x}=\arctan(x)+C $.
+    \item $ \int \frac{1}{\sqrt{1-x^2}}\odif{x}=\arcsin(x)+C $.
+    \item $ \int \frac{-1}{\sqrt{1-x^2}}\odif{x}=\arccos(x)+C $.
+\end{itemize}

@@ -1,0 +1,233 @@
+\section{2020-03-03}
+\subsection{Accessors/Mutators (Getters/Setters), System modelling}
+Advice: keep fields \code{private}
+
+\begin{lstlisting}
+    class Vec {
+        int x, y;
+        public:
+            // accessors/getters
+            int getX() const { return x; }
+            int getY() const { return y; }
+            // mutators/setters
+            void setX(int _x) { x = _x; }
+            void setY(int _y) { y = _y; }
+    };
+\end{lstlisting}
+
+\subsection{I/O Operators}
+\begin{itemize}
+    \item standalone functions
+    \item need to access fields
+          \begin{itemize}
+              \item Option 1: provide provide accessors/mutators
+              \item Option 2: make I/O operators \code{friend}s
+          \end{itemize}
+\end{itemize}
+
+\begin{lstlisting}
+    class Vec {
+        int x, y;
+        friend ostream &operator<<(ostream &, const Vec &);
+    };
+\end{lstlisting}
+
+\subsection{System Modelling}
+\begin{itemize}
+    \item identifying main entities (what are the main classes in the program)
+    \item relationship between entities
+    \item UML\@: Unified Modelling Language
+\end{itemize}
+
+A class in UML\@: (box with three sections)
+\begin{enumerate}[label=(\arabic*)]
+    \item Class
+    \item (Optional) Fields
+    \item (Optional) Methods
+\end{enumerate}
+An example of a class in UML is the following.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \umlclass{Vec}{
+            - x : integer\\
+            - y : integer
+        }{
+            + getX() : integer\\
+            + setX() : integer
+        }
+    \end{tikzpicture}
+\end{figure}
+Constructors and the Big 5 are not shown.
+
+\emph{Note}:
+\begin{itemize}
+    \item \code{-} $ \rightarrow $ private
+    \item \code{+} $ \rightarrow $ public
+\end{itemize}
+
+Relationship 1: Composition (OWNS-A)
+\begin{lstlisting}
+    class Vec {
+        int x, y;
+        public:
+            Vec(int, int);
+            // default constructor `could' go here
+    };
+    class Basis {
+        Vec v1, v2;
+        // let's put it here instead to avoid calling Vec
+        public:
+            Basis() : v1{0, 1}, v2{1, 1} {}
+    };
+\end{lstlisting}
+
+Basis is composed of 2 \code{Vec} objects. Instead, we write:
+`Basis OWNS-A \code{Vec}.' Typically, if A OWNS-A B\@:
+\begin{enumerate}[label=(\arabic*)]
+    \item copying \code{A} copies \code{B} (deep)
+    \item destroying \code{A} destroys \code{B}
+\end{enumerate}
+
+\begin{lstlisting}
+    class List {
+        Node *theList; // List OWNS-A Node
+    };
+\end{lstlisting}
+
+\code{Basis} OWNS-A \code{Vec}:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \umlclass{Vec}{
+            - x : integer\\
+            - y : integer
+        }{
+            + getX() : integer\\
+            + setX() : integer
+        }
+        \umlclass[x=-4,y=0]{Basis}{
+            - v1 : integer\\
+            - v2 : integer
+        }{}
+        \umlunicompo[arg=v1{,}v2,mult=2,pos=0.5]{Basis}{Vec}
+    \end{tikzpicture}
+\end{figure}
+
+Relationship 2: Aggregation (HAS-A)
+
+Typically, \code{A} HAS-A \code{B} if:
+\begin{itemize}
+    \item copying \code{A} does not copy \code{B} (shallow)
+    \item destroying \code{A} does not destroy \code{B}
+\end{itemize}
+
+Same drawing as OWNS-A, but diamond is not shaded.
+
+Relationship 3: Inheritance (IS-A)
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \umlclass[x=0,y=0]{Book}{
+            - title : string\\
+            - author : string\\
+            - numPages : integer
+        }{}
+        \umlclass[x=-3,y=-3]{Text}{
+            - title : string\\
+            - author : string\\
+            - numPages : integer\\
+            - topic : string
+        }{}
+        \umlclass[x=3,y=-3]{Comic}{
+            - title : string\\
+            - author : string\\
+            - numPages : integer\\
+            - hero: string
+        }{}
+        \umluniassoc{Text}{Book}
+        \umluniassoc{Comic}{Book}
+    \end{tikzpicture}
+\end{figure}
+
+We refer to the \code{Book} class as a:
+\begin{itemize}
+    \item Superclass
+    \item Parent
+\end{itemize}
+
+We refer to the \code{Comic} and \code{Text} class as a:
+\begin{itemize}
+    \item Subclass
+    \item Child
+\end{itemize}
+
+\begin{lstlisting}
+    class Book {
+        string title, author;
+        int numPages;
+        public:
+            Book(string, string, int);
+    };
+    // public inheritance (similar to extends keyword in Java)
+    class Text : public Book {
+        // only need to write new field
+        string topic;
+        ...
+    };
+\end{lstlisting}
+
+\code{Text} inherits \textbf{all} (public \textbf{and} private)
+members from \code{Book}.
+\begin{itemize}
+    \item any method that could be called on \code{Book} can also
+          be called on \code{Text}
+\end{itemize}
+\code{Text} has inherited the \code{private} fields.
+\begin{lstlisting}
+    int main() {
+        Text t{...};
+        t.author // cannot access this
+    }
+\end{lstlisting}
+
+\begin{lstlisting}
+    // will not compile (even if we changed all fields to public)
+    Text::Text(string t, string a, int n, string topic) :
+        title{t}, author{a}, numPages{n}, topic{topic} {}
+\end{lstlisting}
+\begin{itemize}
+    \item Inherited fields: private in base class (\code{title}, \code{author},
+          \code{numPages})
+    \item MIL can only refer to fields declared by the class
+\end{itemize}
+
+\textbf{Steps of Object Construction}:
+\begin{enumerate}[label=(\arabic*)]
+    \item Space is allocated
+    \item Superclass part is constructed
+    \item Subclass' field initialization/MIL
+    \item Subclass constructor runs
+\end{enumerate}
+
+\begin{lstlisting}
+    Text::Text(string t, string a, int numPages, String topic) : // (1)
+        Book(t, a, n), // (2) and (3)
+        topic{topic} // (4)
+        {}
+\end{lstlisting}
+
+Visibility: \code{protected} (UML \#)
+\begin{itemize}
+    \item members that are \code{protected} are visible to the class
+          and its subclasses.
+    \item breaks encapsulation
+          \begin{itemize}
+              \item child classes can break invariants
+          \end{itemize}
+\end{itemize}
+Compromise: keep fields \code{private} but provide \code{protected}
+accessors and mutators.
+

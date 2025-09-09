@@ -1,0 +1,173 @@
+\documentclass[oneside,final]{book}
+\usepackage[svgnames]{xcolor}
+\usepackage[canadian]{babel}
+\usepackage[protrusion=true,expansion=true,tracking=true,final,babel=true,DVIoutput=false]{microtype}
+\usepackage{fontspec}
+\usepackage[math-style=ISO,bold-style=ISO,warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+\usepackage[margin=1in]{geometry}
+\usepackage[unicode,pdfversion=1.7]{hyperref}
+\usepackage{siunitx}
+\sisetup{round-mode = places, round-precision = 3, round-pad = false, retain-explicit-plus}
+\usepackage[shortlabels]{enumitem}
+\usepackage[theorems,breakable]{tcolorbox}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{nicematrix}
+\usepackage{framed}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage[skip=1ex]{caption}
+\usepackage{interval}
+\usepackage{derivative}
+\usepackage{subcaption}
+\graphicspath{{figures/}}%
+
+% Functions
+\providecommand\given{}% just to make sure it exists
+\DeclarePairedDelimiterXPP{\E}[1]{\operatorname{\mathbb{E}}}[]{}{%
+    \renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}%
+    \ifblank{#1}{\:\cdot\:}%
+    #1}%
+\DeclarePairedDelimiterXPP{\Var}[1]{\operatorname{\mathbb{V}}}(){}{%
+    \renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}%
+    \ifblank{#1}{\:\cdot\:}%
+    #1}%
+\DeclarePairedDelimiterXPP\Prob[1]{\operatorname{\mathbb{P}}}(){}{%
+    \renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}%
+    \ifblank{#1}{\:\cdot\:}%
+    #1}%
+\DeclarePairedDelimiterXPP\Ind[1]{\operatorname{\mathbb{I}}}\{\}{}{%
+    \renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}%
+    \ifblank{#1}{\:\cdot\:}%
+    #1}%
+\DeclarePairedDelimiterXPP{\Se}[1]{\operatorname{\text{Se}}}(){}{%
+    \ifblank{#1}{\:\cdot\:}%
+    #1}%
+\DeclarePairedDelimiterXPP{\Cov}[1]{\operatorname{\text{Cov}}}(){}{%
+    \ifblank{#1}{\:\cdot\:}%
+    #1}%
+\let\exp\relax%
+\let\log\relax%
+\let\ln\relax%
+\DeclarePairedDelimiterXPP{\exp}[1]{\operatorname{\text{exp}}}[]{}{#1}%
+\DeclarePairedDelimiterXPP{\log}[1]{\operatorname{\text{log}}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\ln}[1]{\operatorname{\text{ln}}}(){}{#1}%
+
+% Distributions
+\DeclarePairedDelimiterXPP{\N}[1]{\mathcal{N}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\MVN}[1]{\text{MVN}}(){}{#1}%
+\DeclarePairedDelimiterXPP{\Binomial}[1]{\text{Binomial}}(){}{#1}
+\DeclarePairedDelimiterXPP{\Uniform}[1]{\mathcal{U}}[]{}{#1}
+
+% DeclarePairedDelimiter (excl. XPP)
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiterX\Set[1]\{\}{%
+    \renewcommand\given{:}%
+    #1%
+}%
+
+% Operators
+\DeclareMathOperator{\FWER}{FWER}%
+\DeclareMathOperator{\FDR}{FDR}%
+
+% Shortcuts
+\newcommand{\iid}{\overset{\text{iid}}{\sim}}%
+\newcommand{\SSC}{\text{SS}_{\text{C}}}%
+\newcommand{\SSB}{\text{SS}_{\text{B}}}%
+\newcommand{\SSE}{\text{SS}_{\text{E}}}%
+\newcommand{\SST}{\text{SS}_{\text{T}}}%
+\newcommand{\MSC}{\text{MS}_{\text{C}}}%
+\newcommand{\MSB}{\text{MS}_{\text{B}}}%
+\newcommand{\MSE}{\text{MS}_{\text{E}}}%
+\newcommand{\HN}{\symbfup{H}_0}%
+\newcommand{\HA}{\symbfup{H}_{\text{A}}}%
+\newcommand{\ALPHABET}{ABCDEFGHIJKLMNOPQRSTUVWXYZ}
+\newcommand{\alphabet}{abcdefghijklmnopqrstuvwxyz}
+
+\newenvironment{tightcenter}{%
+    \setlength\topsep{0pt}%
+    \setlength\parskip{0pt}%
+    \par\centering%
+}{\par\noindent\ignorespacesafterend}%
+
+\providecommand{\RandomVector}[1]{\symbf{#1}}% general vectors in bold italic
+\providecommand{\Vector}[1]{\symbf{#1}}% general vectors in bold italic
+\providecommand{\Matrix}[1]{\symbfup{#1}}% matrix in bold roman % also symbfsfup
+\providecommand{\Field}[1]{\symbfsfup{#1}}
+
+\newcommand{\makeheading}[1]%
+{%
+\begin{center}%
+    \makebox[\linewidth]{\raisebox{-.5ex}[0cm][0cm]{\textcolor{Gray}{\textsc{#1}}\;}\color{Crimson!50}\hrulefill}%
+\end{center}%
+}%
+
+\tcbset{%
+    common/.style={%
+            coltitle=black,%
+            boxrule=0pt,%
+            breakable,%
+            sharp corners%
+        }%
+}%
+
+\definecolor{myyellow}{RGB}{255,255,168}% Definitions
+\definecolor{mypurple}{RGB}{216,216,255}% Theorems
+\definecolor{mygreen}{RGB}{216,255,216}% Examples
+\definecolor{mycyan}{RGB}{204,229,229}% Remarks
+
+\newtcbtheorem[number within=section, crefname={definition}{definitions}]%
+{Definition}{DEFINITION}{common,colback=myyellow,colframe=myyellow!95!black}{def}%
+
+\newtcbtheorem[use counter from=Definition, crefname={example}{examples}]%
+{Example}{EXAMPLE}{common,colback=mygreen,colframe=mygreen!95!black}{ex}%
+
+\newtcbtheorem[use counter from=Definition, crefname={remark}{remarks}]%
+{Remark}{REMARK}{common,colback=mycyan,colframe=mycyan!95!black}{remark}%
+
+\newtcbtheorem[use counter from=Definition, crefname={statistical Test}{statistical Tests}]%
+{Statistical_Test}{STATISTICAL TEST}{common,colback=Pink!25!white,colframe=Pink!50!white}{stest}%
+
+\newtcbtheorem[use counter from=Definition, crefname={theorem}{theorems}]%
+{Theorem}{THEOREM}{common,colback=MediumPurple!50!white,colframe=MediumPurple!95!black,fontupper=\itshape{}}{thm}% chktex 6
+
+\newtcbtheorem[no counter]%
+{Proof}{Proof of}{common,colframe=Silver,separator sign={}}{pf}%
+
+\hypersetup{colorlinks=true,%
+linkcolor=[rgb]{0,0.5,1},%
+pdftitle={Experimental Design (STAT 430/STAT 830)},%
+pdfauthor={Cameron Roopnarine, Nathaniel Stevens},%
+pdfsubject={Statistics},%
+pdfkeywords={University of Waterloo, Spring 2021 (1215)}}%
+
+\title{%
+\LARGE Experimental Design\\%
+\large STAT 430/STAT 830\\%
+\normalsize Spring 2021 (1215)\thanks{Online Course}}%
+\author{Cameron Roopnarine\thanks{\LaTeX{}er}\and Nathaniel Stevens\thanks{Instructor}}%
+\date{\today}%
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\input{wk_01.tex}
+\input{wk_02.tex}
+\input{wk_03.tex}
+\input{wk_04.tex}
+\input{wk_05.tex}
+\input{wk_06.tex}
+\input{wk_07.tex}
+\input{wk_08.tex}
+\input{wk_09.tex}
+\input{wk_10.tex}
+\input{wk_11.tex}
+\input{wk_12.tex}
+
+\end{document}

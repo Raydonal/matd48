@@ -1,0 +1,179 @@
+\makeheading{2020-02-07}
+\section{Decoding Linear Codes}
+
+\begin{Definition}{}{}
+    Let $ C $ be an $ (n,k) $-code over $ F=GF(q) $ with PCM $ H $.
+    We write $ \symbf{x}\equiv \symbf{y} \pmod{C} $, where $ \symbf{x},\symbf{y}\in V_n(F) $
+    if $ (\symbf{x}-\symbf{y})\in C $.
+\end{Definition}
+
+\textbf{Notes}:
+\begin{enumerate}[label=(\arabic*)]
+    \item Congruence is an equivalence relation. That is, it has the
+          following three properties:
+          \begin{enumerate}[label=(\roman*)]
+              \item Reflexivity
+              \item Symmetry
+              \item Transitivity
+          \end{enumerate}
+    \item The set of equivalence classes partitions $ V_n(F) $.
+    \item The equivalence classes containing $ \symbf{x}\in V_n(F) $
+          is called a \textbf{coset} of $ V_n(F) $. This class is:
+          \begin{align*}
+              \set{\symbf{y}\in V_n(F):\symbf{y}\equiv \symbf{x}\pmod{C}}
+               & =\set{\symbf{x}+\symbf{c}:\symbf{c}\in C} \\
+               & =C+\symbf{x}
+          \end{align*}
+          We call $ C+\symbf{x} $ the coset of $ C $ represented by $ \symbf{x} $.
+\end{enumerate}
+
+\begin{Example}{Cosets}{}
+    Consider a $ (5,2) $-binary code with generator matrix
+    \[ G=\begin{bmatrix}
+            1 & 0 & 1 & 1 & 1 \\
+            0 & 1 & 1 & 1 & 0
+        \end{bmatrix}_{2\times 5} \]
+    with $ d(C)=3 $. Find all cosets of $ C $.
+
+    \textbf{Solution.} The cosets of $ C $ are:
+    \begin{enumerate}[label=(\arabic*)]
+        \item $ C+00000=\set{00000,10111,01110,11001}=\set{\symbf{0},R_1,R_2, R_1+R_2}
+                  = C+10111 = C+01110 = C + 11001 $
+        \item $ C+10000=\set{10000,00111,11110,01001} $
+        \item $ C+01000=\set{01000,11111,00000,10001} $
+        \item $ C+00100=\set{00100,10011,01010,11101} $
+        \item $ C+00010=\set{00010,10101,01100,11011} $
+        \item $ C+00001=\set{00001,10110,01111,11000} $
+        \item $ C+00011=\set{00011,10100,01101,11010} $
+        \item $ C+11100=\set{11100,01011,10010,00101} $
+    \end{enumerate}
+    In total, there are $ 8 $ cosets.
+\end{Example}
+
+\textbf{Notes}:
+\begin{enumerate}[label=(\arabic*)]
+    \item $ C+\symbf{0}=C $.
+    \item If $ \symbf{y}\in C+\symbf{x} $, then $ C+\symbf{y}=C+\symbf{x} $ by definition
+          of equivalence relation---more specifically symmetry.
+    \item The number of cosets is $ \sfrac{q^n}{q^k}=q^{n-k} $.
+\end{enumerate}
+
+\textbf{Recall}: If $ \symbf{x}\in V_n(F) $, then it's syndrome is
+\[ \symbf{s}=H\symbf{r}^\top\in V_{n-k}(F) \]
+
+\begin{Theorem}{}{hxt_eq_hty}
+    Let $ \symbf{x},\symbf{y}\in V_n(F) $. Then $ \symbf{x}\equiv \symbf{y}\pmod{C} $
+    if and only if $ H\symbf{x}^\top=H\symbf{y}^\top $.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:hxt_eq_hty}}{}
+    \begin{align*}
+        \symbf{x}\equiv \symbf{y}\pmod{C}
+         & \iff (\symbf{x}-\symbf{y})\in C            \\
+         & \iff H(\symbf{x}-\symbf{y})^\top=\symbf{0} \\
+         & \iff H\symbf{x}^\top=H\symbf{y}^\top
+    \end{align*}
+\end{Proof}
+So, cosets are characterized by their syndromes.
+
+\textbf{Decoding}
+\begin{itemize}
+    \item $ \symbf{c}\in C $ is sent.
+    \item $ \symbf{r}\in V_n(F) $ is received.
+    \item $ \symbf{e}=(\symbf{r}-\symbf{c})\in V_n(F) $.
+    \item $ H\symbf{r}^\top=H\symbf{e}^\top $.
+\end{itemize}
+So, $ \symbf{r} $ and $ \symbf{e} $ belong to the same coset of $ C $.
+
+\subsection*{CMLD}
+Given $ \symbf{r} $, find a vector $ \symbf{e} $ of smallest weight in $ C+\symbf{r} $
+or equivalently, find a vector $ \symbf{e} $ of smallest weight with the same
+syndrome as $ \symbf{r} $. Then, decode $ \symbf{r} $ to $ \symbf{c}=\symbf{r}-\symbf{e} $.
+
+\subsection*{IMLD}
+Find the unique vector $ \symbf{e} $ of smallest weight in $ C+\symbf{r} $
+having the same syndrome as $ \symbf{r} $.
+If no such $ \symbf{e} $ exists, then reject $ \symbf{r} $.
+Otherwise, decode $ \symbf{r} $ to $ \symbf{c}=\symbf{r}-\symbf{e} $.
+
+\section{Syndrome Decoding Algorithm}
+Given a PCM $ H $ for an $ (n,k) $-code $ C $ over $ F=GF(q) $.
+
+\begin{Definition}{Coset leader}{coset leader}
+    A vector of smallest weight is a coset of $ C $ is distinguished and called
+    a \textbf{coset leader} (of that coset).
+\end{Definition}
+
+\begin{algorithm}
+    \DontPrintSemicolon{}
+    \caption{Syndrome Decoding Algorithm}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+
+    \Input{Table of cosets, parity-check matrix $ H $, and received vector $ \symbf{r} $}
+    \Output{Decoded vector}
+    $ \symbf{s}\gets H\symbf{r}^\top $\;
+    Look up the coset leader corresponding to $ \symbf{s} $, say $ \symbf{\ell} $.\;
+    \Return{$ \symbf{r}-\symbf{\ell} $}
+\end{algorithm}
+
+
+\begin{Example}{Syndrome Decoding}{}
+    \[ G=\begin{bmatrix}
+            1 & 0 & 1 & 1 & 1 \\
+            0 & 1 & 1 & 1 & 0
+        \end{bmatrix}_{2\times 5} \]
+    \[ H=\begin{bmatrix}
+            1 & 1 & 1 & 0 & 0 \\
+            1 & 1 & 0 & 1 & 0 \\
+            1 & 0 & 0 & 0 & 1
+        \end{bmatrix}_{3\times 5} \]
+    \begin{table}[H]
+        \centering
+        \caption{Table of Cosets}
+        \begin{multicols}{2}
+            $ C+00000=\set{00000,10111,01110,11001} $\\
+            $ C+10000=\set{10000,00111,11110,01001} $\\
+            $ C+01000=\set{01000,11111,00000,10001} $\\
+            $ C+00100=\set{00100,10011,01010,11101} $\\
+            $ C+00010=\set{00010,10101,01100,11011} $\\
+            $ C+00001=\set{00001,10110,01111,11000} $\\
+            $ C+00011=\set{00011,10100,01101,11010} $\\
+            $ C+11100=\set{11100,01011,10010,00101} $
+        \end{multicols}
+    \end{table}
+    There are $ q^{n-k}=2^{5-2}=2^3=8 $ cosets in total.
+    \begin{table}[H]
+        \centering
+        \begin{tabularx}{0.5\linewidth}{@{}YY@{}}
+            Coset Leaders & Syndromes \\
+            \midrule
+            00000         & 000       \\
+            10000         & 111       \\
+            01000         & 110       \\
+            00100         & 100       \\
+            00010         & 010       \\
+            00001         & 001       \\
+            00011         & 011       \\
+            10010         & 101
+        \end{tabularx}
+    \end{table}
+    Suppose $ \symbf{r}=(10111) $ is received. Decode $ \symbf{r} $.
+
+    \textbf{Solution.}
+
+    Compute $ \symbf{s}=H\symbf{r}^\top=(000)^\top $.
+
+    The closest leader corresponding to $ \symbf{s}=(000) $ is $ \symbf{\ell}=(00000) $.
+
+    Thus, we get the decoded vector $ \symbf{r}-\symbf{\ell}=(10111) $.
+\end{Example}
+\begin{Remark}{}{}
+    Syndrome decoding is \emph{not} efficient in general since
+    the syndrome table is exponentially large:
+
+    For an $ (n,k) $-binary code, the syndrome table has size
+    \[ 2^{n-k}\bigl[n+(n-k)]=2^{n-k}(2n-k)\text{ bits} \]
+    Actually, $ 2^{n-k}n $ bits, since the table can be
+    sorted by syndrome, and then the syndromes do not need to be stored.
+\end{Remark}

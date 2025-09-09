@@ -1,0 +1,105 @@
+\makeheading{ 2020-01-13 }
+
+\section{Error Correcting \& Detecting Capabilities of a Code}
+\begin{itemize}
+    \item If $ C $ is used for error correction, the strategy is IMLD/CMLD\@.
+    \item If $ C $ is used for error detection only, the strategy is
+          to reject $ \symbf{r} $ if $ \symbf{r}\notin C $, otherwise accept $ \symbf{r} $.
+\end{itemize}
+
+\begin{Definition}{$ e $-error correcting code}{e-error_correcting_code}
+    A code $ C $ is called an \textbf{$\symbf{e}$-error correcting code}
+    if the decoder always makes the correct decision if
+    at most $ e $ errors per codeword are introduced per transmission.
+    We define \textbf{$\symbf{e}$-error detecting code} similarly.
+\end{Definition}
+
+\begin{Example}{Error Detecting and Correcting Codes}{}
+    \begin{itemize}
+        \item $ C=\set{0000,\,1111} $ is a $ 1 $-error correcting code, but not a
+              $ 2 $-error correcting code.
+        \item $ C=\set{\underbrace{0\cdots 0}_{m},\,\underbrace{1\cdots 1}_{m}} $
+              is a $ \bigl\lfloor \frac{m-1}{2} \bigr\rfloor $-error correcting code.
+        \item $ C=\set{0000,\,1111} $ is a $ 3 $-error detecting code.
+    \end{itemize}
+\end{Example}
+
+\begin{Theorem}{}{d1_ecc}
+    If $ d(C)=d $, then $ C $ is a $ (d-1) $-error detecting code.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:d1_ecc}}{}
+    Suppose $ \symbf{c}\in C $ is transmitted $ \symbf{r} $ is received. If no
+    errors occurred during transmission, then $ \symbf{r}=\symbf{c} $,
+    so the decoder correctly accepts $ \symbf{r} $. If at least $ 1 $
+    and at most $ (d-1) $ errors occur, then
+    $ 1\leqslant d(\symbf{r},\symbf{c})\leqslant d-1 $. Since $ d(C)=d $,
+    we have $ \symbf{r}\notin C $. Thus, the decoder correctly rejects
+    $ \symbf{r} $. Thus, $ C $ is a $ (d-1) $-error detecting code.
+\end{Proof}
+
+\begin{Theorem}{}{not_d_ecc}
+    If $ d(C)=d $, then $ C $ is not a $ d $-error detecting code.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:not_d_ecc}}{}
+    Since $ d(C)=d $, there exists codewords $ \symbf{c}_1,\symbf{c}_2\in C $
+    with $ d(\symbf{c}_1,\symbf{c}_2)=d $. Hence, it is possible that
+    $ \symbf{c}_1 $ is sent, $ d $ errors are introduced, and $ \symbf{c}_2 $
+    is received. In this case, the decoder incorrectly accepts
+    $ \symbf{c}_2 $. Thus, $ C $ is not a $ d $-error detecting code.
+\end{Proof}
+
+\begin{Theorem}{}{1ecc}
+    If $ d(C)=d $, then $ C $ is a $ \biggr\lfloor \dfrac{d-1}{2}\biggl\rfloor $-error
+    correcting code.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:1ecc}}{}
+    Suppose $ \symbf{c}\in C $ is transmitted, at most $ \frac{d-1}{2}  $ errors
+    are introduced, and $ \symbf{r} $ is received.
+    Let $ \symbf{z}\in C $ with $ \symbf{z}\neq \symbf{c} $.
+    By the triangle inequality, we have
+    \begin{align*}
+        d(\symbf{c},\symbf{z})\leqslant d(\symbf{c},\symbf{r})+d(\symbf{r},\symbf{z})\implies
+        d(\symbf{r},\symbf{z})
+         & \geqslant d(\symbf{c},\symbf{z})-d(\symbf{c},\symbf{r}) \\
+         & \geqslant d-\frac{d-1}{2}                               \\
+         & =\frac{d+1}{2}                                          \\
+         & >\frac{d-1}{2}
+    \end{align*}
+    So, $ \symbf{c} $ is the unique codeword closest to $ \symbf{r} $. Hence, IMLD/CMLD
+    will decode $ \symbf{r} $ to $ \symbf{c} $. Thus, $ C $ is a
+    $ \bigl\lfloor \frac{d-1}{2} \bigr\rfloor $-error correcting code.
+\end{Proof}
+
+\begin{Theorem}{}{ecc_not_d-1}
+    If $ d(C)=d $, then $ C $ is not a $ \biggl(\biggr\lfloor \dfrac{d-1}{2}\biggl\rfloor +1 \biggr) $-error correcting code.
+\end{Theorem}
+
+\begin{Exercise}{}{}
+    Prove~\Cref{thm:ecc_not_d-1}.
+\end{Exercise}
+
+Given $ q,\,n,\,M,\,d $, does there exist an $ [n,M] $-code over $ A $
+with $ \abs{A}=q $ such that $ d(C)=d $?
+
+Let $ C=\set{\symbf{c}_1,\ldots ,\symbf{c}_M} $ and $ e=\lfloor \frac{d-1}{2} \rfloor $.
+For any codeword $ \symbf{c}\in C $, let $ S_{\symbf{c}} $ be the sphere of radius $ e $ centred at
+$ \symbf{c} $;
+that is,
+\[ S_{\symbf{c}}= \set{\symbf{r}\in A^n:d(\symbf{r},\symbf{c})\leqslant e} \]
+We proved that if $ \symbf{c}_i,\symbf{c}_j\in C $ with $ i\neq j $,
+then $ S_{\symbf{c}_i}\cap S_{\symbf{c}_j}= \varnothing $ for each $ i\neq j $.
+This question can be viewed as a \textbf{sphere packing problem}:
+Can we place $ M $ spheres of radius $ e $ in $ A^n $ such that
+no two spheres overlap? This is a purely combinatorial problem.
+
+Does there exist a block code with parameters
+$ q=2,\,n=128,\,M=2^{64},\,d\geqslant 22 $? Yes, we will see this in Chapter 6.
+
+\subsection*{Road map}
+We'll view $ \set{0,1}^{n} $ as a vector space of
+dimension $ n $ over $ \mathbb{Z}_q $ where $ \abs{A}=q $. We will choose the code
+$ C $ to be an $ M $-dimensional subspace of this vector space,
+and we will choose special subspaces that satisfy the $ d(C)=d $ requirement.

@@ -1,0 +1,164 @@
+\makeheading{ 2020-01-24 }
+
+\begin{Theorem}{}{alpha_pairwise_excl}
+    If $ GF(q)^* $ has order $ t $, then
+    \[ \alpha^1,\ldots,\alpha^{t-1} \]
+    are pairwise distinct.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:alpha_pairwise_excl}}{}
+    Suppose for a contradiction that $ \alpha^i=\alpha^j $ where $ 0\leqslant i,j\leqslant t-1 $.
+    WLOG suppose $ j>i $, then $ \alpha^{j-i}=1 $ which contradicts $ \ord(\alpha)=t $
+    since $ 1\leqslant j-i\leqslant t-1 $.
+\end{Proof}
+
+\section{\texorpdfstring{$ \dagger $}{†} Existence of Generators}
+
+\begin{Lemma}{}{t_divides_gcd_ti}
+    Let $ \alpha\in GF(q)^* $ with $ \ord(\alpha)=t $. Then $ \ord(\alpha^i)=
+        t/\gcd(t,i) $.
+\end{Lemma}
+
+\begin{Proof}{\Cref{lem:t_divides_gcd_ti}}{}
+    Let $ d=\gcd(t,i) $. The order of $ a^i $ is the smallest positive
+    integer $ s $ such that $ \alpha^{is}=1 $. Now,
+    \[ \alpha^{is}=1\iff t\mid is\iff \frac{t}{d}\mid \frac{i}{d}s
+        \iff \frac{t}{d} \mid s \]
+    Since the smallest positive integer $ s $ satisfying $ \frac{t}{d} \mid s $
+    is $ s=\frac{t}{d} $, we have $ \ord(\alpha^i)=\frac{t}{d} $.
+\end{Proof}
+
+\begin{Lemma}{}{ord_alphabeta_mn}
+    Let $ \alpha,\beta\in GF(q)^* $, with $ \ord(\alpha)=m $ and $ \ord(\beta)=n $.
+    If $ \gcd(m,n)=1 $ then $ \ord(\alpha\beta)=mn $.
+\end{Lemma}
+
+\begin{Proof}{\Cref{lem:ord_alphabeta_mn}}{}
+    Let $ t=\ord(\alpha\beta) $. Now,
+    \[ (\alpha\beta)^{mn}=\alpha^{mn}\beta^{mn}=1, \]
+    so $ t\mid mn $. Also,
+    \[ 1=(\alpha\beta)^{tn}=\alpha^{tn}\beta^{tn}=\alpha^{tn}, \]
+    so $ m\mid tn $. And, since $ \gcd(m,n)=1 $, we have $ m\mid t $. Similarly,
+    \[ 1=(\alpha\beta)^{tm}=\alpha^{tm}\beta^{tm}=\beta^{tm}, \]
+    so $ n\mid tm $. And, since $ \gcd(m,n)=1 $, we have $ n\mid t $. Hence, since $ \gcd(m,n)=1 $,
+    we have $ mn\mid t $. Thus. $ t=mn $.
+\end{Proof}
+
+\begin{Theorem}{}{existence_generator}
+    Every finite field $ GF(q) $ has a generator.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:existence_generator}}{}
+    Let $ \alpha $ be an element of highest order in $ GF(q)^* $;
+    say $ \ord(\alpha)=t $. Suppose that $ t<(q-1) $.
+
+    If the order of every element in $ GF(q)^* $ were to divide $ t $ then the equation
+    $ y^t-1=0 $ would have $ q-1 $ roots in $ GF(q) $, which is impossible
+    since $ (q-1)>t $. Hence, there exists an element $ \beta\in GF(q)^* $
+    whose order $ b $ does not divide $ t $.
+
+    Now, let $ \ell $ be a prime such that the highest power of $ \ell $
+    which divides $ b $ (say $ \ell^e $) is greater than the highest
+    power of $ \ell $ which divides $ t $ (say $ \ell^f $)---such a prime
+    $ \ell $ must exist since $ b $ does not divide $ t $.
+
+    Consider the field elements $ \alpha^{\prime}=\alpha^{\ell^f} $
+    and $ \beta^{\prime}=\beta^{b/\ell^e} $. We have
+    \[ \ord(\alpha^{\prime})=\frac{t}{\gcd(t,\ell^f)} =\frac{t}{\ell^f} \]
+    and
+    \[ \ord(\beta^{\prime})=\frac{b}{\gcd(b,\ell^e)} =\frac{b}{b/\ell^e}=\ell^e \]
+    Since $ \gcd(t/\ell^f,\ell^e)=1 $, we have $ \ord(\alpha^{\prime}\beta^{\prime})=
+        (t/\ell^f)(\ell^e)=t\ell^{e-f}>t $. This contradicts the hypothesis
+    that the highest order of any element in $ GF(q)^* $ is $ t $. Hence, the
+    hypothesis that $ t<(q-1) $ is wrong, and so $ t=q-1 $. Thus, $ \alpha $
+    is a generator of $ GF(q)^* $.
+\end{Proof}
+
+\chapter{Linear Codes}
+\section{Introduction}
+Let $ F=GF(q) $. Let $ V_n(F)=\underbrace{F\times\cdots\times F}_{n}=F^n $.
+Then, $ V_n(F) $ is an $ n $-dimensional vector space over $ F $, and
+we have $ \abs{V_n(F)}=q^n $.
+
+\begin{Definition}{Linear $ \symbf{(n,k)} $-code}{linear_nk_code}
+    Let $ F=GF(q) $.
+    A \textbf{linear $ \symbf{(n,k)} $-code} over $ F $ is a $ k $-dimensional subspace
+    of $ V_n(F) $.
+\end{Definition}
+
+\begin{Definition}{Subspace}{subspace}
+    A \textbf{subspace} of a vector space $ V $ over $ F $ is a subset
+    $ S\subseteq V $ such that
+    \begin{enumerate}[label=V\arabic*]
+        \item $ \symbf{0}\in S \implies S\neq \varnothing $
+        \item $ \symbf{v}_1+\symbf{v}_2\in S $, $ \forall \symbf{v}_1,\symbf{v}_2\in S $
+        \item $ \lambda \symbf{v}\in S $, $ \forall \lambda\in F $ and $ \symbf{v}\in S $
+    \end{enumerate}
+    Note that $ S\subseteq V $ is also a vector space over $ F $.
+\end{Definition}
+
+Let $ C $ be an $ (n,k) $-code over $ F $. Let $ \symbf{v}_1,\ldots,\symbf{v}_k $ be
+an ordered basis for $ C $.
+\begin{enumerate}[label=(\arabic*)]
+    \item The codewords in $ C $ are precisely:
+          \[ m_1\symbf{v}_1+\cdots +m_k\symbf{v}_k \]
+          where $ m_i\in F $. So, $ \abs{C}=M=q^k $ since there are $ q $ choices for each $ m $.
+          The length of $ C $ is $ n $ and has dimension $ k $.
+    \item The rate of $ C $ is
+          \[ R=\frac{\log_q(M)}{n} =\frac{k}{n} \]
+\end{enumerate}
+
+\begin{Definition}{Hamming weight}{hamming_weight}
+    The \textbf{Hamming weight} of $ \symbf{v}\in V_n(F) $, denoted
+    $ w(\symbf{v}) $ is the number of non-zero coordinate positions in $ \symbf{v} $.
+\end{Definition}
+
+\begin{Definition}{Hamming weight of an $ \symbf{(n,k)} $-code}{hamming_weight_code}
+    The \textbf{Hamming weight of an $ \symbf{(n,k)} $-code} $ C $ is:
+    \[ w(C)=\min \set{w(\symbf{c}):\symbf{c}\in C,\,\symbf{c}\neq \symbf{0}} \]
+\end{Definition}
+
+\begin{Theorem}{}{distance_equals_weight}
+    If $ C $ is a linear code, then $ d(C)=w(C) $.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:distance_equals_weight}}{}
+    \begin{align*}
+        d(C) & =\min \set{d(\symbf{x},\symbf{y}):\symbf{x},\symbf{y}\in C,\,\symbf{x}\neq \symbf{y}}                                              \\
+             & =\min \set{w(\symbf{x}-\symbf{y}):\symbf{x},\symbf{y}\in C,\,\symbf{x}\neq \symbf{y}} & \quad & \text{by A2Q1a}                    \\
+             & =\min \set{w(\symbf{c}):\symbf{c}\in C,\,\symbf{c}\neq \symbf{0}}                     &       & \text{since $C$ is a vector space} \\
+             & =w(C)
+    \end{align*}
+\end{Proof}
+
+\section{Generator Matrices and the Dual Code}
+
+Since $ M=q^k $, there are $ q^k $ source messages. We'll assume that the source
+messages are elements of $ V_k(F) $. Then, a natural encoding rule is,
+given $ \spalignmat{m_1 \ldots{} m_k}_{1\times k}\in V_k(F) $ we'll encode the message as
+\[ \symbf{c}=m_1\symbf{v}_1+\cdots+m_k\symbf{v}_k \]
+The encoding rule depends on the basis chosen for $ C $.
+
+If $ \symbf{m}=\spalignmat{m_1 \ldots{} m_k}_{1\times k} $,
+then the encoding rule can be written as follows:
+\begin{align*}
+    \symbf{c} & =\spalignmat{m_1 \ldots{} m_k}_{1\times k}
+    \begin{bmatrix}
+        -\symbf{v}_1- \\
+        -\symbf{v}_2- \\
+        \vdots        \\
+        -\symbf{v}_k-
+    \end{bmatrix}_{k\times n}                 \\
+              & =\symbf{m}G
+\end{align*}
+Note that $ \symbf{v}_i $ are row vectors in this course; that is,
+\[ \symbf{v}_i=\spalignmat{v_{i1} \ldots{} v_{in}}_{1\times n} \]
+
+\begin{Definition}{Generator matrix}{generator_matrix}
+    Let $ C $ be an $ (n,k) $-code. A \textbf{generator matrix} $ G $
+    for $ C $ is a $ k\times n $ matrix whose rows form a basis for $ C $.
+\end{Definition}
+
+\textbf{Note}: An encoding rule for $ C $ with respect to $ G $ is $ \symbf{c}=\symbf{m}G $.
+Performing elementary row operations on $ G $ gives
+a different matrix for the same code $ C $ due to the order of the basis.

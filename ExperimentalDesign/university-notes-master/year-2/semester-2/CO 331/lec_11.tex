@@ -1,0 +1,97 @@
+\makeheading{ 2020-01-29 }
+
+\begin{Definition}{Orthogonal}{orthogonal}
+    If $ \symbf{x},\symbf{y}\in V_n(F) $ and $ \symbf{x}\cdot \symbf{y}=0 $, then
+    $ \symbf{x} $ and $ \symbf{y} $ are \textbf{orthogonal}.
+\end{Definition}
+
+\begin{Theorem}{}{c_perp_perp}
+    If $ C $ is a linear code, then $ (C^{\perp})^{\perp}=C $.
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:c_perp_perp}}{}
+    Let $ C $ be an $ (n,k) $-code. Then $ C^{\perp} $ is an $ (n,n-k) $-code.
+    So, $ (C^{\perp})^{\perp} $ is an $ (n,k) $-code. But
+    $ C\subseteq (C^{\perp})^{\perp} $ by definition of $ C^{\perp} $.
+    Suppose $ C $ is a code over $ F=GF(q) $. Then $ \abs{C}=q^k $
+    and $ \abs{(C^{\perp})^{\perp}}=q^k $. Thus, $ C=(C^{\perp})^{\perp} $.
+\end{Proof}
+
+\begin{Theorem}{}{gen_c_perp}
+    Let $ C $ be an $ (n,k) $-code with standard form $ k\times n $ generator matrix.
+    Then, a generator matrix for $ C^{\perp} $ is
+    \[ H=\spalignaugmat{-A^{\top} I_{n-k}}_{(n-k)\times n} \]
+\end{Theorem}
+
+\begin{Proof}{\Cref{thm:gen_c_perp}}{}
+    $ \rank(H)=n-k $, so $ H $ is indeed a generator matrix for some $ (n,n-k) $-code
+    $ \overline{C} $. Now,
+    \begin{align*}
+        GH^{\top}
+         & = \spalignaugmat{I_k A}_{k\times n}\spalignmat[c]{-A; I_{n-k}}_{n\times(n-k)} \\
+         & =-A+A                                                                         \\
+         & =0
+    \end{align*}
+
+    Since $ GH^{\top}=0 $, every row of $ H $ is orthogonal to every row of $ G $,
+    so every vector in the row space of $ H $ is orthogonal to every vector in
+    the row space of $ G $. Hence, $ \overline{C}\subseteq C^\top $. Since
+    $ \dim(\overline{C})=\dim(C^{\perp}) $ we have $ \overline{C}=C^{\perp} $.
+\end{Proof}
+
+\section{The Parity-Check Matrix}
+
+\begin{Definition}{Parity-check matrix}{parity-check_matrix}
+    A generator matrix for $ C^{\perp} $ is called a \textbf{parity-check matrix}
+    (PCM) for $ C $.
+\end{Definition}
+
+\begin{Example}{}{}
+    Consider a $ (5,2) $-code $ C $ over $ \mathbb{Z}_3 $ with generator matrix
+    \[ G=
+        \begin{bmatrix}
+            2 & 0 & 2 & 1 & 0 \\
+            1 & 1 & 0 & 0 & 1
+        \end{bmatrix}
+        \begin{matrix}
+            \leftarrow \symbf{c}_1 \\
+            \leftarrow \symbf{c}_2
+        \end{matrix} \]
+
+    Find the length, dimension, order, number of codewords, codewords,
+    distance, weight and errors that can be corrected for $ C $.
+
+    \textbf{Solution.}
+    \begin{itemize}
+        \item Length: $ n=5 $ ($ (n,k) $-code)
+        \item Dimension: $ k=2 $ ($ (n,k) $-code)
+        \item Order: $ q=3 $ ($ \mathbb{Z}_3 $)
+        \item Number of codewords: $ M=q^k=3^2=9 $
+        \item Codewords: $ C=\set{00000,20210,10120,11001,22002,01211,12212,21121,02122} $
+        \item Distance: $ d(C)=w(C)=3 $
+        \item Error-correcting capability: $ e=1 $
+    \end{itemize}
+
+    Find a generator matrix for $ C^{\perp} $.
+
+    \textbf{Solution.}
+    \[\begin{bmatrix}
+            2 & 0 & 2 & 1 & 0 \\
+            1 & 1 & 0 & 0 & 1
+        \end{bmatrix}\rightarrow
+        \begin{bmatrix}
+            1 & 0 & 1 & 2 & 0 \\
+            0 & 1 & 2 & 1 & 1
+        \end{bmatrix}\]
+    So,
+    \[ H=
+        \spalignaugmatn{3}{
+            2 1 1 0 0;
+            1 2 0 1 0;
+            0 2 0 0 1
+        }
+    \]
+    is a generator matrix for $ C^{\perp} $ which is a $ (5,3) $-code
+    over $ \mathbb{Z}_3 $. $ M=3^3=27 $.
+\end{Example}
+
