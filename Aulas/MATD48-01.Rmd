@@ -11,8 +11,14 @@ output:
       highlightLines: true
       countIncrementalSlides: false
 bibliography: refs.bib
+csl: apa.csl    
 link-citations: true
 ---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 class: inverse, center, middle
 
@@ -181,7 +187,7 @@ knitr::include_graphics("images/depre.png")
 
 ## Estudos Comparativos ou Confirmatórios (Experimentos)
 
-- **O quê:** O foco da nossa aula. Aqui, o investigador **manipula ativamente** uma variável (o fator) para observar o seu efeito noutra variável (a resposta), enquanto tenta controlar todas as outras.
+- **O quê:** O foco da nossa aula. Aqui, o investigador **manipula ativamente** uma variável (o fator) para observar o seu efeito em uma outra variável (a resposta), enquanto tenta controlar todas as outras.
 - **Exemplo:** Investigar se a prática regular de mindfulness melhora a concentração.
 
 ```{r, echo=FALSE, purl=FALSE, out.width="50%", fig.align='center'}
@@ -198,7 +204,7 @@ knitr::include_graphics("images/midful.png")
 - **Controle:** Ambos os grupos são testados nas mesmas condições.
 - **Medição:** Comparamos as notas num teste de concentração após o programa.
 - **Importância:** São o **padrão-ouro para estabelecer relações de causa e efeito**.
-- **Limitações:** Nem sempre são viáveis ou éticos (não podemos forçar pessoas a fumar).
+- **Limitações:** Nem sempre são viáveis ou éticos (não podemos forçar pessoas a fumar, por exemplo ou usar drigas para elevar seu nível de relaxamento).
 
 Leitura recomendada [@molinari2015mindful] e [@ross2010health]
 ---
@@ -295,7 +301,7 @@ A melhor forma de entender os princípios do delineamento de experimentos é ver
     2. Plantou uma muda de salgueiro de 2.25 kg.
     3. Regou-a apenas com água por 5 anos.
     
-```{r, echo=FALSE, purl=FALSE, out.width="40%", fig.align='center'}
+```{r, echo=FALSE, purl=FALSE, out.width="38%", fig.align='center'}
 # Assumindo que a imagem está disponível
 # include_graphics("images/circular_flowchart.png")
 knitr::include_graphics("images/Van_Helmont_Experiment.jpg")
@@ -340,12 +346,12 @@ knitr::include_graphics("images/priestly.jpg")
 
 A história da "Senhora do Chá" é o exemplo perfeito para ilustrar os três pilares do delineamento experimental moderno, formalizados por R. A. Fisher.
 
-- **A Afirmação:** Uma senhora afirmava conseguir distinguir, pelo sabor, se o leite ou o chá foram colocados primeiro na chávena.
+- **A Afirmação:** Uma senhora afirmava conseguir distinguir, pelo sabor, se o leite ou o chá foram colocados primeiro na xícara.
 - **A Pergunta Científica:** Esta capacidade é real ou é apenas sorte?
 - **O Delineamento Genial de Fisher:**
     1. Preparar 8 chávenas: 4 com leite primeiro (Tratamento A), 4 com chá primeiro (Tratamento B).
-    2. Apresentar as 8 chávenas à senhora em **ordem aleatória**.
-    3. Pedir que ela separe as chávenas nos dois grupos de 4.
+    2. Apresentar as 8 xícaras à senhora em **ordem aleatória**.
+    3. Pedir que ela separe as xícaras nos dois grupos de 4.
 
 ---
 
@@ -550,29 +556,59 @@ O gráfico mostra claramente a sobreposição dos intervalos de confiança.
     - $H_0: \mu_{Surf} = \mu_{Escalada} = \mu_{Campismo} = \mu_{Profissional}$ (Todas as médias são iguais).
     - $H_1:$ Pelo menos uma média é diferente.
 
-```{r nixon-sim, message=FALSE, warning=FALSE}
+```{r nixon-sim, message=FALSE, warning=FALSE, out.width="40%"}
+# library(broom)
 set.seed(123)
 dados_nixon <- tibble( tema = factor(rep(c("Surf", "Escalada", "Campismo", "Profissional"), each = 100)), duracao = c(rnorm(100, mean = 35, sd = 10), rnorm(100, mean = 28, sd = 10), rnorm(100, mean = 32, sd = 10), rnorm(100, mean = 27, sd = 10)))
 modelo_anova <- aov(duracao ~ tema, data = dados_nixon)
-kable(tidy(modelo_anova), format = "markdown", digits = 4)
+```
+---
+```{r nixon-sim1, message=FALSE, warning=FALSE, out.width="40%"}
+kable(tidy(modelo_anova), format = "markdown", digits = 4) %>%
+  kable_styling(full_width = FALSE, font_size = 15)
 ```
 
 **Interpretação:** O p-valor é extremamente baixo. **Rejeitamos $H_0$**. Concluímos que o tema do anúncio tem um efeito significativo no tempo de visualização.
 
----
-
 ### Análise Post-Hoc e Conclusão (Nixon)
 
 A ANOVA nos disse *que* há uma diferença, mas não *onde*. Para isso, usamos um teste **post-hoc** como o de **Tukey HSD**, que compara todos os pares de grupos controlando o erro.
+---
 
-```{r nixon-tukey-plot, echo=FALSE, fig.align='center', warning=FALSE}
+<div style="font-size: 75%;">
+```{r nixon-tukey-plot, echo=FALSE, fig.align='center', warning=FALSE, out.width="40%"}
 tukey_results <- TukeyHSD(modelo_anova)
-plot(tukey_results, las = 1)
+par(mar = c(4.1, 11.1, 4.1, 2.1))
+
+ plot(tukey_results,  las=1)
+
+# tukey_tidy <- tidy(tukey_results)
+# 
+# # 2. Criar um gráfico muito mais claro com ggplot2
+# ggplot(tukey_tidy, aes(y = term, x = estimate)) +
+#   geom_vline(xintercept = 0, linetype = "dashed", color = "red") +
+#   geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2) +
+#   geom_point(size = 3, color = "navy") +
+#   labs(
+#     title = "Resultados do Teste de Tukey HSD",
+#     y = "Comparação entre Pares",
+#     x = "Diferença Estimada nas Médias"
+#   ) +
+#   theme_minimal(base_size = 14)
+
 ```
 
 **Interpretação:** O gráfico mostra a diferença estimada entre as médias de cada par (ponto) e o intervalo de confiança de 95% para essa diferença (linha).
 - **Se um intervalo não cruza a linha vertical do zero, a diferença é significativa.**
 - **Conclusão para a Nixon:** "Os temas 'Surf' e 'Campismo' têm uma performance significativamente superior aos temas 'Escalada' e 'Profissional'. Não há diferença estatística entre 'Surf' e 'Campismo', nem entre 'Escalada' e 'Profissional'. A recomendação é focar em temas de aventura/natureza."
+
+
+<!-- --- -->
+
+<!-- ## Referências -->
+
+<!-- <div id="refs"></div> -->
+
 
 <!-- --- -->
 

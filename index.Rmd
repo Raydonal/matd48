@@ -1,0 +1,426 @@
+---
+title: "PLANEJAMENTO DE EXPERIMENTOS A (MATD48)"
+# author: "Professor: Raydonal Ospina Martínez"
+# date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+header-includes:    
+    geometry: margin = 1.0in
+---
+    
+
+
+```{r, echo = FALSE, warning = FALSE}
+# Packages
+suppressPackageStartupMessages(library(tidyverse)) # Data wrangling
+suppressPackageStartupMessages(library(scales)) # Data wrangling
+suppressPackageStartupMessages(library(dplyr)) # Data wrangling
+suppressPackageStartupMessages(library(gridExtra)) # arrange plots of ggplot 
+suppressPackageStartupMessages(library(ggpubr)) # arrange plots of ggplot 
+suppressPackageStartupMessages(library(MASS)) # for shapiro test
+suppressPackageStartupMessages(library(car)) # for ncvTest    
+suppressPackageStartupMessages(library(lmtest)) #  Generic tools for inference in parametric models, Breusch-Pagan Test included
+suppressPackageStartupMessages(library(kableExtra)) # tables
+suppressPackageStartupMessages(library(ggmosaic)) # tables
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(GGally)) # gamlss distributions
+suppressPackageStartupMessages(library(gamlss)) # gamlss fits
+suppressPackageStartupMessages(library(gamlss.dist)) # gamlss distributions
+suppressPackageStartupMessages(library(gamlss.add)) # gamlss - Extra Additive Terms - Decision tree
+# suppressPackageStartupMessages(library(gamlss.util)) # gamlss fits
+suppressPackageStartupMessages(library(broom)) # Convert Statistical Objects into Tidy Tibbles
+suppressPackageStartupMessages(library(ggthemes)) # ggplot themes
+suppressPackageStartupMessages(library(cowplot)) # ggplot arrange
+suppressPackageStartupMessages(library(gtable)) # ggplot table
+suppressPackageStartupMessages(library(RColorBrewer)) # cool colors
+suppressPackageStartupMessages(library(colorspace)) # cool colors
+suppressPackageStartupMessages(library(gvlma)) # Top-level function for Global Validation of Linear Models Assumptions.
+suppressPackageStartupMessages(library(sandwich)) # Robust Covariance Matrix Estimators
+# suppressPackageStartupMessages(library(skedastic)) # Heteroskedasticity Diagnostics for Linear Regression Models
+suppressPackageStartupMessages(library(moments)) # Moments
+suppressPackageStartupMessages(library(latex2exp)) # latex Simbols
+suppressPackageStartupMessages(library(gcookbook)) # Moments
+suppressPackageStartupMessages(library(viridis)) # latex Simbols
+suppressPackageStartupMessages(library(gcookbook)) # Moments
+suppressPackageStartupMessages(library(viridisLite)) # latex Simbols
+# Auxiliar - name of response in linear regression model
+responseName <- function (model, ...) deparse(attr(terms(model), "variables")[[2]])
+```
+
+```{r,  echo = FALSE, fig.width = 8, fig.height=5, fig.align="center", message=FALSE,warning=FALSE}
+# 2. Simular dados para o cenário de desempenho de algoritmos
+set.seed(42) # Para resultados reproduzíveis
+
+# Definir os parâmetros do nosso experimento
+servidores <- c("Servidor Básico (t2.micro)", "Servidor Avançado (m5.large)")
+algoritmos <- c("Padrão (Biblioteca)", "Algoritmo A (Otimizado)", "Algoritmo B (Legado)")
+n_testes <- 20 # Número de testes por combinação
+
+# Criar o dataframe com todas as combinações
+dados_desempenho <- expand.grid(
+  Algoritmo = algoritmos,
+  Servidor = servidores,
+  Replica = 1:n_testes
+)
+
+# Simular o tamanho dos dados de entrada (nosso eixo X)
+dados_desempenho$Tamanho_Dados_MB <- runif(nrow(dados_desempenho), min = 10, max = 500)
+
+# Simular o tempo de execução (nosso eixo Y) com base em regras lógicas
+# - O servidor avançado é mais rápido (reduz o tempo)
+# - O algoritmo otimizado é o mais rápido, o legado é o mais lento
+# - O tempo aumenta com o tamanho dos dados
+
+efeito_servidor <- ifelse(dados_desempenho$Servidor == "Servidor Avançado (m5.large)", -15, 0) # Reduz 15ms
+
+tempo_base <- case_when(
+  dados_desempenho$Algoritmo == "Padrão (Biblioteca)"   ~ 10 + 0.10 * dados_desempenho$Tamanho_Dados_MB,
+  dados_desempenho$Algoritmo == "Algoritmo A (Otimizado)" ~ 5  + 0.05 * dados_desempenho$Tamanho_Dados_MB, # Mais rápido e escala melhor
+  dados_desempenho$Algoritmo == "Algoritmo B (Legado)"    ~ 20 + 0.20 * dados_desempenho$Tamanho_Dados_MB  # Mais lento e escala pior
+)
+
+# Tempo final = tempo base + efeito do servidor + um pouco de ruído aleatório
+dados_desempenho$Tempo_Execucao_ms <- tempo_base + efeito_servidor + rnorm(nrow(dados_desempenho), mean = 0, sd = 8)
+
+# Garantir que não há tempos de execução negativos
+dados_desempenho$Tempo_Execucao_ms <- pmax(0, dados_desempenho$Tempo_Execucao_ms)
+
+
+# 3. Gerar o gráfico com os novos dados e rótulos claros
+grafico_desempenho <- ggplot(
+  data = dados_desempenho, 
+  aes(x = Tamanho_Dados_MB, y = Tempo_Execucao_ms, color = Algoritmo, shape = Algoritmo)
+) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, aes(fill = Algoritmo), alpha = 0.1) +
+  
+  # Dividir o gráfico em painéis, um para cada TIPO DE SERVIDOR (nosso bloco)
+  facet_wrap(~ Servidor, ncol = 2) +
+  
+  # Rótulos e títulos claros e informativos
+  labs(
+    title = "Comparativo de Desempenho de Algoritmos por Tipo de Servidor",
+    # subtitle = "O planejamento em blocos (servidores) permite uma comparação mais justa",
+    x = "Tamanho dos Dados de Entrada (MB)",
+    y = "Tempo de Execução (milissegundos)",
+    color = "Versão do Algoritmo",
+    shape = "Versão do Algoritmo",
+    fill = "Versão do Algoritmo"
+  ) +
+  
+  # Estilo visual limpo
+  theme_bw(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5),
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom"
+  )
+
+# 4. Exibir o gráfico final
+print(grafico_desempenho)
+
+```
+
+<h4>
+# PLANO DE ENSINO - APRENDIZAGEM DO COMPONENTE  CURRICULAR
+
+### Semestre 2025.1	
+</h4>
+
+<!-- * **Carga horaria:** 60 horas/Aula. -->
+* **Professor:** Raydonal Ospina Martínez
+* **Homepage do Curso:** [https://raydonal.github.io/matd48/](https://raydonal.github.io/matd48/)
+* **Contato:** raydonalmartinez@ufba.br
+* **Ementa do curso:** Princípios fundamentais de planejamentos experimentais e os delineamentos básicoa e suas análises. O problema de parcelas perdidas. Análise de covariância. Introdução aos planos fatoriais, efeitos principais e interações. Análise de variância de delineamentos fatoriais simples. 
+* **Local e horário da disciplina:**  2025.2 Local: PAF 1 ((PAF - Pavilhão de Aulas da Federação I - Av. Barão de Geremoabo - s/n - Ondina - Campus de Ondina).) - Sala 208 - Terça Horários 10:40 às 12:30; Lab 140 - IME - Quinta Horários 10:40 às 12:30. 	
+* **Atenção aos estudantes:** Reunião virtual via google-meet ou reunião presencial com prévio agendamento. O local de atendimento presencial será em alguma sala disponível no Departamento de Estatística da UFBA.
+
+* *<font color="red">Nota:</font> O atendimento somente será realizado com agendamento prévio. Caro aluno, eu sou uma pessoa bastante ocupada e meu tempo, assim como o seu, é muito valioso.  Use o tempo que você gastar comigo de forma eficiente. De preferência já traga anotações e perguntas já elaboradas. Seja pontual. Sempre.*
+    
+* **Inicio do curso:** 09 de setembro de 2025.
+
+<!-- * **Último dia das aulas:** 12/07/2024 (Mudanças desta data obedeceram os direcionamentos da adiministração central da UFBA no calendário acadêmico da UFBA) -->
+<!-- * **Período de realização de segunda chamada:** A combinar. -->
+
+* **Pré-requisitos:** ( ( MATD41A ou MATD41 ) e ( MATD43A ou MATD43 ) ) . A disciplina também requer conhecimentos sólidos de algebra e probabilidade.
+
+* **Propósitos da disciplina:** Capacitar o aluno a planejar, conduzir e analisar experimentos de forma estatisticamente rigorosa, permitindo a obtenção de conclusões válidas sobre relações de causa e efeito. A disciplina busca desenvolver o pensamento crítico para controlar fontes de variabilidade, maximizar a precisão das estimativas e garantir a validade interna e externa dos resultados. Prepara o futuro estatístico para atuar em áreas como pesquisa científica, desenvolvimento de produtos, otimização de processos, ensaios clínicos e testes A/B.
+
+* **Objetivos da disciplina:**Diferenciar estudos observacionais de experimentais e dominar os princípios fundamentais da experimentação (repetição, casualização e controle local). Identificar e aplicar os principais delineamentos experimentais: Inteiramente Casualizado (DIC), Blocos Completos Casualizados (DBC) e Quadrado Latino (DQL). Construir o modelo estatístico adequado para cada delineamento e realizar a Análise de Variância (ANOVA) para testar as hipóteses de interesse. Verificar os pressupostos de validade do modelo através da análise de resíduos. Executar e interpretar testes de comparações múltiplas para identificar diferenças entre tratamentos. Analisar experimentos fatoriais, interpretando corretamente os efeitos principais e as interações.
+
+
+***
+<h4>
+## Critério de aprovação
+</h4>
+
+A avaliação tem como objetivo ajudar ao aluno a progredir nas suas aprendizagens e serve também para estabelecer os resultado dos conhecimentos e das competências adquiridas nos diferentes momentos do período acadêmico. A avaliação também contribui para a qualidade do sistema de ensino. Desta forma, os critérios de avaliação para este curso são:
+
+
+| Avaliação | Porcentagem  |	Data da Prova (tentativa) |
+|:-----------:|:-------------:|:-----------------:|
+| Avaliação 1     |    35% 	    |     23/10/2025  |
+| Avaliação 2     |    35% 	    |     11/12/2025  |
+| Avaliação 3     |    30% 	    |     08/01/2026  |
+
+
+A avaliação será constituída pela nota das atividades (que podem consistir em provas, Desafios, listas de exercicios e/ou projetos a depender do desempenho e participação da turma). O grau atribuído ao aluno no final do curso será o da sua média global ponderada (média aritmética ponderada) entre as notas, i.e.,
+
+<center>
+<h3>
+    M = (0,35 * A1)+(0,35 * A2)+(0,3 * A3).
+</h3>
+</center>
+
+<!-- 1. O aluno que tiver média global M >= 7.5 recebe conceito A. -->
+<!-- 2. O aluno que tiver média global 6.5 = < M < 7.5  recebe conceito B. -->
+<!-- 3. O aluno que tiver média global 5.0 = < M < 6.5  recebe conceito C. -->
+<!-- 4. O aluno que tiver média global M < 5.0  será automaticamente reprovado. -->
+    
+* **Nota:** Não haverá escalonamento de notas. 
+    
+<!-- * **Nota:** A prova de 2a chamada é destinada exclusivamente para aqueles que não apresentarem uma (unicamente uma) prova e para tal será necessária a apresentação de alguma justificativa comprovável, como por exemplo, atestado médico ou de trabalho. A prova de 2a chamada cobrirá todo o conteúdo da disciplina.  -->
+
+***
+
+# Programa da disciplina (Tentativo)
+<center>
+  | Data de Início | Data de Fim | Tópico / Atividade Programada                                        |
+  |:--------------:|:-----------:|:---------------------------------------------------------------------|
+  |  02/09/2025    | 02/09/2025  | Congresso UFBA (Não haverá aula)                                     |
+  |  04/09/2025    | 04/09/2025  | Congresso UFBA (Não haverá aula)                                     |
+  |  09/09/2025    | 09/09/2025  | [Princípios da experimentação](Aulas/MATD48-01.html).                                        |
+  |  11/09/2025    | 11/09/2025  | Fatores, níveis e tratamentos. Erro experimental.                    |
+  |  16/09/2025    | 16/09/2025  | Modelos de ANOVA.                                                    |
+  |  18/09/2025    | 18/09/2025  | Unidades experimentais. Caracterização e escolha das unidades.       |
+  |  23/09/2025    | 23/09/2025  | Técnicas para aumentar a precisão.                                   |
+  |  25/09/2025    | 25/09/2025  | Experimentos Inteiramente Casualizados (DIC).                        |
+  |  30/09/2025    | 30/09/2025  | Modelo matemático para o DIC.                                        |
+  |  02/10/2025    | 02/10/2025  | Análise de Variância (ANOVA) para o DIC. **Aula prática em R**         |
+  |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.                                  |
+  |  09/10/2025    | 09/10/2025  | Coeficiente de variação. Análise de pressupostos.                    |
+  |  14/10/2025    | 14/10/2025  | Análise de Covariância (ANCOVA).                                     |
+  |  16/10/2025    | 16/10/2025  | Aula de exercícios e **Aula prática em R**                           |
+  |  21/10/2025    | 21/10/2025  | ANCOVA e revisão.                                                    |
+  |  **23/10/2025**  | **23/10/2025**  | **<font color="red">APLICAÇÃO DA PROVA 1</font>**                          |
+  |  28/10/2025    | 28/10/2025  | Comparações de médias. Contrastes.                                   |
+  |  30/10/2025    | 30/10/2025  | Contrastes ortogonais. **Aula prática em R**                         |
+  |  04/11/2025    | 04/11/2025  | Procedimentos de Tukey e Scheffé.                                    |
+  |  06/11/2025    | 06/11/2025  | Procedimentos de Bonferroni e Duncan. **Aula prática em R**            |
+  |  11/11/2025    | 11/11/2025  | Aula de exercícios sobre Comparações Múltiplas.                      |
+  |  13/11/2025    | 13/11/2025  | Experimentos em Blocos Completos Casualizados (DBC).                 |
+  |  18/11/2025    | 18/11/2025  | Modelo matemático e ANOVA para DBC. **Aula prática em R**              |
+  |  20/11/2025    | 20/11/2025  | Eficiência do delineamento.                                          |
+  |  25/11/2025    | 25/11/2025  | Experimentos em Quadrados Latinos (DQL).                             |
+  |  27/11/2025    | 27/11/2025  | Modelo matemático e ANOVA para DQL. **Aula prática em R**              |
+  |  02/12/2025    | 04/12/2025  | O problema de parcelas perdidas.                                     |
+  |  **11/12/2025**  | **11/12/2025**  | **<font color="red">APLICAÇÃO DA PROVA 2</font>**                          |
+  |  16/12/2025    | 16/12/2025  | Experimentos Fatoriais: Introdução.                                  |
+  |  18/12/2025    | 18/12/2025  | Fatores aninhados e cruzados. Modelo matemático.                     |
+  |  23/12/2025    | 23/12/2025  | Cálculo dos efeitos principais e interações. **Aula prática em R**     |
+  |  25/12/2025    | 25/12/2025  | Delineamentos para experimentos fatoriais.                           |
+  |  30/12/2025    | 30/12/2025  | ANOVA para experimentos fatoriais.                                   |
+  |  06/01/2026    | 06/01/2026  | Desdobramento e interpretação de interações. **Aula prática em R**   |
+  |  **08/01/2026**  | **08/01/2026**  | **<font color="red">APLICAÇÃO DA PROVA 3</font>**                          |
+  </center>
+***
+
+#### Referências bibliográficas (Principal)
+
+1.  Montgomery, D. C. (2017). **Design and analysis of experiments**. John Wiley & Sons. (Livro principal)
+2.  Box, G. E., Hunter, J. S., & Hunter, W. G. (2005). **Statistics for experimenters: design, innovation, and discovery**. Wiley-Interscience.
+3.  Kuehl, R. O. (2000). **Design of experiments: statistical principles of research design and analysis**. Cengage Learning.
+4.  Ribeiro, J. L. D. (2018). **Análise de Variância e Regressão**. Editora Appris. (Em português)
+
+***
+
+#### Referências bibliográficas 
+  <ul>
+  <li>Casella, G. (2008). <em>Statistical design.</em> Springer.</li>
+  <li>Cox, D. R., & Reid, N. (2000). <em>The theory of the design of experiments.</em> CRC press.</li>
+  <li>Hinkelmann, K., & Kempthorne, O. (2008). <em>Design and analysis of experiments, volume 1: Introduction to experimental design</em>. John Wiley & Sons.</li>
+  </ul>
+
+***
+
+#### Software (Interessados em implementar seus conhecimentos)
+
+1.  [An Introduction to R](http://cran.r-project.org)
+2.  [SAS - Acadêmico](https://www.sas.com/pt_br/learn/academic-programs/software.html)
+3.  [Rstudio](www.rstudio.com)
+4.  [TeXnicCenter](www.texniccenter.org)
+5.  [Python](http://www.python.org/)
+6.  [Julia](https://julialang.org/)
+
+***
+
+## Para refletir
+
+##### Sobrea as aulas
+
+*São reuniões cientificas e profissionais onde são discutidos temas de relevância para a formação pessoal, social e profissional. Portanto é esperado que o aluno chegue sem atraso, não entre na sala abruptamente, não sai da sala durante a discussão, respeite as intervenções do professor e/ou colega(s), não fume (Lei Federal), não use o celular (caso precisar pode se retirar da sala)  e não promova a destruição de bens públicos, entre outros.*
+
+##### Sobre honestidade acadêmica
+
+*Honestidade e confiança são importantes para todos nós como indivíduos. Neste sentido, os membros da comunidade acadêmica tanto como professores e alunos têm a responsabilidade de manter e promover os princípios da verdade e honestidade acadêmica. Assim, a honestidade acadêmica pressupõe que todos os trabalhos, provas e testes sejam frutos do trabalho individual do aluno salvo os casos onde o professor tenha dado permissão expressa e instruções para a realização de atividades em grupo.*
+
+<!-- ##### Sobre o plágio -->
+
+<!-- *Constitui desonestidade acadêmica e constitui uma grave falta acadêmica, pois destrói o princípio fundamental de confiança que deve existir no processo de transmissão de conhecimento em atividades de pesquisa e ensino. Não constitui defesa no caso de detecção de plágio que o ato tenha sido feito por negligência ou sem a intenção do aluno. A ausência de intenção pode diminuir a pena imposta, mas não serve como desculpa para o ato. Alunos devem, portanto, ter muito cuidado para evitar o plágio. Se tiver alguma dúvida sobre plágio, citação de passagens de texto, uso de ideias de terceiros ou colaborações com colegas em suas atividades acadêmicas, recomendo que  o aluno procure orientação de um professor ou coordenador acadêmico. (Fonte: Tomado de http://www.ibmecsp.edu.br/biblioteca).* -->
+
+<!-- ##### Sobre desonestidade acadêmica -->
+
+<!-- *Desonestidade acadêmica inclui colar em provas e testes, plágio e/ou qualquer adulteração no desenvolvimento de um trabalho ou pesquisa acadêmica. O plágio ocorre quando o aluno e/ou professor apresenta o trabalho de outra pessoa como se fosse seu sem citar a fonte de maneira apropriada. A única exceção à regra de citar adequadamente as fontes ocorre quando informações ou ideias são do senso comum. O plágio inclui, mas não se limita a, apresentar um trabalho obtido de um serviço profissional de redação (inclusive da Internet); citar diretamente ou parafrasear uma passagem de texto sem citar a fonte; e utilizar figuras, gráficos e tabelas sem identificar as fontes. Solicitações inapropriadas não serão admissíveis nesse curso, portanto evite-se constrangimentos. O aluno que agir de modo contrário à ética e honestidade acadêmica receberá forte penalização e será reportado oficialmente à coordenação do curso.* -->
+
+##### Sobre profissionalismo
+
+*Aluno, você já não é mais criança ou adolescente, mas adulto. Durante seu tempo na universidade, você formará quem você será pelas próximas décadas. O mercado de trabalho quer apenas os melhores e os mais profissionais. Haja desde já como o profissional que você deseja ser. (Fonte: Política do Curso e Etiqueta em Sala de Aula, Professor Dr. Renato J. Cintra).*
+
+##### Sobre tratamento pessoal
+
+*Lembrem que nós somos respeitados e tratados da mesma forma em que tratamos as demais pessoas. Ao se dirigir a professores e/ou colegas, faça-o respeitosamente.*
+
+
+##### Sobre o aluno
+
+*Finalmente quero lembrá-lo que você constrói seu conhecimento e desenvolve sua capacidade de aprender e criar. Seu instrutor está aqui para orientá-lo. Trabalhe, pesquise, seja crítico construtivo, crie, se dedique, se esforce e não desista, se pensar em desistir se esforce mais. Não se preocupe e melhor se ocupe. Você está aqui porque tem condições de vencer.*
+
+***
+
+### Material de apoio 
+
+O material de apoio será distribuído ao longo do curso. Esse material pode incluir, livros, slides de aula, scripts para reprodução, artigos científicos, artigos dedivulgação, entre outros.
+
+
+<!-- * <font color="purple">  Hansen, M. H., & Hurwitz, W. N. (1943).</font> On the theory of sampling from finite populations. The Annals of Mathematical Statistics, 14(4), 333-362.  [[Artigo]](Papers/Hansen-TheorySamplingFinite-1943.pdf) -->
+
+<!-- * <font color="purple"> Hansen, M. H., & Hurwitz, W. N. (1949).</font> On the determination of optimum probabilities in sampling. The Annals of Mathematical Statistics, 426-432. [[Artigo]](Papers/Hansen-DeterminationOptimumProbabilities-1949.pdf) -->
+
+<!-- * <font color="purple"> Horvitz, D. G., & Thompson, D. J. (1952). </font> A generalization of sampling without replacement from a finite universe. Journal of the American statistical Association, 47(260), 663-685. [[Artigo]](Papers/Horvitz-Thompson-1952-jasa.pdf) -->
+
+
+
+
+<!-- Material elaborado pelos professores: Cristiano Ferraz e Raydonal Ospina -->
+<!-- * <font color="purple">[M1]</font> [ME414-UNICAMP](https://github.com/ME414-UNICAMP/ME414-UNICAMP.github.io/tree/master/aulas). Material da disciplina **Estatística para Experimentalistas** elaborado pelas professores Samara Kiihl, Tatiana Benaglia e Benilton Carvalho da UNICAMP. -->
+<!-- * Notas de aula da disciplina **EST0232 - Fundamentos de Estatística Aplicada** em colaboração com a professora Luz Milena Zea Fernández do DE-UFRN. -->
+<!-- * Notas de aula da disciplina **Cálculo I** [(Cálculo Diferencial e Integral - Notas de Aula)](https://sites.icmc.usp.br/andcarva/sma301/Calculo1c-AM6.pdf). Elaborado pelas professoas Márcia Federson e Gabriela Plana. -->
+<!-- *  [Apostila Unidade - II - ](Material/Apostila-2.pdf) Material elaborado pelas professoras: Giovana Silva, Lia Moraes, Rosana Castro e Rosemeire Fiaccone. Revisada em 2010.2 - Monitora: Tatiana Felix da Matta. Revisada em 2013.1 - Profas Gecynalda Gomes e Silvia Regina. Revisada em 2014.1 - Profa Silvia Regina.   Revisada em 2017.2 - Profas Giovana Silva e Verônica Lima. Revisada em 2017.2 - Monitores: Ícaro Augusto e Matheus Borges. -->
+<!-- *  [Apostila Unidade - III - ](Material/Apostila-3.pdf) Material elaborado pelas professoras: Giovana Silva, Lia Moraes, Rosana Castro e Rosemeire Fiaccone. Revisada em 2010.2 - Monitora: Tatiana Felix da Matta. Revisada em 2013.1 - Profas Gecynalda Gomes e Silvia Regina. Revisada em 2014.1 - Profa Silvia Regina.   Revisada em 2017.2 - Profas Giovana Silva e Verônica Lima. Revisada em 2017.2 - Monitores: Ícaro Augusto e Matheus Borges. -->
+
+<!-- *** -->
+
+<!-- **Slides** -->
+
+<!-- * Unidade I -->
+
+<!-- Em breve -->
+ <!-- | [Parte 0](Material/Parte-0.pdf)  -->
+<!--  | [Parte 1](Material/Parte-1.pdf) | [Parte 2](Material/Parte-2.pdf) | [Parte 3](Material/Parte-3.pdf) | -->
+
+<!-- * Unidade II -->
+
+<!--  | [Parte 4](Material/Parte-4.pdf) | [Parte 5](Material/Parte-5.pdf) |  [Parte 6a ](Material/misclasification-V-ESAMP-2017.pdf) |  [Parte 6b ](Material/Misclassification_and_area_sample.pdf) |  -->
+
+<!--  * Laboratório -->
+
+<!--  | [Prática 01](Scripts/Practical_01.R) | [Prática 02](Scripts/Practical_02.R)| -->
+
+<!--  Dados Censo penitenciário  [[Aqui]](https://proyectos.inei.gob.pe/iinei/srienaho/descarga/SPSS/512-Modulo860.zip). Mais informações ver o site do INEI [Censo Nacional de población Penitenciária](https://proyectos.inei.gob.pe/iinei/srienaho/Consulta_por_Encuesta.asp) -->
+
+
+<!--  |  [Semana 2](Material/semana2.pdf) |  [Semana 3](Material/semana3.pdf)  | [Semana 4](Material/semana4.pdf)   |  [Semana 5](Material/semana5.pdf) | [P-I](Material/PI.pdf) | -->
+
+<!-- *Resultados Prova I* | [Turma-09](Material/T09-Nota-P-I.pdf) | [Turma-10](Material/T10-Nota-P-I.pdf) | -->
+
+<!-- * Unidade II -->
+
+<!--  | [Semana 6](Material/semana6.pdf) | [Semana 7](Material/semana7.pdf) | [Semana 8](Material/semana8.pdf) |  [Semana 9](Material/semana9.pdf) |  [Semana 10](Material/semana10.pdf) | -->
+
+<!-- *Resultados Prova II* | [Turma-09](Material/T09-Nota-P-II.pdf) | [Turma-10](Material/T10-Nota-P-II.pdf) | -->
+
+<!--  * Unidade III -->
+
+<!--  | [Semana 11](Material/semana11.pdf) | [Semana 12](Material/semana12.pdf) | -->
+
+<!-- *Resultados Prova III* | [Turma-09](Material/T09-Nota-P-III.pdf) | [Turma-10](Material/T10-Nota-P-III.pdf) | -->
+
+***
+
+### <img src="Configuracoes/hora.gif" width="16" height="16" border="0" align="left">   &nbsp;	<u> Listas </u> 
+
+<!-- * <font color="pink">- Aula virtual- </font> Por motivos de segurança a aula do dia 05/09/2023 será realizada de forma virtual. Detalhes da conexão se encontram no e-mail encaminhado. -->
+
+<!-- <font color="purple"> - Lista de exercícios I - </font>  -->
+
+<!--   + Bolfarine & Bussab (2005),  Exercícios: 1.1, 1.3, 1.6, 1.11, 1.13, 2.1, 2.2, 2.6 -->
+<!--   + Tillé (2020). Exercícios: 2.1, 2.2,2.3, 2.4 -->
+<!--   + Särndal (2003). Exercícios: 2.1, 2.2, 2.3, 2.5 -->
+
+<!-- <font color="purple"> - Lista de exercícios II - </font>  -->
+
+<!--   + Tillé (2020). Exercícios: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.8 -->
+
+<!-- <font color="purple"> - Lista de exercícios III - </font>  -->
+
+<!--   + Tillé (2020). Exercícios: 7.1, 7.2, 7.3 -->
+
+
+<!-- * <font color="pink"> - Lista - Exercicios - </font> [[Aqui]](Material/Lista_1_MATD44_2023_2.pdf) -->
+
+
+***
+<!-- ### <img src="Configuracoes/hora.gif" width="16" height="16" border="0" align="left">   &nbsp;	<u> <font color="red"> Provas </font> </u> -->
+
+<!-- *   [[<font color="red">  Prova I  </font>]](Provas/Prova-I-MATD44-2025-1.pdf) <!-- - [[Gabarito]](Provas/Gabarito-Prova-I-MATD44-2025-1.pdf)  --> - [[Notas]](Provas/Nota-Prova-I.md)  -->
+
+
+<!-- *   [[<font color="red">  Prova II  </font>]](Provas/Prova-II-MATD44-2025-1.pdf) <!-- - [[Gabarito]](Provas/Gabarito-Prova-II-MATD44-2025-1.pdf)  --> - [[Notas]](Provas/Nota-Prova-II.md)  -->
+
+
+<!-- <!-- * <font color="red">- Prova I - </font>  [[Aqui]](Provas/UFBA_MATD44_Amostragem_Prova_I.pdf) --> -->
+
+<!-- <!-- * <font color="red">- Prova II - </font>  [[Aqui]](Provas/UFBA_MATD44_Amostragem_Prova_II.pdf) --> -->
+
+<!-- <!-- * <font color="red">- Prova III - </font>  [[Aqui]](Provas/UFBA_MATD44_Amostragem_Prova_III.pdf). Dados prova III [[Aqui]](Provas/PPM-29-de-Ago.xlsx) --> -->
+
+<!-- <!-- * Prezado aluno, recomendo <font color="red">fortemente</font> fazer todos os exercícios propostos das Apostilas (Unidade - I, II e III para treinamento e afixar conhecimento). --> -->
+<!-- <!-- * Alunos com dificuldades de cálculo recomendo revisar fortemente notas de Cálculo I e o material audiovisual da USP [e-Aulas] (https://eaulas.usp.br/portal/). Lá encontraram uma série de conteúdos de fácil assimilação com notas explicativas e exercícios resolvidos  (Aproveitem!!!) --> -->
+
+<!-- <!-- * Informamos que foi selecionado o monitor **Luiz Antônio** para a disciplina de MAT236.  O monitor irá auxiliar os alunos de MAT236 a resolver os exercícios das quatros listas de exercícios da apostila 1 desta disciplina. Seguem adiante os horários de atendimento da monitoria durante a semana que iniciará no dia 05/09/2022 até o final do semestre. --> -->
+
+<!-- <!-- <font color="red">Mudança de horário da monitoria de MAT236:</font> Na segunda unidade, houve uma alteração nos horários de atendimento da monitoria devido a baixa procura dos alunos na segunda-feira e quinta-feira e maior frequência de alunos na sexta-feira. Devido à maior procura pela monitoria online, na segunda unidade a monitoria será de forma online. Na quinta-feira, o horário presencial passou a ser online. Os alunos que frequentam a monitoria solicitaram mais horários na sexta-feira. Sendo assim, aumentou o tempo de atendimento na sexta-feira --> -->
+
+
+<!-- <!-- | Dia da semana | Horário        | Atendimento online                      | --> -->
+<!-- <!-- |---------------|----------------|---------------------------------------------| --> -->
+<!-- <!-- | Quinta-feira | 13:00 às 14:50 | Link: https://meet.google.com/utq-ukgc-ktg                       | --> -->
+<!-- <!-- | Sexta-feira  | 18:30 às 20:20 | Link: https://meet.google.com/qjj-vvvq-sav                           | --> -->
+<!-- <!-- | Sexta-feira   | 10:40 às 12:30 | Link: https://meet.google.com/pub-dojh-nei | --> -->
+<!-- <!-- | Sexta-feira   | 10:40 às 12:30 | Link: https://meet.google.com/tcj-gxwy-bem | --> -->
+
+
+
+<!-- <!-- * <font color="purple"> Prezado aluno, a prova I do dia 22/09/2022 será realizada da sala 109 do PAF V no horário habitual da aula. Caso haja alguma mudança deixarei algum recado na porta da sala. </font> --> -->
+<!-- ### <img src="Configuracoes/hora.gif" width="16" height="16" border="0" align="left">   &nbsp;	<u> Desafios </u>  -->
+
+<!-- [[<font color="red">  Desafios  </font> / Conceitos]](Desafios/AvalDesafios.html) -  [[Notas]](Provas/Nota-Desafios-III.md)  -->
+
+
+<!-- *   [[<font color="red">  Nota Final  </font>]](Provas/Nota-Final.md)  -->
+
+
+
+***
+<!-- ###### Este documento foi gerado através de um arquivo [R Markdown](http://rmarkdown.rstudio.com/). Markdown é uma linguagem simples de formatação que permite produzir documentos HTML, PDF e MS Word, de forma eficiente.   -->
+###### Content Copyright &copy; 2025 Raydonal Ospina Martínez. All Rights Reserved.
+
+
+<!-- https://cales.arizona.edu/~anling/STAT574/notes.htm -->
+<!-- https://mathspace.co/textbooks/syllabuses/Syllabus-1057/topics/Topic-20689/subtopics/Subtopic-268600/ -->
+<!-- https://byjus.com/maths/sampling-methods/ -->
+<!-- https://mathspace.co/textbooks/syllabuses/Syllabus-1057/topics/Topic-20689/subtopics/Subtopic-268600/ -->
+

@@ -28,6 +28,8 @@ class: center, middle, inverse, title-slide
 ---
 
 
+
+
 class: inverse, center, middle
 
 # Parte 1: A Gênese - Por que Fazemos Ciência com Dados?
@@ -179,7 +181,7 @@ Leitura recomendada [@bauminger2008children] e [@dere2018analyzing].
 
 ## Estudos Comparativos ou Confirmatórios (Experimentos)
 
-- **O quê:** O foco da nossa aula. Aqui, o investigador **manipula ativamente** uma variável (o fator) para observar o seu efeito noutra variável (a resposta), enquanto tenta controlar todas as outras.
+- **O quê:** O foco da nossa aula. Aqui, o investigador **manipula ativamente** uma variável (o fator) para observar o seu efeito em uma outra variável (a resposta), enquanto tenta controlar todas as outras.
 - **Exemplo:** Investigar se a prática regular de mindfulness melhora a concentração.
 
 &lt;img src="images/midful.png" width="50%" style="display: block; margin: auto;" /&gt;
@@ -192,7 +194,7 @@ Leitura recomendada [@bauminger2008children] e [@dere2018analyzing].
 - **Controle:** Ambos os grupos são testados nas mesmas condições.
 - **Medição:** Comparamos as notas num teste de concentração após o programa.
 - **Importância:** São o **padrão-ouro para estabelecer relações de causa e efeito**.
-- **Limitações:** Nem sempre são viáveis ou éticos (não podemos forçar pessoas a fumar).
+- **Limitações:** Nem sempre são viáveis ou éticos (não podemos forçar pessoas a fumar, por exemplo ou usar drigas para elevar seu nível de relaxamento).
 
 Leitura recomendada [@molinari2015mindful] e [@ross2010health]
 ---
@@ -281,7 +283,7 @@ A melhor forma de entender os princípios do delineamento de experimentos é ver
     2. Plantou uma muda de salgueiro de 2.25 kg.
     3. Regou-a apenas com água por 5 anos.
     
-&lt;img src="images/Van_Helmont_Experiment.jpg" width="40%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/Van_Helmont_Experiment.jpg" width="38%" style="display: block; margin: auto;" /&gt;
 ---
 
 
@@ -330,12 +332,12 @@ print(paste("Perda de peso do solo:", perda_peso_solo, "Kg"))
 
 A história da "Senhora do Chá" é o exemplo perfeito para ilustrar os três pilares do delineamento experimental moderno, formalizados por R. A. Fisher.
 
-- **A Afirmação:** Uma senhora afirmava conseguir distinguir, pelo sabor, se o leite ou o chá foram colocados primeiro na chávena.
+- **A Afirmação:** Uma senhora afirmava conseguir distinguir, pelo sabor, se o leite ou o chá foram colocados primeiro na xícara.
 - **A Pergunta Científica:** Esta capacidade é real ou é apenas sorte?
 - **O Delineamento Genial de Fisher:**
     1. Preparar 8 chávenas: 4 com leite primeiro (Tratamento A), 4 com chá primeiro (Tratamento B).
-    2. Apresentar as 8 chávenas à senhora em **ordem aleatória**.
-    3. Pedir que ela separe as chávenas nos dois grupos de 4.
+    2. Apresentar as 8 xícaras à senhora em **ordem aleatória**.
+    3. Pedir que ela separe as xícaras nos dois grupos de 4.
 
 ---
 
@@ -514,32 +516,70 @@ O gráfico mostra claramente a sobreposição dos intervalos de confiança.
 
 
 ``` r
+# library(broom)
 set.seed(123)
 dados_nixon &lt;- tibble( tema = factor(rep(c("Surf", "Escalada", "Campismo", "Profissional"), each = 100)), duracao = c(rnorm(100, mean = 35, sd = 10), rnorm(100, mean = 28, sd = 10), rnorm(100, mean = 32, sd = 10), rnorm(100, mean = 27, sd = 10)))
 modelo_anova &lt;- aov(duracao ~ tema, data = dados_nixon)
-kable(tidy(modelo_anova), format = "markdown", digits = 4)
+```
+---
+
+``` r
+kable(tidy(modelo_anova), format = "markdown", digits = 4) %&gt;%
+  kable_styling(full_width = FALSE, font_size = 15)
 ```
 
-
-
-|term      |  df|     sumsq|    meansq| statistic| p.value|
-|:---------|---:|---------:|---------:|---------:|-------:|
-|tema      |   3|  6410.721| 2136.9071|   22.7959|       0|
-|Residuals | 396| 37121.361|   93.7408|        NA|      NA|
+&lt;table class="table" style="font-size: 15px; color: black; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sumsq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; meansq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tema &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6410.721 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2136.9071 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.7959 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 396 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37121.361 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 93.7408 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 **Interpretação:** O p-valor é extremamente baixo. **Rejeitamos `\(H_0\)`**. Concluímos que o tema do anúncio tem um efeito significativo no tempo de visualização.
-
----
 
 ### Análise Post-Hoc e Conclusão (Nixon)
 
 A ANOVA nos disse *que* há uma diferença, mas não *onde*. Para isso, usamos um teste **post-hoc** como o de **Tukey HSD**, que compara todos os pares de grupos controlando o erro.
+---
 
-&lt;img src="MATD48-01_files/figure-html/nixon-tukey-plot-1.png" style="display: block; margin: auto;" /&gt;
+&lt;div style="font-size: 75%;"&gt;
+&lt;img src="MATD48-01_files/figure-html/nixon-tukey-plot-1.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 **Interpretação:** O gráfico mostra a diferença estimada entre as médias de cada par (ponto) e o intervalo de confiança de 95% para essa diferença (linha).
 - **Se um intervalo não cruza a linha vertical do zero, a diferença é significativa.**
 - **Conclusão para a Nixon:** "Os temas 'Surf' e 'Campismo' têm uma performance significativamente superior aos temas 'Escalada' e 'Profissional'. Não há diferença estatística entre 'Surf' e 'Campismo', nem entre 'Escalada' e 'Profissional'. A recomendação é focar em temas de aventura/natureza."
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Referências --&gt;
+
+&lt;!-- &lt;div id="refs"&gt;&lt;/div&gt; --&gt;
+
 
 &lt;!-- --- --&gt;
 
