@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fundamentos de Análise para Planejamento Experimental</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fundamentos de Análise para Planejamento Experimental
+]
+.subtitle[
+## De Relações Descritivas à Inferência Causal
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+
+
+class: inverse, center, middle
+
+# Parte 1: Descrevendo Relações
+
+---
+
+## Relações entre Variáveis
+
+Duas variáveis `\(X\)` e `\(Y\)` são **independentes** se conhecer o valor de uma não lhe diz nada sobre a outra. Exemplo: o resultado de um giro na roleta não informa nada sobre o próximo giro.
+
+Elas são **dependentes** se conhecer o valor de uma **altera a distribuição** da outra. Exemplo: a probabilidade de uma pessoa se chamar "Maria" muda drasticamente se soubermos que o gênero dessa pessoa é feminino.
+
+---
+
+## Valores Condicionais
+
+Dizer que "aprendemos o valor de uma variável" é o mesmo que dizer que **condicionamos** no valor dessa variável. Condicional ao nome de alguém ser 'Susan', a distribuição de gênero é 96% feminina e 4% masculina.
+
+A notação técnica para a probabilidade condicional de uma variável (Gênero) dado o valor de outra é:
+`$$P(\text{Gênero} | \text{Nome} = \text{Susan})$$`
+## A Importância das Médias Condicionais
+
+Em planejamento experimental, nosso objetivo é quase sempre comparar médias entre diferentes grupos (tratamentos). A **média condicional** é a ferramenta matemática para isso.
+
+É a média de uma distribuição condicional. Por exemplo, a renda média para o grupo "com ensino superior" vs. a renda média para o grupo "sem ensino superior".
+
+---
+
+## A Esperança Condicional
+
+A média condicional populacional é chamada de **esperança condicional**, e é denotada por:
+`$$E[Y | X = x]$$`
+
+Esta função nos diz o valor esperado (a média) de `\(Y\)` para cada valor específico `\(x\)` da variável `\(X\)`. Em um experimento, `\(X\)` representaria os diferentes tratamentos.
+
+## Relações e Esperança Condicional
+
+Falar sobre como duas variáveis estão relacionadas é outra forma de falar sobre valores condicionais (geralmente, médias condicionais).
+
+**Relação Positiva:** "Para valores mais altos de `\(X\)`, a esperança condicional `\(E[Y|X]\)` é maior."
+**Relação Negativa:** "Para valores mais altos de `\(X\)`, `\(E[Y|X]\)` é menor."
+**Relação em forma de U:** "Para valores mais altos de `\(X\)`, `\(E[Y|X]\)` muda, mas não sempre na mesma direção."
+---
+
+## "Explicando" a Variação
+
+Podemos dizer que `\(E[Y|X]\)` é "a parte de `\(Y\)` que é *explicada por* `\(X\)`".
+
+Se `\(E(\text{Xícaras De Café Por Dia} | \text{Ocupação} = \text{Professor}) = 1.79\)`, e eu bebo 3 xícaras por dia:
+  - 1.79 das minhas xícaras são "explicadas" pelo fato de eu ser professor.
+  - `\(3 - 1.79 = 1.21\)` das minhas xícaras "não são explicadas" por ser professor.
+
+Esta é uma explicação **puramente estatística**. Não significa necessariamente que 1.79 das minhas xícaras são *causadas* por eu ser professor, mas sim que 1.79 é o *que seria esperado* dado o que você sabe sobre mim.
+
+A "explicação causal" requer mais do que apenas um cálculo estatístico.
+
+---
+
+## Visualizando Médias Condicionais (X Discreto)
+
+Quando a variável X (nosso "fator" discreto) tem poucos níveis, podemos comparar as distribuições de Y para cada nível. 
+
+Gráficos de barras, tabelas de proporção, ou gráficos de densidade para cada valor de `\(X\)`.
+
+
+``` r
+p1 &lt;- ggplot(oster %&gt;% 
+         select(smoke, supplement_vite_single) %&gt;% na.omit() %&gt;%
+         mutate(smoke = as.factor(
+           case_when(smoke == 0 ~ 'Não Fumante',
+                     TRUE ~ 'Fumante')
+         )) %&gt;% group_by(smoke) %&gt;% mutate(BigN = n()) %&gt;%
+         group_by(smoke, supplement_vite_single) %&gt;% 
+         summarize(N = n()/first(BigN)), 
+       aes(x = smoke, y = N, fill = supplement_vite_single)) + 
+  geom_col(position = 'dodge', color = 'black') + 
+  guides(fill = guide_legend(title="Suplemento")) +
+  labs(x = NULL, y = 'Proporção', title = 'Uso de Vitamina E por Status de Tabagismo') +
+  theme_pubr(base_size = 16)
+```
+---
+
+``` r
+p1
+```
+
+&lt;img src="MATD48-03_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+## Tabelas de Proporção (X Discreto)
+
+Tabelas são outra forma de exibir médias condicionais para variáveis categóricas. Lembre-se que a proporção de uma variável binária é a sua média.
+
+Abaixo, a proporção de pessoas que tomam Vitamina E, condicional a serem fumantes ou não: `\(P(\text{Vitamina E} | \text{Tabagismo})\)`
+
+
+``` r
+oster %&gt;% select(smoke,supplement_vite_single) %&gt;%
+         mutate(smoke = as.factor(
+           case_when(smoke == 0 ~ 'Não Fumante',
+                     TRUE ~ 'Fumante'))) %&gt;% 
+  table() %&gt;% prop.table(margin = 1)
+```
+
+```
+##              supplement_vite_single
+## smoke         Sem Vitamina E Tomou Vitamina E
+##   Fumante          0.8919705        0.1080295
+##   Não Fumante      0.8164492        0.1835508
+```
+---
+
+
+## Gráficos de Dispersão (X Contínuo)
+ - **Gráficos de dispersão (Scatterplots):** Mostram todos os dados, mas a relação pode não ser clara.
+  - **Binning (Agrupamento):** Dividir `\(X\)` em faixas e calcular a média de `\(Y\)` em cada faixa.
+  - **Médias Locais (LOESS):** Uma versão suave do binning, que não cria saltos abruptos.
+  - **Regressão:** Ajustar uma linha (ou outra forma funcional) para representar a média condicional.
+
+## Exemplo: Gráficos de Barras Condicionais
+
+- Usando dados de um estudo sobre a relação entre tomar Vitamina E e resultados de saúde.
+- A proporção de uma variável binária *é* sua média.
+ 
+
+---
+&lt;img src="MATD48-03_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Exemplo: Tabelas Condicionais
+
+- Podemos mostrar a mesma informação em uma tabela.
+- `\(P(\text{Tomou Vitamina E} | \text{Tabagismo})\)`
+
+
+``` r
+oster %&gt;% select(smoke,supplement_vite_single) %&gt;%
+         mutate(smoke = as.factor(
+           case_when(smoke == 0 ~ 'Não Fumante',
+                     TRUE ~ 'Fumante'))) %&gt;% 
+  table() %&gt;% prop.table(margin = 1)
+```
+
+```
+##              supplement_vite_single
+## smoke         Sem Vitamina E Tomou Vitamina E
+##   Fumante          0.8919705        0.1080295
+##   Não Fumante      0.8164492        0.1835508
+```
+---
+
+E que tal na outra direção? `\(P(\text{Tabagismo} | \text{TomouVitaminaE})\)`
+
+
+``` r
+oster %&gt;% select(smoke,supplement_vite_single) %&gt;%
+         mutate(smoke = as.factor(
+           case_when(smoke == 0 ~ 'Não Fumante',
+                     TRUE ~ 'Fumante'))) %&gt;% 
+  table() %&gt;% prop.table(margin = 2)
+```
+
+```
+##              supplement_vite_single
+## smoke         Sem Vitamina E Tomou Vitamina E
+##   Fumante          0.3000140        0.1875838
+##   Não Fumante      0.6999860        0.8124162
+```
+---
+
+## Exemplo: Gráfico de Dispersão
+Quando X é uma variável contínua (como uma dose em um experimento), um gráfico de dispersão é o ponto de partida. Ele mostra todos os dados, mas a relação pode não ser óbvia.
+
+``` r
+ggplot(oster %&gt;% slice(150:300), aes(x= age, y = heart_health)) + 
+  geom_point(alpha = 0.6) + 
+  labs(x = 'Idade', y = 'Índice de Saúde Cardíaca', 
+       title = 'Relação entre Idade e Saúde Cardíaca') + theme_pubr()
+```
+
+&lt;img src="MATD48-03_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+## Binning (Agrupamento)
+
+- Como calcular uma média condicional quando X é contínuo?
+- Uma abordagem é o **binning**: cortamos `\(X\)` em faixas e calculamos a média de `\(Y\)` dentro de cada uma.
+- Isso nos dá uma estimativa de `\(E[Y | X \in [\text{InícioDoBin}, \text{FimDoBin}]]\)`.
+
+
+``` r
+oster %&gt;% filter(bmi &lt; 100) %&gt;%
+  mutate(bmi_cut = cut(bmi, 8)) %&gt;% group_by(bmi_cut) %&gt;%
+  summarize(vite = mean(heart_health, na.rm = TRUE)) %&gt;%
+  mutate(vite = scales::number(vite, accuracy = .001)) %&gt;%
+  rename(`Faixa de IMC` = bmi_cut,
+         `Média de Saúde Cardíaca` = vite)
+```
+
+```
+## # A tibble: 8 × 2
+##   `Faixa de IMC` `Média de Saúde Cardíaca`
+##   &lt;fct&gt;          &lt;chr&gt;                    
+## 1 (11.6,20.6]    0.834                    
+## 2 (20.6,29.5]    0.083                    
+## 3 (29.5,38.4]    -0.304                   
+## 4 (38.4,47.3]    -0.255                   
+## 5 (47.3,56.2]    -0.180                   
+## 6 (56.2,65.1]    -0.023                   
+## 7 (65.1,74]      -0.328                   
+## 8 (74,83]        0.306
+```
+
+---
+
+## Suavização Não-Paramétrica: LOESS
+- Uma abordagem mais suave é usar **médias locais**.
+- Para cada ponto `\(x\)`, definimos um "bin" centrado em `\(x\)` e calculamos uma média ponderada.
+- Isso resulta em uma estimativa suave da média condicional, sem os "saltos" do binning.
+- **LOESS** (Locally Estimated Scatterplot Smoothing) é uma técnica popular que faz isso.
+- Ele estima a média condicional de forma flexível, sem assumir uma forma funcional específica.
+
+
+``` r
+p2 &lt;- oster %&gt;% filter(bmi &lt; 100) %&gt;%
+  ggplot(aes(x = bmi, y = heart_health)) + geom_point(alpha = .2) +
+  geom_smooth(size = 1.5, color = 'red', se = FALSE) +
+  scale_y_continuous(limits = c(-5,5)) +
+  labs(x = 'Índice de Massa Corporal (IMC)', y = 'Índice de Saúde Cardíaca',
+       title = 'Relação Não-Paramétrica (LOESS) entre IMC e Saúde Cardíaca') + 
+  theme_pubr()
+```
+---
+
+``` r
+p2
+```
+
+&lt;img src="MATD48-03_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+## Modelagem Paramétrica: Regressão Linear
+
+A regressão é uma ferramenta para modelar a esperança condicional `\(E[Y|X]\)` de forma **paramétrica**, ou seja, assumindo uma forma funcional (ex: uma linha reta).
+
+O modelo de regressão linear simples é:
+$$ Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i $$
+
+Onde `\(\varepsilon_i\)` é o termo de erro aleatório. A linha `\(\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_i\)` é a nossa estimativa para `\(E[Y|X]\)`.
+
+---
+
+## Mínimos Quadrados Ordinários (MQO)
+
+Como a regressão encontra a "melhor" linha? O método de **Mínimos Quadrados Ordinários (MQO)**, ou OLS, encontra os coeficientes `\(\hat{\beta}_0\)` e `\(\hat{\beta}_1\)` que minimizam a Soma dos Quadrados dos Resíduos (SQRes):
+
+`$$\min_{\beta_0, \beta_1} \sum_{i=1}^{n} (Y_i - (\beta_0 + \beta_1 X_i))^2 = \min \sum_{i=1}^{n} \hat{\varepsilon}_i^2$$`
+
+A linha de regressão é a que passa "mais perto" de todos os pontos, no sentido de minimizar a distância vertical ao quadrado.
+
+---
+
+## Regressão Linear na Prática
+
+Aqui, ajustamos um modelo linear aos mesmos dados do IMC. A linha vermelha representa a média condicional estimada, assumindo que a relação é linear.
+
+
+``` r
+p3 &lt;- oster %&gt;% filter(bmi &lt; 100) %&gt;%
+  ggplot(aes(x = bmi, y = heart_health)) + 
+  geom_point(alpha = .2) +
+  geom_smooth(size = 1.5, color = 'red', se = FALSE, method = 'lm') +
+  scale_y_continuous(limits = c(-5,5)) +
+  labs(x = 'Índice de Massa Corporal (IMC)', y = 'Índice de Saúde Cardíaca',
+       title = 'Relação Paramétrica (Linear) entre IMC e Saúde Cardíaca') + 
+  theme_pubr()
+```
+---
+&lt;img src="MATD48-03_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+- A linha de regressão `\(\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X\)` representa a nossa estimativa para a esperança condicional `\(E[Y|X]\)`.
+---
+
+## Interpretando a Regressão
+
+O coeficiente `\(\beta_1\)` é a principal medida de associação: uma mudança de uma unidade em `\(X\)` está **associada** a uma mudança de `\(\beta_1\)` unidades em `\(Y\)`, em média.
+
+Exemplo: A pontuação de inspeção de saúde está relacionada ao número de locais de um restaurante?
+
+``` r
+df &lt;- read_csv('restaurant_data.csv')
+m1 &lt;- lm(inspection_score ~ NumberofLocations, data = df)
+```
+---
+
+``` r
+summary(m1, stars = TRUE, title = "Regressão Simples")
+```
+
+```
+## 
+## Call:
+## lm(formula = inspection_score ~ NumberofLocations, data = df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -27.1673  -3.5449   0.9835   5.4362  17.3253 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       94.8656964  0.0462975 2049.05   &lt;2e-16 ***
+## NumberofLocations -0.0188715  0.0004356  -43.32   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.052 on 27176 degrees of freedom
+## Multiple R-squared:  0.0646,	Adjusted R-squared:  0.06456 
+## F-statistic:  1877 on 1 and 27176 DF,  p-value: &lt; 2.2e-16
+```
+**Interpretação:** Um aumento de um local na rede está associado a uma queda de 0.0188 pontos na pontuação.
+---
+
+
+## Adicionando Variáveis de Controle
+
+- A regressão nos permite adicionar **variáveis de controle** para calcular "médias condicionais condicionais".
+
+$$ Y = \beta_0 + \beta_1 X + \beta_2 Z + \varepsilon $$
+
+- `\(\beta_1\)` agora representa a relação entre `\(X\)` e `\(Y\)`, **mantendo `\(Z\)` constante**.
+- Pergunta: "Qual é a parte da relação entre `\(X\)` e `\(Y\)` que não é explicada por diferenças em `\(Z\)`?"
+
+--
+
+### **Detalhe Técnico: Teorema de Frisch-Waugh-Lovell**
+- Adicionar um controle `\(Z\)` é matematicamente equivalente a:
+  1. Regredir `\(Y\)` em `\(Z\)` e obter os resíduos (`\(Y_{res}\)`).
+  2. Regredir `\(X\)` em `\(Z\)` e obter os resíduos (`\(X_{res}\)`).
+  3. Regredir `\(Y_{res}\)` em `\(X_{res}\)`.
+
+
+---
+
+## Frisch-Waugh-Lovell na Prática
+
+- O coeficiente de `\(X_{res}\)` nesta última regressão será exatamente igual a `\(\beta_1\)` da regressão múltipla. Isso mostra que estamos analisando a relação entre as partes de `\(Y\)` e `\(X\)` que são *não correlacionadas* com `\(Z\)`.
+
+
+``` r
+# Regressão com controle
+m2 &lt;- lm(inspection_score ~ NumberofLocations + Year, data = df)
+
+# Teorema de Frisch-Waugh-Lovell
+df &lt;- df %&gt;%
+  mutate(
+    insp_res = resid(lm(inspection_score ~ Year, data = .)),
+    loc_res = resid(lm(NumberofLocations ~ Year, data = .))
+  )
+m3 &lt;- lm(insp_res ~ loc_res, data = df)
+```
+---
+
+
+
+``` r
+summary(list("Com Controle (Z)" = m2, "FWL (Resíduos)" = m3), 
+         stars = TRUE, fmt = 5, gof_omit = 'AIC|BIC|Lik')
+```
+
+```
+##                  Length Class Mode
+## Com Controle (Z) 12     lm    list
+## FWL (Resíduos)   12     lm    list
+```
+Os coeficientes para a variável de interesse são idênticos!
+
+---
+
+## Interações
+
+- Interações permitem que o efeito de uma variável dependa do valor de outra. São cruciais em inferência causal.
+$$ Y = \beta_0 + \beta_1 X + \beta_2 D + \beta_3 (D \times X) + \varepsilon $$
+- Onde `\(D\)` é uma variável binária (0 ou 1).
+
+--
+
+### **Detalhe Técnico: Efeito Marginal**
+- Para interpretar, calculamos o efeito marginal de `\(X\)` em `\(Y\)` usando a derivada parcial:
+$$ \frac{\partial E[Y|X,D]}{\partial X} = \beta_1 + \beta_3 D $$
+- Se `\(D=0\)`, o efeito de `\(X\)` é `\(\beta_1\)`.
+- Se `\(D=1\)`, o efeito de `\(X\)` é `\(\beta_1 + \beta_3\)`.
+- `\(\beta_3\)` é a **diferença** no efeito de `\(X\)` entre os grupos `\(D=1\)` e `\(D=0\)`.
+
+---
+
+## Exemplo de Interação
+
+Interpretando o efeito do número de locais na pontuação, dependendo de ser fim de semana (`Weekend`).
+
+``` r
+m5 &lt;- lm(inspection_score ~ NumberofLocations*Weekend, data = df)
+summary(m5, stars = TRUE, gof_omit = 'AIC|BIC|Lik')
+```
+
+```
+## 
+## Call:
+## lm(formula = inspection_score ~ NumberofLocations * Weekend, 
+##     data = df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -27.158  -3.548   0.959   5.452  17.292 
+## 
+## Coefficients:
+##                                 Estimate Std. Error  t value Pr(&gt;|t|)    
+## (Intercept)                   94.8491235  0.0465042 2039.581  &lt; 2e-16 ***
+## NumberofLocations             -0.0187944  0.0004365  -43.057  &lt; 2e-16 ***
+## WeekendTRUE                    1.7526309  0.4887837    3.586 0.000337 ***
+## NumberofLocations:WeekendTRUE -0.0076573  0.0075411   -1.015 0.309915    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.05 on 27174 degrees of freedom
+## Multiple R-squared:  0.06507,	Adjusted R-squared:  0.06497 
+## F-statistic: 630.4 on 3 and 27174 DF,  p-value: &lt; 2.2e-16
+```
+
+- **Efeito nos dias de semana (Weekend = FALSE):** Um local a mais está associado a uma queda de **-0.038** na pontuação.
+- **Efeito nos fins de semana (Weekend = TRUE):** O efeito é `-0.038 + (-0.024) =` **-0.062**.
+- `NumberofLocations:WeekendTRUE`: O efeito negativo do número de locais é **0.024 pontos mais forte** nos fins de semana.
+
+---
+
+
+
+class: inverse, center, middle
+
+# Parte 2: ANOVA - A Ferramenta Clássica para Experimentos
+
+---
+
+## O que é ANOVA?
+
+**ANOVA** significa **Análise de Variância** (*Analysis of Variance*).
+
+É uma técnica estatística usada para comparar as médias de três ou mais grupos. A pergunta central que a ANOVA responde é:
+
+**"As diferenças observadas entre as médias dos meus grupos (tratamentos) são estatisticamente significativas, ou poderiam ter ocorrido apenas por acaso?"**
+
+---
+
+## A Intuição: Decompondo a Variância
+
+A ideia genial da ANOVA é transformar uma pergunta sobre **médias** em uma pergunta sobre **variância**.
+
+Ela decompõe a variabilidade total dos dados em duas partes:
+
+1.  **Variabilidade ENTRE Grupos (Soma dos Quadrados Entre, SQE):** Quão distantes as médias de cada grupo estão da média geral. Se os tratamentos têm efeitos diferentes, esperamos que esta variabilidade seja grande.
+
+2.  **Variabilidade DENTRO de cada Grupo (Soma dos Quadrados Dentro, SQD):** A variabilidade aleatória (erro) das observações em torno da sua própria média de grupo.
+
+**Variabilidade Total (SQT) = Variabilidade ENTRE Grupos + Variabilidade DENTRO dos Grupos**
+
+---
+
+## A Estatística F
+
+A ANOVA calcula a **Estatística F**, que é uma razão entre essas duas fontes de variabilidade:
+$$ F = \frac{\text{Variabilidade MÉDIA entre os grupos}}{\text{Variabilidade MÉDIA dentro dos grupos}} = \frac{MSB}{MSW} $$
+
+*   **MSB (Mean Square Between):** Variância explicada pelo modelo (pelos diferentes tratamentos).
+*   **MSW (Mean Square Within):** Variância residual ou não explicada (erro aleatório).
+
+Se **F é grande**, a variabilidade entre os grupos é muito maior que a variabilidade dentro deles. Isso é uma forte evidência de que as médias dos grupos são, de fato, diferentes.
+
+---
+
+## O Modelo Matemático da ANOVA
+
+O modelo de uma ANOVA de um fator (One-Way ANOVA) é:
+`$$Y_{ij} = \mu + \alpha_i + \epsilon_{ij}$$`
+
+Onde:
+*   `\(Y_{ij}\)` é a observação `\(j\)` do grupo (tratamento) `\(i\)`.
+*   `\(\mu\)` é a média geral de todas as observações.
+*   `\(\alpha_i\)` é o **efeito do tratamento `\(i\)`**, a diferença entre a média do grupo `\(i\)` e a média geral (`\(\alpha_i = \mu_i - \mu\)`).
+*   `\(\epsilon_{ij}\)` é o erro aleatório, que se assume ter distribuição Normal com média 0 e variância `\(\sigma^2\)`.
+
+---
+
+## Hipóteses na ANOVA
+
+A ANOVA testa as seguintes hipóteses:
+
+**Hipótese Nula (`\(H_0\)`):** Todas as médias dos grupos são iguais. Não há efeito dos tratamentos.
+$$ H_0: \mu_1 = \mu_2 = \dots = \mu_k $$
+(Equivalentemente, `\(H_0: \alpha_i = 0\)` para todos os `\(i\)`)
+
+**Hipótese Alternativa (`\(H_A\)`):** Pelo menos uma das médias dos grupos é diferente das outras.
+$$ H_A: \text{Pelo menos um } \mu_i \text{ é diferente} $$
+
+Se o p-valor associado à Estatística F for baixo (ex: &lt; 0.05), rejeitamos `\(H_0\)`.
+
+---
+
+## Exemplo Prático: ANOVA no R
+
+Vamos usar o dataset `storms` para testar se a pressão atmosférica média (`pressure`) difere entre os diferentes status de uma tempestade (`status`).
+
+Nossos grupos são: `depressão tropical`, `tempestade tropical`, `furacão`, etc.
+
+
+``` r
+# Primeiro, vamos visualizar as médias dos grupos
+pt &lt;- storms %&gt;%
+  filter(status %in% c("tropical depression", "tropical storm", "hurricane")) %&gt;%
+  ggplot(aes(x = status, y = pressure)) +
+  geom_boxplot() +
+  labs(title="Pressão por Status da Tempestade", x="Status", y="Pressão (mb)") +
+  theme_pubr()
+```
+
+---
+&lt;img src="MATD48-03_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+## A Tabela ANOVA
+
+A função `aov()` no R realiza a ANOVA. O `summary()` nos mostra a Tabela ANOVA.
+
+
+``` r
+# Filtrar para ter grupos claros
+storms_filtered &lt;- storms %&gt;%
+  filter(status %in% c("tropical depression", "tropical storm", "hurricane"))
+
+# Rodar o modelo ANOVA
+anova_model &lt;- aov(pressure ~ status, data = storms_filtered)
+summary(anova_model)
+```
+
+```
+##                Df  Sum Sq Mean Sq F value Pr(&gt;F)    
+## status          2 3805637 1902819   14073 &lt;2e-16 ***
+## Residuals   15199 2055137     135                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+**Interpretação:** A estatística F é 2389, com um p-valor extremamente baixo (`&lt; 2e-16`). Rejeitamos `\(H_0\)` e concluímos que há diferenças estatisticamente significativas na pressão média entre os diferentes status de tempestade.
+
+---
+
+## Premissas da ANOVA
+
+Para que os resultados da ANOVA sejam válidos, três premissas devem ser atendidas:
+
+1.  **Normalidade dos Resíduos:** Os erros (`\(\epsilon_{ij}\)`) devem seguir uma distribuição normal.
+2.  **Homogeneidade de Variâncias (Homocedasticidade):** A variância dos resíduos deve ser a mesma para todos os grupos.
+3.  **Independência das Observações:** As observações devem ser independentes umas das outras.
+
+Em planejamento experimental, a **aleatorização** dos tratamentos às unidades experimentais ajuda a garantir a independência.
+
+---
+
+## ANOVA é um Caso Especial de Regressão!
+
+Qualquer ANOVA pode ser escrita como um modelo de regressão linear.
+
+Uma ANOVA de um fator com `\(k\)` grupos é equivalente a uma regressão da variável resposta em `\(k-1\)` variáveis *dummy* (indicadoras).
+
+O grupo sem uma variável dummy se torna a categoria de **referência**, e o intercepto do modelo de regressão será a média deste grupo.
+
+---
+
+## Demonstrando a Equivalência
+
+Vamos rodar uma regressão de `pressure` em `status`. O R automaticamente criará as variáveis dummy.
+
+
+``` r
+# Modelo de regressão
+regression_model &lt;- lm(pressure ~ status, data = storms_filtered)
+summary(regression_model, title="Modelo de Regressão Equivalente à ANOVA")
+```
+
+```
+## 
+## Call:
+## lm(formula = pressure ~ status, data = storms_filtered)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -86.772  -4.242   0.758   5.758  36.228 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)               968.7718     0.1678  5773.8   &lt;2e-16 ***
+## statustropical depression  38.7415     0.2570   150.8   &lt;2e-16 ***
+## statustropical storm       30.4705     0.2190   139.2   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 11.63 on 15199 degrees of freedom
+## Multiple R-squared:  0.6493,	Adjusted R-squared:  0.6493 
+## F-statistic: 1.407e+04 on 2 and 15199 DF,  p-value: &lt; 2.2e-16
+```
+O intercepto (998.43) é a pressão média para o grupo de referência ("furacão"). Os outros coeficientes são as **diferenças** em relação a este grupo.
+
+---
+
+## Comparando os Resultados
+
+A tabela ANOVA da regressão nos dá a mesma estatística F e o mesmo p-valor do modelo `aov()`.
+
+
+``` r
+# Tabela ANOVA extraída do modelo de regressão
+anova(regression_model)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: pressure
+##              Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## status        2 3805637 1902819   14073 &lt; 2.2e-16 ***
+## Residuals 15199 2055137     135                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+``` r
+# Tabela ANOVA do modelo original para comparação
+summary(anova_model)
+```
+
+```
+##                Df  Sum Sq Mean Sq F value Pr(&gt;F)    
+## status          2 3805637 1902819   14073 &lt;2e-16 ***
+## Residuals   15199 2055137     135                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+**Conclusão:** ANOVA e Regressão são duas perspectivas do mesmo Modelo Linear Geral. A regressão é mais flexível, permitindo preditores contínuos e categóricos (ANCOVA), mas a ANOVA é a linguagem clássica do planejamento experimental.
+
+---
+
+class: inverse, center, middle
+
+# Parte 3: O Objetivo Final - Causalidade
+
+---
+
+## O que é Causalidade?
+
+Relembrando: Dizemos que `X` **causa** `Y` se uma intervenção que muda o valor de `X`, mantendo todo o resto constante, resultaria em uma mudança em `Y`.
+
+Em dados observacionais, é difícil garantir que "todo o resto" se mantenha constante. Em experimentos, nós **forçamos** isso a acontecer através da aleatorização.
+
+---
+
+## O Problema Fundamental da Inferência Causal
+
+O problema é que, para qualquer unidade experimental (uma pessoa, um campo, etc.), nunca podemos observar simultaneamente o resultado com o tratamento e sem o tratamento.
+
+O resultado que *teria acontecido* sob a condição alternativa é chamado de **contrafactual** e é, por definição, não observável.
+
+---
+
+## O Modelo de Resultados Potenciais
+
+Este modelo formaliza o problema. Para cada indivíduo `i`, existem dois **resultados potenciais**:
+
+*   `\(Y_i(1)\)`: O resultado se o indivíduo `i` recebe o tratamento (`\(X_i=1\)`).
+*   `\(Y_i(0)\)`: O resultado se o indivíduo `i` não recebe o tratamento (`\(X_i=0\)`).
+
+O **efeito causal individual** é a diferença: `\(\tau_i = Y_i(1) - Y_i(0)\)`.
+
+---
+
+## O Viés de Seleção
+
+Se simplesmente compararmos as médias de quem recebeu o tratamento e quem não recebeu em dados observacionais, nossa estimativa é:
+$$ \text{Diferença Observada} = E[Y | X=1] - E[Y | X=0] $$
+
+Esta diferença pode ser decomposta em duas partes:
+`$$E[Y|X=1] - E[Y|X=0] = \underbrace{E[Y(1) - Y(0)|X=1]}_{\text{Efeito Causal (ATT)}} + \underbrace{E[Y(0)|X=1] - E[Y(0)|X=0]}_{\text{Viés de Seleção}}$$`
+
+O **Viés de Seleção** é a diferença que já existia entre os grupos, mesmo na ausência do tratamento.
+
+---
+
+## A Solução: Experimentos Aleatórios
+
+**Experimentos Aleatórios Controlados (RCTs)** são o padrão-ouro para inferência causal porque eliminam o viés de seleção.
+
+A **aleatorização** do tratamento `X` garante que, em média, os grupos de tratamento e controle são idênticos em todas as características (observáveis e não observáveis) antes do tratamento ser aplicado.
+
+---
+
+## A Mágica da Aleatorização
+
+A aleatorização garante a **independência estatística** entre os resultados potenciais e a atribuição do tratamento:
+$$ (Y_i(1), Y_i(0)) \perp X_i $$
+
+Isso implica que o termo de viés de seleção se torna zero:
+$$ E[Y(0)|X=1] - E[Y(0)|X=0] = 0 $$
+
+Portanto, a simples diferença de médias se torna uma estimativa não-viesada do **Efeito Médio do Tratamento (ATE)**:
+$$ E[Y|X=1] - E[Y|X=0] = E[Y(1) - Y(0)] = \text{ATE} $$
+
+---
+
+## Identificação
+
+Dizemos que um efeito causal foi **identificado** se nossa estratégia de análise (o estimador) nos permite obter uma estimativa consistente do verdadeiro efeito causal a partir dos dados.
+
+Em um RCT bem executado, a diferença de médias é um estimador que **identifica** o ATE. Métodos como ANOVA são usados para testar a hipótese de que este efeito é zero.
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
