@@ -192,13 +192,13 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
   |:--------------:|:-----------:|:---------------------------------------------------------------------|
   |  02/09/2025    | 02/09/2025  | Congresso UFBA (Não haverá aula)                                     |
   |  04/09/2025    | 04/09/2025  | Congresso UFBA (Não haverá aula)                                     |
-  |  09/09/2025    | 09/09/2025  | Princípios da experimentação [Mat-01](Aulas/MATD48-01.html).         |
-  |  11/09/2025    | 11/09/2025  | Fatores, níveis e tratamentos. Erro experimental. [Mat-02](Aulas/MATD48-02.html)|
+  |  09/09/2025    | 09/09/2025  | Princípios da experimentação [[Mat-01]](Aulas/MATD48-01.html).         |
+  |  11/09/2025    | 11/09/2025  | Fatores, níveis e tratamentos. Erro experimental. [[Mat-02]](Aulas/MATD48-02.html)|
   |  16/09/2025    | 16/09/2025  | Modelos de ANOVA.                                                    |
   |  18/09/2025    | 18/09/2025  | Unidades experimentais. Caracterização e escolha das unidades.       |
   |  23/09/2025    | 23/09/2025  | Técnicas para aumentar a precisão.                                   |
   |  25/09/2025    | 25/09/2025  | Experimentos Inteiramente Casualizados (DIC).                        |
-  |  30/09/2025    | 30/09/2025  | Modelo matemático para o DIC.                                        |
+  |  30/09/2025    | 30/09/2025  | Modelo matemático para o DIC.    [[Mat-03]](Aulas/MATD48-03.html)                                     |
   |  02/10/2025    | 02/10/2025  | Análise de Variância (ANOVA) para o DIC. **Aula prática em R**         |
   |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.                                  |
   |  09/10/2025    | 09/10/2025  | Coeficiente de variação. Análise de pressupostos.                    |
@@ -227,6 +227,18 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
   |  **08/01/2026**  | **08/01/2026**  | **<font color="red">APLICAÇÃO DA PROVA 3</font>**                          |
   </center>
 ***
+#### Dados
+
+ * [[Restaurantes]](Aulas/restaurant_data.csv)
+ * [[Gasto]](Aulas/ad_spend_and_gdp.csv)
+ * [[Peso]](Aulas/average-height-men-OWID.csv)
+ * [[GDP]](Aulas/GDP.csv)
+ * [[EITC]](Aulas/eitc.csv)
+ * [[EITC]](Aulas/eitc.csv)
+ 
+ 
+ 
+
 
 #### Referências bibliográficas (Principal)
 

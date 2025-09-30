@@ -4,7 +4,7 @@ subtitle: "De Relações Descritivas à Inferência Causal"
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts"]
+    css: ["default", "metropolis", "metropolis-fonts", "custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -77,8 +77,11 @@ Esta função nos diz o valor esperado (a média) de $Y$ para cada valor especí
 Falar sobre como duas variáveis estão relacionadas é outra forma de falar sobre valores condicionais (geralmente, médias condicionais).
 
 **Relação Positiva:** "Para valores mais altos de $X$, a esperança condicional $E[Y|X]$ é maior."
+
 **Relação Negativa:** "Para valores mais altos de $X$, $E[Y|X]$ é menor."
+
 **Relação em forma de U:** "Para valores mais altos de $X$, $E[Y|X]$ muda, mas não sempre na mesma direção."
+
 ---
 
 ## "Explicando" a Variação
@@ -149,9 +152,7 @@ oster %>% select(smoke,supplement_vite_single) %>%
 - Usando dados de um estudo sobre a relação entre tomar Vitamina E e resultados de saúde.
 - A proporção de uma variável binária *é* sua média.
  
-
----
-```{r, fig.width=8, fig.height=4.5}
+```{r, fig.width=8, fig.height=2.5}
 ggplot(oster %>% 
          select(smoke, supplement_vite_single) %>%
          na.omit() %>%
@@ -169,32 +170,6 @@ ggplot(oster %>%
   labs(x = NULL, y = 'Proporção', title = 'Proporção de Uso de Vitamina E por Status de Tabagismo') +
   theme_pubr(base_size = 16)
 ```
-
----
-
-## Exemplo: Tabelas Condicionais
-
-- Podemos mostrar a mesma informação em uma tabela.
-- $P(\text{Tomou Vitamina E} | \text{Tabagismo})$
-
-```{r, echo = TRUE}
-oster %>% select(smoke,supplement_vite_single) %>%
-         mutate(smoke = as.factor(
-           case_when(smoke == 0 ~ 'Não Fumante',
-                     TRUE ~ 'Fumante'))) %>% 
-  table() %>% prop.table(margin = 1)
-```
----
-
-E que tal na outra direção? $P(\text{Tabagismo} | \text{TomouVitaminaE})$
-
-```{r, echo = TRUE}
-oster %>% select(smoke,supplement_vite_single) %>%
-         mutate(smoke = as.factor(
-           case_when(smoke == 0 ~ 'Não Fumante',
-                     TRUE ~ 'Fumante'))) %>% 
-  table() %>% prop.table(margin = 2)
-```
 ---
 
 ## Exemplo: Gráfico de Dispersão
@@ -205,6 +180,8 @@ ggplot(oster %>% slice(150:300), aes(x= age, y = heart_health)) +
   labs(x = 'Idade', y = 'Índice de Saúde Cardíaca', 
        title = 'Relação entre Idade e Saúde Cardíaca') + theme_pubr()
 ```
+---
+
 ## Binning (Agrupamento)
 
 - Como calcular uma média condicional quando X é contínuo?
@@ -219,8 +196,50 @@ oster %>% filter(bmi < 100) %>%
   rename(`Faixa de IMC` = bmi_cut,
          `Média de Saúde Cardíaca` = vite)
 ```
-
 ---
+
+```{r, echo=TRUE}
+# 1. Preparar os dados para o gráfico de degrau
+binned_data_steps <- oster %>%
+  filter(bmi < 100) %>%
+  mutate(bmi_cut = cut(bmi, 8)) %>%
+  group_by(bmi_cut) %>%
+  summarize(mean_heart_health = mean(heart_health, na.rm = TRUE)) %>%
+  ungroup() %>%
+  # Extrair os limites numéricos de início e fim de cada faixa
+  mutate(
+    interval_str = as.character(bmi_cut),
+    clean_str = str_replace_all(interval_str, "\\[|\\]|\\(|\\)", ""),
+    endpoints = str_split(clean_str, ",", simplify = TRUE),
+    x_start = as.numeric(endpoints[, 1]),
+    x_end = as.numeric(endpoints[, 2])
+  )
+
+# 2. Gerar o gráfico com segmentos horizontais
+p <- ggplot(binned_data_steps, 
+       aes(y = mean_heart_health)) +
+  # Adiciona um scatterplot de fundo para dar contexto
+  geom_point(data = oster %>% filter(bmi < 100) %>% sample_n(500), 
+             aes(x = bmi, y = heart_health), 
+             alpha = 0.15, color = "gray") +
+  # Desenha os segmentos horizontais para cada bin
+  geom_segment(aes(x = x_start, xend = x_end, yend = mean_heart_health),
+               color = "firebrick", size = 1.5) +
+  labs(
+    title = "Função de Degrau Gerada pelo Binning",
+    subtitle = "A média condicional é constante em cada faixa de IMC",
+    x = "Índice de Massa Corporal (IMC)",
+    y = "Média de Saúde Cardíaca"
+  ) +
+  theme_pubr()
+```
+---
+
+```{r, echo=TRUE}
+p
+```
+---
+
 
 ## Suavização Não-Paramétrica: LOESS
 - Uma abordagem mais suave é usar **médias locais**.
@@ -320,17 +339,59 @@ $$ Y = \beta_0 + \beta_1 X + \beta_2 Z + \varepsilon $$
   2. Regredir $X$ em $Z$ e obter os resíduos ($X_{res}$).
   3. Regredir $Y_{res}$ em $X_{res}$.
 
+---
+## O Teorema de Frisch-Waugh-Lovell (Enunciado e Prova)
 
+O Teorema de Frisch-Waugh-Lovell (FWL) formaliza a intuição de "manter Z constante". Ele nos dá um método alternativo e conceitualmente poderoso para calcular os coeficientes de uma regressão múltipla.
+
+**Enunciado do Teorema:**
+Considere o modelo de regressão múltipla particionado em dois conjuntos de regressores, $X_1$ e $X_2$:
+$$ Y = X_1\beta_1 + X_2\beta_2 + \varepsilon $$
+O estimador de Mínimos Quadrados Ordinários (MQO) para $\beta_1$, denotado como $\hat{\beta}_1$, pode ser obtido de duas formas:
+1.  **Regressão Múltipla Completa:** Regredindo $Y$ em $X_1$ e $X_2$ simultaneamente.
+2.  **Regressão em Etapas (FWL):**
+    a. Regrida $Y$ em $X_2$ e obtenha os resíduos, $\tilde{Y} = Y - X_2\hat{\gamma}_Y$. ($\tilde{Y}$ é a parte de $Y$ *não explicada* por $X_2$).
+    b. Regrida cada coluna de $X_1$ em $X_2$ e obtenha os resíduos, $\tilde{X}_1 = X_1 - X_2\hat{\Gamma}_X$. ($\tilde{X}_1$ é a parte de $X_1$ *não explicada* por $X_2$).
+    c. Regrida os resíduos $\tilde{Y}$ nos resíduos $\tilde{X}_1$. O coeficiente desta regressão simples é numericamente idêntico a $\hat{\beta}_1$ da regressão múltipla completa.
 ---
 
+**Prova (Esboço):**
+Seja $M_2 = I - X_2(X_2'X_2)^{-1}X_2'$ a matriz que projeta um vetor no espaço ortogonal a $X_2$ (a "matriz residualizadora"). Os resíduos das etapas (a) e (b) são $\tilde{Y} = M_2Y$ e $\tilde{X}_1 = M_2X_1$.
+A regressão de $\tilde{Y}$ em $\tilde{X}_1$ na etapa (c) nos dá o estimador:
+$$\hat{\beta}_{1,FWL} = (\tilde{X}_1'\tilde{X}_1)^{-1}\tilde{X}_1'\tilde{Y} = ((M_2X_1)'(M_2X_1))^{-1}(M_2X_1)'(M_2Y)$$
+Como $M_2$ é simétrica ($M_2' = M_2$) e idempotente ($M_2M_2 = M_2$), a expressão se simplifica para:
+$$\hat{\beta}_{1,FWL} = (X_1'M_2X_1)^{-1}X_1'M_2Y$$
+Esta é exatamente a fórmula para o subvetor $\hat{\beta}_1$ obtido pela inversão da matriz de covariância particionada do modelo de regressão completo. Q.E.D.
+
+---
+## Conexão do FWL com Planejamento Experimental
+
+O Teorema FWL não é apenas uma curiosidade matemática; ele é a base para entendermos por que e como usamos variáveis de controle (covariadas) em análises de experimentos.
+
+**1. O Poder da Aleatorização e a Ortogonalidade:**
+Em um **experimento completamente aleatorizado**, a atribuição do tratamento ($X_1$) é, por construção, estatisticamente independente de qualquer característica pré-tratamento das unidades experimentais (as covariadas, $X_2$). Isso implica que $X_1$ e $X_2$ são (em média, na população) **ortogonais**.
+*   **O que isso significa na prática?** Regredir $X_1$ em $X_2$ (etapa b do FWL) resultará em coeficientes próximos de zero. Os resíduos $\tilde{X}_1$ serão quase idênticos a $X_1$.
+*   **Implicação:** Em um experimento aleatorizado, o coeficiente do tratamento $\hat{\beta}_1$ da regressão simples ($Y$ em $X_1$) será muito similar ao da regressão múltipla ($Y$ em $X_1$ e $X_2$). A inclusão de covariadas não causa viés, nem é estritamente necessária para obter uma estimativa não-viesada do efeito do tratamento.
+---
+
+**2. Por que incluir covariadas, então? Para Aumentar a Precisão!**
+Se a covariada $X_2$ (ex: uma medida base do resultado) explica uma parte da variação em $Y$, então o resíduo $\tilde{Y}$ (etapa a do FWL) terá uma variância menor que a variância do $Y$ original.
+*   **O que isso significa?** Ao regredir $\tilde{Y}$ em $\tilde{X}_1$, estamos explicando a variação do "resultado limpo" (sem a influência de $X_2$) usando a variação do "tratamento limpo".
+*   **Implicação:** Isso reduz a variância do erro do modelo final ($\sigma^2_{\varepsilon}$), o que leva a erros padrão menores para $\hat{\beta}_1$. Ganhamos **poder estatístico** para detectar efeitos do tratamento que, de outra forma, poderiam ser mascarados pelo "ruído" nos dados.
+
+**Em resumo:** O Teorema FWL nos mostra que adicionar covariadas a um modelo de experimento aleatório "limpa" a variável de resultado, permitindo um teste mais preciso e poderoso do efeito do tratamento, sem enviesar a estimativa do efeito em si. Essa técnica é conhecida como **ANCOVA (Análise de Covariância)**.
+
+---
 ## Frisch-Waugh-Lovell na Prática
-
-- O coeficiente de $X_{res}$ nesta última regressão será exatamente igual a $\beta_1$ da regressão múltipla. Isso mostra que estamos analisando a relação entre as partes de $Y$ e $X$ que são *não correlacionadas* com $Z$.
-
+O coeficiente de $X_{res}$ nesta última regressão será exatamente igual a $\beta_1$ da regressão múltipla. Isso mostra que estamos analisando a relação entre as partes de $Y$ e $X$ que são *não correlacionadas* com $Z$.
 ```{r, echo = TRUE, eval = TRUE}
 # Regressão com controle
 m2 <- lm(inspection_score ~ NumberofLocations + Year, data = df)
+summary(m2)
+```
+---
 
+```{r, echo = TRUE, eval = TRUE}
 # Teorema de Frisch-Waugh-Lovell
 df <- df %>%
   mutate(
@@ -338,13 +399,14 @@ df <- df %>%
     loc_res = resid(lm(NumberofLocations ~ Year, data = .))
   )
 m3 <- lm(insp_res ~ loc_res, data = df)
+summary(m3)
 ```
 ---
 
 
 ```{r, echo = TRUE, eval = TRUE}
-summary(list("Com Controle (Z)" = m2, "FWL (Resíduos)" = m3), 
-         stars = TRUE, fmt = 5, gof_omit = 'AIC|BIC|Lik')
+modelsummary(list("Com Controle (Z)" = m2, "FWL (Resíduos)" = m3), stars = TRUE, fmt = 5, 
+             gof_omit = 'AIC|BIC|Lik', output = "data.frame") %>%  knitr::kable()
 ```
 Os coeficientes para a variável de interesse são idênticos!
 
@@ -370,10 +432,6 @@ $$ \frac{\partial E[Y|X,D]}{\partial X} = \beta_1 + \beta_3 D $$
 ## Exemplo de Interação
 
 Interpretando o efeito do número de locais na pontuação, dependendo de ser fim de semana (`Weekend`).
-```{r, echo = TRUE, eval=FALSE}
-m5 <- lm(inspection_score ~ NumberofLocations*Weekend, data = df)
-summary(m5, stars = TRUE, gof_omit = 'AIC|BIC|Lik')
-```
 ```{r, echo=FALSE}
 df$Weekend <- as.logical(df$Weekend)
 m5 <- lm(inspection_score ~ NumberofLocations*Weekend, data = df)
@@ -437,9 +495,23 @@ $$Y_{ij} = \mu + \alpha_i + \epsilon_{ij}$$
 
 Onde:
 *   $Y_{ij}$ é a observação $j$ do grupo (tratamento) $i$.
-*   $\mu$ é a média geral de todas as observações.
-*   $\alpha_i$ é o **efeito do tratamento $i$**, a diferença entre a média do grupo $i$ e a média geral ($\alpha_i = \mu_i - \mu$).
+*   $\mu$ é a média geral de todas as observações (o "grande intercepto").
+*   $\alpha_i$ é o **efeito do tratamento $i$**. Pense nisso como o "empurrão" (positivo ou negativo) que o tratamento *i* dá à média geral. É a diferença entre a média do grupo $i$ e a média geral ($\alpha_i = \mu_i - \mu$).
 *   $\epsilon_{ij}$ é o erro aleatório, que se assume ter distribuição Normal com média 0 e variância $\sigma^2$.
+---
+
+**Onde estão as "covariadas" neste modelo?**
+Esta é uma pergunta natural e muito importante. A resposta é que **as próprias designações de grupo são as covariadas!** O modelo ANOVA é uma forma de escrever um modelo de regressão onde os preditores são variáveis categóricas (os tratamentos).
+
+Podemos reescrever o modelo acima usando variáveis *dummy* (indicadoras):
+$$Y_{ij} = \beta_0 + \beta_1 D_{1} + \beta_2 D_{2} + \dots + \beta_{k-1} D_{k-1} + \epsilon_{ij}$$
+Onde $D_1, D_2, \dots$ são variáveis que valem 1 se a observação pertence àquele grupo, e 0 caso contrário.
+
+*   $\beta_0$ corresponde à média do grupo de referência.
+*   Cada $\beta_i$ corresponde à *diferença* entre a média do grupo *i* e a média do grupo de referência.
+*   Os $\alpha_i$ do modelo ANOVA são apenas uma reparametrização dos $\beta_i$ da regressão.
+
+Portanto, a ANOVA não ignora covariadas; ela é projetada especificamente para o caso em que a principal "covariada" de interesse é o próprio tratamento (uma variável categórica).
 
 ---
 
@@ -495,6 +567,25 @@ anova_model <- aov(pressure ~ status, data = storms_filtered)
 summary(anova_model)
 ```
 **Interpretação:** A estatística F é 2389, com um p-valor extremamente baixo (`< 2e-16`). Rejeitamos $H_0$ e concluímos que há diferenças estatisticamente significativas na pressão média entre os diferentes status de tempestade.
+
+---
+## ANOVA, Bloqueio e o Teorema FWL
+
+A conexão entre ANOVA e regressão se torna ainda mais poderosa quando consideramos desenhos experimentais mais complexos, como o **Desenho em Blocos Aleatorizados**.
+
+Nesse desenho, agrupamos unidades experimentais em "blocos" homogêneos e, em seguida, aleatorizamos os tratamentos *dentro* de cada bloco. O objetivo é controlar uma fonte conhecida de variação (o efeito do bloco).
+
+O modelo de uma ANOVA de dois fatores (tratamento e bloco) é:
+$$Y_{ij} = \mu + \alpha_i (\text{efeito do tratamento}) + \rho_j (\text{efeito do bloco}) + \epsilon_{ij}$$
+---
+
+**Como a ANOVA encontra o efeito "puro" do tratamento, $\alpha_i$?**
+Aqui, o Teorema de Frisch-Waugh-Lovell nos dá a intuição perfeita:
+1.  A ANOVA primeiro "remove" a variação em $Y$ que é explicada pelo fator de bloqueio $\rho_j$. Isso é análogo a obter os resíduos $\tilde{Y}$ da regressão de $Y$ nas variáveis *dummy* do bloco.
+2.  Como o tratamento foi aleatorizado *dentro* dos blocos, o tratamento $\alpha_i$ e o bloco $\rho_j$ são ortogonais. Isso significa que a parte do tratamento não explicada pelos blocos ($\tilde{X}_1$) é o próprio tratamento.
+3.  A ANOVA então calcula o efeito do tratamento sobre esses resultados "ajustados para o bloco".
+
+Em suma, a ANOVA em um desenho em blocos é uma aplicação direta do princípio FWL: ela estima o efeito do tratamento **depois de controlar pela variabilidade entre os blocos**, fornecendo uma estimativa mais precisa e poderosa do efeito causal de interesse.
 
 ---
 
@@ -620,5 +711,3 @@ $$ E[Y|X=1] - E[Y|X=0] = E[Y(1) - Y(0)] = \text{ATE} $$
 Dizemos que um efeito causal foi **identificado** se nossa estratégia de análise (o estimador) nos permite obter uma estimativa consistente do verdadeiro efeito causal a partir dos dados.
 
 Em um RCT bem executado, a diferença de médias é um estimador que **identifica** o ATE. Métodos como ANOVA são usados para testar a hipótese de que este efeito é zero.
-
----

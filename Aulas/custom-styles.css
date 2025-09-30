@@ -1,0 +1,14 @@
+/* custom-styles.css */
+.remark-slide-content {
+  font-size: 1.1rem; /* Usando rem como exemplo. Ajuste o valor. */
+}
+
+/* Opcional: Se quiser ajustar apenas o tamanho da fonte do código */
+.remark-code {
+  font-size: 0.7rem;
+}
+
+/* Opcional: Para ajustar os títulos */
+.remark-slide-content h1 {
+  font-size: 1.8rem;
+}
