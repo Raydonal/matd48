@@ -200,7 +200,7 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
   |  25/09/2025    | 25/09/2025  | Experimentos Inteiramente Casualizados (DIC).                        |
   |  30/09/2025    | 30/09/2025  | Modelo matemático para o DIC.    [[Mat-03]](Aulas/MATD48-03.html)                                     |
   |  02/10/2025    | 02/10/2025  | Análise de Variância (ANOVA) para o DIC. **Aula prática em R**         |
-  |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.                                  |
+  |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.  [[Mat-04]](Aulas/MATD48-04.html)                                  |
   |  09/10/2025    | 09/10/2025  | Coeficiente de variação. Análise de pressupostos.                    |
   |  14/10/2025    | 14/10/2025  | Análise de Covariância (ANCOVA).                                     |
   |  16/10/2025    | 16/10/2025  | Aula de exercícios e **Aula prática em R**                           |
