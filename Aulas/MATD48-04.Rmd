@@ -26,13 +26,15 @@ library(ggplot2)
 library(dplyr)
 library(MASS) # Para a função ginv()
 library(DiagrammeR)
+library(sf)
+library(tidyverse)
 ```
 
 class: center, middle, inverse
 
-# 1. Fundamentos e Estrutura de Modelos Lineares
+# Fundamentos e Estrutura de Modelos Lineares
 
-(Seções 3.1 a 3.5)
+<!-- (Seções 3.1 a 3.5) -->
 
 ---
 
@@ -62,11 +64,22 @@ qplot(x, y, geom = c("point", "smooth"), method = "lm", se = FALSE) +
 
 ## 3.1 Relações entre Fatores
 
-Em um experimento, um **fator** particiona a população em grupos (seus **níveis**). A complexidade e a validade de um modelo dependem crucialmente de como os múltiplos fatores se relacionam.
+Na definição de fator, foi dito que um **fator** define uma partição da população sob estudo. Cada componente desta partição (um subconjunto de elementos da população) corresponde a um **nível** do fator. A complexidade e a validade de um modelo dependem crucialmente de como os múltiplos fatores se relacionam.
 
---
+**Exemplo:** 
+- **População:** Habitantes de Recife.
+- **Fator:** `Bairro` (define uma partição na população segundo um critério geográfico) .
+- **Níveis:** `Boa Viagem`, `Casa Forte`, `Pina`, `Várzea`, etc. (são apenas níveis do fator)
 
-As possíveis relações são:
+```{r, echo=FALSE, fig.height=3, message=FALSE, }
+# Importando o shapefile
+recife = st_read(dsn = "Bairros_Recife/bairros-polygon.shp", quiet = TRUE)
+## Para plotar somente o contorno do objeto recife
+ggplot(recife) +
+  geom_sf(fill = "White")+theme_bw()
+```
+---
+Em várias situações práticas há interesse em considerar a existência de mais de um fator. Quando isso acontece é de fundamental importância identificar as relações entre eles. As possíveis relações são:
 
 1.  **Embutimento (Aninhamento):** Uma relação hierárququica.
 2.  **Cruzamento:** Uma relação fatorial completa.
@@ -74,11 +87,54 @@ As possíveis relações são:
 
 Compreender essas relações é o primeiro passo para construir um modelo estatístico correto.
 
----
 
 ## Fatores Embutidos (Aninhados)
 
-Um fator `B` é dito estar **embutido** (ou aninhado) em um fator `A` se cada nível do fator `B` ocorre em combinação com apenas **um** nível do fator `A`.
+Um fator `B` é dito estar **embutido** (ou aninhado) em um fator `A` se todos os elementos pertencentes a um nível do fator `B` também pertencem obrigatoriamente a um mesmo nível de `A`.
+
+**Exemplo:**
+- **População:** Habitantes da região metropolitana de Recife.
+- **Fator `Cidade`:** Com 4 níveis: Paulista (P), Olinda (O), Recife (R), Jaboatão (J).
+- **Fator `Localização`:** Com 2 níveis: centro (L1) e subúrbio (L2).
+---
+
+Note que, simplesmente afirmar que um indivíduo mora no "centro" (nível de `Localização`) não é suficiente para determinar sua residência. É preciso saber **em que cidade**. O centro de Recife é diferente do centro de Olinda. Dessa forma, diz-se que o fator `Localização` está **EMBUTIDO** no fator `Cidade`.
+
+Um gráfico de boxplot pode ilustrar a estrutura hierárquica.
+
+```{r, fig.height=4, echo=FALSE}
+# Simulação de dados para o exemplo
+set.seed(1)
+dados_aninhados_corrigido <- data.frame(
+  Cidade = factor(rep(c("Paulista", "Olinda", "Recife", "Jaboatão"), each = 20)),
+  Localizacao = factor(rep(c("Centro", "Subúrbio"), each = 10, times = 4))
+)
+
+# Gerando renda para cada uma das 8 combinações únicas
+dados_aninhados_corrigido$Renda <- round(c(
+  rnorm(10, mean = 2200, sd = 400), # Paulista Centro
+  rnorm(10, mean = 1800, sd = 300), # Paulista Subúrbio
+  rnorm(10, mean = 2800, sd = 500), # Olinda Centro
+  rnorm(10, mean = 2200, sd = 400), # Olinda Subúrbio
+  rnorm(10, mean = 5000, sd = 1000),# Recife Centro
+  rnorm(10, mean = 3000, sd = 700), # Recife Subúrbio
+  rnorm(10, mean = 1900, sd = 300), # Jaboatão Centro
+  rnorm(10, mean = 1700, sd = 250)  # Jaboatão Subúrbio
+))
+
+ggplot(dados_aninhados_corrigido, aes(x = Localizacao, y = Renda, fill = Cidade)) +
+  geom_boxplot() +
+  facet_wrap(~ Cidade, scales = "free_y") +
+  labs(title = "Visualização de Dados Aninhados",
+       subtitle = "Renda por Localização DENTRO de cada Cidade",
+       x = "Localização", y = "Renda (R$)") +
+  theme_minimal(base_size = 14)  +
+  theme(legend.position = "none")
+```
+**Interpretação:** No painel "Recife", vemos uma grande diferença de renda entre "Centro" e "Subúrbio". No painel "Jaboatão", essa diferença é muito menor (cuidado nas escalas de cada painel). Isso demonstra visualmente que o efeito de Localizacao (Centro vs. Subúrbio) é diferente para cada Cidade e só pode ser interpretado dentro desse contexto. Não existe um "efeito de Centro" geral; existe um efeito de "Centro de Recife", um efeito de "Centro de Olinda", etc.
+---
+
+
 
 ### Exemplo Simulado: `Turma` aninhada em `Escola`
 
@@ -86,38 +142,72 @@ Um fator `B` é dito estar **embutido** (ou aninhado) em um fator `A` se cada n�
 set.seed(321)
 dados_aninhados <- data.frame(
   Escola = factor(rep(c("Escola A", "Escola B", "Escola C"), each = 10)),
-  # A Turma 'T1' da Escola A é diferente da Turma 'T1' da Escola B
-  Turma = factor(rep(c("A.T1", "A.T2", "B.T1", "B.T2", "C.T1", "C.T2"), each = 5)),
-  Nota = round(c(rnorm(5, 85, 4), rnorm(5, 82, 4), # Turmas da Escola A
-                 rnorm(5, 75, 5), rnorm(5, 78, 5), # Turmas da Escola B
-                 rnorm(5, 80, 3), rnorm(5, 79, 3)), 1) # Turmas da Escola C
+  # Criamos um rótulo de turma simples para usar nos eixos do gráfico
+  Turma_label = factor(rep(c("T1", "T2"), each = 5, times = 3)),
+  # E um identificador único para o modelo
+  Turma_ID_unico = factor(rep(c("A.T1", "A.T2", "B.T1", "B.T2", "C.T1", "C.T2"), each = 5))
 )
+# Gerando notas para cada uma das 6 combinações únicas
+dados_aninhados$Nota = round(c(rnorm(5, 85, 4), rnorm(5, 82, 4), # Turmas da Escola A
+                               rnorm(5, 75, 5), rnorm(5, 78, 5), # Turmas da Escola B
+                               rnorm(5, 65, 3), rnorm(5, 68, 3)), 1) # Turmas da Escola C
 ```
 
-**Implicação no Modelo:** O efeito de `Turma` deve ser modelado *dentro* do efeito de `Escola`. Um modelo aditivo `Nota ~ Escola + Turma` estaria **incorreto**. O modelo correto em R é `Nota ~ Escola / Turma`.
+**Implicação no Modelo:** O efeito de `Turma` deve ser modelado *dentro* do efeito de `Escola`. Um modelo aditivo `Nota ~ Escola + Turma` estaria **incorreto**. O modelo correto em R é `Nota ~ Escola / Turma` ou  `Nota ~ Escola + Escola:Turma_label`
 
 ---
 
-### Visualizando Dados Aninhados
-
-Um boxplot revela a estrutura hierárquica. Vemos a variação entre turmas *dentro* de cada escola, e a variação entre as escolas.
+O boxplot revela a estrutura hierárquica. Vemos a variação entre turmas *dentro* de cada escola, e a variação entre as escolas.
 
 ```{r, fig.height=4}
-ggplot(dados_aninhados, aes(x = Turma, y = Nota, fill = Escola)) +
-  geom_boxplot() +labs(title = "Visualização de Dados Aninhados",
-       subtitle = "Variação de Notas por Turma dentro de cada Escola",
-       x = "Turmas (identidade única dentro de cada escola)",
-       y = "Nota") + theme_minimal(base_size = 14) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggplot(dados_aninhados, aes(x = Turma_label, y = Nota, fill = Turma_label)) +
+  geom_boxplot() +
+  facet_wrap(~ Escola) +
+  labs(title = "Escala Fixa", subtitle = "Permite comparar os níveis entre escolas") +
+  theme_minimal(base_size = 12) + theme(legend.position = "none")
 ```
 
 **Interpretação Gráfica:** A comparação principal é entre Escolas. A comparação entre "A.T1" e "B.T1" não é direta, pois são populações de alunos diferentes em contextos diferentes.
 
 ---
 
+
 ## Fatores Cruzados
 
-Dois fatores `A` e `B` são ditos **cruzados** quando cada nível de `A` ocorre em combinação com **todos** os níveis de `B`.
+Dois fatores `A` e `B` são ditos **cruzados** quando cada nível de `A` ocorre em combinação com **todos** os níveis de `B`, ou seja quando nenhum deles está embutido no outro.
+
+**Exemplo:**
+- **População:** Habitantes da região metropolitana de Recife.
+- **Fator `Cidade`:** Paulista, Olinda, Recife, Jaboatão.
+- **Fator `Sexo`:** Masculino, Feminino.
+
+Os fatores `Cidade` e `Sexo` são **CRUZADOS**, pois um homem pode morar em qualquer cidade, assim como uma mulher.
+
+---
+
+### Visualizando Dados Cruzados e Interação (perfil)
+
+```{r, fig.height=5, echo=FALSE}
+# Simulação de dados
+set.seed(2)
+dados_cruzados <- data.frame(
+  Cidade = factor(rep(c("Paulista", "Olinda", "Recife", "Jaboatão"), each = 20)),
+  Sexo = factor(rep(c("Masc", "Fem"), each = 10, times = 4)),
+  Renda = round(runif(80, 1000, 5000))
+)
+
+ggplot(dados_cruzados, aes(x = Cidade, y = Renda, color = Sexo, group = Sexo)) +
+  stat_summary(fun = mean, geom = "point", size = 4) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1.5) +
+    # facet_wrap(~ Sexo, scales = "free_y") +
+  labs(title = "Gráfico de Interação: Cidade x Sexo",
+       subtitle = "Linhas paralelas sugerem ausência de interação",
+       y = "Renda Média") +
+  theme_minimal(base_size = 14)
+```
+**Interpretação:** Se as linhas não são paralelas, o efeito de um fator depende do nível do outro (interação).
+---
+
 
 ### Exemplo Simulado: `Droga` x `Dieta`
 
@@ -136,16 +226,16 @@ dados_cruzados <- data.frame(
 
 ### Visualizando Dados Cruzados: Efeitos Principais
 
-Boxplots são ótimos para visualizar os efeitos principais de cada fator. Podemos visualizar o efeito principal de cada fator separadamente
+O Boxplot permite visualizar os efeitos principais de cada fator separadamente
 .pull-left[
-```{r, fig.height=4.5}
+```{r, fig.height=4.5, echo=FALSE}
 ggplot(dados_cruzados, aes(x = Droga, y = Resposta, fill = Droga)) +
   geom_boxplot() + labs(title = "Efeito Principal da Droga") +
   theme_minimal(base_size = 12) + theme(legend.position = "none")
 ```
 ]
 .pull-right[
-```{r, fig.height=4.5}
+```{r, fig.height=4.5, echo=FALSE}
 ggplot(dados_cruzados, aes(x = Dieta, y = Resposta, fill = Dieta)) +
   geom_boxplot() + labs(title = "Efeito Principal da Dieta") +
   theme_minimal(base_size = 12) + theme(legend.position = "none")
@@ -159,7 +249,7 @@ ggplot(dados_cruzados, aes(x = Dieta, y = Resposta, fill = Dieta)) +
 Um gráfico de interação (ou de perfis) é a melhor ferramenta para visualizar se os efeitos são aditivos ou se interagem. Isso mostra o efeito médio de um fator, ignorando (ou agregando sobre) os níveis do outro. Corresponde conceitualmente às linhas "Droga" e "Dieta" na tabela de ANOVA.
 
 
-```{r, fig.height=4}
+```{r, fig.height=3.5, echo=FALSE}
 ggplot(dados_cruzados, aes(x = Droga, y = Resposta, color = Dieta, group = Dieta)) +
   stat_summary(fun = mean, geom = "point", size = 4) +
   stat_summary(fun = mean, geom = "line", linewidth = 1.5) +
@@ -172,19 +262,212 @@ ggplot(dados_cruzados, aes(x = Droga, y = Resposta, color = Dieta, group = Dieta
 
 ---
 
+
+## Fatores Confundidos
+
+Dois fatores `A` e `B` são ditos **completamente confundidos** quando não é possível separar/distinguir os seus efeitos um do outro.
+
+**Exemplo:** Em um experimento com 3 unidades experimentais, cada uma recebendo um tratamento diferente.
+- Unidade 1 recebe Tratamento 1
+- Unidade 2 recebe Tratamento 2
+- Unidade 3 recebe Tratamento 3
+
+Nessa situação, diferenças observadas na variável-resposta podem ser atribuídas tanto às diferenças entre os **tratamentos** quanto às diferenças inerentes entre as **unidades experimentais**.
+
+Assim, diz-se que o fator `Tratamento` está **COMPLETAMENTE CONFUNDIDO** com o fator `Unidade Experimental`. Isso é uma falha de delineamento que impede a inferência causal.
+
+---
+
+
+### Exemplo de Confundimento: O Caso de Recife
+
+**Cenário:** A prefeitura implementa um novo programa de incentivo ao comércio local (`Programa`). Por questões logísticas, o programa é implementado apenas em bairros de alta renda, enquanto os bairros de baixa renda servem como grupo de controle (não recebem o programa).
+
+- **Tratamento:** `Programa` (Níveis: "Incentivo", "Controle").
+- **Característica dos Bairros:** `Nível de Renda` (Níveis: "Alto", "Baixo").
+- **Resposta:** `Faturamento Médio` do comércio local.
+
+**O Problema:** O fator `Programa` está **completamente confundido** com o fator `Nível de Renda`.
+- Bairros de Alta Renda **SEMPRE** recebem o programa.
+- Bairros de Baixa Renda **NUNCA** recebem o programa.
+
+---
+
+### Exemplo de Confundimento em R e Visualização
+
+Vamos simular os dados para este cenário.
+
+```{r}
+set.seed(555)
+# Criando os dados confundidos
+dados_recife_confundido <- data.frame(
+  Bairro = c("Boa Viagem", "Casa Forte", "Pina", "Várzea", "Brasília Teimosa", "Afogados"),
+  Nivel_Renda = factor(rep(c("Alto", "Baixo"), each = 3)),
+  Programa = factor(rep(c("Incentivo", "Controle"), each = 3))
+)
+
+# Simulando o faturamento. Bairros de alta renda naturalmente já têm faturamento maior.
+dados_recife_confundido$Faturamento <- c(
+  rnorm(3, mean = 500, sd = 50), # Faturamento nos bairros de alta renda
+  rnorm(3, mean = 200, sd = 30)  # Faturamento nos bairros de baixa renda
+)
+```
+---
+
+**Visualizando o Problema:**
+```{r, fig.height=4}
+ggplot(dados_recife_confundido, aes(x = Programa, y = Faturamento, fill = Nivel_Renda)) +
+  geom_boxplot(alpha=0.6) +
+  geom_jitter(width=0.1, size=3) +
+  labs(title = "Efeito Aparente do Programa de Incentivo",
+       subtitle = "O efeito do programa está confundido com o nível de renda dos bairros",
+       x = "Grupo do Programa",
+       y = "Faturamento Médio (em milhares de R$)") +
+  theme_minimal(base_size = 14)
+```
+
+---
+
+### Interpretação do Exemplo de Confundimento
+
+O gráfico mostra claramente que o grupo "Incentivo" tem um faturamento muito maior que o grupo "Controle".
+
+**Podemos concluir que o programa de incentivo foi um sucesso?**
+
+**NÃO. É impossível saber.** A diferença observada pode ser devida:
+1.  Ao **efeito real** do programa de incentivo.
+2.  À **diferença preexistente** no poder de compra e faturamento dos bairros de alta e baixa renda.
+3.  A uma combinação de ambos.
+
+Como a `Nível_Renda` e o `Programa` variam em perfeita sincronia, seus efeitos são matematicamente indistinguíveis. Não podemos isolar o impacto causal do programa.
+
+**Solução:** Um delineamento experimental melhor teria que quebrar esse confundimento. Por exemplo, sorteando aleatoriamente *tanto bairros de alta quanto de baixa renda* para receberem o programa de incentivo.
+
+---
+
+
+
+### Fatores Confundidos: Outro exemplo simulado em R
+
+Vamos simular exatamente o cenário descrito para demonstrar o problema do confundimento.
+
+**Cenário Simulado:**
+1.  Temos 3 **Unidades Experimentais** (por exemplo, 3 pacientes). Cada paciente tem uma "resposta base" diferente devido à sua fisiologia.
+    - Paciente 1: Resposta base alta (ex: 20)
+    - Paciente 2: Resposta base média (ex: 15)
+    - Paciente 3: Resposta base baixa (ex: 10)
+2.  Temos 3 **Tratamentos** com efeitos reais diferentes.
+    - Tratamento 1 (T1): Adiciona 5 unidades à resposta.
+    - Tratamento 2 (T2): Adiciona 10 unidades à resposta.
+    - Tratamento 3 (T3): Adiciona 15 unidades à resposta.
+
+**O Delineamento Confundido:**
+- Paciente 1 (o melhor) recebe Tratamento 1.
+- Paciente 2 (o médio) recebe Tratamento 2.
+- Paciente 3 (o pior) recebe Tratamento 3.
+
+---
+### Simulação em R e Visualização do Confundimento
+
+```{r}
+# Definindo os efeitos REAIS (que na prática seriam desconhecidos)
+efeito_unidade <- c(20, 15, 10)  # Efeito inerente de cada paciente
+efeito_tratamento <- c(5, 10, 15) # Efeito de cada tratamento
+
+# Criando o dataframe com o delineamento confundido
+dados_confundidos_sim <- data.frame(
+  Unidade = factor(c("Paciente 1", "Paciente 2", "Paciente 3")),
+  Tratamento = factor(c("T1", "T2", "T3"))
+)
+
+# A resposta observada é a soma dos efeitos + um pequeno ruído aleatório
+set.seed(123)
+dados_confundidos_sim$Resposta_Observada <- efeito_unidade + efeito_tratamento + rnorm(3, 0, 0.5)
+
+print(dados_confundidos_sim)
+```
+---
+
+**Visualizando os Resultados:**
+```{r, fig.height=4.5}
+ggplot(dados_confundidos_sim, aes(x = Tratamento, y = Resposta_Observada, fill = Unidade)) +
+  geom_col(width=0.7) +
+  geom_text(aes(label = round(Resposta_Observada, 1)), vjust = 1.5, color = "white", size = 5) +
+  labs(title = "Resultados do Experimento Confundido",
+       subtitle = "Qual efeito causou a diferença nas respostas?",
+       y = "Resposta Observada") +
+  theme_minimal(base_size = 14)
+```
+
+---
+### A Impossibilidade de Separar os Efeitos
+
+Observando os resultados, vemos uma diferença clara: `T3 > T2 > T1`.
+
+**A pergunta é: A que se deve essa diferença?**
+- É porque o Tratamento 3 é o melhor? (O que é verdade em nossa simulação).
+- Ou é porque o Paciente 3 é diferente dos outros? (O que também é verdade).
+
+A resposta observada para o `T3` (~25) é a soma do `efeito_unidade` (10) e do `efeito_tratamento` (15). A resposta para o `T1` (~25) é a soma de `efeito_unidade` (20) e `efeito_tratamento` (5). **Os resultados observados acabam sendo muito parecidos por uma coincidência dos efeitos opostos!**
+---
+
+Se tentarmos ajustar um modelo em R, ele falhará ou dará um aviso:
+
+```{r, echo=TRUE}
+# Tentativa de ajustar um modelo para separar os efeitos
+# O R irá reclamar que o modelo não é de posto completo
+modelo_confundido <- lm(Resposta_Observada ~ Unidade + Tratamento, data = dados_confundidos_sim)
+summary(modelo_confundido)
+```
+**Interpretação do Erro:** O R nos informa que os coeficientes não podem ser estimados porque `Unidade` e `Tratamento` são **perfeitamente colineares**. A coluna da matriz do modelo para "Paciente 2" é uma combinação linear das outras, e o mesmo para "Tratamento T2", etc. Matematicamente, é impossível resolver o sistema de equações.
+
+**Conclusão:** O confundimento é uma falha estrutural do delineamento experimental que a análise estatística **não pode consertar**.
+---
+  
+
+##  Estruturas de Classificação Balanceadas e Completas
+
+Uma estrutura de classificação é dita **BALANCEADA** e **completa** quando:
+1.  Para cada uma de todas as **possíveis combinações** dos níveis dos fatores, existe pelo menos um elemento.
+2.  Todas as possíveis combinações possuem um **mesmo número de elementos** (mesmo número de réplicas).
+
+.pull-left[
+**Estrutura Balanceada:**
+```{r}
+df_bal <- data.frame(FatorA = rep(c("A1","A2"), each=4), 
+                     FatorB = rep(c("B1","B2"), 4))
+table(df_bal)
+```
+]
+.pull-right[
+**Estrutura Desbalanceada:**
+```{r}
+df_unbal <- df_bal[-1, ]
+table(df_unbal)
+```
+]
+
+**Importância:** Delineamentos balanceados garantem que os efeitos dos fatores sejam **ortogonais** (independentes), o que simplifica enormemente a análise e a interpretação. Daqui para adiante, a teoria apresentada refere-se a estruturas balanceadas e completas, a menos que haja referência contrária.
+
+---
+
 class: center, middle, inverse
 
-## 3.2 e 3.3: A Linguagem dos Diagramas de Hasse: Da Estrutura ao Modelo
+## Representação de Estruturas em Diagramas de Hasse
 
 ---
 
 ### Aprofundando: O que é um Diagrama de Hasse?
+
+As relações entre fatores de interesse podem ser convenientemente representadas por meio de diagramas de Hasse. Essa forma de representar esquematicamente estruturas de classificação foram estudadas extensamente por Throckomorton, 1961.
+
 
 Um Diagrama de Hasse é a representação gráfica de um **conjunto parcialmente ordenado (poset)**. No nosso contexto:
 - **O conjunto:** É composto pelos fatores do modelo, mais a média geral ($\mu$) e o termo de erro residual ($\epsilon$).
 - **A relação de ordem ($\preceq$):** É definida pela **relação de aninhamento**. Dizemos que $B \preceq A$ ("B precede ou é igual a A") se o fator B está aninhado no (ou é contido pelo) fator A.
 
 O diagrama simplifica a visualização desta ordem, mostrando apenas as relações de "cobertura" (se $B \preceq A$ e não existe um C tal que $B \preceq C \preceq A$, então desenhamos uma linha de B para A). A direção da hierarquia é implícita (de baixo para cima).
+---
 
 ### Por que isso é fundamental?
 A estrutura de ordem parcial do diagrama dita diretamente:
@@ -192,357 +475,441 @@ A estrutura de ordem parcial do diagrama dita diretamente:
 2.  Quais médias são "admissíveis" para cálculo e interpretação.
 3.  Como a Soma de Quadrados deve ser particionada na ANOVA.
 
----
-
-### A Gramática Visual dos Diagramas de Hasse
-
-Para usar o diagrama, precisamos entender sua linguagem.
-
-.pull-left[
-**1. Aninhamento (Hierarquia)**
-- **Relação:** Fator `B` está aninhado em `A` ($A \supset B$).
-- **Visual:** Uma linha vertical direta conectando `B` (embaixo) a `A` (em cima).
-```{r, echo=FALSE,fig.height=2.5}
-grViz("digraph { node[shape=circle]; edge[arrowhead=none]; B -> A }")
-```
-- **Interpretação:** O efeito de `B` só pode ser avaliado *dentro* dos níveis de `A`.
-]
-.pull-right[
-**2. Cruzamento (Fatorial)**
-- **Relação:** Fatores `A` e `B` são cruzados ($A \times B$).
-- **Visual:** Estrutura paralela. Ambos partem de um nó superior comum e chegam a um nó inferior comum.
-```{r, echo=FALSE, fig.height=2.5}
-grViz("digraph { node[shape=circle]; edge[arrowhead=none]; E -> {A B} -> M }")
-```
-- **Interpretação:** Os efeitos de `A`, `B` e da interação `A:B` podem ser estimados.
-]
-
----
-
-### Do Diagrama de Hasse para a Fórmula do Modelo em R
-
-**Esta é a conexão mais importante:** O diagrama de Hasse é um mapa visual que se traduz diretamente na sintaxe de fórmulas do R.
-
-.pull-left[
-**1. Aninhamento (Hierarquia)**
-
-O diagrama mostra `B` aninhado em `A`.
-
-```{r, echo=FALSE, fig.height=2.5}
-grViz("
-digraph hierarchy {
-  rankdir=TB;
-  node [shape=circle, style=filled, fillcolor=lightblue];
-  edge [arrowhead=none];
-  B -> A;
-}
-")
-```
-
 **Tradução para R:** O operador de aninhamento é `/`.
 O modelo para o efeito de `B` aninhado em `A` é:
 `~ A / B`
 que é expandido pelo R para:
 `~ A + A:B`
-]
-.pull-right[
-**2. Cruzamento (Fatorial)**
-
-O diagrama mostra `A` e `B` cruzados.
-
-```{r, echo=FALSE, fig.height=2.5}
-grViz("
-digraph factorial {
-  rankdir=TB;
-  node [shape=circle, style=filled, fillcolor=lightblue];
-  edge [arrowhead=none];
-  
-  # Nós
-  mu [label='μ']
-  epsilon [label='ε']
-
-  # Relações
-  epsilon -> {A, B} -> mu;
-}
-")
-```
 
 **Tradução para R:** O operador de cruzamento é `*`.
 O modelo para `A` e `B` cruzados é:
 `~ A * B`
 que é expandido pelo R para:
 `~ A + B + A:B`
+
+---
+
+## Diagramas de Hasse 
+
+<!-- As relações entre fatores de interesse podem ser convenientemente representadas por meio de diagramas de Hasse. Essa forma de representar esquematicamente estruturas de classificação foram estudadas extensamente por Throckomorton, 1961. -->
+
+A Figura abaixo ilustra, através desses diagramas, as duas possíveis estruturas com dois fatores.
+
+.pull-left[
+Representação da situação em que o fator **B está embutido** no fator A.
+```{r, echo=FALSE, fig.height=3.5}
+grViz("digraph { rankdir=TB; node[shape=circle]; edge[arrowhead=none]; mu->A->B->epsilon; epsilon[label='ε']; mu[label='μ'] }")
+```
+]
+.pull-right[
+Representação no caso em que **A e B são cruzados**.
+```{r, echo=FALSE, fig.height=3.5}
+grViz("digraph { rankdir=TB; node[shape=circle]; edge[arrowhead=none]; mu->{A,B}->epsilon; epsilon[label='ε']; mu[label='μ']; {rank=same; A;B} }")
+```
 ]
 
-**Portanto, ao desenhar o diagrama de Hasse para o seu delineamento experimental, você está, na verdade, especificando a fórmula correta do seu modelo estatístico.**
-
+Relações de completo **confundimento** entre fatores seriam representadas por um **mesmo ponto** para todos os fatores confundidos. **Portanto, ao desenhar o diagrama de Hasse para o seu delineamento experimental, você está, na verdade, especificando a fórmula correta do seu modelo estatístico.**
 ---
 
-### Exemplo Prático: Delineamento em Blocos Completos Aleatorizados (RCBD)
 
-Este é um exemplo clássico que ilustra o poder dos diagramas para escolher o modelo correto.
+### EXERCÍCIO EM CLASSE
+
+**Desenhemos os diagramas de Hasse correspondentes a cada uma das 5 estruturas possíveis de classificação com 3 fatores (A, B e C).**
+
+```{r, echo=FALSE}
+# Definir um estilo padrão para todos os gráficos para evitar repetição
+graph_attrs <- "
+  rankdir=TB;
+  node [shape=circle, style=filled, fillcolor=lightblue];
+  edge [arrowhead=none];
+"
+```
+.pull-left[
+**1. Totalmente Cruzados (A * B * C)**
+```{r,  echo=FALSE}
+grViz(paste0("digraph {", graph_attrs, "
+  mu [label='μ'];
+  epsilon [label='ε'];
+  mu -> {A, B, C};
+  {A, B, C} -> epsilon [arrowhead=none];
+  {rank=same; A; B; C;}
+}"))
+```
+]
+.pull-right[
+**2. Totalmente Aninhados (A / B / C)**
+```{r, echo=FALSE}
+grViz(paste0("digraph {", graph_attrs, "
+  mu [label='μ'];
+  epsilon [label='ε'];
+  mu -> A -> B -> C -> epsilon;
+}"))
+```
+]
+---
+
+.pull-left[
+**3. (A ⊃ B) x C**  (Lê-se: `C` cruzado com `B` aninhado em `A`. Modelo: `C * A/B`)
+```{r, echo=FALSE}
+grViz(paste0("digraph {", graph_attrs, "
+  mu [label='μ'];
+  epsilon [label='ε'];
+  mu -> {A, C};
+  A -> B;
+  {B, C} -> epsilon;
+}"))
+```
+]
+.pull-right[
+**4. A ⊃ (B x C)**  (Lê-se: `B` e `C` cruzados, aninhados em `A`. Modelo: `A/(B*C)`)
+```{r, echo=FALSE}
+grViz(paste0("digraph {", graph_attrs, "
+  mu [label='μ'];
+  epsilon [label='ε'];
+  mu -> A;
+  A -> {B, C};
+  {B, C} -> epsilon;
+  {rank=same; B; C;}
+}"))
+```
+]
+---
+
+**5. Confundidos**
+```{r, echo=FALSE}
+grViz(paste0("digraph {", graph_attrs, "
+  mu [label='μ'];
+  epsilon [label='ε'];
+  ABC [label='(A,B,C)'];
+  mu -> ABC -> epsilon;
+}"))
+```
+---
+
+### Exemplo Prático: A Lógica por Trás do Delineamento em Blocos (RCBD)
+
+Vamos usar um exemplo clássico para ilustrar como o Diagrama de Hasse nos guia para o modelo correto e por que isso é tão poderoso.
 
 **Cenário Experimental:**
-- Queremos testar o efeito de 3 **Tratamentos** (A, B, C) (nosso fator de interesse).
-- Suspeitamos que há um gradiente de fertilidade no campo (uma fonte de variabilidade que não nos interessa, mas que pode mascarar o efeito do tratamento).
-- Para controlar essa variabilidade, dividimos o campo em 4 **Blocos**. Cada bloco é uma área que consideramos homogênea internamente, mas pode ser diferente de outros blocos.
-- Em cada bloco, aplicamos *todos* os 3 tratamentos a 3 unidades experimentais, de forma aleatória.
+- **Objetivo:** Testar se 3 tipos de fertilizante (`Tratamento`: A, B, C) afetam a produção de uma cultura.
+- **Problema:** O campo experimental não é homogêneo. Há um gradiente de umidade e fertilidade da esquerda para a direita. As parcelas à direita são naturalmente mais produtivas.
+- **Variável Indesejada:** Esta variação espacial é um "ruído" que pode mascarar o verdadeiro efeito dos fertilizantes.
+
+**A pergunta é: como podemos separar o "sinal" (efeito do Tratamento) do "ruído" (efeito da posição no campo)?**
+
 ---
+### Solução: O Delineamento em Blocos Completos Aleatorizados (RCBD)
+
+A solução é o **bloqueio**.
+1.  Dividimos o campo em 4 **Blocos**, perpendiculares ao gradiente. Cada bloco é uma área considerada homogênea *internamente*.
+2.  Em **cada bloco**, aplicamos *todos* os 3 tratamentos a 3 unidades experimentais, de forma aleatória.
 
 **Análise das Relações:**
-- O fator de interesse é `Tratamento`.
-- O fator de controle (ou "ruído") é `Bloco`.
-- Como cada tratamento aparece em cada bloco, os fatores `Tratamento` e `Bloco` são **cruzados**.
-- A interação `Bloco:Tratamento` existe? Sim, mas em um RCBD sem réplicas, ela está **confundida** com o erro experimental residual. A unidade experimental ($\epsilon$) é, na verdade, a combinação de um Bloco com um Tratamento.
+- Fator de interesse: `Tratamento`.
+- Fator de bloqueio (controle de ruído): `Bloco`.
+- Como cada tratamento aparece em cada bloco, os fatores são **cruzados**.
+- A interação `Bloco:Tratamento` está confundida com o erro experimental ($\epsilon$).
 
 ---
+### Simulação e Visualização: O Problema do "Ruído"
 
-### Diagrama de Hasse e Modelo para o Delineamento em Blocos (RCBD)
+Vamos simular os dados. O Tratamento B é o melhor (+5), mas o Bloco 4 é muito mais fértil (+12).
+```{r}
+set.seed(99)
+dados_rcbd <- data.frame(Bloco = factor(rep(1:4, each = 3)),
+  Tratamento = factor(rep(c("A", "B", "C"), times = 4))
+)
+# Definindo efeitos REAIS
+efeito_bloco <- c(0, 4, 8, 12)  # Blocos cada vez mais férteis
+efeito_trat <- c(0, 5, 0)      # Tratamento B é o melhor
+# A resposta é a soma dos efeitos + ruído
+dados_rcbd <- dados_rcbd %>%
+  mutate(
+    Resp_Base = 20 + efeito_bloco[as.numeric(Bloco)] + efeito_trat[as.numeric(Tratamento)],
+    Resposta = round(Resp_Base + rnorm(12, 0, 1.5), 1)
+  )
+```
+---
+**Visualização 1: Ignorando os Blocos (Análise Incorreta de um DIC)**
+Se analisarmos os dados como se fossem de um Delineamento Inteiramente Casualizado (DIC), a variabilidade dos blocos obscurece tudo.
+```{r, fig.height=4.5, echo=FALSE}
+ggplot(dados_rcbd, aes(x = Tratamento, y = Resposta, fill = Tratamento)) +
+  geom_boxplot(alpha=0.6) + geom_jitter(width=0.1) +
+  labs(title="Análise Incorreta: Ignorando o Efeito do Bloco",
+       subtitle="A alta variabilidade DENTRO dos grupos mascara o efeito do tratamento") +
+  theme_minimal(base_size=14) + theme(legend.position="none")
+```
+**Interpretação:** A sobreposição entre os boxplots é enorme. Uma ANOVA incorreta (`lm(Resposta ~ Tratamento)`) provavelmente não detectaria a superioridade do Tratamento B.
 
+---
+### O Diagrama de Hasse nos Mostra o Caminho
 
-**Construindo o Diagrama:**
-1.  A unidade experimental ($\epsilon$), que representa a variação `Bloco:Tratamento`, está no nível mais baixo.
-2.  Acima dela, estão os fatores que a definem: `Bloco` e `Tratamento`.
-3.  Como `Bloco` e `Tratamento` são cruzados, eles formam uma estrutura paralela.
-4.  Ambos estão abaixo da média geral ($\mu$).
+O diagrama de Hasse para um RCBD nos diz que `Bloco` e `Tratamento` são fatores cruzados.
 
-```{r, echo=FALSE, fig.height=2.5}
+.pull-left[
+**Diagrama de Hasse do RCBD:**
+```{r, echo=FALSE, fig.height=3.5}
 grViz("
 digraph rcbd {
-  node [shape=box, style=rounded]
-  edge [arrowhead=none]
-  
-  # Nós
-  mu [label='μ']
-  bloco [label='Bloco']
-  trat [label='Tratamento']
-  epsilon [label='ε \n(Bloco:Tratamento)', shape=ellipse]
-
-  # Relações
-  epsilon -> {bloco, trat} -> mu
+  rankdir=TB;
+  node [shape=box, style=rounded]; edge [arrowhead=none];
+  mu [label='μ']; bloco [label='Bloco']; trat [label='Tratamento'];
+  epsilon [label='ε \\n(Bloco:Tratamento)', shape=ellipse];
+  mu -> {bloco, trat}; {bloco, trat} -> epsilon;
 }
 ")
 ```
----
-
+]
+.pull-right[
 **Tradução para Modelo Estatístico:**
 
-O diagrama mostra claramente dois fatores cruzados. Em um delineamento em blocos, geralmente não estamos interessados na interação bloco-tratamento (assumimos que ela não existe ou é pequena). Nosso objetivo é **remover a variabilidade devida aos Blocos** para conseguir enxergar o efeito dos Tratamentos com mais clareza.
+O diagrama nos força a reconhecer a existência do fator `Bloco`. Para controlar seu efeito, devemos incluí-lo no modelo. Como não estamos interessados na interação, usamos um modelo aditivo.
 
-**Fórmula do Modelo em R:**
-O diagrama nos diz que `Bloco` e `Tratamento` são fatores cruzados. Como queremos estimar seus efeitos de forma aditiva (sem a interação), a fórmula correta é:
-
+**Fórmula Correta do Modelo em R:**
 `Resposta ~ Bloco + Tratamento`
-
-**O que este modelo faz?**
-- `Tratamento`: Estima e testa o efeito do nosso fator de interesse.
-- `Bloco`: Estima a variabilidade *entre* os blocos e a **remove** da soma de quadrados do resíduo.
-
-Isso torna o termo de erro (`QM_Resíduo`) menor, o que aumenta o poder do nosso teste F para detectar diferenças entre os tratamentos. O diagrama de Hasse nos levou diretamente a este modelo, que é o padrão para a análise de um RCBD.
-
-**Se estivéssemos interessados na interação, o modelo seria:**
-`Resposta ~ Bloco * Tratamento` (mas não poderíamos estimar o erro residual separadamente sem réplicas).
-
-
+]
 ---
 
-### O Diagrama de Hasse como Ferramenta de Diagnóstico
+**O que este modelo faz matematicamente?**
+- Ele calcula a parte da variabilidade total que se deve às diferenças **entre blocos** ($SQ_{Bloco}$).
+- Ele calcula a parte da variabilidade que se deve às diferenças **entre tratamentos** ($SQ_{Tratamento}$).
+- A variabilidade restante, o "ruído puro", é o resíduo ($SQ_{Resíduo}$).
 
-Podemos usar o diagrama *antes* de realizar o experimento para verificar se o nosso delineamento é sólido.
+Ao "subtrair" a $SQ_{Bloco}$ da variabilidade total, o nosso denominador do teste F ($QM_{Resíduo}$) fica muito menor, aumentando o poder para detectar o efeito do `Tratamento`.
 
-**Cenário do Confundimento:** `Método de Ensino` confundido com `Professor`.
-- O Prof. Silva SEMPRE usa o Método X.
-- A Profa. Santos SEMPRE usa o Método Y.
+O modelo `Resposta ~ Bloco + Tratamento` ajusta os dados removendo o efeito médio de cada bloco. O resultado é como se todas as observações tivessem sido feitas em um campo homogêneo.
+```{r, fig.height=4.5, echo=FALSE}
+# Ajustando o modelo para obter os resíduos parciais do tratamento
+modelo_rcbd <- lm(Resposta ~ Bloco + Tratamento, data = dados_rcbd)
+```
+---
 
-**Análise Estrutural:**
-Qualquer diferença observada entre os grupos pode ser devida ao `Professor` OU ao `Método`. Eles são indistinguíveis. Na linguagem de conjuntos e ordem parcial, eles são o mesmo elemento.
+**Visualização 2: "Removendo" o Efeito do Bloco (Análise Correta)**
 
-**Diagrama de Hasse do Delineamento Falho:**
-```{r, echo=FALSE, fig.height=2.5}
+```{r, fig.height=4.5, echo=FALSE}
+# Criando os dados ajustados (removendo o efeito do bloco)
+dados_rcbd$Resposta_Ajustada <- predict(modelo_rcbd, type="terms")[, "Tratamento"] + 
+                                mean(dados_rcbd$Resposta)
+ggplot(dados_rcbd, aes(x = Tratamento, y = Resposta_Ajustada, fill = Tratamento)) +
+  geom_boxplot(alpha=0.6) + geom_jitter(width=0.1) +
+  labs(title="Análise Correta: Resposta Ajustada pelo Bloco",
+       subtitle="O efeito real do Tratamento B agora é claramente visível") +
+  theme_minimal(base_size=14) + theme(legend.position="none") +
+  ylab("Resposta Ajustada")
+```
+**Interpretação:** Magia! Ao controlar estatisticamente a variabilidade dos blocos, a variabilidade *dentro* de cada tratamento diminui drasticamente, e a superioridade do Tratamento B torna-se inegável. O Diagrama de Hasse nos levou ao modelo que permitiu esta "limpeza" dos dados.
+
+---
+### O Diagrama de Hasse como Ferramenta de Diagnóstico *a Priori*
+
+O poder real do diagrama é no **planejamento** de um experimento.
+
+**Cenário de Diagnóstico:** Um pesquisador propõe um estudo para comparar `Método de Ensino` X e Y. Ele decide que o `Professor` Silva usará o Método X e a Profa. Santos usará o Método Y.
+
+**Passo 1: Desenhar o Diagrama de Hasse do delineamento proposto.**
+- `Professor` e `Método` não são cruzados (Prof. Silva nunca usa Y).
+- `Professor` e `Método` não são aninhados (Método X não está "dentro" do Prof. Silva de uma forma hierárquica).
+- Eles são **confundidos**: saber o professor implica saber o método.
+---
+
+**Passo 2: Diagnóstico a partir do Diagrama.**
+
+```{r, fig.height=3.5, echo=FALSE}
 grViz("
 digraph confounded {
-  node [shape=circle, style=filled, fillcolor=lightcoral]
-  edge [arrowhead=none]
-  
-  # Nós confundidos em um só
-  conf [label='(Professor, Método)']
-  
-  # Relações
-  epsilon -> conf -> mu
-  
-  # Rótulos
-  mu [label = 'μ']; epsilon [label = 'ε']
+  rankdir=TB;
+  node [shape=circle, style=filled, fillcolor=lightcoral]; edge[arrowhead=none];
+  mu [label = 'μ']; epsilon [label = 'ε']; conf [label='(Professor, Método)'];
+  mu -> conf -> epsilon;
 }
 ")
 ```
 
-**Diagnóstico:** O diagrama mostra visualmente que não há como separar os efeitos. Se tivéssemos desenhado este diagrama durante a fase de planejamento, a falha seria óbvia e o experimento poderia ser corrigido (ex: fazendo ambos os professores usarem ambos os métodos, o que resultaria em um delineamento cruzado).
+**Diagnóstico:** O diagrama revela imediatamente a falha. Os dois fatores ocupam o mesmo nó, significando que seus efeitos são inseparáveis. O experimento, como planejado, **não pode responder à pergunta de pesquisa**.
+
+**Passo 3: Ação Corretiva.**
+O diagrama nos força a redesenhar o experimento. A solução óbvia é **cruzar** os fatores: ambos os professores devem usar ambos os métodos. O novo diagrama seria o de fatores cruzados, que é um delineamento válido.
+
 ---
+
 class: center, middle, inverse
 
-## 3.6 a 3.8: Ajuste, Estimação e Teoria
+## 3.4 Médias Parciais, Admissíveis e Identidades Algébricas
 
 ---
+## Médias Parciais e Admissíveis
 
-### O Modelo em Forma Matricial: $y = X\beta + \epsilon$
-A matriz $X$ é a **representação matemática do seu delineamento experimental**.
+Em estudos experimentais, o valor de uma variável-resposta $Y$ é denotado como:
+$y_{ijk...r}.$ Nesta notação, cada índice corresponde ao nível de um fator considerado. O último índice, `r`, porém, corresponde à réplica executada sob a combinação dos níveis de todos os fatores considerados.
 
-### O Princípio de Mínimos Quadrados e as Equações Normais
-O objetivo é encontrar $b$ que minimiza $S(b) = (y - Xb)^T(y - Xb)$.
-A solução é encontrada derivando $S(b)$ em relação a $b$ e igualando a zero:
-$$ \frac{\partial S(b)}{\partial b} = -2X^T(y - Xb) = 0 \implies X^T y - X^T X b = 0 $$
-O que nos leva às **Equações Normais**:
-$$ (X^T X) b = X^T y $$
+- **Média parcial:** É a média das observações calculada sobre todos os níveis de um determinado fator ou conjunto de fatores.
 
+**Exemplo:** Dois fatores (cruzados) estão sob estudo: A, com `a` níveis e B, com `b` níveis. Suponha que `n` denote o número de réplicas do experimento. As seguintes notações são estabelecidas:
+.pull-left[
+$$y_{ij.} = \sum_{r=1}^n y_{ijr} \implies \bar{y}_{ij.} = \frac{1}{n}y_{ij.}$$
+$$y_{i..} = \sum_{j=1}^b \sum_{r=1}^n y_{ijr} \implies \bar{y}_{i..} = \frac{1}{bn}y_{i..}$$
+]
+.pull-rigth[
+$$y_{.j.} = \sum_{i=1}^a \sum_{r=1}^n y_{ijr} \implies \bar{y}_{.j.} = \frac{1}{an}y_{.j.}$$
+$$y_{...} = \sum_{i=1}^a \sum_{j=1}^b \sum_{r=1}^n y_{ijr} \implies \bar{y}_{...} = \frac{1}{abn}y_{...}$$]
 ---
 
-### Singularidade, Inversa Generalizada e Estimabilidade
+### Exemplo Prático: Calculando Médias Parciais em R
 
-A matriz $X^T X$ é singular em modelos fatoriais devido à **sobreparametrização**. A solução $b$ não é única.
-
-**Solução:** $b = (X^T X)^- X^T y$, onde $(X^T X)^-$ é *qualquer* **inversa generalizada**.
-
-**Implicação Profunda: Estimabilidade.**
-
-Embora $b$ não seja único, o vetor de valores preditos $\hat{y} = Xb = X(X^T X)^- X^T y = P_X y$ **é único**, pois a matriz de projeção $P_X$ é invariante à escolha da inversa generalizada.
-
-Uma função $l^T \beta$ é **estimável** se ela pode ser escrita como uma combinação linear dos valores médios esperados, $E(y_i)$. 
-
-Matematicamente, $l^T$ deve pertencer ao espaço-linha de $X$. Apenas estas funções têm estimativas únicas e interpretação científica.
-
----
-
-## Teorema de Gauss-Markov e Modelo de Aitken
-
-**Teorema de Gauss-Markov:** Se os erros $\epsilon$ têm média zero, variância constante $\sigma^2$ e não são correlacionados ($Var(\epsilon)=\sigma^2 I$), então o estimador de Mínimos Quadrados Ordinários (OLS) é o **BLUE** (Best Linear Unbiased Estimator) para qualquer função estimável $l^T \beta$.
-
-**Modelo de Aitken:** E se os erros *não* forem "bem-comportados"? 
-
-($Var(\epsilon) = \sigma^2 H$, com $H \neq I$).
-Neste caso, o estimador BLUE é o de **Mínimos Quadrados Generalizados (GLS)**:
-$$ b_{GLS} = (X^T H^{-1} X)^{-} X^T H^{-1} y $$
-Ele pondera as observações para dar menos peso às de maior variância.
-
----
-class: center, middle, inverse
-
-## 4. Análise de Variância e Inferência
-
-(Seções 3.10 em diante)
-
----
-
-## 3.10 A Geometria da Análise de Variância (ANOVA)
-
-A ANOVA particiona a variabilidade total dos dados. A intuição geométrica é a mais poderosa: é uma aplicação do **Teorema de Pitágoras** em um espaço vetorial de $n$ dimensões.
-
-O vetor de dados $y$ é decomposto em componentes **ortogonais**:
-$$y = \underbrace{P_{J_n} y}_{\text{Vetor Média}} + \underbrace{(P_X - P_{J_n})y}_{\text{Vetor de Efeitos}} + \underbrace{(I - P_X)y}_{\text{Vetor de Resíduos}}$$
-$$y_{ajustado} = \bar{y} \mathbf{1} + \text{efeitos} + \text{resíduos}$$
-
-Como os vetores são ortogonais, a soma de suas "energias" (norma ao quadrado) se conserva:
-$$||y - \bar{y}\mathbf{1}||^2 = ||\text{efeitos}||^2 + ||\text{resíduos}||^2$$
-$$SQ_{Total} = SQ_{Modelo} + SQ_{Resíduo}$$
-
----
-### Tabela de ANOVA (Corrigida pela Média)
-
-
-| F.V. | G.L. (df) | S.Q. (Sum Sq) | Q.M. (Mean Sq) | F |
-|:---|:---:|:---:|:---:|:---:|
-| Tratamento | $t-1$ | $SQ_{Trat}$ | $SQ_{Trat}/(t-1)$ | $QM_{Trat}/QM_{Res}$ |
-| Resíduo | $n-t$ | $SQ_{Res}$ | $SQ_{Res}/(n-t)$ | |
-| Total | $n-1$ | $SQ_{Total}$ | | |
-
-- **QM (Quadrado Médio):** É uma estimativa da variância associada àquela fonte. $E(QM_{Res}) = \sigma^2$. $E(QM_{Trat}) = \sigma^2 + \frac{k}{t-1}\sum \tau_i^2$.
-- **Estatística F:** Compara a variabilidade explicada pelo modelo com a variabilidade residual. Se $H_0$ (não há efeito do tratamento) for verdadeira, $\sum \tau_i^2 = 0$ e esperamos que $F \approx 1$.
-
----
-### Exemplo Prático: ANOVA de um fator com `ggplot2`
-
-**Cenário:** Testando 3 fertilizantes (A, B, C) na produção.
-```{r, fig.height=5}
-set.seed(123)
-dados_fert <- data.frame(
-  Fertilizante = factor(rep(c("A", "B", "C"), each = 6)),
-  Producao = c(rnorm(6, mean = 20, sd = 2), rnorm(6, mean = 25, sd = 2), rnorm(6, mean = 21, sd = 2))
-)
-
-# Visualização completa: pontos de dados + boxplot
-p <- ggplot(dados_fert, aes(x = Fertilizante, y = Producao, fill = Fertilizante)) +
-  geom_boxplot(alpha = 0.6) +
-  geom_jitter(width = 0.1, color = "black") + # Adiciona os pontos de dados
-  labs(title = "Produção por Tipo de Fertilizante",
-       subtitle = "Boxplots com dados individuais sobrepostos") +
-  theme_minimal(base_size = 14) +
-  theme(legend.position = "none")
-```
----
-
-```{r, fig.height=5}
-p
-```
----
-### Ajustando o Modelo e Gerando a Tabela ANOVA em R
-
+Vamos usar um exemplo simples de `Droga` (Fator A, 2 níveis) x `Sexo` (Fator B, 2 níveis) com `n=3` réplicas para tornar isso concreto.
+.pull-left[
 ```{r}
-modelo_fert <- lm(Producao ~ Fertilizante, data = dados_fert); tabela_anova <- anova(modelo_fert)
-print(tabela_anova)
+set.seed(101)
+dados_med <- data.frame(
+  Droga = factor(rep(c("A", "B"), each = 6)),
+  Sexo = factor(rep(c("M", "F"), times = 2, each = 3)),
+  Resposta = round(rnorm(12, mean=20, sd=5))
+)
 ```
-
-**Interpretando o Resultado Detalhadamente:**
-1.  **Hipóteses:**
-    - $H_0: \mu_A = \mu_B = \mu_C$ (Os fertilizantes não têm efeito diferente).
-    - $H_1:$ Pelo menos uma média é diferente.
-2.  **Estatística de Teste F:** O valor F de 14.19 indica que a variância *entre* os grupos é ~14 vezes maior que a variância *dentro* dos grupos.
-3.  **p-valor:** A probabilidade de observar um F tão grande (ou maior) por puro acaso, *se a H₀ fosse verdadeira*, é de 0.00038.
-4.  **Decisão e Conclusão:** Como p < 0.05, rejeitamos $H_0$. Existem evidências estatísticas fortes para concluir que o tipo de fertilizante afeta a produção.
-
----
-class: center, middle, inverse
-
-## 3.11 Teoria Inferencial, Distribuições e Referências
-
----
-
-### O Modelo Linear Normal e Suas Consequências
-
-A premissa adicional de que os erros seguem uma distribuição Normal, $\epsilon \sim N(0, \sigma^2 I)$, é o que permite a inferência clássica (testes F, testes t, intervalos de confiança).
-
-Sob esta premissa:
-- $y \sim N(X\beta, \sigma^2 I)$.
-- As Somas de Quadrados, que são formas quadráticas de vetores normais, seguem distribuições Qui-quadrado ($\chi^2$).
-- A independência entre as Somas de Quadrados (garantida pelo Teorema de Cochran) permite a construção da estatística $F$.
-
----
-
-### O Teorema de Cochran: A Grande Unificação
-
-Para qualquer modelo linear (com fatores cruzados, aninhados, etc.), a soma de quadrados total pode ser particionada em componentes ortogonais.
-
-$$ y^T(I-J_n)y = y^T A_1 y + y^T A_2 y + \dots + y^T A_p y $$
-
-O **Teorema de Cochran** garante que, sob a premissa de normalidade e $H_0$:
-1.  Cada termo $\frac{y^T A_i y}{\sigma^2}$ segue uma distribuição $\chi^2_{k_i}$, onde $k_i = posto(A_i)$ são os graus de liberdade.
-2.  Todos esses termos são **mutuamente independentes**.
-
-Este teorema é a fundação que justifica toda a tabela de ANOVA, permitindo-nos construir testes F válidos para cada linha da tabela.
-
----
-
-### Referências e Leitura Complementar
-
-Para um aprofundamento nos tópicos discutidos, as seguintes obras são referências clássicas na área de Modelos Lineares:
-
-- **Searle, S. R. (1971). *Linear Models*.** Wiley.
-  - *Um texto fundamental e matematicamente rigoroso sobre a teoria de modelos lineares, especialmente para dados desbalanceados.*
-
-- **Scheffé, H. (1959). *The Analysis of Variance*.** Wiley.
-  - *O trabalho clássico sobre ANOVA, com uma abordagem geométrica profunda.*
-
-- **Christensen, R. (2011). *Plane Answers to Complex Questions: The Theory of Linear Models*.** Springer.
-  - *Uma abordagem moderna e muito conceituada, que conecta a teoria com a prática computacional.*
-
-- **Rao, C. R. (1973). *Linear Statistical Inference and Its Applications*.** Wiley.
-  - *Uma referência abrangente sobre inferência estatística, com capítulos detalhados sobre a teoria de estimação em modelos lineares.*
+]
+.pull-right[
+```{r}
+print(dados_med)
 ```
+]
+---
+### Exemplo Prático: Significado das Médias Parciais
+
+Vamos calcular e interpretar cada média usando `dplyr`.
+
+.pull-left[
+**1. Média da Célula ($\bar{y}_{ij.}$)**
+Média para cada combinação específica.
+```{r}
+# a = 2, b = 2, n = 3
+dados_med %>% 
+  group_by(Droga, Sexo) %>% 
+  summarise(Media_Célula = mean(Resposta))
+```
+**Interpretação:** É a resposta média para o grupo que recebeu a Droga A e é do Sexo M, etc. São os pontos em um gráfico de interação.
+]
+.pull-right[
+**2. Média Geral ($\bar{y}_{...}$)**
+A média de todas as observações.
+```{r}
+mean(dados_med$Resposta)
+```
+**Interpretação:** É a linha de base geral do experimento.
+]
+---
+.pull-left[
+**3. Média do Fator A ($\bar{y}_{i..}$)**
+Média para cada nível de `Droga`, agregando sobre `Sexo`.
+```{r}
+dados_med %>% 
+  group_by(Droga) %>% 
+  summarise(Media_Droga = mean(Resposta))
+```
+**Interpretação:** Permite avaliar o **efeito principal** da Droga, ignorando o sexo dos pacientes.
+]
+.pull-right[
+**4. Média do Fator B ($\bar{y}_{.j.}$)**
+Média para cada nível de `Sexo`, agregando sobre `Droga`.
+```{r}
+dados_med %>% 
+  group_by(Sexo) %>% 
+  summarise(Media_Sexo = mean(Resposta))
+```
+**Interpretação:** Permite avaliar o **efeito principal** do Sexo, ignorando qual droga foi administrada.
+]
+---
+
+## Média Parcial Admissível
+
+**Definição:** Uma média parcial é dita **admissível** quando, estando presente um índice de um determinado fator, todos os índices de fatores que o embutem também estão presentes. Do contrário, a média parcial é dita inadmissível.
+
+**Por que isso importa?** Para evitar cálculos que são numericamente possíveis, mas **cientificamente sem sentido**.
+
+**Exemplo:** `Turma` (j) aninhada em `Escola` (i).
+- $\bar{y}_{ij.}$ (média da turma `j` da escola `i`) é **admissível**. A identidade da turma `j` depende da escola `i`.
+- $\bar{y}_{i..}$ (média da escola `i`) é **admissível**.
+- $\bar{y}_{.j.}$ (média da "turma `j`" sobre todas as escolas) é **INADMISSÍVEL**. Não existe uma entidade "Turma 1" que seja comum a todas as escolas. Seria como tirar a média da renda da "Rua A" de Boa Viagem com a "Rua A" da Várzea; são lugares completamente diferentes.
+
+A regra de admissibilidade é uma verificação de construção lógica imposta pela estrutura do seu experimento.
+---
+
+### EXERCÍCIO EM CLASSE 
+
+**Identifique todas as médias admissíveis nos diagramas de Hasse do exercício do slide 29.**
+
+(Notação: $y_{ijkr}$ para observação. A média geral $\bar{y}_{....}$ e a própria observação $y_{ijkr}$ são sempre admissíveis).
+
+1.  **A, B, C Cruzados:** Nenhum fator está aninhado. **Todas as médias parciais são admissíveis**: $\bar{y}_{i...}$, $\bar{y}_{.j..}$, $\bar{y}_{..k.}$, $\bar{y}_{ij..}$, $\bar{y}_{i.k.}$, $\bar{y}_{.jk.}$, $\bar{y}_{ijk.}$.
+
+2.  **A ⊃ B ⊃ C (Totalmente Aninhado):**
+    - Para ter o índice `k` (de C), precisamos ter `j` (de B) e `i` (de A).
+    - Para ter `j` (de B), precisamos ter `i` (de A).
+    - **Admissíveis:** $\bar{y}_{i...}$, $\bar{y}_{ij..}$, $\bar{y}_{ijk.}$.
+
+3.  **(A ⊃ B) x C:**
+    - `B` está aninhado em `A`. `C` é cruzado.
+    - Para ter `j` (de B), precisamos ter `i` (de A). O índice `k` (de C) é livre.
+    - **Admissíveis:** $\bar{y}_{i...}$, $\bar{y}_{..k.}$, $\bar{y}_{ij..}$, $\bar{y}_{i.k.}$, $\bar{y}_{.jk.}$, $\bar{y}_{ijk.}$.
+---
+
+4.  **A ⊃ (B x C):**
+    - `B` e `C` estão aninhados em `A`.
+    - Para ter `j` (de B) ou `k` (de C), precisamos ter `i` (de A).
+    - **Admissíveis:** $\bar{y}_{i...}$, $\bar{y}_{ij..}$, $\bar{y}_{i.k.}$, $\bar{y}_{ijk.}$.
+
+5.  **Confundidos:** Como os fatores são indistinguíveis, apenas a média geral e a observação individual são interpretáveis.
+
+
+## Identidades Algébricas
+
+É possível representar cada observação
+da variável resposta por meio de
+identidades algébricas apropriadas que
+são úteis para entender como cada
+fator contribui para a formação dos
+valores observados. A expressão a
+seguir é um exemplo de uma identidade
+algébrica.
+$$y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$
+---
+Uma identidade algébrica pode ser construída através dos seguintes passos:
+
+**Passo 1:** Listar todas as médias parciais admissíveis iniciando pela média geral e
+terminando com uma observação;
+
+**Passo 2:** Localizar os índices que representam níveis de fatores que não possuem outros 
+fatores embutidos, na média considerada.
+
+**Passo 3:** Para cada média parcial listada no Passo 1, adicionar termos formados pela
+eliminação dos índices localizados no Passo 2. Se o termo for formado pela eliminação de um número
+ímpar de índices, ele 79receberá sinal negativo. Do contrário, receberá sinal positivo. 
+
+**Passo 4:** Proceda à soma das parcelas geradas pelos passos anteriores.
+
+---
+### EXERCÍCIO EM CLASSE 
+
+**Construir a identidade algébrica correspondente a um experimento com dois fatores cruzados e com réplicas.**
+
+Seguindo os passos de listar as médias admissíveis e construir os termos, chegamos à identidade completa para um delineamento fatorial de dois fatores:
+
+$$y_{ijr} = \bar{y}_{...} + (\bar{y}_{i..} - \bar{y}_{...}) + (\bar{y}_{.j.} - \bar{y}_{...}) + (\bar{y}_{ij.} - \bar{y}_{i..} - \bar{y}_{.j.} + \bar{y}_{...}) + (y_{ijr} - \bar{y}_{ij.})$$
+
+**Mas o que significa cada um desses termos?**
+
+Esta equação não é apenas uma manipulação matemática; ela é a **decomposição de uma observação individual em suas fontes de variação**. 
+
+### Interpretando a Identidade Algébrica e a Conexão com a ANOVA
+
+Cada componente da identidade algébrica corresponde diretamente a uma linha na tabela de Análise de Variância (ANOVA). A ANOVA simplesmente calcula a soma dos quadrados (a "energia") de cada um desses componentes vetoriais.
+---
+$$y_{ijr} = \underbrace{\bar{y}_{...}}_{\substack{\text{Média Geral} \\ \text{(Intercepto)}}} + \underbrace{(\bar{y}_{i..} - \bar{y}_{...})}_{\substack{\text{Efeito Principal de A} \\ \rightarrow SQ_A}} + \underbrace{(\bar{y}_{.j.} - \bar{y}_{...})}_{\substack{\text{Efeito Principal de B} \\ \rightarrow SQ_B}} + \underbrace{(\bar{y}_{ij.} - \bar{y}_{i..} - \bar{y}_{.j.} + \bar{y}_{...})}_{\substack{\text{Efeito da Interação A*B} \\ \rightarrow SQ_{A:B}}} + \underbrace{(y_{ijr} - \bar{y}_{ij.})}_{\substack{\text{Resíduo (Erro)} \\ \rightarrow SQ_{Erro}}}$$
+
+- **Efeito Principal de A:** Mede o quanto a média do nível `i` do fator A desvia da média geral. Se somarmos os quadrados desses desvios para todas as observações, obtemos a **Soma de Quadrados do Fator A ($SQ_A$)**.
+- **Efeito Principal de B:** Mede o quanto a média do nível `j` do fator B desvia da média geral. A soma de seus quadrados é a **$SQ_B$**.
+- **Efeito da Interação A*B:** Este é o termo mais sutil. Ele mede o "algo a mais" que a média da célula (`i,j`) possui que não pode ser explicado pela simples soma dos efeitos principais de A e B. A soma de seus quadrados é a **$SQ_{A:B}$**. Se este termo for grande, significa que o efeito de A depende do nível de B (e vice-versa).
+- **Resíduo (Erro):** É a variação de uma observação individual em torno da média de sua própria célula. Representa a variabilidade aleatória e inexplicada. A soma de seus quadrados é a **Soma de Quadrados do Erro ($SQ_{Erro}$)**.
+
+**Conclusão:** A identidade algébrica é o mecanismo para a construção do ANOVA. Ela nos mostra exatamente como a variabilidade total de um dado é particionada entre as diferentes fontes de variação definidas pelo delineamento experimental.
+
+

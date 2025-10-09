@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fundamentos de Análise para Planejamento Experimental</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+    <script src="libs/viz-1.8.2/viz.js"></script>
+    <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="libs/grViz-binding-1.0.11/grViz.js"></script>
+    <link rel="stylesheet" href="custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fundamentos de Análise para Planejamento Experimental
+]
+.subtitle[
+## Populações Conceituais de Respostas e modelos lineares
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+
+class: center, middle, inverse
+
+# Populações Conceituais de Respostas
+---
+
+## Populações Conceituais de Respostas
+
+
+Em planejamento de experimentos, a concepção de uma **população conceitual de respostas** é bastante útil e natural.
+
+Considere `\(Y_{ij}\)` (`\(i=1,...,t\)`, `\(j=1,...,N\)`) como o valor **potencial** observado da variável resposta Y referente ao `\(j\)`-ésimo elemento da população, se ele fosse submetido ao tratamento `\(i\)`.
+
+**Exemplo:** Como cada elemento da população é submetido ao efeito de apenas um dos tratamentos, tem-se, por exemplo, que o elemento `j` submetido ao tratamento `1` fornecerá a resposta `\(Y_{1j}\)`. Sendo este o caso, o valor `\(Y_{2j}\)`, por exemplo, não será observado, embora ele exista conceitualmente (se o tratamento escolhido para ser aplicado ao elemento `j` tivesse sido o de número 2, `\(Y_{2j}\)` seria o valor observado).
+
+---
+### Definição e Estrutura da População Conceitual
+
+A **população conceitual de respostas** desse experimento é definida como o conjunto `\(\{Y_{ij}\}\)` de todas as possíveis respostas dos `\(N\)` elementos que compõem a população sob o efeito de cada um dos `\(t\)` tratamentos sob estudo.
+
+O **Quadro ** a seguir ilustra a população conceitual de respostas em um experimento para comparar os efeitos de `\(t=2\)` tratamentos (`\(i\)` o tratamento) em uma população composta por `\(N=4\)` elementos (unidades experimentais  (UE) como `\(j\)`).
+
+| Tratamento | UE 1 | UE 2 | UE 3 | UE 4 | Total | Média |
+|:----------:|:----:|:----:|:----:|:----:|:----:|:----:|
+| **i=1**    | `\(Y_{11}\)` | `\(Y_{12}\)` | `\(Y_{13}\)` | `\(Y_{14}\)` | `\(Y_{1.}\)` | `\(\bar{Y}_{1.}\)` |
+| **i=2**    | `\(Y_{21}\)` | `\(Y_{22}\)` | `\(Y_{23}\)` | `\(Y_{24}\)` | `\(Y_{2.}\)` | `\(\bar{Y}_{2.}\)` |
+| Total      | `\({Y}_{.1}\)` | `\({Y}_{.2}\)`| `\({Y}_{.3}\)`| `\({Y}_{.4}\)`| `\({Y}_{...}\)`|         | 
+| Média      | `\(\bar{Y}_{.1}\)` | `\(\bar{Y}_{.2}\)` | `\(\bar{Y}_{.3}\)` | `\(\bar{Y}_{.4}\)` |   | `\(\bar{Y}_{..}\)` |
+
+---
+
+Note a estrutura de classificação da população conceitual de respostas do Quadro é representada no diagrama de Hasse:
+
+<div class="grViz html-widget html-fill-item" id="htmlwidget-e11b3bcfb0b96175f893" style="width:576px;height:324px;"></div>
+<script type="application/json" data-for="htmlwidget-e11b3bcfb0b96175f893">{"x":{"diagram":"\ndigraph fig6_corrected {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  # Definir nós com nomes seguros\n  mu [label=\"μ\"];\n  Tratamento [label=\"T\"];\n  Unidade [label=\"U\"];\n  epsilon [label=\"ε\"];\n  \n  # Definir relações de cima para baixo\n  mu -> Tratamento;\n  mu -> Unidade;\n  Tratamento -> epsilon;\n  Unidade -> epsilon;\n  \n  {rank=same; Tratamento; Unidade;}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+Nesta estrutura, os fatores `Tratamento (T)` e `Unidade Experimental (U)` são **cruzados**. A identidade algébrica relacionada é:
+`$$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) + (Y_{ij} - \bar{Y}_{i.} - \bar{Y}_{.j} + \bar{Y}_{..})$$`
+---
+
+### Da População Conceitual para a Amostra Observada
+Populações conceituais de respostas **não são observáveis como um todo**.
+
+Uma vez atribuídos os tratamentos às unidades experimentais, apenas uma resposta por u.e. é observada. Esse conjunto de respostas observadas pode ser visto como uma **amostra** da população conceitual.
+
+**Porém, a estrutura dessa amostra não é mais a mesma da população de onde ela foi selecionada.**
+
+Tomando a mesma situação ilustrada no Quadro anterior, numa amostra, cada unidade experimental está **embutida** num tratamento.
+
+A **Figura** a seguir ilustra a estrutura de classificação da amostra observada no experimento:
+ndo o estilo do PDF original:
+---
+
+
+
+**Estrutura de classificação da amostra observada no experimento**
+<div class="grViz html-widget html-fill-item" id="htmlwidget-6eb467d66cb2b5d4b460" style="width:576px;height:324px;"></div>
+<script type="application/json" data-for="htmlwidget-6eb467d66cb2b5d4b460">{"x":{"diagram":"digraph {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  mu [label=\"μ\"];\n  epsilon [label=\"ε\"];\n  mu -> T -> U -> epsilon;\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+A identidade algébrica relacionada a uma observação do experimento é:
+`$$y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$`
+---
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

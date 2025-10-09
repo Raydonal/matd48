@@ -1,0 +1,411 @@
+---
+title: "Fundamentos de Análise para Planejamento Experimental"
+subtitle: "Noções de Modelos Lineares para Planejamento experimental"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: refs.bib
+csl: apa.csl    
+link-citations: true
+---
+
+
+```{r setup, include=FALSE}
+# Opções globais do Knitr
+options(html.tag.transform.rmarkdown = function(x) x)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, fig.width=8, fig.height=4.5)
+
+# Carregar pacotes necessários
+library(ggplot2)
+library(dplyr)
+library(MASS) # Para a função ginv()
+library(DiagrammeR)
+```
+
+class: center, middle, inverse
+
+# 3. Noções Básicas de Modelos Lineares
+
+---
+
+## Introdução
+
+Modelos lineares estatísticos são ferramentas amplamente utilizadas em processos de aprendizado científico através da experimentação.
+
+Nesta seção serão vistos conceitos básicos da teoria de modelos lineares, focando na estrutura dos fatores experimentais e na estimação dos parâmetros do modelo.
+
+.pull-left[
+**Estrutura Matemática Geral:**
+
+$$ Y = \beta_0 + \beta_1 X_1 + \dots + \beta_p X_p + \epsilon $$
+
+- **Componente Determinístico:** $\beta_0 + \beta_1 X_1 + \dots + \beta_p X_p$. Descreve a relação *média* entre a resposta Y e os preditores X.
+- **Componente Estocástico:** $\epsilon$. Representa a variabilidade aleatória não explicada pelo modelo.
+]
+.pull-right[
+```{r, echo=FALSE}
+set.seed(42)
+x <- 1:20
+y <- 2.5 * x + rnorm(20, 0, 10)
+qplot(x, y, geom = c("point", "smooth"), method = "lm", se = FALSE) + 
+  theme_minimal(base_size = 14) + labs(title="Exemplo Visual de um Modelo Linear", x="Preditor (X)", y="Resposta (Y)")
+```
+]
+
+---
+
+## 3.1 Relações entre Fatores
+
+Na definição de fator, foi dito que um **fator** define uma partição da população sob estudo. Cada componente desta partição (um subconjunto de elementos da população) corresponde a um **nível** do fator.
+
+**Exemplo:**
+- **População:** Habitantes de Recife.
+- **Fator:** `Bairro`.
+- **Níveis:** Boa Viagem, Casa Forte, Pina, Várzea, etc.
+
+Em várias situações práticas, há interesse em considerar a existência de mais de um fator. Quando isso acontece, é de fundamental importância identificar as **relações** entre eles.
+
+---
+
+### Tipos de Relações entre Fatores
+
+As possíveis relações entre fatores são:
+
+1.  **Relação de Embutimento (ou Hierarquia / Aninhamento)**
+2.  **Relação de Cruzamento**
+3.  **Relação de Confundimento**
+
+A correta identificação destas relações é o primeiro e mais crucial passo para a especificação de um modelo estatístico válido.
+
+---
+
+## Fatores Embutidos (ou Hierárquicos)
+
+Um fator `B` é dito estar **embutido** (ou aninhado) em um fator `A` se todos os elementos pertencentes a um nível do fator `B` também pertencem obrigatoriamente a um mesmo nível de `A`.
+
+**Exemplo:**
+- **População:** Habitantes da região metropolitana de Recife.
+- **Fator `Cidade`:** Com 4 níveis: Paulista (P), Olinda (O), Recife (R), Jaboatão (J).
+- **Fator `Localização`:** Com 2 níveis: centro (L1) e subúrbio (L2).
+
+Note que, simplesmente afirmar que um indivíduo mora no "centro" (nível de `Localização`) não é suficiente para determinar sua residência. É preciso saber **em que cidade**. O centro de Recife é diferente do centro de Olinda.
+
+Dessa forma, diz-se que o fator `Localização` está **EMBUTIDO** no fator `Cidade`.
+
+---
+
+### Visualizando Dados Aninhados
+
+Um gráfico de boxplot pode ilustrar a estrutura hierárquica.
+
+```{r, fig.height=5}
+# Simulação de dados para o exemplo
+set.seed(1)
+dados_aninhados <- data.frame(
+  Cidade = factor(rep(c("Paulista", "Olinda", "Recife", "Jaboatão"), each = 20)),
+  Localizacao = factor(rep(c("Centro", "Subúrbio"), each = 10, times = 4)),
+  Renda = round(c(rnorm(20, 2000, 300), rnorm(20, 2500, 400), rnorm(20, 4000, 800), rnorm(20, 1800, 250)))
+)
+
+ggplot(dados_aninhados, aes(x = Localizacao, y = Renda, fill = Cidade)) +
+  geom_boxplot() +
+  facet_wrap(~ Cidade, scales = "free_x") +
+  labs(title = "Visualização de Dados Aninhados",
+       subtitle = "Renda por Localização DENTRO de cada Cidade",
+       x = "Localização", y = "Renda (R$)") +
+  theme_minimal(base_size = 14) + theme(legend.position = "none")
+```
+**Interpretação:** O gráfico mostra que a comparação "Centro vs. Subúrbio" só faz sentido *dentro* de cada cidade.
+
+---
+
+## Fatores Cruzados
+
+Dois fatores `A` e `B` são ditos **cruzados** quando nenhum deles está embutido no outro. Em um delineamento completo, isso significa que cada nível de `A` ocorre em combinação com **todos** os níveis de `B`.
+
+**Exemplo:**
+- **População:** Habitantes da região metropolitana de Recife.
+- **Fator `Cidade`:** Paulista, Olinda, Recife, Jaboatão.
+- **Fator `Sexo`:** Masculino, Feminino.
+
+Os fatores `Cidade` e `Sexo` são **CRUZADOS**, pois um homem pode morar em qualquer cidade, assim como uma mulher.
+
+---
+
+### Visualizando Dados Cruzados e Interação
+
+```{r, fig.height=5}
+# Simulação de dados
+set.seed(2)
+dados_cruzados <- data.frame(
+  Cidade = factor(rep(c("Paulista", "Olinda", "Recife", "Jaboatão"), each = 20)),
+  Sexo = factor(rep(c("Masc", "Fem"), each = 10, times = 4)),
+  Renda = round(runif(80, 1000, 5000))
+)
+
+ggplot(dados_cruzados, aes(x = Cidade, y = Renda, color = Sexo, group = Sexo)) +
+  stat_summary(fun = mean, geom = "point", size = 4) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1.5) +
+  labs(title = "Gráfico de Interação: Cidade x Sexo",
+       subtitle = "Linhas paralelas sugerem ausência de interação",
+       y = "Renda Média") +
+  theme_minimal(base_size = 14)
+```
+**Interpretação:** Se as linhas não são paralelas, o efeito de um fator depende do nível do outro (interação).
+
+---
+
+## Fatores Confundidos
+
+Dois fatores `A` e `B` são ditos **completamente confundidos** quando não é possível separar/distinguir os seus efeitos um do outro.
+
+**Exemplo:** Em um experimento com 3 unidades experimentais, cada uma recebendo um tratamento diferente.
+- Unidade 1 recebe Tratamento 1
+- Unidade 2 recebe Tratamento 2
+- Unidade 3 recebe Tratamento 3
+
+Nessa situação, diferenças observadas na variável-resposta podem ser atribuídas tanto às diferenças entre os **tratamentos** quanto às diferenças inerentes entre as **unidades experimentais**.
+
+Assim, diz-se que o fator `Tratamento` está **COMPLETAMENTE CONFUNDIDO** com o fator `Unidade Experimental`. Isso é uma falha de delineamento que impede a inferência causal.
+
+---
+
+## 3.2 Estruturas de Classificação Balanceadas e Completas
+
+Uma estrutura de classificação é dita **BALANCEADA** e **completa** quando:
+1.  Para cada uma de todas as **possíveis combinações** dos níveis dos fatores, existe pelo menos um elemento.
+2.  Todas as possíveis combinações possuem um **mesmo número de elementos** (mesmo número de réplicas).
+
+.pull-left[
+**Estrutura Balanceada:**
+```{r}
+df_bal <- data.frame(FatorA = rep(c("A1","A2"), each=4), FatorB = rep(c("B1","B2"), 4))
+table(df_bal)
+```
+]
+.pull-right[
+**Estrutura Desbalanceada:**
+```{r}
+df_unbal <- df_bal[-1, ]
+table(df_unbal)
+```
+]
+
+**Importância:** Delineamentos balanceados garantem que os efeitos dos fatores sejam **ortogonais** (independentes), o que simplifica enormemente a análise e a interpretação. Daqui para adiante, a teoria apresentada refere-se a estruturas balanceadas e completas, a menos que haja referência contrária.
+
+---
+
+class: center, middle, inverse
+
+## 3.3 Representação de Estruturas em Diagramas de Hasse
+
+---
+
+### A Linguagem dos Diagramas de Hasse
+
+Um Diagrama de Hasse é uma ferramenta visual para representar a **hierarquia de aninhamento** em um modelo. A estrutura do diagrama dita diretamente a fórmula correta do modelo estatístico.
+
+.pull-left[
+**1. Aninhamento (Hierarquia)**
+
+O diagrama mostra `B` aninhado em `A`.
+```{r, echo=FALSE}
+grViz("
+digraph hierarchy {
+  rankdir=TB;
+  node [shape=circle, style=filled, fillcolor=lightblue];
+  edge [arrowhead=none];
+  B -> A;
+}
+")
+```
+**Tradução para R:** O operador de aninhamento é `/`.
+`~ A / B`  (expande para `~ A + A:B`)
+]
+.pull-right[
+**2. Cruzamento (Fatorial)**
+
+O diagrama mostra `A` e `B` cruzados.
+```{r, echo=FALSE}
+grViz("
+digraph factorial {
+  rankdir=TB;
+  node [shape=circle, style=filled, fillcolor=lightblue];
+  edge [arrowhead=none];
+  mu [label='μ']; epsilon [label='ε'];
+  epsilon -> {A, B} -> mu;
+}
+")
+```
+**Tradução para R:** O operador de cruzamento é `*` (ou `+` se a interação não for de interesse).
+`~ A * B` (expande para `~ A + B + A:B`)
+]
+
+---
+
+### EXERCÍCIO EM CLASSE (Resolvido - pág. 69)
+
+**Desenhe os diagramas de Hasse correspondentes a cada uma das 5 estruturas possíveis de classificação com 3 fatores (A, B e C).**
+
+.pull-left[
+**1. Totalmente Cruzados (A*B*C)**
+```{r}
+grViz("digraph { mu->{A,B,C}->e; {rank=same; A;B;C} }")
+```
+**2. Totalmente Aninhados (A/B/C)**
+```{r}
+grViz("digraph { e->C->B->A->mu }")
+```
+**3. (A ⊃ B) x C** (`C * A/B`)
+```{r}
+grViz("digraph { e->{C,B}; B->A; {A,C}->mu }")
+```
+]
+.pull-right[
+**4. A ⊃ (B x C)** (`A/(B*C)`)
+```{r}
+grViz("digraph { e->{B,C}->A->mu; {rank=same; B;C} }")
+```
+**5. Confundidos**
+```{r}
+grViz("digraph { e->ABC->mu }")
+```
+]
+
+---
+
+class: center, middle, inverse
+
+## 3.4 Médias e Identidades Algébricas
+
+---
+
+### Médias Parciais e Admissibilidade
+
+- **Média Parcial:** É a média das observações calculada sobre todos os níveis de um ou mais fatores.
+- **Média Parcial Admissível:** Uma média parcial é dita **admissível** quando, se um índice de um determinado fator está presente, todos os índices de fatores que o embutem também estão presentes.
+
+**Exemplo:** Fator `Turma` (j) aninhado em `Escola` (i).
+- $\bar{y}_{i..}$ (média da escola `i`) é **admissível**.
+- $\bar{y}_{ij.}$ (média da turma `j` da escola `i`) é **admissível**.
+- $\bar{y}_{.j.}$ (média da "turma `j`" sobre todas as escolas) é **INADMISSÍVEL**, pois não faz sentido científico.
+
+---
+
+### EXERCÍCIO EM CLASSE (Resolvido - pág. 76)
+
+**Identifique todas as médias admissíveis nos diagramas de Hasse do exercício anterior.**
+(Notação: $y_{ijkr}$. Média geral $\bar{y}_{....}$ e obs. $y_{ijkr}$ são sempre admissíveis)
+
+1.  **A, B, C Cruzados:** Todas as médias são admissíveis. $\bar{y}_{i...}$, $\bar{y}_{.j..}$, $\bar{y}_{..k.}$, $\bar{y}_{ij..}$, $\bar{y}_{i.k.}$, $\bar{y}_{.jk.}$, $\bar{y}_{ijk.}$.
+2.  **A ⊃ B ⊃ C:** Apenas as que respeitam a hierarquia: $\bar{y}_{i...}$, $\bar{y}_{ij..}$, $\bar{y}_{ijk.}$.
+3.  **(A ⊃ B) x C:** Respeita a hierarquia A/B e o cruzamento com C. Admissíveis: $\bar{y}_{i...}$, $\bar{y}_{..k.}$, $\bar{y}_{ij..}$, $\bar{y}_{i.k.}$, $\bar{y}_{.jk.}$, $\bar{y}_{ijk.}$.
+4.  **A ⊃ (B x C):** Respeita a hierarquia A/(B,C). Admissíveis: $\bar{y}_{i...}$, $\bar{y}_{ij..}$, $\bar{y}_{i.k.}$, $\bar{y}_{ijk.}$.
+5.  **Confundidos:** Apenas a média geral e a observação individual.
+
+---
+
+### 3.4 Identidades Algébricas
+
+É possível representar cada observação da variável resposta por meio de identidades algébricas que decompõem a variabilidade.
+
+**Exemplo (1 fator A):**
+$$ y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.}) $$
+$$ \text{Observação} = \text{Média Geral} + \text{Efeito do Fator A} + \text{Erro Aleatório} $$
+Essa decomposição é a base da Análise de Variância (ANOVA).
+
+---
+
+### EXERCÍCIO EM CLASSE (Resolvido - pág. 81)
+
+**Construir a identidade algébrica para um experimento com dois fatores cruzados (A e B) com réplicas.**
+
+A identidade decompõe a observação em componentes ortogonais:
+$$ y_{ijr} = \underbrace{\bar{y}_{...}}_{\text{Média Geral}} + \underbrace{(\bar{y}_{i..} - \bar{y}_{...})}_{\text{Efeito A}} + \underbrace{(\bar{y}_{.j.} - \bar{y}_{...})}_{\text{Efeito B}} + \underbrace{(\bar{y}_{ij.} - \bar{y}_{i..} - \bar{y}_{.j.} + \bar{y}_{...})}_{\text{Interação A*B}} + \underbrace{(y_{ijr} - \bar{y}_{ij.})}_{\text{Resíduo}} $$
+Cada termo entre parênteses é um vetor. A identidade mostra que o vetor de observações pode ser escrito como a soma de vetores de efeitos que são **mutuamente ortogonais** (em um delineamento balanceado).
+
+---
+class: center, middle, inverse
+
+## 3.5 a 3.9: Álgebra Matricial de Modelos Lineares
+
+---
+
+### 3.5 Populações Conceituais de Respostas
+
+Este conceito é fundamental para entender a **causalidade**. Para cada unidade experimental `j`, existe uma resposta potencial para *cada* tratamento `i`, $Y_{ij}$. No experimento, observamos apenas **uma** delas.
+- **Na população conceitual:** Fatores `Tratamento` e `Unidade Experimental` são **cruzados**.
+- **Na amostra observada (DIC):** `Unidade Experimental` está **aninhada** em `Tratamento`.
+
+A aleatorização nos permite tratar os grupos de tratamento como comparáveis, apesar desta mudança de estrutura.
+
+---
+
+### 3.6 a 3.8: O Modelo em Forma Matricial
+
+Todo modelo linear pode ser escrito como $y = X\beta + \epsilon$.
+
+**Exemplo:** 2 tratamentos (A e B), 2 réplicas. Dados: $y = (15.2, 14.3, 13.5, 14.5)^T$.
+$$ \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \\ 1 & 0 & 1 \end{pmatrix} \begin{pmatrix} \mu \\ \tau_1 \\ \tau_2 \end{pmatrix} \doteq \begin{pmatrix} 15.2 \\ 14.3 \\ 13.5 \\ 14.5 \end{pmatrix} $$
+A matriz $X$ tem posto incompleto. Isso leva às Equações Normais $(X^T X) b = X^T y$, onde $X^T X$ é singular.
+
+---
+### Inversa Generalizada e Estimabilidade
+
+A solução para os parâmetros `b` não é única e é dada por $b = (X^T X)^- X^T y$, onde $(X^T X)^-$ é uma **inversa generalizada**.
+
+**Implicação Profunda: Estimabilidade.**
+Uma função $l^T \beta$ é **estimável** se sua estimativa $l^T b$ é invariante à escolha da inversa generalizada. Matematicamente, $l^T$ deve pertencer ao espaço-linha de $X$. Apenas estas funções (ex: médias de grupo, contrastes) têm interpretação científica direta.
+
+---
+
+### EXERCÍCIOS EM CLASSE (Resolvidos - pág. 109-113)
+
+**1. Achar outra inversa generalizada de $X^TX = \begin{pmatrix} 4 & 2 & 2 \\ 2 & 2 & 0 \\ 2 & 0 & 2 \end{pmatrix}$**
+Usando o Algoritmo 1, escolhemos a submatriz $S = \begin{pmatrix} 4 & 2 \\ 2 & 2 \end{pmatrix}$. Sua inversa é $S^{-1} = \begin{pmatrix} 0.5 & -0.5 \\ -0.5 & 1 \end{pmatrix}$.
+Uma inversa generalizada é: $G_1 = \begin{pmatrix} 0.5 & -0.5 & 0 \\ -0.5 & 1 & 0 \\ 0 & 0 & 0 \end{pmatrix}$.
+
+**2. Obter a estimativa de $\beta$ com $G_1$ e os dados.**
+```{r}
+X <- matrix(c(1,1,0, 1,1,0, 1,0,1, 1,0,1), ncol=3, byrow=TRUE)
+y_vec <- c(15.2, 14.3, 13.5, 14.5)
+G1 <- matrix(c(0.5, -0.5, 0, -0.5, 1, 0, 0, 0, 0), ncol=3, byrow=TRUE)
+b_estimado_g1 <- G1 %*% t(X) %*% y_vec
+rownames(b_estimado_g1) <- c("μ", "τ₁", "τ₂")
+print(b_estimado_g1)
+```
+
+**3. Estimar as quantidades $\mu + \tau_1$, $\mu + \tau_2$ e $\tau_1 - \tau_2$ com este `b` e comparar.**
+```{r}
+L <- matrix(c(1, 1, 0,  1, 0, 1, 0, 1, -1), ncol=3, byrow=TRUE)
+estimativas_g1 <- L %*% b_estimado_g1
+rownames(estimativas_g1) <- c("μ + τ₁", "μ + τ₂", "τ₁ - τ₂")
+print(estimativas_g1)
+```
+**Conclusão:** Os valores para as funções estimáveis (14.75, 14.0, 0.75) **são idênticos** aos que obteríamos com qualquer outra inversa generalizada.
+
+---
+
+## 3.7-3.9: Teoremas Fundamentais
+
+**Teorema de Gauss-Markov:** Se $Var(\epsilon)=\sigma^2 I$, então o estimador de Mínimos Quadrados Ordinários (OLS) é o **BLUE** (Best Linear Unbiased Estimator) para qualquer função estimável $l^T \beta$.
+
+**Modelo de Aitken:** Se $Var(\epsilon) = \sigma^2 H$ (com $H \neq I$), o estimador BLUE é o de **Mínimos Quadrados Generalizados (GLS)**:
+$$ b_{GLS} = (X^T H^{-1} X)^{-} X^T H^{-1} y $$
+
+**Teorema de Zyskind:** Descreve as condições sob as quais o estimador OLS ainda é BLUE, mesmo quando $H \neq I$. Isso ocorre se o espaço de colunas de X for invariante sob a matriz de covariância V ($VX=XQ$).
+
+---
+### Referências e Leitura Complementar
+
+- **Searle, S. R. (1971). *Linear Models*.** Wiley.
+- **Scheffé, H. (1959). *The Analysis of Variance*.** Wiley.
+- **Christensen, R. (2011). *Plane Answers to Complex Questions: The Theory of Linear Models*.** Springer.
+- **Throckmorton, T. N. (1961). *Structures of Classification in the Analysis of Variance*.** Tese de Doutorado, Iowa State University. (Referência para Diagramas de Hasse).
+```
