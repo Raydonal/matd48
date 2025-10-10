@@ -123,5 +123,351 @@ grViz(paste0("digraph {", graph_attrs, "
 
 A identidade algébrica relacionada a uma observação do experimento é:
 $$y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$
+
+---
+##  Modelos Lineares Classificatórios
+
+Para ilustrar a utilidade dos modelos lineares no contexto de planejamento de experimentos, considere ainda a situação correspondente ao Quadro do experimento que estamos estudando como exemplo. Imaginemos que o experimento foi realizado, fornecendo os seguintes dados:
+
+| Tratamento | Resposta     |
+|------------|--------------|
+| A (1)      | $y_{11}$ (15.2) |
+| A (1)      | $y_{12}$ (14.3) |
+| B (2)      | $y_{21}$ (13.5) |
+| B (2)      | $y_{22}$ (14.5) |
+
+Um modelo linear apropriado para essa situação experimental pode ser escrito da seguinte forma:
+$$\begin{aligned}
+y_{ir} &= \mu_i + \epsilon_{ir} \\
+&= \mu + \tau_i + \epsilon_{ir} \quad (1)
+\end{aligned}$$
 ---
 
+onde:
+- $y_{ir}$ é a resposta observada na r-ésima réplica do tratamento $i=1,2; r=1,2; (i=1=A. i=2=B)$;
+- $\mu$ representa a média geral das observações;
+- $\tau_i$ é o efeito (fixo) do tratamento $i$;
+- $\epsilon_{ir}$ é o termo aleatório que representa o resíduo associado à réplica $r$ do tratamento $i$;
+
+Ajustar o modelo (1) aos dados significa achar uma "melhor" solução para o sistema de equações lineares em $\mu$, $\tau_1$ e $\tau_2$:
+$$ \mu + \tau_1 \doteq 15.2 $$
+$$ \mu + \tau_1 \doteq 14.3 $$
+$$ \mu + \tau_2 \doteq 13.5 $$
+$$ \mu + \tau_2 \doteq 14.5 $$
+Este sistema pode ser escrito na forma $X\beta \doteq y$:
+$$\begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \\ 1 & 0 & 1 \end{pmatrix} \begin{pmatrix} \mu \\ \tau_1 \\ \tau_2 \end{pmatrix} \doteq \begin{pmatrix} 15.2 \\ 14.3 \\ 13.5 \\ 14.5 \end{pmatrix} \quad (2)$$
+---
+- $X$ é a **matriz do modelo**. Sua forma é conhecida e, no contexto deste curso, tem **posto incompleto**.
+- $\beta$ é o vetor de parâmetros fixos (porém desconhecidos).
+- $y$ é o vetor de observações (medidas) da variável resposta.
+
+Em termos matriciais, o modelo (1) corresponde a $$y = X\beta + \epsilon \quad (3),$$
+em que $\epsilon = (\epsilon_{11},\epsilon_{12},\epsilon_{21},\epsilon_{22} )^\top $ é o vetor aleatório de erros. 
+
+##  O Modelo Linear de Gauss-Markov
+
+O modelo linear de Gauss-Markov é definido como:
+$$y = X\beta + \epsilon, \quad (4)$$
+onde as premissas sobre o vetor aleatório de resíduos $\epsilon$ são:
+1.  $E(\epsilon) = 0$ (A média dos erros é zero).
+2.  $Var(\epsilon) = \sigma^2 I$ (Os erros são não correlacionados e possuem variância constante, $\sigma^2$).
+
+Estas são as premissas clássicas que garantem as ótimas propriedades do estimador de mínimos quadrados.
+---
+
+## O ajuste de quadrados mínimos
+
+
+**Critério:** Minimizar a soma dos quadrados dos resíduos.
+
+O objetivo é achar o valor de $\beta$, diga-se `b`, que torna mínima a função distância $D$ dada por:
+$$D(y, X\beta) = (y - X\beta)^\top(y - X\beta)$$
+Resolvendo-se analiticamente, tem-se:
+$$\frac{dD(y, X\beta)}{d\beta} = 2(X^\top X \beta - X^\top y) = 0 $$
+O resultado anterior indica que qualquer vetor `b` que satisfaça o conjunto das **Equações Normais** é uma solução de quadrados mínimos:
+$$(X^\top X) b = X^\top y \quad (5) $$
+**Obs:** Como a matriz $X$ tem posto incompleto $\implies$ $X^\top X$ é singular $\implies$ Existem infinitas soluções `b` para as equações normais (5). **Como achar uma forma geral para `b`?**
+---
+
+### Definições: Inversas e Projeção
+
+**Definição 1: Inversa Generalizada:** Uma matriz $G$ é uma inversa generalizada de $A$ se $AGA=A$. Notação: $G=A^-$. Elas geralmente não são únicas.
+
+**Comentários:**
+
+- Inversas generalizadas, em geral, não são únicas.
+- Se $A$ for uma matriz m◊m não singular, $G = A^{-1}$ será a única inversa generalizada de $A$.
+
+**Definição 2: Inversa de Moore-Penrose:** Para qualquer matriz $A$ , existe uma
+única matriz $M$ , chamada de inversa generalizada de Moore-Penrose, que
+satisfaz as seguintes condições:
+1. $AMA = A$
+2. $MAM = M$
+3. $AM$ é simétrica
+4. $MA$ é simétrica
+
+**Definição 3: Matriz de Projeção:** A matriz $P_A = A(A^\top A)^- A^\top$ projeta vetores ortogonalmente no espaço gerado pelas colunas de $A$.
+---
+
+**Propriedades de $P_A$:**
+
+i) É **invariante** à escolha da inversa generalizada $(A^\top A)^-$.
+
+ii) É simétrica ($P_A^\top = P_A$).
+
+iii) É idempotente ($P_A  P_A = P_A$).
+
+iv) $P_A A = A$.
+
+v) $P_A(I-P_A) = 0$.
+
+vi) Particionando a matriz $A$ como $A=[A_1| A_2| ...| A_k]$,
+$P_A A_j = A_j.$ 
+
+vii) $(I - P_A)$ é uma matriz de projeção que projeta
+vetores no complemento ortogonal de $A.$ 
+
+---
+### Solução das Equações Normais e Propriedades
+
+**Resultado ** $$b = (X^\top X)^- X^\top y$$ é solução das equações normais.
+
+**Prova:**
+Substituindo $b$ em $X^\top X b$:
+$X^\top X b = X^\top X [(X^\top X)^- X^\top y]$
+Usando a propriedade da matriz de projeção $P_X = X(X^\top X)^- X^\top$, temos que $X^\top P_X = X^\top$.
+Então: $X^\top X b = (X^\top P_X) X^\top y = X^T y$. C.Q.D.
+
+**Ponto Chave:** Mesmo que `b` não seja único, o vetor de valores preditos $\hat{y}$ **é único** porque a matriz de projeção $P_X$ é única.
+
+**Resultado** Sob as condições de Gauss-Markov:
+
+a) $E(y) = X\beta$
+
+b) $\hat{y} = P_X y = Xb$ é um estimador centrado (não-viesado) para $E(y) = X\beta$.
+
+c) $Var(\hat{y}) = \sigma^2 P_X = \sigma^2 X(X^\top X)^- X^\top$
+---
+
+### Prova da Propriedade (a): $E(y) = X\beta$
+
+Esta prova decorre diretamente das premissas do modelo.
+
+1.  **Modelo:** Partimos do modelo linear:
+    $y = X\beta + \epsilon$
+
+2.  **Aplicar a Esperança:** Aplicamos o operador de esperança a ambos os lados da equação:
+    $E(y) = E(X\beta + \epsilon) $
+
+3.  **Linearidade da Esperança:** A esperança da soma é a soma das esperanças:
+    $E(y) = E(X\beta) + E(\epsilon)$
+
+4.  **Propriedades da Esperança:**
+    - O termo $X\beta$ é um vetor de constantes (parâmetros fixos), então $E(X\beta) = X\beta$  e pela premissa do modelo de Gauss-Markov, $E(\epsilon) = 0$.
+
+5.  **Substituição:** Substituindo estes resultados na equação:
+    $$ E(y) = X\beta + 0 $$
+
+6.  **Conclusão:** $ E(y) = X\beta $
+    Isso mostra que o valor esperado do vetor de observações é o componente determinístico do modelo. **C.Q.D.**
+
+---
+
+### Prova da Propriedade (b): $\hat{y}$ é um estimador centrado (não-viesado)
+
+Queremos provar que $E(\hat{y}) = X\beta$.
+
+1.  **Definição do Estimador:** O vetor de valores preditos é definido como $\hat{y} = P_X y$.
+    $\hat{y} = X(X^\top X)^- X^\top y$
+
+2.  **Aplicar a Esperança:** $E(\hat{y}) = E(P_X y)$
+
+3.  **Propriedades da Esperança:** A matriz de projeção $P_X$ é uma matriz de constantes, então podemos colocá-la para fora da esperança:
+    $E(\hat{y}) = P_X E(y)$
+
+4.  **Usar Resultado Anterior:** Pela propriedade (a), já provamos que $E(y) = X\beta$. Substituindo:
+    $ E(\hat{y}) = P_X (X\beta) $
+
+5.  **Propriedade da Matriz de Projeção:** Uma das propriedades fundamentais da matriz de projeção no espaço de colunas de X é que $P_X X = X$.
+    
+6.  **Conclusão:**
+    $E(\hat{y}) = X\beta $
+    Como o valor esperado do estimador $\hat{y}$ é igual ao parâmetro que ele visa estimar $E(y)$, concluímos que $\hat{y}$ é um estimador **centrado (não-viesado)**. **C.Q.D.**
+
+---
+
+### Prova da Propriedade (c): $Var(\hat{y}) = \sigma^2 P_X$
+
+Queremos provar que a matriz de covariâncias do vetor de preditos é $\sigma^2 P_X$.
+
+1.  **Definição do Estimador:** Novamente, partimos de $\hat{y} = P_X y$.
+
+2.  **Aplicar a Variância:** Aplicamos o operador de variância-covariância:
+    $Var(\hat{y}) = Var(P_X y) $
+
+3.  **Propriedade da Matriz de Covariâncias:** Para uma matriz de constantes `A` e um vetor aleatório `y`, a propriedade é $Var(Ay) = A \cdot Var(y) \cdot A^T$. Como $Var(\hat{y}) = P_X \cdot Var(y) \cdot P_X^\top$
+
+4.  **Variância de y:** Pela premissa do modelo de Gauss-Markov, $Var(y) = Var(X\beta + \epsilon) = Var(\epsilon) = \sigma^2 I$. Substituindo:
+    $Var(\hat{y}) = P_X (\sigma^2 I) P_X^\top$
+
+5.  **Simplificação:** Como $\sigma^2$ é um escalar, podemos movê-lo para a frente:
+    $Var(\hat{y}) = \sigma^2 P_X I P_X^\top = \sigma^2 P_X P_X^\top $
+
+6.  **Propriedades da Matriz de Projeção:** Como a matriz de projeção $P_X$ é simétrica, então $P_X^\top = P_X$ e idempotente, então $P_X P_X = P_X$.
+
+7.  **Substituição e Conclusão:**
+    $Var(\hat{y}) = \sigma^2 P_X P_X = \sigma^2 P_X,$ logo $Var(\hat{y}) = \sigma^2 X(X^\top X)^- X^\top$
+    Isso completa a prova. A matriz de covariâncias do vetor de preditos é a matriz de projeção $P_X$ multiplicada pela variância do erro, $\sigma^2$. **C.Q.D.**
+
+
+---
+### Como Gerar uma Inversa Generalizada
+
+
+**Problema:** Encontrar uma inversa generalizada para $X^\top X = \begin{pmatrix} 4 & 2 & 2 \\ 2 & 2 & 0 \\ 2 & 0 & 2 \end{pmatrix}$. Note que posto($X^TX$) = 2.
+
+**Algoritmo 1:**
+1.  Encontre uma submatriz $2\times2$ de posto completo. Por exemoplo, a
+submatriz no canto inferior,
+mais à direita, dada por $S = \begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix}$.
+2.  Obtenha a matriz transposta da
+inversa da submatriz escolhida. No caso do exemplo dado: $(S^{-1})^\top = (\begin{pmatrix} 1/2 & 0 \\ 0 & 1/2 \end{pmatrix})^\top = \begin{pmatrix} 1/2 & 0 \\ 0 & 1/2 \end{pmatrix}$.
+3.  Coloque no lugar original da matriz $G$ e preencha o resto com zeros: $G = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 1/2 & 0 \\ 0 & 0 & 1/2 \end{pmatrix}$.
+4. Obtenha a transposta da
+matriz resultante do passo
+3 e você terá uma inversa
+generalizada: 
+$G^- = (X^\top X)^- = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 1/2 & 0 \\ 0 & 0 & 1/2 \end{pmatrix}$.
+
+---
+
+### Algoritmo 2: Inversa Generalizada via SVD
+O segundo algoritmo para achar uma inversa generalizada é mais geral e teoricamente mais elegante. Ele se baseia na **Decomposição em Valores Singulares (SVD)**.
+
+Para achar uma inversa generalizada de uma matriz $A$ de dimensão $m \times n$ e posto $r$, siga os passos seguintes:
+
+**Passo 1: Decomponha a matriz $A$ em seus valores singulares (SVD).**
+A SVD de $A$ é a fatoração: $A = U \Sigma V^\top.$  Podemos usar também uma variação relacionada chamada decomposição em posto completo, que é escrita como:
+$$PAQ = \begin{pmatrix} D_{r \times r} & 0 \\ 0 & 0 \end{pmatrix}$$
+Onde:
+- $P$ é uma matriz ortogonal $m \times m$.
+- $Q$ é uma matriz ortogonal $n \times n$.
+- $D$ é uma matriz diagonal $r \times r$ contendo os $r$ valores singulares positivos de $A$.
+
+---
+
+
+**Passo 2: Construa a inversa generalizada.**
+Faça:$$G = Q \begin{pmatrix} D^{-1} & E_1 \\ E_2 & E_3 \end{pmatrix} P$$
+Onde $D^{-1}$ é simplesmente a matriz diagonal com o inverso de cada valor singular, e $E_1, E_2, E_3$ são matrizes de dimensões apropriadas compostas por elementos arbitrários (quaisquer números).
+
+**Interpretação:**
+- A parte $D^{-1}$ "inverte" a parte principal da matriz $A$.
+-- As matrizes $E_1, E_2, E_3$ correspondem ao **espaço nulo** da matriz A. Como existem infinitas maneiras de mapear o espaço nulo, a escolha de $E_1, E_2, E_3$ é arbitrária, o que gera as **infinitas inversas generalizadas**.
+
+---
+### A Conexão com a Inversa de Moore-Penrose
+
+A inversa generalizada mais "natural" e comumente usada é a **inversa de Moore-Penrose**. Ela é obtida a partir do Algoritmo 2 com a escolha mais simples possível para as matrizes arbitrárias.
+
+Em particular, escolhendo:
+$$ E_1 = 0, \quad E_2 = 0, \quad E_3 = 0 $$
+temos a inversa generalizada de Moore-Penrose, frequentemente denotada por $A^+$:
+
+$$ A^+ = Q \begin{pmatrix} D^{-1} & 0 \\ 0 & 0 \end{pmatrix} P $$
+
+Esta é a inversa generalizada que a função `ginv()` do pacote `MASS` calcula no `R`.
+
+---
+### Exemplo Prático em R: Usando SVD para encontrar $A^+$
+
+Vamos encontrar a inversa de Moore-Penrose para a matriz $A = X^T X$ do nosso exemplo, usando a SVD.
+
+$A = \begin{pmatrix} 4 & 2 & 2 \\ 2 & 2 & 0 \\ 2 & 0 & 2 \end{pmatrix}$
+
+```{r}
+# 1. Nossa matriz A (que é XTX)
+A <- matrix(c(4, 2, 2, 2, 2, 0, 2, 0, 2), ncol=3, byrow=TRUE)
+
+# 2. Realizar a Decomposição em Valores Singulares (SVD) em R
+svd_A <- svd(A)
+
+# A SVD em R nos dá U, V e um vetor d com os valores singulares
+U <- svd_A$u
+V <- svd_A$v
+d <- svd_A$d
+
+cat("Valores singulares (d):\n")
+print(d)
+
+# O posto é 2, pois o terceiro valor singular é praticamente zero.
+# Vamos inverter apenas os valores singulares não-nulos.
+D_inv_vec <- 1 / d[d > 1e-10]
+D_inv <- diag(c(D_inv_vec, 0)) # Criar a matriz D^{-1} com o zero no final
+
+# 3. Construir a inversa de Moore-Penrose: A+ = V * D_inv * t(U)
+A_plus <- V %*% D_inv %*% t(U)
+
+cat("\nInversa de Moore-Penrose calculada via SVD:\n")
+print(A_plus)
+
+# 4. Comparar com o resultado da função ginv() do pacote MASS
+cat("\nInversa calculada pela função ginv():\n")
+print(ginv(A))
+```
+**Conclusão:** Os resultados são idênticos. O Algoritmo 2, quando usamos zeros para as matrizes arbitrárias, nos dá exatamente a inversa de Moore-Penrose. Ele fornece o fundamento teórico para o cálculo que funções como `ginv()` realizam internamente.
+
+---
+
+
+### EXERCÍCIOS EM CLASSE 
+
+**1. Achar outra inversa generalizada de $X^\top X$ usando o algoritmo 1.**
+1. Escolhemos outra submatriz de posto completo: $S = \begin{pmatrix} 4 & 2 \\ 2 & 2 \end{pmatrix}$.
+2. Sua inversa é $S^{-1} = \begin{pmatrix} 0.5 & -0.5 \\ -0.5 & 1 \end{pmatrix}$.
+3. Colocando no lugar original e preenchendo com zeros, temos uma inversa generalizada: $$G_1 = \begin{pmatrix} 0.5 & -0.5 & 0 \\ -0.5 & 1 & 0 \\ 0 & 0 & 0 \end{pmatrix}$$
+
+**2. Obter a estimativa de $\beta$ com $G_1$ e os dados.**
+```{r}
+X <- matrix(c(1,1,0, 1,1,0, 1,0,1, 1,0,1), ncol=3, byrow=TRUE)
+y_vec <- c(15.2, 14.3, 13.5, 14.5)
+G1 <- matrix(c(0.5, -0.5, 0, -0.5, 1, 0, 0, 0, 0), ncol=3, byrow=TRUE)
+b_estimado_g1 <- G1 %*% t(X) %*% y_vec
+rownames(b_estimado_g1) <- c("μ", "τ₁", "τ₂")
+print(b_estimado_g1)
+```
+
+---
+### Definição 3: Estimabilidade
+
+Uma combinação linear $l^T \beta$ é dita **estimável** se existe um estimador linear e não-viesado para ela ($E(a^T y) = l^T\beta$). Isso significa que sua estimativa $l^T b$ é **invariante** à escolha da inversa generalizada.
+
+**Exemplo:** $\mu + \tau_1$ é estimável.
+
+**Exercício: Estimar as quantidades $\mu + \tau_1$, $\mu + \tau_2$ e $\tau_1 - \tau_2$ com o `b` encontrado.**
+```{r}
+L <- matrix(c(
+  1, 1, 0,  # l₁ para μ + τ₁
+  1, 0, 1,  # l₂ para μ + τ₂
+  0, 1, -1  # l₃ para τ₁ - τ₂
+), ncol=3, byrow=TRUE)
+
+estimativas_g1 <- L %*% b_estimado_g1
+rownames(estimativas_g1) <- c("μ + τ₁", "μ + τ₂", "τ₁ - τ₂")
+print(estimativas_g1)
+```
+**Conclusão:** Os valores para as funções estimáveis (14.75, 14.0, 0.75) são únicos. Seus colegas chegarão aos mesmos resultados, mesmo que seus vetores `b` sejam diferentes.
+
+---
+## 3.7-3.9: Teoremas Fundamentais
+(Páginas 114-120)
+
+**Teorema de Gauss-Markov (Teorema 3.1):** Sob o modelo de Gauss-Markov, o estimador de mínimos quadrados de uma função estimável $l^T\beta$ é o **BLUE** (Best Linear Unbiased Estimator - Melhor Estimador Linear Não-Viesado).
+
+**Modelo de Aitken (Seção 3.9):** Generaliza o modelo para casos onde a matriz de covariância dos erros não é diagonal e/ou homocedástica: $Var(\epsilon) = \sigma^2 H$, com $H \neq I$.
+
+**Teorema 3.2 (Aitken):** Sob o modelo de Aitken, o estimador BLUE é o de **Mínimos Quadrados Generalizados (GLS)**, também chamado de *quadrados mínimos ponderados*:
+$$ b_{GLS} = (X^T H^{-1} X)^{-} X^T H^{-1} y $$
+
+**Teorema 3.3 (Zyskind):** Responde à pergunta: quando o estimador de Mínimos Quadrados Ordinários (OLS) ainda é BLUE, mesmo sob o modelo de Aitken? A resposta é afirmativa se existir uma matriz Q tal que $VX=XQ$, onde $V = \sigma^2H$.
+```

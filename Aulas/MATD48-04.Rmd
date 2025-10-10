@@ -586,6 +586,112 @@ grViz(paste0("digraph {", graph_attrs, "
 ```
 ---
 
+### O Diagrama de Hasse como um Mapa para o Modelo
+
+Vamos revisitar as 5 estruturas possíveis com 3 fatores (A, B, C), mas desta vez com muito mais detalhes. Para cada estrutura, vamos perguntar:
+
+1.  **Qual é a relação fundamental entre os fatores?**
+2.  **Dê um exemplo prático e concreto.**
+3.  **Como o Diagrama de Hasse representa essa relação?**
+4.  **Qual é a fórmula do modelo estatístico em R que corresponde diretamente ao diagrama?**
+
+Esta abordagem transformará o diagrama de uma figura abstrata em uma **ferramenta de modelagem** prática.
+
+---
+### Estrutura 1: Fatores Totalmente Cruzados
+
+**1. Relação:** Todos os fatores são independentes. Todas as combinações de níveis de A, B e C são possíveis e foram incluídas no experimento.
+
+**2. Exemplo Prático:** Um ensaio clínico testa o efeito de `Droga` (A: A1, A2), `Dieta` (B: B1, B2) e `Sexo` (C: Masc, Fem) na pressão arterial. Temos pacientes em todas as 8 combinações (A1/B1/Masc, A1/B1/Fem, etc.).
+
+**3. Diagrama de Hasse:**
+Mostra A, B e C em paralelo. Nenhum tem precedência sobre o outro. Todos estão "acima" do erro residual e "abaixo" da média geral.
+```{r, echo=FALSE, fig.height=2.5}
+grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none]; mu->{A,B,C}->epsilon; {rank=same;A,B,C}; mu[label='μ']; epsilon[label='ε'] }")
+```
+
+**4. Tradução para Modelo em R:**
+O modelo mais completo para esta estrutura inclui todos os efeitos principais e todas as interações possíveis.
+`Resposta ~ Droga * Dieta * Sexo`
+Que expande para:
+`~ Droga + Dieta + Sexo + Droga:Dieta + Droga:Sexo + Dieta:Sexo + Droga:Dieta:Sexo`
+
+---
+### Estrutura 2: Fatores Totalmente Aninhados
+
+**1. Relação:** Uma hierarquia estrita. Os níveis de C só existem dentro de um nível específico de B, e os níveis de B só existem dentro de um nível específico de A.
+
+**2. Exemplo Prático:** Amostragem de `Alunos` ($\epsilon$) em diferentes `Turmas` (C), que pertencem a diferentes `Escolas` (B), que estão localizadas em diferentes `Distritos` (A). A "Turma 1" da Escola X não tem relação com a "Turma 1" da Escola Y.
+
+**3. Diagrama de Hasse:**
+Mostra uma cadeia linear de dependência, de cima para baixo.
+```{r, echo=FALSE, fig.height=2.5}
+grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none]; mu->A->B->C->epsilon; mu[label='μ']; epsilon[label='ε'] }")
+```
+
+**4. Tradução para Modelo em R:**
+O modelo deve refletir essa hierarquia usando o operador de aninhamento `/`.
+`Nota ~ Distrito / Escola / Turma`
+Que expande para:
+`~ Distrito + Distrito:Escola + Distrito:Escola:Turma`
+Este modelo estima a variabilidade em cada nível da hierarquia.
+
+---
+### Estrutura 3: (A ⊃ B) x C (Aninhamento e Cruzamento Mistos)
+
+**1. Relação:** O fator B está aninhado em A. O fator C é cruzado com A e, por consequência, com B.
+
+**2. Exemplo Prático:** Avaliar o desempenho de `Pacientes` ($\epsilon$) em diferentes `Enfermarias` (B) que estão aninhadas em diferentes `Hospitais` (A). O `Sexo` (C) do paciente é um fator cruzado com a estrutura hospitalar. Uma mulher pode estar em qualquer enfermaria de qualquer hospital.
+
+**3. Diagrama de Hasse:**
+A linha `A -> B` mostra o aninhamento. `C` aparece em paralelo, mostrando o cruzamento.
+```{r, echo=FALSE, fig.height=2.5}
+grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none]; mu->{A,C}; A->B; {B,C}->epsilon; mu[label='μ']; epsilon[label='ε'] }")
+```
+
+**4. Tradução para Modelo em R:**
+A fórmula combina os operadores `*` e `/`.
+`Resposta ~ Sexo * Hospital / Enfermaria`
+Que expande para:
+`~ Sexo + Hospital + Sexo:Hospital + Hospital:Enfermaria + Sexo:Hospital:Enfermaria`
+
+---
+### Estrutura 4: A ⊃ (B x C) (Fatorial Aninhado)
+
+**1. Relação:** Os fatores B e C são cruzados entre si, mas todo o delineamento BxC é replicado dentro de cada nível de A.
+
+**2. Exemplo Prático:** Um Delineamento em Blocos (`Bloco` = A). Dentro de cada Bloco, aplicamos um fatorial completo de `Adubação` (B) e `Variedade` (C). A combinação Adubo1/Variedade1 no Bloco 1 é diferente da mesma combinação no Bloco 2.
+
+**3. Diagrama de Hasse:**
+Mostra a estrutura paralela de B e C "abaixo" de A.
+```{r, echo=FALSE, fig.height=2.5}
+grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none]; mu->A->{B,C}->epsilon; {rank=same;B,C}; mu[label='μ']; epsilon[label='ε'] }")
+```
+
+**4. Tradução para Modelo em R:**
+`Resposta ~ Bloco / (Adubacao * Variedade)`
+Que expande para:
+`~ Bloco + Bloco:Adubacao + Bloco:Variedade + Bloco:Adubacao:Variedade`
+Este modelo permite ver se o efeito do adubo, da variedade ou de sua interação muda de um bloco para outro.
+
+---
+### Estrutura 5: Fatores Confundidos
+
+**1. Relação:** É impossível separar os efeitos de A, B e C. Conhecer o nível de um fator determina completamente o nível dos outros.
+
+**2. Exemplo Prático:** Um pesquisador testa 3 `Dietas` (A), 3 `Programas de Exercício` (B) e 3 `Suplementos` (C). Mas o Paciente 1 recebe a combinação (Dieta1, Exercicio1, Suplemento1), o Paciente 2 a (Dieta2, Exercicio2, Suplemento2), etc.
+
+**3. Diagrama de Hasse:**
+Todos os fatores colapsam em um único nó, pois são indistinguíveis.
+```{r, echo=FALSE, fig.height=2.3}
+grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightcoral]; edge[arrowhead=none]; mu[label='μ']; epsilon[label='ε']; ABC[label='(A,B,C)']; mu->ABC->epsilon }")
+```
+
+**4. Tradução para Modelo em R:**
+Não existe um modelo estatístico que possa separar os efeitos. Se você tentar `Resposta ~ A + B + C`, o software retornará um erro de singularidade/colinearidade. O experimento está **fatalmente falho**. O diagrama de Hasse, se desenhado durante a fase de planejamento, teria revelado este erro *a priori*.
+
+
+
 ### Exemplo Prático: A Lógica por Trás do Delineamento em Blocos (RCBD)
 
 Vamos usar um exemplo clássico para ilustrar como o Diagrama de Hasse nos guia para o modelo correto e por que isso é tão poderoso.
@@ -596,79 +702,60 @@ Vamos usar um exemplo clássico para ilustrar como o Diagrama de Hasse nos guia 
 - **Variável Indesejada:** Esta variação espacial é um "ruído" que pode mascarar o verdadeiro efeito dos fertilizantes.
 
 **A pergunta é: como podemos separar o "sinal" (efeito do Tratamento) do "ruído" (efeito da posição no campo)?**
-
 ---
-### Solução: O Delineamento em Blocos Completos Aleatorizados (RCBD)
+### Análise Incorreta (Ignorando o Problema):
 
-A solução é o **bloqueio**.
-1.  Dividimos o campo em 4 **Blocos**, perpendiculares ao gradiente. Cada bloco é uma área considerada homogênea *internamente*.
-2.  Em **cada bloco**, aplicamos *todos* os 3 tratamentos a 3 unidades experimentais, de forma aleatória.
-
-**Análise das Relações:**
-- Fator de interesse: `Tratamento`.
-- Fator de bloqueio (controle de ruído): `Bloco`.
-- Como cada tratamento aparece em cada bloco, os fatores são **cruzados**.
-- A interação `Bloco:Tratamento` está confundida com o erro experimental ($\epsilon$).
-
----
-### Simulação e Visualização: O Problema do "Ruído"
-
-Vamos simular os dados. O Tratamento B é o melhor (+5), mas o Bloco 4 é muito mais fértil (+12).
+Se distribuirmos os tratamentos de forma inteiramente aleatória (DIC), a variabilidade do solo inflará nosso erro experimental.
 ```{r}
 set.seed(99)
-dados_rcbd <- data.frame(Bloco = factor(rep(1:4, each = 3)),
-  Tratamento = factor(rep(c("A", "B", "C"), times = 4))
-)
-# Definindo efeitos REAIS
 efeito_bloco <- c(0, 4, 8, 12)  # Blocos cada vez mais férteis
 efeito_trat <- c(0, 5, 0)      # Tratamento B é o melhor
-# A resposta é a soma dos efeitos + ruído
-dados_rcbd <- dados_rcbd %>%
+dados_rcbd <- data.frame(
+  Bloco = factor(rep(1:4, each = 3)),
+  Tratamento = factor(rep(c("A", "B", "C"), times = 4))
+) %>%
   mutate(
-    Resp_Base = 20 + efeito_bloco[as.numeric(Bloco)] + efeito_trat[as.numeric(Tratamento)],
-    Resposta = round(Resp_Base + rnorm(12, 0, 1.5), 1)
+    Resposta = round(20 + efeito_bloco[as.numeric(Bloco)] + efeito_trat[as.numeric(Tratamento)] + rnorm(12, 0, 1.5), 1)
   )
+
+head(dados_rcbd, 10)
 ```
 ---
-**Visualização 1: Ignorando os Blocos (Análise Incorreta de um DIC)**
-Se analisarmos os dados como se fossem de um Delineamento Inteiramente Casualizado (DIC), a variabilidade dos blocos obscurece tudo.
-```{r, fig.height=4.5, echo=FALSE}
+```{r, fig.height=5, echo=FALSE}
 ggplot(dados_rcbd, aes(x = Tratamento, y = Resposta, fill = Tratamento)) +
   geom_boxplot(alpha=0.6) + geom_jitter(width=0.1) +
   labs(title="Análise Incorreta: Ignorando o Efeito do Bloco",
        subtitle="A alta variabilidade DENTRO dos grupos mascara o efeito do tratamento") +
   theme_minimal(base_size=14) + theme(legend.position="none")
 ```
-**Interpretação:** A sobreposição entre os boxplots é enorme. Uma ANOVA incorreta (`lm(Resposta ~ Tratamento)`) provavelmente não detectaria a superioridade do Tratamento B.
+**Interpretação:** A sobreposição entre os boxplots é enorme. Uma ANOVA `lm(Resposta ~ Tratamento)` provavelmente falharia em detectar a superioridade do Tratamento B.
+
 
 ---
-### O Diagrama de Hasse nos Mostra o Caminho
+### A Solução Guiada pelo Diagrama de Hasse
 
-O diagrama de Hasse para um RCBD nos diz que `Bloco` e `Tratamento` são fatores cruzados.
+**Solução (Bloqueio):** Dividimos o campo em 4 **Blocos**. Em cada bloco, aplicamos todos os 3 tratamentos aleatoriamente.
 
-.pull-left[
-**Diagrama de Hasse do RCBD:**
-```{r, echo=FALSE, fig.height=3.5}
-grViz("
-digraph rcbd {
-  rankdir=TB;
-  node [shape=box, style=rounded]; edge [arrowhead=none];
-  mu [label='μ']; bloco [label='Bloco']; trat [label='Tratamento'];
-  epsilon [label='ε \\n(Bloco:Tratamento)', shape=ellipse];
-  mu -> {bloco, trat}; {bloco, trat} -> epsilon;
-}
-")
+**Análise das Relações e Diagrama:**
+- `Tratamento` e `Bloco` são fatores **cruzados**.
+- A interação `Bloco:Tratamento` é confundida com o erro experimental ($\epsilon$).
+- O diagrama de Hasse é o de dois fatores cruzados.
+
+```{r, echo=FALSE, fig.height=2.5}
+grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none];
+mu[label='μ']; epsilon[label='ε'];
+      mu->{Bloco,Tratamento}->epsilon }")
 ```
-]
-.pull-right[
+
 **Tradução para Modelo Estatístico:**
+O diagrama nos obriga a reconhecer o fator `Bloco`. Para controlar seu efeito (e não testá-lo), usamos um modelo aditivo.
+**Fórmula Correta:** `Resposta ~ Bloco + Tratamento`
 
-O diagrama nos força a reconhecer a existência do fator `Bloco`. Para controlar seu efeito, devemos incluí-lo no modelo. Como não estamos interessados na interação, usamos um modelo aditivo.
-
-**Fórmula Correta do Modelo em R:**
-`Resposta ~ Bloco + Tratamento`
-]
 ---
+
+### Bloqueio: Visualizando a Análise Correta
+
+O modelo `Resposta ~ Bloco + Tratamento` ajusta os dados removendo o efeito médio de cada bloco. O resultado é como se todas as observações tivessem sido feitas em um campo homogêneo.
 
 **O que este modelo faz matematicamente?**
 - Ele calcula a parte da variabilidade total que se deve às diferenças **entre blocos** ($SQ_{Bloco}$).
@@ -677,59 +764,136 @@ O diagrama nos força a reconhecer a existência do fator `Bloco`. Para controla
 
 Ao "subtrair" a $SQ_{Bloco}$ da variabilidade total, o nosso denominador do teste F ($QM_{Resíduo}$) fica muito menor, aumentando o poder para detectar o efeito do `Tratamento`.
 
-O modelo `Resposta ~ Bloco + Tratamento` ajusta os dados removendo o efeito médio de cada bloco. O resultado é como se todas as observações tivessem sido feitas em um campo homogêneo.
-```{r, fig.height=4.5, echo=FALSE}
+```{r, fig.height=4.5, echo=TRUE}
 # Ajustando o modelo para obter os resíduos parciais do tratamento
+# O modelo calcula o efeito de cada fator
 modelo_rcbd <- lm(Resposta ~ Bloco + Tratamento, data = dados_rcbd)
+# A tabela ANOVA mostra que tanto Bloco quanto Tratamento são significativos
+```
+---
+
+```{r, fig.height=4.5, echo=TRUE}
+anova(modelo_rcbd)
+# A resposta ajustada é o que sobra após remover o "ruído" do bloco
+dados_rcbd$Resposta_Ajustada <- resid(modelo_rcbd) + mean(dados_rcbd$Resposta)
+head(dados_rcbd)
 ```
 ---
 
 **Visualização 2: "Removendo" o Efeito do Bloco (Análise Correta)**
 
-```{r, fig.height=4.5, echo=FALSE}
-# Criando os dados ajustados (removendo o efeito do bloco)
-dados_rcbd$Resposta_Ajustada <- predict(modelo_rcbd, type="terms")[, "Tratamento"] + 
-                                mean(dados_rcbd$Resposta)
-ggplot(dados_rcbd, aes(x = Tratamento, y = Resposta_Ajustada, fill = Tratamento)) +
-  geom_boxplot(alpha=0.6) + geom_jitter(width=0.1) +
-  labs(title="Análise Correta: Resposta Ajustada pelo Bloco",
-       subtitle="O efeito real do Tratamento B agora é claramente visível") +
-  theme_minimal(base_size=14) + theme(legend.position="none") +
-  ylab("Resposta Ajustada")
+```{r, fig.height=4.5, echo=TRUE}
+# 1. Modelo apenas com o bloco
+modelo_so_bloco <- lm(Resposta ~ Bloco, data = dados_rcbd)
+
+# 2. Resíduos contêm o efeito do tratamento + erro
+dados_rcbd$Resposta_Ajustada_Correta <- residuals(modelo_so_bloco)
 ```
-**Interpretação:** Magia! Ao controlar estatisticamente a variabilidade dos blocos, a variabilidade *dentro* de cada tratamento diminui drasticamente, e a superioridade do Tratamento B torna-se inegável. O Diagrama de Hasse nos levou ao modelo que permitiu esta "limpeza" dos dados.
 
----
-### O Diagrama de Hasse como Ferramenta de Diagnóstico *a Priori*
-
-O poder real do diagrama é no **planejamento** de um experimento.
-
-**Cenário de Diagnóstico:** Um pesquisador propõe um estudo para comparar `Método de Ensino` X e Y. Ele decide que o `Professor` Silva usará o Método X e a Profa. Santos usará o Método Y.
-
-**Passo 1: Desenhar o Diagrama de Hasse do delineamento proposto.**
-- `Professor` e `Método` não são cruzados (Prof. Silva nunca usa Y).
-- `Professor` e `Método` não são aninhados (Método X não está "dentro" do Prof. Silva de uma forma hierárquica).
-- Eles são **confundidos**: saber o professor implica saber o método.
----
-
-**Passo 2: Diagnóstico a partir do Diagrama.**
 
 ```{r, fig.height=3.5, echo=FALSE}
+# Criando os dados ajustados (removendo o efeito do bloco)
+ggplot(dados_rcbd, aes(x = Tratamento, y = Resposta_Ajustada_Correta, fill = Tratamento)) +
+  geom_boxplot(alpha=0.6) + geom_jitter(width=0.1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
+  labs(title="Análise Correta: Variação Restante Após Remover o Efeito do Bloco",
+       subtitle="O efeito real do Tratamento B (valores acima de zero) agora é visível") +
+  theme_minimal(base_size=14) + theme(legend.position="none") +
+  ylab("Resposta Ajustada (Resíduos do Modelo ~ Bloco)")
+```
+
+**Interpretação:** Ao modelar e remover a variabilidade devida aos blocos, a variabilidade residual (o "ruído") diminui drasticamente. Agora, a superioridade do Tratamento B, que era o "sinal" que queríamos detectar, fica clara e estatisticamente significativa. **O Diagrama de Hasse nos levou ao modelo que tornou esta descoberta possível.**
+---
+
+### O Diagrama de Hasse como Ferramenta de Diagnóstico *a Priori*
+
+O poder mais significativo do Diagrama de Hasse é no **planejamento** de um experimento. Ele funciona como um "raio-x" da estrutura lógica do seu delineamento, permitindo identificar falhas fatais *antes* de coletar qualquer dado.
+
+Vamos analisar um cenário clássico de erro de planejamento.
+
+**Cenário do Problema:**
+Um pesquisador quer testar se um novo `Método de Ensino` (X) é melhor que o tradicional (Y). Ele tem dois professores disponíveis: o experiente `Professor` Silva e a novata Profa. Santos. Para "facilitar", ele decide que:
+- O Prof. Silva, por ser mais experiente, usará o novo Método X.
+- A Profa. Santos usará o tradicional Método Y.
+
+**A Pergunta de Diagnóstico:** Qual é a estrutura de fatores deste delineamento?
+
+---
+### Diagnóstico do Problema via Diagrama de Hasse
+
+**Análise Estrutural:**
+- Os fatores são `Professor` e `Método`.
+- `Professor` e `Método` são **confundidos**. Se conhecemos o professor de uma turma, automaticamente sabemos o método de ensino utilizado. Os dois fatores variam em perfeita sincronia.
+
+**Passo 1: Desenhar o Diagrama de Hasse do delineamento proposto.**
+Como os fatores são indistinguíveis, eles colapsam em um único nó.
+
+.pull-left[
+**Diagrama do Delineamento Falho:**
+```{r, fig.height=2.5, echo=FALSE}
 grViz("
 digraph confounded {
   rankdir=TB;
   node [shape=circle, style=filled, fillcolor=lightcoral]; edge[arrowhead=none];
-  mu [label = 'μ']; epsilon [label = 'ε']; conf [label='(Professor, Método)'];
+  mu [label = 'μ']; epsilon [label = 'ε'];
+  conf [label='(Professor,\n Método)'];
   mu -> conf -> epsilon;
 }
 ")
 ```
+]
+.pull-right[
+**Diagnóstico:**
+O diagrama é um **alerta vermelho visual**. O nó único `(Professor, Método)` mostra que é impossível, matematicamente, separar o efeito de ser ensinado pelo Prof. Silva do efeito de ser ensinado pelo Método X.
+]
 
-**Diagnóstico:** O diagrama revela imediatamente a falha. Os dois fatores ocupam o mesmo nó, significando que seus efeitos são inseparáveis. O experimento, como planejado, **não pode responder à pergunta de pesquisa**.
+---
+**Conclusão *a Priori*:** Se o grupo do Prof. Silva tiver notas maiores, nunca saberemos se foi por causa do professor ou do método. **O experimento, como planejado, é incapaz de responder à pergunta de pesquisa.**
 
-**Passo 3: Ação Corretiva.**
-O diagrama nos força a redesenhar o experimento. A solução óbvia é **cruzar** os fatores: ambos os professores devem usar ambos os métodos. O novo diagrama seria o de fatores cruzados, que é um delineamento válido.
+### Ação Corretiva: Redesenhando o Experimento com o Diagrama
 
+O diagrama não apenas identifica o problema, mas também sugere a solução. Para separar os efeitos, os fatores `Professor` e `Método` precisam estar em **nós separados** no diagrama.
+
+**Ação Corretiva:** Devemos **cruzar** os fatores. Isso significa que *ambos* os professores devem lecionar turmas usando *ambos* os métodos.
+
+**Novo Delineamento (Corrigido):**
+- Turma 1: Prof. Silva, Método X
+- Turma 2: Prof. Silva, Método Y
+- Turma 3: Profa. Santos, Método X
+- Turma 4: Profa. Santos, Método Y
+---
+
+**Passo 2: Desenhar o Diagrama de Hasse do NOVO delineamento.**
+
+.pull-left[
+**Diagrama do Delineamento Corrigido:**
+```{r, fig.height=3.5, echo=FALSE}
+grViz("
+digraph corrected {
+  rankdir=TB;
+  node [shape=circle, style=filled, fillcolor=lightblue]; edge[arrowhead=none];
+  mu [label='μ']; epsilon [label='ε'];
+  prof [label='Professor']; met [label='Método'];
+  mu -> {prof, met}; {prof, met} -> epsilon;
+  {rank=same; prof; met;}
+}
+")
+```
+]
+.pull-right[
+**Diagnóstico do Novo Delineamento:**
+O diagrama agora mostra dois fatores cruzados. Os nós estão separados.
+
+**Conclusão Corretiva:**
+Este novo delineamento **é válido**. Ele nos permitirá ajustar um modelo `Nota ~ Professor * Método` e estimar separadamente:
+]
+
+
+1.  O efeito principal do `Professor` (se um é melhor que o outro, em média).
+2.  O efeito principal do `Método` (se um é melhor que o outro, em média).
+3.  A **interação**: será que o novo Método X funciona melhor com o professor experiente?
+
+O uso do Diagrama de Hasse na fase de planejamento transformou um experimento falho em um delineamento fatorial robusto e informativo.
 ---
 
 class: center, middle, inverse
@@ -905,10 +1069,10 @@ Cada componente da identidade algébrica corresponde diretamente a uma linha na 
 ---
 $$y_{ijr} = \underbrace{\bar{y}_{...}}_{\substack{\text{Média Geral} \\ \text{(Intercepto)}}} + \underbrace{(\bar{y}_{i..} - \bar{y}_{...})}_{\substack{\text{Efeito Principal de A} \\ \rightarrow SQ_A}} + \underbrace{(\bar{y}_{.j.} - \bar{y}_{...})}_{\substack{\text{Efeito Principal de B} \\ \rightarrow SQ_B}} + \underbrace{(\bar{y}_{ij.} - \bar{y}_{i..} - \bar{y}_{.j.} + \bar{y}_{...})}_{\substack{\text{Efeito da Interação A*B} \\ \rightarrow SQ_{A:B}}} + \underbrace{(y_{ijr} - \bar{y}_{ij.})}_{\substack{\text{Resíduo (Erro)} \\ \rightarrow SQ_{Erro}}}$$
 
-- **Efeito Principal de A:** Mede o quanto a média do nível `i` do fator A desvia da média geral. Se somarmos os quadrados desses desvios para todas as observações, obtemos a **Soma de Quadrados do Fator A ($SQ_A$)**.
-- **Efeito Principal de B:** Mede o quanto a média do nível `j` do fator B desvia da média geral. A soma de seus quadrados é a **$SQ_B$**.
-- **Efeito da Interação A*B:** Este é o termo mais sutil. Ele mede o "algo a mais" que a média da célula (`i,j`) possui que não pode ser explicado pela simples soma dos efeitos principais de A e B. A soma de seus quadrados é a **$SQ_{A:B}$**. Se este termo for grande, significa que o efeito de A depende do nível de B (e vice-versa).
-- **Resíduo (Erro):** É a variação de uma observação individual em torno da média de sua própria célula. Representa a variabilidade aleatória e inexplicada. A soma de seus quadrados é a **Soma de Quadrados do Erro ($SQ_{Erro}$)**.
+- **Efeito Principal de A:** Mede o quanto a média do nível `i` do fator A desvia da média geral. Se somarmos os quadrados desses desvios para todas as observações, obtemos a Soma de Quadrados do Fator A ($SQ_A$).
+- **Efeito Principal de B:** Mede o quanto a média do nível `j` do fator B desvia da média geral. A soma de seus quadrados é a $SQ_B$.
+- **Efeito da Interação A*B:** Este é o termo mais sutil. Ele mede o "algo a mais" que a média da célula (`i,j`) possui que não pode ser explicado pela simples soma dos efeitos principais de A e B. A soma de seus quadrados é a $SQ_{A:B}$. Se este termo for grande, significa que o efeito de A depende do nível de B (e vice-versa).
+- **Resíduo (Erro):** É a variação de uma observação individual em torno da média de sua própria célula. Representa a variabilidade aleatória e inexplicada. A soma de seus quadrados é a Soma de Quadrados do Erro ($SQ_{Erro}$).
 
 **Conclusão:** A identidade algébrica é o mecanismo para a construção do ANOVA. Ela nos mostra exatamente como a variabilidade total de um dado é particionada entre as diferentes fontes de variação definidas pelo delineamento experimental.
 

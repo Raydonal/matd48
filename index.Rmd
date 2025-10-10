@@ -202,7 +202,7 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
   |  02/10/2025    | 02/10/2025  | Análise de Variância (ANOVA) para o DIC. **Aula prática em R**         |
   |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.  [[Mat-04]](Aulas/MATD48-04.html)                                  |
   |  09/10/2025    | 09/10/2025  | Coeficiente de variação. Análise de pressupostos.                    |
-  |  14/10/2025    | 14/10/2025  | Análise de Covariância (ANCOVA).                                     |
+  |  14/10/2025    | 14/10/2025  | Análise de Covariância (ANCOVA). [[Mat-05]](Aulas/MATD48-05.html)                                    |
   |  16/10/2025    | 16/10/2025  | Aula de exercícios e **Aula prática em R**                           |
   |  21/10/2025    | 21/10/2025  | ANCOVA e revisão.                                                    |
   |  **23/10/2025**  | **23/10/2025**  | **<font color="red">APLICAÇÃO DA PROVA 1</font>**                          |
