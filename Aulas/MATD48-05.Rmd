@@ -100,7 +100,7 @@ Uma vez atribuídos os tratamentos às unidades experimentais, apenas uma respos
 Tomando a mesma situação ilustrada no Quadro anterior, numa amostra, cada unidade experimental está **embutida** num tratamento.
 
 A **Figura** a seguir ilustra a estrutura de classificação da amostra observada no experimento:
-ndo o estilo do PDF original:
+
 ---
 
 ```{r, echo=FALSE}
@@ -162,7 +162,7 @@ $$\begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \\ 1 & 0 & 1 \end{pmatrix}
 - $y$ é o vetor de observações (medidas) da variável resposta.
 
 Em termos matriciais, o modelo (1) corresponde a $$y = X\beta + \epsilon \quad (3),$$
-em que $\epsilon = (\epsilon_{11},\epsilon_{12},\epsilon_{21},\epsilon_{22} )^\top $ é o vetor aleatório de erros. 
+em que $\epsilon = (\epsilon_{11},\epsilon_{12},\epsilon_{21},\epsilon_{22} )^\top$ é o vetor aleatório de erros. 
 
 ##  O Modelo Linear de Gauss-Markov
 
@@ -257,7 +257,7 @@ Esta prova decorre diretamente das premissas do modelo.
     $y = X\beta + \epsilon$
 
 2.  **Aplicar a Esperança:** Aplicamos o operador de esperança a ambos os lados da equação:
-    $E(y) = E(X\beta + \epsilon) $
+    $E(y) = E(X\beta + \epsilon)$
 
 3.  **Linearidade da Esperança:** A esperança da soma é a soma das esperanças:
     $E(y) = E(X\beta) + E(\epsilon)$
@@ -268,7 +268,7 @@ Esta prova decorre diretamente das premissas do modelo.
 5.  **Substituição:** Substituindo estes resultados na equação:
     $$ E(y) = X\beta + 0 $$
 
-6.  **Conclusão:** $ E(y) = X\beta $
+6.  **Conclusão:** $E(y) = X\beta$
     Isso mostra que o valor esperado do vetor de observações é o componente determinístico do modelo. **C.Q.D.**
 
 ---
@@ -286,12 +286,12 @@ Queremos provar que $E(\hat{y}) = X\beta$.
     $E(\hat{y}) = P_X E(y)$
 
 4.  **Usar Resultado Anterior:** Pela propriedade (a), já provamos que $E(y) = X\beta$. Substituindo:
-    $ E(\hat{y}) = P_X (X\beta) $
+    $E(\hat{y}) = P_X (X\beta)$
 
 5.  **Propriedade da Matriz de Projeção:** Uma das propriedades fundamentais da matriz de projeção no espaço de colunas de X é que $P_X X = X$.
     
 6.  **Conclusão:**
-    $E(\hat{y}) = X\beta $
+    $E(\hat{y}) = X\beta$
     Como o valor esperado do estimador $\hat{y}$ é igual ao parâmetro que ele visa estimar $E(y)$, concluímos que $\hat{y}$ é um estimador **centrado (não-viesado)**. **C.Q.D.**
 
 ---
@@ -303,7 +303,7 @@ Queremos provar que a matriz de covariâncias do vetor de preditos é $\sigma^2 
 1.  **Definição do Estimador:** Novamente, partimos de $\hat{y} = P_X y$.
 
 2.  **Aplicar a Variância:** Aplicamos o operador de variância-covariância:
-    $Var(\hat{y}) = Var(P_X y) $
+    $Var(\hat{y}) = Var(P_X y)$
 
 3.  **Propriedade da Matriz de Covariâncias:** Para uma matriz de constantes `A` e um vetor aleatório `y`, a propriedade é $Var(Ay) = A \cdot Var(y) \cdot A^T$. Como $Var(\hat{y}) = P_X \cdot Var(y) \cdot P_X^\top$
 
@@ -311,7 +311,7 @@ Queremos provar que a matriz de covariâncias do vetor de preditos é $\sigma^2 
     $Var(\hat{y}) = P_X (\sigma^2 I) P_X^\top$
 
 5.  **Simplificação:** Como $\sigma^2$ é um escalar, podemos movê-lo para a frente:
-    $Var(\hat{y}) = \sigma^2 P_X I P_X^\top = \sigma^2 P_X P_X^\top $
+    $Var(\hat{y}) = \sigma^2 P_X I P_X^\top = \sigma^2 P_X P_X^\top$
 
 6.  **Propriedades da Matriz de Projeção:** Como a matriz de projeção $P_X$ é simétrica, então $P_X^\top = P_X$ e idempotente, então $P_X P_X = P_X$.
 
@@ -333,17 +333,18 @@ mais à direita, dada por $S = \begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix}$.
 2.  Obtenha a matriz transposta da
 inversa da submatriz escolhida. No caso do exemplo dado: $(S^{-1})^\top = (\begin{pmatrix} 1/2 & 0 \\ 0 & 1/2 \end{pmatrix})^\top = \begin{pmatrix} 1/2 & 0 \\ 0 & 1/2 \end{pmatrix}$.
 3.  Coloque no lugar original da matriz $G$ e preencha o resto com zeros: $G = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 1/2 & 0 \\ 0 & 0 & 1/2 \end{pmatrix}$.
+---
 4. Obtenha a transposta da
 matriz resultante do passo
 3 e você terá uma inversa
 generalizada: 
 $G^- = (X^\top X)^- = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 1/2 & 0 \\ 0 & 0 & 1/2 \end{pmatrix}$.
 
----
 
 ### Algoritmo 2: Inversa Generalizada via SVD
 O segundo algoritmo para achar uma inversa generalizada é mais geral e teoricamente mais elegante. Ele se baseia na **Decomposição em Valores Singulares (SVD)**.
 
+---
 Para achar uma inversa generalizada de uma matriz $A$ de dimensão $m \times n$ e posto $r$, siga os passos seguintes:
 
 **Passo 1: Decomponha a matriz $A$ em seus valores singulares (SVD).**
@@ -399,7 +400,10 @@ d <- svd_A$d
 
 cat("Valores singulares (d):\n")
 print(d)
+```
+---
 
+```{r}
 # O posto é 2, pois o terceiro valor singular é praticamente zero.
 # Vamos inverter apenas os valores singulares não-nulos.
 D_inv_vec <- 1 / d[d > 1e-10]
@@ -434,15 +438,19 @@ y_vec <- c(15.2, 14.3, 13.5, 14.5)
 G1 <- matrix(c(0.5, -0.5, 0, -0.5, 1, 0, 0, 0, 0), ncol=3, byrow=TRUE)
 b_estimado_g1 <- G1 %*% t(X) %*% y_vec
 rownames(b_estimado_g1) <- c("μ", "τ₁", "τ₂")
+```
+---
+
+```{r}
 print(b_estimado_g1)
 ```
 
----
 ### Definição 3: Estimabilidade
 
 Uma combinação linear $l^T \beta$ é dita **estimável** se existe um estimador linear e não-viesado para ela ($E(a^T y) = l^T\beta$). Isso significa que sua estimativa $l^T b$ é **invariante** à escolha da inversa generalizada.
 
 **Exemplo:** $\mu + \tau_1$ é estimável.
+---
 
 **Exercício: Estimar as quantidades $\mu + \tau_1$, $\mu + \tau_2$ e $\tau_1 - \tau_2$ com o `b` encontrado.**
 ```{r}
@@ -453,8 +461,7 @@ L <- matrix(c(
 ), ncol=3, byrow=TRUE)
 
 estimativas_g1 <- L %*% b_estimado_g1
-rownames(estimativas_g1) <- c("μ + τ₁", "μ + τ₂", "τ₁ - τ₂")
-print(estimativas_g1)
+rownames(estimativas_g1) <- c("μ + τ₁", "μ + τ₂", "τ₁ - τ₂"); print(estimativas_g1)
 ```
 **Conclusão:** Os valores para as funções estimáveis (14.75, 14.0, 0.75) são únicos. Seus colegas chegarão aos mesmos resultados, mesmo que seus vetores `b` sejam diferentes.
 
@@ -470,4 +477,4 @@ print(estimativas_g1)
 $$ b_{GLS} = (X^T H^{-1} X)^{-} X^T H^{-1} y $$
 
 **Teorema 3.3 (Zyskind):** Responde à pergunta: quando o estimador de Mínimos Quadrados Ordinários (OLS) ainda é BLUE, mesmo sob o modelo de Aitken? A resposta é afirmativa se existir uma matriz Q tal que $VX=XQ$, onde $V = \sigma^2H$.
-```
+
