@@ -1,0 +1,670 @@
+---
+title: "Fundamentos de Análise para Planejamento Experimental"
+subtitle: "ANOVA"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: refs.bib
+csl: apa.csl    
+link-citations: true
+---
+
+
+```{r setup, include=FALSE}
+# Opções globais do Knitr
+options(html.tag.transform.rmarkdown = function(x) x)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, fig.width=8, fig.height=4.5)
+
+# Carregar pacotes necessários
+library(ggplot2)
+library(dplyr)
+library(MASS) # Para a função ginv()
+library(DiagrammeR)
+library(sf)
+library(tidyverse)
+```
+
+# Análise de Variância e Inferência
+
+
+## Análise de Variância
+
+
+Em todo experimento, um vetor de respostas $y$ é identificado e expresso de acordo com um modelo linear. Para ser mais preciso, assuma um experimento que objetivou comparar `t` tratamentos usando `k` unidades experimentais para cada tratamento (`k` réplicas). Ao todo, $n=tk$ observações foram feitas.
+
+**A Ideia Central da ANOVA:**
+A técnica de análise de variância corresponde à **decomposição do vetor de respostas $y$ (de dimensão n) em vetores mutuamente ortogonais.**
+
+**Intuição Geométrica:** Pense no seu vetor de dados $y$ como um ponto em um espaço de $n$ dimensões. A ANOVA é a aplicação do Teorema de Pitágoras para decompor este vetor em partes que representam o "sinal" (efeito do tratamento) e o "ruído" (erro aleatório).
+
+Considere o modelo de Gauss-Markov e denote por $\hat{y}$ o vetor de respostas estimado.
+
+---
+### A Decomposição Fundamental do Vetor de Respostas
+
+Pelo exposto até o momento, sabemos que o vetor de respostas estimado (ou predito) é:
+$\hat{y} = P_X y = Xb.$ Ele é a **projeção ortogonal** do vetor de dados $y$ no espaço vetorial definido pelas colunas de $X$ (o "espaço do modelo").
+
+Neste contexto, o estimador de quadrados mínimos ordinários do vetor de **resíduos** $e$ é dado por:
+$$ e = y - \hat{y} = y - P_X y = (I - P_X)y $$
+O vetor de resíduos é a **projeção ortogonal** de $y$ no espaço complemento ortogonal ao espaço do modelo (o "espaço do erro").
+
+Note, então, a seguinte relação fundamental:
+$$ y = P_X y + (I - P_X) y $$
+$$ y = \hat{y} + e $$
+Como $P_X$ e $(I-P_X)$ são matrizes de projeção em espaços ortogonais, os vetores $\hat{y}$ e $e$ são **mutuamente ortogonais**.
+
+---
+### Decomposição da Soma de Quadrados (ANOVA não corrigida)
+
+
+A ortogonalidade entre $\hat{y}$ e $e$ nos permite aplicar o Teorema de Pitágoras. O "comprimento ao quadrado" do vetor $y$ é a soma dos "comprimentos ao quadrado" de suas projeções:
+$$||y||^2 = ||\hat{y}||^2 + ||e||^2$$
+$$y^T y = (P_X y)^T (P_X y) + ((I - P_X)y)^T ((I - P_X)y)$$
+Como $P_X$ e $(I-P_X)$ são simétricas e idempotentes, isso simplifica para:
+$y^T y = y^T P_X y + y^T (I - P_X) y$ e $SQ_{Total} = SQ_{Trat} + SQ_{Resid}$
+Daí tem-se a seguinte **Tabela 1 de ANOVA (não corrigida)**:
+
+| F.V. (Fonte de Variação) | G.L. (Graus de Liberdade) | S.Q. (Soma de Quadrados) |
+|:---|:---:|:---:|
+| Tratamento | $posto(X)$ | $y^T P_X y$ |
+| Resíduo | $n - posto(X)$ | $y^T (I - P_X) y$ |
+| Total | $n$ | $y^T y$ |
+
+Esta tabela particiona a energia total do vetor $y$, mas não é a forma usual, pois inclui a média geral no $SQ_{Trat}$.
+
+---
+### A ANOVA Corrigida pela Média
+
+
+É mais usual encontrar tabelas de ANOVA **corrigidas pela média**. O objetivo é particionar a **variância** dos dados ($y$ centrado na média), e não sua energia total. Para isso, introduzimos uma nova decomposição:
+
+$$y = \underbrace{J_n y}_{\text{Componente da Média}} + \underbrace{(P_X - J_n)y}_{\text{Componente dos Efeitos}} + \underbrace{(I - P_X)y}_{\text{Componente do Resíduo}}$$
+onde $J_n = \frac{1}{n}\mathbf{1}\mathbf{1}^T$ é a matriz de projeção no vetor de 1s (o vetor da média geral). Os três componentes são mutuamente ortogonais.
+
+Aplicando o Teorema de Pitágoras novamente, obtemos a partição da soma de quadrados corrigida:
+$$y^T(I-J_n)y = y^T(P_X-J_n)y + y^T(I-P_X)y$$
+---
+Daí tem-se a **Tabela 2 de ANOVA**:
+
+| F.V. | G.L. | S.Q. |
+|:---|:---:|:---:|
+| Tratamento | $posto(X) - 1$ | $y^T (P_X - J_n) y$ |
+| Resíduo | $n - posto(X)$ | $y^T (I - P_X) y$ |
+| Total | $n - 1$ | $y^T (I - J_n) y$ |
+
+---
+### Tabela 3 de ANOVA (Forma Escalar)
+
+
+A Tabela 2, escrita sem recorrer à notação matricial, é a forma mais conhecida da ANOVA. Para um Delineamento Inteiramente Casualizado com `t` tratamentos e `k` réplicas:
+
+| F.V. | G.L. | S.Q. |
+|:---|:---:|:---:|
+| Tratamento | $t-1$ | $k \sum_{i=1}^t (\bar{y}_{i.} - \bar{y}_{..})^2$ |
+| Resíduo | $n-t$ | $\sum_{i=1}^t \sum_{r=1}^k (y_{ir} - \bar{y}_{i.})^2$ |
+| Total | $n-1$ | $\sum_{i=1}^t \sum_{r=1}^k (y_{ir} - \bar{y}_{..})^2$ |
+
+**É interessante notar que as somas de quadrados apresentadas na Tabela 3 correspondem às somas de quadrados dos componentes da identidade algébrica associada ao experimento.**
+$$y_{ir} - \bar{y}_{..} = \underbrace{(\bar{y}_{i.} - \bar{y}_{..})}_{\text{Componente Tratamento}} + \underbrace{(y_{ir} - \bar{y}_{i.})}_{\text{Componente Resíduo}}$$
+
+---
+### EXERCÍCIO EM CLASSE (
+
+**Verifique que, através da identidade algébrica [...], é possível chegar à Tabela 3 de ANOVA.**
+
+1.  **Partida:** A identidade algébrica para um DIC é:
+    $y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$
+2.  **Centralizar:** Subtraindo a média geral de ambos os lados:
+    $(y_{ir} - \bar{y}_{..}) = (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$
+3.  **Elevar ao Quadrado e Somar:**
+    $\sum_{i=1}^t \sum_{r=1}^k (y_{ir} - \bar{y}_{..})^2 = \sum_{i=1}^t \sum_{r=1}^k [(\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})]^2$
+4.  **Expandir o Quadrado:**
+    $= \sum_i \sum_r (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_i \sum_r (y_{ir} - \bar{y}_{i.})^2 + 2 \sum_i \sum_r (\bar{y}_{i.} - \bar{y}_{..})(y_{ir} - \bar{y}_{i.})$
+5.  **Analisar o Termo Cruzado:**
+    O termo cruzado pode ser reescrito como: $2 \sum_i (\bar{y}_{i.} - \bar{y}_{..}) \left[ \sum_r (y_{ir} - \bar{y}_{i.}) \right]$.
+    Como a soma dos desvios em torno da média é sempre zero, o termo $\sum_r (y_{ir} - \bar{y}_{i.}) = 0$ para qualquer `i`. Portanto, todo o termo cruzado é zero.
+6.  **Conclusão:**
+    $SQ_{Total} = \sum_i k (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_i \sum_r (y_{ir} - \bar{y}_{i.})^2 = SQ_{Tratamento} + SQ_{Resíduo}$. C.Q.D.
+
+---
+
+
+## Inferência
+ 
+Até agora, as premissas do modelo de Gauss-Markov nos garantiram que o estimador de mínimos quadrados é **BLUE** (o melhor em termos de variância). No entanto, para realizar **testes de hipótese** (testes F, testes t) e construir **intervalos de confiança**, precisamos de uma premissa adicional sobre a distribuição dos erros.
+
+O **modelo linear normal** adiciona a suposição de **normalidade** aos resíduos:
+$$ y = X\beta + \epsilon, \quad \text{onde } \epsilon \sim N(0, \sigma^2 I) $$
+
+Como $y$ é uma transformação linear do vetor normal $\epsilon$, a consequência direta é que o próprio vetor de respostas também segue uma distribuição normal (multivariada):
+$$ y \sim N(X\beta, \sigma^2 I) $$
+
+---
+### Interpretando as Premissas do Modelo Normal
+
+O que a expressão matemática $y \sim N(X\beta, \sigma^2 I)$ realmente significa? Ela encapsula três premissas fundamentais sobre a relação entre os preditores (X) e a resposta (Y):
+
+1.  **Linearidade (na média):** O valor esperado (a média) de Y, para um dado conjunto de X's, está sobre uma linha (ou hiperplano). Matematicamente, $E(y|X) = X\beta$.
+
+2.  **Normalidade (dos erros):** Para um dado conjunto de X's, os valores observados de Y se distribuem normalmente em torno de sua média. Isso implica que os erros ($\epsilon = y - E(y|X)$) seguem uma distribuição normal.
+
+3.  **Homocedasticidade (variância constante):** A "largura" ou "dispersão" da distribuição normal de Y é a mesma para todos os valores de X. Matematicamente, $Var(y|X) = \sigma^2$, um valor constante.
+
+A imagem a seguir torna essas três ideias concretas.
+
+---
+### Visualizando as Premissas do Modelo Normal
+
+Vamos criar um exemplo prático: prever a `Nota` final de um aluno com base nas `Horas_Estudo`.
+O "verdadeiro" modelo (desconhecido para nós) é: $Nota = 30 + 5 \times \text{Horas_Estudo} + \epsilon$, onde $\epsilon \sim N(0, 8^2)$.
+
+```{r}
+# 1. Simular os dados de acordo com o modelo
+set.seed(42)
+n_alunos <- 200
+horas_estudo <- runif(n_alunos, 2, 20)
+nota_final <- 30 + 5 * horas_estudo + rnorm(n_alunos, mean = 0, sd = 8)
+dados_alunos <- data.frame(Horas_Estudo = horas_estudo, Nota = nota_final)
+
+# 2. Ajustar o modelo linear para estimar a linha e o desvio padrão
+modelo_alunos <- lm(Nota ~ Horas_Estudo, data = dados_alunos)
+sigma_hat <- sigma(modelo_alunos) # Estimativa de σ
+```
+
+---
+### Gráfico da Intuição: Conectando Teoria e Dados
+
+O gráfico abaixo, inspirado no seu exemplo, visualiza as três premissas simultaneamente.
+
+```{r, fig.height=5, echo=FALSE}
+# Pontos para desenhar as curvas de densidade
+x_slices <- c(5, 10, 15)
+density_data <- do.call(rbind, lapply(x_slices, function(x_val) {
+  pred_mean <- predict(modelo_alunos, newdata = data.frame(Horas_Estudo = x_val))
+  y_range <- seq(pred_mean - 3*sigma_hat, pred_mean + 3*sigma_hat, length.out = 100)
+  density <- dnorm(y_range, mean = pred_mean, sd = sigma_hat)
+  data.frame(x_orig = x_val, y = y_range, dens = density)
+}))
+
+ggplot(dados_alunos, aes(x = Horas_Estudo, y = Nota)) +
+  # Heatmap de densidade 2D
+  geom_density_2d_filled(alpha = 0.5, bins=10, show.legend = FALSE) +
+  # Pontos de dados
+  geom_point(alpha = 0.6, color = "blue") +
+  # Linha de regressão (representa E(y|X) = Xβ)
+  geom_smooth(method = "lm", se = FALSE, color = "black", linewidth = 1.5) +
+  # Curvas de densidade normal
+  geom_path(data = density_data, aes(x = x_orig + dens * 10, y = y, group = x_orig), 
+            color = "black", linewidth = 1.2) +
+  # Linhas verticais
+  geom_vline(xintercept = x_slices, linetype = "solid") +
+  scale_fill_viridis_d() +
+  labs(title = "Visualização das Premissas do Modelo Linear Normal",
+       subtitle = "Linearidade, Normalidade e Homocedasticidade") +
+  theme_minimal(base_size = 14)
+```
+
+---
+### Interpretando o Gráfico e a Conexão com a Inferência
+
+Este gráfico é um dicionário visual para as premissas do modelo:
+
+1.  **A linha de regressão preta** representa a premissa de **Linearidade**. Ela mostra como a *média* da Nota (`E(y|X)`) aumenta linearmente com as Horas de Estudo. É a nossa estimativa de $X\beta$.
+
+2.  **As curvas de sino pretas** em cada fatia vertical representam a premissa de **Normalidade**. Elas mostram que, para um número fixo de horas de estudo (ex: 10 horas), as notas dos alunos se distribuem normalmente em torno da média prevista pela linha.
+
+3.  **A largura igual de todas as curvas de sino** representa a premissa de **Homocedasticidade**. A dispersão das notas em torno da média é constante ($\sigma^2$), não importando se o aluno estudou 5, 10 ou 15 horas.
+
+**Por que isso é a base da inferência?**
+Quando essas três premissas são satisfeitas, as Somas de Quadrados seguem distribuições $\chi^2$, e a razão dos Quadrados Médios segue uma distribuição F. Isso significa que podemos confiar nos **p-valores** gerados pela tabela de ANOVA para decidir se o efeito das `Horas_Estudo` é estatisticamente significativo. Se as premissas forem violadas (ex: se as curvas de sino ficassem mais largas para mais horas de estudo), a distribuição F não seria a correta, e nossos testes de hipótese seriam inválidos.
+
+
+
+---
+## 3.11 O Modelo Linear Normal de Gauss-Markov
+
+Para realizar testes de hipótese e construir intervalos de confiança, adicionamos uma premissa à definição do modelo de Gauss-Markov: a **suposição de normalidade aos resíduos**.
+
+O modelo linear normal é:
+$$ y = X\beta + \epsilon, \quad \text{onde } \epsilon \sim N(0, \sigma^2 I) $$
+
+Sob este modelo, como $y$ é uma transformação linear de $\epsilon$, verifica-se então que:
+$$ y \sim N(X\beta, \sigma^2 I) $$
+
+Esta premissa é a chave que nos permite derivar a distribuição das Somas de Quadrados.
+
+---
+### Distribuição de Formas Quadráticas
+
+**Resultado 3.3:** Considere um vetor aleatório $y \sim N(\mu, \Sigma)$ e uma matriz simétrica $A$ com $posto(A)=k$.
+Nessas condições, se $A\Sigma$ for idempotente, então:
+$$ y^T A y \sim \chi^2_k(\delta^2) \quad \text{, com } \delta^2 = \mu^T A \mu $$
+E se, adicionalmente, $A\mu = 0$, então a distribuição é central:
+$$ y^T A y \sim \chi^2_k $$
+
+Este teorema é a ferramenta matemática que nos permite encontrar a distribuição das Somas de Quadrados.
+
+---
+### Aplicação: Distribuição da Soma de Quadrados do Resíduo
+
+Queremos mostrar que $\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$.
+
+1.  **Definições:** $SQ_{Resid} = y^T(I-P_X)y$. No nosso modelo, $y \sim N(X\beta, \sigma^2 I)$, então $\mu=X\beta$ e $\Sigma=\sigma^2 I$.
+2.  **Forma Quadrática:** $\frac{SQ_{Resid}}{\sigma^2} = y^T A y$, onde $A = \frac{1}{\sigma^2}(I-P_X)$.
+3.  **Verificar Condições do Resultado 3.3:**
+    - **Posto:** $posto(A) = posto(I-P_X) = n - posto(X) = n-t$. Então $k=n-t$.
+    - **Idempotência de $A\Sigma$:** $A\Sigma = \frac{1}{\sigma^2}(I-P_X) (\sigma^2 I) = (I-P_X)$. Como $(I-P_X)$ é uma matriz de projeção, ela é idempotente. A condição é satisfeita.
+    - **Verificar se $A\mu=0$:** $A\mu = \frac{1}{\sigma^2}(I-P_X)X\beta$. Como $P_X X = X$, temos $(I-P_X)X = X - P_X X = X - X = 0$. Portanto, $A\mu = 0$.
+4.  **Conclusão:** Como $A\mu=0$, a distribuição é qui-quadrado central com $k=n-t$ graus de liberdade.
+    $$\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$$
+
+---
+### EXERCÍCIO EM CLASSE
+
+**Mostre, utilizando o Resultado 3.3, que $SQ_{Trat}/\sigma^2 \sim \chi^2_{t}(\delta^2)$ (para a SQ *não corrigida*).**
+
+1.  **Definições:** $SQ_{Trat} = y^T P_X y$. $y \sim N(X\beta, \sigma^2 I)$.
+2.  **Forma Quadrática:** $\frac{SQ_{Trat}}{\sigma^2} = y^T A y$, onde $A = \frac{1}{\sigma^2}P_X$.
+3.  **Verificar Condições:**
+    - **Posto:** $posto(A) = posto(P_X) = posto(X) = t$. Então $k=t$.
+    - **Idempotência de $A\Sigma$:** $A\Sigma = \frac{1}{\sigma^2}P_X (\sigma^2 I) = P_X$. $P_X$ é idempotente. A condição é satisfeita.
+    - **Parâmetro de não-centralidade $\delta^2$:** Não esperamos que $A\mu=0$ aqui.
+      $\delta^2 = \mu^T A \mu = (X\beta)^T (\frac{1}{\sigma^2}P_X) (X\beta) = \frac{1}{\sigma^2} \beta^T X^T P_X X \beta$.
+      Como $P_X X = X$, temos $\delta^2 = \frac{1}{\sigma^2} \beta^T X^T X \beta$.
+4.  **Conclusão:** A forma quadrática segue uma qui-quadrado **não-central** com $t$ graus de liberdade.
+    $$ \frac{SQ_{Trat}}{\sigma^2} \sim \chi^2_t(\delta^2) $$
+
+---
+### Independência das Somas de Quadrados
+
+
+**Resultado 3.4:** Considere $y \sim N(\mu, \Sigma)$ e duas matrizes simétricas $A_1$ e $A_2$. Se $A_1 \Sigma A_2 = 0$, então as formas quadráticas $y^T A_1 y$ e $y^T A_2 y$ são variáveis aleatórias **independentes**.
+
+**Aplicação:** $SQ_{Trat}$ e $SQ_{Resid}$ são independentes.
+- $SQ_{Trat} = y^T P_X y$. Aqui, $A_1 = P_X$.
+- $SQ_{Resid} = y^T (I-P_X) y$. Aqui, $A_2 = I-P_X$.
+- $\Sigma = \sigma^2 I$.
+- Verificamos a condição: $A_1 \Sigma A_2 = P_X (\sigma^2 I) (I-P_X) = \sigma^2 P_X (I-P_X)$.
+- Como $P_X$ é idempotente, $P_X(I-P_X) = P_X - P_X P_X = P_X - P_X = 0$.
+- **Conclusão:** A condição é satisfeita. Logo, $SQ_{Trat}$ e $SQ_{Resid}$ são independentes.
+
+---
+### Comparando Efeitos de Tratamentos: O Teste F
+
+
+Seguindo os resultados, sob o modelo linear normal:
+- $\frac{SQ_{Trat(corrigida)}}{\sigma^2} \sim \chi^2_{t-1}(\delta^2)$
+- $\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$
+- $SQ_{Trat}$ e $SQ_{Resid}$ são independentes.
+
+Isso nos permite construir a estatística F, que é a razão de duas variáveis qui-quadrado independentes, cada uma dividida por seus graus de liberdade:
+$$F = \frac{SQ_{Trat(corrigida)} / (t-1)}{SQ_{Resid} / (n-t)} = \frac{QM_{Trat}}{QM_{Resid}}$$
+$$F \sim F_{t-1, n-t}(\delta^2) \quad (\text{Distribuição F não-central})$$
+Onde $QM$ é o Quadrado Médio.
+---
+
+**A Hipótese Nula ($H_0$):**
+A hipótese nula do teste F é que não há efeito de tratamento, o que é equivalente a $\tau_1 = \tau_2 = \dots = \tau_t = 0$.
+Sob $H_0$, o parâmetro de não-centralidade $\delta^2 = 0$.
+Quando $\delta^2=0$, a distribuição se torna a **distribuição F central**:
+$$F \sim F_{t-1, n-t}$$
+Esta é a condição sob a qual o teste F usual é derivado. A estatística F testa se a variação entre os tratamentos é maior do que o esperado apenas pela variação residual (aleatória).
+
+---
+### O Teorema de Cochran
+
+
+**Teorema 3.4 (Cochran):**
+Considere $y \sim N(\mu, \sigma^2 I)$ e um conjunto de matrizes simétricas $A_1, ..., A_p$ onde $\sum A_i = I_n$ e $\sum posto(A_i) = n$.
+Nestas condições:
+1.  Cada forma quadrática $\frac{y^T A_i y}{\sigma^2}$ segue uma distribuição $\chi^2_{k_i}(\delta_i^2)$, onde $k_i=posto(A_i)$.
+2.  As formas quadráticas $y^T A_i y$ são todas **mutuamente independentes**.
+
+**Importância:** Este é o teorema fundamental que justifica a decomposição da Soma de Quadrados em **múltiplos componentes** (ex: Bloco, Tratamento A, Tratamento B, Interação A*B, Resíduo) em delineamentos mais complexos. Ele garante que podemos construir testes F válidos para cada fonte de variação na tabela de ANOVA, pois os componentes do numerador e denominador serão independentes.
+
+---
+class: center, middle, inverse
+
+# Planos Experimentais
+
+
+---
+## Planos Experimentais
+
+Nesta parte do curso, diferentes tipos de planos experimentais serão apresentados.
+
+Do ponto de vista da **aleatorização**, existem apenas duas classes de planos experimentais:
+
+1.  **Planos sob Aleatorização Irrestrita:**
+    - Também chamados de **Delineamentos Completamente Aleatorizados (DIC)**.
+    - A alocação de qualquer unidade experimental a qualquer tratamento é irrestrita.
+
+2.  **Planos sob Aleatorização Restrita:**
+    - A aleatorização possui alguma restrição para controlar fontes de variabilidade conhecidas.
+    - Nesta classe estão, por exemplo, os planos aleatorizados em **blocos**, em **quadrados latinos**, greco-latinos e em **parcelas subdivididas**.
+
+---
+class: center, middle, inverse
+
+## Planos Experimentais Completamente Aleatorizados (DIC)
+
+
+---
+###  Delineamento Completamente Aleatorizado (DIC)
+
+O plano completamente aleatorizado (DIC), apesar de ser o mais simples dos planos, é de grande importância teórica e prática.
+
+- **Importância Teórica:** Ele será usado para expor o desenvolvimento de uma análise com base na **teoria da aleatorização**.
+- **Importância Prática:** O plano é bastante simples de ser implementado e é apropriado quando as unidades experimentais são **homogêneas**.
+
+---
+### Descrição do Plano
+
+**Condição:** É necessário ter uma quantidade N de unidades experimentais (u.e.) disponíveis e homogêneas.
+
+**Procedimento:**
+1. Para comparar os efeitos de `t` tratamentos, as N unidades experimentais são divididas em `t` grupos.
+2. Um processo físico de **aleatorização** é usado para garantir igual probabilidade de alocação de cada u.e. em cada grupo.
+3. Cada grupo, então, recebe um tratamento diferente.
+
+Quando $N=tk$, são alocadas `k` unidades experimentais para cada tratamento, implicando em uma **estrutura de classificação balanceada**. Dizemos que o experimento tem `k` **réplicas**.
+
+---
+### O Processo de Aleatorização do Plano
+
+A aleatorização é a pedra angular que garante a validade da inferência estatística.
+
+**Procedimento Clássico:**
+i) Enumerar as N u.e. de 1 a N, colocar os números em uma urna.
+ii) Sortear, sem reposição, os `k` primeiros números para o Tratamento 1, os `k` seguintes para o Tratamento 2, e assim por diante.
+
+**Procedimento Moderno (Computacional):**
+Com recursos como o **R**, o processo é muito mais simples e reprodutível.
+
+**Exemplo em R:** Aleatorizar N=12 unidades para t=3 tratamentos (A, B, C) com k=4 réplicas.
+```{r}
+# 1. Definir os tratamentos e o número de unidades
+N <- 12
+tratamentos <- factor(rep(c("A", "B", "C"), each = 4))
+# 2. Criar o plano de alocação
+plano_alocacao <- data.frame(
+  Unidade_Exp = 1:N, Tratamento_Alocado = sample(tratamentos) # A função sample() faz a aleatorização
+)
+```
+---
+
+```{r}
+print(plano_alocacao)
+```
+Este data frame é o "mapa" do nosso experimento, dizendo qual tratamento cada unidade receberá.
+
+---
+class: center, middle, inverse
+
+## O Modelo Linear Deduzido da Aleatorização
+
+
+---
+### População Conceitual de Respostas Revisitada
+
+O contexto de um DIC nos permite revisitar a população conceitual.
+- Defina $Y_{ij}$ ($i=1,...,t, j = 1,...,N$) como o valor observado da variável resposta Y referente ao j-ésimo elemento da população, quando submetido ao tratamento $i$.
+- O conjunto não observável $\{Y_{ij}\}$ de todas as possíveis respostas dos N elementos que compõem a população sob o efeito de cada um dos t tratamentos sob estudo, é denominado de **população conceitual de respostas**.
+
+População conceitual de respostas no contexto de um plano completamente aleatorizado.
+
+| Tratamento | Unid. Experimentais ||| Total | Média |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| | **j=1** | **j=2** | **...** | **j=N** | | |
+| **i=1** | $Y_{11}$ | $Y_{12}$ | ... | $Y_{1N}$ | $Y_{1.}$ | $\bar{Y}_{1.}$ |
+| **...** | ... | ... | ... | ... | ... | ... |
+| **i=t** | $Y_{t1}$ | $Y_{t2}$ | ... | $Y_{tN}$ | $Y_{t.}$ | $\bar{Y}_{t.}$ |
+| **Total** | $Y_{.1}$ | $Y_{.2}$ | ... | $Y_{.N}$ | $Y_{..}$ | |
+| **Média** | $\bar{Y}_{.1}$ | $\bar{Y}_{.2}$ | ... | $\bar{Y}_{.N}$ | | $\bar{Y}_{..}$ |
+
+Nesta parte do curso, porém, a ênfase recairá sob a teoria da aleatorização. O próximo passo, então, será mostrar como deduzir um modelo linear apropriado ao plano experimental.
+
+
+---
+### O Modelo Linear Deduzido
+
+A conexão entre a resposta observada ($y_{ir}$) e a população conceitual ($Y_{ij}$) é feita pela **variável aleatória de seleção** $\delta_{ir}^j$ (Cornfield, 1944):
+$$\delta_{ir}^j = \begin{cases} 1, & \text{se a r-ésima réplica do tratamento i foi aplicada à u.e. j} \\ 0, & \text{caso contrário} \end{cases}$$
+Com base na aleatorização, sabemos que $P(\delta_{ir}^j=1) = 1/N$ e que $\sum_{j=1}^N \delta_{ir}^j = 1$.
+
+A resposta observada pode ser escrita como:
+$$y_{ir} = \sum_{j=1}^N \delta_{ir}^j Y_{ij} \quad (1)$$
+Usando a identidade algébrica da população conceitual (assumindo **aditividade**, i.e., interação tratamento-unidade negligível):
+$$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \quad (3)$$
+---
+Substituindo (3) em (1), e fazendo as seguintes definições:
+$$\mu = \bar{Y}_{..} \quad \tau_i = (\bar{Y}_{i.} - \bar{Y}_{..}) \quad \omega_{ir} = \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$
+Chegamos ao **modelo linear deduzido**:
+$$y_{ir} = \mu + \tau_i + \omega_{ir} \quad (4)$$
+
+---
+### Diferença entre o Modelo Deduzido e o Modelo de Gauss-Markov
+
+Compare o modelo deduzido (4) com o modelo de Gauss-Markov (1) da pág. 91:
+- **Modelo Deduzido:** $y_{ir} = \mu + \tau_i + \omega_{ir}$
+- **Modelo de Gauss-Markov:** $y_{ir} = \mu + \tau_i + \epsilon_{ir}$
+
+A diferença crucial está no termo de erro:
+- $\epsilon_{ir}$ (Erro de Gauss-Markov): É um erro puramente aleatório, geralmente associado a erros de medição. Suas propriedades (média zero, variância constante, não correlacionado) são **assumidas**.
+- $\omega_{ir}$ (Erro de Aleatorização): **Não é um erro de medição**. Ele representa o desvio da unidade experimental específica que *calhou* de ser sorteada para aquela réplica, em relação à média das unidades. Suas propriedades são **conhecidas e deduzíveis** a partir do processo de aleatorização.
+
+---
+### Propriedades do Termo Aleatório $\omega_{ir}$
+
+Com base apenas no processo de aleatorização, pode-se deduzir as propriedades de $\omega_{ir}$:
+
+i) **O termo aleatório tem média zero:** $E_R(\omega_{ir}) = 0$.
+
+ii) **Sua variância é dada por:** $Var_R(\omega_{ir}) = (1 - \frac{1}{N})\sigma_u^2$, onde $\sigma_u^2 = \frac{1}{N-1}\sum(\bar{Y}_{.j} - \bar{Y}_{..})^2$ é a variância finita entre as unidades experimentais.
+
+iii) **E sua covariância é negativa:** $Cov_R(\omega_{ir}, \omega_{i'r'}) = -\frac{1}{N}\sigma_u^2$.
+
+A estrutura de covariâncias do vetor de erros $\omega$ é:
+$$Var_R(\omega) = V = \sigma_u^2 [I_N - \frac{1}{N}J_N]$$
+Esta matriz **não é** $\sigma^2 I$. Isso significa que os erros de aleatorização $\omega_{ir}$ são **correlacionados**.
+
+---
+### O Teorema de Zyskind em Ação
+
+Se a matriz de covariâncias do erro é $V \neq \sigma^2 I$, então o modelo deduzido ($y=X\beta + \omega$) é um **modelo de Aitken**, e não de Gauss-Markov. Em geral, isso implicaria que a solução de Mínimos Quadrados Ordinários (OLS) não seria BLUE.
+
+**Teorema 4.1:** O modelo linear gerado por um plano experimental completamente aleatorizado admite a solução de quadrados mínimos ordinários como BLUE.
+
+**Prova (Esboço):**
+A prova consiste em mostrar que a condição do Teorema de Zyskind é satisfeita: $VX=XQ$ para alguma matriz Q. Para o DIC, pode-se verificar que esta condição é verdadeira.
+
+**Importância:** Este teorema é fundamental. Ele nos diz que, apesar de os erros de aleatorização serem correlacionados, **podemos agir como se eles não fossem**. Podemos usar a análise de variância e os estimadores de mínimos quadrados ordinários (que assumem o modelo de Gauss-Markov) e ainda assim obter os melhores estimadores lineares não-viesados.
+
+O modelo final que usamos na prática combina os dois tipos de erro:
+$$y_{ir} = \mu + \tau_i + \epsilon_{ir} \quad (5)$$
+Onde $\epsilon_{ir}$ agora representa tanto o erro de aleatorização quanto o erro de medição.
+
+---
+class: center, middle, inverse
+
+## Análise de um Experimento DIC
+
+
+---
+### Análise de Variância (ANOVA) para o DIC
+
+A análise de variância (ANOVA) de um experimento balanceado executado de acordo com um plano completamente aleatorizado baseia-se no modelo (5). A derivação da soma de quadrados segue a identidade algébrica:
+$$(y_{ir} - \bar{y}_{..}) = (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$
+Elevando ao quadrado e somando (o termo cruzado se anula), temos:
+$$\sum_{ir} (y_{ir} - \bar{y}_{..})^2 = k \sum_{i} (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{ir} (y_{ir} - \bar{y}_{i.})^2$$
+$$SQ_{Total} = SQ_{Tratamento} + SQ_{Resíduo}$$
+---
+
+O quadro a seguir resume as informações:
+
+| Fonte | G.L. | S.Q. | Q.M. | E(QM) |
+|:---|:---:|:---:|:---:|:---:|
+| Trat. | $t-1$ | $k\sum(\bar{y}_{i.}-\bar{y}_{..})^2$ | $SQ_{Trat}/(t-1)$ | $\sigma^2 + \frac{k\sum\tau_i^2}{t-1}$ |
+| Resíduo| $t(k-1)$ | $\sum(y_{ir}-\bar{y}_{i.})^2$ | $SQ_{Res}/(t(k-1))$ | $\sigma^2$ |
+| Total | $tk-1$ | $\sum(y_{ir}-\bar{y}_{..})^2$ | | |
+
+---
+### Análise de um Experimento sob um Plano Completamente Aleatorizado
+
+**Exemplo de Estudo:**
+Deseja-se comparar o efeito de duas dietas (A e B) em porcos. Doze porcos recém-nascidos são aleatorizados: 6 para a dieta A e 6 para a dieta B. Ao final de 100 dias, o peso final (kg) é registrado.
+
+```{r}
+# Inserindo os dados do exemplo
+dados_porcos <- data.frame(
+  Porco = 1:12,
+  Dieta = factor(c("B", "A", "A", "B", "A", "B", "B", "A", "B", "A", "A", "B")),
+  Peso_final = c(114.5, 90.2, 98.8, 100.3, 107.4, 118.0, 110.5, 101.2, 115.8, 94.3, 93.5, 119.3)
+)
+```
+---
+Visualizando os dados:
+```{r}
+ggplot(dados_porcos, aes(x=Dieta, y=Peso_final, fill=Dieta)) +
+  geom_boxplot(alpha=0.6) + geom_jitter(width=0.1) +
+  labs(title="Peso Final dos Porcos por Dieta", y="Peso Final (kg)") +
+  theme_minimal(base_size=14)
+```
+
+---
+### Teste de Aleatorização
+
+Uma forma de testar a hipótese nula ($H_0$: não há diferença entre as dietas) é usar um **teste de aleatorização (ou permutação)**.
+
+**Lógica:** Se a $H_0$ for verdadeira, o peso final de um porco seria o mesmo, não importa qual dieta ele recebesse. A diferença de médias que observamos no nosso experimento é apenas uma de muitas combinações possíveis que poderiam ter ocorrido por acaso no sorteio.
+
+1.  **Calcular a estatística observada:**
+    A diferença observada é de 15.5 Kg
+2.  **Gerar a distribuição de aleatorização:**
+    - Existem $C_{12,6} = 924$ maneiras de alocar 6 porcos para a Dieta A e 6 para a B.
+    - Sob $H_0$, podemos calcular a diferença de médias para cada uma dessas 924 alocações.
+    - Isso gera a **distribuição de referência**. 
+3.  **Calcular o p-valor:** O p-valor é a proporção de diferenças na distribuição de referência que são tão ou mais extremas que a nossa diferença observada.
+    O texto informa que em apenas 2 das 924 alocações a diferença foi $\ge 15.5$ Kg.
+    $$ \text{p-valor} = 2 / 924 \approx 0.00216 $$
+---
+
+Como o p-valor é muito pequeno, há forte evidência para rejeitar $H_0$.
+
+```{r}
+    diff_obs <- diff(tapply(dados_porcos$Peso_final, dados_porcos$Dieta, mean))
+    abs(diff_obs)
+```
+
+### Comparação com a ANOVA (Teste F)
+
+Felizmente, a distribuição F fornece uma excelente aproximação para a distribuição de aleatorização. Vamos realizar a ANOVA para o exemplo dos porcos.
+
+```{r}
+# Ajustar o modelo linear
+modelo_porcos <- lm(Peso_final ~ Dieta, data = dados_porcos)
+# Obter a tabela ANOVA
+anova(modelo_porcos)
+```
+---
+A tabela ANOVA gerada :
+- **Fonte:** Dieta; **G.L.:** 1; **S.Q.:** 720.8; **Q.M.:** 720.8;  **F:** 16.56; **p:** 0.002
+
+**Compare:**
+- p-valor do teste de aleatorização: **0.00216**
+- p-valor do teste F da ANOVA: **0.002**
+
+A proximidade é notável. Essa equivalência permite que usemos o teste F, que é computacionalmente muito mais eficiente, como uma excelente aproximação para o teste de aleatorização.
+
+---
+### O Caso Desbalanceado
+
+O que acontece se o experimento for desbalanceado (número de réplicas $k_i$ diferente para cada tratamento)?
+- O modelo associado ($y_{ir} = \mu + \tau_i + \epsilon_{ir}$) ainda é o mesmo.
+- A aproximação pela distribuição F ainda pode ser utilizada.
+- A tabela de ANOVA é facilmente alterada para acomodar os $k_i$ diferentes:
+
+| Fonte | G.L. | S.Q. |
+|:---|:---:|:---:|
+| Trat. | $t-1$ | $\sum_{i=1}^t k_i(\bar{y}_{i.} - \bar{y}_{..})^2$ |
+| Resíduo | $\sum k_i - t$ | $\sum_{i,r} (y_{ir}-\bar{y}_{i.})^2$ |
+| Total | $\sum k_i - 1$ | $\sum_{i,r} (y_{ir}-\bar{y}_{..})^2$ |
+
+---
+class: center, middle, inverse
+
+## Exercícios Finais
+
+
+---
+### EXERCÍCIO EM CLASSE 
+
+Um experimento com 4 réplicas foi conduzido para comparar 2 tratamentos (A e B).
+
+```{r}
+# 1. Criar os dados do exercício
+dados_ex <- data.frame(
+  UE = 1:8,
+  Trat = factor(c("A", "B", "B", "B", "A", "A", "A", "B")),
+  Resp = c(7, 2, 1, 6, 4, 8, 10, 4)
+)
+print(dados_ex)
+```
+
+**1. Teste a hipótese de que não há efeito de tratamentos usando o teste de aleatorização.**
+
+**Hipótese Nula ($H_0$):** O tratamento não tem efeito. A resposta de cada U.E. é fixa, independente do tratamento recebido.
+As 8 respostas observadas são: {7, 2, 1, 6, 4, 8, 10, 4}.
+---
+
+**Estatística de Teste:** Diferença de médias ($ \bar{y}_A - \bar{y}_B $).
+- **Médias observadas:**
+  - $\bar{y}_A = (7+4+8+10)/4 = 7.25$
+  - $\bar{y}_B = (2+1+6+4)/4 = 3.25$
+- **Diferença Observada:** $7.25 - 3.25 = 4.0$
+
+**Distribuição de Aleatorização:**
+- Quantas maneiras existem de alocar 4 'A's e 4 'B's para as 8 U.E.? $C_{8,4} = \frac{8!}{4!4!} = 70$.
+- Sob $H_0$, os valores {7, 2, 1, 6, 4, 8, 10, 4} são fixos. Poderíamos calcular a diferença de médias para cada uma das 70 alocações.
+- **Em R, podemos simular isso:**
+```{r}
+# Usando a biblioteca 'coin' para o teste de permutação exato
+library(coin)
+independence_test(Resp ~ Trat, data = dados_ex, teststat = "scalar", distribution = "exact")
+```
+---
+
+O p-valor é a proporção de alocações que resultam numa diferença de médias $\ge 4.0$. O output do R nos dá um **p-valor = 0.1714**.
+
+**Conclusão (Teste de Aleatorização):** Com um p-valor de 0.1714 (que é > 0.05), **não temos evidência suficiente para rejeitar a hipótese nula**. O teste de aleatorização sugere que uma diferença de 4.0 poderia ocorrer por acaso no sorteio.
+
+
+**2. Compare o nível de significância do teste de aleatorização com o de um teste F usual numa tabela de ANOVA.**
+
+Vamos agora analisar os mesmos dados usando a ANOVA paramétrica.
+
+```{r}
+# Ajustar o modelo linear
+modelo_ex <- lm(Resp ~ Trat, data = dados_ex)
+
+# Obter a tabela ANOVA
+anova(modelo_ex)
+```
+---
+**Resultados da ANOVA:**
+- **F-valor:** 2.4
+- **p-valor:** 0.1719
+
+**Comparação:**
+- p-valor do teste de aleatorização: **0.1714**
+- p-valor do teste F da ANOVA: **0.1719**
+
+**Conclusão Final:** Os p-valores são extremamente próximos. Para um Delineamento Completamente Aleatorizado, a distribuição F da ANOVA serve como uma excelente aproximação para a distribuição de aleatorização, que não depende de nenhuma suposição sobre a normalidade dos dados. Na prática, usamos o teste F por ser computacionalmente muito mais eficiente. Ambas as análises levam à mesma conclusão: não há evidência de diferença significativa entre os tratamentos.
+
