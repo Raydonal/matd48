@@ -1,0 +1,75 @@
+body{
+  font-family: Cambria, Georgia, serif;
+  font-size: 14pt;
+  text-align: justify;
+  margin-top: 75px;
+  margin-bottom: 75px;
+  margin-right: 56px;
+  margin-left: 56px;
+  background-color: #fafafa;
+    webkit-user-select: none;  /* Chrome all / Safari all */
+    moz-user-select: none;     /* Firefox all */
+    ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
+}
+
+h1.title{
+  font-family: Cambria, Georgia, serif;
+  font-size: 34pt;
+  text-align: right;
+}
+
+h1{
+  font-family: Cambria, Georgia, serif;
+  font-size: 24pt;
+  color: #009688;
+}
+
+h2{
+  font-family: Cambria, Georgia, serif;
+  font-size: 18pt;
+  color: #009688;
+}
+
+
+h3{
+  font-family: Cambria, Georgia, serif;
+  font-size: 14pt;
+  color: #009688;
+}
+
+.subtitle{
+  font-family: Cambria, Georgia, serif;
+  text-align: right;
+  font-size: 20pt;
+  color: #009688;
+}
+
+.author{
+  font-family: Cambria, Georgia, serif;
+  text-align: right;
+  color: #009688;
+}
+
+.date{
+  font-family: Cambria, Georgia, serif;
+  text-align: right;
+  font-size: 12pt;
+  color: #009688;
+}
+
+a{
+  color: #607d8b;
+}
+
+
+/* visited link */
+a:visited {
+  color: #607d8b;
+}
+
+/* mouse over link */
+a:hover {
+  color: #26a69a;
+}
+

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fundamentos de Análise para Planejamento Experimental</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fundamentos de Análise para Planejamento Experimental
+]
+.subtitle[
+## Análise de Resíduos
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+
+
+## Análise de Resíduos
+
+Após o ajuste de um modelo aos dados de um experimento, é importante realizar uma **análise de resíduos**.
+
+**Por quê?** Para investigar possíveis discrepâncias entre:
+- Os dados observados.
+- O modelo adotado.
+- As suposições feitas para justificar a inferência (Normalidade, Variância Constante, etc.).
+
+**Definição:** Resíduos são as diferenças entre os valores **observados** e os valores **ajustados (preditos)** pelo modelo.
+`$$e_{ir} = y_{ir} - \hat{y}_{ir}$$`
+Pela sua natureza, informações sobre fontes de variação **não captadas pelo modelo** estão presentes nos resíduos.
+
+---
+### O que Procuramos na Análise de Resíduos?
+
+No contexto da teoria de aleatorização, a análise de resíduos é essencial para:
+
+i) **Evidências contra a suposição de aditividade:** Um padrão (como um cone ou funil) no gráfico de resíduos vs. valores ajustados sugere que a variância não é constante (heterocedasticidade), o que pode ser um sinal de não-aditividade (ex: a interação que ignoramos é importante).
+
+ii) **Evidências contra a homocedasticidade:** Checar se a variância do erro experimental é constante entre os tratamentos.
+
+iii) **Fontes de variação não controladas:** Padrões em gráficos de resíduos contra a ordem de execução ou outras variáveis (tempo, temperatura) podem revelar fatores que não foram incluídos no modelo e que estão afetando os resultados.
+
+iv) **Pontos discrepantes (outliers):** Resíduos com valores muito grandes (positivos ou negativos) indicam observações que não se ajustam bem ao modelo e merecem investigação.
+
+---
+### Ferramentas Gráficas para Análise de Resíduos
+
+Em uma análise de resíduos, os seguintes gráficos são úteis:
+- Resíduos versus valores ajustados
+- Resíduos versus ordem de execução
+- Resíduos versus eventuais fatores externos
+- Boxplot de resíduos (geral e por tratamento)
+- Gráfico de probabilidade normal (Q-Q Plot)
+
+No contexto do **modelo linear normal**, a análise de resíduos **deve** checar a suposição de **normalidade dos resíduos**, geralmente através de um gráfico de probabilidade normal (Q-Q Plot).
+
+---
+### Exemplo: Análise de Resíduos do Experimento dos Porcos
+
+
+Vamos gerar os gráficos de diagnóstico para o modelo `Peso_final ~ Dieta` 
+**Primeiro, reajustamos o modelo e extraímos os resíduos e valores ajustados em um único passo para garantir que os objetos estejam disponíveis.**
+
+
+``` r
+# Dados do exemplo dos porcos
+dados_porcos &lt;- data.frame(
+  Dieta = factor(c("B", "A", "A", "B", "A", "B", "B", "A", "B", "A", "A", "B")),
+  Peso_final = c(114.5, 90.2, 98.8, 100.3, 107.4, 118.0, 110.5, 101.2, 115.8, 94.3, 93.5, 119.3)
+)
+
+# Ajustar o modelo
+modelo_porcos &lt;- lm(Peso_final ~ Dieta, data = dados_porcos)
+
+# Adicionar resíduos e valores ajustados ao dataframe
+dados_porcos$residuos &lt;- residuals(modelo_porcos)
+dados_porcos$ajustados &lt;- fitted(modelo_porcos)
+```
+
+---
+**Gráfico de Resíduos vs. Valores Ajustados:**
+&lt;img src="MATD48-07_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+**Interpretação:** Não há um padrão claro (como um funil). A dispersão dos resíduos parece ser semelhante para ambos os grupos (valores ajustados), o que é um bom sinal para a premissa de homocedasticidade.
+
+---
+### Diagnóstico (cont.): Boxplot e Q-Q Plot
+
+.pull-left[
+**Boxplot de Resíduos por Tratamento**
+
+``` r
+ggplot(dados_porcos, aes(x = Dieta, y = residuos, fill = Dieta)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0, linetype = "dashed", color="red") +
+  labs(title = "Boxplot de Resíduos por Dieta", y="Resíduos") +
+  theme_minimal(base_size = 12) + theme(legend.position = "none")
+```
+
+&lt;img src="MATD48-07_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+**Interpretação:** A mediana dos resíduos em cada grupo está próxima de zero. A dispersão (altura das caixas) parece um pouco maior para a Dieta B, mas com apenas 6 observações por grupo, é difícil concluir que há heterocedasticidade.
+]
+.pull-right[
+**Gráfico de Probabilidade Normal (Q-Q Plot)**
+
+``` r
+ggplot(dados_porcos, aes(sample = residuos)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(title = "Gráfico Q-Q de Normalidade dos Resíduos",
+       x = "Quantis Teóricos", y = "Quantis Amostrais") +
+  theme_minimal(base_size = 12)
+```
+
+&lt;img src="MATD48-07_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+**Interpretação:** Os pontos seguem razoavelmente bem a linha diagonal, sugerindo que a suposição de normalidade dos resíduos é plausível.
+]
+
+---
+## Subamostragem em Experimentos DIC
+
+Em alguns experimentos, as **unidades observacionais** (onde a medida é feita) não coincidem com as **unidades experimentais** (que recebem o tratamento de forma independente). Isso ocorre quando temos **subamostragem**.
+
+**Modelo Apropriado:**
+`$$y_{irj} = \mu + \tau_i + \epsilon_{ir} + \eta_{irj}$$`
+Onde:
+- `\(y_{irj}\)` é a é a resposta observada na j-ésima
+subamostra de r-ésima réplica do
+tratamento i.
+- `\(\epsilon_{ir}\)` é o **erro experimental** (variação entre as u.e. dentro de um tratamento, i.e. é o termo aleatório que representa
+o erro experimental associado à
+réplica r do tratamento i),  com `\(Var(\epsilon_{ir}) = \sigma^2_{\epsilon}\)`.
+- `\(\eta_{irj}\)` é o **erro observacional** ou de subamostragem (variação entre as subamostras dentro de uma u.e., i.e., é o termo aleatório que representa
+o erro observacional associado à
+j-ésima subamostra da réplica r do
+tratamento i), com `\(Var(\eta_{irj}) = \sigma^2_{\eta}\)`.
+- Aqui `\(\eta_{irj}\)`'s e `\(\eta_{irj}\)` são v.a. de média 0 independentes.
+---
+### Tabela ANOVA com Subamostragem
+
+A tabela de ANOVA associada a este
+modelo, para o caso de um
+experimento balanceado com r',
+subamostras (repetições) por réplica, k
+réplicas e t tratamentos é dada a
+seguir, omitindo-se a coluna dos
+quadrados médios:
+
+A tabela de ANOVA completa é:
+
+| Fonte | G.L. (Graus de Liberdade) | S.Q. (Soma de Quadrados) | Q.M. (Quadrado Médio) | E(QM) |
+|:---|:---:|:---:|:---:|:---:|
+| **Trat.** | `\(t-1\)` | `\(kr'\sum(\bar{y}_{i..}-\bar{y}_{...})^2\)` | `\(SQ_{Trat}/(t-1)\)` | `\(\sigma^2_\eta + r'\sigma^2_\epsilon + \frac{kr'\sum\tau_i^2}{t-1}\)` |
+| **E.E.** | `\(t(k-1)\)` | `\(r'\sum(\bar{y}_{ir.}-\bar{y}_{i..})^2\)` | `\(SQ_{EE}/(t(k-1))\)` | `\(\sigma^2_\eta + r'\sigma^2_\epsilon\)` |
+| **E.O.** | `\(tk(r'-1)\)` | `\(\sum(y_{irj}-\bar{y}_{ir.})^2\)` | `\(SQ_{EO}/(tk(r'-1))\)` | `\(\sigma^2_\eta\)` |
+| **Total**| `\(tkr'-1\)` | `\(\sum(y_{irj}-\bar{y}_{...})^2\)` | | |
+
+*Legenda: E.E. = Erro Experimental; E.O. = Erro Observacional.*
+---
+
+
+**Teste F Correto para Tratamentos:**
+A esperança do `\(QM_{Trat}\)` contém ambos os componentes de variância. Para isolar o efeito do tratamento (`\(\tau_i\)`), devemos usar o denominador correto no teste F:
+`$$F = \frac{QM_{Trat}}{QM_{EE}}$$`
+Usar o `\(QM_{EO}\)` como denominador seria um erro grave (pseudorreplicação).
+
+**Estimativas das Variâncias:**
+- `\(\hat{\sigma}^2_\eta = QM_{EO}\)`
+- `\(\hat{\sigma}^2_\epsilon = (QM_{EE} - QM_{EO}) / k'\)`
+
+---
+class: center, middle, inverse
+
+## Comparando Tratamentos: Contrastes
+
+
+---
+### Além do Teste F Global
+
+
+O teste F da ANOVA é um teste "global". Ele nos diz **se** existe alguma diferença entre as médias dos tratamentos, mas não nos diz **quais** médias são diferentes.
+
+- Para `t=2` tratamentos, `\(H_0: \tau_1 - \tau_2 = 0\)` é suficiente.
+- Para `t&gt;2` tratamentos, a hipótese da ANOVA é `\(H_0: \tau_1 = \tau_2 = \dots = \tau_t = 0\)`.
+
+Se rejeitamos `\(H_0\)`, o próximo passo é realizar **comparações entre tratamentos**. Isso pode ser feito de duas formas:
+1.  **Técnicas de Contrastes:** Para testar hipóteses específicas e planejadas *a priori*.
+2.  **Comparações Múltiplas:** Para comparar todos os pares de médias (ex: Teste de Tukey).
+
+---
+### Comparando Tratamentos Qualitativos Através de Contrastes
+
+
+Contrastes são tipicamente utilizados para testar diferenças entre tratamentos qualitativos em experimentos estruturados. Nessas situações, as comparações de interesse são conhecidas antes da condução do experimento e são motivadas pela estrutura do(s) fator(es) sob investigação.
+
+**Exemplo Motivador:**
+Imagine um experimento para comparar o desempenho de quatro tipos de combustíveis em relação a uma certa variável de interesse (ex: consumo km/L).
+
+| Combustível (Tratamento) | Réplicas | Resposta Média |
+|:---|:---:|:---:|
+| **1. Gasolina Comum** | (`\(y_{11}, y_{12}, ...\)`) | `\(\bar{y}_{1.}\)` |
+| **2. Gasolina Aditivada** | (`\(y_{21}, y_{22}, ...\)`) | `\(\bar{y}_{2.}\)` |
+| **3. Álcool** | (`\(y_{31}, y_{32}, ...\)`) | `\(\bar{y}_{3.}\)` |
+| **4. Gás** | (`\(y_{41}, y_{42}, ...\)`) | `\(\bar{y}_{4.}\)` |
+
+Se o teste F da ANOVA rejeitasse a hipótese de que não há diferença entre tratamentos, o pesquisador poderia naturalmente estar interessado em investigar questões específicas.
+
+---
+### Hipóteses Específicas de Pesquisa
+
+
+O pesquisador pode ter as seguintes perguntas (hipóteses) específicas:
+
+- **Questão (1):** Há diferença de desempenho entre gasolina comum e aditivada?
+  $$ H_0: \tau_1 - \tau_2 = 0 \quad \text{vs.} \quad H_1: \tau_1 - \tau_2 \neq 0 $$
+
+- **Questão (2):** Há diferença de desempenho entre a *média* do combustível gasolina (comum e aditivada) e o combustível álcool?
+  $$ H_0: \frac{\tau_1 + \tau_2}{2} - \tau_3 = 0 \quad \text{vs.} \quad H_1: \frac{\tau_1 + \tau_2}{2} - \tau_3 \neq 0 $$
+
+- **Questão (3):** Há diferença de desempenho entre gasolina aditivada e gás?
+  $$ H_0: \tau_2 - \tau_4 = 0 \quad \text{vs.} \quad H_1: \tau_2 - \tau_4 \neq 0 $$
+
+- **Questão (4):** Há diferença de desempenho entre o combustível álcool e o combustível gás?
+  $$ H_0: \tau_3 - \tau_4 = 0 \quad \text{vs.} \quad H_1: \tau_3 - \tau_4 \neq 0 $$
+
+---
+### A Forma Geral de um Contraste
+
+
+De uma forma geral, qualquer uma das hipóteses apresentadas pode ser expressa como:
+`$$H_0: \sum_{i=1}^t c_i \tau_i = 0$$`
+`$$H_1: \sum_{i=1}^t c_i \tau_i \neq 0$$`
+onde os coeficientes `\(c_i\)` variam de acordo com a hipótese a ser investigada, como ilustrado no quadro 3 abaixo.
+
+---
+### Definição Formal de Contraste
+
+
+**Quadro 3:** Valores de `\(c_i\)` para cada hipótese considerada.
+
+| Hipótese | `\(c_1\)` (Gas. Comum) | `\(c_2\)` (Gas. Adit.) | `\(c_3\)` (Álcool) | `\(c_4\)` (Gás) | `\(\sum c_i\)` |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| (1) | 1 | -1 | 0 | 0 | 0 |
+| (2) | 1/2 | 1/2 | -1 | 0 | 0 |
+| (3) | 0 | 1 | 0 | -1 | 0 |
+| (4) | 0 | 0 | 1 | -1 | 0 |
+---
+
+**Definição:** Uma combinação linear de parâmetros de um modelo
+`$$C = \sum_i c_i \tau_i$$`
+é dita ser um **contraste** quando a soma de seus coeficientes é zero:
+`\(\sum_i c_i = 0\)`
+
+**Intuição:** Um contraste é sempre uma comparação. Ao fazer `\(\sum c_i = 0\)`, garantimos que estamos comparando grupos de tratamentos entre si (coeficientes positivos vs. negativos), e não simplesmente medindo uma média ponderada.
+---
+
+
+### Estimação e Variância de um Contraste
+
+Considere um DIC balanceado com `t` tratamentos e `k` réplicas.
+- O **contraste** populacional é: `\(C = \sum c_i \tau_i\)`.
+- O **estimador** amostral do contraste é a mesma combinação linear das médias amostrais:
+  `\(\hat{C} = \sum c_i \bar{y}_{i.}\)`
+
+Pode-se mostrar que:
+1.  `\(\hat{C}\)` é um **estimador centrado (não-viesado)** para C.
+2.  A variância do estimador é: `\(Var(\hat{C}) = \frac{\sigma^2}{k} \sum c_i^2\)`.
+
+---
+### EXERCÍCIO
+
+**Mostre que `\(\hat{C}\)` é um estimador centrado para `\(C\)` e que `\(Var(\hat{C}) = \frac{\sigma^2}{k}\sum c_i^2\)`.**
+
+**1. Prova de que é Centrado (Não-Viesado): `\(E(\hat{C}) = C\)`**
+`$$E(\hat{C}) = E\left( \sum_i c_i \bar{y}_{i.} \right) = \sum_i c_i E(\bar{y}_{i.})$$`
+Sabemos que `\(E(\bar{y}_{i.}) = \mu + \tau_i\)`.
+`$$= \sum_i c_i (\mu + \tau_i) = \sum_i c_i \mu + \sum_i c_i \tau_i = \mu \sum_i c_i + \sum_i c_i \tau_i$$`
+Pela definição de um contraste, `\(\sum c_i = 0\)`. O primeiro termo se anula.
+$$ = 0 + \sum_i c_i \tau_i = C $$
+---
+
+**2. Prova da Variância:**
+`$$Var(\hat{C}) = Var\left( \sum_i c_i \bar{y}_{i.} \right)$$`
+Como as médias de grupo `\(\bar{y}_{i.}\)` são independentes em um DIC:
+`$$= \sum_i Var(c_i \bar{y}_{i.}) = \sum_i c_i^2 Var(\bar{y}_{i.})$$`
+Sabemos que `\(Var(\bar{y}_{i.}) = \sigma^2/k\)`.
+`$$= \sum_i c_i^2 \frac{\sigma^2}{k} = \frac{\sigma^2}{k} \sum_i c_i^2$$`
+
+
+---
+### Testando a Hipótese de um Contraste
+
+Para testar a hipótese geral `\(H_0: C = \sum c_i \tau_i = 0\)` contra `\(H_1: C = \sum c_i \tau_i \neq 0\)`:
+
+**1. Usando a distribuição t de Student:**
+Sob as premissas do modelo normal, a estatística padronizada do contraste segue uma distribuição Normal. Substituindo a variância desconhecida `\(\sigma^2\)` por sua estimativa `\(QM_{Res}\)`, a estatística segue uma distribuição t:
+`$$t = \frac{\hat{C}}{\sqrt{Var(\hat{C})}} = \frac{\sum c_i \bar{y}_{i.}}{\sqrt{\frac{QM_{Res}}{k} \sum c_i^2}} \sim t_{N-t}$$`
+
+**2. Usando a distribuição F (forma de Soma de Quadrados):**
+Equivalentemente, podemos testar usando um teste F. A Soma de Quadrados de um Contraste (SQC) é:
+`$$SQC = \frac{(\hat{C})^2}{\sum c_i^2 / k} = \frac{k (\sum c_i \bar{y}_{i.})^2}{\sum c_i^2}$$`
+---
+Esta SQC tem **1 grau de liberdade**. A estatística de teste é:
+`$$F_C = \frac{SQC}{QM_{Resid}} \sim F_{1, N-t}$$`
+As duas abordagens (t e F) são equivalentes, pois `\(t^2_{df} = F_{1, df}\)`.
+
+---
+### Contrastes Ortogonais
+
+
+**Definição:** Dois contrastes, `\(C_1 = \sum c_{1i}\tau_i\)` e `\(C_2 = \sum c_{2i}\tau_i\)`, são ditos **ortogonais** se a soma dos produtos de seus coeficientes for nula:
+`$$\sum_i c_{1i} c_{2i} = 0$$`
+Um conjunto de contrastes é ortogonal se todos os pares de contrastes distintos no conjunto são ortogonais.
+
+**Importância:** Em um experimento com `t` tratamentos, é possível definir no máximo **t-1 contrastes ortogonais**. Um conjunto como este, chamado de **conjunto completo de contrastes ortogonais**, tem uma propriedade especial: ele particiona a Soma de Quadrados do Tratamento.
+`$$SQ_{Trat} = SQ_{C_1} + SQ_{C_2} + \dots + SQ_{C_{t-1}}$$`
+Cada contraste testa uma "fatia" independente da variação total entre os tratamentos, cada uma com 1 grau de liberdade.
+
+---
+### EXERCÍCIO 
+
+**Cenário:** Estudar o efeito de música ambiente na produção de leite de vacas. 5 tratamentos, 8 réplicas.
+- T1: Controle (sem música)
+- T2: Música Clássica
+- T3: Música Instrumental
+- T4: MPB (Alceu Valença)
+- T5: Rock (Titãs)
+
+**Forneça um conjunto completo de contrastes ortogonais e identifique a utilidade de cada um deles.**
+
+Com 5 tratamentos, podemos definir `\(5-1=4\)` contrastes ortogonais. Um conjunto com interpretação lógica poderia ser:
+
+---
+| Contraste | Pergunta de Pesquisa | c1 (T1) | c2 (T2) | c3 (T3) | c4 (T4) | c5 (T5) |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| C1 | Qualquer música vs. Sem música? | -4 | 1 | 1 | 1 | 1 |
+| C2 | Músicas calmas vs. Músicas agitadas? | 0 | 1 | 1 | -1 | -1 |
+| C3 | Música Clássica vs. Instrumental? | 0 | 1 | -1 | 0 | 0 |
+| C4 | MPB vs. Rock? | 0 | 0 | 0 | 1 | -1 |
+
+**Verificação da Ortogonalidade (exemplo C1 vs C2):**
+`\(\sum c_{1i}c_{2i} = (-4)(0) + (1)(1) + (1)(1) + (1)(-1) + (1)(-1) = 0 + 1 + 1 - 1 - 1 = 0\)`. (Pode-se verificar para todos os outros pares).
+
+**Utilidade:**
+- **C1:** Testa a hipótese mais geral: a presença de qualquer tipo de música tem efeito?
+- **C2:** Dado que a música tem efeito, a natureza (calma vs. agitada) importa?
+- **C3:** Dentro das músicas calmas, há diferença entre Clássica e Instrumental?
+- **C4:** Dentro das músicas agitadas, há diferença entre MPB e Rock?
+
+Este conjunto particiona a variação do tratamento em 4 perguntas de pesquisa independentes e com significado psicossocial/prático.
+
+---
+### Exemplo Prático: Análise do Experimento dos Combustíveis
+
+Vamos agora aplicar a teoria dos contrastes a um exemplo prático em R.
+
+**Cenário:** Relembre o experimento dos 4 combustíveis. Vamos simular dados onde a ANOVA global é significativa e as hipóteses específicas fazem sentido.
+- `t=4` tratamentos (Gas. Comum, Gas. Aditivada, Álcool, Gás)
+- `k=5` réplicas (carros) por tratamento.
+
+**Simulando os Dados:**
+
+``` r
+set.seed(2023)
+dados_comb &lt;- data.frame(
+  Combustivel = factor(rep(c("Gasolina Comum", "Gasolina Aditivada", "Álcool", "Gás"), each = 5)),
+  # Simular médias: Gas. Adit &gt; Gas. Comum, Gasolinas &gt; Álcool, Álcool &gt; Gás
+  Consumo_kmL = c(rnorm(5, 10, 0.8),    # Gas. Comum
+                  rnorm(5, 10.5, 0.8),  # Gas. Aditivada
+                  rnorm(5, 9, 0.8),     # Álcool
+                  rnorm(5, 8, 0.8))     # Gás
+)
+```
+---
+
+**Análise Exploratória:**
+&lt;img src="MATD48-07_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Passo 1: A ANOVA Global
+
+Primeiro, realizamos a ANOVA para verificar se existe *alguma* diferença significativa entre os combustíveis.
+
+
+``` r
+# Ajustar o modelo linear
+modelo_comb &lt;- lm(Consumo_kmL ~ Combustivel, data = dados_comb)
+
+# Tabela de ANOVA
+anova(modelo_comb)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: Consumo_kmL
+##             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## Combustivel  3 11.021  3.6738  13.248 0.0001327 ***
+## Residuals   16  4.437  0.2773                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+**Conclusão:** O p-valor é extremamente pequeno (`\(&lt; 0.001\)`). Rejeitamos a hipótese nula de que todos os combustíveis têm o mesmo desempenho médio. Isso **justifica** a investigação de quais grupos específicos são diferentes, usando contrastes.
+
+---
+### Passo 2: Definindo Contrastes Ortogonais em R (Método Correto)
+
+Para que o R entenda nossas comparações específicas, precisamos definir um **conjunto completo e ortogonal** de contrastes. Com `t=4` tratamentos, precisamos de `t-1=3` contrastes ortogonais.
+
+Vamos construir um conjunto lógico e sequencial de perguntas:
+1.  **C1: Gasolina Comum vs. Gasolina Aditivada.** (Comparação dentro do grupo "Gasolina")
+2.  **C2: Média do grupo "Gasolina" vs. Álcool.** (Comparação entre tipos de combustível)
+3.  **C3: Média dos 3 primeiros combustíveis vs. Gás.** (Comparação de todos os combustíveis líquidos vs. Gás)
+
+**Tradução para Coeficientes Ortogonais:**
+
+| Contraste | Pergunta | `\(c_1\)` (G.Comum) | `\(c_2\)` (G.Adit) | `\(c_3\)` (Álcool) | `\(c_4\)` (Gás) | `\(\sum c_i\)` |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| C1 | G.Comum vs. G.Adit | 1 | -1 | 0 | 0 | 0 |
+| C2 | Gasolinas vs. Álcool | 1 | 1 | -2 | 0 | 0 |
+| C3 | Líquidos vs. Gás | 1 | 1 | 1 | -3 | 0 |
+
+---
+**Verificação da Ortogonalidade (ex: C2 vs C3):**
+`\(\sum c_{2i}c_{3i} = (1)(1) + (1)(1) + (-2)(1) + (0)(-3) = 1 + 1 - 2 + 0 = 0\)`. **Sim, são ortogonais.** (Pode-se verificar para todos os pares).
+
+
+``` r
+# Definir os coeficientes corretos
+c1 &lt;- c(1, -1, 0, 0)
+c2 &lt;- c(1, 1, -2, 0)
+c3 &lt;- c(1, 1, 1, -3)
+
+# Combinar em uma matriz de contrastes
+matriz_contrastes_correta &lt;- cbind(c1, c2, c3)
+
+# Aplicar esta matriz ao fator 'Combustivel' em nossos dados
+# É CRUCIAL que o fator no dataframe tenha os contrastes definidos ANTES de ajustar o modelo
+contrasts(dados_comb$Combustivel) &lt;- matriz_contrastes_correta
+```
+Agora, o fator `Combustivel` está corretamente "programado" com nossas perguntas de pesquisa ortogonais.
+
+### Passo 3: Executando a Análise de Contrastes (Método Correto)
+
+A forma correta de obter os testes para cada contraste é ajustar o modelo com `aov()` e depois usar `summary.lm()` (ou `summary()`) sobre o objeto ajustado.
+
+
+``` r
+# 1. Ajustar o modelo de ANOVA agora que os contrastes estão definidos no fator
+modelo_comb_aov &lt;- aov(Consumo_kmL ~ Combustivel, data = dados_comb)
+```
+
+---
+
+``` r
+# 2. Pedir o sumário do modelo. O R usará os contrastes definidos.
+summary.lm(modelo_comb_aov)
+```
+
+```
+## 
+## Call:
+## aov(formula = Consumo_kmL ~ Combustivel, data = dados_comb)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.89823 -0.38094  0.00325  0.38402  0.82283 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    9.387075   0.117752  79.719  &lt; 2e-16 ***
+## Combustivelc1  0.285715   0.166526   1.716    0.106    
+## Combustivelc2 -0.583217   0.096144  -6.066 1.64e-05 ***
+## Combustivelc3 -0.003699   0.067984  -0.054    0.957    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.5266 on 16 degrees of freedom
+## Multiple R-squared:  0.713,	Adjusted R-squared:  0.6592 
+## F-statistic: 13.25 on 3 and 16 DF,  p-value: 0.0001327
+```
+
+---
+### Interpretando a Saída Corrigida e Final
+
+A tabela `Coefficients` agora reflete nossas perguntas de pesquisa sequenciais:
+
+| Termo | Estimativa | p-valor | Interpretação da Pergunta |
+|:---|:---:|:---:|:---|
+| **(Intercept)**   | 9.38    | &lt; 2e-16  | A média geral do consumo.                                               |
+| **Combustivelc1** | 0.2857  | 0.106    | **G.Comum vs. G.Adit:** A diferença **não é significativa**.            |
+| **Combustivelc2** | -0.5832 | 1.641-05 | **Gasolinas vs. Álcool:** A diferença **é altamente significativa**.    |
+| **Combustivelc3** | -0.0036 | 0.957    | **Líquidos vs. Gás:** A diferença **é significativa**.                  |
+---
+
+**Conclusão da Análise de Contrastes:**
+- A análise nos permitiu decompor a diferença geral entre os combustíveis em etapas lógicas.
+- Não encontramos evidências de que a aditivação melhore o consumo.
+- Encontramos fortes evidências de que as gasolinas, em média, têm um consumo superior ao do álcool.
+- Não encontramos evidências de que os combustíveis líquidos, em média, têm um consumo superior ao do gás.
+
+Esta análise é muito mais rica e estruturada do que a saída padrão do `summary()`.
+
+
+### Verificando a Partição da Soma de Quadrados (Agora Correta)
+
+A teoria diz que um conjunto completo de contrastes ortogonais em um delineamento balanceado particiona a `\(SQ_{Trat}\)`.
+
+- Da ANOVA global, `\(SQ_{Tratamento} = 11.021\)`.
+
+---
+Vamos obter a ANOVA novamente, pedindo para particionar a SQ pelos contrastes que definimos.
+
+
+``` r
+# A função 'summary.aov' com o argumento 'split' faz a partição
+summary(modelo_comb_aov, split = list(
+  Combustivel = list("G.Comum vs G.Adit" = 1, "Gas vs Alcool" = 2, "Líquidos vs Gas" = 3)
+))
+```
+
+```
+##                                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## Combustivel                       3 11.021   3.674  13.248 0.000133 ***
+##   Combustivel: G.Comum vs G.Adit  1  0.816   0.816   2.944 0.105507    
+##   Combustivel: Gas vs Alcool      1 10.204  10.204  36.797 1.64e-05 ***
+##   Combustivel: Líquidos vs Gas    1  0.001   0.001   0.003 0.957284    
+## Residuals                        16  4.437   0.277                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+**Verificação:**
+A saída "Sum Sq" para as linhas dos contrastes é:
+- G.Comum vs G.Adit: 0.816
+- Gas vs Alcool: 10.204
+- Líquidos vs Gas: 0.021
+- **Soma:** `\(0.816 + 10.204 + 0.001 = 11.021\)`
+
+O resultado **confirma perfeitamente a teoria**: a soma das Somas de Quadrados dos contrastes ortogonais (11.021) é igual à Soma de Quadrados total do fator `Combustivel` (11.021). Nós particionamos a variação total do tratamento em três perguntas de pesquisa independentes, cada uma com 1 grau de liberdade.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

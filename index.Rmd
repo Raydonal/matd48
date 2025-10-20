@@ -206,7 +206,7 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
   |  16/10/2025    | 16/10/2025  | Aula de exercícios e **Aula prática em R**   [[Mat-06]](Aulas/MATD48-06.html)                         |
   |  21/10/2025    | 21/10/2025  | ANCOVA e revisão.                                              |
   |  23/10/2025    | 23/10/2025  |   Comparações de médias. Contrastes                        |
-  |  28/10/2025    | 28/10/2025  | Contrastes ortogonais. **Aula prática em R**                                  |
+  |  28/10/2025    | 28/10/2025  | Contrastes ortogonais. **Aula prática em R**   [[Mat-07]](Aulas/MATD48-07.html)                               |
   |  **30/10/2025**    | **30/10/2025**  | **<font color="red">APLICAÇÃO DA PROVA 1</font>**                          |
   |  04/11/2025    | 04/11/2025  | Procedimentos de Tukey e Scheffé.                                    |
   |  06/11/2025    | 06/11/2025  | Procedimentos de Bonferroni e Duncan. **Aula prática em R**            |
