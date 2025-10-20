@@ -1,7 +1,7 @@
 ---
 documentclass: extarticle
 classoption: landscape
-title: "PLANEJAMENTO DE EXPERIMENTOS A"
+title:  "Projeto Criativo: PLANEJAMENTO DE EXPERIMENTOS A" 
 subtitle:  "Projeto - I"
 geometry: margin=0.7in
 fontsize: 14pt
@@ -20,10 +20,19 @@ link-citations: yes
 linkcolor: blue
 ---
 
-**Data de Devolução:** 30/11/2023
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+**Regras:** O projeto deve ser realizado de forma individual. Você deverá encaminhar a resolução de seu  projeto digitalizado em formato PDF  para o e-mail raydonal@castlab.org no dia 30/10/2023 até as 18:00hs (GMT-3, Horário de Brasilia). Forneça informações adicionais como código R, Python e complementares que foram usados para a realização do seu projeto. Recomendo fortemente não usar LLMs (Large Language Model ) como ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral, Falcon, Gemma, Bloom, Magistral, Qwen, Kimi, Nova Phi, Grok, etc. Quero vocẽs pensando, não a máquina.
 
 **Contexto:**
-Vocês foram contratados como cientistas de dados pela "BioConstructRay", uma startup de biotecnologia que está desenvolvendo uma nova "biotinta" para impressão 3D de tecidos. O objetivo é otimizar o processo para maximizar a **viabilidade celular** (a porcentagem de células que sobrevivem 24 horas após a impressão), que é a principal variável-resposta.
+Vocês foram contratados como cientistas de dados pela "BioConstruct", uma startup de biotecnologia que está desenvolvendo uma nova "biotinta" para impressão 3D de tecidos. O objetivo é otimizar o processo para maximizar a **viabilidade celular** (a porcentagem de células que sobrevivem 24 horas após a impressão), que é a principal variável-resposta.
 
 A equipe de Pesquisa e Desenvolvimento (P&D). identificou dois fatores críticos:
 1.  **Fornecedor do Polímero Base (Fator A):** "PolyLife" vs. "CellMatrix".
@@ -35,12 +44,12 @@ O laboratório possui **oito bioimpressoras 3D idênticas**, mas que são operad
 A empresa precisa de respostas rápidas. No entanto, o gerente do laboratório, com pressa, propôs um plano experimental. Cabe a vocês avaliarem esse plano e, posteriormente, analisarem os dados de um experimento corretamente executado.
 
 ---
-### **Parte 1: Análise Crítica de Delineamentos Experimentais **
+# **Parte 1: Análise Crítica de Delineamentos Experimentais **
 
 **Cenário Proposto pelo Gerente:**
 O gerente, para "simplificar a logística", propõe o seguinte delineamento:
 - A técnica **João** usará exclusivamente o polímero da **"PolyLife"**. Em suas 4 impressoras, ela testará a concentração "Baixa" em 2 delas e a "Alta" nas outras 2.
-- O técnico **maria** usará exclusivamente o polímero da **"CellMatrix"**. Em suas 4 impressoras, ele testará a concentração "Baixa" em 2 delas e a "Alta" nas outras 2.
+- O técnico **Maria** usará exclusivamente o polímero da **"CellMatrix"**. Em suas 4 impressoras, ele testará a concentração "Baixa" em 2 delas e a "Alta" nas outras 2.
 
 **Atividades (Parte 1):**
 1.  **Identificação de Unidades :** Para o cenário proposto pelo gerente, identifique claramente:
@@ -59,41 +68,70 @@ O gerente, para "simplificar a logística", propõe o seguinte delineamento:
     b. Desenhe o Diagrama de Hasse para o seu novo delineamento (DIC).
     c. Escreva a fórmula completa do modelo estatístico em R para o seu DIC, considerando que há subamostragem. Esboce a tabela de ANOVA correspondente, com Fontes de Variação e Graus de Liberdade.
 
----
-### **Parte 2: Análise dos Dados e Recomendações (Questões Práticas)**
+# **Parte 2: Análise dos Dados e Recomendações**
 
 A empresa descartou o plano do gerente e seguiu a sua recomendação, executando um **Delineamento Completamente Aleatorizado (DIC)**. As 8 impressoras foram aleatoriamente designadas a uma das 4 combinações de tratamento (Fornecedor x Concentração), resultando em 2 réplicas (impressoras) para cada combinação. Os dados de viabilidade celular (%) foram coletados.
 
-**Dados Simulados (para o aluno inserir no R):**
+**Dados Simulados :**
+
 ```{r}
 # O aluno deve criar este dataframe
 set.seed(123)
-dados_dic <- data.frame(
-  Impressora = factor(rep(1:8, each = 2)),
-  Fornecedor = factor(rep(c("PolyLife", "CellMatrix", "PolyLife", "CellMatrix", 
-                            "PolyLife", "CellMatrix", "PolyLife", "CellMatrix"), each = 2, times = 1)),
-  Concentracao = factor(rep(c("Baixa", "Baixa", "Alta", "Alta"), each = 4)),
-  Viabilidade = round(c(
-    rnorm(2, 75, 3), rnorm(2, 78, 3), # P, B
-    rnorm(2, 85, 3), rnorm(2, 95, 3), # P, A
-    rnorm(2, 74, 3), rnorm(2, 79, 3), # C, B
-    rnorm(2, 88, 3), rnorm(2, 94, 3)  # C, A
-  ), 1)
+
+# --- MÉTODO CORRETO ---
+# 1. Definir os níveis dos fatores
+niveis_fornecedor <- c("PolyLife", "CellMatrix")
+niveis_concentracao <- c("Baixa", "Alta")
+
+# 2. Criar o delineamento para as Unidades Experimentais (Impressoras)
+# Temos 4 combinações de tratamento, com 2 réplicas (impressoras) cada.
+delineamento_ue <- data.frame(
+  Fornecedor = factor(rep(niveis_fornecedor, each = 4)),
+  Concentracao = factor(rep(rep(niveis_concentracao, each=2), times=2)),
+  Impressora = factor(1:8)
 )
-# Nota: A estrutura dos dados acima já representa a aleatorização completa.
+
+# 3. Aleatorizar a atribuição dos tratamentos às impressoras
+delineamento_ue_aleatorizado <- delineamento_ue[sample(nrow(delineamento_ue)), ]
+rownames(delineamento_ue_aleatorizado) <- NULL # Resetar os nomes das linhas
+cat("--- Delineamento Aleatorizado (qual impressora recebe qual tratamento) ---\n")
+print(delineamento_ue_aleatorizado)
+
+# 4. Expandir para as Unidades Observacionais (subamostras)
+# Cada impressora tem 2 subamostras
+dados_dic <- delineamento_ue_aleatorizado[rep(1:nrow(delineamento_ue_aleatorizado), each = 2), ]
+
+# 5. Simular a resposta (Viabilidade) com base nos tratamentos atribuídos
+# Adicionar um pequeno efeito de interação: CellMatrix + Alta é especialmente bom
+dados_dic <- dados_dic %>%
+  mutate(
+    media_base = case_when(
+      Fornecedor == "PolyLife"   & Concentracao == "Baixa" ~ 75,
+      Fornecedor == "PolyLife"   & Concentracao == "Alta"  ~ 85,
+      Fornecedor == "CellMatrix" & Concentracao == "Baixa" ~ 78,
+      Fornecedor == "CellMatrix" & Concentracao == "Alta"  ~ 95 # Efeito de interação aqui
+    ),
+    # O erro tem dois componentes: entre impressoras (erro_exp) e entre subamostras (erro_obs)
+    erro_exp = rep(rnorm(8, 0, 2), each = 2), # Erro da impressora, o mesmo para as 2 subamostras
+    erro_obs = rnorm(16, 0, 1),              # Erro da subamostra (medição)
+    Viabilidade = round(media_base + erro_exp + erro_obs, 1)
+  )
+
+cat("\n\n--- Dataframe Final para Análise ---\n")
+head(dados_dic)
 ```
 
 **Atividades (Parte 2):**
 1.  **Análise Exploratória :** Crie um gráfico (ex: boxplots) que visualize os efeitos principais do `Fornecedor` e da `Concentração`, bem como a possível interação entre eles. Descreva verbalmente o que os gráficos sugerem.
 
-2.  **Análise de Variância com Subamostragem :**
+2.  **Análise de Variância com Subamostragem:**
     a. Ajuste o modelo linear correspondente ao DIC com subamostragem em R. **Dica:** Lembre-se que `Impressora` define a unidade experimental e está aninhada dentro da combinação de tratamentos. O modelo deve ter dois termos de erro.
     b. Apresente a tabela de ANOVA completa. Indique qual teste F você deve usar para cada efeito principal e para a interação.
     c. Interprete os resultados: quais fatores e/ou interações são estatisticamente significativos ao nível de $\alpha=0.05$?
 
-3.  **Diagnóstico do Modelo :** Realize uma análise de resíduos do seu modelo (use os resíduos do Erro Experimental). Apresente e interprete os gráficos de Resíduos vs. Ajustados e o Q-Q Plot.
+3.  **Diagnóstico do Modelo:** Realize uma análise de resíduos do seu modelo (use os resíduos do Erro Experimental). Apresente e interprete os gráficos de Resíduos vs. Ajustados e o Q-Q Plot.
 
-4.  **Comparações Específicas com Contrastes :**
+4.  **Comparações Específicas com Contrastes:**
     A equipe de P&D, após ver os resultados, tem perguntas muito específicas:
     - **Pergunta 1:** "O efeito de aumentar a concentração de 'Baixa' para 'Alta' é significativo?"
     - **Pergunta 2:** "Existe uma diferença de desempenho entre os fornecedores 'PolyLife' e 'CellMatrix'?"
@@ -103,35 +141,11 @@ dados_dic <- data.frame(
     b. Teste esses contrastes em R.
     c. Interprete os resultados e responda diretamente a cada uma das três perguntas.
 
-5.  **Recomendação Final :** Escreva um parágrafo conciso (como se fosse um e-mail para a diretoria) resumindo suas descobertas. Qual combinação de `Fornecedor` e `Concentração` você recomenda para maximizar a viabilidade celular? Baseie sua recomendação em evidências estatísticas da sua análise.
+5.  **Recomendação Final:** Escreva um parágrafo conciso (como se fosse um e-mail para a diretoria) resumindo suas descobertas. Qual combinação de `Fornecedor` e `Concentração` você recomenda para maximizar a viabilidade celular? Baseie sua recomendação em evidências estatísticas da sua análise.
 
-<!-- --- -->
-<!-- ### **Guia de Resolução para o Professor** -->
-<!-- --- -->
-<!-- **(Parte 1, Questão 1)** -->
-<!-- - U.E. para `Fornecedor`: O Técnico (Ana ou Bruno). -->
-<!-- - U.E. para `Concentração`: A Impressora. -->
-<!-- - U.O.: A subamostra. -->
-<!-- - Justificativa: A aleatorização da concentração ocorre entre impressoras (dentro de cada técnico), mas não há aleatorização do fornecedor (ele está fixo para cada técnico). -->
 
-<!-- **(Parte 1, Questão 2)** -->
-<!-- - `Fornecedor` e `Técnico` estão **completamente confundidos**. O diagrama de Hasse mostraria um nó único `(Técnico, Fornecedor)`. -->
-<!-- - Falha Crítica: É impossível separar o efeito do material do fornecedor do efeito do operador. Se os resultados de Bruno (com CellMatrix) forem melhores, pode ser por causa do polímero ou porque Bruno é um técnico mais habilidoso. A conclusão sobre o fornecedor é inválida. -->
-
-<!-- **(Parte 1, Questão 3)** -->
-<!-- - **DIC Válido:** As 8 impressoras são as unidades experimentais. As 4 combinações de tratamento (P-B, P-A, C-B, C-A) são sorteadas para as 8 impressoras, resultando em 2 réplicas por combinação. -->
-<!-- - **Diagrama de Hasse:** Fatores `Fornecedor` e `Concentração` cruzados. `Impressora` está aninhada na combinação dos tratamentos (é o erro experimental). `Subamostra` está aninhada na `Impressora` (é o erro de subamostragem). -->
-<!-- - **Modelo em R:** `aov(Viabilidade ~ Fornecedor * Concentracao + Error(Fornecedor:Concentracao/Impressora))` ou um modelo misto. -->
-<!-- - **Tabela ANOVA:** F.V.: `Fornecedor`, `Concentracao`, `Fornecedor:Concentracao`, `Erro(a) (Impressoras)`, `Erro(b) (Subamostras)`. G.L.: 1, 1, 1, 4, 8. -->
-
-<!-- **(Parte 2)** -->
-<!-- - A análise deve revelar um forte efeito principal de `Concentracao` e um efeito de interação significativo. -->
-<!-- - O modelo correto é `aov(Viabilidade ~ Fornecedor * Concentracao + Error(Impressora))`. -->
-<!-- - Os contrastes devem confirmar os efeitos principais e a interação. -->
-<!-- - A recomendação final provavelmente será "CellMatrix" com concentração "Alta", pois a simulação sugere que a interação é positiva (o benefício da concentração alta é ainda maior com o polímero CellMatrix). -->
 ---
-#### Faça o seu melhor - Bom trabalho
-
+ Faça o seu melhor - Bom trabalho
 
 
 

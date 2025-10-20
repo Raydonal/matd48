@@ -12,7 +12,7 @@
 <meta name="author" content="Raydonal Ospina  " />
 
 
-<title>PLANEJAMENTO DE EXPERIMENTOS A</title>
+<title>Projeto Criativo: PLANEJAMENTO DE EXPERIMENTOS A</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -290,7 +290,69 @@ if (window.hljs) {
 
 
 
-<link rel="stylesheet" href="config/StyleHomework.css" type="text/css" />
+<style type="text/css">body{
+font-family: Cambria, Georgia, serif;
+font-size: 14pt;
+text-align: justify;
+margin-top: 75px;
+margin-bottom: 75px;
+margin-right: 56px;
+margin-left: 56px;
+background-color: #fafafa;
+webkit-user-select: none; 
+moz-user-select: none; 
+ms-user-select: none; 
+user-select: none; 
+}
+h1.title{
+font-family: Cambria, Georgia, serif;
+font-size: 34pt;
+text-align: right;
+}
+h1{
+font-family: Cambria, Georgia, serif;
+font-size: 24pt;
+color: #009688;
+}
+h2{
+font-family: Cambria, Georgia, serif;
+font-size: 18pt;
+color: #009688;
+}
+h3{
+font-family: Cambria, Georgia, serif;
+font-size: 14pt;
+color: #009688;
+}
+.subtitle{
+font-family: Cambria, Georgia, serif;
+text-align: right;
+font-size: 20pt;
+color: #009688;
+}
+.author{
+font-family: Cambria, Georgia, serif;
+text-align: right;
+color: #009688;
+}
+.date{
+font-family: Cambria, Georgia, serif;
+text-align: right;
+font-size: 12pt;
+color: #009688;
+}
+a{
+color: #607d8b;
+}
+
+a:visited {
+color: #607d8b;
+}
+
+a:hover {
+color: #26a69a;
+}
+</style>
 
 
 
@@ -387,7 +449,8 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">PLANEJAMENTO DE EXPERIMENTOS A</h1>
+<h1 class="title toc-ignore">Projeto Criativo: PLANEJAMENTO DE
+EXPERIMENTOS A</h1>
 <h3 class="subtitle">Projeto - I</h3>
 <h4 class="author">Raydonal Ospina
 <a href="mailto:raydonal@castlab.org">
@@ -396,9 +459,17 @@ display: none;
 </div>
 
 
-<p><strong>Data de Devolução:</strong> 30/11/2023</p>
+<p><strong>Regras:</strong> O projeto deve ser realizado de forma
+individual. Você deverá encaminhar a resolução de seu projeto
+digitalizado em formato PDF para o e-mail <a href="mailto:raydonal@castlab.org" class="email">raydonal@castlab.org</a> no dia 30/10/2023 até as 18:00hs
+(GMT-3, Horário de Brasilia). Forneça informações adicionais como código
+R, Python e complementares que foram usados para a realização do seu
+projeto. Recomendo fortemente não usar LLMs (Large Language Model ) como
+ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral,
+Falcon, Gemma, Bloom, Magistral, Qwen, Kimi, Nova Phi, Grok, etc. Quero
+vocẽs pensando, não a máquina.</p>
 <p><strong>Contexto:</strong> Vocês foram contratados como cientistas de
-dados pela “BioConstructRay”, uma startup de biotecnologia que está
+dados pela “BioConstruct”, uma startup de biotecnologia que está
 desenvolvendo uma nova “biotinta” para impressão 3D de tecidos. O
 objetivo é otimizar o processo para maximizar a <strong>viabilidade
 celular</strong> (a porcentagem de células que sobrevivem 24 horas após
@@ -418,6 +489,59 @@ delas.</p>
 laboratório, com pressa, propôs um plano experimental. Cabe a vocês
 avaliarem esse plano e, posteriormente, analisarem os dados de um
 experimento corretamente executado.</p>
+<hr />
+<div id="parte-1-análise-crítica-de-delineamentos-experimentais" class="section level1">
+<h1><strong>Parte 1: Análise Crítica de Delineamentos Experimentais
+</strong></h1>
+<p><strong>Cenário Proposto pelo Gerente:</strong> O gerente, para
+“simplificar a logística”, propõe o seguinte delineamento: - A técnica
+<strong>João</strong> usará exclusivamente o polímero da
+<strong>“PolyLife”</strong>. Em suas 4 impressoras, ela testará a
+concentração “Baixa” em 2 delas e a “Alta” nas outras 2. - O técnico
+<strong>Maria</strong> usará exclusivamente o polímero da
+<strong>“CellMatrix”</strong>. Em suas 4 impressoras, ele testará a
+concentração “Baixa” em 2 delas e a “Alta” nas outras 2.</p>
+<p><strong>Atividades (Parte 1):</strong> 1. <strong>Identificação de
+Unidades :</strong> Para o cenário proposto pelo gerente, identifique
+claramente: a. A <strong>Unidade Experimental (U.E.)</strong> para o
+fator <code>Fornecedor do Polímero</code>. b. A <strong>Unidade
+Experimental (U.E.)</strong> para o fator <code>Concentração</code>.
+c. A <strong>Unidade Observacional (U.O.)</strong>. Justifique suas
+respostas com base no <strong>processo de aleatorização</strong> (ou
+falta dele).</p>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>Análise Estrutural e Diagrama de Hasse:</strong>
+<ol style="list-style-type: lower-alpha">
+<li>Descreva as relações entre os fatores <code>Técnico</code>,
+<code>Fornecedor</code> e <code>Concentração</code> no delineamento do
+gerente.</li>
+<li>Desenhe o Diagrama de Hasse que representa esta estrutura.</li>
+<li>Qual é a <strong>falha crítica e fatal</strong> neste delineamento?
+Explique por que os resultados obtidos seriam cientificamente inválidos
+para comparar os fornecedores.</li>
+</ol></li>
+<li><strong>Propondo um Delineamento Válido :</strong>
+<ol style="list-style-type: lower-alpha">
+<li>Descreva como você reestruturaria o experimento para que ele se
+tornasse um <strong>Delineamento Completamente Aleatorizado
+(DIC)</strong> válido, usando todas as 8 impressoras. Explique o seu
+processo de aleatorização.</li>
+<li>Desenhe o Diagrama de Hasse para o seu novo delineamento (DIC).</li>
+<li>Escreva a fórmula completa do modelo estatístico em R para o seu
+DIC, considerando que há subamostragem. Esboce a tabela de ANOVA
+correspondente, com Fontes de Variação e Graus de Liberdade.</li>
+</ol></li>
+</ol>
+</div>
+<div id="parte-2-análise-dos-dados-e-recomendações" class="section level1">
+<h1><strong>Parte 2: Análise dos Dados e Recomendações</strong></h1>
+<p>A empresa descartou o plano do gerente e seguiu a sua recomendação,
+executando um <strong>Delineamento Completamente Aleatorizado
+(DIC)</strong>. As 8 impressoras foram aleatoriamente designadas a uma
+das 4 combinações de tratamento (Fornecedor x Concentração), resultando
+em 2 réplicas (impressoras) para cada combinação. Os dados de
+viabilidade celular (%) foram coletados.</p>
+</div>
 
 
 
