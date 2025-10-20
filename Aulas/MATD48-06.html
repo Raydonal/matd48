@@ -199,10 +199,112 @@ Este gráfico é um dicionário visual para as premissas do modelo:
 
 **Por que isso é a base da inferência?**
 Quando essas três premissas são satisfeitas, as Somas de Quadrados seguem distribuições `\(\chi^2\)`, e a razão dos Quadrados Médios segue uma distribuição F. Isso significa que podemos confiar nos **p-valores** gerados pela tabela de ANOVA para decidir se o efeito das `Horas_Estudo` é estatisticamente significativo. Se as premissas forem violadas (ex: se as curvas de sino ficassem mais largas para mais horas de estudo), a distribuição F não seria a correta, e nossos testes de hipótese seriam inválidos.
+---
 
 
+## Visualizando as Premissas do Modelo Normal no DIC
+
+Como as premissas de Linearidade, Normalidade e Homocedasticidade se aplicam quando nosso preditor é um fator categórico (Tratamento)?
+
+1.  **"Linearidade" (Modelo das Médias):** O modelo assume que a média da resposta `Y` **depende apenas do grupo (tratamento)** ao qual a observação pertence. Matematicamente, `\(E(y_{ir}) = \mu_i = \mu + \tau_i\)`. Em um gráfico, isso significa que cada grupo terá sua própria média (um platô), em vez de uma linha inclinada.
+
+2.  **Normalidade:** Dentro de cada grupo de tratamento, as respostas observadas (`\(y_{ir}\)`) se distribuem normalmente em torno da média daquele grupo (`\(\mu_i\)`).
+
+3.  **Homocedasticidade (Variância Constante):** A variância (`\(\sigma^2\)`) das respostas é a **mesma para todos os tratamentos**. Em um gráfico, isso significa que a "largura" ou "dispersão" das distribuições normais deve ser igual para todos os grupos.
 
 ---
+### Exemplo Prático e Simulação
+
+**Cenário:** Um agrônomo testa 3 tipos de fertilizante (`Tratamento`: A, B, C) na produção de uma cultura. Ele usa um Delineamento Completamente Aleatorizado (DIC) com 100 parcelas para cada fertilizante.
+
+O "verdadeiro" modelo (desconhecido para nós) é:
+- Média da Produção com Fertilizante A: `\(\mu_A = 20\)`
+- Média da Produção com Fertilizante B: `\(\mu_B = 28\)`
+- Média da Produção com Fertilizante C: `\(\mu_C = 22\)`
+- A variabilidade (erro) em todos os grupos é a mesma: `\(\epsilon \sim N(0, \sigma^2=4^2)\)`.
+
+
+``` r
+# 1. Simular os dados de acordo com o modelo
+set.seed(123)
+n_replicas &lt;- 100
+dados_fert_dic &lt;- data.frame(
+  Fertilizante = factor(rep(c("A", "B", "C"), each = n_replicas)),
+  Producao = c(rnorm(n_replicas, mean = 20, sd = 4),
+               rnorm(n_replicas, mean = 28, sd = 4),
+               rnorm(n_replicas, mean = 22, sd = 4))
+)
+```
+
+---
+### Gráfico da Intuição para o DIC
+
+O gráfico abaixo combina um **gráfico de violino** (que mostra a densidade empírica dos dados) com os **pontos de dados brutos** (jitter) e sobrepõe a **curva de densidade normal teórica** que o modelo assume para cada grupo.
+
+
+``` r
+# Calcular as médias e o desvio padrão de cada grupo para desenhar as curvas
+sumario_dic &lt;- dados_fert_dic %&gt;%
+  group_by(Fertilizante) %&gt;%
+  summarise(media_grupo = mean(Producao),
+            sd_grupo = sd(Producao))
+sumario_dic
+```
+
+```
+## # A tibble: 3 × 3
+##   Fertilizante media_grupo sd_grupo
+##   &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A                   20.4     3.65
+## 2 B                   27.6     3.87
+## 3 C                   22.5     3.80
+```
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="MATD48-06_files/figure-html/unnamed-chunk-5-1.png" alt="Gráfico de Violino"  /&gt;
+&lt;p class="caption"&gt;Gráfico de Violino&lt;/p&gt;
+&lt;/div&gt;
+---
+### Interpretando o Gráfico para o DIC
+
+Este gráfico é um dicionário visual para as premissas do modelo no contexto de um DIC:
+
+1.  **Médias Diferentes (Modelo das Médias):** Os centros dos boxplots e dos violinos estão em alturas diferentes. O modelo `Producao ~ Fertilizante` captura exatamente essas diferenças entre as médias de cada grupo (`\(\mu_A, \mu_B, \mu_C\)`).
+
+2.  **Normalidade:** As **curvas de sino vermelhas** representam a distribuição Normal teórica que o modelo assume para cada grupo. A forma dos **gráficos de violino** representa a distribuição real dos dados. A premissa de normalidade é satisfeita se a forma dos violinos for razoavelmente parecida com a forma das curvas de sino.
+
+3.  **Homocedasticidade (Variância Constante):** A premissa de que a variância é a mesma em todos os grupos (`\(\sigma^2\)`) é visualizada pelo fato de que as **curvas de sino vermelhas têm a mesma largura (dispersão)**. Da mesma forma, esperamos que os gráficos de violino também tenham larguras (dispersões) semelhantes entre si.
+
+**Conexão com a Inferência:**
+Quando estas premissas (especialmente a Normalidade e a Homocedasticidade) são satisfeitas, o **Quadrado Médio do Resíduo (`\(QM_{Res}\)`)** da tabela de ANOVA é uma boa estimativa da variância comum `\(\sigma^2\)`. Isso valida o uso da estatística F para comparar o `\(QM_{Tratamento}\)` com o `\(QM_{Resíduo}\)` e obter um p-valor confiável.
+---
+
+
+### Mas... Onde está a "Reta de Regressão"?
+
+No exemplo anterior com `Horas_Estudo`, tínhamos uma linha de regressão clara. Por que aqui não temos?
+
+A resposta está na natureza do nosso preditor:
+- **Regressão Linear:** O preditor (`Horas_Estudo`) é **contínuo e ordenado**. Faz sentido conectar as médias esperadas com uma linha, pois um aumento de uma hora de estudo tem um efeito previsível na nota.
+- **Análise de Variância (ANOVA):** O preditor (`Fertilizante`) é **categórico e não ordenado**. Não há um "meio do caminho" entre o Fertilizante A e o B. A ordem A, B, C no eixo x é arbitrária. Conectar as médias com uma linha não teria nenhum significado prático ou teórico.
+
+**O que o modelo de ANOVA faz em vez de ajustar uma reta?**
+Ele ajusta um **modelo de médias**, onde cada grupo tem sua própria média estimada. Em vez de uma única reta, o "ajuste" do modelo é um conjunto de **linhas horizontais (platôs)**, uma para cada grupo.
+
+---
+### Visualizando o "Ajuste" do Modelo de ANOVA
+
+O gráfico abaixo mostra o que o modelo `Producao ~ Fertilizante` realmente "aprende" a partir dos dados.
+
+&lt;img src="MATD48-06_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+**Interpretação:**
+A "reta de regressão" em um modelo de ANOVA é, na verdade, um **conjunto de médias**. As linhas vermelhas horizontais representam a estimativa do modelo para a produção média de cada fertilizante (`\(\hat{\mu}_A\)`, `\(\hat{\mu}_B\)`, `\(\hat{\mu}_C\)`). Os resíduos (`\(\epsilon_{ir}\)`) são as distâncias verticais de cada ponto cinza até a linha vermelha do seu respectivo grupo.
+
+**Conclusão:** A ANOVA é um tipo de modelo linear, mas em vez de estimar um intercepto e uma inclinação (`y = b0 + b1*x`), ela estima uma média para cada nível do fator (`y = μi`). Ambos são casos especiais do modelo geral `\(y=X\beta\)`.
+---
+
 ## 3.11 O Modelo Linear Normal de Gauss-Markov
 
 Para realizar testes de hipótese e construir intervalos de confiança, adicionamos uma premissa à definição do modelo de Gauss-Markov: a **suposição de normalidade aos resíduos**.
@@ -351,6 +453,14 @@ O plano completamente aleatorizado (DIC), apesar de ser o mais simples dos plano
 
 Quando `\(N=tk\)`, são alocadas `k` unidades experimentais para cada tratamento, implicando em uma **estrutura de classificação balanceada**. Dizemos que o experimento tem `k` **réplicas**.
 
+É comum, nesta situação, dizer que o
+experimento foi replicado `k` vezes, ou
+ainda, que o experimento foi executado
+com `k` réplicas. Quando ocorre
+situações em que `k = 1`, porém, diz-se
+que o experimento foi executado sem
+replicação, ou ainda, sem réplicas.
+
 ---
 ### O Processo de Aleatorização do Plano
 
@@ -383,18 +493,18 @@ print(plano_alocacao)
 
 ```
 ##    Unidade_Exp Tratamento_Alocado
-## 1            1                  B
-## 2            2                  A
-## 3            3                  B
-## 4            4                  C
-## 5            5                  C
+## 1            1                  C
+## 2            2                  C
+## 3            3                  A
+## 4            4                  B
+## 5            5                  B
 ## 6            6                  A
-## 7            7                  C
+## 7            7                  A
 ## 8            8                  A
-## 9            9                  B
-## 10          10                  B
-## 11          11                  C
-## 12          12                  A
+## 9            9                  C
+## 10          10                  C
+## 11          11                  B
+## 12          12                  B
 ```
 Este data frame é o "mapa" do nosso experimento, dizendo qual tratamento cada unidade receberá.
 
@@ -408,41 +518,93 @@ class: center, middle, inverse
 ### População Conceitual de Respostas Revisitada
 
 O contexto de um DIC nos permite revisitar a população conceitual.
-- Defina `\(Y_{ij}\)` (`\(i=1,...,t, j = 1,...,N\)`) como o valor observado da variável resposta Y referente ao j-ésimo elemento da população, quando submetido ao tratamento `\(i\)`.
-- O conjunto não observável `\(\{Y_{ij}\}\)` de todas as possíveis respostas dos N elementos que compõem a população sob o efeito de cada um dos t tratamentos sob estudo, é denominado de **população conceitual de respostas**.
+- Defina `\(Y_{ij}\)` (`\(i=1,...,t, j = 1,...,N\)`) como o valor observado da variável resposta `\(Y\)` referente ao `\(j\)`-ésimo elemento da população, quando submetido ao tratamento `\(i\)`.
+- O conjunto não observável `\(\{Y_{ij}\}\)` de todas as possíveis respostas dos `\(N\)` elementos que compõem a população sob o efeito de cada um dos `\(t\)` tratamentos sob estudo, é denominado de **população conceitual de respostas**.
 
 População conceitual de respostas no contexto de um plano completamente aleatorizado.
 
+&lt;small&gt;
+
 | Tratamento | Unid. Experimentais ||| Total | Média |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| | **j=1** | **j=2** | **...** | **j=N** | | |
-| **i=1** | `\(Y_{11}\)` | `\(Y_{12}\)` | ... | `\(Y_{1N}\)` | `\(Y_{1.}\)` | `\(\bar{Y}_{1.}\)` |
-| **...** | ... | ... | ... | ... | ... | ... |
-| **i=t** | `\(Y_{t1}\)` | `\(Y_{t2}\)` | ... | `\(Y_{tN}\)` | `\(Y_{t.}\)` | `\(\bar{Y}_{t.}\)` |
-| **Total** | `\(Y_{.1}\)` | `\(Y_{.2}\)` | ... | `\(Y_{.N}\)` | `\(Y_{..}\)` | |
-| **Média** | `\(\bar{Y}_{.1}\)` | `\(\bar{Y}_{.2}\)` | ... | `\(\bar{Y}_{.N}\)` | | `\(\bar{Y}_{..}\)` |
+| | `\(j=1\)` | `\(j=2\)` | `\(...\)` | `\(j=N\)` | | |
+| `\(i=1\)` | `\(Y_{11}\)` | `\(Y_{12}\)` | ... | `\(Y_{1N}\)` | `\(Y_{1.}\)` | `\(\bar{Y}_{1.}\)` |
+| `\(...\)` | ... | ... | ... | ... | ... | ... |
+| `\(i=t\)` | `\(Y_{t1}\)` | `\(Y_{t2}\)` | ... | `\(Y_{tN}\)` | `\(Y_{t.}\)` | `\(\bar{Y}_{t.}\)` |
+| **Total*$** | `\(Y_{.1}\)` | `\(Y_{.2}\)` | ... | `\(Y_{.N}\)` | `\(Y_{..}\)` | |
+| **Média*$** | `\(\bar{Y}_{.1}\)` | `\(\bar{Y}_{.2}\)` | ... | `\(\bar{Y}_{.N}\)` | | `\(\bar{Y}_{..}\)` |
 
+&lt;/small&gt;
 Nesta parte do curso, porém, a ênfase recairá sob a teoria da aleatorização. O próximo passo, então, será mostrar como deduzir um modelo linear apropriado ao plano experimental.
 
 
 ---
 ### O Modelo Linear Deduzido
 
-A conexão entre a resposta observada (`\(y_{ir}\)`) e a população conceitual (`\(Y_{ij}\)`) é feita pela **variável aleatória de seleção** `\(\delta_{ir}^j\)` (Cornfield, 1944):
-`$$\delta_{ir}^j = \begin{cases} 1, &amp; \text{se a r-ésima réplica do tratamento i foi aplicada à u.e. j} \\ 0, &amp; \text{caso contrário} \end{cases}$$`
-Com base na aleatorização, sabemos que `\(P(\delta_{ir}^j=1) = 1/N\)` e que `\(\sum_{j=1}^N \delta_{ir}^j = 1\)`.
+Para conectar a **população conceitual** (não observável) `\(\{Y_{ij}\}\)` com os **dados observados** `\(\{y_{ir}\}\)`, precisamos de uma ferramenta matemática que represente o ato do sorteio.
 
-A resposta observada pode ser escrita como:
-`$$y_{ir} = \sum_{j=1}^N \delta_{ir}^j Y_{ij} \quad (1)$$`
-Usando a identidade algébrica da população conceitual (assumindo **aditividade**, i.e., interação tratamento-unidade negligível):
-`$$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \quad (3)$$`
+Definimos uma **variável aleatória de seleção** (Cornfield, 1944) como segue:
+`$$\delta_{ir}^j = \begin{cases} 1, &amp; \text{se } y_{ir} = Y_{ij} \\ 0, &amp; \text{caso contrário (c.c.)} \end{cases}$$`
+
+A varável `\(\delta_{ir}^j\)` assume o valor 1 quando a *r-ésima réplica do tratamento i* (`ir`) for aplicada à *u.e. j* (`j`); e assume o valor zero, caso contrário.
+
+- O subscrito `ir` identifica uma **posição no plano experimental** (a 2ª réplica do tratamento A, por exemplo).
+- O superescrito `j` identifica uma **unidade experimental física** (o porco nº 5, o paciente nº 8, etc.).
+
+Esta variável `\(\delta\)` é a representação matemática do "papeizinho sorteado" da urna. Sua aleatoriedade vem do processo físico de aleatorização.
 ---
-Substituindo (3) em (1), e fazendo as seguintes definições:
+
+Com base na aleatorização irrestrita empregada (sorteio sem reposição de N unidades), é fácil verificar, por exemplo, que:
+
+1.  `\(P(\delta_{ir}^j = 1) = \frac{1}{N}\)`
+*   **Intuição:** A probabilidade de qualquer unidade específica `j` ser escolhida para qualquer posição específica `ir` do plano é a mesma, `\(1/N\)`.
+
+2. `\(P(\delta_{ir}^j = 1 | \delta_{ir}^{j'} = 1) = 0\)` para `\(j \neq j'\)`
+*   **Intuição:** Se a unidade `j'` já foi sorteada para a posição `ir`, é impossível que a unidade `j` também seja sorteada para a *mesma* posição.
+
+3.  `\(P(\delta_{ir}^j = 1 | \delta_{i'r'}^{j'} = 1) = \frac{1}{N-1}\)` para `\(ir \neq i'r'\)` e `\(j \neq j'\)`
+*   **Intuição:** Se a unidade `j'` já foi sorteada para uma *outra* posição (`i'r'`), restam `\(N-1\)` unidades para serem sorteadas para a posição `ir`. A chance da unidade `j` ser a escolhida é de `\(1/(N-1)\)`.
+
+Além disso, como cada posição `ir` no plano deve ser preenchida por exatamente uma unidade experimental, temos: `\(\sum_{j=1}^N \delta_{ir}^j = 1\)`
+---
+
+
+
+&lt;!-- A conexão entre a resposta observada (`\(y_{ir}\)`) e a população conceitual (`\(Y_{ij}\)`) é feita pela **variável aleatória de seleção** `\(\delta_{ir}^j\)` (Cornfield, 1944): --&gt;
+
+&lt;!-- `$$\delta_{ir}^j = \begin{cases} 1, &amp; \text{se a r-ésima réplica do tratamento i foi aplicada à u.e. j} \\ 0, &amp; \text{caso contrário} \end{cases}$$` --&gt;
+&lt;!-- Com base na aleatorização, sabemos que `\(P(\delta_{ir}^j=1) = 1/N\)` e que `\(\sum_{j=1}^N \delta_{ir}^j = 1\)`. --&gt;
+
+**Agora, a relação entre as notações `\(y_{ir}\)` e `\(Y_{ij}\)` é estabelecida fazendo-se:**
+`$$y_{ir} = \sum_{j=1}^N \delta_{ir}^j Y_{ij} \quad (1)$$` 
+
+**Intuição:** Esta soma "filtra" a população conceitual. Como apenas um `\(\delta_{ir}^j\)` é 1 para um dado `ir`, a soma simplesmente seleciona o valor potencial `\(Y_{ij}\)` correspondente à unidade `j` que foi sorteada para aquela posição.
+
+**Próximo Passo:** Substituímos a identidade algébrica (com suposição de aditividade, Equação 3) na relação (1):
+`$$y_{ir} = \sum_{j=1}^N \delta_{ir}^j \left[ \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \right]$$`
+Distribuindo a soma:
+`$$y_{ir} = \sum_{j=1}^N \delta_{ir}^j \bar{Y}_{..} + \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{i.} - \bar{Y}_{..}) + \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$`
+---
+Como `\(\sum \delta_{ir}^j = 1\)` e os termos sem `j` são constantes na soma:
+`$$y_{ir} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$`
+Fazendo as definições:
 `$$\mu = \bar{Y}_{..} \quad \tau_i = (\bar{Y}_{i.} - \bar{Y}_{..}) \quad \omega_{ir} = \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$`
-Chegamos ao **modelo linear deduzido**:
+O seguinte **modelo linear para um plano completamente aleatorizado é deduzido:**
 `$$y_{ir} = \mu + \tau_i + \omega_{ir} \quad (4)$$`
-
 ---
+
+
+
+
+&lt;!-- Usando a identidade algébrica da população conceitual (assumindo **aditividade**, i.e., interação tratamento-unidade negligível): --&gt;
+&lt;!-- `$$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \quad (3)$$` --&gt;
+&lt;!-- --- --&gt;
+&lt;!-- Substituindo (3) em (1), e fazendo as seguintes definições: --&gt;
+&lt;!-- `$$\mu = \bar{Y}_{..} \quad \tau_i = (\bar{Y}_{i.} - \bar{Y}_{..}) \quad \omega_{ir} = \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$` --&gt;
+&lt;!-- Chegamos ao **modelo linear deduzido**: --&gt;
+&lt;!-- `$$y_{ir} = \mu + \tau_i + \omega_{ir} \quad (4)$$` --&gt;
+
+
 ### Diferença entre o Modelo Deduzido e o Modelo de Gauss-Markov
 
 Compare o modelo deduzido (4) com o modelo de Gauss-Markov (1) da pág. 91:
@@ -452,15 +614,47 @@ Compare o modelo deduzido (4) com o modelo de Gauss-Markov (1) da pág. 91:
 A diferença crucial está no termo de erro:
 - `\(\epsilon_{ir}\)` (Erro de Gauss-Markov): É um erro puramente aleatório, geralmente associado a erros de medição. Suas propriedades (média zero, variância constante, não correlacionado) são **assumidas**.
 - `\(\omega_{ir}\)` (Erro de Aleatorização): **Não é um erro de medição**. Ele representa o desvio da unidade experimental específica que *calhou* de ser sorteada para aquela réplica, em relação à média das unidades. Suas propriedades são **conhecidas e deduzíveis** a partir do processo de aleatorização.
+---
+
+Com isso, é possível descrever o modelo (4) em termos matriciais da seguinte forma:
+`$$y = X\beta + \omega$$`
+onde:
+- `\(y = (y_{11}, ..., y_{1k}, ..., y_{t1}, ..., y_{tk})^\top\)` é o vetor de observações.
+- `\(\beta = (\mu, \tau_1, ..., \tau_t)^\top\)` é o vetor de parâmetros.
+- `\(X\)` é a matriz de delineamento:
+`$$X = \begin{pmatrix} 1 &amp; 1 &amp; 0 &amp; \dots &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; &amp; \vdots \\ 1 &amp; 1 &amp; 0 &amp; \dots &amp; 0 \\ 1 &amp; 0 &amp; 1 &amp; \dots &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; &amp; \vdots \\ 1 &amp; 0 &amp; 0 &amp; \dots &amp; 1 \end{pmatrix}_{N \times (t+1)}$$`
+- `\(\omega = (\omega_{11}, ..., \omega_{tk})^\top\)` é o vetor de erros de aleatorização.
 
 ---
 ### Propriedades do Termo Aleatório `\(\omega_{ir}\)`
 
+As propriedades de `\(\omega\)` em forma matricial são:
+- `\(E_R(\omega) = \mathbf{0}_N\)`
+- `\(Var_R(\omega) = V_{N \times N} = \sigma_u^2 \left[ I_N - \frac{1}{N}J_N \right]\)`
+Onde `\(J_N\)` é uma matriz `\(N \times N\)` composta inteiramente por 1s. A matriz `\(V\)` **não é diagonal**, indicando que os erros são correlacionados.
+
+
 Com base apenas no processo de aleatorização, pode-se deduzir as propriedades de `\(\omega_{ir}\)`:
 
-i) **O termo aleatório tem média zero:** `\(E_R(\omega_{ir}) = 0\)`.
+i) **O termo aleatório tem média zero:** `\(E_R(\omega_{ir}) = 0\)`. De fato, `$$E_R(\omega_{ir}) = E_R \left[ \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..}) \right]$$`
+Pela linearidade da esperança e o fato de que os termos `\(Y\)` são fixos (constantes) na população conceitual, a esperança atua apenas na variável aleatória `\(\delta_{ir}^j\)`:
+`$$E_R(\omega_{ir}) = \sum_{j=1}^N E_R(\delta_{ir}^j) (\bar{Y}_{.j} - \bar{Y}_{..})$$`
+---
+Em um DIC, a probabilidade de qualquer unidade `j` ser selecionada para uma réplica específica é `\(1/N\)`. Portanto, `\(E_R(\delta_{ir}^j) = P(\delta_{ir}^j=1) = 1/N\)`:
+`$$= \sum_{j=1}^N \frac{1}{N} (\bar{Y}_{.j} - \bar{Y}_{..}) = \frac{1}{N} \sum_{j=1}^N (\bar{Y}_{.j} - \bar{Y}_{..})$$`
+A soma dos desvios de cada média de unidade (`\(\bar{Y}_{.j}\)`) em relação à média geral (`\(\bar{Y}_{..}\)`) é, por definição, zero, `\(= \frac{1}{N} \times 0 = 0\)`
 
-ii) **Sua variância é dada por:** `\(Var_R(\omega_{ir}) = (1 - \frac{1}{N})\sigma_u^2\)`, onde `\(\sigma_u^2 = \frac{1}{N-1}\sum(\bar{Y}_{.j} - \bar{Y}_{..})^2\)` é a variância finita entre as unidades experimentais.
+ii) **Sua variância é dada por:** `\(Var_R(\omega_{ir}) = (1 - \frac{1}{N})\sigma_u^2\)`, onde `\(\sigma_u^2 = \frac{1}{N-1}\sum(\bar{Y}_{.j} - \bar{Y}_{..})^2\)` é a variância finita entre as unidades experimentais. De fato. `$$Var_R(\omega_{ir}) = Var_R\left(\sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})\right)$$`
+Usando a fórmula da variância da soma:
+`$$= \sum_{j=1}^N Var_R(\delta_{ir}^j)(\bar{Y}_{.j}-\bar{Y}_{..})^2 + \sum_{j \neq j'} Cov_R(\delta_{ir}^j, \delta_{ir}^{j'})(\bar{Y}_{.j}-\bar{Y}_{..})(\bar{Y}_{.j'}-\bar{Y}_{..})$$`
+---
+Com base na aleatorização, pode-se mostrar que:
+- `\(Var_R(\delta_{ir}^j) = \frac{1}{N}(1-\frac{1}{N})\)`
+- `\(Cov_R(\delta_{ir}^j, \delta_{ir}^{j'}) = -\frac{1}{N^2(N-1)}.\)` No entanto, 
+$$ = \frac{1}{N}\sum_{j=1}^N(\bar{Y}_{.j}-\bar{Y}_{..})^2 - \frac{1}{N(N-1)}\sum_{j \neq j'}(\bar{Y}_{.j}-\bar{Y}_{..})(\bar{Y}_{.j'}-\bar{Y}_{..}) $$
+Após manipulação algébrica, chega-se a:
+`$$= (1 - \frac{1}{N}) \frac{\sum(\bar{Y}_{.j}-\bar{Y}_{..})^2}{N-1} = (1 - \frac{1}{N})\sigma_u^2$$`
+Onde `\(\sigma_u^2\)` é a variância entre as unidades experimentais.
 
 iii) **E sua covariância é negativa:** `\(Cov_R(\omega_{ir}, \omega_{i'r'}) = -\frac{1}{N}\sigma_u^2\)`.
 
@@ -476,37 +670,123 @@ Se a matriz de covariâncias do erro é `\(V \neq \sigma^2 I\)`, então o modelo
 **Teorema 4.1:** O modelo linear gerado por um plano experimental completamente aleatorizado admite a solução de quadrados mínimos ordinários como BLUE.
 
 **Prova (Esboço):**
-A prova consiste em mostrar que a condição do Teorema de Zyskind é satisfeita: `\(VX=XQ\)` para alguma matriz Q. Para o DIC, pode-se verificar que esta condição é verdadeira.
+É fácil verificar que a matriz do modelo (X) e a matriz de covariâncias (V), apresentadas anteriormente, são tais que `\(VX=XQ\)`, onde:
+`$$Q_{(t+1)\times(t+1)} = \sigma_u^2 \begin{pmatrix} 1 &amp; -1/N &amp; \dots &amp; -1/N \\ -k/N &amp; 1 &amp; \dots &amp; -1/N \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ -k/N &amp; -1/N &amp; \dots &amp; 1 \end{pmatrix}$$` Logo, o resultado segue pelo **Teorema de Zyskind**.
+---
+
 
 **Importância:** Este teorema é fundamental. Ele nos diz que, apesar de os erros de aleatorização serem correlacionados, **podemos agir como se eles não fossem**. Podemos usar a análise de variância e os estimadores de mínimos quadrados ordinários (que assumem o modelo de Gauss-Markov) e ainda assim obter os melhores estimadores lineares não-viesados.
 
 O modelo final que usamos na prática combina os dois tipos de erro:
 `$$y_{ir} = \mu + \tau_i + \epsilon_{ir} \quad (5)$$`
-Onde `\(\epsilon_{ir}\)` agora representa tanto o erro de aleatorização quanto o erro de medição.
+nde `\(\epsilon_{ir}\)` é o termo aleatório de resíduo, com média zero e variância constante `\(\sigma^2\)`. Embora os componentes de `\(\epsilon_{ir}\)` (erro de aleatorização e erro de medida) tenham covariância não nula, eles são tratados como sendo **não correlacionados**, uma simplificação justificada pelo Teorema 4.1 e pela prática comum na análise de experimentos.
 
 ---
-class: center, middle, inverse
 
-## Análise de um Experimento DIC
-
-
----
 ### Análise de Variância (ANOVA) para o DIC
 
-A análise de variância (ANOVA) de um experimento balanceado executado de acordo com um plano completamente aleatorizado baseia-se no modelo (5). A derivação da soma de quadrados segue a identidade algébrica:
+
+A análise de variância (ANOVA) de um experimento balanceado, executado de acordo com um plano completamente aleatorizado, baseia-se no modelo linear final:
+`$$y_{ir} = \mu + \tau_i + \epsilon_{ir} \quad (5)$$`
+A derivação das somas de quadrados apropriadas segue os mesmos passos vistos anteriormente, motivados pela identidade algébrica. Partimos da identidade centralizada:
 `$$(y_{ir} - \bar{y}_{..}) = (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$`
-Elevando ao quadrado e somando (o termo cruzado se anula), temos:
+Elevando-se ao quadrado ambos os termos e tomando-se a soma em todos os índices, tem-se a decomposição da Soma de Quadrados.
+
+---
+### Decomposição da Soma de Quadrados
+
+Ao elevarmos ao quadrado e somarmos, obtemos:
+`$$\sum_{ir} (y_{ir} - \bar{y}_{..})^2 = \sum_{ir} (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{ir} (y_{ir} - \bar{y}_{i.})^2 + 2 \sum_{ir} (\bar{y}_{i.} - \bar{y}_{..})(y_{ir} - \bar{y}_{i.})$$`
+**Os termos referentes a produtos cruzados anulam-se**, pois, para cada `i`:
+`$$\sum_{r} (\bar{y}_{i.} - \bar{y}_{..})(y_{ir} - \bar{y}_{i.}) = (\bar{y}_{i.} - \bar{y}_{..}) \sum_{r} (y_{ir} - \bar{y}_{i.})$$`
+Como a soma dos desvios em torno da média de um grupo é sempre zero (`\(\sum_r (y_{ir} - \bar{y}_{i.}) = 0\)`), o termo cruzado se anula. Isso explica a decomposição ortogonal:
 `$$\sum_{ir} (y_{ir} - \bar{y}_{..})^2 = k \sum_{i} (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{ir} (y_{ir} - \bar{y}_{i.})^2$$`
 `$$SQ_{Total} = SQ_{Tratamento} + SQ_{Resíduo}$$`
+
+---
+### Justificativa dos Graus de Liberdade
+
+Na parte 3, a definição dos graus de liberdade (G.L.) foi apresentada em função de postos de matrizes. Uma forma equivalente de justificar os G.L. seria notar que:
+
+i) **G.L. do Tratamento:** A soma dos desvios das médias de grupo em relação à média geral é zero:
+`$$\sum_{i=1}^t (\bar{y}_{i.} - \bar{y}_{..}) = 0$$`
+Logo, se conhecemos `\(t-1\)` desses desvios, o último está determinado. Existem apenas **(t-1)** termos linearmente independentes nessa soma, que correspondem aos graus de liberdade do tratamento.
+
+ii) **G.L. do Resíduo:** Analogamente, a soma dos resíduos dentro de cada grupo `i` é zero:
+`$$\sum_{r=1}^k (y_{ir} - \bar{y}_{i.}) = 0$$`
+Isso implica que, para cada `i`, existem `\((k-1)\)` termos linearmente independentes. Ao todo, para os `t` tratamentos, tem-se **t(k-1)** termos linearmente independentes, o que justifica os graus de liberdade associados à soma de quadrados do resíduo.
+
+---
+### Esperança dos Quadrados Médios (E(QM))
+
+A possibilidade de testar hipóteses foi avaliada com base nas esperanças de quadrados médios. Para exemplificar, vamos determinar a esperança do quadrado médio de tratamentos, sob o modelo (5):
+`$$y_{ir} = \mu + \tau_i + \epsilon_{ir}$$`
+onde os termos de resíduo `\(\epsilon_{ir}\)` são considerados não correlacionados, com `\(E(\epsilon_{ir}) = 0\)` e `\(Var(\epsilon_{ir}) = \sigma^2\)`.
+
+Sob esse modelo, tem-se que os `\(y_{ir}\)`'s são não correlacionados, com:
+`$$E(y_{ir}) = \mu + \tau_i \quad , \quad Var(y_{ir}) = \sigma^2$$`
+Logo, para as médias, temos (assumindo a restrição `\(\sum \tau_i = 0\)`, que implica `\(\bar{\tau}_{.}=0\)`):
+- `\(E(\bar{y}_{i.}) = \frac{1}{k} \sum_{r=1}^k (\mu + \tau_i) = \mu + \tau_i\)`
+- `\(Var(\bar{y}_{i.}) = Var(\frac{1}{k}\sum_r y_{ir}) = \frac{1}{k^2} \sum_r Var(y_{ir}) = \frac{1}{k^2} (k \sigma^2) = \frac{\sigma^2}{k}\)`
+- `\(E(\bar{y}_{..}) = \frac{1}{t} \sum_{i=1}^t (\mu + \tau_i) = \mu + \bar{\tau}_{.} = \mu\)`
+- `\(Var(\bar{y}_{..}) = Var(\frac{1}{tk}\sum_{ir} y_{ir}) = \frac{1}{(tk)^2} (tk \sigma^2) = \frac{\sigma^2}{tk}\)`
 ---
 
-O quadro a seguir resume as informações:
+Por outro lado, tem-se:
+`$$E(\bar{y}_{i.} - \bar{y}_{..})^2 = Var(\bar{y}_{i.} - \bar{y}_{..}) + [E(\bar{y}_{i.} - \bar{y}_{..})]^2$$`
+
+### Derivação do `\(E(QM_{Trat})\)`
+
+
+1.  **Cálculo da Variância do Termo:**
+    `$$Var(\bar{y}_{i.} - \bar{y}_{..}) = Var(\bar{y}_{i.}) + Var(\bar{y}_{..}) - 2 Cov(\bar{y}_{i.}, \bar{y}_{..})$$`
+    Pode-se mostrar que `\(Cov(\bar{y}_{i.}, \bar{y}_{..}) = \sigma^2/tk\)`. Substituindo:
+    $$ = \frac{\sigma^2}{k} + \frac{\sigma^2}{tk} - 2\frac{\sigma^2}{tk} = \frac{\sigma^2}{k} - \frac{\sigma^2}{tk} = \frac{\sigma^2}{k} \left(1 - \frac{1}{t}\right) = \frac{\sigma^2(t-1)}{kt}$$
+---
+
+2.  **Cálculo da Esperança do Termo:**
+    `$$E(\bar{y}_{i.} - \bar{y}_{..}) = (\mu + \tau_i) - \mu = \tau_i$$`
+3.  **Juntando os termos:**
+    `$$E(\bar{y}_{i.} - \bar{y}_{..})^2 = \frac{\sigma^2(t-1)}{kt} + \tau_i^2$$`
+4.  **Cálculo da Esperança do Quadrado Médio:**
+    `$$E(QM_{Trat}) = \frac{k}{t-1}\sum_{i=1}^t E(\bar{y}_{i.}-\bar{y}_{..})^2 = \frac{k}{t-1}\sum_{i=1}^t \left[ \frac{\sigma^2(t-1)}{kt} + \tau_i^2 \right]$$`
+    `$$= \frac{k}{t-1} \left[ t \cdot \frac{\sigma^2(t-1)}{kt} + \sum_{i=1}^t \tau_i^2 \right] = \frac{k}{t-1} \left[ \frac{\sigma^2(t-1)}{k} + \sum_{i=1}^t \tau_i^2 \right]$$`
+    `$$= \sigma^2 + \frac{k}{t-1}\sum_{i=1}^t \tau_i^2$$`
+
+---
+### Tabela ANOVA Final para o DIC
+
+De forma análoga, é possível mostrar que `\(E(QM_{Resid}) = \sigma^2\)`.
+O quadro a seguir resume essas informações no formato usual de uma ANOVA:
 
 | Fonte | G.L. | S.Q. | Q.M. | E(QM) |
 |:---|:---:|:---:|:---:|:---:|
 | Trat. | `\(t-1\)` | `\(k\sum(\bar{y}_{i.}-\bar{y}_{..})^2\)` | `\(SQ_{Trat}/(t-1)\)` | `\(\sigma^2 + \frac{k\sum\tau_i^2}{t-1}\)` |
-| Resíduo| `\(t(k-1)\)` | `\(\sum(y_{ir}-\bar{y}_{i.})^2\)` | `\(SQ_{Res}/(t(k-1))\)` | `\(\sigma^2\)` |
+| Resid. | `\(t(k-1)\)` | `\(\sum(y_{ir}-\bar{y}_{i.})^2\)` | `\(SQ_{Res}/(t(k-1))\)` | `\(\sigma^2\)` |
 | Total | `\(tk-1\)` | `\(\sum(y_{ir}-\bar{y}_{..})^2\)` | | |
+
+**Lógica do Teste F:** Se `\(H_0: \tau_i=0\)` é verdadeira, `\(E(QM_{Trat}) = E(QM_{Resid}) = \sigma^2\)`, e esperamos `\(F = QM_{Trat}/QM_{Resid} \approx 1\)`. Se `\(H_0\)` é falsa, esperamos `\(F &gt; 1\)`.
+
+
+
+
+
+
+
+&lt;!-- A análise de variância (ANOVA) de um experimento balanceado executado de acordo com um plano completamente aleatorizado baseia-se no modelo (5). A derivação da soma de quadrados segue a identidade algébrica: --&gt;
+&lt;!-- `$$(y_{ir} - \bar{y}_{..}) = (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$` --&gt;
+&lt;!-- Elevando ao quadrado e somando (o termo cruzado se anula), temos: --&gt;
+&lt;!-- `$$\sum_{ir} (y_{ir} - \bar{y}_{..})^2 = k \sum_{i} (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{ir} (y_{ir} - \bar{y}_{i.})^2$$` --&gt;
+&lt;!-- `$$SQ_{Total} = SQ_{Tratamento} + SQ_{Resíduo}$$` --&gt;
+&lt;!-- --- --&gt;
+
+&lt;!-- O quadro a seguir resume as informações: --&gt;
+
+&lt;!-- | Fonte | G.L. | S.Q. | Q.M. | E(QM) | --&gt;
+&lt;!-- |:---|:---:|:---:|:---:|:---:| --&gt;
+&lt;!-- | Trat. | `\(t-1\)` | `\(k\sum(\bar{y}_{i.}-\bar{y}_{..})^2\)` | `\(SQ_{Trat}/(t-1)\)` | `\(\sigma^2 + \frac{k\sum\tau_i^2}{t-1}\)` | --&gt;
+&lt;!-- | Resíduo| `\(t(k-1)\)` | `\(\sum(y_{ir}-\bar{y}_{i.})^2\)` | `\(SQ_{Res}/(t(k-1))\)` | `\(\sigma^2\)` | --&gt;
+&lt;!-- | Total | `\(tk-1\)` | `\(\sum(y_{ir}-\bar{y}_{..})^2\)` | | | --&gt;
 
 ---
 ### Análise de um Experimento sob um Plano Completamente Aleatorizado
@@ -533,7 +813,7 @@ ggplot(dados_porcos, aes(x=Dieta, y=Peso_final, fill=Dieta)) +
   theme_minimal(base_size=14)
 ```
 
-&lt;img src="MATD48-06_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="MATD48-06_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Teste de Aleatorização
