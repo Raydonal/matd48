@@ -4,7 +4,7 @@
     <title>Fundamentos de Análise para Planejamento Experimental</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -67,8 +67,8 @@ O **Quadro ** a seguir ilustra a população conceitual de respostas em um exper
 
 Note a estrutura de classificação da população conceitual de respostas do Quadro é representada no diagrama de Hasse:
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-e4f04f3b6e48fb51235e" style="width:576px;height:324px;"></div>
-<script type="application/json" data-for="htmlwidget-e4f04f3b6e48fb51235e">{"x":{"diagram":"\ndigraph fig6_corrected {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  # Definir nós com nomes seguros\n  mu [label=\"μ\"];\n  Tratamento [label=\"T\"];\n  Unidade [label=\"U\"];\n  epsilon [label=\"ε\"];\n  \n  # Definir relações de cima para baixo\n  mu -> Tratamento;\n  mu -> Unidade;\n  Tratamento -> epsilon;\n  Unidade -> epsilon;\n  \n  {rank=same; Tratamento; Unidade;}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-d908e42b70ade38ebd87" style="width:576px;height:324px;"></div>
+<script type="application/json" data-for="htmlwidget-d908e42b70ade38ebd87">{"x":{"diagram":"\ndigraph fig6_corrected {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  # Definir nós com nomes seguros\n  mu [label=\"μ\"];\n  Tratamento [label=\"T\"];\n  Unidade [label=\"U\"];\n  epsilon [label=\"ε\"];\n  \n  # Definir relações de cima para baixo\n  mu -> Tratamento;\n  mu -> Unidade;\n  Tratamento -> epsilon;\n  Unidade -> epsilon;\n  \n  {rank=same; Tratamento; Unidade;}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 Nesta estrutura, os fatores `Tratamento (T)` e `Unidade Experimental (U)` são **cruzados**. A identidade algébrica relacionada é:
 `$$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) + (Y_{ij} - \bar{Y}_{i.} - \bar{Y}_{.j} + \bar{Y}_{..})$$`
@@ -90,8 +90,8 @@ A **Figura** a seguir ilustra a estrutura de classificação da amostra observad
 
 
 **Estrutura de classificação da amostra observada no experimento**
-<div class="grViz html-widget html-fill-item" id="htmlwidget-a645dc8f62e9b47ffdea" style="width:576px;height:324px;"></div>
-<script type="application/json" data-for="htmlwidget-a645dc8f62e9b47ffdea">{"x":{"diagram":"digraph {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  mu [label=\"μ\"];\n  epsilon [label=\"ε\"];\n  mu -> T -> U -> epsilon;\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-d3b517c525d8e2692f19" style="width:576px;height:324px;"></div>
+<script type="application/json" data-for="htmlwidget-d3b517c525d8e2692f19">{"x":{"diagram":"digraph {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  mu [label=\"μ\"];\n  epsilon [label=\"ε\"];\n  mu -> T -> U -> epsilon;\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 A identidade algébrica relacionada a uma observação do experimento é:
 `$$y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$`

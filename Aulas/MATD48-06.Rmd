@@ -32,11 +32,11 @@ library(tidyverse)
 
 # Análise de Variância e Inferência
 
-
+<br>
 ## Análise de Variância
 
 
-Em todo experimento, um vetor de respostas $y$ é identificado e expresso de acordo com um modelo linear. Para ser mais preciso, assuma um experimento que objetivou comparar `t` tratamentos usando `k` unidades experimentais para cada tratamento (`k` réplicas). Ao todo, $n=tk$ observações foram feitas.
+Em todo experimento, um vetor de respostas $y$ é identificado e expresso de acordo com um modelo linear. Para ser mais preciso, assuma um experimento que objetivou comparar $t$ tratamentos usando $k$ unidades experimentais para cada tratamento ($k$ réplicas). Ao todo, $n=tk$ observações foram feitas.
 
 **A Ideia Central da ANOVA:**
 A técnica de análise de variância corresponde à **decomposição do vetor de respostas $y$ (de dimensão n) em vetores mutuamente ortogonais.**
@@ -66,16 +66,16 @@ Como $P_X$ e $(I-P_X)$ são matrizes de projeção em espaços ortogonais, os ve
 
 A ortogonalidade entre $\hat{y}$ e $e$ nos permite aplicar o Teorema de Pitágoras. O "comprimento ao quadrado" do vetor $y$ é a soma dos "comprimentos ao quadrado" de suas projeções:
 $$||y||^2 = ||\hat{y}||^2 + ||e||^2$$
-$$y^T y = (P_X y)^T (P_X y) + ((I - P_X)y)^T ((I - P_X)y)$$
+$$y^\top y = (P_X y)^\top (P_X y) + ((I - P_X)y)^\top ((I - P_X)y)$$
 Como $P_X$ e $(I-P_X)$ são simétricas e idempotentes, isso simplifica para:
-$y^T y = y^T P_X y + y^T (I - P_X) y$ e $SQ_{Total} = SQ_{Trat} + SQ_{Resid}$
+$y^\top y = y^\top P_X y + y^\top (I - P_X) y$ e $SQ_{Total} = SQ_{Trat} + SQ_{Resid}$
 Daí tem-se a seguinte **Tabela 1 de ANOVA (não corrigida)**:
 
 | F.V. (Fonte de Variação) | G.L. (Graus de Liberdade) | S.Q. (Soma de Quadrados) |
 |:---|:---:|:---:|
-| Tratamento | $posto(X)$ | $y^T P_X y$ |
-| Resíduo | $n - posto(X)$ | $y^T (I - P_X) y$ |
-| Total | $n$ | $y^T y$ |
+| Tratamento | $posto(X)$ | $y^\top P_X y$ |
+| Resíduo | $n - posto(X)$ | $y^\top (I - P_X) y$ |
+| Total | $n$ | $y^\top y$ |
 
 Esta tabela particiona a energia total do vetor $y$, mas não é a forma usual, pois inclui a média geral no $SQ_{Trat}$.
 
@@ -86,24 +86,24 @@ Esta tabela particiona a energia total do vetor $y$, mas não é a forma usual, 
 É mais usual encontrar tabelas de ANOVA **corrigidas pela média**. O objetivo é particionar a **variância** dos dados ($y$ centrado na média), e não sua energia total. Para isso, introduzimos uma nova decomposição:
 
 $$y = \underbrace{J_n y}_{\text{Componente da Média}} + \underbrace{(P_X - J_n)y}_{\text{Componente dos Efeitos}} + \underbrace{(I - P_X)y}_{\text{Componente do Resíduo}}$$
-onde $J_n = \frac{1}{n}\mathbf{1}\mathbf{1}^T$ é a matriz de projeção no vetor de 1s (o vetor da média geral). Os três componentes são mutuamente ortogonais.
+onde $J_n = \frac{1}{n}\mathbf{1}\mathbf{1}^\top$ é a matriz de projeção no vetor de 1s (o vetor da média geral). Os três componentes são mutuamente ortogonais.
 
 Aplicando o Teorema de Pitágoras novamente, obtemos a partição da soma de quadrados corrigida:
-$$y^T(I-J_n)y = y^T(P_X-J_n)y + y^T(I-P_X)y$$
+$$y^\top(I-J_n)y = y^\top(P_X-J_n)y + y^\top(I-P_X)y$$
 ---
 Daí tem-se a **Tabela 2 de ANOVA**:
 
 | F.V. | G.L. | S.Q. |
 |:---|:---:|:---:|
-| Tratamento | $posto(X) - 1$ | $y^T (P_X - J_n) y$ |
-| Resíduo | $n - posto(X)$ | $y^T (I - P_X) y$ |
-| Total | $n - 1$ | $y^T (I - J_n) y$ |
+| Tratamento | $posto(X) - 1$ | $y^\top (P_X - J_n) y$ |
+| Resíduo | $n - posto(X)$ | $y^\top (I - P_X) y$ |
+| Total | $n - 1$ | $y^\top (I - J_n) y$ |
 
 ---
 ### Tabela 3 de ANOVA (Forma Escalar)
 
 
-A Tabela 2, escrita sem recorrer à notação matricial, é a forma mais conhecida da ANOVA. Para um Delineamento Inteiramente Casualizado com `t` tratamentos e `k` réplicas:
+A Tabela 3, escrita sem recorrer à notação matricial, é a forma mais conhecida da ANOVA. Para um Delineamento Inteiramente Casualizado com $t$ tratamentos e $k$ réplicas:
 
 | F.V. | G.L. | S.Q. |
 |:---|:---:|:---:|
@@ -115,9 +115,9 @@ A Tabela 2, escrita sem recorrer à notação matricial, é a forma mais conheci
 $$y_{ir} - \bar{y}_{..} = \underbrace{(\bar{y}_{i.} - \bar{y}_{..})}_{\text{Componente Tratamento}} + \underbrace{(y_{ir} - \bar{y}_{i.})}_{\text{Componente Resíduo}}$$
 
 ---
-### EXERCÍCIO EM CLASSE (
+### EXERCÍCIO 
 
-**Verifique que, através da identidade algébrica [...], é possível chegar à Tabela 3 de ANOVA.**
+**Verifique que, através das identidades algébricas é possível chegar à Tabela 3 de ANOVA.**
 
 1.  **Partida:** A identidade algébrica para um DIC é:
     $y_{ir} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$
@@ -129,16 +129,16 @@ $$y_{ir} - \bar{y}_{..} = \underbrace{(\bar{y}_{i.} - \bar{y}_{..})}_{\text{Comp
     $= \sum_i \sum_r (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_i \sum_r (y_{ir} - \bar{y}_{i.})^2 + 2 \sum_i \sum_r (\bar{y}_{i.} - \bar{y}_{..})(y_{ir} - \bar{y}_{i.})$
 5.  **Analisar o Termo Cruzado:**
     O termo cruzado pode ser reescrito como: $2 \sum_i (\bar{y}_{i.} - \bar{y}_{..}) \left[ \sum_r (y_{ir} - \bar{y}_{i.}) \right]$.
-    Como a soma dos desvios em torno da média é sempre zero, o termo $\sum_r (y_{ir} - \bar{y}_{i.}) = 0$ para qualquer `i`. Portanto, todo o termo cruzado é zero.
+    Como a soma dos desvios em torno da média é sempre zero, o termo $\sum_r (y_{ir} - \bar{y}_{i.}) = 0$ para qualquer $i$. Portanto, todo o termo cruzado é zero.
 6.  **Conclusão:**
-    $SQ_{Total} = \sum_i k (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_i \sum_r (y_{ir} - \bar{y}_{i.})^2 = SQ_{Tratamento} + SQ_{Resíduo}$. C.Q.D.
+    $SQ_{Total} = \sum_i k (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_i \sum_r (y_{ir} - \bar{y}_{i.})^2 = SQ_{Tratamento} + SQ_{Resíduo}$. 
 
 ---
 
 
 ## Inferência
  
-Até agora, as premissas do modelo de Gauss-Markov nos garantiram que o estimador de mínimos quadrados é **BLUE** (o melhor em termos de variância). No entanto, para realizar **testes de hipótese** (testes F, testes t) e construir **intervalos de confiança**, precisamos de uma premissa adicional sobre a distribuição dos erros.
+Até agora, as premissas do modelo de Gauss-Markov nos garantiram que o estimador de mínimos quadrados é **BLUE** (o melhor em termos de variância). No entanto, para realizar **testes de hipótese** (testes $F$, testes $t$) e construir **intervalos de confiança**, precisamos de uma premissa adicional sobre a distribuição dos erros.
 
 O **modelo linear normal** adiciona a suposição de **normalidade** aos resíduos:
 $$ y = X\beta + \epsilon, \quad \text{onde } \epsilon \sim N(0, \sigma^2 I) $$
@@ -149,13 +149,13 @@ $$ y \sim N(X\beta, \sigma^2 I) $$
 ---
 ### Interpretando as Premissas do Modelo Normal
 
-O que a expressão matemática $y \sim N(X\beta, \sigma^2 I)$ realmente significa? Ela encapsula três premissas fundamentais sobre a relação entre os preditores (X) e a resposta (Y):
+O que a expressão matemática $y \sim N(X\beta, \sigma^2 I)$ realmente significa? Ela encapsula três premissas fundamentais sobre a relação entre os preditores ($X$) e a resposta ($Y$):
 
-1.  **Linearidade (na média):** O valor esperado (a média) de Y, para um dado conjunto de X's, está sobre uma linha (ou hiperplano). Matematicamente, $E(y|X) = X\beta$.
+1.  **Linearidade (na média):** O valor esperado (a média) de Y, para um dado conjunto de $X$'s, está sobre uma linha (ou hiperplano). Matematicamente, $E(y|X) = X\beta$.
 
-2.  **Normalidade (dos erros):** Para um dado conjunto de X's, os valores observados de Y se distribuem normalmente em torno de sua média. Isso implica que os erros ($\epsilon = y - E(y|X)$) seguem uma distribuição normal.
+2.  **Normalidade (dos erros):** Para um dado conjunto de $X$'s, os valores observados de $Y$ se distribuem normalmente em torno de sua média. Isso implica que os erros ($\epsilon = y - E(y|X)$) seguem uma distribuição normal.
 
-3.  **Homocedasticidade (variância constante):** A "largura" ou "dispersão" da distribuição normal de Y é a mesma para todos os valores de X. Matematicamente, $Var(y|X) = \sigma^2$, um valor constante.
+3.  **Homocedasticidade (variância constante):** A "largura" ou "dispersão" da distribuição normal de $Y$ é a mesma para todos os valores de $X$. Matematicamente, $Var(y|X) = \sigma^2$, um valor constante.
 
 A imagem a seguir torna essas três ideias concretas.
 
@@ -216,7 +216,7 @@ ggplot(dados_alunos, aes(x = Horas_Estudo, y = Nota)) +
 
 Este gráfico é um dicionário visual para as premissas do modelo:
 
-1.  **A linha de regressão preta** representa a premissa de **Linearidade**. Ela mostra como a *média* da Nota (`E(y|X)`) aumenta linearmente com as Horas de Estudo. É a nossa estimativa de $X\beta$.
+1.  **A linha de regressão preta** representa a premissa de **Linearidade**. Ela mostra como a *média* da Nota ($E(y|X)$) aumenta linearmente com as Horas de Estudo. É a nossa estimativa de $X\beta$.
 
 2.  **As curvas de sino pretas** em cada fatia vertical representam a premissa de **Normalidade**. Elas mostram que, para um número fixo de horas de estudo (ex: 10 horas), as notas dos alunos se distribuem normalmente em torno da média prevista pela linha.
 
@@ -231,7 +231,7 @@ Quando essas três premissas são satisfeitas, as Somas de Quadrados seguem dist
 
 Como as premissas de Linearidade, Normalidade e Homocedasticidade se aplicam quando nosso preditor é um fator categórico (Tratamento)?
 
-1.  **"Linearidade" (Modelo das Médias):** O modelo assume que a média da resposta `Y` **depende apenas do grupo (tratamento)** ao qual a observação pertence. Matematicamente, $E(y_{ir}) = \mu_i = \mu + \tau_i$. Em um gráfico, isso significa que cada grupo terá sua própria média (um platô), em vez de uma linha inclinada.
+1.  **"Linearidade" (Modelo das Médias):** O modelo assume que a média da resposta $Y$ **depende apenas do grupo (tratamento)** ao qual a observação pertence. Matematicamente, $E(y_{ir}) = \mu_i = \mu + \tau_i$. Em um gráfico, isso significa que cada grupo terá sua própria média (um platô), em vez de uma linha inclinada.
 
 2.  **Normalidade:** Dentro de cada grupo de tratamento, as respostas observadas ($y_{ir}$) se distribuem normalmente em torno da média daquele grupo ($\mu_i$).
 
@@ -275,7 +275,7 @@ sumario_dic
 ```
 ---
 
-```{r, fig.height=5, echo=FALSE, fig.cap="Gráfico de Violino" }
+```{r, fig.height=6, echo=FALSE, fig.cap="Gráfico de Violino" }
 # Criar dados para as curvas de densidade
 density_data_dic <- do.call(rbind, lapply(1:nrow(sumario_dic), function(i) {
   grupo <- sumario_dic$Fertilizante[i]
@@ -366,7 +366,7 @@ A "reta de regressão" em um modelo de ANOVA é, na verdade, um **conjunto de m�
 **Conclusão:** A ANOVA é um tipo de modelo linear, mas em vez de estimar um intercepto e uma inclinação (`y = b0 + b1*x`), ela estima uma média para cada nível do fator (`y = μi`). Ambos são casos especiais do modelo geral $y=X\beta$.
 ---
 
-## 3.11 O Modelo Linear Normal de Gauss-Markov
+## O Modelo Linear Normal de Gauss-Markov
 
 Para realizar testes de hipótese e construir intervalos de confiança, adicionamos uma premissa à definição do modelo de Gauss-Markov: a **suposição de normalidade aos resíduos**.
 
@@ -381,11 +381,11 @@ Esta premissa é a chave que nos permite derivar a distribuição das Somas de Q
 ---
 ### Distribuição de Formas Quadráticas
 
-**Resultado 3.3:** Considere um vetor aleatório $y \sim N(\mu, \Sigma)$ e uma matriz simétrica $A$ com $posto(A)=k$.
+**Resultado** Considere um vetor aleatório $y \sim N(\mu, \Sigma)$ e uma matriz simétrica $A$ com $posto(A)=k$.
 Nessas condições, se $A\Sigma$ for idempotente, então:
-$$ y^T A y \sim \chi^2_k(\delta^2) \quad \text{, com } \delta^2 = \mu^T A \mu $$
+$$ y^\top A y \sim \chi^2_k(\delta^2) \quad \text{, com } \delta^2 = \mu^\top A \mu $$
 E se, adicionalmente, $A\mu = 0$, então a distribuição é central:
-$$ y^T A y \sim \chi^2_k $$
+$$ y^\top A y \sim \chi^2_k $$
 
 Este teorema é a ferramenta matemática que nos permite encontrar a distribuição das Somas de Quadrados.
 
@@ -394,9 +394,9 @@ Este teorema é a ferramenta matemática que nos permite encontrar a distribuiç
 
 Queremos mostrar que $\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$.
 
-1.  **Definições:** $SQ_{Resid} = y^T(I-P_X)y$. No nosso modelo, $y \sim N(X\beta, \sigma^2 I)$, então $\mu=X\beta$ e $\Sigma=\sigma^2 I$.
-2.  **Forma Quadrática:** $\frac{SQ_{Resid}}{\sigma^2} = y^T A y$, onde $A = \frac{1}{\sigma^2}(I-P_X)$.
-3.  **Verificar Condições do Resultado 3.3:**
+1.  **Definições:** $SQ_{Resid} = y^\top(I-P_X)y$. No nosso modelo, $y \sim N(X\beta, \sigma^2 I)$, então $\mu=X\beta$ e $\Sigma=\sigma^2 I$.
+2.  **Forma Quadrática:** $\frac{SQ_{Resid}}{\sigma^2} = y^\top A y$, onde $A = \frac{1}{\sigma^2}(I-P_X)$.
+3.  **Verificar Condições do Resultado:**
     - **Posto:** $posto(A) = posto(I-P_X) = n - posto(X) = n-t$. Então $k=n-t$.
     - **Idempotência de $A\Sigma$:** $A\Sigma = \frac{1}{\sigma^2}(I-P_X) (\sigma^2 I) = (I-P_X)$. Como $(I-P_X)$ é uma matriz de projeção, ela é idempotente. A condição é satisfeita.
     - **Verificar se $A\mu=0$:** $A\mu = \frac{1}{\sigma^2}(I-P_X)X\beta$. Como $P_X X = X$, temos $(I-P_X)X = X - P_X X = X - X = 0$. Portanto, $A\mu = 0$.
@@ -404,18 +404,18 @@ Queremos mostrar que $\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$.
     $$\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$$
 
 ---
-### EXERCÍCIO EM CLASSE
+### EXERCÍCIO 
 
-**Mostre, utilizando o Resultado 3.3, que $SQ_{Trat}/\sigma^2 \sim \chi^2_{t}(\delta^2)$ (para a SQ *não corrigida*).**
+**Mostre, utilizando o Resultado anterior, que $SQ_{Trat}/\sigma^2 \sim \chi^2_{t}(\delta^2)$ (para a SQ *não corrigida*).**
 
-1.  **Definições:** $SQ_{Trat} = y^T P_X y$. $y \sim N(X\beta, \sigma^2 I)$.
-2.  **Forma Quadrática:** $\frac{SQ_{Trat}}{\sigma^2} = y^T A y$, onde $A = \frac{1}{\sigma^2}P_X$.
+1.  **Definições:** $SQ_{Trat} = y^\top P_X y$. $y \sim N(X\beta, \sigma^2 I)$.
+2.  **Forma Quadrática:** $\frac{SQ_{Trat}}{\sigma^2} = y^\top A y$, onde $A = \frac{1}{\sigma^2}P_X$.
 3.  **Verificar Condições:**
     - **Posto:** $posto(A) = posto(P_X) = posto(X) = t$. Então $k=t$.
     - **Idempotência de $A\Sigma$:** $A\Sigma = \frac{1}{\sigma^2}P_X (\sigma^2 I) = P_X$. $P_X$ é idempotente. A condição é satisfeita.
     - **Parâmetro de não-centralidade $\delta^2$:** Não esperamos que $A\mu=0$ aqui.
-      $\delta^2 = \mu^T A \mu = (X\beta)^T (\frac{1}{\sigma^2}P_X) (X\beta) = \frac{1}{\sigma^2} \beta^T X^T P_X X \beta$.
-      Como $P_X X = X$, temos $\delta^2 = \frac{1}{\sigma^2} \beta^T X^T X \beta$.
+      $\delta^2 = \mu^\top A \mu = (X\beta)^\top (\frac{1}{\sigma^2}P_X) (X\beta) = \frac{1}{\sigma^2} \beta^\top X^\top P_X X \beta$.
+      Como $P_X X = X$, temos $\delta^2 = \frac{1}{\sigma^2} \beta^T X^\top X \beta$.
 4.  **Conclusão:** A forma quadrática segue uma qui-quadrado **não-central** com $t$ graus de liberdade.
     $$ \frac{SQ_{Trat}}{\sigma^2} \sim \chi^2_t(\delta^2) $$
 
@@ -423,18 +423,18 @@ Queremos mostrar que $\frac{SQ_{Resid}}{\sigma^2} \sim \chi^2_{n-t}$.
 ### Independência das Somas de Quadrados
 
 
-**Resultado 3.4:** Considere $y \sim N(\mu, \Sigma)$ e duas matrizes simétricas $A_1$ e $A_2$. Se $A_1 \Sigma A_2 = 0$, então as formas quadráticas $y^T A_1 y$ e $y^T A_2 y$ são variáveis aleatórias **independentes**.
+**Resultado:** Considere $y \sim N(\mu, \Sigma)$ e duas matrizes simétricas $A_1$ e $A_2$. Se $A_1 \Sigma A_2 = 0$, então as formas quadráticas $y^\top A_1 y$ e $y^\top A_2 y$ são variáveis aleatórias **independentes**.
 
 **Aplicação:** $SQ_{Trat}$ e $SQ_{Resid}$ são independentes.
-- $SQ_{Trat} = y^T P_X y$. Aqui, $A_1 = P_X$.
-- $SQ_{Resid} = y^T (I-P_X) y$. Aqui, $A_2 = I-P_X$.
+- $SQ_{Trat} = y^\top P_X y$. Aqui, $A_1 = P_X$.
+- $SQ_{Resid} = y^\top (I-P_X) y$. Aqui, $A_2 = I-P_X$.
 - $\Sigma = \sigma^2 I$.
 - Verificamos a condição: $A_1 \Sigma A_2 = P_X (\sigma^2 I) (I-P_X) = \sigma^2 P_X (I-P_X)$.
 - Como $P_X$ é idempotente, $P_X(I-P_X) = P_X - P_X P_X = P_X - P_X = 0$.
 - **Conclusão:** A condição é satisfeita. Logo, $SQ_{Trat}$ e $SQ_{Resid}$ são independentes.
 
 ---
-### Comparando Efeitos de Tratamentos: O Teste F
+### Comparando Efeitos de Tratamentos: O Teste $F$
 
 
 Seguindo os resultados, sob o modelo linear normal:
@@ -455,15 +455,15 @@ Quando $\delta^2=0$, a distribuição se torna a **distribuição F central**:
 $$F \sim F_{t-1, n-t}$$
 Esta é a condição sob a qual o teste F usual é derivado. A estatística F testa se a variação entre os tratamentos é maior do que o esperado apenas pela variação residual (aleatória).
 
----
+
 ### O Teorema de Cochran
 
 
-**Teorema 3.4 (Cochran):**
+**Teorema (Cochran):**
 Considere $y \sim N(\mu, \sigma^2 I)$ e um conjunto de matrizes simétricas $A_1, ..., A_p$ onde $\sum A_i = I_n$ e $\sum posto(A_i) = n$.
 Nestas condições:
-1.  Cada forma quadrática $\frac{y^T A_i y}{\sigma^2}$ segue uma distribuição $\chi^2_{k_i}(\delta_i^2)$, onde $k_i=posto(A_i)$.
-2.  As formas quadráticas $y^T A_i y$ são todas **mutuamente independentes**.
+1.  Cada forma quadrática $\frac{y^\top A_i y}{\sigma^2}$ segue uma distribuição $\chi^2_{k_i}(\delta_i^2)$, onde $k_i=posto(A_i)$.
+2.  As formas quadráticas $y^\top A_i y$ são todas **mutuamente independentes**.
 
 **Importância:** Este é o teorema fundamental que justifica a decomposição da Soma de Quadrados em **múltiplos componentes** (ex: Bloco, Tratamento A, Tratamento B, Interação A*B, Resíduo) em delineamentos mais complexos. Ele garante que podemos construir testes F válidos para cada fonte de variação na tabela de ANOVA, pois os componentes do numerador e denominador serão independentes.
 
@@ -505,20 +505,20 @@ O plano completamente aleatorizado (DIC), apesar de ser o mais simples dos plano
 ---
 ### Descrição do Plano
 
-**Condição:** É necessário ter uma quantidade N de unidades experimentais (u.e.) disponíveis e homogêneas.
+**Condição:** É necessário ter uma quantidade $N$ de unidades experimentais (u.e.) disponíveis e homogêneas.
 
 **Procedimento:**
-1. Para comparar os efeitos de `t` tratamentos, as N unidades experimentais são divididas em `t` grupos.
+1. Para comparar os efeitos de $t$ tratamentos, as $N$ unidades experimentais são divididas em $t$ grupos.
 2. Um processo físico de **aleatorização** é usado para garantir igual probabilidade de alocação de cada u.e. em cada grupo.
 3. Cada grupo, então, recebe um tratamento diferente.
 
-Quando $N=tk$, são alocadas `k` unidades experimentais para cada tratamento, implicando em uma **estrutura de classificação balanceada**. Dizemos que o experimento tem `k` **réplicas**.
+Quando $N=tk$, são alocadas $k$ unidades experimentais para cada tratamento, implicando em uma **estrutura de classificação balanceada**. Dizemos assim que o experimento tem $k$ **réplicas**.
 
 É comum, nesta situação, dizer que o
-experimento foi replicado `k` vezes, ou
+experimento foi replicado $k$ vezes, ou
 ainda, que o experimento foi executado
-com `k` réplicas. Quando ocorre
-situações em que `k = 1`, porém, diz-se
+com $k$ réplicas. Quando ocorre
+situações em que $k = 1$, porém, diz-se
 que o experimento foi executado sem
 replicação, ou ainda, sem réplicas.
 
@@ -528,13 +528,13 @@ replicação, ou ainda, sem réplicas.
 A aleatorização é a pedra angular que garante a validade da inferência estatística.
 
 **Procedimento Clássico:**
-i) Enumerar as N u.e. de 1 a N, colocar os números em uma urna.
-ii) Sortear, sem reposição, os `k` primeiros números para o Tratamento 1, os `k` seguintes para o Tratamento 2, e assim por diante.
+i) Enumerar as $N$ u.e. de 1 a $N$, colocar os números em uma urna.
+ii) Sortear, sem reposição, os $k$ primeiros números para o Tratamento 1, os $k$ seguintes para o Tratamento 2, e assim por diante.
 
 **Procedimento Moderno (Computacional):**
 Com recursos como o **R**, o processo é muito mais simples e reprodutível.
 
-**Exemplo em R:** Aleatorizar N=12 unidades para t=3 tratamentos (A, B, C) com k=4 réplicas.
+**Exemplo em R:** Aleatorizar $N=12$ unidades para $t=3$ tratamentos (A, B, C) com $k=4$ réplicas.
 ```{r}
 # 1. Definir os tratamentos e o número de unidades
 N <- 12
@@ -549,7 +549,7 @@ plano_alocacao <- data.frame(
 ```{r}
 print(plano_alocacao)
 ```
-Este data frame é o "mapa" do nosso experimento, dizendo qual tratamento cada unidade receberá.
+Este data frame é o "mapa" do nosso experimento, dizendo qual é o tratamento que cada unidade receberá.
 
 ---
 class: center, middle, inverse
@@ -586,30 +586,30 @@ Nesta parte do curso, porém, a ênfase recairá sob a teoria da aleatorização
 
 Para conectar a **população conceitual** (não observável) $\{Y_{ij}\}$ com os **dados observados** $\{y_{ir}\}$, precisamos de uma ferramenta matemática que represente o ato do sorteio.
 
-Definimos uma **variável aleatória de seleção** (Cornfield, 1944) como segue:
+Definimos uma **variável aleatória de seleção** [Cornfield, J. (1944). On samples from finite populations. Journal of the American Statistical Association, 39(226), 236-239.] como segue:
 $$\delta_{ir}^j = \begin{cases} 1, & \text{se } y_{ir} = Y_{ij} \\ 0, & \text{caso contrário (c.c.)} \end{cases}$$
 
-A varável $\delta_{ir}^j$ assume o valor 1 quando a *r-ésima réplica do tratamento i* (`ir`) for aplicada à *u.e. j* (`j`); e assume o valor zero, caso contrário.
+A variável $\delta_{ir}^j$ assume o valor 1 quando a $r$-ésima réplica do tratamento $i$ ($ir$) for aplicada à u.e.  ($j$); e assume o valor zero, caso contrário.
 
-- O subscrito `ir` identifica uma **posição no plano experimental** (a 2ª réplica do tratamento A, por exemplo).
-- O superescrito `j` identifica uma **unidade experimental física** (o porco nº 5, o paciente nº 8, etc.).
+- O subscrito $ir$ identifica uma **posição no plano experimental** (a 2ª réplica do tratamento A, por exemplo).
+- O superescrito $j$ identifica uma **unidade experimental física** (o porco nº 5, o paciente nº 8, etc.).
 
-Esta variável $\delta$ é a representação matemática do "papeizinho sorteado" da urna. Sua aleatoriedade vem do processo físico de aleatorização.
+Esta variável $\delta$ é a representação matemática do "papeizinho sorteado" numa urna. Sua aleatoriedade vem do processo físico de aleatorização.
 ---
 
-Com base na aleatorização irrestrita empregada (sorteio sem reposição de N unidades), é fácil verificar, por exemplo, que:
+Com base na aleatorização irrestrita empregada (sorteio sem reposição de $N$ unidades), é fácil verificar, por exemplo, que:
 
-1.  $P(\delta_{ir}^j = 1) = \frac{1}{N}$
-*   **Intuição:** A probabilidade de qualquer unidade específica `j` ser escolhida para qualquer posição específica `ir` do plano é a mesma, $1/N$.
+$P(\delta_{ir}^j = 1) = \frac{1}{N}$
+*   **Intuição:** A probabilidade de qualquer unidade específica $j$ ser escolhida para qualquer posição específica $ir$ do plano é a mesma, $1/N$.
 
-2. $P(\delta_{ir}^j = 1 | \delta_{ir}^{j'} = 1) = 0$ para $j \neq j'$
-*   **Intuição:** Se a unidade `j'` já foi sorteada para a posição `ir`, é impossível que a unidade `j` também seja sorteada para a *mesma* posição.
+$P(\delta_{ir}^j = 1 | \delta_{ir}^{j'} = 1) = 0$ para $j \neq j'$
+*   **Intuição:** Se a unidade $j'$ já foi sorteada para a posição $ir$, é impossível que a unidade $j$ também seja sorteada para a *mesma* posição.
 
-3.  $P(\delta_{ir}^j = 1 | \delta_{i'r'}^{j'} = 1) = \frac{1}{N-1}$ para $ir \neq i'r'$ e $j \neq j'$
-*   **Intuição:** Se a unidade `j'` já foi sorteada para uma *outra* posição (`i'r'`), restam $N-1$ unidades para serem sorteadas para a posição `ir`. A chance da unidade `j` ser a escolhida é de $1/(N-1)$.
+$P(\delta_{ir}^j = 1 | \delta_{i'r'}^{j'} = 1) = \frac{1}{N-1}$ para $ir \neq i'r'$ e $j \neq j'$
+*   **Intuição:** Se a unidade $j'$ já foi sorteada para uma *outra* posição ($i'r'$), restam $N-1$ unidades para serem sorteadas para a posição $ir$. A chance da unidade $j$ ser a escolhida é de $1/(N-1)$.
 
-Além disso, como cada posição `ir` no plano deve ser preenchida por exatamente uma unidade experimental, temos: $\sum_{j=1}^N \delta_{ir}^j = 1$
----
+Além disso, como cada posição $ir$ no plano deve ser preenchida por exatamente uma unidade experimental, temos: $\sum_{j=1}^N \delta_{ir}^j = 1$
+
 
 
 
@@ -618,26 +618,32 @@ Além disso, como cada posição `ir` no plano deve ser preenchida por exatament
 <!-- $$\delta_{ir}^j = \begin{cases} 1, & \text{se a r-ésima réplica do tratamento i foi aplicada à u.e. j} \\ 0, & \text{caso contrário} \end{cases}$$ -->
 <!-- Com base na aleatorização, sabemos que $P(\delta_{ir}^j=1) = 1/N$ e que $\sum_{j=1}^N \delta_{ir}^j = 1$. -->
 
-**Agora, a relação entre as notações $y_{ir}$ e $Y_{ij}$ é estabelecida fazendo-se:**
-$$y_{ir} = \sum_{j=1}^N \delta_{ir}^j Y_{ij} \quad (1)$$ 
+---
+1.  A **Relação de Seleção**, que conecta a observação $y_{ir}$ com a população conceitual $\{Y_{ij}\}$:
+    $$y_{ir} = \sum_{j=1}^N \delta_{ir}^j Y_{ij} \quad (1)$$
+**Intuição:** Esta soma "filtra" a população conceitual. Como apenas um $\delta_{ir}^j$ é 1 para um dado $ir$, a soma simplesmente seleciona o valor potencial $Y_{ij}$ correspondente à unidade $j$ que foi sorteada para aquela posição.
 
-**Intuição:** Esta soma "filtra" a população conceitual. Como apenas um $\delta_{ir}^j$ é 1 para um dado `ir`, a soma simplesmente seleciona o valor potencial $Y_{ij}$ correspondente à unidade `j` que foi sorteada para aquela posição.
+2.  A **Identidade Algébrica completa** associada a uma observação da população conceitual de respostas (como vimos anteriormente):
+    $$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) + (Y_{ij} - \bar{Y}_{i.} - \bar{Y}_{.j} + \bar{Y}_{..}) \quad (2)$$
+    O último termo da identidade (2) acima corresponde a um **efeito de interação** entre o tratamento $i$ e a unidade experimental $j$.
+
+Nesse ponto, a suposição fundamental de **aditividade no sentido estrito** é lançada. Aqui, admite-se que o efeito dessa interação seja negligível (zero). Logo, a identidade (2) dá lugar à expressão simplificada:
+$$Y_{ij} \approx \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \quad (3)$$
+
+---
 
 **Próximo Passo:** Substituímos a identidade algébrica (com suposição de aditividade, Equação 3) na relação (1):
 $$y_{ir} = \sum_{j=1}^N \delta_{ir}^j \left[ \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \right]$$
 Distribuindo a soma:
 $$y_{ir} = \sum_{j=1}^N \delta_{ir}^j \bar{Y}_{..} + \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{i.} - \bar{Y}_{..}) + \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$
----
-Como $\sum \delta_{ir}^j = 1$ e os termos sem `j` são constantes na soma:
+
+Como $\sum \delta_{ir}^j = 1$ e os termos sem $j$ são constantes na soma:
 $$y_{ir} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$
 Fazendo as definições:
 $$\mu = \bar{Y}_{..} \quad \tau_i = (\bar{Y}_{i.} - \bar{Y}_{..}) \quad \omega_{ir} = \sum_{j=1}^N \delta_{ir}^j (\bar{Y}_{.j} - \bar{Y}_{..})$$
+---
 O seguinte **modelo linear para um plano completamente aleatorizado é deduzido:**
 $$y_{ir} = \mu + \tau_i + \omega_{ir} \quad (4)$$
----
-
-
-
 
 <!-- Usando a identidade algébrica da população conceitual (assumindo **aditividade**, i.e., interação tratamento-unidade negligível): -->
 <!-- $$Y_{ij} = \bar{Y}_{..} + (\bar{Y}_{i.} - \bar{Y}_{..}) + (\bar{Y}_{.j} - \bar{Y}_{..}) \quad (3)$$ -->
@@ -683,7 +689,7 @@ i) **O termo aleatório tem média zero:** $E_R(\omega_{ir}) = 0$. De fato, $$E_
 Pela linearidade da esperança e o fato de que os termos $Y$ são fixos (constantes) na população conceitual, a esperança atua apenas na variável aleatória $\delta_{ir}^j$:
 $$E_R(\omega_{ir}) = \sum_{j=1}^N E_R(\delta_{ir}^j) (\bar{Y}_{.j} - \bar{Y}_{..})$$
 ---
-Em um DIC, a probabilidade de qualquer unidade `j` ser selecionada para uma réplica específica é $1/N$. Portanto, $E_R(\delta_{ir}^j) = P(\delta_{ir}^j=1) = 1/N$:
+Em um DIC, a probabilidade de qualquer unidade $j$ ser selecionada para uma réplica específica é $1/N$. Portanto, $E_R(\delta_{ir}^j) = P(\delta_{ir}^j=1) = 1/N$:
 $$= \sum_{j=1}^N \frac{1}{N} (\bar{Y}_{.j} - \bar{Y}_{..}) = \frac{1}{N} \sum_{j=1}^N (\bar{Y}_{.j} - \bar{Y}_{..})$$
 A soma dos desvios de cada média de unidade ($\bar{Y}_{.j}$) em relação à média geral ($\bar{Y}_{..}$) é, por definição, zero, $= \frac{1}{N} \times 0 = 0$
 
@@ -699,9 +705,7 @@ Após manipulação algébrica, chega-se a:
 $$= (1 - \frac{1}{N}) \frac{\sum(\bar{Y}_{.j}-\bar{Y}_{..})^2}{N-1} = (1 - \frac{1}{N})\sigma_u^2$$
 Onde $\sigma_u^2$ é a variância entre as unidades experimentais.
 
-iii) **E sua covariância é negativa:** $Cov_R(\omega_{ir}, \omega_{i'r'}) = -\frac{1}{N}\sigma_u^2$.
-
-A estrutura de covariâncias do vetor de erros $\omega$ é:
+iii) **E sua covariância é negativa:** $Cov_R(\omega_{ir}, \omega_{i'r'}) = -\frac{1}{N}\sigma_u^2$. A estrutura de covariâncias do vetor de erros $\omega$ é:
 $$Var_R(\omega) = V = \sigma_u^2 [I_N - \frac{1}{N}J_N]$$
 Esta matriz **não é** $\sigma^2 I$. Isso significa que os erros de aleatorização $\omega_{ir}$ são **correlacionados**.
 
@@ -710,11 +714,11 @@ Esta matriz **não é** $\sigma^2 I$. Isso significa que os erros de aleatoriza�
 
 Se a matriz de covariâncias do erro é $V \neq \sigma^2 I$, então o modelo deduzido ($y=X\beta + \omega$) é um **modelo de Aitken**, e não de Gauss-Markov. Em geral, isso implicaria que a solução de Mínimos Quadrados Ordinários (OLS) não seria BLUE.
 
-**Teorema 4.1:** O modelo linear gerado por um plano experimental completamente aleatorizado admite a solução de quadrados mínimos ordinários como BLUE.
+**Teorema:** O modelo linear gerado por um plano experimental completamente aleatorizado admite a solução de quadrados mínimos ordinários como BLUE.
 
 **Prova (Esboço):**
-É fácil verificar que a matriz do modelo (X) e a matriz de covariâncias (V), apresentadas anteriormente, são tais que $VX=XQ$, onde:
-$$Q_{(t+1)\times(t+1)} = \sigma_u^2 \begin{pmatrix} 1 & -1/N & \dots & -1/N \\ -k/N & 1 & \dots & -1/N \\ \vdots & \vdots & \ddots & \vdots \\ -k/N & -1/N & \dots & 1 \end{pmatrix}$$ Logo, o resultado segue pelo **Teorema de Zyskind**.
+É fácil verificar que a matriz do modelo ($X$) e a matriz de covariâncias ($V$), apresentadas anteriormente, são tais que $VX=XQ$, onde:
+$$Q_{(t+1)\times(t+1)} = \sigma_u^2 \begin{pmatrix} 1 & -1/N & \dots & -1/N \\ -k/N & 1 & \dots & -1/N \\ \vdots & \vdots & \ddots & \vdots \\ -k/N & -1/N & \dots & 1 \end{pmatrix}$$ Logo, o resultado segue pelo **Teorema de Zyskind** [Zyskind, G. (1967). On canonical forms, non-negative covariance matrices and best and simple least squares linear estimators in linear models. The Annals of Mathematical Statistics, 1092-1109.].
 ---
 
 
@@ -722,7 +726,7 @@ $$Q_{(t+1)\times(t+1)} = \sigma_u^2 \begin{pmatrix} 1 & -1/N & \dots & -1/N \\ -
 
 O modelo final que usamos na prática combina os dois tipos de erro:
 $$y_{ir} = \mu + \tau_i + \epsilon_{ir} \quad (5)$$
-nde $\epsilon_{ir}$ é o termo aleatório de resíduo, com média zero e variância constante $\sigma^2$. Embora os componentes de $\epsilon_{ir}$ (erro de aleatorização e erro de medida) tenham covariância não nula, eles são tratados como sendo **não correlacionados**, uma simplificação justificada pelo Teorema 4.1 e pela prática comum na análise de experimentos.
+nde $\epsilon_{ir}$ é o termo aleatório de resíduo, com média zero e variância constante $\sigma^2$. Embora os componentes de $\epsilon_{ir}$ (erro de aleatorização e erro de medida) tenham covariância não nula, eles são tratados como sendo **não correlacionados**, uma simplificação justificada pelo Teorema anterior e pela prática comum na análise de experimentos.
 
 ---
 
@@ -730,7 +734,7 @@ nde $\epsilon_{ir}$ é o termo aleatório de resíduo, com média zero e variân
 
 
 A análise de variância (ANOVA) de um experimento balanceado, executado de acordo com um plano completamente aleatorizado, baseia-se no modelo linear final:
-$$y_{ir} = \mu + \tau_i + \epsilon_{ir} \quad (5)$$
+$$y_{ir} = \mu + \tau_i + \epsilon_{ir}$$
 A derivação das somas de quadrados apropriadas segue os mesmos passos vistos anteriormente, motivados pela identidade algébrica. Partimos da identidade centralizada:
 $$(y_{ir} - \bar{y}_{..}) = (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ir} - \bar{y}_{i.})$$
 Elevando-se ao quadrado ambos os termos e tomando-se a soma em todos os índices, tem-se a decomposição da Soma de Quadrados.
@@ -740,7 +744,7 @@ Elevando-se ao quadrado ambos os termos e tomando-se a soma em todos os índices
 
 Ao elevarmos ao quadrado e somarmos, obtemos:
 $$\sum_{ir} (y_{ir} - \bar{y}_{..})^2 = \sum_{ir} (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{ir} (y_{ir} - \bar{y}_{i.})^2 + 2 \sum_{ir} (\bar{y}_{i.} - \bar{y}_{..})(y_{ir} - \bar{y}_{i.})$$
-**Os termos referentes a produtos cruzados anulam-se**, pois, para cada `i`:
+**Os termos referentes a produtos cruzados anulam-se**, pois, para cada $i$:
 $$\sum_{r} (\bar{y}_{i.} - \bar{y}_{..})(y_{ir} - \bar{y}_{i.}) = (\bar{y}_{i.} - \bar{y}_{..}) \sum_{r} (y_{ir} - \bar{y}_{i.})$$
 Como a soma dos desvios em torno da média de um grupo é sempre zero ($\sum_r (y_{ir} - \bar{y}_{i.}) = 0$), o termo cruzado se anula. Isso explica a decomposição ortogonal:
 $$\sum_{ir} (y_{ir} - \bar{y}_{..})^2 = k \sum_{i} (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{ir} (y_{ir} - \bar{y}_{i.})^2$$
@@ -749,13 +753,13 @@ $$SQ_{Total} = SQ_{Tratamento} + SQ_{Resíduo}$$
 ---
 ### Justificativa dos Graus de Liberdade
 
-Na parte 3, a definição dos graus de liberdade (G.L.) foi apresentada em função de postos de matrizes. Uma forma equivalente de justificar os G.L. seria notar que:
+A definição dos graus de liberdade (G.L.) foi apresentada em função de postos de matrizes. Uma forma equivalente de justificar os G.L. seria notar que:
 
 i) **G.L. do Tratamento:** A soma dos desvios das médias de grupo em relação à média geral é zero:
 $$\sum_{i=1}^t (\bar{y}_{i.} - \bar{y}_{..}) = 0$$
-Logo, se conhecemos $t-1$ desses desvios, o último está determinado. Existem apenas **(t-1)** termos linearmente independentes nessa soma, que correspondem aos graus de liberdade do tratamento.
+Logo, se conhecemos $t-1$ desses desvios, o último está determinado. Existem apenas $(t-1)$ termos linearmente independentes nessa soma, que correspondem aos graus de liberdade do tratamento.
 
-ii) **G.L. do Resíduo:** Analogamente, a soma dos resíduos dentro de cada grupo `i` é zero:
+ii) **G.L. do Resíduo:** Analogamente, a soma dos resíduos dentro de cada grupo $i$ é zero:
 $$\sum_{r=1}^k (y_{ir} - \bar{y}_{i.}) = 0$$
 Isso implica que, para cada `i`, existem $(k-1)$ termos linearmente independentes. Ao todo, para os `t` tratamentos, tem-se **t(k-1)** termos linearmente independentes, o que justifica os graus de liberdade associados à soma de quadrados do resíduo.
 
