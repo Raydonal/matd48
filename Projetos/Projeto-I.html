@@ -461,17 +461,19 @@ EXPERIMENTOS A</h1>
 
 <p><strong>Regras:</strong> O projeto deve ser realizado de forma
 individual. Você deverá encaminhar a resolução de seu projeto
-digitalizado em formato PDF para o e-mail <a href="mailto:raydonal@castlab.org" class="email">raydonal@castlab.org</a> no dia 30/10/2023 até as 18:00hs
+digitalizado em formato PDF para o e-mail <a href="mailto:raydonal@castlab.org" class="email">raydonal@castlab.org</a> no dia 01/11/2023 até as 12:00hs
 (GMT-3, Horário de Brasilia). Forneça informações adicionais como código
-R, Python e complementares que foram usados para a realização do seu
-projeto. Recomendo fortemente não usar LLMs (Large Language Model ) como
-ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral,
-Falcon, Gemma, Bloom, Magistral, Qwen, Kimi, Nova Phi, Grok, etc. Quero
-vocẽs pensando, não a máquina.</p>
-<p><strong>Contexto:</strong> Vocês foram contratados como cientistas de
-dados pela “BioConstruct”, uma startup de biotecnologia que está
-desenvolvendo uma nova “biotinta” para impressão 3D de tecidos. O
-objetivo é otimizar o processo para maximizar a <strong>viabilidade
+<code>R</code> e/ou <code>Python</code> e/ou <code>Julia</code> além de
+outras fontes complementares que foram usados para a realização do seu
+projeto. Recomendo fortemente não usar LLMs (Large Language Model) como
+o ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere,
+Mistral, Falcon, Gemma, Bloom, Magistral, Qwen, Kimi, Nova Phi, Grok,
+etc. para resolver o seu projeto, evite constrangimentos. <strong>Quero
+vocẽs pensando, não a máquina.</strong></p>
+<p><strong>Contexto do Pojeto:</strong> Vocês foram contratados como
+cientistas de dados pela “BioConstruct”, uma startup de biotecnologia
+que está desenvolvendo uma nova “biotinta” para impressão 3D de tecidos.
+O objetivo é otimizar o processo para maximizar a <strong>viabilidade
 celular</strong> (a porcentagem de células que sobrevivem 24 horas após
 a impressão), que é a principal variável-resposta.</p>
 <p>A equipe de Pesquisa e Desenvolvimento (P&amp;D). identificou dois
@@ -501,15 +503,19 @@ concentração “Baixa” em 2 delas e a “Alta” nas outras 2. - O técnico
 <strong>Maria</strong> usará exclusivamente o polímero da
 <strong>“CellMatrix”</strong>. Em suas 4 impressoras, ele testará a
 concentração “Baixa” em 2 delas e a “Alta” nas outras 2.</p>
-<p><strong>Atividades (Parte 1):</strong> 1. <strong>Identificação de
-Unidades :</strong> Para o cenário proposto pelo gerente, identifique
-claramente: a. A <strong>Unidade Experimental (U.E.)</strong> para o
-fator <code>Fornecedor do Polímero</code>. b. A <strong>Unidade
-Experimental (U.E.)</strong> para o fator <code>Concentração</code>.
-c. A <strong>Unidade Observacional (U.O.)</strong>. Justifique suas
+<p><strong>Atividades (Parte 1):</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>Identificação de Unidades :</strong> Para o cenário proposto
+pelo gerente, identifique claramente:
+<ol style="list-style-type: lower-alpha">
+<li>A <strong>Unidade Experimental (U.E.)</strong> para o fator
+<code>Fornecedor do Polímero</code>.</li>
+<li>A <strong>Unidade Experimental (U.E.)</strong> para o fator
+<code>Concentração</code>.</li>
+<li>A <strong>Unidade Observacional (U.O.)</strong>. Justifique suas
 respostas com base no <strong>processo de aleatorização</strong> (ou
-falta dele).</p>
-<ol start="2" style="list-style-type: decimal">
+falta dele).</li>
+</ol></li>
 <li><strong>Análise Estrutural e Diagrama de Hasse:</strong>
 <ol style="list-style-type: lower-alpha">
 <li>Descreva as relações entre os fatores <code>Técnico</code>,
@@ -541,6 +547,127 @@ executando um <strong>Delineamento Completamente Aleatorizado
 das 4 combinações de tratamento (Fornecedor x Concentração), resultando
 em 2 réplicas (impressoras) para cada combinação. Os dados de
 viabilidade celular (%) foram coletados.</p>
+<p><strong>Dados Simulados :</strong> <small></p>
+<pre class="r"><code># O aluno deve criar este dataframe usando como semente 
+# o mes+dia de seu nascimento + 123 
+
+#exemplo aluno X,  mes = 1, dia = 6
+ano_de_seu_nascimento &lt;- 1+6+123
+set.seed(ano_de_seu_nascimento)
+
+# 1. Definir os níveis dos fatores
+niveis_fornecedor &lt;- c(&quot;PolyLife&quot;, &quot;CellMatrix&quot;)
+niveis_concentracao &lt;- c(&quot;Baixa&quot;, &quot;Alta&quot;)
+
+# 2. Criar o delineamento para as Unidades Experimentais (Impressoras)
+# Temos 4 combinações de tratamento, com 2 réplicas (impressoras) cada.
+delineamento_ue &lt;- data.frame(
+  Fornecedor = factor(rep(niveis_fornecedor, each = 4)),
+  Concentracao = factor(rep(rep(niveis_concentracao, each=2), times=2)),
+  Impressora = factor(1:8)
+)
+
+# 3. Aleatorizar a atribuição dos tratamentos às impressoras
+delineamento_ue_aleatorizado &lt;- delineamento_ue[sample(nrow(delineamento_ue)), ]
+rownames(delineamento_ue_aleatorizado) &lt;- NULL # Resetar os nomes das linhas
+cat(&quot;--- Delineamento Aleatorizado (qual impressora recebe qual tratamento) ---\n&quot;)</code></pre>
+<pre><code>## --- Delineamento Aleatorizado (qual impressora recebe qual tratamento) ---</code></pre>
+<pre class="r"><code>print(delineamento_ue_aleatorizado)</code></pre>
+<pre><code>##   Fornecedor Concentracao Impressora
+## 1   PolyLife         Alta          3
+## 2 CellMatrix        Baixa          5
+## 3 CellMatrix         Alta          7
+## 4   PolyLife         Alta          4
+## 5 CellMatrix         Alta          8
+## 6   PolyLife        Baixa          1
+## 7   PolyLife        Baixa          2
+## 8 CellMatrix        Baixa          6</code></pre>
+<pre class="r"><code># 4. Expandir para as Unidades Observacionais (subamostras)
+# Cada impressora tem 2 subamostras
+dados_dic &lt;- delineamento_ue_aleatorizado[rep(1:nrow(delineamento_ue_aleatorizado), each = 2), ]
+
+# 5. Simular a resposta (Viabilidade) com base nos tratamentos atribuídos
+# Adicionar um pequeno efeito de interação: CellMatrix + Alta é especialmente bom
+dados_dic &lt;- dados_dic %&gt;%
+  mutate(
+    media_base = case_when(
+      Fornecedor == &quot;PolyLife&quot;   &amp; Concentracao == &quot;Baixa&quot; ~ 75,
+      Fornecedor == &quot;PolyLife&quot;   &amp; Concentracao == &quot;Alta&quot;  ~ 85,
+      Fornecedor == &quot;CellMatrix&quot; &amp; Concentracao == &quot;Baixa&quot; ~ 78,
+      Fornecedor == &quot;CellMatrix&quot; &amp; Concentracao == &quot;Alta&quot;  ~ 95 # Efeito de interação aqui
+    ),
+    # O erro tem dois componentes: entre impressoras (erro_exp) e entre subamostras (erro_obs)
+    erro_exp = rep(rnorm(8, 0, 2), each = 2), # Erro da impressora, o mesmo para as 2 subamostras
+    erro_obs = rnorm(16, 0, 1),              # Erro da subamostra (medição)
+    Viabilidade = round(media_base + erro_exp + erro_obs, 1)
+  )
+
+# Exemplo de saída que você deve obter
+cat(&quot;\n\n--- Dataframe Final para Análise ---\n&quot;)</code></pre>
+<pre><code>## 
+## 
+## --- Dataframe Final para Análise ---</code></pre>
+<pre class="r"><code>head(dados_dic)</code></pre>
+<pre><code>##     Fornecedor Concentracao Impressora media_base   erro_exp   erro_obs
+## 1     PolyLife         Alta          3         85 -1.9668163 -0.1122511
+## 1.1   PolyLife         Alta          3         85 -1.9668163  0.8519181
+## 2   CellMatrix        Baixa          5         78 -0.1725823 -0.2869640
+## 2.1 CellMatrix        Baixa          5         78 -0.1725823 -0.4859387
+## 3   CellMatrix         Alta          7         95 -2.0007286 -0.3552484
+## 3.1 CellMatrix         Alta          7         95 -2.0007286 -1.2440812
+##     Viabilidade
+## 1          82.9
+## 1.1        83.9
+## 2          77.5
+## 2.1        77.3
+## 3          92.6
+## 3.1        91.8</code></pre>
+<p></small></p>
+<p><strong>Atividades (Parte 2):</strong></p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Análise Exploratória :</strong> Crie um gráfico (ex:
+boxplots) que visualize os efeitos principais do <code>Fornecedor</code>
+e da <code>Concentração</code>, bem como a possível interação entre
+eles. Descreva verbalmente o que os gráficos sugerem.</p></li>
+<li><p><strong>Análise de Variância com Subamostragem:</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>Ajuste o modelo linear correspondente ao DIC com subamostragem em R.
+<strong>Dica:</strong> Lembre-se que <code>Impressora</code> define a
+unidade experimental e está aninhada dentro da combinação de
+tratamentos. O modelo deve ter dois termos de erro.</li>
+<li>Apresente a tabela de ANOVA completa. Indique qual teste F você deve
+usar para cada efeito principal e para a interação.</li>
+<li>Interprete os resultados: quais fatores e/ou interações são
+estatisticamente significativos ao nível de <span class="math inline">\(\alpha=0.05\)</span>?</li>
+</ol></li>
+<li><p><strong>Diagnóstico do Modelo:</strong> Realize uma análise de
+resíduos do seu modelo (use os resíduos do Erro Experimental). Apresente
+e interprete os gráficos de Resíduos vs. Ajustados e o Q-Q
+Plot.</p></li>
+<li><p><strong>Comparações Específicas com Contrastes:</strong> A equipe
+de P&amp;D, após ver os resultados, tem perguntas muito específicas:</p>
+<ul>
+<li><strong>Pergunta 1:</strong> “O efeito de aumentar a concentração de
+‘Baixa’ para ‘Alta’ é significativo?”</li>
+<li><strong>Pergunta 2:</strong> “Existe uma diferença de desempenho
+entre os fornecedores ‘PolyLife’ e ‘CellMatrix’?”</li>
+<li><strong>Pergunta 3:</strong> “O benefício de usar a concentração
+‘Alta’ é o mesmo para ambos os fornecedores?” (Esta pergunta testa a
+interação).</li>
+</ul>
+<ol style="list-style-type: lower-alpha">
+<li>Defina um conjunto completo de contrastes ortogonais que respondam a
+essas três perguntas. Mostre a matriz de coeficientes.</li>
+<li>Teste esses contrastes em R.</li>
+<li>Interprete os resultados e responda diretamente a cada uma das três
+perguntas.</li>
+</ol></li>
+<li><p><strong>Recomendação Final:</strong> Escreva um parágrafo conciso
+(como se fosse um e-mail para a diretoria) resumindo suas descobertas.
+Qual combinação de <code>Fornecedor</code> e <code>Concentração</code>
+você recomenda para maximizar a viabilidade celular? Baseie sua
+recomendação nas evidências estatísticas da sua análise.</p></li>
+</ol>
 </div>
 
 

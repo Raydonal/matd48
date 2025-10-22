@@ -528,8 +528,8 @@ replicação, ou ainda, sem réplicas.
 A aleatorização é a pedra angular que garante a validade da inferência estatística.
 
 **Procedimento Clássico:**
-i) Enumerar as $N$ u.e. de 1 a $N$, colocar os números em uma urna.
-ii) Sortear, sem reposição, os $k$ primeiros números para o Tratamento 1, os $k$ seguintes para o Tratamento 2, e assim por diante.
+**i)** Enumerar as $N$ u.e. de 1 a $N$, colocar os números em uma urna.
+**ii)** Sortear, sem reposição, os $k$ primeiros números para o Tratamento 1, os $k$ seguintes para o Tratamento 2, e assim por diante.
 
 **Procedimento Moderno (Computacional):**
 Com recursos como o **R**, o processo é muito mais simples e reprodutível.
@@ -586,7 +586,7 @@ Nesta parte do curso, porém, a ênfase recairá sob a teoria da aleatorização
 
 Para conectar a **população conceitual** (não observável) $\{Y_{ij}\}$ com os **dados observados** $\{y_{ir}\}$, precisamos de uma ferramenta matemática que represente o ato do sorteio.
 
-Definimos uma **variável aleatória de seleção** [Cornfield, J. (1944). On samples from finite populations. Journal of the American Statistical Association, 39(226), 236-239.] como segue:
+Definimos uma **variável aleatória de seleção** [[Cornfield, J. (1944). On samples from finite populations. Journal of the American Statistical Association, 39(226), 236-239.]](Misc/Cornfield_1944.pdf) como segue:
 $$\delta_{ir}^j = \begin{cases} 1, & \text{se } y_{ir} = Y_{ij} \\ 0, & \text{caso contrário (c.c.)} \end{cases}$$
 
 A variável $\delta_{ir}^j$ assume o valor 1 quando a $r$-ésima réplica do tratamento $i$ ($ir$) for aplicada à u.e.  ($j$); e assume o valor zero, caso contrário.
@@ -718,7 +718,7 @@ Se a matriz de covariâncias do erro é $V \neq \sigma^2 I$, então o modelo ded
 
 **Prova (Esboço):**
 É fácil verificar que a matriz do modelo ($X$) e a matriz de covariâncias ($V$), apresentadas anteriormente, são tais que $VX=XQ$, onde:
-$$Q_{(t+1)\times(t+1)} = \sigma_u^2 \begin{pmatrix} 1 & -1/N & \dots & -1/N \\ -k/N & 1 & \dots & -1/N \\ \vdots & \vdots & \ddots & \vdots \\ -k/N & -1/N & \dots & 1 \end{pmatrix}$$ Logo, o resultado segue pelo **Teorema de Zyskind** [Zyskind, G. (1967). On canonical forms, non-negative covariance matrices and best and simple least squares linear estimators in linear models. The Annals of Mathematical Statistics, 1092-1109.].
+$$Q_{(t+1)\times(t+1)} = \sigma_u^2 \begin{pmatrix} 1 & -1/N & \dots & -1/N \\ -k/N & 1 & \dots & -1/N \\ \vdots & \vdots & \ddots & \vdots \\ -k/N & -1/N & \dots & 1 \end{pmatrix}$$ Logo, o resultado segue pelo **Teorema de Zyskind** [[Zyskind, G. (1967). On canonical forms, non-negative covariance matrices and best and simple least squares linear estimators in linear models. The Annals of Mathematical Statistics, 1092-1109.]](Misc/Zyskind_1967.pdf).
 ---
 
 
@@ -761,7 +761,7 @@ Logo, se conhecemos $t-1$ desses desvios, o último está determinado. Existem a
 
 ii) **G.L. do Resíduo:** Analogamente, a soma dos resíduos dentro de cada grupo $i$ é zero:
 $$\sum_{r=1}^k (y_{ir} - \bar{y}_{i.}) = 0$$
-Isso implica que, para cada `i`, existem $(k-1)$ termos linearmente independentes. Ao todo, para os `t` tratamentos, tem-se **t(k-1)** termos linearmente independentes, o que justifica os graus de liberdade associados à soma de quadrados do resíduo.
+Isso implica que, para cada $i$, existem $(k-1)$ termos linearmente independentes. Ao todo, para os $t$ tratamentos, tem-se $t(k-1)$ termos linearmente independentes, o que justifica os graus de liberdade associados à soma de quadrados do resíduo.
 
 ---
 ### Esperança dos Quadrados Médios (E(QM))
@@ -871,7 +871,7 @@ p
 **1. O Modelo:**
 O modelo estatístico para este DIC é:
 $$\text{PesoFinal}_{ir} = \mu + \tau_i + \epsilon_{ir}$$
-Onde $\tau_i$ é o efeito da Dieta `i` (A ou B). A hipótese nula que testamos é $H_0: \tau_A = \tau_B$, o que implica que a diferença de médias entre os tratamentos é zero.
+Onde $\tau_i$ é o efeito da Dieta $i$ (A ou B). A hipótese nula que testamos é $H_0: \tau_A = \tau_B$, o que implica que a diferença de médias entre os tratamentos é zero.
 
 **2. A Tabela de ANOVA:**
 Ajustamos o modelo em R para obter a tabela de ANOVA.
@@ -890,7 +890,7 @@ anova(modelo_porcos)
 
 ### Abordagem 2: Teste de Aleatorização (Permutação)
 
-Esta abordagem não assume normalidade e responde a uma pergunta mais fundamental.
+Esta abordagem não assume normalidade e responde a uma pergunta mais fundamental. [[Holt, Charles A., and Sean P. Sullivan. "Permutation tests for experimental data." Experimental economics 26.4 (2023): 775-812.]](Misc/Holt_2023.pdf)
 
 **Lógica e Hipótese Nula (de Fisher):**
 - $H_0$: A dieta não tem nenhum efeito. O peso que o Porco 1 atingiu (114.5 kg) é uma característica *inerente* a ele, e ele teria pesado 114.5 kg **independentemente da dieta que recebesse**.
@@ -901,7 +901,7 @@ Esta abordagem não assume normalidade e responde a uma pergunta mais fundamenta
 - **Diferença Observada:**
   - $\bar{y}_A = 97.57$ kg
   - $\bar{y}_B = 113.07$ kg
-  - Diferença = **15.5 kg**
+  - **Diferença = 15.5 kg**
 
 **A Pergunta do Teste:** Em todas as $C_{12,6} = 924$ maneiras possíveis de atribuir os rótulos "A" e "B" aos 12 pesos fixos, qual a probabilidade de obtermos uma diferença de médias tão grande ou maior que 15.5 kg por puro acaso?
 
@@ -939,7 +939,7 @@ ggplot(df_perms, aes(x = diferencas)) +
   geom_density(color = "blue", linewidth = 1) +
   # Linha de corte do valor crítico (observado)
   geom_vline(xintercept = diff_obs, color = "red", linetype = "dashed", linewidth = 1.5) +
-  annotate("text", x = diff_obs, y = 0.1, label = paste("Observado =", round(diff_obs,1), "kg"), 
+  annotate("text", x = diff_obs-6, y = 0.1, label = paste("Observado =", round(diff_obs,1), "kg"), 
            hjust = -0.1, color = "red", size=5) +
   labs(title = "Distribuição de Aleatorização da Diferença de Médias",
        subtitle = "Distribuição das diferenças esperadas se H₀ fosse verdadeira",
@@ -972,7 +972,7 @@ Ambos os métodos, um baseado puramente na aleatorização e o outro em suposiç
 
 ### O Caso Desbalanceado
 
-Até o momento, as derivações apresentadas referem-se à situação em que o experimento é **balanceado** ($k_1 = k_2 = ... = k_t = k$).
+Até o momento, as derivações apresentadas referem-se à situação em que o experimento é **balanceado** ($k_1 = k_2 = \cdots = k_t = k$).
 
 Não é raro, porém, encontrar casos de experimentos **desbalanceados**. Isso pode ocorrer:
 - **Deliberadamente:** Quando há interesse em observar o efeito de um tratamento (ex: um controle) com maior precisão, alocando mais réplicas a ele.
@@ -985,7 +985,7 @@ Além disso, a tabela de ANOVA pode ser facilmente alterada.
 ---
 ### Tabela de ANOVA (Caso Desbalanceado)
 
-Para acomodar um número diferente de réplicas por tratamento, a aproximação da distribuição de aleatorização pela distribuição F ainda pode ser utilizada. Denotando por $k_i$ o número de réplicas do tratamento `i`:
+Para acomodar um número diferente de réplicas por tratamento, a aproximação da distribuição de aleatorização pela distribuição F ainda pode ser utilizada. Denotando por $k_i$ o número de réplicas do tratamento $i$:
 
 | Fonte | G.L. (Graus de Liberdade) | S.Q. (Soma de Quadrados) |
 |:---|:---:|:---:|
@@ -1018,18 +1018,21 @@ print(dados_ex)
 1. Teste a hipótese de que não há efeito de tratamentos usando a diferença de médias como critério para o teste de aleatorização.
 2. Compare o nível de significância (p-valor) do teste de aleatorização com o de um teste F usual numa tabela de ANOVA.
 
----
 ### 1. Teste de Aleatorização
 
 Hipótese Nula ($H_0$): O tratamento não tem efeito. A resposta de cada U.E. é uma característica fixa dela, independentemente do tratamento que recebeu. Os 8 valores de resposta {7, 2, 1, 6, 4, 8, 10, 4} são fixos.
 
-**Estatística de Teste:** Diferença de médias ($ \bar{y}_A - \bar{y}_B $).
+**Estatística de Teste:** Diferença de médias ($\bar{y}_A - \bar{y}_B$).
 
 **Cálculo da Diferença Observada:**
 ```{r}
 # Médias observadas
 medias_obs <- tapply(dados_ex$Resp, dados_ex$Trat, mean)
 print(medias_obs)
+```
+
+---
+```{r}
 # Diferença observada
 diff_obs_ex <- medias_obs["A"] - medias_obs["B"]
 cat("Diferença Observada (A - B):", diff_obs_ex, "\n")
@@ -1061,7 +1064,7 @@ print(teste_aleat)
 ```
 
 **Conclusão (Teste de Aleatorização):**
-O p-valor exato calculado é **0.08571*. Como este valor é maior que os níveis de significância usuais (ex: $\alpha = 0.05$), ** não temos evidência estatística suficiente para rejeitar a hipótese nula**. O teste de aleatorização sugere que uma diferença de 4.0 entre as médias dos grupos poderia ter ocorrido por acaso no processo de sorteio.
+O p-valor exato calculado é **0.08571**. Como este valor é maior que os níveis de significância usuais (ex: $\alpha = 0.05$), ** não temos evidência estatística suficiente para rejeitar a hipótese nula**. O teste de aleatorização sugere que uma diferença de 4.0 entre as médias dos grupos poderia ter ocorrido por acaso no processo de sorteio.
 
 ---
 ### 2. Comparação com o Teste F (ANOVA)

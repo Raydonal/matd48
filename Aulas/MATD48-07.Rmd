@@ -138,25 +138,25 @@ Em alguns experimentos, as **unidades observacionais** (onde a medida é feita) 
 **Modelo Apropriado:**
 $$y_{irj} = \mu + \tau_i + \epsilon_{ir} + \eta_{irj}$$
 Onde:
-- $y_{irj}$ é a é a resposta observada na j-ésima
-subamostra de r-ésima réplica do
-tratamento i.
+- $y_{irj}$ é a resposta observada na $j$-ésima
+subamostra de $r$-ésima réplica do
+tratamento $i$.
 - $\epsilon_{ir}$ é o **erro experimental** (variação entre as u.e. dentro de um tratamento, i.e. é o termo aleatório que representa
 o erro experimental associado à
-réplica r do tratamento i),  com $Var(\epsilon_{ir}) = \sigma^2_{\epsilon}$.
+réplica $r$ do tratamento $i$),  com $Var(\epsilon_{ir}) = \sigma^2_{\epsilon}$.
 - $\eta_{irj}$ é o **erro observacional** ou de subamostragem (variação entre as subamostras dentro de uma u.e., i.e., é o termo aleatório que representa
 o erro observacional associado à
-j-ésima subamostra da réplica r do
-tratamento i), com $Var(\eta_{irj}) = \sigma^2_{\eta}$.
+$j$-ésima subamostra da réplica $r$ do
+tratamento $i$), com $Var(\eta_{irj}) = \sigma^2_{\eta}$.
 - Aqui $\eta_{irj}$'s e $\eta_{irj}$ são v.a. de média 0 independentes.
 ---
 ### Tabela ANOVA com Subamostragem
 
 A tabela de ANOVA associada a este
 modelo, para o caso de um
-experimento balanceado com r',
-subamostras (repetições) por réplica, k
-réplicas e t tratamentos é dada a
+experimento balanceado com $r'$,
+subamostras (repetições) por réplica, $k$
+réplicas e $t$ tratamentos é dada a
 seguir, omitindo-se a coluna dos
 quadrados médios:
 
@@ -173,8 +173,8 @@ A tabela de ANOVA completa é:
 ---
 
 
-**Teste F Correto para Tratamentos:**
-A esperança do $QM_{Trat}$ contém ambos os componentes de variância. Para isolar o efeito do tratamento ($\tau_i$), devemos usar o denominador correto no teste F:
+**Teste $F$ Correto para Tratamentos:**
+A esperança do $QM_{Trat}$ contém ambos os componentes de variância. Para isolar o efeito do tratamento ($\tau_i$), devemos usar o denominador correto no teste $F$:
 $$F = \frac{QM_{Trat}}{QM_{EE}}$$
 Usar o $QM_{EO}$ como denominador seria um erro grave (pseudorreplicação).
 
@@ -194,8 +194,8 @@ class: center, middle, inverse
 
 O teste F da ANOVA é um teste "global". Ele nos diz **se** existe alguma diferença entre as médias dos tratamentos, mas não nos diz **quais** médias são diferentes.
 
-- Para `t=2` tratamentos, $H_0: \tau_1 - \tau_2 = 0$ é suficiente.
-- Para `t>2` tratamentos, a hipótese da ANOVA é $H_0: \tau_1 = \tau_2 = \dots = \tau_t = 0$.
+- Para $t=2$ tratamentos, $H_0: \tau_1 - \tau_2 = 0$ é suficiente.
+- Para $t>2$ tratamentos, a hipótese da ANOVA é $H_0: \tau_1 = \tau_2 = \dots = \tau_t = 0$.
 
 Se rejeitamos $H_0$, o próximo passo é realizar **comparações entre tratamentos**. Isso pode ser feito de duas formas:
 1.  **Técnicas de Contrastes:** Para testar hipóteses específicas e planejadas *a priori*.
@@ -217,7 +217,7 @@ Imagine um experimento para comparar o desempenho de quatro tipos de combustíve
 | **3. Álcool** | ($y_{31}, y_{32}, ...$) | $\bar{y}_{3.}$ |
 | **4. Gás** | ($y_{41}, y_{42}, ...$) | $\bar{y}_{4.}$ |
 
-Se o teste F da ANOVA rejeitasse a hipótese de que não há diferença entre tratamentos, o pesquisador poderia naturalmente estar interessado em investigar questões específicas.
+Se o teste $F$ da ANOVA rejeitasse a hipótese de que não há diferença entre tratamentos, o pesquisador poderia naturalmente estar interessado em investigar questões específicas.
 
 ---
 ### Hipóteses Específicas de Pesquisa
@@ -244,13 +244,13 @@ O pesquisador pode ter as seguintes perguntas (hipóteses) específicas:
 De uma forma geral, qualquer uma das hipóteses apresentadas pode ser expressa como:
 $$H_0: \sum_{i=1}^t c_i \tau_i = 0$$
 $$H_1: \sum_{i=1}^t c_i \tau_i \neq 0$$
-onde os coeficientes $c_i$ variam de acordo com a hipótese a ser investigada, como ilustrado no quadro 3 abaixo.
+onde os coeficientes $c_i$ variam de acordo com a hipótese a ser investigada, como ilustrado no quadro a seguir.
 
 ---
 ### Definição Formal de Contraste
 
 
-**Quadro 3:** Valores de $c_i$ para cada hipótese considerada.
+**Quadro:** Valores de $c_i$ para cada hipótese considerada.
 
 | Hipótese | $c_1$ (Gas. Comum) | $c_2$ (Gas. Adit.) | $c_3$ (Álcool) | $c_4$ (Gás) | $\sum c_i$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|
@@ -271,7 +271,7 @@ $\sum_i c_i = 0$
 
 ### Estimação e Variância de um Contraste
 
-Considere um DIC balanceado com `t` tratamentos e `k` réplicas.
+Considere um DIC balanceado com $t$ tratamentos e $k$ réplicas.
 - O **contraste** populacional é: $C = \sum c_i \tau_i$.
 - O **estimador** amostral do contraste é a mesma combinação linear das médias amostrais:
   $\hat{C} = \sum c_i \bar{y}_{i.}$
@@ -310,13 +310,13 @@ Para testar a hipótese geral $H_0: C = \sum c_i \tau_i = 0$ contra $H_1: C = \s
 Sob as premissas do modelo normal, a estatística padronizada do contraste segue uma distribuição Normal. Substituindo a variância desconhecida $\sigma^2$ por sua estimativa $QM_{Res}$, a estatística segue uma distribuição t:
 $$t = \frac{\hat{C}}{\sqrt{Var(\hat{C})}} = \frac{\sum c_i \bar{y}_{i.}}{\sqrt{\frac{QM_{Res}}{k} \sum c_i^2}} \sim t_{N-t}$$
 
-**2. Usando a distribuição F (forma de Soma de Quadrados):**
-Equivalentemente, podemos testar usando um teste F. A Soma de Quadrados de um Contraste (SQC) é:
+**2. Usando a distribuição $F$ (forma de Soma de Quadrados):**
+Equivalentemente, podemos testar usando um teste $F$. A Soma de Quadrados de um Contraste ($SQC$) é:
 $$SQC = \frac{(\hat{C})^2}{\sum c_i^2 / k} = \frac{k (\sum c_i \bar{y}_{i.})^2}{\sum c_i^2}$$
 ---
-Esta SQC tem **1 grau de liberdade**. A estatística de teste é:
+Esta $SQC$ tem **1 grau de liberdade**. A estatística de teste é:
 $$F_C = \frac{SQC}{QM_{Resid}} \sim F_{1, N-t}$$
-As duas abordagens (t e F) são equivalentes, pois $t^2_{df} = F_{1, df}$.
+As duas abordagens ($t$ e $F$) são equivalentes, pois $t^2_{df} = F_{1, df}$.
 
 ---
 ### Contrastes Ortogonais
@@ -326,7 +326,7 @@ As duas abordagens (t e F) são equivalentes, pois $t^2_{df} = F_{1, df}$.
 $$\sum_i c_{1i} c_{2i} = 0$$
 Um conjunto de contrastes é ortogonal se todos os pares de contrastes distintos no conjunto são ortogonais.
 
-**Importância:** Em um experimento com `t` tratamentos, é possível definir no máximo **t-1 contrastes ortogonais**. Um conjunto como este, chamado de **conjunto completo de contrastes ortogonais**, tem uma propriedade especial: ele particiona a Soma de Quadrados do Tratamento.
+**Importância:** Em um experimento com $t$ tratamentos, é possível definir no máximo **$t-1$ contrastes ortogonais**. Um conjunto como este, chamado de **conjunto completo de contrastes ortogonais**, tem uma propriedade especial: ele particiona a Soma de Quadrados do Tratamento.
 $$SQ_{Trat} = SQ_{C_1} + SQ_{C_2} + \dots + SQ_{C_{t-1}}$$
 Cada contraste testa uma "fatia" independente da variação total entre os tratamentos, cada uma com 1 grau de liberdade.
 
@@ -369,8 +369,8 @@ Este conjunto particiona a variação do tratamento em 4 perguntas de pesquisa i
 Vamos agora aplicar a teoria dos contrastes a um exemplo prático em R.
 
 **Cenário:** Relembre o experimento dos 4 combustíveis. Vamos simular dados onde a ANOVA global é significativa e as hipóteses específicas fazem sentido.
-- `t=4` tratamentos (Gas. Comum, Gas. Aditivada, Álcool, Gás)
-- `k=5` réplicas (carros) por tratamento.
+- $t=4$ tratamentos (Gas. Comum, Gas. Aditivada, Álcool, Gás)
+- $k=5$ réplicas (carros) por tratamento.
 
 **Simulando os Dados:**
 ```{r}
@@ -411,7 +411,7 @@ anova(modelo_comb)
 ---
 ### Passo 2: Definindo Contrastes Ortogonais em R (Método Correto)
 
-Para que o R entenda nossas comparações específicas, precisamos definir um **conjunto completo e ortogonal** de contrastes. Com `t=4` tratamentos, precisamos de `t-1=3` contrastes ortogonais.
+Para que o R entenda nossas comparações específicas, precisamos definir um **conjunto completo e ortogonal** de contrastes. Com $t=4$ tratamentos, precisamos de $t-1=3$ contrastes ortogonais.
 
 Vamos construir um conjunto lógico e sequencial de perguntas:
 1.  **C1: Gasolina Comum vs. Gasolina Aditivada.** (Comparação dentro do grupo "Gasolina")

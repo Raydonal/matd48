@@ -29,9 +29,9 @@ library(tidyverse)
 ```
 
 
-**Regras:** O projeto deve ser realizado de forma individual. Você deverá encaminhar a resolução de seu  projeto digitalizado em formato PDF  para o e-mail raydonal@castlab.org no dia 30/10/2023 até as 18:00hs (GMT-3, Horário de Brasilia). Forneça informações adicionais como código R, Python e complementares que foram usados para a realização do seu projeto. Recomendo fortemente não usar LLMs (Large Language Model ) como ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral, Falcon, Gemma, Bloom, Magistral, Qwen, Kimi, Nova Phi, Grok, etc. Quero vocẽs pensando, não a máquina.
+**Regras:** O projeto deve ser realizado de forma individual. Você deverá encaminhar a resolução de seu  projeto digitalizado em formato PDF  para o e-mail raydonal@castlab.org no dia 01/11/2023 até as 12:00hs (GMT-3, Horário de Brasilia). Forneça informações adicionais como código `R` e/ou `Python` e/ou `Julia` além de outras fontes complementares que foram usados para a realização do seu projeto. Recomendo fortemente não usar LLMs (Large Language Model) como o ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral, Falcon, Gemma, Bloom, Magistral, Qwen, Kimi, Nova Phi, Grok, etc. para resolver o seu projeto, evite constrangimentos. **Quero vocẽs pensando, não a máquina.**
 
-**Contexto:**
+**Contexto do Pojeto:**
 Vocês foram contratados como cientistas de dados pela "BioConstruct", uma startup de biotecnologia que está desenvolvendo uma nova "biotinta" para impressão 3D de tecidos. O objetivo é otimizar o processo para maximizar a **viabilidade celular** (a porcentagem de células que sobrevivem 24 horas após a impressão), que é a principal variável-resposta.
 
 A equipe de Pesquisa e Desenvolvimento (P&D). identificou dois fatores críticos:
@@ -52,6 +52,7 @@ O gerente, para "simplificar a logística", propõe o seguinte delineamento:
 - O técnico **Maria** usará exclusivamente o polímero da **"CellMatrix"**. Em suas 4 impressoras, ele testará a concentração "Baixa" em 2 delas e a "Alta" nas outras 2.
 
 **Atividades (Parte 1):**
+
 1.  **Identificação de Unidades :** Para o cenário proposto pelo gerente, identifique claramente:
     a. A **Unidade Experimental (U.E.)** para o fator `Fornecedor do Polímero`.
     b. A **Unidade Experimental (U.E.)** para o fator `Concentração`.
@@ -67,18 +68,21 @@ O gerente, para "simplificar a logística", propõe o seguinte delineamento:
     a. Descreva como você reestruturaria o experimento para que ele se tornasse um **Delineamento Completamente Aleatorizado (DIC)** válido, usando todas as 8 impressoras. Explique o seu processo de aleatorização.
     b. Desenhe o Diagrama de Hasse para o seu novo delineamento (DIC).
     c. Escreva a fórmula completa do modelo estatístico em R para o seu DIC, considerando que há subamostragem. Esboce a tabela de ANOVA correspondente, com Fontes de Variação e Graus de Liberdade.
-
+    
 # **Parte 2: Análise dos Dados e Recomendações**
 
 A empresa descartou o plano do gerente e seguiu a sua recomendação, executando um **Delineamento Completamente Aleatorizado (DIC)**. As 8 impressoras foram aleatoriamente designadas a uma das 4 combinações de tratamento (Fornecedor x Concentração), resultando em 2 réplicas (impressoras) para cada combinação. Os dados de viabilidade celular (%) foram coletados.
 
 **Dados Simulados :**
-
+<small>
 ```{r}
-# O aluno deve criar este dataframe
-set.seed(123)
+# O aluno deve criar este dataframe usando como semente 
+# o mes+dia de seu nascimento + 123 
 
-# --- MÉTODO CORRETO ---
+#exemplo aluno X,  mes = 1, dia = 6
+ano_de_seu_nascimento <- 1+6+123
+set.seed(ano_de_seu_nascimento)
+
 # 1. Definir os níveis dos fatores
 niveis_fornecedor <- c("PolyLife", "CellMatrix")
 niveis_concentracao <- c("Baixa", "Alta")
@@ -117,11 +121,14 @@ dados_dic <- dados_dic %>%
     Viabilidade = round(media_base + erro_exp + erro_obs, 1)
   )
 
+# Exemplo de saída que você deve obter
 cat("\n\n--- Dataframe Final para Análise ---\n")
 head(dados_dic)
 ```
+</small>
 
 **Atividades (Parte 2):**
+
 1.  **Análise Exploratória :** Crie um gráfico (ex: boxplots) que visualize os efeitos principais do `Fornecedor` e da `Concentração`, bem como a possível interação entre eles. Descreva verbalmente o que os gráficos sugerem.
 
 2.  **Análise de Variância com Subamostragem:**
@@ -141,11 +148,5 @@ head(dados_dic)
     b. Teste esses contrastes em R.
     c. Interprete os resultados e responda diretamente a cada uma das três perguntas.
 
-5.  **Recomendação Final:** Escreva um parágrafo conciso (como se fosse um e-mail para a diretoria) resumindo suas descobertas. Qual combinação de `Fornecedor` e `Concentração` você recomenda para maximizar a viabilidade celular? Baseie sua recomendação em evidências estatísticas da sua análise.
-
-
----
- Faça o seu melhor - Bom trabalho
-
-
+5.  **Recomendação Final:** Escreva um parágrafo conciso (como se fosse um e-mail para a diretoria) resumindo suas descobertas. Qual combinação de `Fornecedor` e `Concentração` você recomenda para maximizar a viabilidade celular? Baseie sua recomendação nas evidências estatísticas da sua análise.
 
