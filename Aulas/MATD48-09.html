@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fundamentos de Análise para Planejamento Experimental</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+    <script src="libs/viz-1.8.2/viz.js"></script>
+    <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="libs/grViz-binding-1.0.11/grViz.js"></script>
+    <link rel="stylesheet" href="custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fundamentos de Análise para Planejamento Experimental
+]
+.subtitle[
+## Planos Aleatorizados em Blocos
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+
+
+class: center, middle, inverse
+
+# Planos Experimentais com Aleatorização Restrita: Blocos
+
+
+
+---
+## Planos Experimentais Aleatorizados em Blocos
+
+A descrição de um plano completamente aleatorizado (DIC) ressalta a necessidade de **unidades experimentais homogêneas**. A variância do erro experimental (`\(\sigma^2\)`) será reduzida na medida em que o grau de homogeneidade entre as u.e. seja alto. No entanto, conseguir u.e. com alto grau de homogeneidade não é uma tarefa trivial.
+
+**O Problema:** Em muitas situações, é possível identificar uma **fonte de variação sistemática** (heterogeneidade) entre as unidades.
+
+**A Solução:** Se essa fonte de variação é um **fator de ruído controlável**, podemos usar um **plano aleatorizado em blocos (RCBD)** para reduzir a variância do erro experimental e aumentar a precisão do experimento.
+
+---
+### Descrição do Plano (RCBD)
+Suponha que `\(N = bt\)` unidades experimentais estejam disponíveis para comparar `t` tratamentos.
+
+**Condições:** É possível identificar, entre as `\(N\)` unidades, `\(b\)` conjuntos (chamados de **blocos**) de `\(t\)` unidades cada, tais que:
+i) **Dentro de cada bloco**, as `\(t\)` unidades sejam o mais **homogêneas** possível.
+ii) **Entre os blocos**, exista **heterogeneidade**, atribuível a um fator de ruído.
+
+**Procedimento de Aleatorização (Restrita):**
+1.  Dentro de cada bloco, os `\(t\)` tratamentos são designados **aleatoriamente** às `\(t\)` unidades experimentais.
+2.  Cada tratamento é observado **uma única vez por bloco**.
+3.  O processo de aleatorização é empregado **independentemente em cada bloco**.
+
+A estrutura de classificação resultante (`Bloco` x `Tratamento`) é **balanceada**.
+
+Pela descrição do plano, observa-se que o processo de aleatorização envolvido é equivalente à execução de um **Delineamento Completamente Aleatorizado (DIC), sem replicação, independentemente, dentro de cada bloco**.
+
+---
+### A Intuição Visual por Trás do Bloqueio
+
+Vamos usar um exemplo clássico para entender a lógica do bloqueio.
+
+**O Problema: Heterogeneidade no Campo**
+Imagine um campo agrícola onde queremos testar 3 fertilizantes (A, B, C). O campo não é uniforme; ele possui um **gradiente de fertilidade** (por exemplo, mais umidade ou nutrientes) que aumenta da esquerda para a direita. As áreas à direita são naturalmente mais produtivas.
+
+**Mapa de Calor do Campo (Fonte de Ruído):**
+&lt;img src="MATD48-09_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+Se usarmos um Delineamento Completamente Aleatorizado (DIC), por puro azar, o Tratamento A poderia acabar sendo alocado principalmente na área menos fértil e o Tratamento C na mais fértil. Concluiríamos erroneamente que C é melhor que A, quando na verdade a diferença é apenas a posição no campo. **O efeito do tratamento estaria confundido com o efeito do gradiente.**
+
+---
+### A Solução: Delineamento em Blocos (RCBD)
+
+Para neutralizar o efeito do gradiente, aplicamos a técnica de bloqueio.
+
+**Procedimento:**
+1.  **Criar Blocos:** Dividimos o campo em faixas **perpendiculares** ao gradiente. Cada faixa (bloco) é mais homogênea internamente do que o campo como um todo.
+2.  **Aleatorizar Dentro dos Blocos:** Em cada bloco, sorteamos os 3 tratamentos (A, B, C) para as 3 parcelas disponíveis.
+
+**Visualização do Plano Aleatorizado em Blocos:**
+
+``` r
+# Definir blocos e tratamentos
+blocos &lt;- rep(1:4, each = 3)
+tratamentos_aleatorizados &lt;- c(sample(c("A","B","C")), sample(c("A","B","C")), 
+                               sample(c("A","B","C")), sample(c("A","B","C")))
+campo_grid$Bloco &lt;- factor(blocos)
+campo_grid$Tratamento &lt;- factor(tratamentos_aleatorizados)
+```
+
+---
+&lt;img src="MATD48-09_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+**Por que isso funciona?**
+Este delineamento garante que **cada tratamento (A, B e C) seja testado uma vez em cada nível de fertilidade** (em cada bloco). A comparação entre A, B e C dentro do Bloco 1 é justa. A comparação dentro do Bloco 4 também é justa. Ao combinar as informações de todos os blocos na ANOVA, o modelo `Resposta ~ Bloco + Tratamento` consegue:
+1.  Estimar e **isolar** o efeito do gradiente (a variação entre os blocos).
+2.  Fornecer uma estimativa **não-viesada** do efeito dos tratamentos, "limpa" da influência do gradiente de fertilidade.
+
+
+---
+### População Conceitual de Respostas Revisitada (RCBD)
+
+Defina `\(Y_{ijk}\)` como o valor observado (potencial) da variável resposta `\(Y\)` referente ao efeito do `\(k\)`-ésimo tratamento aplicado à `\(j\)`-ésima unidade experimental do bloco `\(i\)`.
+Aqui, `\(i = 1, ..., b\)` (índice para blocos), `\(j = 1, ..., t\)` (índice para unidades experimentais dentro de um bloco) e `\(k = 1, ..., t\)` (índice para tratamentos)
+
+O **Quadro** a seguir ilustra a estrutura geral de uma população conceitual de respostas no contexto de um plano aleatorizado em blocos.
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/quadro5Blocos.png" alt="Legenda da imagem" width="50%" /&gt;
+&lt;p class="caption"&gt;Legenda da imagem&lt;/p&gt;
+&lt;/div&gt;
+
+---
+A Figura a seguir, por sua vez, ilustra essa mesma estrutura através de um diagrama de Hasse:
+
+<div class="grViz html-widget html-fill-item" id="htmlwidget-c42b251bf060794f5578" style="width:576px;height:324px;"></div>
+<script type="application/json" data-for="htmlwidget-c42b251bf060794f5578">{"x":{"diagram":"\ndigraph fig6_corrected {\n  rankdir=TB;\n  node [shape=circle, style=filled, fillcolor=lightblue];\n  edge [arrowhead=none];\n\n  # Definir nós com nomes seguros\n  mu [label=\"μ\"];\n  Tratamento [label=\"T\"];\n  Unidade [label=\"U\"];\n  epsilon [label=\"ε\"];\n  \n  # Definir relações de cima para baixo\n  mu -> Tratamento;\n  mu -> Unidade;\n  Tratamento -> epsilon;\n  Unidade -> epsilon;\n  \n  {rank=same; Tratamento; Unidade;}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+**Interpretação:** `Unidade Experimental (U)` está aninhada em `Bloco (B)`. O `Tratamento (T)` é cruzado com ambos.
+
+---
+### Identidade Algébrica e Suposição de Aditividade
+(Página 262)
+
+A identidade algébrica completa para esta estrutura é complexa. No entanto, para a análise padrão de um RCBD, fazemos uma **suposição fundamental de aditividade no sentido estrito**.
+
+Isso significa que assumimos que os efeitos de interação são negligíveis, especialmente a interação **Bloco x Tratamento**.
+- (`\(Y_{i.k} - \bar{Y}_{i..} - \bar{Y}_{..k} + \bar{Y}_{...}) = 0\)`
+- E outras interações com a unidade experimental.
+
+Sob esta suposição, a identidade se simplifica para:
+`$$Y_{ijk} = \bar{Y}_{...} + (\bar{Y}_{i..} - \bar{Y}_{...}) + (\bar{Y}_{..k} - \bar{Y}_{...}) + (\bar{Y}_{ij.} - \bar{Y}_{i..}) \quad (1)$$`
+Onde cada termo representa a Média Geral, Efeito do Bloco `i`, Efeito do Tratamento `k`, e o Efeito da Unidade `j` dentro do Bloco `i`.
+
+---
+### O Modelo Linear Deduzido
+(Páginas 263-267)
+
+Seguindo passos similares aos do DIC (usando uma variável de seleção `\(\delta_{ij}^k\)`), e adotando uma notação mais usual, a equação da identidade leva ao modelo:
+$$ y_{ik} = \mu + \beta_i + \tau_k + \omega_{ik} \quad $$
+onde:
+- `\(y_{ik}\)` é a resposta observada ao tratamento `k` no bloco `i`.
+- `\(\mu\)` é a média geral.
+- `\(\beta_i\)` é o efeito (fixo) do bloco `i`.
+- `\(\tau_k\)` é o efeito (fixo) do tratamento `k`.
+- `\(\omega_{ik}\)` é o termo de erro, que combina o efeito da unidade experimental com o erro de medição.
+
+Desenvolvendo os cálculos (e aplicando o Teorema de Zyskind), pode-se mostrar que OLS ainda é BLUE. O modelo final que usamos na prática é:
+$$ y_{ik} = \mu + \beta_i + \tau_k + \epsilon_{ik} \quad (3) $$
+Com as premissas (parcialmente deduzidas, parcialmente assumidas):
+- `\(E(\epsilon_{ik}) = 0\)`
+- `\(Var(\epsilon_{ik}) = \sigma^2\)`
+- `\(Cov(\epsilon_{ik}, \epsilon_{i'k'}) = 0\)` para `\(i \neq i'\)` ou `\(k \neq k'\)` (erros não correlacionados).
+
+---
+### Análise de Variância (ANOVA) para o RCBD
+(Páginas 268-271)
+
+A ANOVA para um RCBD baseia-se no modelo (3). A estrutura de classificação da **amostra** observada é a de dois fatores cruzados (`Bloco` e `Tratamento`), como mostra a **Figura 9**:
+<div class="grViz html-widget html-fill-item" id="htmlwidget-00c527b7ecda3cc37a21" style="width:576px;height:180px;"></div>
+<script type="application/json" data-for="htmlwidget-00c527b7ecda3cc37a21">{"x":{"diagram":"digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none];\n  mu[label=\"μ\"]; B[label=\"B\"]; T[label=\"T\"]; epsilon[label=\"ε\"];\n  mu -> {B, T}; {B, T} -> epsilon; {rank=same; B; T;}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+A **identidade algébrica** associada a esta estrutura é:
+$$ y_{ik} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (\bar{y}_{.k} - \bar{y}_{..}) + (y_{ik} - \bar{y}_{i.} - \bar{y}_{.k} + \bar{y}_{..}) $$
+
+Elevando ao quadrado e somando, os termos cruzados se anulam, resultando na **partição da Soma de Quadrados**:
+$$ SQ_{Total} = SQ_{Bloco} + SQ_{Tratamento} + SQ_{Resíduo} $$
+
+---
+### Tabela ANOVA para o RCBD
+(Página 271)
+
+O quadro a seguir apresenta as informações para uma ANOVA de um RCBD.
+
+| Fonte | G.L. | S.Q. | E(QM) |
+|:---|:---:|:---:|:---:|
+| Bloco | `\(b-1\)` | `\(t\sum(\bar{y}_{i.}-\bar{y}_{..})^2\)` | `\(g(\sigma^2) + \frac{t}{b-1}\sum\beta_i^2\)` |
+| Trat. | `\(t-1\)` | `\(b\sum(\bar{y}_{.k}-\bar{y}_{..})^2\)` | `\(\sigma^2 + \frac{b}{t-1}\sum\tau_k^2\)` |
+| Resíduo| `\((b-1)(t-1)\)` | `\(\sum(y_{ik}-\bar{y}_{i.}-\bar{y}_{.k}+\bar{y}_{..})^2\)`| `\(\sigma^2\)` |
+| Total | `\(bt-1\)` | `\(\sum(y_{ik}-\bar{y}_{..})^2\)` | |
+
+**Comentário (pág. 272):**
+Observando a coluna E(QM), percebe-se que, num plano aleatorizado em blocos (com blocos fixos), **não há um teste F definido para a fonte de variação devido a blocos**, pois não há um denominador apropriado com esperança `\(g(\sigma^2)\)`. Isso não é um problema, pois o objetivo do bloqueio não é testar o efeito do bloco, mas sim **removê-lo da variância do resíduo**.
+
+---
+### Análise de um Experimento RCBD
+(Página 273)
+
+Utilizando a estatística:
+$$ F = \frac{QM_{Trat}}{QM_{Resid}} $$
+como critério para o teste de igualdade de efeito dos tratamentos (`\(H_0: \tau_1 = ... = \tau_t = 0\)`), a distribuição `\(F_{(t-1), (b-1)(t-1)}\)` é utilizada como uma aproximação da distribuição de referência gerada pela aleatorização.
+
+---
+class: center, middle, inverse
+
+### Eficiência, Aditividade e Extensões
+
+---
+### Eficiência Relativa de um Plano em Blocos
+(Páginas 274-277)
+
+O bloqueio valeu a pena? Para comparar a eficiência de um RCBD (`\(D_1\)`) com a de um DIC (`\(D_2\)`) que poderia ter sido usado, Yates (1935) propôs a **Eficiência Relativa (ER)**.
+
+A estimativa da eficiência relativa é dada por:
+$$ \hat{ER}(D_1, D_2) = \frac{(b-1)QM_{Bloco} + b(t-1)QM_{Resid}}{(bt-1)QM_{Resid}} $$
+
+**Interpretação:** Se `\(\hat{ER} = 1.25\)` (ou 125%), isso significa que um DIC precisaria de **25% mais réplicas** para atingir a mesma precisão (mesma variância para a estimativa de um contraste) que o RCBD executado.
+É comum considerar o uso de blocos como efetivo quando `\(\hat{ER}\)` é superior a 125%.
+
+---
+### Checando Não-aditividade: O Teste de Tukey
+(Páginas 278-282)
+
+A análise padrão do RCBD assume **aditividade**, ou seja, que a interação Bloco x Tratamento é nula. A violação desta premissa invalida o teste F.
+
+**O Teste de Tukey para Não-Aditividade (1949)** propõe um teste para esta hipótese.
+- **Hipótese:** `\(H_0\)`: O modelo é aditivo vs. `\(H_1\)`: O modelo possui um componente de interação multiplicativo.
+- **Lógica:** O teste aloca **1 grau de liberdade** da Soma de Quadrados do Resíduo para testar especificamente um tipo de interação multiplicativa.
+
+**Algoritmo:**
+1. Ajuste o modelo aditivo `\(y_{ik} = \mu + \beta_i + \tau_k + \epsilon_{ik}\)` e obtenha os resíduos (`\(r\)`) e os valores ajustados (`\(p\)`).
+2. Crie uma nova variável com os quadrados dos valores ajustados: `\(p2 = p^2\)`.
+3. Ajuste um modelo auxiliar dos resíduos de p2: `\(r_2 = p2 - (\hat{\mu}^* + \hat{\beta}_i^* + \hat{\tau}_k^*)\)`.
+4. Ajuste uma regressão dos resíduos originais (`\(r\)`) contra os resíduos do passo 3 (`\(r_2\)`): `\(r_{ik} = \gamma \cdot r2_{ik} + e_{ik}\)`.
+5. A Soma de Quadrados para "Não-aditividade" é a SQ da Regressão deste último modelo. O teste F para `\(\gamma=0\)` é o teste de Tukey.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
