@@ -1,6 +1,6 @@
 ---
 title: "Fundamentos de Análise para Planejamento Experimental"
-subtitle: "Análise de Resíduos"
+subtitle: "Análise de Resíduos e Contrastes"
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
@@ -506,3 +506,288 @@ A saída "Sum Sq" para as linhas dos contrastes é:
 - **Soma:** $0.816 + 10.204 + 0.001 = 11.021$
 
 O resultado **confirma perfeitamente a teoria**: a soma das Somas de Quadrados dos contrastes ortogonais (11.021) é igual à Soma de Quadrados total do fator `Combustivel` (11.021). Nós particionamos a variação total do tratamento em três perguntas de pesquisa independentes, cada uma com 1 grau de liberdade.
+
+---
+### A Tabela ANOVA Particionada por Contrastes Ortogonais
+
+A propriedade de que um conjunto completo de $t-1$ contrastes ortogonais particiona a Soma de Quadrados do Tratamento ($SQ_{Trat} = \sum_{l=1}^{t-1} SQC_l$) nos permite expandir a tabela de ANOVA.
+
+A tabela de ANOVA acomoda essas somas de quadrados da seguinte forma:
+
+| Fonte | G.L. | S.Q. | E(QM) |
+|:---|:---:|:---:|:---:|
+| **Trat.** | $t-1$ | $k\sum(\bar{y}_{i.}-\bar{y}_{..})^2$ | $\sigma^2 + \frac{k}{t-1}\sum \tau_i^2$ |
+|  $C_1$ | 1 | $\frac{k(\sum c_{1i}\bar{y}_{i.})^2}{\sum c_{1i}^2}$ | $\sigma^2 + \frac{k(\sum c_{1i}\tau_i)^2}{\sum c_{1i}^2}$ |
+|  $\vdots$ | $\vdots$ | $\vdots$ | $\vdots$ |
+|  $C_{t-1}$ | 1 | $\frac{k(\sum c_{(t-1)i}\bar{y}_{i.})^2}{\sum c_{(t-1)i}^2}$ | $\sigma^2 + \frac{k(\sum c_{(t-1)i}\tau_i)^2}{\sum c_{(t-1)i}^2}$ |
+| **Resid.** | $t(k-1)$ | $\sum(y_{ir}-\bar{y}_{i.})^2$ | $\sigma^2$ |
+| **Total** | $tk-1$ | $\sum(y_{ir}-\bar{y}_{..})^2$ | |
+
+
+
+
+---
+
+Isso transforma uma única linha "Tratamento" com $t-1$ graus de liberdade em $t-1$ linhas, cada uma representando um contraste específico com **1 grau de liberdade**. Isso nos permite testar cada hipótese de pesquisa individualmente dentro da estrutura da ANOVA.
+
+**Interpretação da Tabela:** Cada linha de contraste ($C_l$) pode ser testada com um teste F, usando $F = QM_{C_l} / QM_{Resid}$. O E(QM) nos mostra que, se a hipótese nula para aquele contraste ($H_0: \sum c_{li}\tau_i = 0$) for verdadeira, o valor esperado do seu quadrado médio é simplesmente $\sigma^2$, e esperamos uma estatística  $F$ com valor próximo de 1.
+
+
+### Comentários: O Caso Desbalanceado
+
+As definições de contraste e ortogonalidade precisam ser ajustadas para o caso de um experimento desbalanceado, onde o tratamento $i$ tem $k_i$ réplicas.
+
+**1. Definição de Contraste (Desbalanceado):**
+Uma combinação linear $C_l = \sum c_{li}\tau_i$ é dita ser um contraste quando:
+$$\sum_i k_i c_{li} = 0$$
+A soma dos coeficientes agora é **ponderada** pelo número de réplicas.
+---
+
+**2. Definição de Ortogonalidade (Desbalanceada):**
+Dois contrastes, $C_1$ e $C_2$, são ditos ortogonais quando:
+$$\sum_i k_i c_{1i} c_{2i} = 0$$
+A soma dos produtos dos coeficientes também é ponderada por $k_i$.
+
+### Soma de Quadrados de Contraste (Desbalanceado)
+
+Ainda no caso de um experimento desbalanceado, a soma de quadrados de um contraste é dada por:
+$$SQC = \frac{(\hat{C})^2}{\widehat{Var}(\hat{C})/\sigma^2} = \frac{(\sum c_i \bar{y}_{i.})^2}{\sum (c_i^2 / k_i)}$$
+Esta SQC ainda tem **1 grau de liberdade**.
+
+**Ponto Crucial:**
+Porém, num experimento conduzido sob um plano completamente aleatorizado **desbalanceado**, a ortogonalidade dos dados se perde. Consequentemente, a propriedade de partição da soma de quadrados **não se aplica mais**:
+$$\sum_{l=1}^{t-1} SQC_l \neq SQ_{Trat}$$
+A soma das Somas de Quadrados de um conjunto de contrastes (mesmo que ortogonais segundo a definição ponderada) não será igual à Soma de Quadrados do Tratamento calculada pela ANOVA. Isso ocorre porque as hipóteses testadas não são mais independentes. A análise de dados desbalanceados requer métodos mais avançados (como Somas de Quadrados do Tipo II ou III).
+
+
+----
+### Cenário: O Experimento dos Combustíveis com Perda de Dados
+
+Vamos revisitar nosso experimento com 4 combustíveis. Suponha que, devido a problemas mecânicos, perdemos algumas amostras, resultando em um delineamento desbalanceado.
+
+- Gasolina Comum: $k_1 = 5$ réplicas
+- Gasolina Aditivada: $k_2 = 4$ réplicas (perdeu 1)
+- Álcool: $k_3 = 5$ réplicas
+- Gás: $k_4 = 3$ réplicas (perdeu 2)
+
+```{r}
+# Usar os dados originais e remover algumas observações para desbalancear
+set.seed(2023)
+dados_comb_orig <- data.frame(
+  Combustivel = factor(rep(c("Gasolina Comum", "Gasolina Aditivada", "Álcool", "Gás"), each = 5)),
+  Consumo_kmL = c(rnorm(5, 10, 0.8), rnorm(5, 10.5, 0.8), rnorm(5, 9, 0.8), rnorm(5, 8, 0.8))
+)
+
+# Criar o dataset desbalanceado
+dados_comb_desbal <- dados_comb_orig %>%
+  group_by(Combustivel) %>%
+  slice(1:case_when( Combustivel == "Gasolina Aditivada" ~ 4,
+    Combustivel == "Gás" ~ 3, TRUE ~ 5
+  )) %>% ungroup()
+
+# Verificar o número de réplicas
+cat("Número de réplicas (k_i) por tratamento:\n")
+(k_i <- table(dados_comb_desbal$Combustivel))
+```
+
+---
+### Análise de Variância (ANOVA) para o Caso Desbalanceado
+
+Primeiro, vamos executar a ANOVA padrão. O R lida com o desbalanceamento automaticamente (usando Somas de Quadrados Tipo I por padrão).
+
+```{r}
+# Ajustar o modelo e obter a tabela ANOVA
+modelo_desbal <- lm(Consumo_kmL ~ Combustivel, data = dados_comb_desbal)
+anova_desbal <- anova(modelo_desbal)
+print(anova_desbal)
+
+# Guardar a SQ do Tratamento para comparação posterior
+SQ_Trat_desbal <- anova_desbal$"Sum Sq"
+```
+
+A Soma de Quadrados total do fator `Combustivel` é **36.94**. Agora, vamos ver se conseguimos particionar este valor.
+
+---
+### Calculando os Contrastes Ortogonais (Ponderados)
+
+Precisamos de um conjunto de `t-1=3` contrastes que sejam ortogonais **de acordo com a definição ponderada**: $\sum k_i c_{1i} c_{2i} = 0$. Encontrar estes coeficientes manualmente pode ser complexo.
+
+Para fins de demonstração, vamos usar um conjunto padrão que o R pode gerar, como os contrastes de Helmert, que são ortogonais.
+
+**Cálculo das Somas de Quadrados de cada Contraste (SQC):**
+A fórmula é: $SQC = (\sum c_i \bar{y}_{i.})^2 / \sum (c_i^2 / k_i)$
+
+```{r}
+# 1. Calcular médias de grupo e k_i
+sumario_desbal <- dados_comb_desbal %>%
+  group_by(Combustivel) %>%
+  summarise(media = mean(Consumo_kmL), k = n())
+
+# 2. Definir os mesmos contrastes de antes (não serão perfeitamente ortogonais aqui, mas serve para ilustrar)
+c1 <- c(1, -1, 0, 0); c2 <- c(1, 1, -2, 0); c3 <- c(1, 1, 1, -3)
+
+# 3. Função para calcular SQC
+calcular_sqc <- function(c_vec, sumario) {
+  k_vals <- sumario$k
+  y_bar_vals <- sumario$media
+  numerador <- (sum(c_vec * y_bar_vals))^2
+  denominador <- sum(c_vec^2 / k_vals)
+  return(numerador / denominador)
+}
+```
+---
+```{r}
+# 4. Calcular a SQ para cada contraste
+SQC1 <- calcular_sqc(c1, sumario_desbal)
+SQC2 <- calcular_sqc(c2, sumario_desbal)
+SQC3 <- calcular_sqc(c3, sumario_desbal)
+
+cat("SQC1 (G.Comum vs G.Adit):", round(SQC1, 3), "\n")
+cat("SQC2 (Gasolinas vs Alcool):", round(SQC2, 3), "\n")
+cat("SQC3 (Líquidos vs Gas):", round(SQC3, 3), "\n")
+```
+
+---
+### A Perda da Partição
+
+Agora, o momento crucial. Vamos somar as Somas de Quadrados dos contrastes e comparar com a Soma de Quadrados do Tratamento da tabela ANOVA.
+
+```{r}
+# Soma das Somas de Quadrados dos contrastes
+soma_sqc <- SQC1 + SQC2 + SQC3
+
+cat("SQ do Tratamento (da ANOVA):", round(SQ_Trat_desbal, 3), "\n")
+cat("Soma das SQs dos Contrastes:", round(soma_sqc, 3), "\n")
+```
+
+$$\sum_{l=1}^{t-1} SQC_l \neq SQ_{Trat} \Rightarrow 45.426 \neq 36.94$$
+
+**Conclusão:**
+O exemplo numérica confirma a teoria: em um delineamento desbalanceado, a soma das Somas de Quadrados de um conjunto de contrastes **NÃO é igual** à Soma de Quadrados total do tratamento.
+
+
+
+---
+
+**Implicação Prática:**
+Isso ocorre porque os contrastes não são mais ortogonais *nos dados*. A informação que eles testam agora tem uma sobreposição. O teste para `C1` não é mais totalmente independente do teste para `C2`. A "limpeza" da partição se perdeu. É por isso que a análise de dados desbalanceados é inerentemente mais complexa e requer cuidado na interpretação e na escolha do tipo de Soma de Quadrados (Tipo I, II ou III) a ser utilizado, dependendo das hipóteses de interesse.
+
+### O que Acontece Quando os Dados são Desbalanceados?
+
+Lembre-se: em um delineamento **balanceado**, os fatores são **ortogonais**. A informação que o Fator A fornece sobre a resposta Y é completamente independente da informação que o Fator B fornece.
+
+**Analogia do Diagrama de Venn (Caso Balanceado):**
+A variabilidade total da resposta Y (o círculo cinza) é particionada de forma limpa. A área explicada por A (círculo azul) e a área explicada por B (círculo vermelho) **não se sobrepõem**. A soma das áreas é perfeita: $SQ_{Total} = SQ_A + SQ_B + SQ_{Erro}$.
+
+---
+```{r, echo=FALSE, fig.align='center'}
+# Diagrama de Venn para o caso Ortogonal (Balanceado)
+plot(0,0, type="n", xlim=c(0,10), ylim=c(0,10), axes=FALSE, xlab="", ylab="")
+symbols(x=5, y=5.5, circles=4, inches=FALSE, add=TRUE, fg="gray80", bg="gray90", lwd=2)
+symbols(x=3.5, y=5, circles=1.5, inches=FALSE, add=TRUE, fg="blue", bg="#0000FF33", lwd=2)
+symbols(x=6.5, y=5, circles=1.5, inches=FALSE, add=TRUE, fg="red", bg="#FF000033", lwd=2)
+text(x=5, y=9, "Variância Total (Y)", cex=1.5)
+text(x=3.5, y=5, "A", cex=1.5, col="blue")
+text(x=6.5, y=5, "B", cex=1.5, col="red")
+```
+
+### O Problema da Não-Ortogonalidade
+
+Em um delineamento **desbalanceado**, os fatores tornam-se **não-ortogonais (correlacionados)**. Isso significa que a informação que A fornece sobre Y **se sobrepõe** com a informação que B fornece.
+
+---
+**Analogia do Diagrama de Venn (Caso Desbalanceado):**
+Agora, os círculos de A e B se sobrepõem. A variabilidade total de Y é dividida em 4 partes:
+1.  Área explicada **apenas por A**.
+2.  Área explicada **apenas por B**.
+3.  Área explicada **conjuntamente por A e B** (a sobreposição).
+4.  Área não explicada (Erro).
+
+```{r, echo=FALSE, fig.align='center'}
+plot(0,0, type="n", xlim=c(0,10), ylim=c(0,10), axes=FALSE, xlab="", ylab="")
+symbols(x=5, y=5.5, circles=4, inches=FALSE, add=TRUE, fg="gray80", bg="gray90", lwd=2)
+symbols(x=4, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="blue", bg="#0000FF33", lwd=2)
+symbols(x=6, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="red", bg="#FF000033", lwd=2)
+text(x=5, y=9, "Variância Total (Y)", cex=1.5)
+text(x=2.5, y=5, "A", cex=2, col="blue")
+text(x=7.5, y=5, "B", cex=2, col="red")
+text(x=2.5, y=4, "1", cex=1.5)
+text(x=5, y=4, "2", cex=1.5)
+text(x=7.5, y=4, "3", cex=1.5)
+```
+
+
+---
+A grande questão é: **a quem pertence a área de sobreposição (2)?** As "Somas de Quadrados Tipo I, II e III" são simplesmente três respostas diferentes para essa pergunta.
+
+### Soma de Quadrados Tipo I (Sequencial)
+
+**A Regra:** "O primeiro que chega, leva tudo". A variabilidade é atribuída sequencialmente, na ordem em que os fatores aparecem no modelo.
+
+**Modelo: `lm(Y ~ A + B)`**
+1.  O Fator A entra primeiro. Ele fica com toda a área que consegue explicar: **Área(A) = 1 + 2**.
+2.  O Fator B entra depois. Ele só pode explicar a variabilidade que "sobrou": **Área(B|A) = 3**.
+
+```{r, echo=FALSE, fig.align='center', fig.height=4}
+plot(0,0, type="n", xlim=c(0,10), ylim=c(0,10), axes=FALSE, xlab="", ylab="")
+symbols(x=4, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="blue", bg="#0000FF33", lwd=3) # A gets everything
+symbols(x=6, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="red", lwd=1)
+text(x=4, y=5, "SQ(A) = 1+2", cex=1.5, col="blue")
+text(x=7.5, y=5, "SQ(B|A) = 3", cex=1.5, col="red")
+```
+---
+**Consequência:** A ordem importa! Se o modelo fosse `lm(Y ~ B + A)`, os resultados seriam diferentes: $SQ_B = 2+3$ e $SQ_A = 1$.
+**Uso:** Este é o padrão em R (`anova()`). É útil para modelos aninhados ou polinômios, mas **geralmente incorreto** para modelos fatoriais desbalanceados.
+
+### Soma de Quadrados Tipo II (Hierárquica / Parcial)
+
+**A Regra:** "A contribuição de um efeito principal é avaliada na presença de outros efeitos principais, mas ignorando interações."
+
+-   **Para o Fator A:** A $SQ_A$ é a variabilidade que A explica *além* do que B já explica. 
+$SQ_A = \text{Área}(A|B) = 1$.
+-   **Para o Fator B:** A $SQ_B$ é a variabilidade que B explica *além* do que A já explica. $SQ_B = \text{Área}(B|A) = 3$.
+
+---
+```{r, echo=FALSE, fig.align='center', fig.height=5}
+par(mfrow=c(1,2))
+plot(0,0, type="n", xlim=c(0,10), ylim=c(0,10), axes=FALSE, xlab="", ylab="")
+symbols(x=4, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="blue", bg="#0000FF33", lwd=1)
+symbols(x=6, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="red", bg="#FF000033", lwd=1)
+# Destacar as áreas
+polygon(x=c(1.5,1.5,4,4), y=c(2.5,7.5,7.5,2.5), col="#0000FF55", border=NA)
+text(x=2.5, y=5, "SQ(A) = 1", cex=1.5, col="blue")
+
+plot(0,0, type="n", xlim=c(0,10), ylim=c(0,10), axes=FALSE, xlab="", ylab="")
+symbols(x=4, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="blue", bg="#0000FF33", lwd=1)
+symbols(x=6, y=5, circles=2.5, inches=FALSE, add=TRUE, fg="red", bg="#FF000033", lwd=1)
+polygon(x=c(6,6,8.5,8.5), y=c(2.5,7.5,7.5,2.5), col="#FF000055", border=NA)
+text(x=7.5, y=5, "SQ(B) = 3", cex=1.5, col="red")
+```
+
+**Consequência:** A ordem dos fatores no modelo **não importa**. Note que a área de sobreposição (2) **não é atribuída a ninguém**. A soma $SQ_A + SQ_B$ não é igual à $SQ_{A+B}$.
+**Uso:** É a abordagem preferida para modelos fatoriais **sem interação significativa**. Em R, usa-se `car::Anova(modelo, type = "II")`.
+
+---
+### Soma de Quadrados Tipo III (Marginal)
+
+**A Regra:** "A contribuição de cada fator é avaliada após considerar todos os outros fatores, *incluindo interações*."
+
+Para um modelo `Y ~ A * B` (que é `A + B + A:B`), o teste para o efeito principal de A é uma pergunta muito específica: "O fator A tem um efeito principal, *assumindo que a interação A:B pode existir*?".
+
+-   **Para o Fator A:** A $SQ_A$ é a variabilidade que A explica *além* do que B e a interação A:B já explicam. $SQ_A = \text{Área}(A | B, A:B)$.
+-   **Para o Fator B:** A $SQ_B$ é a variabilidade que B explica *além* do que A e a interação A:B já explicam. $SQ_B = \text{Área}(B | A, A:B)$.
+
+**Consequência:** A ordem não importa. Esta é a abordagem mais conservadora. Se o teste para A é significativo, significa que A tem um efeito "médio" que é consistente mesmo na presença de uma interação.
+**Uso:** É a abordagem mais segura e comum para modelos fatoriais desbalanceados, **especialmente quando há uma interação significativa**. É o padrão em softwares como SAS e SPSS. Em R, usa-se `car::Anova(modelo, type = "III")`.
+
+**Aviso:** O teste para os efeitos principais com SS Tipo III pode ser controverso e difícil de interpretar se houver uma interação forte.
+
+---
+### Recomendação Prática
+
+1.  **Sempre que possível, use delineamentos balanceados!** Isso evita toda essa complexidade.
+
+2.  Se seus dados são **desbalanceados**:
+    - **Verifique a interação primeiro.**
+    - Se **não houver interação significativa**, use a **Soma de Quadrados Tipo II** para testar os efeitos principais (`car::Anova(modelo, type="II")`).
+    - Se **houver interação significativa**, o foco da sua interpretação deve ser na **interação**. Os testes dos efeitos principais (com Tipo II ou III) perdem o sentido prático, e você deve analisar o efeito de um fator dentro de cada nível do outro (usando contrastes ou testes post-hoc).
