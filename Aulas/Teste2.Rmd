@@ -1,0 +1,36 @@
+---
+title: "Teste Mínimo do Diagrama de Hasse"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(DiagrammeR)
+```
+
+## Diagrama da Figura 8
+
+Este é um teste para renderizar o diagrama da Figura 8.
+
+```{r fig-8-test}
+grViz("
+digraph fig8_final_robust {
+  rankdir=TB;
+  node [shape=circle, style=filled, fillcolor=lightblue];
+  edge [arrowhead=none];
+
+  # Definir nós com nomes internos seguros e rótulos
+  mu [label='μ'];
+  Bloco [label='B'];
+  Tratamento [label='T'];
+  Unidade [label='U'];
+  epsilon [label='ε'];
+  
+  # Definir cada relação individualmente
+  mu -> Bloco;
+  mu -> Tratamento;
+  Bloco -> Unidade;
+  Unidade -> epsilon;
+  Tratamento -> epsilon;
+}")
+```

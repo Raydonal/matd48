@@ -19,18 +19,17 @@ link-citations: true
 ```{r setup, include=FALSE}
 # Opções globais do Knitr
 options(html.tag.transform.rmarkdown = function(x) x)
-knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, fig.width=8, fig.height=4.5)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, fig.width=8, fig.height=4.0)
 
 # Carregar pacotes necessários
 library(ggplot2)
 library(dplyr)
 library(MASS) # Para a função ginv()
-library(DiagrammeR)
 library(sf)
 library(tidyverse)
-library(knitr)
-library(kableExtra)
-library(emmeans)
+library(DiagrammeR)
+library(DiagrammeRsvg)
+library(magrittr) # para o pipe %>%
 ```
 
 
@@ -145,61 +144,114 @@ knitr::include_graphics("images/quadro5Blocos.png")
 ```
 
 ---
-A Figura a seguir, por sua vez, ilustra essa mesma estrutura através de um diagrama de Hasse:
+A Figura a seguir, por sua vez, apresenta a Estrutura da população conceitual de respostas sob um plano aleatorizado em blocos, ilustrada via diagrama de Hasse.
 
-```{r, echo=FALSE}
+```{r save-diagram, echo=FALSE}
+# Criar o objeto do diagrama
 grViz("
-digraph fig6_corrected {
+digraph  {
   rankdir=TB;
   node [shape=circle, style=filled, fillcolor=lightblue];
   edge [arrowhead=none];
 
-  # Definir nós com nomes seguros
+  # Definir nós com nomes internos seguros e rótulos
   mu [label='μ'];
+  Bloco [label='B'];
   Tratamento [label='T'];
   Unidade [label='U'];
   epsilon [label='ε'];
   
-  # Definir relações de cima para baixo
+  # Definir cada relação individualmente
+  mu -> Bloco;
   mu -> Tratamento;
-  mu -> Unidade;
-  Tratamento -> epsilon;
+  Bloco -> Unidade;
   Unidade -> epsilon;
-  
-  {rank=same; Tratamento; Unidade;}
+  Tratamento -> epsilon;
 }")
+
+# # Exportar o diagrama como um arquivo PNG
+# # Ele será salvo no mesmo diretório do seu arquivo teste.Rmd
+# fig8_graph %>%
+#   export_svg() %>%
+#   charToRaw() %>%
+#   rsvg::rsvg_png("figura8_diagrama.png")
+# 
+# cat("Diagrama salvo como 'figura8_diagrama.png' no diretório de trabalho.")
 ```
+
 **Interpretação:** `Unidade Experimental (U)` está aninhada em `Bloco (B)`. O `Tratamento (T)` é cruzado com ambos.
 
 ---
 ### Identidade Algébrica e Suposição de Aditividade
-(Página 262)
 
-A identidade algébrica completa para esta estrutura é complexa. No entanto, para a análise padrão de um RCBD, fazemos uma **suposição fundamental de aditividade no sentido estrito**.
+A identidade algébrica associada à estrutura da população conceitual do Delineamento em Blocos (Figura 8) é dada pela decomposição completa de uma observação potencial $Y_{ijk}$:
 
-Isso significa que assumimos que os efeitos de interação são negligíveis, especialmente a interação **Bloco x Tratamento**.
-- ($Y_{i.k} - \bar{Y}_{i..} - \bar{Y}_{..k} + \bar{Y}_{...}) = 0$
-- E outras interações com a unidade experimental.
+$$\begin{aligned}Y_{ijk} = & \bar{Y}_{...} + (\bar{Y}_{i..} - \bar{Y}_{...}) + (\bar{Y}_{..k} - \bar{Y}_{...}) \\ &+ (\bar{Y}_{i.k} - \bar{Y}_{i..} - \bar{Y}_{..k} + \bar{Y}_{...}) + (\bar{Y}_{ij.} - \bar{Y}_{i..}) \\ &+ (Y_{ijk} - \bar{Y}_{i.k} - \bar{Y}_{ij.} + \bar{Y}_{i..})\end{aligned}$$
 
-Sob esta suposição, a identidade se simplifica para:
+**Componentes da Identidade:**
+1.  $\bar{Y}_{...}$ : Média Geral
+2.  $(\bar{Y}_{i..} - \bar{Y}_{...})$ : Efeito Principal do **Bloco `i`**
+3.  $(\bar{Y}_{..k} - \bar{Y}_{...})$ : Efeito Principal do **Tratamento `k`**
+4.  $(\bar{Y}_{i.k} - \dots)$ : Efeito da **Interação Bloco x Tratamento**
+5.  $(\bar{Y}_{ij.} - \bar{Y}_{i..})$ : Efeito da **Unidade Experimental `j` aninhada no Bloco `i`**
+6.  $(Y_{ijk} - \dots)$ : Efeito da **Interação de 3ª ordem (Bloco x UE x Tratamento)**, ou erro.
+
+---
+### Suposição de Aditividade no Sentido Estrito
+
+
+Para a análise padrão de um RCBD, a suposição fundamental de **aditividade no sentido estrito** é lançada. Por ela, admite-se que os efeitos de interação sejam negligíveis.
+
+**Quais termos são anulados?**
+
+-   **O quarto termo (Interação Bloco x Tratamento):**
+    $(\bar{Y}_{i.k} - \bar{Y}_{i..} - \bar{Y}_{..k} + \bar{Y}_{...}) \rightarrow 0.$ Isso significa que assumimos que o efeito de um tratamento é o mesmo em todos os blocos. Esta é a suposição mais forte e a que é testada pelo Teste de Não-Aditividade de Tukey.
+
+-   **O sexto termo (Interação de 3ª ordem):**
+    $Y_{ijk} - \bar{Y}_{i.k} - \bar{Y}_{ij.} + \bar{Y}_{i..}) \rightarrow 0.$ Assumimos que esta variação de ordem superior é zero e ela se torna parte do erro aleatório.
+
+Com a anulação desses dois termos, a identidade acima é reescrita como:
 $$Y_{ijk} = \bar{Y}_{...} + (\bar{Y}_{i..} - \bar{Y}_{...}) + (\bar{Y}_{..k} - \bar{Y}_{...}) + (\bar{Y}_{ij.} - \bar{Y}_{i..}) \quad (1)$$
-Onde cada termo representa a Média Geral, Efeito do Bloco `i`, Efeito do Tratamento `k`, e o Efeito da Unidade `j` dentro do Bloco `i`.
+Esta equação (1) é a base para a dedução do modelo linear para o Delineamento em Blocos.
 
 ---
 ### O Modelo Linear Deduzido
-(Páginas 263-267)
 
-Seguindo passos similares aos do DIC (usando uma variável de seleção $\delta_{ij}^k$), e adotando uma notação mais usual, a equação da identidade leva ao modelo:
-$$ y_{ik} = \mu + \beta_i + \tau_k + \omega_{ik} \quad $$
-onde:
+
+Seguindo passos similares aos do DIC (usando uma variável de seleção $\delta_{ij}^k=\mathbb{I}(y_{ik}=Y_{ijk})$), é possível escrever
+$$y_{ik}=\sum_j\delta_{ij}^kY_{ijk}. \quad (2)$$ agora, substituindo
+na equação (2) pelo valor da identidade (1), tem-se
+$$y_{ik} =  \bar{Y}_{...} + (\bar{Y}_{i..} - \bar{Y}_{...}) + (\bar{Y}_{..k} - \bar{Y}_{...})+\sum_j\delta_{ij}^k(\bar{Y}_{ij.} - \bar{Y}_{i..}).$$
+
+
+Adotando uma notação mais usual, a equação da identidade leva ao modelo:
+$$y_{ik} = \mu + \beta_i + \tau_k + \omega_{ik} \quad$$
 - $y_{ik}$ é a resposta observada ao tratamento `k` no bloco `i`.
 - $\mu$ é a média geral.
 - $\beta_i$ é o efeito (fixo) do bloco `i`.
 - $\tau_k$ é o efeito (fixo) do tratamento `k`.
 - $\omega_{ik}$ é o termo de erro, que combina o efeito da unidade experimental com o erro de medição.
 
-Desenvolvendo os cálculos (e aplicando o Teorema de Zyskind), pode-se mostrar que OLS ainda é BLUE. O modelo final que usamos na prática é:
-$$ y_{ik} = \mu + \beta_i + \tau_k + \epsilon_{ik} \quad (3) $$
+---
+As propriedades do termo aleatório $\omega_{ik}$
+são derivadas a partir da sua estrutura
+conhecida, da mesma forma como foi
+mostrado para o experimento
+completamente aleatorizado (ver
+Hinkelmann e Kempthorne, pág.253).
+Desenvolvendo os cálculos pertinentes,
+será possível ainda verificar que a
+condição do teorema de Zyskind é
+satisfeita para um plano aleatorizado
+em blocos, i.e.  pode-se mostrar que o estimador OLS ainda é BLUE. 
+ Dessa forma, é possível
+incorporar fontes de aleatoriedade ao
+modelo - devido por exemplo a erros de
+medida - além daquela induzida pelo
+processo físico de aleatorização
+(refletida pelo termo $\omega_{ik}$ ), implicando
+na seguinte representação:
+$$y_{ik} = \mu + \beta_i + \tau_k + \epsilon_{ik} \quad (3)$$
 Com as premissas (parcialmente deduzidas, parcialmente assumidas):
 - $E(\epsilon_{ik}) = 0$
 - $Var(\epsilon_{ik}) = \sigma^2$
@@ -207,65 +259,77 @@ Com as premissas (parcialmente deduzidas, parcialmente assumidas):
 
 ---
 ### Análise de Variância (ANOVA) para o RCBD
-(Páginas 268-271)
 
-A ANOVA para um RCBD baseia-se no modelo (3). A estrutura de classificação da **amostra** observada é a de dois fatores cruzados (`Bloco` e `Tratamento`), como mostra a **Figura 9**:
-```{r, echo=FALSE, fig.height=2.5}
-grViz("digraph { rankdir=TB; node[shape=circle,style=filled,fillcolor=lightblue]; edge[arrowhead=none];
-  mu[label='μ']; B[label='B']; T[label='T']; epsilon[label='ε'];
-  mu -> {B, T}; {B, T} -> epsilon; {rank=same; B; T;}
+A ANOVA para um RCBD baseia-se no modelo (3). A estrutura de classificação da **amostra** observada é a de dois fatores cruzados (`Bloco` e `Tratamento`), como apresentado no seguinte diagrama de Hasse:
+
+```{r, echo=FALSE, fig.height=3}
+grViz("
+digraph { 
+rankdir=TB; 
+node[shape=circle,style=filled,fillcolor=lightblue]; 
+edge[arrowhead=none];
+mu[label='μ']; 
+B[label='B']; 
+T[label='T']; 
+epsilon[label='ε'];
+mu -> {B, T}; 
+{B, T} -> epsilon; 
+{rank=same; B; T;}
 }")
 ```
+
+
+
 A **identidade algébrica** associada a esta estrutura é:
-$$ y_{ik} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (\bar{y}_{.k} - \bar{y}_{..}) + (y_{ik} - \bar{y}_{i.} - \bar{y}_{.k} + \bar{y}_{..}) $$
+$$y_{ik} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (\bar{y}_{.k} - \bar{y}_{..}) + (y_{ik} - \bar{y}_{i.} - \bar{y}_{.k} + \bar{y}_{..})$$
 
 Elevando ao quadrado e somando, os termos cruzados se anulam, resultando na **partição da Soma de Quadrados**:
-$$ SQ_{Total} = SQ_{Bloco} + SQ_{Tratamento} + SQ_{Resíduo} $$
+$$SQ_{Total} = SQ_{Bloco} + SQ_{Tratamento} + SQ_{Resíduo}$$
 
 ---
 ### Tabela ANOVA para o RCBD
-(Página 271)
 
 O quadro a seguir apresenta as informações para uma ANOVA de um RCBD.
 
 | Fonte | G.L. | S.Q. | E(QM) |
 |:---|:---:|:---:|:---:|
-| Bloco | $b-1$ | $t\sum(\bar{y}_{i.}-\bar{y}_{..})^2$ | $g(\sigma^2) + \frac{t}{b-1}\sum\beta_i^2$ |
-| Trat. | $t-1$ | $b\sum(\bar{y}_{.k}-\bar{y}_{..})^2$ | $\sigma^2 + \frac{b}{t-1}\sum\tau_k^2$ |
-| Resíduo| $(b-1)(t-1)$ | $\sum(y_{ik}-\bar{y}_{i.}-\bar{y}_{.k}+\bar{y}_{..})^2$| $\sigma^2$ |
-| Total | $bt-1$ | $\sum(y_{ik}-\bar{y}_{..})^2$ | |
+| Bloco | $b-1$ | $t\sum_i(\bar{y}_{i.}-\bar{y}_{..})^2$ | $g(\sigma^2) + \frac{t}{b-1}\sum_{i=1}^t\beta_i^2$ |
+| Trat. | $t-1$ | $b\sum_k(\bar{y}_{.k}-\bar{y}_{..})^2$ | $\sigma^2 + \frac{b}{t-1}\sum_{k=1}^t\tau_k^2$ |
+| Resíduo| $(b-1)(t-1)$ | $\sum_{ik}(y_{ik}-\bar{y}_{i.}-\bar{y}_{.k}+\bar{y}_{..})^2$| $\sigma^2$ |
+| Total | $bt-1$ | $\sum_{ik}(y_{ik}-\bar{y}_{..})^2$ | |
 
-**Comentário (pág. 272):**
-Observando a coluna E(QM), percebe-se que, num plano aleatorizado em blocos (com blocos fixos), **não há um teste F definido para a fonte de variação devido a blocos**, pois não há um denominador apropriado com esperança $g(\sigma^2)$. Isso não é um problema, pois o objetivo do bloqueio não é testar o efeito do bloco, mas sim **removê-lo da variância do resíduo**.
+**Comentário:**
+Observando a coluna do valore esperado dos quadrados médios E(QM), percebe-se que, num plano aleatorizado em blocos (com blocos fixos), **não há um teste F definido para a fonte de variação devido a blocos**, pois não há um denominador apropriado com esperança $g(\sigma^2)$. Isso não é um problema, pois o objetivo do bloqueio não é testar o efeito do bloco, mas sim **removê-lo da variância do resíduo**.
 
 ---
 ### Análise de um Experimento RCBD
-(Página 273)
 
 Utilizando a estatística:
-$$ F = \frac{QM_{Trat}}{QM_{Resid}} $$
+$$F = \frac{QM_{Trat}}{QM_{Resid}}$$
 como critério para o teste de igualdade de efeito dos tratamentos ($H_0: \tau_1 = ... = \tau_t = 0$), a distribuição $F_{(t-1), (b-1)(t-1)}$ é utilizada como uma aproximação da distribuição de referência gerada pela aleatorização.
 
 ---
-class: center, middle, inverse
-
-### Eficiência, Aditividade e Extensões
-
----
 ### Eficiência Relativa de um Plano em Blocos
-(Páginas 274-277)
 
 O bloqueio valeu a pena? Para comparar a eficiência de um RCBD ($D_1$) com a de um DIC ($D_2$) que poderia ter sido usado, Yates (1935) propôs a **Eficiência Relativa (ER)**.
 
 A estimativa da eficiência relativa é dada por:
-$$ \hat{ER}(D_1, D_2) = \frac{(b-1)QM_{Bloco} + b(t-1)QM_{Resid}}{(bt-1)QM_{Resid}} $$
+$$\hat{ER}(D_1, D_2) = \frac{(b-1)QM_{Bloco} + b(t-1)QM_{Resid}}{(bt-1)QM_{Resid}}$$
+Suponha que $\hat{ER}(D_1, D_2)=a$. Tem-se
+então, como interpretação prática, que
+se o mesmo material experimental
+tivesse sido usado em um plano
+completamente aleatorizado, teriam
+sido necessárias $r=ba$
+réplicas para atingir a mesma eficiência
+do plano aleatorizado em blocos
+executado.
 
 **Interpretação:** Se $\hat{ER} = 1.25$ (ou 125%), isso significa que um DIC precisaria de **25% mais réplicas** para atingir a mesma precisão (mesma variância para a estimativa de um contraste) que o RCBD executado.
 É comum considerar o uso de blocos como efetivo quando $\hat{ER}$ é superior a 125%.
 
 ---
 ### Checando Não-aditividade: O Teste de Tukey
-(Páginas 278-282)
 
 A análise padrão do RCBD assume **aditividade**, ou seja, que a interação Bloco x Tratamento é nula. A violação desta premissa invalida o teste F.
 
@@ -279,3 +343,169 @@ A análise padrão do RCBD assume **aditividade**, ou seja, que a interação Bl
 3. Ajuste um modelo auxiliar dos resíduos de p2: $r_2 = p2 - (\hat{\mu}^* + \hat{\beta}_i^* + \hat{\tau}_k^*)$.
 4. Ajuste uma regressão dos resíduos originais ($r$) contra os resíduos do passo 3 ($r_2$): $r_{ik} = \gamma \cdot r2_{ik} + e_{ik}$.
 5. A Soma de Quadrados para "Não-aditividade" é a SQ da Regressão deste último modelo. O teste F para $\gamma=0$ é o teste de Tukey.
+
+---
+### Exemplo Prático: Teste de Tukey para Não-Aditividade 
+
+Vamos aplicar o Teste de Tukey seguindo o algoritmo proposto. John e Quenoulli (1977) descrevem um
+estudo sobre o efeito de diferentes
+níveis de aplicação de K20 na a
+resistência de algodão, medida pelo
+índice de Pressley. 
+**Cenário:** Efeito de 5 níveis de K2O (`Trat`) na resistência de algodão, em 3 `Blocos`.
+
+```{r}
+# Dados no formato longo
+dados_k2o <- data.frame(
+  Resistencia = c(7.62, 8.14, 7.76, 7.17, 7.46, 8.00, 8.15, 7.73, 7.57, 7.68, 7.93, 7.87, 7.74, 7.80, 7.21),
+  Bloco = factor(rep(1:3, each = 5)),
+  Trat = factor(rep(1:5, times = 3))
+)
+```
+
+**Passo 1: Ajuste o modelo aditivo e calcule seus resíduos (r) e valores ajustados (p).**
+```{r}
+# Ajustar o modelo aditivo original
+modelo_aditivo <- lm(Resistencia ~ Bloco + Trat, data = dados_k2o)
+residuos_r <- residuals(modelo_aditivo)
+ajustados_p <- fitted(modelo_aditivo)
+```
+
+---
+```{r}
+anova(modelo_aditivo)
+```
+
+**Passo 2: Obtenha os quadrados dos valores ajustados: p2 = p².**
+```{r}
+ajustados_p2 <- ajustados_p^2
+```
+
+**Passo 3: Ajuste o modelo aditivo aos quadrados dos valores ajustados (`p2`) e calcule seus resíduos (`r2`).**
+```{r}
+# Ajustar o modelo auxiliar
+modelo_auxiliar <- lm(ajustados_p2 ~ Bloco + Trat, data = dados_k2o)
+residuos_r2 <- residuals(modelo_auxiliar)
+```
+**Intuição:** O vetor `r2` representa a parte da "curvatura" dos valores ajustados que não pode ser explicada por simples efeitos aditivos de bloco e tratamento. Ele captura a essência da interação.
+
+---
+**Passo 4: Ajuste o modelo de regressão dos resíduos originais (`r`) contra os resíduos do passo 3 (`r2`) e observe o teste para $\gamma=0$.**
+O modelo é $E(r_{ik}) = \gamma \cdot r2_{ik}$. A Soma de Quadrados da Regressão para $\gamma$ é a Soma de Quadrados para Não-Aditividade.
+```{r}
+# Ajustar o modelo final (regressão sem intercepto)
+modelo_tukey <- lm(residuos_r ~ 0 + residuos_r2)
+# A tabela ANOVA deste modelo nos dará o teste que queremos
+anova(modelo_tukey)
+```
+
+### Interpretando o Resultado do Algoritmo
+
+**Interpretação:**
+- A linha `residuos_r2` corresponde ao teste da hipótese $H_0: \gamma = 0$.
+- A **Soma de Quadrados** para este termo é **0.014190**. Este é o valor da "Soma de Quadrados para Não-Aditividade".
+- O **p-valor (Pr(>F))** é **0.4542**.
+
+---
+**Conclusão Final:**
+Como o p-valor (0.4542) é muito grande, **não rejeitamos a hipótese nula** de que $\gamma=0$. Isso significa que não há evidência de uma interação multiplicativa. A suposição de aditividade do modelo original é considerada válida.
+
+**Incorporando à Tabela de ANOVA Original:**
+Podemos construir a tabela final manualmente:
+- SQ Erro Original: 0.34948 (com 8 G.L.)
+- SQ Não-Aditividade: 0.01419 (com 1 G.L.)
+- SQ Resto: $0.34948 - 0.01419 = 0.33529$ (com $8-1=7$ G.L.)
+- Teste F para Não-Aditividade: $F = \frac{0.01419 / 1}{0.33529 / 7} = \frac{0.01419}{0.0479} \approx 0.30$, com p-valor = 0.59.
+
+---
+### Teste de Tukey para Não-Aditividade usando o pacote `additivityTests` 
+
+```{r, echo=TRUE}
+# Inserir os dados no formato longo (padrão tidyverse)
+dados_k2o_longo <- data.frame(
+  Resistencia = c(7.62, 8.14, 7.76, 7.17, 7.46, 8.00, 8.15, 7.73, 7.57, 7.68,
+                  7.93, 7.87, 7.74, 7.80, 7.21),
+  Bloco = factor(rep(1:3, each = 5)), Trat = factor(rep(1:5, times = 3))
+)
+```
+
+**Realizando o Teste com `additivityTests::tukey.test()` :**
+A função `tukey.test()` deste pacote requer que os dados estejam em um formato de **matriz**, onde as linhas representam os blocos e as colunas representam os tratamentos.
+
+**Passo 1: Transformar os dados para o formato de matriz.**
+```{r}
+# Usando a função xtabs para criar a tabela/matriz
+dados_k2o_matriz <- xtabs(Resistencia ~ Bloco + Trat, data = dados_k2o_longo)
+head(dados_k2o_matriz, 3)
+```
+
+---
+**Passo 2: Aplicar a função `tukey.test()` à matriz.**
+```{r}
+# Instalar e carregar o pacote (se necessário)
+# install.packages("additivityTests")
+library(additivityTests)
+
+# Agora a função funciona corretamente
+teste_tukey_pkg <- tukey.test(dados_k2o_matriz, alpha = 0.05)
+print(teste_tukey_pkg)
+```
+---
+### Teste de Tukey para Não-Aditividade usando o pacote `agricolae`
+```{r}
+library(agricolae)
+model<-lm(Resistencia ~ Bloco + Trat,dados_k2o_longo)
+df<-df.residual(model)
+MSerror<-deviance(model)/df
+analysis<-with(dados_k2o_longo,nonadditivity(Resistencia, Bloco, Trat, df, MSerror))#> 
+```
+
+
+
+---
+- A linha `Residuals` (Erro) tem **8 G.L.** e uma Soma de Quadrados (`Sum Sq`) de **0.34948**.
+
+**2. Resultados do Teste de Não-Aditividade:**
+O teste nos disse que a parte da variação do erro atribuível à não-aditividade tem **1 G.L.** e uma Soma de Quadrados de **0.01419**.
+
+**3. Construindo a Tabela Final:**
+A nova tabela mantém as linhas `Bloco` e `Trat` e divide a linha `Residuals`.
+
+| Fonte | DF | Sum Sq | Mean Sq | F value | Pr(>F) |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| Bloco | 2 | 0.09712 | 0.04856 | 1.11 | 0.375 |
+| Trat | 4 | 0.73244 | 0.18311 | 4.19 | 0.040 |
+| **Error (Original)** | **8** | **0.34948** | **0.04368** | | |
+|  *Não-aditividade* | *1* | *0.01419* | *0.01419* | *0.30* | *0.601* |
+|  *Resto* | *7* | *0.33529* | *0.04790* | | |
+| Total | 14 | 1.17904 | | | |
+
+---
+**Como os valores foram calculados:**
+- **DF Resto:** $8 - 1 = 7$
+- **Sum Sq Resto:** $0.34948 - 0.01419 = 0.33529$
+- **Mean Sq Resto:** $0.33529 / 7 = 0.04790$
+- **F value Não-adit:** $\frac{MS_{Nao-adit}}{MS_{Resto}} = \frac{0.01419}{0.04790} \approx 0.30$
+- **p-valor (0.601):** `1 - pf(0.30, 1, 7)`
+
+**Nota:** Não existe uma função no `R` para juntar as tabelas de anovas. A construção da tabela final é uma consequência da teoria da partição da Soma de Quadrados, e o pacote `additivityTests` ou `agricolae` que a apresenta de forma conveniente.
+
+**Conclusão:** Como o p-valor (0.592) é muito maior que 0.05, **não há evidência para rejeitar a hipótese nula de aditividade**. A suposição do modelo (`Resistencia ~ Bloco + Trat`) é válida
+
+
+---
+### Exemplo: Eficiência Relativa do Experimento K2O
+
+Vamos aproveitar a oportunidade e calcular a eficiência relativa estimada do plano aleatorizado em blocos para o experimento do K2O e resistência do algodão.
+
+**Resultados da ANOVA que precisamos:**
+- Blocos: `b = 3`
+- Tratamentos: `t = 5`
+- $QM_{Bloco} = 0.04856$
+- $QM_{Resid} = 0.04368$ (Este é o $QM_{Error}$ do modelo aditivo)
+
+**Cálculo:**
+$$\hat{ER} = \frac{(3-1)(0.04856) + 3(5-1)(0.04368)}{(3 \times 5 - 1)(0.04368)}  = \frac{0.62128}{0.61152} \approx 1.016$$
+
+**Conclusão:**
+A eficiência relativa estimada foi de **101.6%**. Isso indica que **não houve ganho considerável** em termos de redução do erro experimental ao "controlar" os efeitos do fator que define os blocos neste experimento. Um Delineamento Completamente Aleatorizado com 3 réplicas teria sido quase tão eficiente quanto o Delineamento em Blocos com 3 blocos. Neste caso específico, o esforço de bloquear não trouxe um grande benefício em precisão.
