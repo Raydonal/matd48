@@ -1140,12 +1140,49 @@ quadrados &lt;- list(A1 = A1, A2 = A2, A3 = A3, B1 = B1, B2 = B2)
 - Para t=3, poder muito baixo mesmo para diferenças grandes. Recomenda-se t ≥ 4 para ter poder aceitável. Para t pequeno, necessárias réplicas
 
 ### 3. Pressuposto de Aditividade Crítico:
-Se existem interações linha×coluna ou linha×tratamento, as inferências podem ser inválidas.
-
-**Teste de Aditividade de Tukey**:
-- Testa a presença de interação não-aditiva. Se significativo, considerar transformação dos dados ou modelo diferente
+Se existem interações linha×coluna ou linha×tratamento, as inferências podem ser. inválidas. Use  Teste de Aditividade de Tukey.
 
 ---
+
+## Quadrados Greco-Latinos: Controlando Três Fontes
+
+### Definição:
+Superposição de **dois quadrados latinos ortogonais**:
+- Letras latinas: tratamentos
+- Letras gregas: terceiro fator de bloqueio
+
+### Condição de Ortogonalidade:
+Cada par (letra latina, letra grega) ocorre **exatamente uma vez**.
+
+### Exemplo 4×4:
+`$$\begin{bmatrix}
+A\alpha &amp; B\gamma &amp; C\delta &amp; D\beta \\
+B\beta &amp; A\delta &amp; D\gamma &amp; C\alpha \\
+C\gamma &amp; D\alpha &amp; A\beta &amp; B\delta \\
+D\delta &amp; C\beta &amp; B\alpha &amp; A\gamma
+\end{bmatrix}$$`
+
+### Modelo:
+`$$Y_{ijkl} = \mu + \rho_i + \gamma_j + \delta_k + \tau_l + \epsilon_{ijkl}$$`
+
+---
+
+## ANOVA para Quadrado Greco-Latino
+
+| Fonte de Variação | GL | E[QM] |
+|-------------------|----|-------|
+| Linhas | t-1 | `\(\sigma^2 + \frac{t}{t-1}\sum\rho_i^2\)` |
+| Colunas | t-1 | `\(\sigma^2 + \frac{t}{t-1}\sum\gamma_j^2\)` |
+| Letras Gregas | t-1 | `\(\sigma^2 + \frac{t}{t-1}\sum\delta_k^2\)` |
+| Tratamentos | t-1 | `\(\sigma^2 + \frac{t}{t-1}\sum\tau_l^2\)` |
+| Resíduo | (t-1)(t-3) | `\(\sigma^2\)` |
+| Total | t²-1 | |
+
+**Atenção**: Para t=4, GL Resíduo = 3 (muito baixo!). Necessário usar réplicas.
+
+---
+
+### Próximo réplicação
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

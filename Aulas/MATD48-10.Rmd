@@ -936,91 +936,7 @@ for (nome in names(quadrados)) {
 - Para t=3, poder muito baixo mesmo para diferenças grandes. Recomenda-se t ≥ 4 para ter poder aceitável. Para t pequeno, necessárias réplicas
 
 ### 3. Pressuposto de Aditividade Crítico:
-Se existem interações linha×coluna ou linha×tratamento, as inferências podem ser inválidas.
-
-**Teste de Aditividade de Tukey**:
-- Testa a presença de interação não-aditiva. Se significativo, considerar transformação dos dados ou modelo diferente
-
----
-
-## Réplicas de Quadrados Latinos
-
-Para aumentar os graus de liberdade do resíduo, podemos replicar o quadrado latino.
-
-### Três Cenários de Replicação:
-
-1. **Cenário 1**: Mesmas linhas e colunas em todas as réplicas
-   - Exemplo: Mesmo campo em anos diferentes
-   - Modelo: $Y_{ijkl} = \mu + \alpha_l + \rho_i + \gamma_j + \tau_k + \epsilon_{ijkl}$
-   - GL Resíduo: $r(t-1)(t-2) + 3(r-1)(t-1)$
-
-2. **Cenário 2**: Linhas fixas, colunas diferentes em cada réplica
-   - Exemplo: Mesmos fornecedores, diferentes lotes de matéria-prima
-   - Modelo: $Y_{ijkl} = \mu + \alpha_l + \rho_i + \gamma_{jl} + \tau_k + \epsilon_{ijkl}$
-   - GL Resíduo: $r(t-1)(t-2) + 2(r-1)(t-1)$
-
-3. **Cenário 3**: Linhas e colunas diferentes em cada réplica
-   - Exemplo: Diferentes campos completamente
-   - Modelo: $Y_{ijkl} = \mu + \alpha_l + \rho_{il} + \gamma_{jl} + \tau_k + \epsilon_{ijkl}$
-   - GL Resíduo: $r(t-1)(t-2) + (r-1)(t-1)$
-
----
-
-## Exemplo: Réplicas no Experimento de Cerâmica
-
-```{r replicas-ceramica, echo=TRUE, eval=TRUE}
-# Simular 2 réplicas do experimento de cerâmica
-simular_replicas <- function(t = 3, r = 2) {
-  dados <- data.frame()
-  
-  for (rep in 1:r) {
-    # Design diferente para cada réplica
-    design <- matrix(sample(1:t), nrow = t)
-    for (i in 1:t) {
-      design[, i] <- sample(design[, i])
-    }
-    
-    # Efeitos (podem variar entre réplicas)
-    mu_rep <- 50 + rnorm(1, 0, 2)  # Média varia
-    
-    for (i in 1:t) {
-      for (j in 1:t) {
-        k <- design[i, j]
-        y <- mu_rep + 
-               rnorm(1, c(-5, 0, 5)[i], 1) +  # Efeito linha
-               rnorm(1, c(-3, 0, 3)[j], 1) +  # Efeito coluna
-               rnorm(1, c(-8, 0, 8)[k], 1) +  # Efeito tratamento
-               rnorm(1, 0, 2)  # Erro
-        dados <- rbind(dados, 
-                      data.frame(Replica = factor(rep),
-                                Fornecedor = factor(i, labels = c("Q1", "Q2", "Q3")),
-                                Forno = factor(j, labels = c("F1", "F2", "F3")),
-                                Processo = factor(k, labels = c("A", "B", "C")),
-                                Resistencia = y))
-      }
-    }
-  }
-  
-  return(dados)
-}
-
-set.seed(789)
-dados_replicas <- simular_replicas(3, 2)
-
-# ANOVA para réplicas (Cenário 1: mesmas linhas e colunas)
-modelo_rep <- aov(Resistencia ~ Replica + Fornecedor + Forno + Processo, 
-                  data = dados_replicas)
-
-cat("ANOVA COM 2 RÉPLICAS (Cenário 1):\n")
-cat("=================================\n")
-print(summary(modelo_rep))
-
-# Comparação de GL
-cat("\nCOMPARAÇÃO DE GRAUS DE LIBERDADE:\n")
-cat("Sem réplica: GL Resíduo = 2\n")
-cat("Com 2 réplicas: GL Resíduo =", summary(modelo_rep)[[1]]$"Df"[5], "\n")
-cat("Aumento:", summary(modelo_rep)[[1]]$"Df"[5] - 2, "graus de liberdade\n")
-```
+Se existem interações linha×coluna ou linha×tratamento, as inferências podem ser. inválidas. Use  Teste de Aditividade de Tukey.
 
 ---
 
@@ -1034,20 +950,16 @@ Superposição de **dois quadrados latinos ortogonais**:
 ### Condição de Ortogonalidade:
 Cada par (letra latina, letra grega) ocorre **exatamente uma vez**.
 
-### Exemplo 4×4 (Software de edição):
-$$
-\begin{bmatrix}
+### Exemplo 4×4:
+$$\begin{bmatrix}
 A\alpha & B\gamma & C\delta & D\beta \\
 B\beta & A\delta & D\gamma & C\alpha \\
 C\gamma & D\alpha & A\beta & B\delta \\
 D\delta & C\beta & B\alpha & A\gamma
-\end{bmatrix}
-$$
+\end{bmatrix}$$
 
 ### Modelo:
-$$
-Y_{ijkl} = \mu + \rho_i + \gamma_j + \delta_k + \tau_l + \epsilon_{ijkl}
-$$
+$$Y_{ijkl} = \mu + \rho_i + \gamma_j + \delta_k + \tau_l + \epsilon_{ijkl}$$
 
 ---
 
@@ -1066,53 +978,5 @@ $$
 
 ---
 
-## Conclusões e Recomendações Práticas
-
-### Quando Usar Quadrados Latinos:
-✓ **Duas fontes** importantes de variação sistemática  
-✓ **Recursos limitados** (poucas unidades disponíveis)  
-✓ **Pressuposto de aditividade** plausível  
-✓ **Número moderado** de tratamentos (4 ≤ t ≤ 8 ideal)  
-
-### Checklist para Implementação:
-1. [ ] Verificar se as fontes de variação são realmente importantes
-2. [ ] Realizar aleatorização completa seguindo Yates (1933)
-3. [ ] Verificar pressupostos estatísticos após coleta
-4. [ ] Calcular poder a posteriori para planejamento futuro
-5. [ ] Considerar réplicas se t for pequeno
-6. [ ] Documentar todas as etapas do processo
-
-### Aplicações Típicas:
-- **Agricultura**: Campos com gradientes em duas direções
-- **Indústria**: Processos com múltiplas fontes de variação
-- **Medicina**: Estudos cross-over complexos
-- **Psicologia**: Experimentos com múltiplos fatores de controle
-
----
-class: inverse, middle, center
-
-# Fim da Parte 5
-
-### Dúvidas? Discussão!
-
-**Próxima aula**: Planos em Parcelas Subdivididas
-
-**Material disponível no Moodle**: Slides, códigos R, exercícios
-
----
-
-## Referências Bibliográficas
-
-1. **Yates, F.** (1933). *The formation of Latin squares for use in field experiments*. Empire Journal of Experimental Agriculture.
-
-2. **Fisher, R. A.** (1935). *The Design of Experiments*. Oliver & Boyd.
-
-3. **Cochran, W. G. & Cox, G. M.** (1957). *Experimental Designs*. 2ª ed. Wiley.
-
-4. **Montgomery, D. C.** (2017). *Design and Analysis of Experiments*. 9ª ed. Wiley.
-
-5. **Box, G. E. P., Hunter, J. S. & Hunter, W. G.** (2005). *Statistics for Experimenters*. 2ª ed. Wiley.
-
-6. **R Core Team** (2023). *R: A Language and Environment for Statistical Computing*. R Foundation.
-
+### Próximo réplicação
 
