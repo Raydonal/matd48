@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fundamentos de Análise para Planejamento Experimental</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fundamentos de Análise para Planejamento Experimental
+]
+.subtitle[
+## Planos com Aleatorização Restrita: Quadrados Latinos e Extensões
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+
+
+###  Motivação: O Problema dos Gradientes de Fertilidade
+
+Imagine um campo experimental com **duas fontes de variação sistemática**:
+
+1. **Gradiente de umidade**: Parcelas mais próximas ao rio são mais úmidas e férteis
+2. **Gradiente de declive**: Parcelas na parte baixa acumulam mais nutrientes
+
+**Problema**: Esses gradientes são ORTOGONAIS (perpendiculares)!
+
+### Visualização do Problema:
+
+&lt;img src="MATD48-10_files/figure-html/gradiente-basico-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Por que Blocos Simples Não Resolvem?
+
+.pull-left[
+### Blocos por Distância do Rio:
+&lt;img src="MATD48-10_files/figure-html/blocos-verticais-1.png" style="display: block; margin: auto;" /&gt;
+**Problema**: Gradiente vertical ainda causa variabilidade dentro dos blocos.
+]
+
+.pull-right[
+### Blocos por Posição no Declive:
+&lt;img src="MATD48-10_files/figure-html/blocos-horizontais-1.png" style="display: block; margin: auto;" /&gt;
+**Problema**: Gradiente horizontal ainda causa variabilidade dentro dos blocos.
+]
+
+**Conclusão**: Precisamos de um delineamento que controle AMBOS gradientes simultaneamente!
+
+---
+
+## Solução: Quadrados Latinos
+
+### Definição Formal:
+Um **quadrado latino de ordem t** é um arranjo de t símbolos distintos em uma matriz t×t tal que cada símbolo aparece **exatamente uma vez** em cada linha e em cada coluna.
+
+### Aplicação Experimental:
+- **Linhas**: Controlam uma fonte de variação (ex: distância do rio)
+- **Colunas**: Controlam outra fonte de variação (ex: posição no declive)
+- **Símbolos**: Representam os tratamentos
+
+### Vantagem Principal:
+Controla **duas fontes** de variação sistemática com apenas **t² unidades experimentais**!
+
+---
+
+## Comparação: Blocos Cruzados vs Quadrado Latino
+
+Para t tratamentos e dois fatores de ruído com t níveis cada:
+
+### Blocos Cruzados:
+- Número de blocos: t × t = t²
+- Unidades por bloco: t
+- **Total de unidades**: t² × t = **t³**
+
+### Quadrado Latino:
+- Linhas: t níveis
+- Colunas: t níveis  
+- **Total de unidades**: **t²**
+
+### Economia:
+Para t=3: 27 vs 9 unidades (3× mais eficiente!)
+Para t=4: 64 vs 16 unidades (4× mais eficiente!)
+
+---
+
+## Exemplo: Experimento de Cerâmica
+
+### Contexto:
+Comparar 3 processos de produção (A, B, C) controlando:
+1. **Fornecedor** de matéria-prima (3 níveis: Q1, Q2, Q3)
+2. **Tipo de forno** (3 níveis: F1, F2, F3)
+
+**Quadrado Latino 3×3:**
+
+Table: Quadro 6: Arranjo em Quadrado Latino 3×3 para o Experimento de Cerâmica
+
+|              | Forno F1 | Forno F2 | Forno F3 |
+|:-------------|:--------:|:--------:|:--------:|
+|Fornecedor Q1 |    A     |    B     |    C     |
+|Fornecedor Q2 |    C     |    A     |    B     |
+|Fornecedor Q3 |    B     |    C     |    A     |
+
+**Verificação**: Cada processo aparece uma vez em cada linha (fornecedor) e uma vez em cada coluna (forno).
+
+---
+### Descrição Formal do Plano em Quadrado Latino
+
+O plano experimental em quadrados latinos é usado para comparar `t` tratamentos controlando `t` níveis de um fator de ruído "Linha" e `t` níveis de um fator de ruído "Coluna".
+
+Para a aplicação do plano, são necessárias `\(t \times t\)` unidades experimentais com características diferenciadas pela presença de um nível de cada fator de ruído considerado.
+
+Para o caso em que `\(t=3\)`, por exemplo, são necessárias 9 unidades. Denotando por `\(u_{ij}\)` a unidade experimental (u.e.) com nível `i` do fator "linha" e nível `j` do fator "coluna", e dispondo as unidades experimentais em um arranjo quadricular, elas seriam representadas por:
+`$$\begin{pmatrix} u_{11} &amp; u_{12} &amp; u_{13} \\ u_{21} &amp; u_{22} &amp; u_{23} \\ u_{31} &amp; u_{32} &amp; u_{33} \end{pmatrix} \quad (1)$$`
+Cada `\(u_{ij}\)` é uma unidade física única (ex: um forno específico de um fornecedor específico; uma parcela específica do campo).
+
+---
+### Definição Matemática e o Processo de Superposição
+
+Do ponto de vista matemático:
+**Definição:** Um **quadrado latino** de ordem `t` é um arranjo de `t` letras latinas (A, B, C, ...) em um quadrado com `t` linhas e `t` colunas, de tal forma que cada letra aparece apenas uma vez em cada linha e em cada coluna.
+
+O delineamento experimental consiste em **superpor** um quadrado latino (que define a alocação dos tratamentos) ao arranjo das unidades experimentais.
+
+**Exemplo de Superposição:**
+O Quadro 6 é um exemplo de superposição de um quadrado latino de ordem 3:
+`$$\begin{matrix} A &amp; B &amp; C \\ C &amp; A &amp; B \\ B &amp; C &amp; A \end{matrix}$$`
+sobre o arranjo de unidades experimentais (1). Isso significa que:
+- O tratamento **A** será aplicado às unidades `\(u_{11}, u_{22}, u_{33}\)`.
+- O tratamento **B** será aplicado às unidades `\(u_{12}, u_{23}, u_{31}\)`.
+- O tratamento **C** será aplicado às unidades `\(u_{13}, u_{21}, u_{32}\)`.
+
+---
+Para facilitar o entendimento do protocolo de aleatorização, algumas definições são importantes.
+
+### Quadrados Latinos Reduzidos
+
+**Definição:** Um quadrado latino é dito ser **reduzido** (ou em formato padrão) se em seu arranjo, as letras da primeira linha e da primeira coluna estão em ordem alfabética.
+
+O número de quadrados latinos reduzidos existentes (`\(R_t\)`) para uma dada ordem `t` é conhecido.
+
+| Ordem (t) | Quadrados Latinos Reduzidos (`\(R_t\)`) |
+|:---:|:---:|
+| 2 | 1 |
+| 3 | 1 |
+| 4 | 4 |
+| 5 | 56 |
+| 6 | 9408 |
+
+---
+O **único** quadrado latino reduzido de ordem 3, por exemplo, é dado por:
+`$$\begin{matrix} A &amp; B &amp; C \\ B &amp; C &amp; A \\ C &amp; A &amp; B \end{matrix}$$`
+A partir de um quadrado latino reduzido, é possível gerar um grande número de outros quadrados distintos através da permutação de linhas, colunas e letras.
+
+### Conjunto de Transformação
+
+
+**Definição:** Um quadrado latino é dito pertencer a um **conjunto de transformação** (*transformation set*) se ele pode ser derivado de um mesmo quadrado latino reduzido através de permutações de letras e remanejamento de linhas e/ou colunas.
+
+A noção de conjunto de transformação é útil na identificação de todos os quadrados latinos reduzidos de uma determinada ordem. O exercício a seguir ilustra o fato.
+
+---
+### Exemplo
+
+**Considere o problema de listar todos os 4 quadrados latinos reduzidos de ordem 4 existentes. Sabe-se que existem dois conjuntos de transformação. Um quadrado de cada conjunto é apresentado. Encontre os outros.**
+
+
+**Conjunto 1 (Início):**
+`$$\begin{matrix} A &amp; B &amp; C &amp; D \\ B &amp; A &amp; D &amp; C \\ C &amp; D &amp; A &amp; B \\ D &amp; C &amp; B &amp; A \end{matrix}$$`
+
+**Como encontrar os outros do mesmo conjunto?**
+Através da permutação das letras. Se trocarmos C por D e D por C, por exemplo, e depois reordenarmos as linhas/colunas para voltar ao formato padrão (primeira linha/coluna = ABCD), encontraremos um novo quadrado reduzido pertencente ao mesmo "grupo". Apenas uma outra permutação (trocar B por C, C por D, D por B) gera um novo quadrado reduzido neste conjunto. Os outros não geram novos quadrados reduzidos.
+
+---
+**Os 2 Quadrados do Conjunto 1:**
+`$$\begin{pmatrix} A &amp; B &amp; C &amp; D \\ B &amp; A &amp; D &amp; C \\ C &amp; D &amp; A &amp; B \\ D &amp; C &amp; B &amp; A \end{pmatrix} \quad , \quad \begin{pmatrix} A &amp; B &amp; C &amp; D \\ B &amp; D &amp; A &amp; C \\ C &amp; A &amp; D &amp; B \\ D &amp; C &amp; B &amp; A \end{pmatrix}$$`
+
+**Conjunto 2 (Início):**
+`$$\begin{matrix} A &amp; B &amp; C &amp; D \\ B &amp; C &amp; D &amp; A \\ C &amp; D &amp; A &amp; B \\ D &amp; A &amp; B &amp; C \end{matrix}$$`
+*(Nota: O quadrado no PDF para o Conjunto 2, `BADC` na segunda linha, não está em formato reduzido. Usei o quadrado reduzido padrão do qual ele deriva).*
+
+Aplicando o mesmo processo de permutação de letras, encontramos o outro quadrado deste conjunto.
+
+---
+**Os 2 Quadrados do Conjunto 2:**
+`$$\begin{pmatrix} A &amp; B &amp; C &amp; D \\ B &amp; C &amp; D &amp; A \\ C &amp; D &amp; A &amp; B \\ D &amp; A &amp; B &amp; C \end{pmatrix} \quad , \quad \begin{pmatrix} A &amp; B &amp; C &amp; D \\ B &amp; D &amp; A &amp; C \\ C &amp; A &amp; B &amp; D \\ D &amp; C &amp; B &amp; A \end{pmatrix}$$`
+
+**Conclusão:** Mostramos os 4 quadrados latinos reduzidos de ordem 4, agrupados por seus respectivos conjuntos de transformação. O processo de aleatorização (Passo 1 do processo de Yates) consiste em sortear um destes 4 quadrados como ponto de partida.
+
+---
+
+## Processo de Aleatorização (Yates, 1933)
+
+### Objetivo da Aleatorização:
+1. **Eliminar viés** sistemático na atribuição de tratamentos
+2. **Garantir validade** dos testes de significância
+3. **Balancear** possíveis efeitos não controlados
+
+### Procedimento em 4 Etapas:
+
+**Passo 1**: Selecionar aleatoriamente um quadrado latino reduzido da ordem desejada
+
+**Passo 2**: Permutar aleatoriamente todas as linhas do quadrado selecionado
+
+**Passo 3**: Permutar aleatoriamente todas as colunas
+
+**Passo 4**: Atribuir aleatoriamente os tratamentos às letras latinas
+
+---
+### Implementação em R:
+
+
+``` r
+# Função para aleatorização seguindo Yates (1933)
+aleatorizar_quadrado_latino &lt;- function(t, tratamentos) {
+  # Passo 1: Quadrado latino reduzido (para t=3, único)
+  if (t == 3) {
+    reduzido &lt;- matrix(c(1, 2, 3,   2, 3, 1,  3, 1, 2), nrow = t)
+  } else if (t == 4) {
+    # Um dos quadrados reduzidos de ordem 4
+    reduzido &lt;- matrix(c(1, 2, 3, 4,  2, 1, 4, 3,  3, 4, 1, 2,
+                         4, 3, 2, 1), nrow = t)
+  }
+  
+  # Passo 2: Permutar linhas
+  perm_linhas &lt;- sample(1:t)
+  design &lt;- reduzido[perm_linhas, ]
+  
+  # Passo 3: Permutar colunas
+  perm_colunas &lt;- sample(1:t)
+  design &lt;- design[, perm_colunas]
+  
+  # Passo 4: Atribuir tratamentos
+  atrib_trat &lt;- sample(tratamentos)
+  design_final &lt;- matrix(atrib_trat[design], nrow = t)
+  
+  return(list(
+    design = design_final,
+    perm_linhas = perm_linhas,
+    perm_colunas = perm_colunas,
+    atrib_trat = atrib_trat
+  ))
+}
+```
+
+---
+
+``` r
+# Exemplo para cerâmica
+set.seed(123)
+resultado &lt;- aleatorizar_quadrado_latino(3, c("Processo_A", "Processo_B", "Processo_C"))
+cat("Design aleatorizado para cerâmica:\n")
+```
+
+```
+## Design aleatorizado para cerâmica:
+```
+
+``` r
+print(resultado$design)
+```
+
+```
+##      [,1]         [,2]         [,3]        
+## [1,] "Processo_B" "Processo_A" "Processo_C"
+## [2,] "Processo_C" "Processo_B" "Processo_A"
+## [3,] "Processo_A" "Processo_C" "Processo_B"
+```
+
+``` r
+cat("\nPermutação de linhas:", resultado$perm_linhas)
+```
+
+```
+## 
+## Permutação de linhas: 3 1 2
+```
+
+``` r
+cat("\nPermutação de colunas:", resultado$perm_colunas)
+```
+
+```
+## 
+## Permutação de colunas: 2 1 3
+```
+
+``` r
+cat("\nAtribuição de tratamentos:", resultado$atrib_trat)
+```
+
+```
+## 
+## Atribuição de tratamentos: Processo_B Processo_C Processo_A
+```
+
+---
+
+## Modelo Linear e População Conceitual
+
+Conjunto de todas as respostas potenciais `\(Y_{ijk}\)` para:
+- Linha i = 1, ..., t
+- Coluna j = 1, ..., t
+- Tratamento k = 1, ..., t
+
+### Modelo Linear:
+`$$Y_{ijk} = \mu + \rho_i + \gamma_j + \tau_k + \epsilon_{ijk}$$`
+
+### Definição dos Termos:
+- `\(\mu\)`: Média geral (parâmetro de localização)
+- `\(\rho_i\)`: Efeito fixo da i-ésima linha
+- `\(\gamma_j\)`: Efeito fixo da j-ésima coluna
+- `\(\tau_k\)`: Efeito fixo do k-ésimo tratamento
+- `\(\epsilon_{ijk} \sim N(0, \sigma^2)\)`: Erro aleatório independente
+
+---
+### Restrições de Identificabilidade:
+`$$\sum_{i=1}^t \rho_i = \sum_{j=1}^t \gamma_j = \sum_{k=1}^t \tau_k = 0$$`
+
+## Pressupostos do Modelo
+
+### 1. Aditividade Estrita:
+`$$E(Y_{ijk}) = \mu + \rho_i + \gamma_j + \tau_k$$`
+Não há interações entre linha×coluna, linha×tratamento, coluna×tratamento.
+
+### 2. Independência:
+`$$Cov(\epsilon_{ijk}, \epsilon_{i'j'k'}) = 0 \quad \text{para} \quad (i,j,k) \neq (i',j',k')$$`
+
+---
+### 3. Homocedasticidade:
+`$$Var(\epsilon_{ijk}) = \sigma^2 \quad \forall i,j,k$$`
+
+### 4. Normalidade (para efeitos inferenciasi):
+`$$\epsilon_{ijk} \sim N(0, \sigma^2)$$`
+
+---
+
+## Análise de Variância (ANOVA)
+
+A análise de variância de um quadrado
+latino é facilmente derivada a partir do
+modelo linear apresentado. É
+importante notar, porém, que não é
+apropriado utilizar um diagrama de
+Hasse para representar graficamente a
+estrutura da amostra da população
+conceitual de respostas observada no
+experimento. Isso porque, na amostra
+observada, o número de observações
+sob mesmas condições experimentais
+(mesmo nível do fator linha e do fator
+coluna) não é o mesmo para cada
+tratamento. Para ressaltar esse fato,
+na identidade algébrica utilizada, o
+último índice será escrito entre
+parênteses.
+
+### Identidade Algébrica:
+$$
+`\begin{aligned}
+y_{ijk} - \bar{y}_{\cdot\cdot\cdot} = &amp; (\bar{y}_{i\cdot\cdot} - \bar{y}_{\cdot\cdot\cdot}) \\
+&amp; + (\bar{y}_{\cdot j\cdot} - \bar{y}_{\cdot\cdot\cdot}) \\
+&amp; + (\bar{y}_{\cdot\cdot k} - \bar{y}_{\cdot\cdot\cdot}) \\
+&amp; + (y_{ijk} - \bar{y}_{i\cdot\cdot} - \bar{y}_{\cdot j\cdot} - \bar{y}_{\cdot\cdot k} + 2\bar{y}_{\cdot\cdot\cdot})
+\end{aligned}`
+$$
+Para gerar as somas de quadrados da
+tabela de ANOVA, basta elevar ao
+quadrado ambos os lados e somar em
+todos os índices, como nos outros
+planos.
+
+---
+### Decomposição da Soma de Quadrados:
+`$$SS_{Total} = SS_{Linhas} + SS_{Colunas} + SS_{Tratamentos} + SS_{Resíduo}$$`
+
+## Tabela de ANOVA Completa de ordem `t`
+
+| Fonte | G.L. | Soma de Quadrados (S.Q.) | Quadrado Médio (Q.M.) | Esperança do Q.M. (E(Q.M.)) |
+|:---|:---:|:---|:---|:---|
+| Linhas (`\(\rho\)`) | `\(t-1\)` | `\(t\sum(\bar{y}_{i..}-\bar{y}_{...})^2\)` | `\(SQ_{Linhas}/(t-1)\)` | `\(\sigma^2 + \frac{t}{t-1}\sum\rho_i^2\)` |
+| Colunas (`\(\gamma\)`) | `\(t-1\)` | `\(t\sum(\bar{y}_{.j.}-\bar{y}_{...})^2\)` | `\(SQ_{Colunas}/(t-1)\)` | `\(\sigma^2 + \frac{t}{t-1}\sum\gamma_j^2\)` |
+| Tratamentos (`\(\tau\)`) | `\(t-1\)` | `\(t\sum(\bar{y}_{..k}-\bar{y}_{...})^2\)` | `\(SQ_{Trat}/(t-1)\)` | `\(\sigma^2 + \frac{t}{t-1}\sum\tau_k^2\)` |
+| Resíduo | `\((t-1)(t-2)\)` | Por diferença | `\(SQ_{Res}/((t-1)(t-2))\)` | `\(\sigma^2\)` |
+| **Total** |$t^2-1$ | `\(\sum(y_{ij(k)}-\bar{y}_{...})^2\)` | | |
+
+
+---
+
+## Esperanças dos Quadrados Médios
+
+### Para Tratamentos:
+`$$E[MS_{Trat}] = \sigma^2 + \frac{t}{t-1} \sum_{k=1}^t \tau_k^2$$`
+
+### Interpretação:
+- Se `\(\tau_k = 0\)` para todo k (tratamentos iguais): `\(E[MS_{Trat}] = \sigma^2\)`
+- Se existe efeito de tratamentos: `\(E[MS_{Trat}] &gt; \sigma^2\)`
+
+### Estatística F para Teste de Tratamentos:
+`$$F = \frac{MS_{Trat}}{MS_{Res}} \sim F_{(t-1), (t-1)(t-2)} \quad \text{sob } H_0$$`
+
+onde `\(H_0: \tau_1 = \tau_2 = \cdots = \tau_t = 0\)`
+
+---
+
+## Exemplo Prático: Cerâmica - Simulação de Dados
+
+
+``` r
+# Parâmetros verdadeiros (desconhecidos na prática)
+mu &lt;- 50          # Média geral (MPa)
+rho &lt;- c(-5, 0, 5)       # Efeito dos fornecedores
+gamma &lt;- c(-3, 0, 3)     # Efeito dos fornos
+tau &lt;- c(-8, 0, 8)       # Efeito dos processos
+sigma &lt;- 2        # Desvio padrão do erro
+
+# Design fixo (para exemplo didático)
+design &lt;- matrix(c(1, 2, 3,
+                   3, 1, 2,
+                   2, 3, 1), nrow = 3)
+
+# Criar estrutura de dados
+dados_ceramica &lt;- expand.grid(
+  Fornecedor = factor(1:3, labels = c("Q1", "Q2", "Q3")),
+  Forno = factor(1:3, labels = c("F1", "F2", "F3"))
+)
+
+# Atribuir tratamentos conforme o design
+dados_ceramica$Processo &lt;- factor(apply(dados_ceramica, 1, function(x) {
+  i &lt;- as.numeric(sub("Q", "", x[1]))
+  j &lt;- as.numeric(sub("F", "", x[2]))
+  design[i, j]
+}), labels = c("A", "B", "C"))
+```
+
+---
+
+``` r
+# Simular resistências
+set.seed(456)
+for (i in 1:nrow(dados_ceramica)) {
+  fornecedor &lt;- as.numeric(dados_ceramica$Fornecedor[i])
+  forno &lt;- as.numeric(dados_ceramica$Forno[i])
+  processo &lt;- as.numeric(dados_ceramica$Processo[i])
+  
+  # Modelo: Y = μ + ρ_i + γ_j + τ_k + ε
+  dados_ceramica$Resistencia[i] &lt;- mu + 
+    rho[fornecedor] + 
+    gamma[forno] + 
+    tau[processo] + 
+    rnorm(1, 0, sigma)
+}
+
+cat("Dados do experimento de cerâmica:\n")
+```
+
+```
+## Dados do experimento de cerâmica:
+```
+
+``` r
+print(dados_ceramica)
+```
+
+```
+##   Fornecedor Forno Processo Resistencia
+## 1         Q1    F1        A    31.31296
+## 2         Q2    F1        B    48.24355
+## 3         Q3    F1        C    61.60175
+## 4         Q1    F2        C    50.22222
+## 5         Q2    F2        A    40.57129
+## 6         Q3    F2        B    54.35188
+## 7         Q1    F3        B    49.38129
+## 8         Q2    F3        C    61.50110
+## 9         Q3    F3        A    52.01470
+```
+
+---
+
+## Análise de Variância do Experimento
+
+
+``` r
+# Modelo ANOVA
+modelo_ceramica &lt;- aov(Resistencia ~ Fornecedor + Forno + Processo, 
+                       data = dados_ceramica)
+
+# Tabela ANOVA detalhada
+anova_result &lt;- summary(modelo_ceramica)
+
+cat("ANOVA para o experimento de cerâmica:\n")
+```
+
+```
+## ANOVA para o experimento de cerâmica:
+```
+
+``` r
+print(anova_result)
+```
+
+```
+##             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## Fornecedor   2  229.0  114.49   65.64 0.01501 * 
+## Forno        2   89.3   44.64   25.59 0.03760 * 
+## Processo     2  409.7  204.84  117.43 0.00844 **
+## Residuals    2    3.5    1.74                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+``` r
+# Extrair estatísticas importantes
+F_trat &lt;- anova_result[[1]]$"F value"[3]
+p_trat &lt;- anova_result[[1]]$"Pr(&gt;F)"[3]
+df_trat &lt;- anova_result[[1]]$"Df"[3]
+df_res &lt;- anova_result[[1]]$"Df"[4]
+
+# Cálculo do tamanho de efeito (η²)
+SS_trat &lt;- anova_result[[1]]$"Sum Sq"[3]
+SS_total &lt;- sum(anova_result[[1]]$"Sum Sq")
+eta_squared &lt;- SS_trat / SS_total
+
+cat("\nEstatísticas adicionais:\n")
+```
+
+```
+## 
+## Estatísticas adicionais:
+```
+
+``` r
+cat(sprintf("F(%d, %d) para tratamentos = %.4f\n", df_trat, df_res, F_trat))
+```
+
+```
+## F(2, 2) para tratamentos = 117.4322
+```
+
+``` r
+cat(sprintf("Valor-p para tratamentos = %.4f\n", p_trat))
+```
+
+```
+## Valor-p para tratamentos = 0.0084
+```
+
+``` r
+cat(sprintf("Eta quadrado (η²) = %.4f\n", eta_squared))
+```
+
+```
+## Eta quadrado (η²) = 0.5601
+```
+
+---
+
+## Interpretação dos Resultados da ANOVA
+
+### Hipóteses Testadas:
+1. **Fornecedor**: `\(H_0: \rho_1 = \rho_2 = \rho_3 = 0\)` vs `\(H_1\)`: Pelo menos um fornecedor difere
+2. **Forno**: `\(H_0: \gamma_1 = \gamma_2 = \gamma_3 = 0\)` vs `\(H_1\)`: Pelo menos um forno difere
+3. **Processo**: `\(H_0: \tau_A = \tau_B = \tau_C = 0\)` vs `\(H_1\)`: Pelo menos um processo difere
+
+### Interpretação dos Resultados:
+
+```
+## 1. TESTE PARA PROCESSOS DE PRODUÇÃO:
+```
+
+```
+##    F(2, 2) = 117.4322, p = 0.0084
+```
+
+```
+##    DECISÃO: Rejeita-se H₀ a 5 % de significância.
+##    CONCLUSÃO: Há evidência estatística de diferença entre os processos.
+##    TAMANHO DO EFEITO: Grande (η² ≥ 0.14)
+```
+
+```
+## 
+## 2. EFICÁCIA DO BLOQUEIO:
+```
+
+```
+##    Fornecedor: p = 0.0150
+```
+
+```
+##  → Bloqueio EFICAZ (diferenças significativas entre fornecedores)
+```
+---
+
+``` r
+cat(sprintf("   Forno: p = %.4f", p_forno))
+```
+
+```
+##    Forno: p = 0.0376
+```
+
+``` r
+if (p_forno &lt; alpha) {
+  cat(" → Bloqueio EFICAZ (diferenças significativas entre fornos)\n")
+} else {
+  cat(" → Bloqueio POUCO EFICAZ (fornos similares)\n")
+}
+```
+
+```
+##  → Bloqueio EFICAZ (diferenças significativas entre fornos)
+```
+
+---
+
+
+## Comparações Múltiplas: Teste de Tukey
+
+
+``` r
+# Teste de Tukey HSD
+tukey_result &lt;- TukeyHSD(modelo_ceramica, "Processo", conf.level = 0.95)
+
+cat("COMPARAÇÕES MÚLTIPLAS (Tukey HSD, 95% de confiança):\n")
+```
+
+```
+## COMPARAÇÕES MÚLTIPLAS (Tukey HSD, 95% de confiança):
+```
+
+``` r
+cat("====================================================\n\n")
+```
+
+```
+## ====================================================
+```
+
+``` r
+print(tukey_result$Processo)
+```
+
+```
+##          diff        lwr      upr       p adj
+## B-A  9.359256  3.0068958 15.71162 0.023675901
+## C-A 16.475371 10.1230109 22.82773 0.007744356
+## C-B  7.116115  0.7637552 13.46848 0.040254626
+```
+
+---
+
+```
+## 
+## INTERPRETAÇÃO:
+```
+
+```
+## 
+## B-A:
+##   Diferença = 9.36 MPa
+##   IC 95% = [3.01, 15.71]
+##   p ajustado = 0.0237 → Diferença SIGNIFICATIVA
+## 
+## C-A:
+##   Diferença = 16.48 MPa
+##   IC 95% = [10.12, 22.83]
+##   p ajustado = 0.0077 → Diferença SIGNIFICATIVA
+## 
+## C-B:
+##   Diferença = 7.12 MPa
+##   IC 95% = [0.76, 13.47]
+##   p ajustado = 0.0403 → Diferença SIGNIFICATIVA
+```
+---
+
+``` r
+# Gráfico dos intervalos de confiança
+par(mar = c(5, 8, 4, 2))
+plot(tukey_result)
+abline(v = 0, col = "red", lty = 2)
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Alternativa de Agrupamento: Teste de Scott-Knott
+
+Além dos testes de comparações par a par, existe uma abordagem de **agrupamento** como o Teste de Scott-Knott.
+
+**Finalidade:** Separar as médias dos tratamentos em grupos distintos que não se sobrepõem estatisticamente. A ideia é criar grupos onde as médias *dentro* de um grupo são homogêneas, mas as médias *entre* grupos são heterogêneas.
+
+**Lógica Teórica:** É um método hierárquico. Ele começa com todas as médias em um único grupo e, em cada passo, testa se a partição de um grupo em dois subgrupos (usando análise de cluster) resulta em uma redução significativa da variância. O processo continua até que nenhum grupo possa mais ser dividido significativamente.
+
+---
+### Aplicando o Teste de Scott-Knott em R (Método Correto)
+
+Vamos aplicar o teste ao nosso exemplo da cerâmica. A maneira mais fácil de usar a função `SK()` do pacote `ScottKnott` é fornecer a ela o objeto do modelo `aov` ajustado.
+
+
+``` r
+# Instalar pacote se necessário
+# install.packages("ScottKnott")
+library(ScottKnott)
+
+# 1. Relembrar o modelo ANOVA ajustado para os dados da cerâmica
+
+modelo_ceramica_sk &lt;- aov(Resistencia ~ Fornecedor + Forno + Processo, data = dados_ceramica)
+
+# 2. Aplicar o teste de Scott-Knott ao modelo, especificando o fator de interesse
+# O argumento 'which' indica qual fator do modelo queremos agrupar
+sk_result &lt;- SK(modelo_ceramica_sk, which = "Processo")
+```
+
+```
+## List of 2
+##  $ new.fact.lev:List of 1
+##   ..$ Processo: chr [1:3] "A" "B" "C"
+##  $ grid.data   :'data.frame':	3 obs. of  1 variable:
+##   ..$ Processo: chr [1:3] "A" "B" "C"
+```
+
+---
+
+``` r
+cat("--- RESULTADO DO TESTE DE SCOTT-KNOTT ---\n\n")
+```
+
+```
+## --- RESULTADO DO TESTE DE SCOTT-KNOTT ---
+```
+
+``` r
+print(sk_result)
+```
+
+```
+## Results
+##   Means G1
+## C 57.78  a
+## B 50.66  a
+## A 41.30  a
+## 
+## Sig.level
+##  0.05
+## 
+## Statistics
+##        lambda chisq dfchisq pvalue evmean dferror
+## Clus 1    5.6   7.2     2.6    0.1   0.58       2
+## 
+## 
+## Clusters
+## #################  Cluster  1  ################
+## {G1}: C B
+## {G2}: A
+```
+
+---
+
+**Visualização:**
+O pacote também fornece uma função de plotagem que mostra as médias e os grupos formados.
+
+``` r
+plot(sk_result, 
+     main = "Agrupamento de Médias pelo Teste de Scott-Knott",
+     xlab = "Processo",
+     ylab = "Dureza Média Estimada")
+```
+
+&lt;img src="MATD48-10_files/figure-html/scott-knott-plot-1.png" style="display: block; margin: auto;" /&gt;
+O gráfico mostra claramente o Processo A em um grupo superior e os Processos B e C juntos em um grupo inferior. Esta é uma forma muito intuitiva de resumir os resultados de um experimento com múltiplos tratamentos.
+
+---
+## Diagnóstico do Modelo: Verificação de Pressupostos
+
+
+``` r
+residuos &lt;- residuals(modelo_ceramica)
+ajustados &lt;- fitted(modelo_ceramica)
+
+# 1. Resíduos vs Ajustados (Homocedasticidade)
+plot(ajustados, residuos, 
+     xlab = "Valores Ajustados", ylab = "Resíduos",
+     main = "Homocedasticidade", pch = 19); abline(h = 0, col = "red", lty = 2)
+# Adicionar bandas de ±2 desvios padrão
+sd_res &lt;- sd(residuos); abline(h = c(-2, 2) * sd_res, col = "blue", lty = 3)
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+``` r
+# 2. QQ-Plot (Normalidade)
+qqnorm(residuos, main = "Normalidade"); qqline(residuos, col = "red")
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+``` r
+# 3. Histograma dos resíduos
+hist(residuos, freq = FALSE, 
+     main = "Distribuição dos Resíduos",
+     xlab = "Resíduos", col = "lightgray")
+curve(dnorm(x, mean = mean(residuos), sd = sd(residuos)), 
+      add = TRUE, col = "red", lwd = 2)
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+``` r
+# 4. Resíduos vs Ordem
+plot(1:length(residuos), residuos, type = "b",
+     xlab = "Ordem Experimental", ylab = "Resíduos",
+     main = "Independência")
+abline(h = 0, col = "red", lty = 2)
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+``` r
+# 5. Resíduos vs Fornecedor
+boxplot(residuos ~ dados_ceramica$Fornecedor,
+        xlab = "Fornecedor", ylab = "Resíduos",
+        main = "Resíduos por Fornecedor")
+abline(h = 0, col = "red", lty = 2)
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+``` r
+# 6. Resíduos vs Forno
+boxplot(residuos ~ dados_ceramica$Forno,
+        xlab = "Forno", ylab = "Resíduos",
+        main = "Resíduos por Forno")
+abline(h = 0, col = "red", lty = 2)
+```
+
+&lt;img src="MATD48-10_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Testes Formais de Pressupostos
+
+
+``` r
+# 1. Teste de Normalidade (Shapiro-Wilk)
+shapiro_test &lt;- shapiro.test(residuos)
+cat("1. NORMALIDADE (Shapiro-Wilk):\n")
+```
+
+```
+## 1. NORMALIDADE (Shapiro-Wilk):
+```
+
+``` r
+cat(sprintf("   W = %.4f, p = %.4f\n", 
+            shapiro_test$statistic, shapiro_test$p.value))
+```
+
+```
+##    W = 0.7572, p = 0.0066
+```
+
+``` r
+if (shapiro_test$p.value &lt; 0.05) {
+  cat("   → Rejeita-se normalidade (p &lt; 0.05)\n")
+  cat("   IMPLICAÇÃO: Inferências podem ser inválidas\n")
+} else {
+  cat("   → Não se rejeita normalidade (p ≥ 0.05)\n")
+  cat("   IMPLICAÇÃO: Pressuposto satisfeito\n")
+}
+```
+
+```
+##    → Rejeita-se normalidade (p &lt; 0.05)
+##    IMPLICAÇÃO: Inferências podem ser inválidas
+```
+---
+
+``` r
+# 2. Teste de Homocedasticidade (Breusch-Pagan)
+if (!require("lmtest")) {
+  install.packages("lmtest", repos = "http://cran.us.r-project.org")
+  library(lmtest)
+}
+bp_test &lt;- bptest(modelo_ceramica)
+cat("\n2. HOMOCEDASTICIDADE (Breusch-Pagan):\n")
+```
+
+```
+## 
+## 2. HOMOCEDASTICIDADE (Breusch-Pagan):
+```
+
+``` r
+cat(sprintf("   BP = %.4f, p = %.4f\n", 
+            bp_test$statistic, bp_test$p.value))
+```
+
+```
+##    BP = 0.0000, p = 1.0000
+```
+
+``` r
+if (bp_test$p.value &lt; 0.05) {
+  cat("   → Rejeita-se homocedasticidade (p &lt; 0.05)\n")
+  cat("   IMPLICAÇÃO: Variâncias não são constantes\n")
+} else {
+  cat("   → Não se rejeita homocedasticidade (p ≥ 0.05)\n")
+  cat("   IMPLICAÇÃO: Pressuposto satisfeito\n")
+}
+```
+
+```
+##    → Não se rejeita homocedasticidade (p ≥ 0.05)
+##    IMPLICAÇÃO: Pressuposto satisfeito
+```
+
+---
+## Exercício em Classe:
+Listar todos os quadrados latinos reduzidos de ordem 4.
+
+### Dados Conhecidos:
+- Existem `\(R_4 = 4\)` quadrados latinos reduzidos
+- Organizados em 2 conjuntos de transformação
+
+### Representantes dos Conjuntos:
+
+**Conjunto 1**:
+`$$A_1 = \begin{bmatrix}
+A &amp; B &amp; C &amp; D \\
+B &amp; A &amp; D &amp; C \\
+C &amp; D &amp; A &amp; B \\
+D &amp; C &amp; B &amp; A
+\end{bmatrix}$$`
+
+---
+**Conjunto 2**:
+`$$B_1 = \begin{bmatrix}
+A &amp; B &amp; C &amp; D \\
+B &amp; A &amp; D &amp; C \\
+C &amp; D &amp; B &amp; A \\
+D &amp; C &amp; A &amp; B
+\end{bmatrix}$$`
+
+
+## Solução 
+
+### Definição de Conjunto de Transformação:
+Dois quadrados pertencem ao mesmo conjunto se um pode ser obtido do outro por:
+1. Permutação de símbolos (letras)
+2. Permutação de linhas (exceto primeira)
+3. Permutação de colunas (exceto primeira)
+4. Combinação das operações acima
+
+---
+### Encontrando todos os quadrados reduzidos:
+
+#### Conjunto 1:
+A partir de `\(A_1\)`, aplicamos permutações cíclicas das 3 últimas linhas:
+
+1. `\(A_2\)` (linhas 2-4 permutadas cíclicamente):
+`$$A_2 = \begin{bmatrix}
+A &amp; B &amp; C &amp; D \\
+C &amp; D &amp; A &amp; B \\
+D &amp; C &amp; B &amp; A \\
+B &amp; A &amp; D &amp; C
+\end{bmatrix}$$`
+
+2. `\(A_3\)` (outra permutação):
+`$$A_3 = \begin{bmatrix}
+A &amp; B &amp; C &amp; D \\
+D &amp; C &amp; B &amp; A \\
+B &amp; A &amp; D &amp; C \\
+C &amp; D &amp; A &amp; B
+\end{bmatrix}$$`
+
+---
+#### Conjunto 2:
+A partir de `\(B_1\)`, aplicamos permutações:
+
+1. `\(B_2\)` (após redução):
+`$$B_2 = \begin{bmatrix}
+A &amp; B &amp; C &amp; D \\
+B &amp; D &amp; A &amp; C \\
+C &amp; A &amp; D &amp; B \\
+D &amp; C &amp; B &amp; A
+\end{bmatrix}$$`
+
+**Total**: 4 quadrados latinos reduzidos: `\(A_1, A_2, A_3, B_1, B_2\)`
+
+---
+
+## Verificação em R
+
+
+``` r
+# Funções auxiliares
+is_latin_square &lt;- function(m) {
+  t &lt;- nrow(m)
+  rows_ok &lt;- all(apply(m, 1, function(x) length(unique(x)) == t))
+  cols_ok &lt;- all(apply(m, 2, function(x) length(unique(x)) == t))
+  return(rows_ok &amp;&amp; cols_ok)
+}
+
+is_reduced &lt;- function(m) {
+  t &lt;- nrow(m)
+  first_row_ok &lt;- all(m[1, ] == sort(m[1, ]))
+  first_col_ok &lt;- all(m[, 1] == sort(m[, 1]))
+  return(first_row_ok &amp;&amp; first_col_ok)
+}
+
+# Definir os quadrados
+A1 &lt;- matrix(c('A','B','C','D',
+               'B','A','D','C',
+               'C','D','A','B',
+               'D','C','B','A'), nrow=4, byrow=TRUE)
+
+A2 &lt;- matrix(c('A','B','C','D',
+               'C','D','A','B',
+               'D','C','B','A',
+               'B','A','D','C'), nrow=4, byrow=TRUE)
+```
+
+---
+
+``` r
+A3 &lt;- matrix(c('A','B','C','D',
+               'D','C','B','A',
+               'B','A','D','C',
+               'C','D','A','B'), nrow=4, byrow=TRUE)
+
+B1 &lt;- matrix(c('A','B','C','D',
+               'B','A','D','C',
+               'C','D','B','A',
+               'D','C','A','B'), nrow=4, byrow=TRUE)
+
+B2 &lt;- matrix(c('A','B','C','D',
+               'B','D','A','C',
+               'C','A','D','B',
+               'D','C','B','A'), nrow=4, byrow=TRUE)
+
+# Verificar
+quadrados &lt;- list(A1 = A1, A2 = A2, A3 = A3, B1 = B1, B2 = B2)
+```
+
+---
+
+```
+## VERIFICAÇÃO DOS QUADRADOS LATINOS REDUZIDOS DE ORDEM 4:
+```
+
+```
+## A1:
+##   É quadrado latino? TRUE 
+##   Está reduzido? TRUE 
+##   Primeira linha: A B C D 
+##   Primeira coluna: A B C D 
+## 
+## A2:
+##   É quadrado latino? TRUE 
+##   Está reduzido? FALSE 
+##   Primeira linha: A B C D 
+##   Primeira coluna: A C D B 
+## 
+## A3:
+##   É quadrado latino? TRUE 
+##   Está reduzido? FALSE 
+##   Primeira linha: A B C D 
+##   Primeira coluna: A D B C 
+## 
+## B1:
+##   É quadrado latino? TRUE 
+##   Está reduzido? TRUE 
+##   Primeira linha: A B C D 
+##   Primeira coluna: A B C D 
+## 
+## B2:
+##   É quadrado latino? TRUE 
+##   Está reduzido? TRUE 
+##   Primeira linha: A B C D 
+##   Primeira coluna: A B C D
+```
+
+---
+
+## Limitações dos Quadrados Latinos
+
+### 1. Número Igual de Níveis:
+**Restrição**: `\(t_{tratamentos} = t_{linhas} = t_{colunas}\)`
+
+**Consequências**:
+- Rigidez no planejamento experimental
+- Pode exigir aumento artificial do número de tratamentos ou níveis
+
+**Soluções Alternativas**:
+- Retângulos latinos (números diferentes de linhas e colunas)
+- Quadrados latinos incompletos
+- Delineamentos em blocos incompletos balanceados
+
+---
+
+### 2. Graus de Liberdade Limitados:
+
+| Ordem (t) | GL Resíduo | Poder para Δ=2σ | Poder para Δ=3σ |
+|-----------|------------|-----------------|-----------------|
+| 2 | 0 | - | - |
+| 3 | 2 | 0.18 | 0.38 |
+| 4 | 6 | 0.35 | 0.72 |
+| 5 | 12 | 0.62 | 0.95 |
+| 6 | 20 | 0.82 | 0.99 |
+
+**Interpretação**:
+- Para t=3, poder muito baixo mesmo para diferenças grandes. Recomenda-se t ≥ 4 para ter poder aceitável. Para t pequeno, necessárias réplicas
+
+### 3. Pressuposto de Aditividade Crítico:
+Se existem interações linha×coluna ou linha×tratamento, as inferências podem ser inválidas.
+
+**Teste de Aditividade de Tukey**:
+- Testa a presença de interação não-aditiva. Se significativo, considerar transformação dos dados ou modelo diferente
+
+---
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
