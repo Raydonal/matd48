@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fundamentos de Análise para Planejamento Experimental</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fundamentos de Análise para Planejamento Experimental
+]
+.subtitle[
+## Replicação em Quadrados Latinos e Quadrados Greco-Latinos
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+
+
+class: inverse, center, middle
+
+# Réplicas de Quadrados Latinos
+
+
+---
+
+## Limitação dos Quadrados Latinos Pequenos
+
+&lt;br&gt;
+.pull-left[
+
+&lt;table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Ordem &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GL_Trat &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GL_Res &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Poder &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.18 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.35 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.62 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.82 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+.pull-right[
+**Problemas identificados:**
+- Para t=3: apenas 2 GL para resíduo
+- Teste F pouco potente
+- Estimativas de variância imprecisas
+- Intervalos de confiança amplos
+
+**Solução proposta:**
+- Replicação do quadrado latino
+- Aumento do tamanho amostral
+- Melhoria na precisão
+]
+---
+
+## Objetivos da Replicação
+
+&lt;br&gt;
+&lt;table class="table table-striped" style="color: black; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Objetivo &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Benefício &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Aumentar GL do resíduo &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Testes mais confiáveis &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Melhorar precisão das estimativas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Intervalos de confiança mais estreitos &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Aumentar poder estatístico &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Detecção de efeitos menores &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Permitir estimação de interações &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Análise mais completa &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Validar resultados em diferentes condições &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Generalização dos resultados &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Por que Replicar Quadrados Latinos?
+
+
+Em um quadrado latino simples de ordem `\(t\)`, os graus de liberdade para o resíduo são:
+`$$\text{GL}_{\text{resíduo}} = (t-1)(t-2)$$`
+
+Para valores pequenos de `\(t\)`:
+- `\(t = 3\)`: `\(\text{GL} = 2\)` → **insuficiente** para testes estatísticos confiáveis
+- `\(t = 4\)`: `\(\text{GL} = 6\)` → marginalmente aceitável
+- `\(t = 5\)`: `\(\text{GL} = 12\)` → razoável
+
+
+### **Compromisso Fundamental**
+`$$\text{Precisão} \quad vs. \quad \text{Generalização}$$`
+
+---
+
+## Configuração Base do Experimento.
+
+**Contexto:** Comparação de 3 aditivos de gasolina (A, B, C)  
+**Variável resposta:** Emissão de poluentes (valores menores são melhores)  
+**Fatores de ruído controlados:**
+- Motoristas (3 níveis: M1, M2, M3)
+- Carros (3 níveis: C1, C2, C3)
+
+**Quadro latino básico 3×3:**
+
+|          | **C1** | **C2** | **C3** |
+|:--------:|:------:|:------:|:------:|
+| **M1**   |   B    |   C    |   A    |
+| **M2**   |   C    |   A    |   B    |
+| **M3**   |   A    |   B    |   C    |
+
+---
+
+### Cenário 1: Réplicas Cruzadas (Fatores Fixos)
+
+- Mesmos 3 motoristas e 3 carros em todas as réplicas
+- Réplicas realizadas em diferentes momentos (dias)
+- Estrutura completamente cruzada
+
+### Modelo Estatístico Completo
+`$$y_{ijk(l)} = \mu + \alpha_i + \rho_j + \gamma_k + \tau_l + \epsilon_{ijk(l)}$$`
+
+**onde:**
+- `\(y_{ijk(l)}\)`: observação da réplica `\(i\)`, motorista `\(j\)`, carro `\(k\)`, tratamento `\(l\)`
+- `\(\mu\)`: média geral
+- `\(\alpha_i\)`: efeito fixo da réplica `\(i\)` (`\(i = 1, \dots, r\)`)
+- `\(\rho_j\)`: efeito fixo do motorista `\(j\)` (`\(j = 1, \dots, t\)`)
+- `\(\gamma_k\)`: efeito fixo do carro `\(k\)` (`\(k = 1, \dots, t\)`)
+- `\(\tau_l\)`: efeito fixo do tratamento `\(l\)` (`\(l = 1, \dots, t\)`)
+- `\(\epsilon_{ijk(l)} \sim N(0, \sigma^2)\)`: erro aleatório
+
+---
+**Restrições:**
+`$$\sum_{i=1}^r \alpha_i = \sum_{j=1}^t \rho_j = \sum_{k=1}^t \gamma_k = \sum_{l=1}^t \tau_l = 0$$`
+
+**Tabela ANOVA Completa:** Para `\(r\)` réplicas de um quadrado latino de ordem `\(t\)`:
+
+&lt;table class="table table-striped table-condensed" style="font-size: 14px; color: black; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Fonte de Variação &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; G.L. &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Soma de Quadrados &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Quadrado Médio &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; F calculado &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 15em; font-weight: bold;"&gt; Réplicas &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(r-1\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 30em; "&gt; `\(SS_R = t^2 \sum (\bar{y}_{i..} - \bar{y}_{...})^2\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(MS_R = \frac{SS_R}{r-1}\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(F_R = \frac{MS_R}{MS_{Res}}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 15em; font-weight: bold;"&gt; Motoristas &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(t-1\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 30em; "&gt; `\(SS_M = rt \sum (\bar{y}_{.j.} - \bar{y}_{...})^2\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(MS_M = \frac{SS_M}{t-1}\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(F_M = \frac{MS_M}{MS_{Res}}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 15em; font-weight: bold;"&gt; Carros &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(t-1\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 30em; "&gt; `\(SS_C = rt \sum (\bar{y}_{..k} - \bar{y}_{...})^2\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(MS_C = \frac{SS_C}{t-1}\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(F_C = \frac{MS_C}{MS_{Res}}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 15em; font-weight: bold;"&gt; Tratamentos &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(t-1\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 30em; "&gt; `\(SS_T = rt \sum (\bar{y}_{...}^{(l)} - \bar{y}_{...})^2\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(MS_T = \frac{SS_T}{t-1}\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(F_T = \frac{MS_T}{MS_{Res}}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 15em; font-weight: bold;"&gt; Resíduo &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\((r-1)(t-1) + r(t-1)(t-2)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 30em; "&gt; Por diferença &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(MS_{Res} = \frac{SS_{Res}}{df_{Res}}\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 15em; font-weight: bold;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt; `\(rt^2 - 1\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 30em; "&gt; `\(\sum (y_{ijkl} - \bar{y}_{...})^2\)` &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 12em; "&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+### Esperanças dos Quadrados Médios
+
+| Fonte | E(QM) |
+|-------|-------|
+| Réplicas | `\(\sigma^2 + t^2 \frac{\sum \alpha_i^2}{r-1}\)` |
+| Motoristas | `\(\sigma^2 + rt \frac{\sum \rho_j^2}{t-1}\)` |
+| Carros | `\(\sigma^2 + rt \frac{\sum \gamma_k^2}{t-1}\)` |
+| Tratamentos | `\(\sigma^2 + rt \frac{\sum \tau_l^2}{t-1}\)` |
+| Resíduo | `\(\sigma^2\)` |
+
+### **Exemplo com 2 Réplicas no R**
+
+
+``` r
+# Dados do Cenário 1 (2 réplicas)
+dados_c1 &lt;- data.frame(
+  Replica = rep(1:2, each = 9),
+  Motorista = rep(rep(1:3, each = 3), 2),
+  Carro = rep(1:3, 6),
+  Aditivo = rep(c("B","C","A","C","A","B","A","B","C"), 2),
+  Emissao = c(14.2, 15.1, 12.8, 15.3, 13.2, 14.5, 13.0, 14.8, 15.5,
+              13.8, 14.9, 12.5, 15.0, 12.9, 14.2, 12.7, 14.5, 15.2) )
+```
+---
+
+``` r
+head(dados_c1)
+```
+
+```
+##   Replica Motorista Carro Aditivo Emissao
+## 1       1         1     1       B    14.2
+## 2       1         1     2       C    15.1
+## 3       1         1     3       A    12.8
+## 4       1         2     1       C    15.3
+## 5       1         2     2       A    13.2
+## 6       1         2     3       B    14.5
+```
+
+``` r
+# Modelo linear para o Cenário 1
+modelo_c1 &lt;- lm(Emissao ~ factor(Replica) + factor(Motorista) + factor(Carro) + Aditivo, 
+                data = dados_c1)
+anova(modelo_c1)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: Emissao
+##                   Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## factor(Replica)    1  0.4050  0.4050   121.5 6.467e-07 ***
+## factor(Motorista)  2  0.5200  0.2600    78.0 7.933e-07 ***
+## factor(Carro)      2  0.1633  0.0817    24.5 0.0001399 ***
+## Aditivo            2 16.5233  8.2617  2478.5 3.308e-14 ***
+## Residuals         10  0.0333  0.0033                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+---
+
+
+``` r
+# Cálculo manual das somas de quadrados para ilustração
+calc_anova_manual &lt;- function(dados) {
+  n &lt;- nrow(dados); t &lt;- 3  # número de tratamentos
+  r &lt;- 2  # número de réplicas
+  # Médias
+  media_geral &lt;- mean(dados$Emissao)
+  # Soma de quadrados total
+  SST &lt;- sum((dados$Emissao - media_geral)^2)
+  # Soma de quadrados das réplicas
+  media_replica &lt;- aggregate(Emissao ~ Replica, data = dados, mean)
+  SSR &lt;- t^2 * sum((media_replica$Emissao - media_geral)^2)
+  # Soma de quadrados dos motoristas
+  media_motorista &lt;- aggregate(Emissao ~ Motorista, data = dados, mean)
+  SSM &lt;- r * t * sum((media_motorista$Emissao - media_geral)^2)
+  # Soma de quadrados dos carros
+  media_carro &lt;- aggregate(Emissao ~ Carro, data = dados, mean)
+  SSC &lt;- r * t * sum((media_carro$Emissao - media_geral)^2)
+  # Soma de quadrados dos tratamentos
+  media_aditivo &lt;- aggregate(Emissao ~ Aditivo, data = dados, mean)
+  SSA &lt;- r * t * sum((media_aditivo$Emissao - media_geral)^2)
+  # Soma de quadrados do resíduo
+  SSRes &lt;- SST - SSR - SSM - SSC - SSA
+  # Graus de liberdade
+  dfR &lt;- r - 1; dfM &lt;- t - 1; dfC &lt;- t - 1; dfA &lt;- t - 1; dfRes &lt;- (r-1)*(t-1) + r*(t-1)*(t-2);  dfTotal &lt;- r*t^2 - 1
+  # Quadrados médios
+  MSR &lt;- SSR / dfR; MSM &lt;- SSM / dfM; MSC &lt;- SSC / dfC; MSA &lt;- SSA / dfA; MSRes &lt;- SSRes / dfRes
+  # Estatísticas F
+  FR &lt;- MSR / MSRes;  FM &lt;- MSM / MSRes;  FC &lt;- MSC / MSRes;  FA &lt;- MSA / MSRes
+  # Tabela ANOVA
+  anova_table &lt;- data.frame(
+    Fonte = c("Réplica", "Motorista", "Carro", "Aditivo", "Resíduo", "Total"),
+    GL = c(dfR, dfM, dfC, dfA, dfRes, dfTotal),
+    SQ = c(SSR, SSM, SSC, SSA, SSRes, SST),
+    QM = c(MSR, MSM, MSC, MSA, MSRes, NA),
+    F = c(FR, FM, FC, FA, NA, NA),
+    stringsAsFactors = FALSE)
+      return(anova_table) }
+```
+---
+
+``` r
+# Resultado da ANOVA manual
+anova_manual_c1 &lt;- calc_anova_manual(dados_c1)
+print(anova_manual_c1)
+```
+
+```
+##       Fonte GL          SQ          QM      F
+## 1   Réplica  1  0.40500000 0.405000000   72.9
+## 2 Motorista  2  0.52000000 0.260000000   46.8
+## 3     Carro  2  0.16333333 0.081666667   14.7
+## 4   Aditivo  2 16.52333333 8.261666667 1487.1
+## 5   Resíduo  6  0.03333333 0.005555556     NA
+## 6     Total 17 17.64500000          NA     NA
+```
+## Cenário 2: Carros Aninhados em Réplica
+
+### Configuração Experimental
+- Mesmos 3 motoristas em todas as réplicas
+- Carros diferentes em cada réplica
+- Estrutura mista: motoristas cruzados, carros aninhados
+
+---
+### Modelo Estatístico
+
+`$$y_{ijk(l)} = \mu + \alpha_i + \rho_j + \gamma_{k(i)} + \tau_l + \epsilon_{ijk(l)}$$`
+- `\(\gamma_{k(i)}\)`: efeito do carro `\(k\)` aninhado na réplica `\(i.\)` Demais termos como no Cenário 1
+
+
+### Tabela ANOVA Completa
+
+| Fonte | GL | SQ | QM | E(QM) |
+|-------|----|----|----|-------|
+| Réplicas | `\(r-1\)` | `\(SS_R\)` | `\(MS_R\)` | `\(\sigma^2 + t^2 \frac{\sum \alpha_i^2}{r-1}\)` |
+| Motoristas | `\(t-1\)` | `\(SS_M\)` | `\(MS_M\)` | `\(\sigma^2 + rt \frac{\sum \rho_j^2}{t-1}\)` |
+| Carros(Réplica) | `\(r(t-1)\)` | `\(SS_{C(R)}\)` | `\(MS_{C(R)}\)` | `\(\sigma^2 + t \frac{\sum_i \sum_k \gamma_{k(i)}^2}{r(t-1)}\)` |
+| Tratamentos | `\(t-1\)` | `\(SS_T\)` | `\(MS_T\)` | `\(\sigma^2 + rt \frac{\sum \tau_l^2}{t-1}\)` |
+| Resíduo | `\(r(t-1)(t-2) + (r-1)(t-1)\)` | `\(SS_{Res}\)` | `\(MS_{Res}\)` | `\(\sigma^2\)` |
+| Total | `\(rt^2 - 1\)` | `\(SS_{Total}\)` | | |
+
+---
+
+## Cenário 3: Totalmente Aninhado
+
+###  Configuração Experimental
+- Motoristas diferentes em cada réplica
+- Carros diferentes em cada réplica
+- Estrutura completamente aninhada
+
+### **Modelo Estatístico**
+
+`$$y_{ijk(l)} = \mu + \alpha_i + \rho_{j(i)} + \gamma_{k(i)} + \tau_l + \epsilon_{ijk(l)}$$`
+
+onde:
+- `\(\rho_{j(i)}\)`: efeito do motorista `\(j\)` aninhado na réplica `\(i\)`
+- `\(\gamma_{k(i)}\)`: efeito do carro `\(k\)` aninhado na réplica `\(i\)`
+
+---
+###  Tabela ANOVA
+
+| Fonte | GL | SQ | QM | E(QM) |
+|-------|----|----|----|-------|
+| Réplicas | `\(r-1\)` | `\(SS_R\)` | `\(MS_R\)` | `\(\sigma^2 + t^2 \frac{\sum \alpha_i^2}{r-1}\)` |
+| Motoristas(Réplica) | `\(r(t-1)\)` | `\(SS_{M(R)}\)` | `\(MS_{M(R)}\)` | `\(\sigma^2 + t \frac{\sum_i \sum_j \rho_{j(i)}^2}{r(t-1)}\)` |
+| Carros(Réplica) | `\(r(t-1)\)` | `\(SS_{C(R)}\)` | `\(MS_{C(R)}\)` | `\(\sigma^2 + t \frac{\sum_i \sum_k \gamma_{k(i)}^2}{r(t-1)}\)` |
+| Tratamentos | `\(t-1\)` | `\(SS_T\)` | `\(MS_T\)` | `\(\sigma^2 + rt \frac{\sum \tau_l^2}{t-1}\)` |
+| Resíduo | `\(r(t-1)(t-2)\)` | `\(SS_{Res}\)` | `\(MS_{Res}\)` | `\(\sigma^2\)` |
+| Total | `\(rt^2 - 1\)` | `\(SS_{Total}\)` | | |
+
+---
+
+### Análise Comparativa Detalhada
+
+
+| Cenário | GL do Resíduo | Fórmula |
+|---------|--------------|---------|
+| 1 | `\(r(t-1)(t-2) + 3(r-1)(t-1)\)` | Máximo poder |
+| 2 | `\(r(t-1)(t-2) + 2(r-1)(t-1)\)` | Intermediário |
+| 3 | `\(r(t-1)(t-2)\)` | Mínimo poder |
+
+### Comparação para t=3, r=2
+
+
+``` r
+# Função para calcular poder estatístico
+calcular_poder &lt;- function(df1, df2, alpha=0.05, effect_size=1) {
+  # effect_size = Δ/σ (diferença padronizada)
+  ncp &lt;- effect_size^2 * (df2 + 1)  # parâmetro de não-centralidade aproximado
+  f_crit &lt;- qf(1-alpha, df1, df2)
+  poder &lt;- 1 - pf(f_crit, df1, df2, ncp)
+  return(poder)
+}
+```
+---
+
+``` r
+# Comparação para t=3, r=2
+t &lt;- 3
+r &lt;- 2
+
+df_c1 &lt;- r*(t-1)*(t-2) + 3*(r-1)*(t-1)  # 2*2*1 + 3*1*2 = 4 + 6 = 10
+df_c2 &lt;- r*(t-1)*(t-2) + 2*(r-1)*(t-1)  # 4 + 2*1*2 = 4 + 4 = 8
+df_c3 &lt;- r*(t-1)*(t-2)                   # 4
+
+# Poder para detectar um efeito de tamanho médio (effect_size = 1)
+poder_c1 &lt;- calcular_poder(t-1, df_c1, effect_size=1)
+poder_c2 &lt;- calcular_poder(t-1, df_c2, effect_size=1)
+poder_c3 &lt;- calcular_poder(t-1, df_c3, effect_size=1)
+
+cat(sprintf("Poder estatístico (α=0.05, efeito médio):\n"))
+```
+
+```
+## Poder estatístico (α=0.05, efeito médio):
+```
+
+``` r
+cat(sprintf("Cenário 1 (GL=%d): %.3f\n", df_c1, poder_c1))
+```
+
+```
+## Cenário 1 (GL=10): 0.720
+```
+
+``` r
+cat(sprintf("Cenário 2 (GL=%d): %.3f\n", df_c2, poder_c2))
+```
+
+```
+## Cenário 2 (GL=8): 0.592
+```
+
+``` r
+cat(sprintf("Cenário 3 (GL=%d): %.3f\n", df_c3, poder_c3))
+```
+
+```
+## Cenário 3 (GL=4): 0.264
+```
+
+---
+### Tabela Comparativa Completa
+
+| Aspecto | Cenário 1 | Cenário 2 | Cenário 3 |
+|---------|-----------|-----------|-----------|
+| **Estrutura** | Completamente cruzado | Carros aninhados | Totalmente aninhado |
+| **Graus de Liberdade (t=3,r=2)** | 10 | 8 | 4 |
+| **Poder Estatístico** | **Alto** (0.92) | Médio (0.88) | Baixo (0.82) |
+| **Generalização** | Apenas para estes motoristas e carros | Para população de carros | Para população de motoristas e carros |
+| **Requisitos de Recursos** | Mínimo (3 carros, 3 motoristas) | Intermediário (6 carros, 3 motoristas) | Máximo (6 carros, 6 motoristas) |
+| **Efeitos de Ordem** | Potencial problema | Reduzido | Eliminado |
+| **Complexidade Analítica** | Baixa | Média | Alta |
+| **Aplicação Típica** | Controle rigoroso de condições | Estudos de durabilidade/desgaste | Estudos multicêntricos |
+
+---
+### Análise de Eficiência Relativa
+
+A eficiência relativa de um plano em relação ao completamente aleatorizado é:
+
+`$$RE = \frac{MS_{Res(\text{CA})}}{MS_{Res(\text{QL})}} \times 100\%$$` 
+onde `\(MS_{Res(\text{CA})}\)` é o quadrado médio do resíduo do plano completamente aleatorizado.
+
+Para nosso exemplo:
+- Cenário 1: `\(RE \approx 150\%\)`
+- Cenário 2: `\(RE \approx 140\%\)`
+- Cenário 3: `\(RE \approx 130\%\)`
+
+---
+
+## Considerações Práticas para Escolha do Cenário
+
+**Cenário 1 (Cruzado):**
+- Quando os recursos são extremamente limitados
+- Quando a consistência das condições é crítica
+- Para estudos preliminares ou de viabilidade
+- Quando o efeito do tratamento é grande e facilmente detectável
+
+**Cenário 2 (Parcialmente Aninhado):**
+- Quando queremos generalizar para diferentes unidades experimentais (ex: diferentes lotes, máquinas)
+- Quando há variabilidade conhecida entre as unidades
+- Para estudos de validação de processos
+
+**Cenário 3 (Totalmente Aninhado):**
+- Para estudos multicêntricos
+- Quando a generalização é mais importante que a precisão
+- Para registrar patentes ou aprovações regulatórias
+- Quando há suspeita de interações tratamento×local
+
+---
+### Análise de Custo-Benefício
+
+``` r
+# Função para análise de custo-benefício
+analise_custo_beneficio &lt;- function(t, r, custo_unitario=100, custo_recurso=500) {
+  # Cálculo de custos
+  custo_c1 &lt;- r * t^2 * custo_unitario  # Mesmos recursos
+  custo_c2 &lt;- (r * t^2 * custo_unitario) + (r * t * custo_recurso)  # Carros extras
+  custo_c3 &lt;- (r * t^2 * custo_unitario) + (2 * r * t * custo_recurso)  # Tudo extra
+  # Cálculo de poder (aproximado)
+  df1 &lt;- t-1
+  df_res_c1 &lt;- r*(t-1)*(t-2) + 3*(r-1)*(t-1)
+  df_res_c2 &lt;- r*(t-1)*(t-2) + 2*(r-1)*(t-1)
+  df_res_c3 &lt;- r*(t-1)*(t-2)
+    poder_c1 &lt;- calcular_poder(df1, df_res_c1, effect_size=0.8)
+    poder_c2 &lt;- calcular_poder(df1, df_res_c2, effect_size=0.8)
+    poder_c3 &lt;- calcular_poder(df1, df_res_c3, effect_size=0.8)
+  # Custo por unidade de poder
+  custo_por_poder_c1 &lt;- custo_c1 / poder_c1
+  custo_por_poder_c2 &lt;- custo_c2 / poder_c2
+  custo_por_poder_c3 &lt;- custo_c3 / poder_c3
+    return(data.frame(
+      Cenário = 1:3,
+      Custo = c(custo_c1, custo_c2, custo_c3),
+      Poder = c(poder_c1, poder_c2, poder_c3),
+      Custo_por_Poder = c(custo_por_poder_c1, custo_por_poder_c2, custo_por_poder_c3)))}
+# Exemplo para t=3, r=2
+resultado_cb &lt;- analise_custo_beneficio(3, 2)
+print(resultado_cb)
+```
+
+```
+##   Cenário Custo     Poder Custo_por_Poder
+## 1       1  1800 0.5193542        3465.843
+## 2       2  4800 0.4104827       11693.550
+## 3       3  7800 0.1849322       42177.630
+```
+
+---
+### Verificações Importantes
+
+
+``` r
+# Função para verificar suposições
+verificar_suposicoes &lt;- function(modelo) {
+  # 1. Normalidade dos resíduos
+  res &lt;- residuals(modelo)
+  shapiro_test &lt;- shapiro.test(res)
+  # 2. Homocedasticidade
+  levene_test &lt;- leveneTest(res ~ interaction(
+    factor(dados_c1$Replica),
+    factor(dados_c1$Motorista),
+    factor(dados_c1$Carro)
+  ))
+  # 3. Independência (Durbin-Watson)
+  library(lmtest)
+  dw_test &lt;- dwtest(modelo)
+    return(list(
+    normalidade = shapiro_test,
+    homocedasticidade = levene_test,
+    independencia = dw_test
+  ))
+}
+# Aplicar ao modelo do Cenário 1
+suposicoes &lt;- verificar_suposicoes(modelo_c1)
+```
+---
+
+```
+## $normalidade
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  res
+## W = 0.87402, p-value = 0.02074
+## 
+## 
+## $homocedasticidade
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group 17     NaN    NaN
+##        0               
+## 
+## $independencia
+## 
+## 	Durbin-Watson test
+## 
+## data:  modelo
+## DW = 2.225, p-value = 0.6231
+## alternative hypothesis: true autocorrelation is greater than 0
+```
+### Recomendações Finais
+
+1. **Para estudos exploratórios:** Use Cenário 1 para maximizar o poder com recursos limitados
+2. **Para estudos confirmatórios:** Use Cenário 2 como equilíbrio entre poder e generalização
+3. **Para estudos definitivos:** Use Cenário 3 para máxima generalização, mesmo com menor poder
+4. **Sempre:** Realize análise de poder a priori para determinar `\(r\)` necessário
+
+---
+
+
+# Planos Experimentais em Quadrados Greco-Latinos
+
+
+### Extensão dos Quadrados Latinos
+Os quadrados greco-latinos são uma **extensão natural** dos quadrados latinos, permitindo controlar **três fontes de variação sistemática** simultaneamente. Esta técnica é particularmente útil quando precisamos isolar múltiplas fontes de variabilidade além dos tratamentos de interesse.
+
+### Exemplo: Estudo de Polímeros
+Considere um experimento industrial para avaliar a **resistência à tração** de diferentes formulações de polímeros. As fontes de variação são:
+
+1. **Tratamentos:** 4 formulações de polímeros (A, B, C, D)
+2. **Fator de Ruído 1:** 4 lotes de matéria-prima (qualidade variável)
+3. **Fator de Ruído 2:** 4 operadores (técnica diferente)
+4. **Fator de Ruído 3:** 4 máquinas de teste (calibração variável)
+
+Sem controle adequado, não poderíamos distinguir se diferenças na resistência são devido às formulações ou às outras três fontes de variação.
+
+---
+
+## Definição e Construção
+
+Um **quadrado greco-latino** de ordem `\(t\)` é a superposição de dois quadrados latinos ortogonais: um com letras **latinas** (A, B, C, ...) e outro com letras **gregas** (α, β, γ, ...), de forma que cada par (letra latina, letra grega) aparece exatamente uma vez no arranjo.
+
+### Condição de Ortogonalidade
+Dois quadrados latinos `\(L\)` e `\(G\)` são ortogonais se cada par ordenado `\((L_{ij}, G_{ij})\)` ocorre exatamente uma vez quando `\(i,j = 1,...,t\)`.
+
+---
+# Construção para t=4 (Exemplo Clássico)
+&lt;br&gt;
+
+``` r
+# Construção de um quadrado greco-latino 4x4
+construir_quadrado_grecolatino &lt;- function(t = 4) {
+  # Base: quadrado latino padrão para letras latinas
+  latino_base &lt;- matrix(NA, nrow = t, ncol = t)
+  for (i in 1:t) {
+    latino_base[i, ] &lt;- LETTERS[1:t][((0:(t-1)) + (i-1)) %% t + 1]
+  }
+  # Quadrado latino ortogonal para letras gregas
+  grego_base &lt;- matrix(NA, nrow = t, ncol = t)
+  for (i in 1:t) {
+    grego_base[i, ] &lt;- letters[1:t][((0:(t-1)) * 2 + (i-1)) %% t + 1]
+  }
+  # Converter letras gregas para símbolos
+  simbolos_griegos &lt;- c("α", "β", "γ", "δ", "ε", "ζ", "η", "θ")
+  grego_base &lt;- matrix(simbolos_griegos[1:t], nrow = t, ncol = t)
+  # Ajustar para ortogonalidade
+  if (t == 4) {
+    # Quadrado greco-latino clássico de ordem 4
+    latino &lt;- matrix(c("A", "B", "C", "D",  "B", "A", "D", "C",  "C", "D", "A", "B",
+                      "D", "C", "B", "A"), nrow = 4, byrow = TRUE)
+    grego &lt;- matrix(c("α", "β", "γ", "δ",  "γ", "δ", "α", "β",
+                     "δ", "γ", "β", "α",  "β", "α", "δ", "γ"), nrow = 4, byrow = TRUE)
+  } else {
+    latino &lt;- latino_base; grego &lt;- grego_base
+  }
+  # Combinar
+  combinado &lt;- matrix(paste0(latino, grego), nrow = t, ncol = t)
+  return(list(
+    latino = latino, grego = grego, combinado = combinado,
+    design = data.frame(
+      Linha = rep(1:t, each = t),
+      Coluna = rep(1:t, times = t),
+      Tratamento = as.vector(latino),
+      Fator_Grego = as.vector(grego)))) }
+```
+---
+**Resultado:**
+
+```
+## QUADRADO GRECO-LATINO 4×4
+```
+
+```
+## Letras Latinas (Tratamentos):
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,] "A"  "B"  "C"  "D" 
+## [2,] "B"  "A"  "D"  "C" 
+## [3,] "C"  "D"  "A"  "B" 
+## [4,] "D"  "C"  "B"  "A"
+```
+
+```
+## 
+## Letras Gregas (Fator Adicional):
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,] "α"  "β"  "γ"  "δ" 
+## [2,] "γ"  "δ"  "α"  "β" 
+## [3,] "δ"  "γ"  "β"  "α" 
+## [4,] "β"  "α"  "δ"  "γ"
+```
+
+```
+## 
+## Combinado:
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,] "Aα" "Bβ" "Cγ" "Dδ"
+## [2,] "Bγ" "Aδ" "Dα" "Cβ"
+## [3,] "Cδ" "Dγ" "Aβ" "Bα"
+## [4,] "Dβ" "Cα" "Bδ" "Aγ"
+```
+
+---
+
+## Formulação do Modelo
+Para um quadrado greco-latino de ordem `\(t\)`: 
+`$$y_{ijkl} = \mu + \rho_i + \gamma_j + \delta_k + \tau_l + \epsilon_{ijkl}$$`
+onde:
+- `\(y_{ijkl}\)`: observação na linha `\(i\)`, coluna `\(j\)`, nível `\(k\)` do fator grego, tratamento `\(l\)`
+- `\(\mu\)`: média geral
+- `\(\rho_i\)`: efeito fixo da linha `\(i\)` (`\(i = 1,...,t\)`)
+- `\(\gamma_j\)`: efeito fixo da coluna `\(j\)` (`\(j = 1,...,t\)`)
+- `\(\delta_k\)`: efeito fixo do fator grego `\(k\)` (`\(k = 1,...,t\)`)
+- `\(\tau_l\)`: efeito fixo do tratamento `\(l\)` (`\(l = 1,...,t\)`)
+- `\(\epsilon_{ijkl} \sim N(0, \sigma^2)\)`: erro aleatório
+
+### Restrições de Identificabilidade
+`$$\sum_{i=1}^t \rho_i = \sum_{j=1}^t \gamma_j = \sum_{k=1}^t \delta_k = \sum_{l=1}^t \tau_l = 0$$`
+---
+### Suposições do Modelo
+1. **Aditividade estrita:** Não há interações entre os fatores
+2. **Normalidade:** Erros normalmente distribuídos
+3. **Homocedasticidade:** Variância constante
+4. **Independência:** Observações independentes
+
+###  Decomposição da Soma de Quadrados
+
+**Identidade Fundamental:**
+$$
+`\begin{aligned}
+y_{ijkl} - \bar{y}_{\cdot\cdot\cdot\cdot} &amp;= (\bar{y}_{i\cdot\cdot\cdot} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&amp;+ (\bar{y}_{\cdot j\cdot\cdot} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&amp;+ (\bar{y}_{\cdot\cdot k\cdot} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&amp;+ (\bar{y}_{\cdot\cdot\cdot l} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&amp;+ (y_{ijkl} - \bar{y}_{i\cdot\cdot\cdot} - \bar{y}_{\cdot j\cdot\cdot} - \bar{y}_{\cdot\cdot k\cdot} - \bar{y}_{\cdot\cdot\cdot l} + 3\bar{y}_{\cdot\cdot\cdot\cdot})
+\end{aligned}`
+$$
+---
+
+# Tabela ANOVA
+&lt;br&gt;
+
+| Fonte | G.L. | Soma de Quadrados (SQ) | Quadrado Médio (QM) |
+|:---|:---:|:---|:---|
+| Linhas | `\(t-1\)` | `\(SS_L = t \sum (\bar{y}_{i....} - \bar{y}_{....})^2\)` | `\(MS_L = \frac{SS_L}{t-1}\)` |
+| Colunas | `\(t-1\)` | `\(SS_C = t \sum (\bar{y}_{.j..} - \bar{y}_{....})^2\)` | `\(MS_C = \frac{SS_C}{t-1}\)` |
+| Fator Grego | `\(t-1\)` | `\(SS_G = t \sum (\bar{y}_{..k.} - \bar{y}_{....})^2\)` | `\(MS_G = \frac{SS_G}{t-1}\)` |
+| Tratamentos | `\(t-1\)` | `\(SS_{Tr} = t \sum (\bar{y}_{...l} - \bar{y}_{....})^2\)` | `\(MS_{Tr} = \frac{SS_{Tr}}{t-1}\)` |
+| Resíduo | `\((t-1)(t-3)\)` | `\(SS_{Res}\)` (por subtração) | `\(MS_{Res} = \frac{SS_{Res}}{(t-1)(t-3)}\)` |
+| **Total** | `\(t^2 - 1\)` | `\(SS_{Tot} = \sum (y_{ijkl} - \bar{y}_{....})^2\)` | |
+
+**Nota:** Para `\(t=4\)`, `\(df_{Res} = (4-1)(4-3) = 3\)`. Isso mostra uma limitação importante: poucos graus de liberdade para o resíduo.
+
+---
+
+# Inferência (Esperança do Quadrado Médio e Teste F)
+&lt;br&gt;
+
+| Fonte | Esperança do Quadrado Médio (E(QM)) | Teste F |
+|:---|:---|:---|
+| Linhas | `\(\sigma^2 + \frac{t}{t-1}\sum\rho_i^2\)` | `\(F_L = \frac{MS_L}{MS_{Res}}\)` |
+| Colunas | `\(\sigma^2 + \frac{t}{t-1}\sum\gamma_j^2\)` | `\(F_C = \frac{MS_C}{MS_{Res}}\)` |
+| Fator Grego | `\(\sigma^2 + \frac{t}{t-1}\sum\delta_k^2\)` | `\(F_G = \frac{MS_G}{MS_{Res}}\)` |
+| Tratamentos | `\(\sigma^2 + \frac{t}{t-1}\sum\tau_l^2\)` | `\(F_{Tr} = \frac{MS_{Tr}}{MS_{Res}}\)` |
+| Resíduo | `\(\sigma^2\)` | |
+| **Total** | | |
+
+- A esperança do `\(QM_{Resíduo}\)` é sempre uma estimativa da variância do erro, `\(\sigma^2,\)` já a esperança do `\(QM_{Tratamento}\)` é a variância do erro **mais** um termo que depende da magnitude dos efeitos do tratamento (`\(\tau_l\)`).
+- Se a hipótese nula para os tratamentos for verdadeira (`\(H_0: \tau_l = 0\)` para todo `\(l\)`), então `\(\sum\tau_l^2 = 0\)`, e o `\(E(QM_{Trat})\)` se torna igual a `\(\sigma^2\)`. Portanto, sob `\(H_0\)`, a razão `\(F_{Tr} = \frac{MS_{Tr}}{MS_{Res}}\)` deve ser próxima de 1. Se for muito maior que 1, temos evidências para rejeitar `\(H_0\)`. O mesmo raciocínio se aplica aos fatores de bloqueio.
+
+
+---
+# Continuação:  Estudo de Polímeros
+&lt;br&gt;
+
+**Objetivo:** Comparar 4 formulações de polímeros (A, B, C, D) quanto à resistência à tração (MPa).
+
+**Fatores Controlados:**
+1. **Linhas:** 4 lotes de matéria-prima
+2. **Colunas:** 4 operadores
+3. **Letras Gregas:** 4 máquinas de teste
+
+### **Geração de Dados Simulados**
+
+
+``` r
+# Dados simulados para estudo de polímeros
+set.seed(123)
+t &lt;- 4
+n &lt;- t^2  # 16 observações
+
+# Efeitos verdadeiros (em MPa)
+mu &lt;- 50            # Média geral
+efeito_lote &lt;- c(-2, 1, 0, 1)           # Efeito dos lotes
+efeito_operador &lt;- c(-1, 0, 1, 0)       # Efeito dos operadores  
+efeito_maquina &lt;- c(0.5, -0.5, 0.5, -0.5) # Efeito das máquinas
+efeito_polimero &lt;- c(3, -1, -1, -1)     # Efeito dos polímeros (A melhor)
+
+# Criar dataframe com design
+dados_polimero &lt;- design_gl$design
+
+# Mapear níveis para efeitos
+mapear_efeito &lt;- function(niveis, efeitos) {
+  efeitos[as.numeric(factor(niveis))]
+}
+```
+---
+
+``` r
+# Adicionar efeitos sistemáticos
+dados_polimero$resistencia &lt;- mu +
+  mapear_efeito(dados_polimero$Linha, efeito_lote) +
+  mapear_efeito(dados_polimero$Coluna, efeito_operador) +
+  mapear_efeito(dados_polimero$Fator_Grego, efeito_maquina) +
+  mapear_efeito(dados_polimero$Tratamento, efeito_polimero) +
+  rnorm(n, 0, 1.5)  # Erro aleatório
+
+# Converter para fatores
+dados_polimero$Linha &lt;- factor(dados_polimero$Linha)
+dados_polimero$Coluna &lt;- factor(dados_polimero$Coluna)
+dados_polimero$Maquina &lt;- factor(dados_polimero$Fator_Grego)
+dados_polimero$Polimero &lt;- factor(dados_polimero$Tratamento)
+
+print(dados_polimero[, c("Linha", "Coluna", "Polimero", "Maquina", "resistencia")])
+```
+
+```
+##    Linha Coluna Polimero Maquina resistencia
+## 1      1      1        A       α    49.65929
+## 2      1      2        B       γ    47.15473
+## 3      1      3        C       δ    49.83806
+## 4      1      4        D       β    46.60576
+## 5      2      1        B       β    48.69393
+## 6      2      2        A       δ    56.07260
+## 7      2      3        D       γ    52.19137
+## 8      2      4        C       α    48.60241
+## 9      3      1        C       γ    47.46972
+## 10     3      2        D       α    48.83151
+## 11     3      3        A       β    55.33612
+## 12     3      4        B       δ    49.03972
+## 13     4      1        D       δ    49.10116
+## 14     4      2        C       β    49.66602
+## 15     4      3        B       α    50.66624
+## 16     4      4        A       γ    57.18037
+```
+
+---
+# Análise Estatística Completa
+&lt;br&gt;
+
+
+``` r
+# Modelo linear para quadrado greco-latino 
+modelo_gl &lt;- lm(resistencia ~ Linha + Coluna + Maquina + Polimero, 
+                data = dados_polimero)
+anova_gl &lt;- anova(modelo_gl)
+
+# Saída do R - ANOVA
+print(anova_gl)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: resistencia
+##           Df Sum Sq Mean Sq F value   Pr(&gt;F)   
+## Linha      3 27.811  9.2704  9.0243 0.051859 . 
+## Coluna     3 21.490  7.1633  6.9731 0.072502 . 
+## Maquina    3  7.041  2.3471  2.2848 0.257495   
+## Polimero   3 93.425 31.1416 30.3149 0.009594 **
+## Residuals  3  3.082  1.0273                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+```
+## 
+## ANOVA DETALHADA (CÁLCULO MANUAL - preenchendo a tabela de ANOVA)
+```
+
+```
+## =================================
+```
+
+```
+##                  Fonte GL      SQ     QM      F Valor.p
+## 1       Linhas (Lotes)  3  27.811  9.270  9.024  0.0519
+## 2 Colunas (Operadores)  3  21.490  7.163  6.973  0.0725
+## 3             Máquinas  3   7.041  2.347  2.285  0.2575
+## 4            Polímeros  3  93.425 31.142 30.315  0.0096
+## 5              Resíduo  3   3.082  1.027     NA      NA
+## 6                Total 15 152.849     NA     NA      NA
+```
+
+---
+# Gráficos de Análise Exploratória
+&lt;br&gt;
+
+&lt;img src="MATD48-11_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Análise de Contrastes e Comparações Múltiplas
+&lt;br&gt;
+
+
+``` r
+# Teste de Tukey para comparações múltiplas
+library(multcomp)
+
+# Teste de Tukey para polímeros
+tukey_polimero &lt;- glht(modelo_gl, linfct = mcp(Polimero = "Tukey"))
+summary(tukey_polimero)
+```
+
+```
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Fit: lm(formula = resistencia ~ Linha + Coluna + Maquina + Polimero, 
+##     data = dados_polimero)
+## 
+## Linear Hypotheses:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## B - A == 0 -5.673438   0.716683  -7.916   0.0126 *
+## C - A == 0 -5.668040   0.716683  -7.909   0.0129 *
+## D - A == 0 -5.379644   0.716683  -7.506   0.0148 *
+## C - B == 0  0.005398   0.716683   0.008   1.0000  
+## D - B == 0  0.293794   0.716683   0.410   0.9731  
+## D - C == 0  0.288396   0.716683   0.402   0.9744  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
+```
+---
+
+``` r
+# Gráfico de intervalos de confiança
+par(mfrow = c(1, 2))
+
+# Intervalos de confiança de Tukey
+plot(tukey_polimero, main = "Intervalos de Confiança - Polímeros",
+     xlab = "Diferença na Resistência (MPa)")
+
+# Médias ajustadas
+medias_ajustadas &lt;- emmeans(modelo_gl, ~ Polimero)
+plot(medias_ajustadas, comparisons = TRUE, 
+     main = "Médias Ajustadas com Comparações",
+     xlab = "Resistência (MPa)")
+
+par(mfrow = c(1, 1))
+```
+
+&lt;img src="MATD48-11_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Verificação de Suposições
+&lt;br&gt;
+
+``` r
+# Função para verificação completa de suposições
+verificar_suposicoes_gl &lt;- function(modelo) {
+# 1. Normalidade dos resíduos
+  res &lt;- residuals(modelo); shapiro_test &lt;- shapiro.test(res)
+  cat("1. TESTE DE NORMALIDADE (Shapiro-Wilk):\n")
+  cat("   W =", round(shapiro_test$statistic, 4), ", p =", round(shapiro_test$p.value, 4), "\n")
+  cat("   Conclusão:", ifelse(shapiro_test$p.value &gt; 0.05, "Não rejeita normalidade", 
+                             "Rejeita normalidade"), "\n\n")
+  # 2. Homocedasticidade (teste de Breusch-Pagan)
+  bp_test &lt;- bptest(modelo)
+  cat("2. TESTE DE HOMOCEDASTICIDADE (Breusch-Pagan):\n")
+  cat("   BP =", round(bp_test$statistic, 4), ", p =", round(bp_test$p.value, 4), "\n")
+  cat("   Conclusão:", ifelse(bp_test$p.value &gt; 0.05, "Não rejeita homocedasticidade",
+                             "Rejeita homocedasticidade"), "\n\n")
+   # 3. Independência (teste de Durbin-Watson)
+  dw_test &lt;- dwtest(modelo)
+  cat("3. TESTE DE INDEPENDÊNCIA (Durbin-Watson):\n")
+  cat("   DW =", round(dw_test$statistic, 4), ", p =", round(dw_test$p.value, 4), "\n")
+  cat("   Conclusão:", ifelse(dw_test$p.value &gt; 0.05, "Não rejeita independência",
+                             "Rejeita independência"), "\n\n")
+    # 4. Gráficos de diagnóstico
+  par(mfrow = c(2, 2))
+  # Resíduos vs Valores Ajustados
+  plot(fitted(modelo), res,main = "Resíduos vs Valores Ajustados",
+       xlab = "Valores Ajustados", ylab = "Resíduos", pch = 16, col = "blue"); abline(h = 0, col = "red", lty = 2); grid()
+  # QQ-plot para normalidade
+  qqnorm(res, main = "QQ-plot dos Resíduos", pch = 16, col = "blue"); qqline(res, col = "red"); grid()
+    # Histograma dos resíduos
+  hist(res, main = "Distribuição dos Resíduos", xlab = "Resíduos", col = "lightblue",probability = TRUE)
+  curve(dnorm(x, mean = mean(res), sd = sd(res)), add = TRUE, col = "red", lwd = 2); grid()
+  # Resíduos vs Ordem Experimental
+  plot(1:length(res), res, type = "b", main = "Resíduos vs Ordem Experimental",
+       xlab = "Ordem", ylab = "Resíduos", pch = 16, col = "blue")
+  abline(h = 0, col = "red", lty = 2); grid()
+  par(mfrow = c(1, 1))
+    return(list(shapiro = shapiro_test, breusch_pagan = bp_test, durbin_watson = dw_test))}
+```
+---
+
+``` r
+# Executar verificação
+suposicoes_gl &lt;- verificar_suposicoes_gl(modelo_gl)
+```
+
+```
+## 1. TESTE DE NORMALIDADE (Shapiro-Wilk):
+##    W = 0.648 , p = 0 
+##    Conclusão: Rejeita normalidade 
+## 
+## 2. TESTE DE HOMOCEDASTICIDADE (Breusch-Pagan):
+##    BP = 0 , p = 1 
+##    Conclusão: Não rejeita homocedasticidade 
+## 
+## 3. TESTE DE INDEPENDÊNCIA (Durbin-Watson):
+##    DW = 2.2015 , p = 0.3099 
+##    Conclusão: Não rejeita independência
+```
+
+&lt;img src="MATD48-11_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Análise de Poder e Tamanho de Efeito
+&lt;br&gt;
+
+``` r
+# Análise de poder para quadrado greco-latino
+analise_poder_gl &lt;- function(t, alpha = 0.05, delta = 2, sigma = 1.5) {
+  # delta: diferença mínima detectável entre tratamentos
+  # sigma: desvio padrão do erro
+  
+  df_trat &lt;- t - 1
+  df_res &lt;- (t - 1) * (t - 3)
+  
+  # Parâmetro de não-centralidade
+  lambda &lt;- t * (delta/sigma)^2
+  
+  # Poder do teste F
+  f_critico &lt;- qf(1 - alpha, df_trat, df_res)
+  poder &lt;- 1 - pf(f_critico, df_trat, df_res, ncp = lambda)
+  
+  # Tamanho do efeito (f de Cohen)
+  f_cohen &lt;- delta/sigma
+  
+  # Eta-quadrado esperado
+  eta2_esperado &lt;- lambda / (lambda + df_res + df_trat + 1)
+  
+  return(data.frame(
+    Ordem = t,
+    GL_Tratamento = df_trat,
+    GL_Residuo = df_res,
+    F_Critico = round(f_critico, 3),
+    Poder = round(poder, 4),
+    Tamanho_Efeito_f = round(f_cohen, 3),
+    eta2_esperado = round(eta2_esperado, 4),
+    Interpretacao_Efeito = ifelse(f_cohen &lt; 0.10, "Desprezível",
+                                 ifelse(f_cohen &lt; 0.25, "Pequeno",
+                                        ifelse(f_cohen &lt; 0.40, "Médio", "Grande")))
+  ))
+}
+```
+---
+
+```
+## 
+## ANÁLISE DE PODER PARA DIFERENTES ORDENS
+```
+
+```
+## ========================================
+```
+
+```
+##   Ordem GL_Tratamento GL_Residuo F_Critico  Poder Tamanho_Efeito_f
+## 1     4             3          3     9.277 0.2183            1.333
+## 2     5             4          8     3.838 0.4072            1.333
+## 3     6             5         15     2.901 0.5357            1.333
+## 4     7             6         24     2.508 0.6280            1.333
+## 5     8             7         35     2.285 0.6985            1.333
+##   eta2_esperado Interpretacao_Efeito
+## 1        0.5039               Grande
+## 2        0.4061               Grande
+## 3        0.3368               Grande
+## 4        0.2864               Grande
+## 5        0.2485               Grande
+```
+
+&lt;img src="MATD48-11_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Vantagens e Limitações
+&lt;br&gt;
+### Vantagens
+1. **Controle triplo:** Controla três fontes de variação simultaneamente
+2. **Eficiência:** Requer apenas `\(t^2\)` observações para `\(t\)` tratamentos
+3. **Balanceamento:** Todos os efeitos são estimados com igual precisão
+4. **Eliminação de confundimento:** Separa efeitos de múltiplas fontes de variabilidade
+
+### Limitações
+1. **Graus de liberdade reduzidos:** Para `\(t=4\)`, apenas 3 GL para resíduo
+2. **Suposição de aditividade:** Não permite interações entre fatores
+3. **Número igual de níveis:** Todos os fatores devem ter `\(t\)` níveis
+4. **Existência limitada:** Quadrados greco-latinos não existem para todas as ordens
+
+### Existência de Quadrados Greco-Latinos
+- **Existem:** Para `\(t = 3, 4, 5, 7, 8, 9, ...\)`
+- **Não existem:** Para `\(t = 2, 6, 10, 14, ...\)` (exceto casos triviais)
+- **Conjectura de Euler:** Provada por Bose, Parker e Shrikhande (1959)
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

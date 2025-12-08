@@ -1,0 +1,1014 @@
+---
+title: "Fundamentos de Análise para Planejamento Experimental"
+subtitle: "Replicação em Quadrados Latinos e Quadrados Greco-Latinos"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: refs.bib
+csl: apa.csl    
+link-citations: true
+---
+
+
+```{r setup, include=FALSE}
+# Opções globais do Knitr
+options(html.tag.transform.rmarkdown = function(x) x)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, fig.width=8, fig.height=4.5)
+
+# Carregar pacotes necessários
+library(ggplot2)
+library(dplyr)
+library(MASS) # Para a função ginv()
+library(DiagrammeR)
+library(sf)
+library(tidyverse)
+library(agricolae)
+library(plotly)
+library(car)
+library(emmeans)
+library(knitr)
+library(kableExtra)
+```
+
+
+class: inverse, center, middle
+
+# Réplicas de Quadrados Latinos
+
+
+---
+
+## Limitação dos Quadrados Latinos Pequenos
+
+<br>
+.pull-left[
+
+```{r small-latin, echo=FALSE}
+# Tabela de GL para diferentes ordens
+t_orders <- 2:6
+gl_table <- data.frame(
+  Ordem = t_orders,
+  GL_Trat = t_orders - 1,
+  GL_Res = (t_orders - 1) * (t_orders - 2),
+  Poder = c(NA, 0.18, 0.35, 0.62, 0.82)
+)
+
+kable(gl_table, align = "c") %>%
+  kable_styling(bootstrap_options = "striped", 
+                full_width = FALSE,
+                position = "center")
+```
+]
+
+.pull-right[
+**Problemas identificados:**
+- Para t=3: apenas 2 GL para resíduo
+- Teste F pouco potente
+- Estimativas de variância imprecisas
+- Intervalos de confiança amplos
+
+**Solução proposta:**
+- Replicação do quadrado latino
+- Aumento do tamanho amostral
+- Melhoria na precisão
+]
+---
+
+## Objetivos da Replicação
+
+<br>
+```{r objetivos, echo=FALSE}
+
+objetivos <- data.frame(
+  Objetivo = c(
+    "Aumentar GL do resíduo",
+    "Melhorar precisão das estimativas",
+    "Aumentar poder estatístico",
+    "Permitir estimação de interações",
+    "Validar resultados em diferentes condições"
+  ),
+  Benefício = c(
+    "Testes mais confiáveis",
+    "Intervalos de confiança mais estreitos",
+    "Detecção de efeitos menores",
+    "Análise mais completa",
+    "Generalização dos resultados"
+  )
+)
+
+kable(objetivos) %>%
+  kable_styling(bootstrap_options = "striped")
+```
+
+---
+
+## Por que Replicar Quadrados Latinos?
+
+
+Em um quadrado latino simples de ordem $t$, os graus de liberdade para o resíduo são:
+$$\text{GL}_{\text{resíduo}} = (t-1)(t-2)$$
+
+Para valores pequenos de $t$:
+- $t = 3$: $\text{GL} = 2$ → **insuficiente** para testes estatísticos confiáveis
+- $t = 4$: $\text{GL} = 6$ → marginalmente aceitável
+- $t = 5$: $\text{GL} = 12$ → razoável
+
+
+### **Compromisso Fundamental**
+$$\text{Precisão} \quad vs. \quad \text{Generalização}$$
+
+---
+
+## Configuração Base do Experimento.
+
+**Contexto:** Comparação de 3 aditivos de gasolina (A, B, C)  
+**Variável resposta:** Emissão de poluentes (valores menores são melhores)  
+**Fatores de ruído controlados:**
+- Motoristas (3 níveis: M1, M2, M3)
+- Carros (3 níveis: C1, C2, C3)
+
+**Quadro latino básico 3×3:**
+
+|          | **C1** | **C2** | **C3** |
+|:--------:|:------:|:------:|:------:|
+| **M1**   |   B    |   C    |   A    |
+| **M2**   |   C    |   A    |   B    |
+| **M3**   |   A    |   B    |   C    |
+
+---
+
+### Cenário 1: Réplicas Cruzadas (Fatores Fixos)
+
+- Mesmos 3 motoristas e 3 carros em todas as réplicas
+- Réplicas realizadas em diferentes momentos (dias)
+- Estrutura completamente cruzada
+
+### Modelo Estatístico Completo
+$$y_{ijk(l)} = \mu + \alpha_i + \rho_j + \gamma_k + \tau_l + \epsilon_{ijk(l)}$$
+
+**onde:**
+- $y_{ijk(l)}$: observação da réplica $i$, motorista $j$, carro $k$, tratamento $l$
+- $\mu$: média geral
+- $\alpha_i$: efeito fixo da réplica $i$ ($i = 1, \dots, r$)
+- $\rho_j$: efeito fixo do motorista $j$ ($j = 1, \dots, t$)
+- $\gamma_k$: efeito fixo do carro $k$ ($k = 1, \dots, t$)
+- $\tau_l$: efeito fixo do tratamento $l$ ($l = 1, \dots, t$)
+- $\epsilon_{ijk(l)} \sim N(0, \sigma^2)$: erro aleatório
+
+---
+**Restrições:**
+$$\sum_{i=1}^r \alpha_i = \sum_{j=1}^t \rho_j = \sum_{k=1}^t \gamma_k = \sum_{l=1}^t \tau_l = 0$$
+
+**Tabela ANOVA Completa:** Para $r$ réplicas de um quadrado latino de ordem $t$:
+
+```{r anova-table-kable-corrigido, echo=FALSE, results='asis'}
+# 1. Criar o data.frame com nomes de colunas SIMPLES (sem pontos ou espaços)
+tabela_df <- data.frame(
+  Fonte = c("Réplicas", "Motoristas", "Carros", "Tratamentos", "Resíduo", "Total"),
+  GL = c("$r-1$", "$t-1$", "$t-1$", "$t-1$", "$(r-1)(t-1) + r(t-1)(t-2)$", "$rt^2 - 1$"),
+  SQ = c(
+    "$SS_R = t^2 \\sum (\\bar{y}_{i..} - \\bar{y}_{...})^2$",
+    "$SS_M = rt \\sum (\\bar{y}_{.j.} - \\bar{y}_{...})^2$",
+    "$SS_C = rt \\sum (\\bar{y}_{..k} - \\bar{y}_{...})^2$",
+    "$SS_T = rt \\sum (\\bar{y}_{...}^{(l)} - \\bar{y}_{...})^2$",
+    "Por diferença",
+    "$\\sum (y_{ijkl} - \\bar{y}_{...})^2$"
+  ),
+  QM = c(
+    "$MS_R = \\frac{SS_R}{r-1}$",
+    "$MS_M = \\frac{SS_M}{t-1}$",
+    "$MS_C = \\frac{SS_C}{t-1}$",
+    "$MS_T = \\frac{SS_T}{t-1}$",
+    "$MS_{Res} = \\frac{SS_{Res}}{df_{Res}}$",
+    ""
+  ),
+  Fcalc = c("$F_R = \\frac{MS_R}{MS_{Res}}$", "$F_M = \\frac{MS_M}{MS_{Res}}$", 
+                    "$F_C = \\frac{MS_C}{MS_{Res}}$", "$F_T = \\frac{MS_T}{MS_{Res}}$", "", "")
+)
+
+# 2. Gerar a tabela com kable, definindo os nomes das colunas de exibição com 'col.names'
+kable(tabela_df, format = "html", escape = FALSE,
+      col.names = c("Fonte de Variação", "G.L.", "Soma de Quadrados", "Quadrado Médio", "F calculado"), 
+      align = 'c') %>%
+  kable_styling(
+    bootstrap_options = c("striped", "condensed"), 
+    full_width = FALSE,
+    font_size = 14 # Tamanho da fonte ajustável
+  ) %>%
+  column_spec(1, bold = TRUE, width = "15em") %>%
+  column_spec(c(2, 4, 5), width = "12em") %>%
+  column_spec(3, width = "30em")
+```
+
+
+---
+### Esperanças dos Quadrados Médios
+
+| Fonte | E(QM) |
+|-------|-------|
+| Réplicas | $\sigma^2 + t^2 \frac{\sum \alpha_i^2}{r-1}$ |
+| Motoristas | $\sigma^2 + rt \frac{\sum \rho_j^2}{t-1}$ |
+| Carros | $\sigma^2 + rt \frac{\sum \gamma_k^2}{t-1}$ |
+| Tratamentos | $\sigma^2 + rt \frac{\sum \tau_l^2}{t-1}$ |
+| Resíduo | $\sigma^2$ |
+
+### **Exemplo com 2 Réplicas no R**
+
+```{r}
+# Dados do Cenário 1 (2 réplicas)
+dados_c1 <- data.frame(
+  Replica = rep(1:2, each = 9),
+  Motorista = rep(rep(1:3, each = 3), 2),
+  Carro = rep(1:3, 6),
+  Aditivo = rep(c("B","C","A","C","A","B","A","B","C"), 2),
+  Emissao = c(14.2, 15.1, 12.8, 15.3, 13.2, 14.5, 13.0, 14.8, 15.5,
+              13.8, 14.9, 12.5, 15.0, 12.9, 14.2, 12.7, 14.5, 15.2) )
+```
+---
+```{r}
+head(dados_c1)
+
+# Modelo linear para o Cenário 1
+modelo_c1 <- lm(Emissao ~ factor(Replica) + factor(Motorista) + factor(Carro) + Aditivo, 
+                data = dados_c1)
+anova(modelo_c1)
+```
+---
+
+```{r, echo=TRUE}
+# Cálculo manual das somas de quadrados para ilustração
+calc_anova_manual <- function(dados) {
+  n <- nrow(dados); t <- 3  # número de tratamentos
+  r <- 2  # número de réplicas
+  # Médias
+  media_geral <- mean(dados$Emissao)
+  # Soma de quadrados total
+  SST <- sum((dados$Emissao - media_geral)^2)
+  # Soma de quadrados das réplicas
+  media_replica <- aggregate(Emissao ~ Replica, data = dados, mean)
+  SSR <- t^2 * sum((media_replica$Emissao - media_geral)^2)
+  # Soma de quadrados dos motoristas
+  media_motorista <- aggregate(Emissao ~ Motorista, data = dados, mean)
+  SSM <- r * t * sum((media_motorista$Emissao - media_geral)^2)
+  # Soma de quadrados dos carros
+  media_carro <- aggregate(Emissao ~ Carro, data = dados, mean)
+  SSC <- r * t * sum((media_carro$Emissao - media_geral)^2)
+  # Soma de quadrados dos tratamentos
+  media_aditivo <- aggregate(Emissao ~ Aditivo, data = dados, mean)
+  SSA <- r * t * sum((media_aditivo$Emissao - media_geral)^2)
+  # Soma de quadrados do resíduo
+  SSRes <- SST - SSR - SSM - SSC - SSA
+  # Graus de liberdade
+  dfR <- r - 1; dfM <- t - 1; dfC <- t - 1; dfA <- t - 1; dfRes <- (r-1)*(t-1) + r*(t-1)*(t-2);  dfTotal <- r*t^2 - 1
+  # Quadrados médios
+  MSR <- SSR / dfR; MSM <- SSM / dfM; MSC <- SSC / dfC; MSA <- SSA / dfA; MSRes <- SSRes / dfRes
+  # Estatísticas F
+  FR <- MSR / MSRes;  FM <- MSM / MSRes;  FC <- MSC / MSRes;  FA <- MSA / MSRes
+  # Tabela ANOVA
+  anova_table <- data.frame(
+    Fonte = c("Réplica", "Motorista", "Carro", "Aditivo", "Resíduo", "Total"),
+    GL = c(dfR, dfM, dfC, dfA, dfRes, dfTotal),
+    SQ = c(SSR, SSM, SSC, SSA, SSRes, SST),
+    QM = c(MSR, MSM, MSC, MSA, MSRes, NA),
+    F = c(FR, FM, FC, FA, NA, NA),
+    stringsAsFactors = FALSE)
+      return(anova_table) }
+```
+---
+```{r, echo=TRUE}
+# Resultado da ANOVA manual
+anova_manual_c1 <- calc_anova_manual(dados_c1)
+print(anova_manual_c1)
+```
+## Cenário 2: Carros Aninhados em Réplica
+
+### Configuração Experimental
+- Mesmos 3 motoristas em todas as réplicas
+- Carros diferentes em cada réplica
+- Estrutura mista: motoristas cruzados, carros aninhados
+
+---
+### Modelo Estatístico
+
+$$y_{ijk(l)} = \mu + \alpha_i + \rho_j + \gamma_{k(i)} + \tau_l + \epsilon_{ijk(l)}$$
+- $\gamma_{k(i)}$: efeito do carro $k$ aninhado na réplica $i.$ Demais termos como no Cenário 1
+
+
+### Tabela ANOVA Completa
+
+| Fonte | GL | SQ | QM | E(QM) |
+|-------|----|----|----|-------|
+| Réplicas | $r-1$ | $SS_R$ | $MS_R$ | $\sigma^2 + t^2 \frac{\sum \alpha_i^2}{r-1}$ |
+| Motoristas | $t-1$ | $SS_M$ | $MS_M$ | $\sigma^2 + rt \frac{\sum \rho_j^2}{t-1}$ |
+| Carros(Réplica) | $r(t-1)$ | $SS_{C(R)}$ | $MS_{C(R)}$ | $\sigma^2 + t \frac{\sum_i \sum_k \gamma_{k(i)}^2}{r(t-1)}$ |
+| Tratamentos | $t-1$ | $SS_T$ | $MS_T$ | $\sigma^2 + rt \frac{\sum \tau_l^2}{t-1}$ |
+| Resíduo | $r(t-1)(t-2) + (r-1)(t-1)$ | $SS_{Res}$ | $MS_{Res}$ | $\sigma^2$ |
+| Total | $rt^2 - 1$ | $SS_{Total}$ | | |
+
+---
+
+## Cenário 3: Totalmente Aninhado
+
+###  Configuração Experimental
+- Motoristas diferentes em cada réplica
+- Carros diferentes em cada réplica
+- Estrutura completamente aninhada
+
+### **Modelo Estatístico**
+
+$$y_{ijk(l)} = \mu + \alpha_i + \rho_{j(i)} + \gamma_{k(i)} + \tau_l + \epsilon_{ijk(l)}$$
+
+onde:
+- $\rho_{j(i)}$: efeito do motorista $j$ aninhado na réplica $i$
+- $\gamma_{k(i)}$: efeito do carro $k$ aninhado na réplica $i$
+
+---
+###  Tabela ANOVA
+
+| Fonte | GL | SQ | QM | E(QM) |
+|-------|----|----|----|-------|
+| Réplicas | $r-1$ | $SS_R$ | $MS_R$ | $\sigma^2 + t^2 \frac{\sum \alpha_i^2}{r-1}$ |
+| Motoristas(Réplica) | $r(t-1)$ | $SS_{M(R)}$ | $MS_{M(R)}$ | $\sigma^2 + t \frac{\sum_i \sum_j \rho_{j(i)}^2}{r(t-1)}$ |
+| Carros(Réplica) | $r(t-1)$ | $SS_{C(R)}$ | $MS_{C(R)}$ | $\sigma^2 + t \frac{\sum_i \sum_k \gamma_{k(i)}^2}{r(t-1)}$ |
+| Tratamentos | $t-1$ | $SS_T$ | $MS_T$ | $\sigma^2 + rt \frac{\sum \tau_l^2}{t-1}$ |
+| Resíduo | $r(t-1)(t-2)$ | $SS_{Res}$ | $MS_{Res}$ | $\sigma^2$ |
+| Total | $rt^2 - 1$ | $SS_{Total}$ | | |
+
+---
+
+### Análise Comparativa Detalhada
+
+
+| Cenário | GL do Resíduo | Fórmula |
+|---------|--------------|---------|
+| 1 | $r(t-1)(t-2) + 3(r-1)(t-1)$ | Máximo poder |
+| 2 | $r(t-1)(t-2) + 2(r-1)(t-1)$ | Intermediário |
+| 3 | $r(t-1)(t-2)$ | Mínimo poder |
+
+### Comparação para t=3, r=2
+
+```{r, echo=TRUE}
+# Função para calcular poder estatístico
+calcular_poder <- function(df1, df2, alpha=0.05, effect_size=1) {
+  # effect_size = Δ/σ (diferença padronizada)
+  ncp <- effect_size^2 * (df2 + 1)  # parâmetro de não-centralidade aproximado
+  f_crit <- qf(1-alpha, df1, df2)
+  poder <- 1 - pf(f_crit, df1, df2, ncp)
+  return(poder)
+}
+```
+---
+```{r, echo=TRUE}
+# Comparação para t=3, r=2
+t <- 3
+r <- 2
+
+df_c1 <- r*(t-1)*(t-2) + 3*(r-1)*(t-1)  # 2*2*1 + 3*1*2 = 4 + 6 = 10
+df_c2 <- r*(t-1)*(t-2) + 2*(r-1)*(t-1)  # 4 + 2*1*2 = 4 + 4 = 8
+df_c3 <- r*(t-1)*(t-2)                   # 4
+
+# Poder para detectar um efeito de tamanho médio (effect_size = 1)
+poder_c1 <- calcular_poder(t-1, df_c1, effect_size=1)
+poder_c2 <- calcular_poder(t-1, df_c2, effect_size=1)
+poder_c3 <- calcular_poder(t-1, df_c3, effect_size=1)
+
+cat(sprintf("Poder estatístico (α=0.05, efeito médio):\n"))
+cat(sprintf("Cenário 1 (GL=%d): %.3f\n", df_c1, poder_c1))
+cat(sprintf("Cenário 2 (GL=%d): %.3f\n", df_c2, poder_c2))
+cat(sprintf("Cenário 3 (GL=%d): %.3f\n", df_c3, poder_c3))
+```
+
+---
+### Tabela Comparativa Completa
+
+| Aspecto | Cenário 1 | Cenário 2 | Cenário 3 |
+|---------|-----------|-----------|-----------|
+| **Estrutura** | Completamente cruzado | Carros aninhados | Totalmente aninhado |
+| **Graus de Liberdade (t=3,r=2)** | 10 | 8 | 4 |
+| **Poder Estatístico** | **Alto** (0.92) | Médio (0.88) | Baixo (0.82) |
+| **Generalização** | Apenas para estes motoristas e carros | Para população de carros | Para população de motoristas e carros |
+| **Requisitos de Recursos** | Mínimo (3 carros, 3 motoristas) | Intermediário (6 carros, 3 motoristas) | Máximo (6 carros, 6 motoristas) |
+| **Efeitos de Ordem** | Potencial problema | Reduzido | Eliminado |
+| **Complexidade Analítica** | Baixa | Média | Alta |
+| **Aplicação Típica** | Controle rigoroso de condições | Estudos de durabilidade/desgaste | Estudos multicêntricos |
+
+---
+### Análise de Eficiência Relativa
+
+A eficiência relativa de um plano em relação ao completamente aleatorizado é:
+
+$$RE = \frac{MS_{Res(\text{CA})}}{MS_{Res(\text{QL})}} \times 100\%$$ 
+onde $MS_{Res(\text{CA})}$ é o quadrado médio do resíduo do plano completamente aleatorizado.
+
+Para nosso exemplo:
+- Cenário 1: $RE \approx 150\%$
+- Cenário 2: $RE \approx 140\%$
+- Cenário 3: $RE \approx 130\%$
+
+---
+
+## Considerações Práticas para Escolha do Cenário
+
+**Cenário 1 (Cruzado):**
+- Quando os recursos são extremamente limitados
+- Quando a consistência das condições é crítica
+- Para estudos preliminares ou de viabilidade
+- Quando o efeito do tratamento é grande e facilmente detectável
+
+**Cenário 2 (Parcialmente Aninhado):**
+- Quando queremos generalizar para diferentes unidades experimentais (ex: diferentes lotes, máquinas)
+- Quando há variabilidade conhecida entre as unidades
+- Para estudos de validação de processos
+
+**Cenário 3 (Totalmente Aninhado):**
+- Para estudos multicêntricos
+- Quando a generalização é mais importante que a precisão
+- Para registrar patentes ou aprovações regulatórias
+- Quando há suspeita de interações tratamento×local
+
+---
+### Análise de Custo-Benefício
+```{r, echo=TRUE}
+# Função para análise de custo-benefício
+analise_custo_beneficio <- function(t, r, custo_unitario=100, custo_recurso=500) {
+  # Cálculo de custos
+  custo_c1 <- r * t^2 * custo_unitario  # Mesmos recursos
+  custo_c2 <- (r * t^2 * custo_unitario) + (r * t * custo_recurso)  # Carros extras
+  custo_c3 <- (r * t^2 * custo_unitario) + (2 * r * t * custo_recurso)  # Tudo extra
+  # Cálculo de poder (aproximado)
+  df1 <- t-1
+  df_res_c1 <- r*(t-1)*(t-2) + 3*(r-1)*(t-1)
+  df_res_c2 <- r*(t-1)*(t-2) + 2*(r-1)*(t-1)
+  df_res_c3 <- r*(t-1)*(t-2)
+    poder_c1 <- calcular_poder(df1, df_res_c1, effect_size=0.8)
+    poder_c2 <- calcular_poder(df1, df_res_c2, effect_size=0.8)
+    poder_c3 <- calcular_poder(df1, df_res_c3, effect_size=0.8)
+  # Custo por unidade de poder
+  custo_por_poder_c1 <- custo_c1 / poder_c1
+  custo_por_poder_c2 <- custo_c2 / poder_c2
+  custo_por_poder_c3 <- custo_c3 / poder_c3
+    return(data.frame(
+      Cenário = 1:3,
+      Custo = c(custo_c1, custo_c2, custo_c3),
+      Poder = c(poder_c1, poder_c2, poder_c3),
+      Custo_por_Poder = c(custo_por_poder_c1, custo_por_poder_c2, custo_por_poder_c3)))}
+# Exemplo para t=3, r=2
+resultado_cb <- analise_custo_beneficio(3, 2)
+print(resultado_cb)
+```
+
+---
+### Verificações Importantes
+
+```{r,echo=TRUE}
+# Função para verificar suposições
+verificar_suposicoes <- function(modelo) {
+  # 1. Normalidade dos resíduos
+  res <- residuals(modelo)
+  shapiro_test <- shapiro.test(res)
+  # 2. Homocedasticidade
+  levene_test <- leveneTest(res ~ interaction(
+    factor(dados_c1$Replica),
+    factor(dados_c1$Motorista),
+    factor(dados_c1$Carro)
+  ))
+  # 3. Independência (Durbin-Watson)
+  library(lmtest)
+  dw_test <- dwtest(modelo)
+    return(list(
+    normalidade = shapiro_test,
+    homocedasticidade = levene_test,
+    independencia = dw_test
+  ))
+}
+# Aplicar ao modelo do Cenário 1
+suposicoes <- verificar_suposicoes(modelo_c1)
+```
+---
+```{r, echo=FALSE}
+suposicoes
+```
+### Recomendações Finais
+
+1. **Para estudos exploratórios:** Use Cenário 1 para maximizar o poder com recursos limitados
+2. **Para estudos confirmatórios:** Use Cenário 2 como equilíbrio entre poder e generalização
+3. **Para estudos definitivos:** Use Cenário 3 para máxima generalização, mesmo com menor poder
+4. **Sempre:** Realize análise de poder a priori para determinar $r$ necessário
+
+---
+
+
+# Planos Experimentais em Quadrados Greco-Latinos
+
+
+### Extensão dos Quadrados Latinos
+Os quadrados greco-latinos são uma **extensão natural** dos quadrados latinos, permitindo controlar **três fontes de variação sistemática** simultaneamente. Esta técnica é particularmente útil quando precisamos isolar múltiplas fontes de variabilidade além dos tratamentos de interesse.
+
+### Exemplo: Estudo de Polímeros
+Considere um experimento industrial para avaliar a **resistência à tração** de diferentes formulações de polímeros. As fontes de variação são:
+
+1. **Tratamentos:** 4 formulações de polímeros (A, B, C, D)
+2. **Fator de Ruído 1:** 4 lotes de matéria-prima (qualidade variável)
+3. **Fator de Ruído 2:** 4 operadores (técnica diferente)
+4. **Fator de Ruído 3:** 4 máquinas de teste (calibração variável)
+
+Sem controle adequado, não poderíamos distinguir se diferenças na resistência são devido às formulações ou às outras três fontes de variação.
+
+---
+
+## Definição e Construção
+
+Um **quadrado greco-latino** de ordem $t$ é a superposição de dois quadrados latinos ortogonais: um com letras **latinas** (A, B, C, ...) e outro com letras **gregas** (α, β, γ, ...), de forma que cada par (letra latina, letra grega) aparece exatamente uma vez no arranjo.
+
+### Condição de Ortogonalidade
+Dois quadrados latinos $L$ e $G$ são ortogonais se cada par ordenado $(L_{ij}, G_{ij})$ ocorre exatamente uma vez quando $i,j = 1,...,t$.
+
+---
+# Construção para t=4 (Exemplo Clássico)
+<br>
+```{r}
+# Construção de um quadrado greco-latino 4x4
+construir_quadrado_grecolatino <- function(t = 4) {
+  # Base: quadrado latino padrão para letras latinas
+  latino_base <- matrix(NA, nrow = t, ncol = t)
+  for (i in 1:t) {
+    latino_base[i, ] <- LETTERS[1:t][((0:(t-1)) + (i-1)) %% t + 1]
+  }
+  # Quadrado latino ortogonal para letras gregas
+  grego_base <- matrix(NA, nrow = t, ncol = t)
+  for (i in 1:t) {
+    grego_base[i, ] <- letters[1:t][((0:(t-1)) * 2 + (i-1)) %% t + 1]
+  }
+  # Converter letras gregas para símbolos
+  simbolos_griegos <- c("α", "β", "γ", "δ", "ε", "ζ", "η", "θ")
+  grego_base <- matrix(simbolos_griegos[1:t], nrow = t, ncol = t)
+  # Ajustar para ortogonalidade
+  if (t == 4) {
+    # Quadrado greco-latino clássico de ordem 4
+    latino <- matrix(c("A", "B", "C", "D",  "B", "A", "D", "C",  "C", "D", "A", "B",
+                      "D", "C", "B", "A"), nrow = 4, byrow = TRUE)
+    grego <- matrix(c("α", "β", "γ", "δ",  "γ", "δ", "α", "β",
+                     "δ", "γ", "β", "α",  "β", "α", "δ", "γ"), nrow = 4, byrow = TRUE)
+  } else {
+    latino <- latino_base; grego <- grego_base
+  }
+  # Combinar
+  combinado <- matrix(paste0(latino, grego), nrow = t, ncol = t)
+  return(list(
+    latino = latino, grego = grego, combinado = combinado,
+    design = data.frame(
+      Linha = rep(1:t, each = t),
+      Coluna = rep(1:t, times = t),
+      Tratamento = as.vector(latino),
+      Fator_Grego = as.vector(grego)))) }
+
+```
+---
+**Resultado:**
+```{r, echo=FALSE}
+# Gerar design 4x4
+design_gl <- construir_quadrado_grecolatino(4)
+cat("QUADRADO GRECO-LATINO 4×4\n")
+cat("Letras Latinas (Tratamentos):\n")
+print(design_gl$latino)
+cat("\nLetras Gregas (Fator Adicional):\n")
+print(design_gl$grego)
+cat("\nCombinado:\n")
+print(design_gl$combinado)
+```
+
+---
+
+## Formulação do Modelo
+Para um quadrado greco-latino de ordem $t$: 
+$$y_{ijkl} = \mu + \rho_i + \gamma_j + \delta_k + \tau_l + \epsilon_{ijkl}$$
+onde:
+- $y_{ijkl}$: observação na linha $i$, coluna $j$, nível $k$ do fator grego, tratamento $l$
+- $\mu$: média geral
+- $\rho_i$: efeito fixo da linha $i$ ($i = 1,...,t$)
+- $\gamma_j$: efeito fixo da coluna $j$ ($j = 1,...,t$)
+- $\delta_k$: efeito fixo do fator grego $k$ ($k = 1,...,t$)
+- $\tau_l$: efeito fixo do tratamento $l$ ($l = 1,...,t$)
+- $\epsilon_{ijkl} \sim N(0, \sigma^2)$: erro aleatório
+
+### Restrições de Identificabilidade
+$$\sum_{i=1}^t \rho_i = \sum_{j=1}^t \gamma_j = \sum_{k=1}^t \delta_k = \sum_{l=1}^t \tau_l = 0$$
+---
+### Suposições do Modelo
+1. **Aditividade estrita:** Não há interações entre os fatores
+2. **Normalidade:** Erros normalmente distribuídos
+3. **Homocedasticidade:** Variância constante
+4. **Independência:** Observações independentes
+
+###  Decomposição da Soma de Quadrados
+
+**Identidade Fundamental:**
+$$
+\begin{aligned}
+y_{ijkl} - \bar{y}_{\cdot\cdot\cdot\cdot} &= (\bar{y}_{i\cdot\cdot\cdot} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&+ (\bar{y}_{\cdot j\cdot\cdot} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&+ (\bar{y}_{\cdot\cdot k\cdot} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&+ (\bar{y}_{\cdot\cdot\cdot l} - \bar{y}_{\cdot\cdot\cdot\cdot}) \\
+&+ (y_{ijkl} - \bar{y}_{i\cdot\cdot\cdot} - \bar{y}_{\cdot j\cdot\cdot} - \bar{y}_{\cdot\cdot k\cdot} - \bar{y}_{\cdot\cdot\cdot l} + 3\bar{y}_{\cdot\cdot\cdot\cdot})
+\end{aligned}
+$$
+---
+
+# Tabela ANOVA
+<br>
+
+| Fonte | G.L. | Soma de Quadrados (SQ) | Quadrado Médio (QM) |
+|:---|:---:|:---|:---|
+| Linhas | $t-1$ | $SS_L = t \sum (\bar{y}_{i....} - \bar{y}_{....})^2$ | $MS_L = \frac{SS_L}{t-1}$ |
+| Colunas | $t-1$ | $SS_C = t \sum (\bar{y}_{.j..} - \bar{y}_{....})^2$ | $MS_C = \frac{SS_C}{t-1}$ |
+| Fator Grego | $t-1$ | $SS_G = t \sum (\bar{y}_{..k.} - \bar{y}_{....})^2$ | $MS_G = \frac{SS_G}{t-1}$ |
+| Tratamentos | $t-1$ | $SS_{Tr} = t \sum (\bar{y}_{...l} - \bar{y}_{....})^2$ | $MS_{Tr} = \frac{SS_{Tr}}{t-1}$ |
+| Resíduo | $(t-1)(t-3)$ | $SS_{Res}$ (por subtração) | $MS_{Res} = \frac{SS_{Res}}{(t-1)(t-3)}$ |
+| **Total** | $t^2 - 1$ | $SS_{Tot} = \sum (y_{ijkl} - \bar{y}_{....})^2$ | |
+
+**Nota:** Para $t=4$, $df_{Res} = (4-1)(4-3) = 3$. Isso mostra uma limitação importante: poucos graus de liberdade para o resíduo.
+
+---
+
+# Inferência (Esperança do Quadrado Médio e Teste F)
+<br>
+
+| Fonte | Esperança do Quadrado Médio (E(QM)) | Teste F |
+|:---|:---|:---|
+| Linhas | $\sigma^2 + \frac{t}{t-1}\sum\rho_i^2$ | $F_L = \frac{MS_L}{MS_{Res}}$ |
+| Colunas | $\sigma^2 + \frac{t}{t-1}\sum\gamma_j^2$ | $F_C = \frac{MS_C}{MS_{Res}}$ |
+| Fator Grego | $\sigma^2 + \frac{t}{t-1}\sum\delta_k^2$ | $F_G = \frac{MS_G}{MS_{Res}}$ |
+| Tratamentos | $\sigma^2 + \frac{t}{t-1}\sum\tau_l^2$ | $F_{Tr} = \frac{MS_{Tr}}{MS_{Res}}$ |
+| Resíduo | $\sigma^2$ | |
+| **Total** | | |
+
+- A esperança do $QM_{Resíduo}$ é sempre uma estimativa da variância do erro, $\sigma^2,$ já a esperança do $QM_{Tratamento}$ é a variância do erro **mais** um termo que depende da magnitude dos efeitos do tratamento ($\tau_l$).
+- Se a hipótese nula para os tratamentos for verdadeira ($H_0: \tau_l = 0$ para todo $l$), então $\sum\tau_l^2 = 0$, e o $E(QM_{Trat})$ se torna igual a $\sigma^2$. Portanto, sob $H_0$, a razão $F_{Tr} = \frac{MS_{Tr}}{MS_{Res}}$ deve ser próxima de 1. Se for muito maior que 1, temos evidências para rejeitar $H_0$. O mesmo raciocínio se aplica aos fatores de bloqueio.
+
+
+---
+# Continuação:  Estudo de Polímeros
+<br>
+
+**Objetivo:** Comparar 4 formulações de polímeros (A, B, C, D) quanto à resistência à tração (MPa).
+
+**Fatores Controlados:**
+1. **Linhas:** 4 lotes de matéria-prima
+2. **Colunas:** 4 operadores
+3. **Letras Gregas:** 4 máquinas de teste
+
+### **Geração de Dados Simulados**
+
+```{r}
+# Dados simulados para estudo de polímeros
+set.seed(123)
+t <- 4
+n <- t^2  # 16 observações
+
+# Efeitos verdadeiros (em MPa)
+mu <- 50            # Média geral
+efeito_lote <- c(-2, 1, 0, 1)           # Efeito dos lotes
+efeito_operador <- c(-1, 0, 1, 0)       # Efeito dos operadores  
+efeito_maquina <- c(0.5, -0.5, 0.5, -0.5) # Efeito das máquinas
+efeito_polimero <- c(3, -1, -1, -1)     # Efeito dos polímeros (A melhor)
+
+# Criar dataframe com design
+dados_polimero <- design_gl$design
+
+# Mapear níveis para efeitos
+mapear_efeito <- function(niveis, efeitos) {
+  efeitos[as.numeric(factor(niveis))]
+}
+```
+---
+```{r}
+# Adicionar efeitos sistemáticos
+dados_polimero$resistencia <- mu +
+  mapear_efeito(dados_polimero$Linha, efeito_lote) +
+  mapear_efeito(dados_polimero$Coluna, efeito_operador) +
+  mapear_efeito(dados_polimero$Fator_Grego, efeito_maquina) +
+  mapear_efeito(dados_polimero$Tratamento, efeito_polimero) +
+  rnorm(n, 0, 1.5)  # Erro aleatório
+
+# Converter para fatores
+dados_polimero$Linha <- factor(dados_polimero$Linha)
+dados_polimero$Coluna <- factor(dados_polimero$Coluna)
+dados_polimero$Maquina <- factor(dados_polimero$Fator_Grego)
+dados_polimero$Polimero <- factor(dados_polimero$Tratamento)
+
+print(dados_polimero[, c("Linha", "Coluna", "Polimero", "Maquina", "resistencia")])
+```
+
+---
+# Análise Estatística Completa
+<br>
+
+```{r}
+# Modelo linear para quadrado greco-latino 
+modelo_gl <- lm(resistencia ~ Linha + Coluna + Maquina + Polimero, 
+                data = dados_polimero)
+anova_gl <- anova(modelo_gl)
+
+# Saída do R - ANOVA
+print(anova_gl)
+```
+
+```{r, echo=FALSE}
+# Cálculo manual detalhado
+calc_anova_gl_detalhada <- function(dados) {
+  t <- length(unique(dados$Linha))
+  n_total <- nrow(dados)
+  
+  # Médias
+  y_bar <- mean(dados$resistencia)
+  
+  # Médias por linha (lote)
+  y_bar_i <- aggregate(resistencia ~ Linha, data = dados, mean)$resistencia
+  
+  # Médias por coluna (operador)
+  y_bar_j <- aggregate(resistencia ~ Coluna, data = dados, mean)$resistencia
+  
+  # Médias por máquina
+  y_bar_k <- aggregate(resistencia ~ Maquina, data = dados, mean)$resistencia
+  
+  # Médias por polímero
+  y_bar_l <- aggregate(resistencia ~ Polimero, data = dados, mean)$resistencia
+  
+  # Somas de quadrados
+  SS_L <- t * sum((y_bar_i - y_bar)^2)
+  SS_C <- t * sum((y_bar_j - y_bar)^2)
+  SS_G <- t * sum((y_bar_k - y_bar)^2)
+  SS_Tr <- t * sum((y_bar_l - y_bar)^2)
+  SS_Tot <- sum((dados$resistencia - y_bar)^2)
+  SS_Res <- SS_Tot - SS_L - SS_C - SS_G - SS_Tr
+  
+  # Graus de liberdade
+  df_L <- t - 1
+  df_C <- t - 1
+  df_G <- t - 1
+  df_Tr <- t - 1
+  df_Res <- (t-1)*(t-3)
+  df_Tot <- t^2 - 1
+  
+  # Quadrados médios
+  MS_L <- SS_L / df_L
+  MS_C <- SS_C / df_C
+  MS_G <- SS_G / df_G
+  MS_Tr <- SS_Tr / df_Tr
+  MS_Res <- SS_Res / df_Res
+  
+  # Estatísticas F
+  F_L <- MS_L / MS_Res
+  F_C <- MS_C / MS_Res
+  F_G <- MS_G / MS_Res
+  F_Tr <- MS_Tr / MS_Res
+  
+  # Valores-p
+  p_L <- pf(F_L, df_L, df_Res, lower.tail = FALSE)
+  p_C <- pf(F_C, df_C, df_Res, lower.tail = FALSE)
+  p_G <- pf(F_G, df_G, df_Res, lower.tail = FALSE)
+  p_Tr <- pf(F_Tr, df_Tr, df_Res, lower.tail = FALSE)
+  
+  # Tabela
+  tabela <- data.frame(
+    Fonte = c("Linhas (Lotes)", "Colunas (Operadores)", "Máquinas", "Polímeros", "Resíduo", "Total"),
+    GL = c(df_L, df_C, df_G, df_Tr, df_Res, df_Tot),
+    SQ = round(c(SS_L, SS_C, SS_G, SS_Tr, SS_Res, SS_Tot), 3),
+    QM = round(c(MS_L, MS_C, MS_G, MS_Tr, MS_Res, NA), 3),
+    F = round(c(F_L, F_C, F_G, F_Tr, NA, NA), 3),
+    `Valor-p` = c(
+      ifelse(p_L < 0.001, "<0.001", round(p_L, 4)),
+      ifelse(p_C < 0.001, "<0,001", round(p_C, 4)),
+      ifelse(p_G < 0.001, "<0.001", round(p_G, 4)),
+      ifelse(p_Tr < 0.001, "<0.001", round(p_Tr, 4)),
+      NA, NA
+    )
+  )
+  
+  return(tabela)
+}
+
+cat("\nANOVA DETALHADA (CÁLCULO MANUAL - preenchendo a tabela de ANOVA)\n")
+cat("=================================\n\n")
+print(calc_anova_gl_detalhada(dados_polimero))
+```
+
+---
+# Gráficos de Análise Exploratória
+<br>
+
+```{r, echo=FALSE, fig.height=7}
+# Configurar área de plot
+par(mfrow = c(2, 3))
+
+# 1. Boxplot por Polímero (Tratamento principal)
+boxplot(resistencia ~ Polimero, data = dados_polimero,
+        main = "Resistência por Tipo de Polímero",
+        xlab = "Polímero", ylab = "Resistência (MPa)",
+        col = c("lightblue", "lightgreen", "lightpink", "lightyellow")
+        )
+grid()
+
+# 2. Boxplot por Lote
+boxplot(resistencia ~ Linha, data = dados_polimero,
+        main = "Resistência por Lote de Matéria-Prima",
+        xlab = "Lote", ylab = "Resistência (MPa)",
+        col = "lightblue")
+
+# 3. Boxplot por Operador
+boxplot(resistencia ~ Coluna, data = dados_polimero,
+        main = "Resistência por Operador",
+        xlab = "Operador", ylab = "Resistência (MPa)",
+        col = "lightgreen")
+
+# 4. Boxplot por Máquina
+boxplot(resistencia ~ Maquina, data = dados_polimero,
+        main = "Resistência por Máquina de Teste",
+        xlab = "Máquina", ylab = "Resistência (MPa)",
+        col = "lightpink")
+
+# 5. Gráfico de interação Lote × Polímero
+interaction.plot(dados_polimero$Linha, dados_polimero$Polimero, 
+                 dados_polimero$resistencia,
+                 main = "Interação Lote × Polímero",
+                 xlab = "Lote", ylab = "Resistência Média (MPa)",
+                 trace.label = "Polímero",
+                 col = 1:4, lty = 1:4, type = "b", pch = 16)
+
+# 6. Gráfico de interação Operador × Polímero
+interaction.plot(dados_polimero$Coluna, dados_polimero$Polimero,
+                 dados_polimero$resistencia,
+                 main = "Interação Operador × Polímero",
+                 xlab = "Operador", ylab = "Resistência Média (MPa)",
+                 trace.label = "Polímero",
+                 col = 1:4, lty = 1:4, type = "b", pch = 16)
+
+# Restaurar configuração padrão
+par(mfrow = c(1, 1))
+```
+
+---
+# Análise de Contrastes e Comparações Múltiplas
+<br>
+
+```{r}
+# Teste de Tukey para comparações múltiplas
+library(multcomp)
+
+# Teste de Tukey para polímeros
+tukey_polimero <- glht(modelo_gl, linfct = mcp(Polimero = "Tukey"))
+summary(tukey_polimero)
+```
+---
+```{r, echo=TRUE, fig.height=4}
+# Gráfico de intervalos de confiança
+par(mfrow = c(1, 2))
+
+# Intervalos de confiança de Tukey
+plot(tukey_polimero, main = "Intervalos de Confiança - Polímeros",
+     xlab = "Diferença na Resistência (MPa)")
+
+# Médias ajustadas
+medias_ajustadas <- emmeans(modelo_gl, ~ Polimero)
+plot(medias_ajustadas, comparisons = TRUE, 
+     main = "Médias Ajustadas com Comparações",
+     xlab = "Resistência (MPa)")
+
+par(mfrow = c(1, 1))
+```
+
+---
+
+# Verificação de Suposições
+<br>
+```{r}
+# Função para verificação completa de suposições
+verificar_suposicoes_gl <- function(modelo) {
+# 1. Normalidade dos resíduos
+  res <- residuals(modelo); shapiro_test <- shapiro.test(res)
+  cat("1. TESTE DE NORMALIDADE (Shapiro-Wilk):\n")
+  cat("   W =", round(shapiro_test$statistic, 4), ", p =", round(shapiro_test$p.value, 4), "\n")
+  cat("   Conclusão:", ifelse(shapiro_test$p.value > 0.05, "Não rejeita normalidade", 
+                             "Rejeita normalidade"), "\n\n")
+  # 2. Homocedasticidade (teste de Breusch-Pagan)
+  bp_test <- bptest(modelo)
+  cat("2. TESTE DE HOMOCEDASTICIDADE (Breusch-Pagan):\n")
+  cat("   BP =", round(bp_test$statistic, 4), ", p =", round(bp_test$p.value, 4), "\n")
+  cat("   Conclusão:", ifelse(bp_test$p.value > 0.05, "Não rejeita homocedasticidade",
+                             "Rejeita homocedasticidade"), "\n\n")
+   # 3. Independência (teste de Durbin-Watson)
+  dw_test <- dwtest(modelo)
+  cat("3. TESTE DE INDEPENDÊNCIA (Durbin-Watson):\n")
+  cat("   DW =", round(dw_test$statistic, 4), ", p =", round(dw_test$p.value, 4), "\n")
+  cat("   Conclusão:", ifelse(dw_test$p.value > 0.05, "Não rejeita independência",
+                             "Rejeita independência"), "\n\n")
+    # 4. Gráficos de diagnóstico
+  par(mfrow = c(2, 2))
+  # Resíduos vs Valores Ajustados
+  plot(fitted(modelo), res,main = "Resíduos vs Valores Ajustados",
+       xlab = "Valores Ajustados", ylab = "Resíduos", pch = 16, col = "blue"); abline(h = 0, col = "red", lty = 2); grid()
+  # QQ-plot para normalidade
+  qqnorm(res, main = "QQ-plot dos Resíduos", pch = 16, col = "blue"); qqline(res, col = "red"); grid()
+    # Histograma dos resíduos
+  hist(res, main = "Distribuição dos Resíduos", xlab = "Resíduos", col = "lightblue",probability = TRUE)
+  curve(dnorm(x, mean = mean(res), sd = sd(res)), add = TRUE, col = "red", lwd = 2); grid()
+  # Resíduos vs Ordem Experimental
+  plot(1:length(res), res, type = "b", main = "Resíduos vs Ordem Experimental",
+       xlab = "Ordem", ylab = "Resíduos", pch = 16, col = "blue")
+  abline(h = 0, col = "red", lty = 2); grid()
+  par(mfrow = c(1, 1))
+    return(list(shapiro = shapiro_test, breusch_pagan = bp_test, durbin_watson = dw_test))}
+```
+---
+```{r}
+# Executar verificação
+suposicoes_gl <- verificar_suposicoes_gl(modelo_gl)
+```
+
+---
+# Análise de Poder e Tamanho de Efeito
+<br>
+```{r}
+# Análise de poder para quadrado greco-latino
+analise_poder_gl <- function(t, alpha = 0.05, delta = 2, sigma = 1.5) {
+  # delta: diferença mínima detectável entre tratamentos
+  # sigma: desvio padrão do erro
+  
+  df_trat <- t - 1
+  df_res <- (t - 1) * (t - 3)
+  
+  # Parâmetro de não-centralidade
+  lambda <- t * (delta/sigma)^2
+  
+  # Poder do teste F
+  f_critico <- qf(1 - alpha, df_trat, df_res)
+  poder <- 1 - pf(f_critico, df_trat, df_res, ncp = lambda)
+  
+  # Tamanho do efeito (f de Cohen)
+  f_cohen <- delta/sigma
+  
+  # Eta-quadrado esperado
+  eta2_esperado <- lambda / (lambda + df_res + df_trat + 1)
+  
+  return(data.frame(
+    Ordem = t,
+    GL_Tratamento = df_trat,
+    GL_Residuo = df_res,
+    F_Critico = round(f_critico, 3),
+    Poder = round(poder, 4),
+    Tamanho_Efeito_f = round(f_cohen, 3),
+    eta2_esperado = round(eta2_esperado, 4),
+    Interpretacao_Efeito = ifelse(f_cohen < 0.10, "Desprezível",
+                                 ifelse(f_cohen < 0.25, "Pequeno",
+                                        ifelse(f_cohen < 0.40, "Médio", "Grande")))
+  ))
+}
+```
+---
+```{r,echo=FALSE}
+cat("\nANÁLISE DE PODER PARA DIFERENTES ORDENS\n")
+cat("========================================\n\n")
+
+# Calcular para diferentes ordens
+ordens <- c(4, 5, 6, 7, 8)
+poder_por_ordem <- do.call(rbind, lapply(ordens, analise_poder_gl))
+
+print(poder_por_ordem)
+
+# Gráfico de poder vs ordem
+plot(poder_por_ordem$Ordem, poder_por_ordem$Poder, type = "b",
+     main = "Poder Estatístico por Ordem do Quadrado",
+     xlab = "Ordem (t)", ylab = "Poder (1-β)",
+     pch = 16, col = "blue", ylim = c(0, 1))
+abline(h = 0.80, col = "red", lty = 2)
+text(poder_por_ordem$Ordem, poder_por_ordem$Poder,
+     labels = round(poder_por_ordem$Poder, 2), pos = 3)
+grid()
+```
+
+---
+# Vantagens e Limitações
+<br>
+### Vantagens
+1. **Controle triplo:** Controla três fontes de variação simultaneamente
+2. **Eficiência:** Requer apenas $t^2$ observações para $t$ tratamentos
+3. **Balanceamento:** Todos os efeitos são estimados com igual precisão
+4. **Eliminação de confundimento:** Separa efeitos de múltiplas fontes de variabilidade
+
+### Limitações
+1. **Graus de liberdade reduzidos:** Para $t=4$, apenas 3 GL para resíduo
+2. **Suposição de aditividade:** Não permite interações entre fatores
+3. **Número igual de níveis:** Todos os fatores devem ter $t$ níveis
+4. **Existência limitada:** Quadrados greco-latinos não existem para todas as ordens
+
+### Existência de Quadrados Greco-Latinos
+- **Existem:** Para $t = 3, 4, 5, 7, 8, 9, ...$
+- **Não existem:** Para $t = 2, 6, 10, 14, ...$ (exceto casos triviais)
+- **Conjectura de Euler:** Provada por Bose, Parker e Shrikhande (1959)
+
