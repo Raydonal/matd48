@@ -11,8 +11,8 @@ stringr
 forcats
 lubridate
 haven
-htmltools
 kableExtra
+htmltools
 ggrepel
 GGally
 mosaicData
