@@ -976,7 +976,5 @@ $$Y_{ijkl} = \mu + \rho_i + \gamma_j + \delta_k + \tau_l + \epsilon_{ijkl}$$
 
 **Atenção**: Para t=4, GL Resíduo = 3 (muito baixo!). Necessário usar réplicas.
 
----
 
-### Próximo réplicação
 
