@@ -1,0 +1,2326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fundamentos de Análise para Planejamento Experimental</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="MATD48-12_files/shower-ribbon/package/styles/screen-4x3.css">
+  <link rel="stylesheet" href="MATD48-12_files/rmdshower/style-common.css">
+  <link rel="stylesheet" href="MATD48-12_files/rmdshower/style-ribbon.css">
+  <link rel="stylesheet" href="MATD48-12_files/shower-ribbon/style-override.css">
+  
+  
+    <style type="text/css">
+   html { -webkit-text-size-adjust: 100%; }
+   pre > code.sourceCode { white-space: pre; position: relative; }
+   pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+   pre > code.sourceCode > span:empty { height: 1.2em; }
+   .sourceCode { overflow: visible; }
+   code.sourceCode > span { color: inherit; text-decoration: inherit; }
+   div.sourceCode { margin: 1em 0; }
+   pre.sourceCode { margin: 0; }
+   @media screen {
+   div.sourceCode { overflow: auto; }
+   }
+   @media print {
+   pre > code.sourceCode { white-space: pre-wrap; }
+   pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+   }
+   pre.numberSource code
+     { counter-reset: source-line 0; }
+   pre.numberSource code > span
+     { position: relative; left: -4em; counter-increment: source-line; }
+   pre.numberSource code > span > a:first-child::before
+     { content: counter(source-line);
+       position: relative; left: -1em; text-align: right; vertical-align: baseline;
+       border: none; display: inline-block;
+       -webkit-touch-callout: none; -webkit-user-select: none;
+       -khtml-user-select: none; -moz-user-select: none;
+       -ms-user-select: none; user-select: none;
+       padding: 0 4px; width: 4em;
+       color: #aaaaaa;
+     }
+   pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+   div.sourceCode
+     {   }
+   @media screen {
+   pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+   }
+   code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+   code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+   code span.at { color: #7d9029; } /* Attribute */
+   code span.bn { color: #40a070; } /* BaseN */
+   code span.bu { color: #008000; } /* BuiltIn */
+   code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+   code span.ch { color: #4070a0; } /* Char */
+   code span.cn { color: #880000; } /* Constant */
+   code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+   code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+   code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+   code span.dt { color: #902000; } /* DataType */
+   code span.dv { color: #40a070; } /* DecVal */
+   code span.er { color: #ff0000; font-weight: bold; } /* Error */
+   code span.ex { } /* Extension */
+   code span.fl { color: #40a070; } /* Float */
+   code span.fu { color: #06287e; } /* Function */
+   code span.im { color: #008000; font-weight: bold; } /* Import */
+   code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+   code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+   code span.op { color: #666666; } /* Operator */
+   code span.ot { color: #007020; } /* Other */
+   code span.pp { color: #bc7a00; } /* Preprocessor */
+   code span.sc { color: #4070a0; } /* SpecialChar */
+   code span.ss { color: #bb6688; } /* SpecialString */
+   code span.st { color: #4070a0; } /* String */
+   code span.va { color: #19177c; } /* Variable */
+   code span.vs { color: #4070a0; } /* VerbatimString */
+   code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  
+  
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+      <script src="MATD48-12_files/header-attrs-2.30/header-attrs.js"></script>
+      <link href="MATD48-12_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+      <script src="MATD48-12_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+      <link href="MATD48-12_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+      <script src="MATD48-12_files/datatables-binding-0.34.0/datatables.js"></script>
+      <script src="MATD48-12_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+      <link href="MATD48-12_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+      <link href="MATD48-12_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+      <script src="MATD48-12_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+      <link href="MATD48-12_files/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+      <script src="MATD48-12_files/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+      <script src="MATD48-12_files/kePrint-0.0.1/kePrint.js"></script>
+      <link href="MATD48-12_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  
+</head>
+
+<body class="shower list">
+
+  <header class="caption">
+    <h1>Fundamentos de Análise para Planejamento Experimental</h1>
+    <p>Raydonal Ospina</p>
+  </header>
+
+  
+  
+<section id="estruturas-fatoriais-de-tratamentos" class="slide level2">
+<h2>Estruturas Fatoriais de Tratamentos</h2>
+<div class="text">
+<p>Em muitas situações é desejável estudar o efeito de <strong>diversos
+fatores</strong> em uma <strong>variável resposta</strong>.</p>
+</div>
+<div class="mlkexbox textbox">
+<p>Um químico pode ter interesse em estudar os efeitos de
+<strong>temperatura</strong> e <strong>pressão</strong> numa certa
+reação.</p>
+</div>
+<div class="mlkexbox textbox">
+<p>Um agrônomo pode estar interessado em estudar qual o melhor
+<strong>método de irrigação</strong>, <strong>tipo</strong> e
+<strong>quantidade</strong> de fertilizante para maximizar a
+<strong>produção</strong> de uma certa cultivar.</p>
+</div>
+</section>
+<section id="estruturas-fatoriais-de-tratamentos-1"
+class="slide level2">
+<h2>Estruturas Fatoriais de Tratamentos</h2>
+<div class="text">
+<p>Nesse contexto, a questão que se coloca não é a de que plano usar
+(<strong>completamente aleatorizado</strong>, <strong>aleatorizado em
+blocos</strong>, em <strong>quadrados latinos</strong>, etc…) mas
+sim:</p>
+</div>
+<div class="mlkinfobox textbox">
+<p>Como <strong>investigar</strong>, de forma
+<strong>eficiente</strong>, o <strong>efeito</strong> de todos esses
+fatores numa mesma variável resposta (ou em diferentes funções de uma
+mesma variável resposta).</p>
+</div>
+<div class="text" style="margin-top:1.5em">
+<p>Uma possível solução para o problema seria
+<strong style='color:red'>investigar os efeitos de cada fator
+separadamente.</strong> Essa abordagem, porém, é
+<strong>ineficiente</strong>, comparada com o uso de uma
+<strong>estrutura fatorial de tratamentos</strong>, onde todos os
+fatores são investigados conjuntamente.</p>
+</div>
+</section>
+<section id="estruturas-fatoriais-da-série-2k" class="slide level2">
+<h2>Estruturas Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<p>Em um experimento com estrutura fatorial de tratamentos, um certo
+número de níveis é fixado para cada fator de interesse, seja ele
+<strong>qualitativo</strong> ou <strong>quantitativo.</strong></p>
+<p>Os <strong>tratamentos</strong> consistem, então, da combinação de
+<strong>todos os níveis considerados.</strong></p>
+<p>Quando todos os <strong>fatores</strong> são investigados
+considerando-se apenas <strong>dois níveis</strong>, tem-se um caso
+especial de estrutura fatorial: são as estruturas fatoriais da
+<strong>série 2<sup>k</sup></strong>, em que <strong>k</strong>
+representa o número de fatores envolvidos no estudo.</p>
+</div>
+</section>
+<section id="por-que-estudar-fatoriais-da-série-2k"
+class="slide level2">
+<h2>Por que estudar fatoriais da Série 2<sup>k</sup>?</h2>
+<div class="textlist">
+<ul>
+<li>Cada fator pode ser estudado com um número relativamente pequeno de
+rodadas do experimento.</li>
+<li>A interpretação dos resultados é fácil, podendo, em alguns casos,
+ser obtida através de senso comum;</li>
+<li>Quando os fatores são quantitativos, apesar de não explorar
+resultados para um número maior de níveis, eles são freqüentemente
+capazes de determinar uma direção promissora a ser estudada em
+experimentos adicionais.</li>
+<li>Permite facilmente <strong>acomodar</strong>, quando necessário,
+<strong>rodadas extras do experimento.</strong></li>
+<li>Eles formam a base para o estudo de <strong>estruturas fatoriais
+fracionárias 2<sup>k-p</sup></strong>, que será abordado mais
+adiante;</li>
+<li>Podem ser utilizadas naturalmente em uma <strong>estratégia
+seqüencial de investigação científica.</strong></li>
+</ul>
+</div>
+</section>
+<section id="estruturas-fatoriais-da-série-2k-1" class="slide level2">
+<h2>Estruturas Fatoriais da Série 2<sup>k</sup></h2>
+<div class="mlkinfobox text">
+<p>Daqui por diante — e essa é a regra na literatura — a expressão
+<strong>experimento fatorial</strong> (ou <strong>plano
+fatorial</strong>), sem referir-se específicamente a um plano
+experimental, deve ser entendida como um experimento com estrutura
+fatorial de tratamentos, executado de acordo com um <strong>plano
+completamente aleatorizado.</strong></p>
+</div>
+<div class="text">
+<p>Quando planos experimentais de aleatorização restrita são usados,
+eles são explicitamente mencionados, como por exemplo: <em>experimento
+fatorial (aleatorizado) em blocos</em>, ou <em>plano fatorial
+(aleatorizado) em blocos</em>.</p>
+</div>
+<!-- ## Contrsates e Efeitos, coeficientes -->
+<!-- **Contraste** é a diferença entre as observações do nível mais alto ($+$) para o nível mais baixo ($-$) de um fator: -->
+<!-- $$ -->
+<!-- \text{Contraste} = \bar{z}(A_+) - \bar{z}(A_-) -->
+<!-- $$ -->
+<!-- Desta forma, o **efeito** de um tratamento pode ser calculado como -->
+<!-- $$ -->
+<!-- \text{Efeito} = \frac{\text{Contraste}}{n\cdot 2^{k-1}} -->
+<!-- $$ -->
+<!-- Em que $n$ é o numero de réplicas e $k$ o número de fatores. O erro padrão é calcular por -->
+<!-- $$ -->
+<!-- \text{Var}(\text{Efeito}) = \sqrt{\frac{\hat{\sigma}^2}{n\cdot 2^{k-1}}} -->
+<!-- $$ -->
+</section>
+<section id="fatoriais-23" class="slide level2">
+<h2>Fatoriais 2<sup>3</sup></h2>
+<div class="text">
+<p>Numa estrutura <strong>fatorial 2<sup>3</sup></strong>, o efeito de
+três fatores (A, B e C) é estudado, formando um total de <span
+class="math inline">2<sup>3</sup> = 8</span> tratamentos. Cada réplica
+de um experimento com essa estrutura utiliza, assim, <span
+class="math inline">8</span> unidades experimentais.</p>
+<p>Usando os sinais de <span class="math inline">−</span> e <span
+class="math inline">+</span> para denotar os níveis
+<strong>baixo</strong> e <strong>alto</strong>, respectivamente, de cada
+fator estudado, é possível apresentar a estrutura dos tratamentos como
+segue:</p>
+</div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ccb810e4a57563024d8a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ccb810e4a57563024d8a">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[[1,2,3,4,5,6,7,8],["(1)","a","b","ab","c","ac","bc","abc"],["−","+","−","+","−","+","−","+"],["−","−","+","+","−","−","+","+"],["−","−","−","−","+","+","+","+"]],"container":"<table class=\"display\" style=\"font-size:12px;width:400px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\" rowspan=\"2\">Tratamentos<\/th>\n      <th style=\"text-align: center;\" colspan=\"3\">Fatores<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align:center;border-left:solid 1px;\" colspan=\"1\">A<\/th>\n      <th style=\"text-align:center\" colspan=\"1\">B<\/th>\n      <th style=\"text-align:center\" colspan=\"1\">C<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4]},{"bSortable":false,"targets":[0,1,2,3,4]},{"name":"N","targets":0},{"name":"Tratamentos","targets":1},{"name":"A","targets":2},{"name":"B","targets":3},{"name":"C","targets":4}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'border-left':'solid 1px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-left':'solid 1px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</section>
+<section id="fatoriais-23-1" class="slide level2">
+<h2>Fatoriais 2<sup>3</sup></h2>
+<div class="text">
+<p>A <strong>ordem dos sinais</strong> apresentada na estrutura acima é
+chamada de <strong>ordem de Yates</strong>, ou ainda, de <strong>ordem
+padrão</strong>.</p>
+<p>É comum adotar a notação da segunda coluna, para os tratamentos.
+Segundo esta notação, quando um fator contribui com o nível
+<strong>alto</strong>, a sua “letra” aparece na notação do tratamento.
+Do contrário, a “letra” não aparece. O símbolo <span
+class="math inline">(1)</span> denota o tratamento em que todos os
+fatores contribuem com o nível <strong>baixo</strong>. É possível
+representar os tratamentos através dos vértices de um
+<strong>cubo</strong>, centrado na origem:</p>
+</div>
+<p><img src="MATD48-12_files/figure-revealjs/cube-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="fatoriais-23-2" class="slide level2">
+<h2>Fatoriais 2<sup>3</sup></h2>
+<div class="text">
+<p>A análise de um <strong>experimento fatorial 2<sup>3</sup></strong>
+inclui o estudo de <strong>efeitos principais</strong>, efeitos de
+<strong>interações duplas</strong> (interações entre dois fatores) e a
+<strong>interação tripla</strong>, definidos da seguinte forma:</p>
+</div>
+<p><img src="MATD48-12_files/figure-revealjs/cube3-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="efeitos-principais" class="slide level2">
+<h2>Efeitos Principais</h2>
+<div class="text">
+<p>O <strong>efeito</strong> (principal) do fator <span
+class="math inline">A</span> corresponde à mudança esperada na variável
+resposta quando há uma mudança do nível <strong>baixo</strong> para o
+nível <strong>alto</strong> desse fator:</p>
+<p><span
+class="math display">A = <em>z̄</em>(A<sub>+</sub>) − <em>z̄</em>(A<sub>−</sub>)</span>
+Em que <span class="math inline"><em>z̄</em>(A<sub>+</sub>)</span>
+representa a média dos valores da variável de interesse <span
+class="math inline"><em>z</em></span>, observados sob o nível “<span
+class="math inline">+</span>” do fator <span
+class="math inline">A</span>, e <span
+class="math inline"><em>z̄</em>(A<sub>−</sub>)</span>, a média sob o
+nível “<span class="math inline">−</span>”.</p>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-1-1.png" width="864" style="display: block; margin: auto;" /></p>
+</div>
+</section>
+<section id="efeitos-de-interações-duplas" class="slide level2">
+<h2>Efeitos de Interações Duplas</h2>
+<div class="text">
+<p>O efeito da interação entre <strong>dois fatores</strong> <span
+class="math inline">A</span> e <span class="math inline">B</span>,
+corresponde à mudança esperada no efeito do fator <span
+class="math inline">B</span> quando há uma mudança do fator <span
+class="math inline">A</span> do nível “<span
+class="math inline">−</span>” para o nível “<span
+class="math inline">+</span>”, ou, vice-versa:</p>
+<p><span class="math display">$$
+\text{AB} = \frac{1}{2}\cdot\left[\bar{z}( \text{B}_+ |  \text{A}_+) -
+\bar{z}( \text{B}_-|  \text{A}_+)\right] - \frac{1}{2}\left[\bar{z}(
+\text{B}_+ |  \text{A}_-) - \bar{z}( \text{B}_-|  \text{A}_-)\right]
+$$</span> em que <span
+class="math inline"><em>z̄</em>(B<sub>−</sub>|A<sub>+</sub>)</span>
+representa a média dos valores da variável resposta <span
+class="math inline"><em>z</em></span>, observados sob o nível “<span
+class="math inline">−</span>” do fator <span
+class="math inline">B</span> e nível “<span
+class="math inline">+</span>” do fator <span
+class="math inline">A</span>, e os outros termos são definidos de forma
+similar.</p>
+</div>
+</section>
+<section id="efeitos-de-interações-duplas-1" class="slide level2">
+<h2>Efeitos de Interações Duplas</h2>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-2-1.png" width="864" style="display: block; margin: auto;" /></p>
+</section>
+<section id="efeito-da-interação-tripla" class="slide level2">
+<h2>Efeito da Interação Tripla</h2>
+<div class="text">
+<p><span class="math display">$$
+\text{ABC} = \frac{1}{2}\cdot\left[\text{Efeito}(\text{AB} | \text{C}_+)
+-\text{Efeito} (\text{AB}|  \text{C}_-)\right]
+$$</span> em que <span class="math inline">ABC</span> corresponde ao
+efeito da interação dupla <span class="math inline">AB</span> observado
+sob o nível “+” do fator <span class="math inline">C</span>, e os outros
+termos são definidos de forma similar.</p>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</section>
+<section id="variâncias" class="slide level2">
+<h2>Variâncias</h2>
+<div class="text">
+<p>Quando existem réplicas do experimento, a <strong>variância do erro
+experimental</strong> pode ser estimada através da combinação das
+variâncias estimadas entre réplicas, para cada tratamento.</p>
+<p>Supondo que cada um de <span class="math inline"><em>g</em></span>
+tratamentos seja replicado <span
+class="math inline"><em>n</em><sub><em>i</em></sub></span> vezes, a
+variância estimada do erro experimental é dada por</p>
+<p><span class="math display">$$
+S^2 = \frac{\nu_1S_1^2 + \nu_2S_2^2 + \cdots + \nu_gS_g^2}{\nu_1 + \nu_2
++ \cdots + \nu_g}
+$$</span> com <span class="math inline">$\nu =
+\sum_{i=1}^{g}\nu_i$</span> graus de liberdade.</p>
+</div>
+<div class="mlkinfobox text">
+<p>Na fórmula acima, <span
+class="math inline"><em>S</em><sub><em>i</em></sub><sup>2</sup></span> é
+a estimativa da <strong>variância entre réplicas</strong> sob o
+<strong>tratamento <span class="math inline"><em>i</em></span></strong>,
+obtida com <span
+class="math inline"><em>ν</em><sub><em>i</em></sub> = <em>n</em><sub><em>i</em></sub> − 1</span>
+graus liberdade.</p>
+</div>
+</section>
+<section id="variâncias-1" class="slide level2">
+<h2>Variâncias</h2>
+<div class="text">
+<p>Quando <span
+class="math inline"><em>n</em><sub><em>i</em></sub> = 2</span>, tem-se
+<span class="math inline">$S_i^2 = \frac{d_i^2}{2}$</span>, em que <span
+class="math inline"><em>d</em><sub><em>i</em></sub></span> é a diferença
+entre os valores bservados em cada <strong>réplica</strong>, para o
+<strong>tratamento</strong> <span class="math inline"><em>i</em></span>.
+Nesse caso:</p>
+<p><span class="math display">$$
+S^2 = \frac{\sum_{i = 1}^{g} d_i^2}{2g}
+$$</span> com <span class="math inline"><em>g</em></span> graus de
+liberdade;</p>
+</div>
+</section>
+<section id="primeiro-experimento" class="slide level2">
+<h2>Primeiro experimento</h2>
+<div class="mlkexbox textbox">
+<p>Um engenheiro químico deseja investigar os efeitos de
+<strong>temperatura</strong> (<span class="math inline">T</span>),
+<strong>concentração</strong> (<span class="math inline">C</span>) e
+<strong>catalisador</strong> (<span class="math inline">K</span>) na
+<strong>produção</strong> de uma certa substância química. Para tanto,
+ele considera os seguintes níveis de cada fator:</p>
+<p><br></p>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-09f7e9c8a1a0b5d1379e" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-09f7e9c8a1a0b5d1379e">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[[160],[180],[20],[40],["A"],["B"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Temperatura<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Concentração<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Catalisador<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">T (°C)<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">C  (%)<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">K<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">+<\/th>\n      <th style=\"text-align: center;border-left:solid 1px;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">+<\/th>\n      <th style=\"text-align: center;border-left:solid 1px;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">+<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5]},{"bSortable":false,"targets":[0,1,2,3,4,5]},{"name":"Tm","targets":0},{"name":"Tp","targets":1},{"name":"Cm","targets":2},{"name":"Cp","targets":3},{"name":"Km","targets":4},{"name":"Kp","targets":5}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-left':'solid 1px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'border-left':'solid 1px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<!-- ## Experimentos -->
+<!-- :::{.mlkexbox .textbox} -->
+<!-- Um engenheiro químico deseja investigar os efeitos de **temperatura** ($\text{T}$), **concentração** ($\text{C}$) e **catalisador** ($\text{K}$) na **produção** de uma certa substância química. Para tanto, ele considera os seguintes níveis de cada fator: -->
+<!-- ```{r exp1, echo=FALSE} -->
+<!-- header.exp1 <- withTags(table( -->
+<!--   class = 'display', style="font-size:12px;width:300px", -->
+<!--   thead( -->
+<!--     tr( -->
+<!--       th(style="text-align: center;vertical-align: middle;", rowspan = 2, 'Fatores'), -->
+<!--       th(style="text-align: center;vertical-align: middle;", colspan = 2, 'Níveis'), -->
+<!--     ), -->
+<!--     tr( -->
+<!--       th(style="text-align: center;border-left:solid 1px;", colspan = 1, "−"), -->
+<!--       th(style="text-align: center;", colspan = 1, "+"), -->
+<!--     ) -->
+<!--   ) -->
+<!-- )) -->
+<!-- exp1 <- tibble( -->
+<!--     Fatores = c("  Temperatura (T)  ", " Concentração (C) ", " Catalisador (K) "), -->
+<!--     N = c('160°C', "20%", "A"), -->
+<!--     P = c('180°C', "40%", "B")) %>%  -->
+<!--       DT::datatable(rownames = FALSE,  -->
+<!--                 options = list(autoWidth = FALSE,     -->
+<!--                                fixedColumns = TRUE, -->
+<!--                                dom = 't', -->
+<!--                                columnDefs = list(list(className = 'dt-center', targets = 0:2), -->
+<!--                                                  list(bSortable = FALSE, targets = 0:2)), -->
+<!--                                rowCallback=JS( -->
+<!--                                'function(row,data) { -->
+<!--                                   if($(row)["0"]["_DT_RowIndex"] % 2 <1)  -->
+<!--                                   $(row).css("background","#edf4f5") //#f2f9ec -->
+<!--                                 }') -->
+<!--                                ),     -->
+<!--                 container = header.exp1, -->
+<!--                 class = "compact hover",  -->
+<!--                 style = 'default') %>%  -->
+<!--   formatStyle(columns = 0:2, 'font-size' = '12px') %>% -->
+<!--   formatStyle(columns = 0:2, background = "#00000001") %>%  -->
+<!--   formatStyle(c(2), 'border-left' = "solid 1px")  -->
+<!-- exp1 -->
+<!-- ``` -->
+<!-- ::: -->
+</section>
+<section id="primeiro-experimento-dados" class="slide level2">
+<h2>Primeiro experimento: dados</h2>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-847ca7e4df935d73ce79" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-847ca7e4df935d73ce79">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["−","+","−","+","−","+","−","+"],["−","−","+","+","−","−","+","+"],["−","−","−","−","+","+","+","+"],["59<sup>(6)<\/sup>","74<sup>(2)<\/sup>","50<sup>(1)<\/sup>","69<sup>(5)<\/sup>","50<sup>(8)<\/sup>","81<sup>(9)<\/sup>","46<sup>(3)<\/sup>","79<sup>(7)<\/sup>"],["61<sup>(13)<\/sup>","70<sup>(4)<\/sup>","58<sup>(16)<\/sup>","67<sup>(10)<\/sup>","54<sup>(12)<\/sup>","85<sup>(14)<\/sup>","44<sup>(11)<\/sup>","81<sup>(15)<\/sup>"],[60,72,54,68,52,83,45,80],[2,4,8,2,4,4,2,2],[2,8,32,2,8,8,2,2]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Fatores<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Réplicas<sup>(o)<\/sup><\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Estatísticas<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">T<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center;border-right:solid 1px;\" colspan=\"1\">K<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">I<\/th>\n      <th style=\"text-align: center;border-right:solid 1px;\" colspan=\"1\">II<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msub><mover accent=\"true\"><mrow><mi>y<\/mi><\/mrow><mo>¯<\/mo><\/mover><mi>i<\/mi><\/msub><\/mrow><annotation encoding=\"application/x-tex\">\bar{y}_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.56778em;\"><\/span><span class=\"strut bottom\" style=\"height: 0.76222em; vertical-align: -0.19444em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord accent\"><span class=\"vlist\"><span class=\"\" style=\"top: 0em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"mord textstyle cramped\"><span class=\"mord mathit\" style=\"margin-right: 0.03588em;\">y<\/span><\/span><\/span><span class=\"\" style=\"top: 0em; margin-left: 0.11112em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"accent-body\"><span class=\"\">¯<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.15em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center;\" colspan=\"1\"><span class=\"math inline\"><span><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi mathvariant=\"normal\">∣<\/mi><msub><mi>d<\/mi><mi>i<\/mi><\/msub><mi mathvariant=\"normal\">∣<\/mi><\/mrow><annotation encoding=\"application/x-tex\">|d_i|<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.75em;\"><\/span><span class=\"strut bottom\" style=\"height: 1em; vertical-align: -0.25em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord mathrm\">∣<\/span><span class=\"mord\"><span class=\"mord mathit\">d<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.15em; margin-right: 0.05em; margin-left: 0em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><span class=\"mord mathrm\">∣<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center;\" colspan=\"1\"><span class=\"math inline\"><span><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n    <\/tr>\n  <\/thead>\n  <tfoot>\n    <tr>\n      <th style=\"text-align:right;font-size:12px\" colspan=\"7\"><stront>Total<\/strong><\/th>\n      <td style=\"text-align:center;font-size:12px\" colspan=\"1\">64<\/td>\n    <\/tr>\n    <tr>\n      <td style=\"text-align:left;font-size:10px\" colspan=\"8\"><sup>(o)<\/sup> Ordem dos experimentos.<\/td>\n    <\/tr>\n  <\/tfoot>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5,6,7]},{"bSortable":false,"targets":[0,1,2,3,4,5,6,7]},{"name":"T","targets":0},{"name":"C","targets":1},{"name":"K","targets":2},{"name":"I","targets":3},{"name":"II","targets":4},{"name":"y","targets":5},{"name":"d","targets":6},{"name":"s2","targets":7}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'12px'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-right':'solid 1px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'border-right':'solid 1px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</section>
+<section id="estimativa-do-efeito-da-temperatura" class="slide level2">
+<h2>Estimativa do efeito da temperatura</h2>
+<!-- $$ -->
+<!-- \begin{align*} -->
+<!-- \text{T}  &= \bar{z}(\text{T}_+) - \bar{z}(\text{T}_-)\\ -->
+<!--    &= \frac{72+68+83+80}{4} - \frac{61+53+52+45}{4} \\ -->
+<!--    &= 75,\!75 - 52,\!75 \\ -->
+<!--    &= 23 -->
+<!-- \end{align*} -->
+<!-- $$ -->
+<div class="center">
+<p><img src="images/EfeitoTemperatura.svg"/></p>
+</div>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="estimativa-do-efeito-da-temperatura-1"
+class="slide level2">
+<h2>Estimativa do efeito da temperatura</h2>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="center">
+<p><img src="images/yates_table.svg"/></p>
+</div>
+</section>
+<section id="geometria-dos-efeitos" class="slide level2">
+<h2>Geometria dos efeitos</h2>
+<div class="center">
+<p><img src="images/geometria_exp1.svg" style="width: 90%;height:auto;"/></p>
+</div>
+</section>
+<section id="geometrias-para-a-temperatura" class="slide level2">
+<h2>Geometrias para a Temperatura</h2>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="estimativa-do-efeito-da-interação-temperatura-catalisador"
+class="slide level2">
+<h2>Estimativa do efeito da interação Temperatura × Catalisador:</h2>
+<div class="center">
+<p><img src="images/EfeitoTK.svg"/></p>
+</div>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-7-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="interação-temperatura-catalisador" class="slide level2">
+<h2>Interação Temperatura × Catalisador</h2>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="center">
+<p><img src="images/Efeito_TK_yates.svg"/></p>
+</div>
+</section>
+<section id="interação-tripla-tck" class="slide level2">
+<h2>Interação Tripla TCK</h2>
+<p><img src="MATD48-12_files/figure-revealjs/cube_tck-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="center">
+<p><img src="images/Efeito_TCK.svg"/></p>
+</div>
+</section>
+<section id="algoritmo-de-yates" class="slide level2">
+<h2>Algoritmo de Yates</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5ab6b1b99d890016db37" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5ab6b1b99d890016db37">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[[" "," "," "," "," "," "," "," "],[1,1,1,1,1,1,1,1],[-1,1,-1,1,-1,1,-1,1],[-1,-1,1,1,-1,-1,1,1],[-1,-1,-1,-1,1,1,1,1],[1,-1,-1,1,1,-1,-1,1],[1,-1,1,-1,-1,1,-1,1],[1,1,-1,-1,-1,-1,1,1],[-1,1,1,-1,1,-1,-1,1],[60,72,54,68,52,83,45,80]],"container":"<table class=\"display\" style=\"font-size:12px;width:600px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\"> <\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Média<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">T<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">K<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">T×C<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">T×K<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">C×K<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">T×C×K<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Produção Média<\/th>\n    <\/tr>\n  <\/thead>\n  <tfoot>\n    <tr>\n      <th style=\"text-align:right;font-size:12px;border-bottom:solid 1px\" colspan=\"1\"><stront>Divisor<\/strong><\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">8<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\">4<\/th>\n      <th style=\"text-align:center;font-size:12px;border-bottom:solid 1px\" colspan=\"1\"><\/th>\n    <\/tr>\n  <\/tfoot>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5,6,7,8,9]},{"bSortable":false,"targets":[0,1,2,3,4,5,6,7,8,9]},{"name":"Free","targets":0},{"name":"Média","targets":1},{"name":"T","targets":2},{"name":"C","targets":3},{"name":"K","targets":4},{"name":"T×C","targets":5},{"name":"T×K","targets":6},{"name":"C×K","targets":7},{"name":"T×C×K","targets":8},{"name":"Produção Média","targets":9}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'12px'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'12px'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'12px'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-weight':'bold','color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"red\" : \"black\"});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"#bf630015\" : \"#dff0d8\"});\nvar value=data[2]; $(this.api().cell(row, 9).node()).css({'background-color':value == -1 ? \"#bf630015\" : value == 1 ? \"#dff0d8\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<p><br></p>
+<div class="center">
+<p><img src="images/yates_table.svg"/></p>
+</div>
+<!-- $$ -->
+<!-- \text{T} = (+1)\frac{(72 + 68 + 83 + 80)}{4} + (-1)\frac{(60 + 54 + 52 + 45)}{4} = 75.75 -52.75 = 23  -->
+<!-- $$ -->
+</div>
+</section>
+<section id="variância-e-erro-padrão" class="slide level2">
+<h2>Variância e Erro padrão</h2>
+<div class="text">
+<!-- $$ -->
+<!-- S^2 = \frac{2 + 8 + 32 + 2 + 8 + 8 + 2 + 2}{8} = 8\quad \therefore\ \quad S = \sqrt{8} \approx 2.8 -->
+<!-- $$ -->
+<div class="center">
+<p><img src="images/fig_var1.svg"/></p>
+</div>
+<p>com <span class="math inline">8</span> graus de liberdade.</p>
+<p>Para os efeitos:</p>
+<div class="center">
+<p><img src="images/fig_var2.svg"/></p>
+</div>
+<!-- $$ -->
+<!-- \begin{align*} -->
+<!-- \sigma^2_{\text{Efeito T}} &= \text{Var}\left[\bar{z}(T_+) - \bar{z}(T_-)\right] \\ -->
+<!--  \\ -->
+<!-- &= \left(\frac{1}{8} + \frac{1}{8}\right)\cdot \sigma^2 -->
+<!-- \end{align*} -->
+<!-- $$ -->
+<p>Portanto:</p>
+<div class="center">
+<p><img src="images/fig_var3.svg"/></p>
+</div>
+<!-- $$ -->
+<!-- {\hat{\sigma}^2}_{\text{Efeito T}} = \frac{2}{8}\cdot S^2 = 2 \quad \therefore \quad \hat{\text{EP}} = \sqrt{2} \approx 1.4. -->
+<!-- $$ -->
+</div>
+</section>
+<section id="resumo-dos-efeitos" class="slide level2">
+<h2>Resumo dos Efeitos</h2>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-2a6d6ee2241f1bc5dea7" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-2a6d6ee2241f1bc5dea7">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["1","2","3","4","5","6","7","8"],["Média","T","C","K","T×C","T×K","C×K","T×C×K"],["64.2","23.0","-5.0"," 1.5"," 1.5","10.0"," 0.0"," 0.5"],["64.2 ± 0.71","23.0 ± 1.41","-5.0 ± 1.41"," 1.5 ± 1.41"," 1.5 ± 1.41","10.0 ± 1.41"," 0.0 ± 1.41"," 0.5 ± 1.41"]],"container":"<table class=\"display\" style=\"font-size:12px;width:350px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Efeito<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Estimativa<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Estimativa ± EP<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-left","targets":1},{"className":"dt-right","targets":[2,3]},{"bSortable":false,"targets":[0,1,2,3]},{"name":" ","targets":0},{"name":"Efeito","targets":1},{"name":"Estimativa","targets":2},{"name":"Estimativa ± Desvio Padrão","targets":3}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'border-right':'solid 1px','border-right-color':'black'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-right':'solid 1px','border-right-color':'black'});\nvar value=data[1]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#bf630015\" : \"#dff0d8\"});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'color':$.inArray(dataIndex + 1, [2]) >= 0 ? \"red\" : $.inArray(dataIndex + 1, [3]) >= 0 ? \"red\" : $.inArray(dataIndex + 1, [6]) >= 0 ? \"red\" : null});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'color':$.inArray(dataIndex + 1, [2]) >= 0 ? \"red\" : $.inArray(dataIndex + 1, [3]) >= 0 ? \"red\" : $.inArray(dataIndex + 1, [6]) >= 0 ? \"red\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div class="text">
+<p><strong>OBS:</strong></p>
+<ul>
+<li>Os <strong>efeitos principais</strong> de um fator devem ser
+<strong>individualmente</strong> interpretados somente se <strong>não
+existem evidências de uma ou mais interações</strong>.</li>
+<li>Quando <strong>existem</strong> tal interações, as variáveis
+relacionadas devem ser consideradas conjuntamente.</li>
+</ul>
+</div>
+</section>
+<section id="distribuição-dos-efeitos" class="slide level2">
+<h2>Distribuição dos efeitos</h2>
+<div class="text">
+<p>É importante ter algum método para determinar qual efeito é
+provavelmente real e qual pode ser explicado por variação aleatória. Uma
+regra grosseira é que efeitos maiores que 2 ou 3 vezes seu desvio padrão
+não são facilmente explicados pela variabilidade do processo.</p>
+<div class="mlkinfobox">
+<p>Mais precisamente. assumindo variáveis <strong>NIID</strong>, cada
+relação efeito/SE(efeito) terá distribuição <span
+class="math inline"><em>t</em></span> com <span
+class="math inline"><em>ν</em> = 8</span> graus de liberdade.</p>
+<p>Um valor “significante” de <span
+class="math inline"><em>t</em></span> ao nível de <span
+class="math inline">5%</span> é <span class="math inline">2.3</span>,
+isto é</p>
+<p><span
+class="math display">Pr(|<em>t</em><sub><em>g</em></sub>| &gt; 2.3) = 0.05</span>
+de modo que um intervalor de confiança para os efeitos apresentados na
+tabela seria entimado <span
+class="math inline">±2.3 ⋅ 1.41 = ±3.2</span>. Contudo.</p>
+</div>
+</div>
+</section>
+<section id="distribuição-dos-efeitos-1" class="slide level2">
+<h2>Distribuição dos efeitos</h2>
+<div class="text">
+<p>Comparação dos efeitos com uma distribuição de referência <span
+class="math inline"><em>t</em></span> com <span
+class="math inline">8</span> graus de liberdade e fator de escala <span
+class="math inline">1.4</span>:</p>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</section>
+<section id="conclusões" class="slide level2">
+<h2>Conclusões</h2>
+<div class="text">
+<ol type="1">
+<li>O efeito de mudar a <strong>Concentração</strong> (C) nos limites
+estudados é <strong>reduzir</strong> a <strong>produção</strong> por
+aproximadamente <strong>cinco unidades</strong>. E isto acontece sem
+evidência de relação entre os níveis das outras variáveis.</li>
+<li>Os efeitos da <strong>Temperatura</strong> (T) e
+<strong>Catalizador</strong> (K) não podem ser interpretados
+separadamente por causa da interação TK. Com o <strong>catalisador
+A</strong> o efeito da temperatura é 13 unidades, contudo com o
+<strong>catalisador B</strong> é de 33 unidades.</li>
+</ol>
+</div>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-12-1.png" width="864" style="display: block; margin: auto;" /></p>
+</section>
+<section id="segundo-experimento-exercício" class="slide level2">
+<h2>Segundo experimento (Exercício)</h2>
+<div class="mlkexbox textbox">
+<p>O gerente de uma fábrica de refrigerantes deseja solucionar um
+problema recentemente detectado no processo de enchimento de garrafas
+<em>pet</em> de <span class="math inline">2 litros</span> (<span
+class="math inline">2000 ml</span>).</p>
+<p>As especificações do produto permitem que cada garrafa contenha <span
+class="math display">2000 ml ± 10 ml.</span></p>
+<p>Um estudo recente revelou que <span class="math inline">10%</span> da
+produção (de <span class="math inline">50</span> milhões de garrafa por
+ano) estava acima do limite superior de especificação. Isso significa um
+<strong>desperdício</strong> de, pelo menos, <span
+class="math inline">50</span> <strong>mil litros de
+refrigerante</strong>, ou, <span class="math inline">25</span>
+<strong>mil garrafas pet ao ano.</strong></p>
+<p><br> O gerente, tendo ouvido uma palestra sua sobre planejamento de
+experimentos industriais, recorre a você para ajudá-lo a minimizar o
+desperdício da fábrica. <strong>O que você faria?</strong></p>
+</div>
+</section>
+<section id="segundo-experimento-dados" class="slide level2">
+<h2>Segundo experimento: dados</h2>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b941348a9d3f3f0125fe" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b941348a9d3f3f0125fe">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[[1,2,3,4,5,6,7,8],["−","+","−","+","−","+","−","+"],["−","−","+","+","−","−","+","+"],["−","−","−","−","+","+","+","+"],[-3,0,-1,2,-1,2,1,6],[-1,1,0,3,0,1,1,5]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" rowspan=\"2\">Experimento<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Fatores<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Desvio no volume<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\">A<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">B<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\">Replica 1<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">Replica 2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5]},{"bSortable":false,"targets":[0,1,2,3,4,5]},{"name":"Run","targets":0},{"name":"T","targets":1},{"name":"C","targets":2},{"name":"K","targets":3},{"name":"I","targets":4},{"name":"II","targets":5}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'border-left':'solid 1px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'border-left':'solid 1px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5b328fcfff5e313c61e4" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5b328fcfff5e313c61e4">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["A","B","C"],["Pressão do gás (psi)","Pressão do líquido (psi)","Velocidade (garrafas/min)"],[10,25,200],[12,30,250]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"4\">Níveis dos fatores<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Código<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Descrição<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">+<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,2,3]},{"bSortable":false,"targets":[0,1,2,3]},{"name":"C","targets":0},{"name":"D","targets":1},{"name":"L","targets":2},{"name":"H","targets":3}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</section>
+<section id="section" class="slide level2 fullpage grad">
+<h2 class="fullpage grad"></h2>
+<div class="topic">
+<dl>
+<dt><span style="color:black"> Próxima aula — </span><br></dt>
+<dd>
+Modelos lineares e a série 2<sup>3</sup>
+</dd>
+</dl>
+</div>
+</section>
+<section id="fatoriais-24" class="slide level2">
+<h2>Fatoriais 2<sup>4</sub></h2>
+<div class="text">
+<p>Para exemplificar a análise de um plano fatorial 2<sup>4</sup>,
+considere o seguinte cenário para um experimento:</p>
+<div class="mlkinfobox">
+<p>Um dos passos iniciais na produção de circuitos integrados é o
+crescimento de uma camada epitaxial em placas (<em>wafers</em>) de
+silicone polidas. A espessura desejável dessas camadas é de <span
+class="math inline">14.5 ± 0.5 <em>μ</em><em>m</em></span>.</p>
+<p>A forma como estão sendo produzidas essas camadas tem levado a uma
+variação maior que o limite especificado de <span
+class="math inline">1 <em>μ</em><em>m</em></span>.</p>
+<p>O objetivo dos estatísticos da empresa é descobrir quais os níveis
+dos fatores <strong>método de rotação</strong> (A), <strong>posição do
+jato de vapor</strong> (B), <strong>temperatura de deposição</strong>
+(C) e <strong>tempo de deposição</strong> (D), que minimizariam a
+irregularidade das espessuras das camadas, <strong>mantendo a espessura
+média o mais perto possível do valor nominal de</strong> <span
+class="math inline">14.5 <em>μ</em><em>m</em></span>.</p>
+</div>
+</div>
+</section>
+<section id="experimento" class="slide level2">
+<h2>Experimento</h2>
+<div class="text">
+<p><strong>Dois níveis</strong> de cada fator foram escolhidos e um
+experimento foi executado com uma estrutura fatorial 2<sup>4</sup> em
+<strong>seis réplicas</strong>.</p>
+<p>Uma característica importante do problema apresentado é o duplo
+objetivo:</p>
+<ul>
+<li>Diminuir a <strong>variabilidade</strong> do processo;</li>
+<li>Manter a <strong>média</strong> da produção o mais perto possível de
+um <strong>alvo nominal</strong>.</li>
+</ul>
+</div>
+</section>
+<section id="fatoriais-24-1" class="slide level2">
+<h2>Fatoriais 2<sup>4</sub></h2>
+<div class="text mlkinfobox">
+<p>Em <strong>engenharia de qualidade</strong>, esse problema é
+conhecido como sendo do tipo <strong>melhor-nominal</strong>
+(<em>nominal-the- best</em>), por seu objetivo de encontrar condições de
+produção que atinjam (ou mantenham) um <strong>alvo nominal
+especificado</strong>.</p>
+</div>
+<div class="text">
+<p>A <strong>novidade</strong>, em comparação com os exemplos de
+experimentos vistos na parte de fatorial 2<sup>3</sup>, é a necessidade
+de estudar a <strong>variância</strong> do processo — por isso foram
+feitas tantas réplicas (6).</p>
+<p>Obviamente, o estudo de variabilidade de processos não é restrito a
+estruturas 2<sup>4</sup>, ou a qualquer outra estrutura em particular.
+Os dados do experimento são fornecidos em seguida.</p>
+</div>
+<!-- ## Exemplos de boxes -->
+</section>
+<section id="dados" class="slide level2">
+<h2>Dados</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-c32e90d00d37f9f45ca6" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c32e90d00d37f9f45ca6">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],["−","−","−","−","−","−","−","−","+","+","+","+","+","+","+","+"],["−","−","−","−","+","+","+","+","−","−","−","−","+","+","+","+"],["−","−","+","+","−","−","+","+","−","−","+","+","−","−","+","+"],["+","−","+","−","+","−","+","−","+","−","+","−","+","−","+","−"],[14.506,12.886,13.926,13.758,14.629,14.059,13.8,13.707,15.05,14.249,13.327,13.605,14.274,13.775,13.723,14.031],[14.153,12.963,14.052,13.992,13.94,13.989,13.896,13.623,14.361,13.9,13.457,13.19,13.904,14.586,13.914,14.467],[14.134,13.669,14.392,14.808,14.466,13.666,14.887,14.21,13.916,13.065,14.368,13.695,14.317,14.379,14.913,14.675],[14.339,13.869,14.428,13.554,14.538,14.706,14.902,14.042,14.431,13.143,14.405,14.259,14.754,13.775,14.808,14.252],[14.953,14.145,13.568,14.283,15.281,13.863,14.461,14.881,14.968,13.708,13.932,14.428,15.188,13.382,14.469,13.658],[15.455,14.007,15.074,13.904,15.046,13.357,14.454,14.378,15.294,14.255,13.552,14.223,14.923,13.382,13.973,13.578],["14.59","13.59","14.24","14.05","14.65","13.94","14.40","14.14","14.67","13.72","13.84","13.90","14.56","13.88","14.30","14.11"],["0.270","0.291","0.268","0.197","0.221","0.205","0.222","0.215","0.269","0.272","0.220","0.229","0.227","0.253","0.250","0.192"],["-1.310","-1.235","-1.317","-1.625","-1.509","-1.586","-1.505","-1.537","-1.314","-1.302","-1.515","-1.474","-1.483","-1.374","-1.385","-1.650"]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" rowspan=\"2\">Experimento<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"4\">Fatores<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"6\">Réplicas<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Respostas<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\">A<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">B<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">D<\/th>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\">1<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">2<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">3<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">4<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">5<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">6<\/th>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msub><mover accent=\"true\"><mrow><mi>y<\/mi><\/mrow><mo>¯<\/mo><\/mover><mi>i<\/mi><\/msub><\/mrow><annotation encoding=\"application/x-tex\">\bar{y}_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.56778em;\"><\/span><span class=\"strut bottom\" style=\"height: 0.76222em; vertical-align: -0.19444em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord accent\"><span class=\"vlist\"><span class=\"\" style=\"top: 0em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"mord textstyle cramped\"><span class=\"mord mathit\" style=\"margin-right: 0.03588em;\">y<\/span><\/span><\/span><span class=\"\" style=\"top: 0em; margin-left: 0.11112em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"accent-body\"><span class=\"\">¯<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.15em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center;\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>ln<\/mi><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">\\ln S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mop\">ln<\/span><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":16,"columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]},{"bSortable":false,"targets":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]},{"name":"run","targets":0},{"name":"A","targets":1},{"name":"B","targets":2},{"name":"C","targets":3},{"name":"D","targets":4},{"name":"R1","targets":5},{"name":"R2","targets":6},{"name":"R3","targets":7},{"name":"R4","targets":8},{"name":"R5","targets":9},{"name":"R6","targets":10},{"name":"ybar","targets":11},{"name":"S2i","targets":12},{"name":"lnS2i","targets":13}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'12px'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'12px'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'12px'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'12px'});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'font-size':'12px'});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'font-size':'12px'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'font-size':'12px'});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'border-left':'solid 1px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'border-left':'solid 1px'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false,"lengthMenu":[10,16,25,50,100]}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="a-função-quadrática-de-perda-de-qualidade"
+class="slide level2">
+<h2>A função quadrática de perda de qualidade</h2>
+<div class="text">
+<p>Para atacar o problema de forma <strong>eficiente</strong>, é útil
+definir uma <strong>função</strong> de perda de qualidade devido a
+<strong>desvios</strong> em relação ao alvo
+<strong>nominal</strong>.</p>
+<div class="mlkinfobox">
+<p>Denote por <span class="math inline"><em>z</em></span> uma variável
+resposta observada no experimento e por <span
+class="math inline"><em>t</em></span>, o valor nominal a ser atingido.
+No exemplo considerado, a perda de qualidade, na medida em que há
+afastamento do alvo <span class="math inline"><em>t</em></span>, pode
+ser convenientemente representada pela seguinte função quadrática: <span
+class="math display">L(<em>z</em>, <em>t</em>) = <em>c</em> ⋅ (<em>z</em> − <em>t</em>)<sup>2</sup></span>
+em que a constante <span class="math inline"><em>c</em></span> é
+determinada por questões de custo e/ou perda financeira.</p>
+</div>
+</div>
+</section>
+<section id="a-função-quadrática-de-perda-de-qualidade-1"
+class="slide level2">
+<h2>A função quadrática de perda de qualidade</h2>
+<div class="text">
+<p>A perda esperada pode ser escrita como:</p>
+<!-- $$ -->
+<!-- \begin{align} -->
+<!-- \text{E}\left(\text{L(z,t)}\right) &= \text{E}(c\cdot(z-t)^2) \\ -->
+<!--           &=c\cdot \text{E}\left[(z - \text{E}(z)) + (\text{E}(z) - t)\right]^2 \\ -->
+<!--           &= c\cdot \text{Var}(z) + c\cdot \left[\text{E}(z) - t \right]^2 -->
+<!-- \end{align} -->
+<!-- $$ -->
+<div class="center">
+<p><img src="images/esp_var.svg"/></p>
+</div>
+<p><strong>A expressão acima sugere a seguinte estratégia para atacar o
+problema do tipo melhor-nominal:</strong></p>
+<ul>
+<li>Selecione os <strong>níveis</strong> de alguns fatores que
+<strong>minimizam</strong> <span
+class="math inline">Var(<em>x</em>)</span>.</li>
+<li>Selecione os <strong>níveis</strong> de outros fatores (que não os
+utilizados para minimizar a variância) para colocar <span
+class="math inline">E(<em>z</em>)</span> o <strong>mais próximo</strong>
+do valor <span class="math inline"><em>t</em></span>.</li>
+</ul>
+</div>
+</section>
+<section id="comentário" class="slide level2">
+<h2>Comentário</h2>
+<div class="text">
+<div class="mlkinfobox">
+<p>A <strong>função perda quadrática</strong> é conveniente para o
+problema na medida em que é razoável assumir uma perda
+<strong>simétrica</strong> de qualidade em torno do
+<strong>alvo</strong>. Assim, a perda de qualidade quando se produz
+circuitos com <span class="math inline">1 <em>μ</em><em>m</em></span> a
+mais de espessura do que o alvo, é a mesma de quando se produz com <span
+class="math inline">1 <em>μ</em><em>m</em></span> a menos de espessura.
+Em problemas onde essa simetria de perda não é verificada, ou onde a
+perda torna-se constante a partir de um certo ponto, essa função
+<strong>não é apropriada</strong> para ser usada.</p>
+</div>
+</div>
+</section>
+<section id="implementando-a-estratégia-de-análise"
+class="slide level2">
+<h2>Implementando a estratégia de análise</h2>
+<div class="text">
+<p>Para estudar o efeito dos fatores na dispersão do processo e
+encontrar os níveis que minimizariam <span
+class="math inline">Var(<em>z</em>)</span>, a variável resposta <span
+class="math inline"><em>z</em><sub><em>i</em></sub> = ln <em>S</em><sub><em>i</em></sub><sup>2</sup></span>
+será analisada.</p>
+<p>Estimativas de efeitos principais, interações duplas, triplas e
+quádrupla são obtidas da maneira usual. O quadro a seguir apresenta
+esses valores para os dados do experimento.</p>
+</div>
+</section>
+<section id="valores-estimados-dos-efeitos" class="slide level2">
+<h2>Valores estimados dos efeitos</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-330ce0cb748922ce0f42" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-330ce0cb748922ce0f42">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["A","B","C","D","AB","AC","AD","BC","BD","CD","ABC","ABD","ACD","BCD","ABCD"],[["-0.077"],[" 0.173"],["-0.077"],[" 0.490"],[" 0.007"],["-0.092"],["-0.050"],[" 0.058"],["-0.030"],["-0.345"],[" 0.097"],[" 0.025"],["-0.030"],[" 0.110"],[" 0.020"]],[[" 0.016"],["-0.117"],["-0.112"],[" 0.055"],[" 0.045"],["-0.026"],["-0.030"],[" 0.080"],[" 0.011"],[" 0.085"],["-0.032"],[" 0.042"],[" 0.001"],["-0.003"],[" 0.104"]]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center\" colspan=\"1\">Efeito<\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msub><mover accent=\"true\"><mrow><mi>y<\/mi><\/mrow><mo>¯<\/mo><\/mover><mi>i<\/mi><\/msub><\/mrow><annotation encoding=\"application/x-tex\">\bar{y}_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.56778em;\"><\/span><span class=\"strut bottom\" style=\"height: 0.76222em; vertical-align: -0.19444em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord accent\"><span class=\"vlist\"><span class=\"\" style=\"top: 0em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"mord textstyle cramped\"><span class=\"mord mathit\" style=\"margin-right: 0.03588em;\">y<\/span><\/span><\/span><span class=\"\" style=\"top: 0em; margin-left: 0.11112em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"accent-body\"><span class=\"\">¯<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.15em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>ln<\/mi><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">\\ln S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mop\">ln<\/span><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":16,"columnDefs":[{"className":"dt-center","targets":[0,1,2]},{"bSortable":false,"targets":[0,1,2]},{"name":"efeito","targets":0},{"name":"ybar","targets":1},{"name":"lnS2","targets":2}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false,"lengthMenu":[10,16,25,50,100]}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="avaliação" class="slide level2">
+<h2>Avaliação</h2>
+<div class="text">
+<p>Para avaliar a significância dos efeitos, é importante notar que, sob
+suposição de normalidade dos valores observados,</p>
+<!-- $$ -->
+<!-- (n_i - 1)S^2_i = \sum_{j=1}^{n_i}(y_{ij} - \bar{y}_i)^2 \ \sim \ \sigma_i^2\chi^2_{n_i - 1} -->
+<!-- $$ -->
+<div class="center">
+<p><img src="images/lnS21.svg"/></p>
+</div>
+<p>Utilizando o <strong>método delta</strong>, é possível então mostrar
+que a distribuição de <span
+class="math inline">ln <em>S</em><sub><em>i</em></sub><sup>2</sup></span>
+é aproximadamente normal, com média <span
+class="math inline">ln <em>σ</em><sub><em>i</em></sub><sup>2</sup></span>
+e variância <span
+class="math inline">2(<em>n</em><sub><em>i</em></sub> − 1)<sup>−1</sup></span>:</p>
+<!-- $$ -->
+<!-- \ln S_i^2 \ \sim \ \text{N}(\ln \sigma^2_i;\ 2(n_i - 1)^{-1}) -->
+<!-- $$ -->
+<div class="center">
+<p><img src="images/lnS22.svg"/></p>
+</div>
+<p>Com base nesse resultado, dois <strong>métodos gráficos</strong> de
+análise são amplamente utilizados: <strong>os gráficos de probabilidade
+normal e half-normal</strong>.</p>
+</div>
+</section>
+<section id="avaliação-1" class="slide level2">
+<h2>Avaliação</h2>
+<div class="text">
+<p>Vantagens de usar um método gráfico:</p>
+<ul>
+<li>Não depende de uma estimativa da variância do erro
+experimental,</li>
+<li>Não sofre de efeito de multiplicidade de testes.</li>
+</ul>
+</div>
+</section>
+<section id="os-gráficos-de-probabilidade-normal-e-half-normal"
+class="slide level2">
+<h2>Os gráficos de probabilidade normal e <em>half</em>-normal</h2>
+<div class="text">
+<p>Denote por <span
+class="math inline"><em>θ</em><sub><em>i</em></sub></span> o <span
+class="math inline"><em>i</em></span>-ésimo de <span
+class="math inline"><em>g</em></span> efeitos estimamos. Denote por
+<span
+class="math display"><em>θ</em><sub>(1)</sub> ≤ <em>θ</em><sub>(2)</sub> ≤ ⋯ ≤ <em>θ</em><sub>(<em>g</em>)</sub></span>
+os valores ordenados desses efeitos.</p>
+<p>As coordenados dos pontos de um <strong>gráfico de probabilidade
+normal</strong> são dadas por <span
+class="math display">(<em>θ</em><sub>(<em>i</em>)</sub>, <em>Φ</em><sup>−1</sup>([<em>i</em> − 0, 5]/<em>g</em>))</span>
+para <span
+class="math inline"><em>i</em> = 1, 2, ⋯, <em>g</em></span>.</p>
+</div>
+</section>
+<section id="os-gráficos-de-probabilidade-normal-e-half-normal-1"
+class="slide level2">
+<h2>Os gráficos de probabilidade normal e <em>half</em>-normal</h2>
+<div class="text">
+<p>Os <strong>gráficos de probabilidade <em>half</em>-normal</strong>,
+por sua vez, são obtidos identificando os pontos</p>
+<p><span
+class="math display">(|<em>θ</em>|<sub>(<em>i</em>)</sub>, <em>Φ</em><sup>−1</sup>(0, 5 + [<em>i</em> − 0, 5]/<em>g</em>))</span>
+para <span
+class="math inline"><em>i</em> = 1, 2, ⋯, <em>g</em></span>.</p>
+</div>
+<div class="text mlkalertbox">
+<p>Em ambos os gráficos, pontos desviando claramente de uma reta são
+julgados significativos.</p>
+<p>A vantagem de usar um gráfico <em>half</em>-normal, é que os pontos
+significativos aparecem no canto superior direito do gráfico. Gráficos
+de probabilidade normal, no entanto, são mais úteis para a detecção de
+outliers.</p>
+</div>
+<div class="text">
+<p>Os gráficos a seguir ilustram a análise dos <strong>efeitos</strong>
+na <strong>dispersão</strong> e <strong>locação</strong> do
+processo.</p>
+</div>
+</section>
+<section
+id="gráficos-de-probabilidade-half-normal-para-o-efeito-de-dispersão"
+class="slide level2">
+<h2>Gráficos de probabilidade <em>half</em>-normal para o efeito de
+dispersão</h2>
+<p><img src="MATD48-12_files/figure-revealjs/hnpe-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section
+id="gráficos-de-probabilidade-half-normal-para-o-efeito-de-localização"
+class="slide level2">
+<h2>Gráficos de probabilidade <em>half</em>-normal para o efeito de
+localização</h2>
+<p><img src="MATD48-12_files/figure-revealjs/hnp-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="análise" class="slide level2">
+<h2>Análise</h2>
+<div class="text">
+<ul>
+<li>Observando o <strong>primeiro</strong> gráfico, percebe-se que
+nenhum efeito se distancia claramente de uma reta, sugerindo que
+<strong>não há</strong> espaço para uma melhora em termos de
+<strong>dispersão.</strong></li>
+<li>Já no <strong>segundo</strong> gráfico, destacam-se os efeitos do
+fator <strong>D</strong>, da interação dupla <strong>CD</strong> e,
+possivelmente, do fator <strong>B</strong>. A análise prosseguiria com
+um gráfico da interação <strong>CD</strong> e dos efeitos principais de
+<strong>D</strong> e <strong>B</strong>.</li>
+</ul>
+</div>
+</section>
+<section id="dados-originais-do-experimento" class="slide level2">
+<h2>Dados originais do experimento</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5a2939a6d108b0f30b0b" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5a2939a6d108b0f30b0b">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],["−","−","−","−","−","−","−","−","+","+","+","+","+","+","+","+"],["−","−","−","−","+","+","+","+","−","−","−","−","+","+","+","+"],["−","−","+","+","−","−","+","+","−","−","+","+","−","−","+","+"],["+","−","+","−","+","−","+","−","+","−","+","−","+","−","+","−"],[14.812,13.768,14.722,13.86,14.886,14.182,14.758,13.996,15.272,14.324,13.918,13.614,14.648,13.97,14.184,13.866],[14.774,13.778,14.736,13.876,14.81,14.172,14.784,13.988,14.656,14.092,14.044,13.202,14.35,14.448,14.402,14.13],[14.772,13.87,14.774,13.932,14.868,14.126,15.054,14.044,14.258,13.536,14.926,13.704,14.682,14.326,15.544,14.256],[14.794,13.896,14.778,13.846,14.876,14.274,15.058,14.028,14.718,13.588,14.962,14.264,15.034,13.97,15.424,14],[14.86,13.932,14.682,13.896,14.958,14.154,14.938,14.108,15.198,13.964,14.504,14.432,15.384,13.738,15.036,13.64],[14.914,13.914,14.85,13.87,14.932,14.082,14.936,14.06,15.49,14.328,14.136,14.228,15.17,13.738,14.47,13.592],["14.82","13.86","14.76","13.88","14.89","14.16","14.92","14.04","14.93","13.97","14.41","13.91","14.88","14.03","14.84","13.91"],["0.003","0.005","0.003","0.001","0.003","0.004","0.016","0.002","0.215","0.121","0.206","0.226","0.147","0.088","0.327","0.070"],["-5.771","-5.311","-5.704","-6.984","-5.917","-5.485","-4.107","-6.237","-1.538","-2.116","-1.579","-1.487","-1.916","-2.430","-1.118","-2.653"]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" rowspan=\"2\">Experimento<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"4\">Fatores<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"6\">Réplicas<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Respostas<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\">A<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">B<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">D<\/th>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\">1<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">2<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">3<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">4<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">5<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">6<\/th>\n      <th style=\"text-align: center;border-left:solid 1px\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msub><mover accent=\"true\"><mrow><mi>y<\/mi><\/mrow><mo>¯<\/mo><\/mover><mi>i<\/mi><\/msub><\/mrow><annotation encoding=\"application/x-tex\">\bar{y}_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.56778em;\"><\/span><span class=\"strut bottom\" style=\"height: 0.76222em; vertical-align: -0.19444em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord accent\"><span class=\"vlist\"><span class=\"\" style=\"top: 0em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"mord textstyle cramped\"><span class=\"mord mathit\" style=\"margin-right: 0.03588em;\">y<\/span><\/span><\/span><span class=\"\" style=\"top: 0em; margin-left: 0.11112em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"accent-body\"><span class=\"\">¯<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.15em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center;\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>ln<\/mi><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">\\ln S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mop\">ln<\/span><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":16,"columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]},{"bSortable":false,"targets":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]},{"name":"run","targets":0},{"name":"A","targets":1},{"name":"B","targets":2},{"name":"C","targets":3},{"name":"D","targets":4},{"name":"R1","targets":5},{"name":"R2","targets":6},{"name":"R3","targets":7},{"name":"R4","targets":8},{"name":"R5","targets":9},{"name":"R6","targets":10},{"name":"ybar","targets":11},{"name":"S2i","targets":12},{"name":"lnS2i","targets":13}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'12px'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'12px'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'12px'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'12px'});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'font-size':'12px'});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'font-size':'12px'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'font-size':'12px'});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'border-left':'solid 1px'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'border-left':'solid 1px'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false,"lengthMenu":[10,16,25,50,100]}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="efeitos" class="slide level2">
+<h2>Efeitos</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-043a4a4b255fbc6b575d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-043a4a4b255fbc6b575d">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(1)","A","B","C","D","AB","AC","AD","BC","BD","CD","ABC","ABD","ACD","BCD","ABCD"],[["14.389"],["-0.055"],[" 0.142"],["-0.109"],[" 0.836"],["-0.032"],["-0.074"],["-0.025"],[" 0.047"],[" 0.010"],["-0.037"],[" 0.060"],[" 0.067"],["-0.056"],[" 0.098"],[" 0.036"]],[["-3.772"],[" 3.834"],[" 0.078"],[" 0.077"],[" 0.632"],["-0.428"],[" 0.214"],[" 0.002"],[" 0.331"],[" 0.305"],[" 0.582"],["-0.335"],[" 0.086"],["-0.494"],[" 0.314"],[" 0.109"]]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center\" colspan=\"1\">Efeito<\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msub><mover accent=\"true\"><mrow><mi>y<\/mi><\/mrow><mo>¯<\/mo><\/mover><mi>i<\/mi><\/msub><\/mrow><annotation encoding=\"application/x-tex\">\bar{y}_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.56778em;\"><\/span><span class=\"strut bottom\" style=\"height: 0.76222em; vertical-align: -0.19444em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord\"><span class=\"mord accent\"><span class=\"vlist\"><span class=\"\" style=\"top: 0em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"mord textstyle cramped\"><span class=\"mord mathit\" style=\"margin-right: 0.03588em;\">y<\/span><\/span><\/span><span class=\"\" style=\"top: 0em; margin-left: 0.11112em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"accent-body\"><span class=\"\">¯<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.15em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>ln<\/mi><msubsup><mi>S<\/mi><mi>i<\/mi><mn>2<\/mn><\/msubsup><\/mrow><annotation encoding=\"application/x-tex\">\\ln S^2_i<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.814108em;\"><\/span><span class=\"strut bottom\" style=\"height: 1.07277em; vertical-align: -0.258664em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mop\">ln<\/span><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right: 0.05764em;\">S<\/span><span class=\"vlist\"><span class=\"\" style=\"top: 0.258664em; margin-left: -0.05764em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle cramped\"><span class=\"mord mathit\">i<\/span><\/span><\/span><span class=\"\" style=\"top: -0.363em; margin-right: 0.05em;\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span><span class=\"reset-textstyle scriptstyle uncramped\"><span class=\"mord mathrm\">2<\/span><\/span><\/span><span class=\"baseline-fix\"><span class=\"fontsize-ensurer reset-size5 size5\"><span class=\"\" style=\"font-size: 0em;\">&#8203;<\/span><\/span>&#8203;<\/span><\/span><\/span><\/span><\/span><\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":16,"columnDefs":[{"className":"dt-center","targets":[0,1,2]},{"bSortable":false,"targets":[0,1,2]},{"name":"efeito","targets":0},{"name":"ybar","targets":1},{"name":"lnS2","targets":2}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false,"lengthMenu":[10,16,25,50,100]}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section
+id="gráficos-de-probabilidade-half-normal-para-o-efeito-de-dispersão-1"
+class="slide level2">
+<h2>Gráficos de probabilidade <em>half</em>-normal para o efeito de
+dispersão</h2>
+<p><img src="MATD48-12_files/figure-revealjs/hnpeo-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section
+id="gráficos-de-probabilidade-half-normal-para-o-efeito-de-localização-1"
+class="slide level2">
+<h2>Gráficos de probabilidade <em>half</em>-normal para o efeito de
+localização</h2>
+<p><img src="MATD48-12_files/figure-revealjs/hnpo-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="conclusões-1" class="slide level2">
+<h2>Conclusões</h2>
+<div class="text">
+<ul>
+<li>Com base no primeiro gráfico, percebe-se que o fator <strong>A
+influencia a variância</strong> do processo.</li>
+<li>Por outro lado, o segundo gráfico revela que o <strong>fator D
+influencia a média</strong>. Como não há evidência que esse fator
+influencia a variância, ele é um <strong>fator de ajuste</strong>.</li>
+</ul>
+</div>
+<div class="text">
+<p><strong>Recomendações:</strong></p>
+<p>O efeito positivo do fator <strong>A</strong> (<span
+class="math inline">+3.834</span>) sobre a variável <span
+class="math inline">ln <em>S</em><sup>2</sup></span> sugere a utilização
+deste fator no nível baixo (<span class="math inline">−</span>), para
+reduzir a variabilidade do processo.</p>
+</div>
+</section>
+<section id="conclusões-2" class="slide level2">
+<h2>Conclusões</h2>
+<div class="text">
+<p>Para fazer uso mais preciso da informação do fator <span
+class="math inline"><em>D</em></span>, é possível ajustar uma regressão
+aos dados, levando à equação <span
+class="math display"><em>ŷ</em> = <em>β̂</em><sub>0</sub> + <em>β̂</em><sub>1</sub> ⋅ <em>x</em><sub>D</sub> = 14, 389 + 0, 418 ⋅ <em>x</em><sub>D</sub></span></p>
+<p>Igualando a equação ao valor nominal desejado tem-se: <span
+class="math display">14.5 = <em>ŷ</em> = 14, 389 + 0, 418 ⋅ <em>x</em><sub>D</sub>  ∴  <em>x</em><sub>D</sub> = 0, 266</span></p>
+<p>Supondo então que os valores dos níveis do fator <strong>D</strong>
+(tempo de deposição) fossem <span class="math inline">30</span> e <span
+class="math inline">40</span> segundos, seria recomendado utilizar <span
+class="math inline">35 + 0, 266 ⋅ 5 = 36, 33</span> segundos.</p>
+</div>
+</section>
+<section id="princípios-fundamentais-para-análise-de-efeitos-fatoriais"
+class="slide level2">
+<h2>Princípios Fundamentais para Análise de Efeitos Fatoriais</h2>
+<div class="text">
+<p>Ao analisar uma estrutura fatorial de tratamentos, <strong>três
+princípios</strong> são importantes na determinação da importância
+relativa e relação entre efeitos.</p>
+<ul>
+<li>Princípio da <strong>Ordenação Hierárquica</strong></li>
+<li>Princípio da <strong>Esparsidade dos Efeitos</strong> (Box e Meyer,
+1986)</li>
+<li>Princípio da <strong>Hereditariedade dos Efeitos</strong> (Hamada e
+Wu, 1992)</li>
+</ul>
+</div>
+</section>
+<section id="princípio-da-ordenação-hierárquica" class="slide level2">
+<h2>Princípio da Ordenação Hierárquica</h2>
+<div class="text">
+<ul>
+<li>Efeitos de <strong>baixa ordem</strong> são mais prováveis de
+<strong>serem importantes</strong> do que os de <strong>ordem
+elevada</strong>.</li>
+<li>Efeitos de <strong>mesma ordem</strong> são igualmente prováveis de
+serem importantes.</li>
+</ul>
+<div class="mlkinfobox">
+<p>Este princípio sugere que quando os recursos são escassos, deve ser
+dada prioridade para a estimativa de efeitos de ordem inferior.</p>
+<p>A sua aplicação é particularmente eficaz para experimentos de triagem
+que têm um grande número de fatores e número de rodadas.</p>
+<p>É um princípio empírico cuja validade foi confirmada em muitos
+experimentos reais. Além disso, outra razão para sua ampla aceitação é
+que interações de ordem superior são mais difíceis de interpretar ou
+justificar fisicamente.</p>
+</div>
+</div>
+</section>
+<section id="princípio-da-esparsidade-dos-efeitos" class="slide level2">
+<h2>Princípio da Esparsidade dos Efeitos</h2>
+<div class="text">
+<p>O número de <strong>efeitos relativamente importantes</strong> em um
+experimento fatorial <strong>é pequeno</strong>.</p>
+</div>
+<div class="text mlkinfobox">
+<p>O princípio pode também ser chamado de <strong>Princípio de Pareto em
+Design Experimental</strong> por causa de seu foco nos “poucos vitais” e
+não os “muitos triviais”.</p>
+</div>
+</section>
+<section id="princípio-da-hereditariedade-dos-efeitos"
+class="slide level2">
+<h2>Princípio da Hereditariedade dos Efeitos</h2>
+<div class="text">
+<p>Para que uma <strong>interação</strong> seja importante, ao menos
+<strong>um</strong> de seus fatores deve ser
+<strong>importante</strong>.</p>
+</div>
+<div class="text mlkinfobox">
+<p>Para selecionar uma interação no modelo, pelo menos um de seus
+efeitos principais também devem estar no modelo.</p>
+</div>
+</section>
+<section id="modelo-linear" class="slide level2">
+<h2>Modelo linear</h2>
+<div class="text">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> dados2e4o <span class="sc">%&gt;%</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(A<span class="sc">:</span>D, <span class="sc">~</span> <span class="fu">if_else</span>(.x <span class="sc">==</span> <span class="st">&quot;−&quot;</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(A<span class="sc">:</span>D, R1<span class="sc">:</span>R6) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>A<span class="sc">:-</span>D, <span class="at">names_to =</span> <span class="st">&quot;Réplica&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;y&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>modelo_1 <span class="ot">&lt;-</span> (<span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> A<span class="sc">*</span>B<span class="sc">*</span>C<span class="sc">*</span>D, <span class="at">data =</span> base))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>modelo_2 <span class="ot">&lt;-</span> (<span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> D, <span class="at">data =</span> base))</span></code></pre></div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5ff5171cdd77ac69b56f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5ff5171cdd77ac69b56f">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1],["R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6","R1","R2","R3","R4","R5","R6"],["14.81","14.77","14.77","14.79","14.86","14.91","13.77","13.78","13.87","13.90","13.93","13.91","14.72","14.74","14.77","14.78","14.68","14.85","13.86","13.88","13.93","13.85","13.90","13.87","14.89","14.81","14.87","14.88","14.96","14.93","14.18","14.17","14.13","14.27","14.15","14.08","14.76","14.78","15.05","15.06","14.94","14.94","14.00","13.99","14.04","14.03","14.11","14.06","15.27","14.66","14.26","14.72","15.20","15.49","14.32","14.09","13.54","13.59","13.96","14.33","13.92","14.04","14.93","14.96","14.50","14.14","13.61","13.20","13.70","14.26","14.43","14.23","14.65","14.35","14.68","15.03","15.38","15.17","13.97","14.45","14.33","13.97","13.74","13.74","14.18","14.40","15.54","15.42","15.04","14.47","13.87","14.13","14.26","14.00","13.64","13.59"]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center\" colspan=\"1\">A<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">B<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">D<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">Réplica<\/th>\n      <th style=\"text-align: center\" colspan=\"1\"><span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>y<\/mi><\/mrow><annotation encoding=\"application/x-tex\">y<\/annotation><\/semantics><\/math><\/span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height: 0.43056em;\"><\/span><span class=\"strut bottom\" style=\"height: 0.625em; vertical-align: -0.19444em;\"><\/span><span class=\"base textstyle uncramped\"><span class=\"mord mathit\" style=\"margin-right: 0.03588em;\">y<\/span><\/span><\/span><\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":10,"columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5]},{"bSortable":false,"targets":[0,1,2,3,4,5]},{"name":"A","targets":0},{"name":"B","targets":1},{"name":"C","targets":2},{"name":"D","targets":3},{"name":"Réplica","targets":4},{"name":"y","targets":5}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="modelo-linear-1" class="slide level2">
+<h2>Modelo linear 1</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-6b0a0a0a7c97f98ab532" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-6b0a0a0a7c97f98ab532">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(Intercept)","A","B","C","D","A:B","A:C","B:C","A:D","B:D","C:D","A:B:C","A:B:D","A:C:D","B:C:D","A:B:C:D"],["14.3889","-0.0273"," 0.0709","-0.0545"," 0.4181","-0.0159","-0.0372"," 0.0236","-0.0126"," 0.0048","-0.0183"," 0.0300"," 0.0337","-0.0279"," 0.0488"," 0.0181"],["0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306","0.0306"],["470.352"," -0.891","  2.319"," -1.782"," 13.666"," -0.518"," -1.217","  0.773"," -0.413","  0.157"," -0.599","  0.981","  1.101"," -0.911","  1.594","  0.593"],["0.0000","0.3754","0.0230","0.0785","0.0000","0.6057","0.2272","0.4418","0.6804","0.8754","0.5511","0.3294","0.2741","0.3653","0.1148","0.5547"]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center\" colspan=\"1\">Termo<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">Estimativa<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">EP<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">Estatística<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">p-valor<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":16,"columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4]},{"bSortable":false,"targets":[0,1,2,3,4]},{"name":"term","targets":0},{"name":"estimate","targets":1},{"name":"std.error","targets":2},{"name":"statistic","targets":3},{"name":"p.value","targets":4}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false,"lengthMenu":[10,16,25,50,100]}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="modelo-linear-2" class="slide level2">
+<h2>Modelo linear 2</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-032c25801822cbafa4e2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-032c25801822cbafa4e2">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(Intercept)","D"],["14.3889"," 0.4181"],["0.0313","0.0313"],["460.308"," 13.374"],["0","0"]],"container":"<table class=\"display\" style=\"font-size:12px;width:500px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center\" colspan=\"1\">Termo<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">Estimativa<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">EP<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">Estatística<\/th>\n      <th style=\"text-align: center\" colspan=\"1\">p-valor<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","pageLength":16,"columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4]},{"bSortable":false,"targets":[0,1,2,3,4]},{"name":"term","targets":0},{"name":"estimate","targets":1},{"name":"std.error","targets":2},{"name":"statistic","targets":3},{"name":"p.value","targets":4}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1)\n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false,"lengthMenu":[10,16,25,50,100]}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="section-1" class="slide level2 fullpage grad">
+<h2 class="fullpage grad"></h2>
+<div class="topic">
+<p><span style="color:black">ET612 — </span><br> Técnicas de
+confundimento para blocagem em fatoriais 2<sup>k</sup></p>
+</div>
+</section>
+<section
+id="experimentos-fatoriais-2k-aleatorizados-em-blocos-e-o-plano-experimental-em-blocos-incompletos-balanceados"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> <span
+style="color:black">Aleatorizados em Blocos</span> e o Plano
+Experimental em <span style="color:black">Blocos Incompletos
+Balanceados</span></h2>
+<div class="text">
+<ul>
+<li>Estruturas fatoriais geralmente implicam em um número
+<strong>grande</strong> de tratamentos.</li>
+<li>Relembre, por exemplo, que no experimento anterior, um fatorial
+2<sup>4</sup>, <strong>16</strong> tratamentos estavam sendo
+estudados.</li>
+<li>Executar um plano como este, <strong>completo</strong>, exige um
+número grande de unidades experimentais disponíveis, que muito
+provavelmente exibem certo grau de <strong>heterogeneidade</strong>
+entre si.</li>
+<li>Dizendo de outra forma, quanto <strong>maior</strong> o número de
+unidades experimentais envolvidas, <strong>menor</strong> é a chance de
+que todas elas tenham um grau de <strong>homogeneidade</strong> elevado
+entre si.</li>
+</ul>
+</div>
+</section>
+<section
+id="experimentos-fatoriais-2k-aleatorizados-em-blocos-e-o-plano-experimental-em-blocos-incompletos-balanceados-1"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> <span
+style="color:black">Aleatorizados em Blocos</span> e o Plano
+Experimental em <span style="color:black">Blocos Incompletos
+Balanceados</span></h2>
+<div class="text">
+<ul>
+<li>Nesse contexto, é natural pensar em panos experimentais
+<strong>aleatorizados em blocos</strong> para reduzir o impacto da
+heterogeneidade entre unidades experimentais na variância do erro
+experimental.</li>
+<li>Porém, no caso de experimentos fatoriais, o uso de
+<strong>blocos</strong> freqüentemente implica em restringir o número de
+tratamentos usados em cada bloco.</li>
+<li>Por esse motivo, uma introdução aos <strong>planos em blocos
+incompletos</strong> é apresentada a seguir.</li>
+</ul>
+</div>
+</section>
+<section id="planos-experimentais-aleatorizados-em-blocos-incompletos"
+class="slide level2">
+<h2>Planos Experimentais Aleatorizados em Blocos Incompletos</h2>
+<div class="text">
+<p>A estrutura geral de um plano em blocos incompletos pode ser descrita
+da seguinte forma:</p>
+<ul>
+<li>Tem-se <span class="math inline"><em>t</em></span> tratamentos e
+<span class="math inline"><em>b</em></span> blocos.</li>
+<li>O <span class="math inline"><em>i</em></span>-ésimo bloco acomoda
+unidades experimentais (<span
+class="math inline"><em>i</em> = 1, 2, ⋯, <em>b</em></span>).</li>
+<li>O <span class="math inline"><em>j</em></span>-ésimo tratamento é
+replicado <span
+class="math inline"><em>r</em><sub><em>j</em></sub></span> vezes (<span
+class="math inline"><em>j</em> = 1, 2, ⋯, <em>t</em></span>).</li>
+</ul>
+<p>Logo, <span class="math display">$$
+\sum_{i=1}^b k_i = \sum_{j = 1}^{t}r_j = n
+$$</span> em que <span class="math inline"><em>n</em></span> é o total
+de unidades experimentais disponíveis.</p>
+</div>
+</section>
+<section id="planos-experimentais-aleatorizados-em-blocos-incompletos-1"
+class="slide level2">
+<h2>Planos Experimentais Aleatorizados em Blocos Incompletos</h2>
+<div class="text">
+<ul>
+<li>Nota-se então que, sob a estrutura geral do plano, pode ocorrer de
+<strong>nem todos os tratamentos</strong> serem aplicados com a mesma
+freqüência em cada bloco.</li>
+<li>De fato, na maioria dos casos, <strong>não</strong> é possível
+observar todos os tratamentos em um mesmo bloco.</li>
+</ul>
+</div>
+<div class="mlkinfobox textbox">
+<p>Dentre a classe dos <strong>planos em blocos incompletos</strong>,
+destaca-se o plano em <strong>blocos incompletos balanceados</strong>,
+que será abordado a seguir.</p>
+</div>
+</section>
+<section id="plano-em-blocos-incompletos-balanceados"
+class="slide level2">
+<h2>Plano em Blocos Incompletos Balanceados</h2>
+<div class="text">
+<p>O plano em blocos incompletos balanceados (<strong>BIB</strong>) foi
+introduzido por Yates (1936) e tem como características:</p>
+<ul>
+<li>O <strong>mesmo número</strong> de unidades experimentais
+disponíveis em cada bloco, <span
+class="math display"><em>k</em><sub><em>i</em></sub> = <em>k</em>,  para  <em>i</em> = 1, 2, ⋯, <em>b</em></span></li>
+<li>O <strong>mesmo número</strong> de réplicas por tratamento, <span
+class="math inline"><em>r</em><sub><em>j</em></sub> = <em>r</em></span>,
+para <span
+class="math inline"><em>j</em> = 1, 2, ⋯, <em>t</em></span>.</li>
+<li><strong>Pares</strong> de tratamentos aparecem, <strong>em
+conjunto</strong>, dentro de blocos, um mesmo número de vezes, <span
+class="math inline"><em>λ</em></span>.</li>
+</ul>
+</div>
+</section>
+<section id="exemplo" class="slide level2">
+<h2>Exemplo</h2>
+<div class="text">
+<p>Arranjo em blocos incompletos balanceados para comparar
+<strong>4</strong> tratamentos (A, B, C e D) em <strong>4</strong>
+blocos (I, II, III e IV) de tamanho <strong>3</strong>.</p>
+<p></br>
+<img src="MATD48-12_files/figure-revealjs/unnamed-chunk-17-1.png" width="600px" style="display: block; margin: auto;" /></p>
+</div>
+</section>
+<section id="exemplo-1" class="slide level2">
+<h2>Exemplo</h2>
+<div class="text">
+<p>Com base nesse exemplo, é fácil ver que:</p>
+<ul>
+<li>Cada tratamento foi aplicado exatamente (<span
+class="math inline"><em>k</em></span>) 3 vezes.</li>
+<li>Pares de tratamentos ocorrem juntos, dentro de blocos, exatamente
+(<span class="math inline"><em>λ</em></span>) 2 vezes. Veja, por
+exemplo, que o par (<strong>B</strong>, <strong>C</strong>) aparece nos
+blocos <strong>I</strong> e <strong>IV</strong>; O par
+(<strong>A</strong>, <strong>D</strong>) aparece nos blocos
+<strong>II</strong> e <strong>III</strong>, e assim por diante.</li>
+<li>A seguinte relação é observada (e vale para todo
+<strong>BIB</strong>) <span
+class="math display"><em>t</em> ⋅ <em>r</em> = <em>b</em> ⋅ <em>k</em> = <em>n</em></span>
+Nesse exemplo, <span class="math inline"><em>n</em> = 12</span>.</li>
+</ul>
+</div>
+</section>
+<section id="notação-especial" class="slide level2">
+<h2>Notação Especial</h2>
+<div class="mlkinfobox textbox">
+<p>Um plano em blocos balanceados incompletos é indicado por seus
+parâmetros, da seguinte forma: <span
+class="math display">BIB(<em>t</em>, <em>b</em>, <em>k</em>, <em>r</em>; <em>λ</em>)</span></p>
+</div>
+<div class="text">
+<p>No exemplo visto, trata-se de um plano</p>
+<p><span class="math display">BIB(4, 4, 3, 3; 2)</span></p>
+</div>
+</section>
+<section id="relação-especial" class="slide level2">
+<h2>Relação Especial</h2>
+<div class="text">
+<p>Os parâmetros de um <strong>BIB</strong> são relacionados como segue:
+<span class="math display">$$
+\lambda(t-1) = r(k - 1) \quad \therefore \quad \lambda =
+\frac{r(k-1)}{t-1}
+$$</span> Como tem que ser um valor inteiro, percebe-se que não existe
+plano <strong>BIB</strong> para todo valor de <span
+class="math inline"><em>t</em></span>, <span
+class="math inline"><em>k</em></span> e <span
+class="math inline"><em>r</em></span>. De fato, pode acontecer de ser
+inteiro e, mesmo assim, não existir o <strong>BIB</strong>
+correspondente.</p>
+</div>
+<div class="mlkalertbox textbox">
+<p>Uma lista (incompleta) de planos <strong>BIB</strong> é fornecida em
+Box, Hunter e Hunter (1979), páginas 270 a 274.</p>
+</div>
+</section>
+<section id="o-processo-de-aleatorização-do-plano" class="slide level2">
+<h2>O Processo de Aleatorização do Plano</h2>
+<div class="text">
+<p>Para aleatorizar um determinado plano <span
+class="math inline">BIB(<em>t</em>, <em>b</em>, <em>k</em>, <em>r</em>; <em>λ</em>)</span>,
+é necessário:</p>
+<ol type="a">
+<li>Designar aleatoriamente cada arranjo de <span
+class="math inline"><em>k</em></span> tratamentos a cada bloco</li>
+<li>Aleatorizar os tratamentos às unidades experimentais dentro de cada
+bloco, independentemente.</li>
+</ol>
+</div>
+</section>
+<section id="o-modelo-linear-associado-ao-plano" class="slide level2">
+<h2>O Modelo Linear Associado ao Plano</h2>
+<div class="text">
+<p>O modelo é o mesmo para um plano aleatorizado em blocos, fazendo uso
+da suposição de aditividade <em>bloco versus tratamento</em>.</p>
+<p>Por isso, apenas a equação linear é mostrada aqui.</p>
+<p><span
+class="math display"><em>y</em><sub><em>i</em><em>j</em></sub> = <em>μ</em> + <em>β</em><sub><em>i</em></sub> + <em>τ</em><sub><em>j</em></sub> + <em>ε</em><sub><em>i</em><em>j</em></sub>,   <em>ε</em><sub><em>i</em><em>j</em></sub> ∼ iid(0, <em>σ</em><sup>2</sup>)</span></p>
+</div>
+<div class="mlkalertbox textbox">
+<p>Apesar de usar o mesmo modelo de um plano em blocos, em um
+<strong>BIB</strong> nem todo tratamento ocorre em cada bloco, o que
+gera <strong>não</strong>-ortogonalidade. A análise dos dados exige
+cuidado especial.</p>
+</div>
+</section>
+<section
+id="análise-de-variância-e-cálculo-de-médias-ajustadas-em-um-bib"
+class="slide level2">
+<h2>Análise de Variância e Cálculo de Médias Ajustadas em um BIB</h2>
+<div class="text">
+<p>Para calcular médias ajustadas em um <strong>BIB</strong> deve-se
+proceder da seguinte forma:</p>
+<ol type="i">
+<li>Calcular o total da variável resposta para cada tratamento: <span
+class="math inline"><em>T</em><sub><em>j</em></sub></span></li>
+<li>Calcular o total da variável resposta somada em todos os blocos que
+contém o tratamento <span
+class="math inline"><em>j</em> : <em>B</em><sub><em>j</em></sub></span></li>
+<li>Calcular ainda o valor <span
+class="math display"><em>Q</em><sub><em>j</em></sub> = <em>k</em><em>T</em><sub><em>j</em></sub> − <em>B</em><sub><em>j</em></sub></span></li>
+</ol>
+</div>
+</section>
+<section
+id="análise-de-variância-e-cálculo-de-médias-ajustadas-em-um-bib-1"
+class="slide level2">
+<h2>Análise de Variância e Cálculo de Médias Ajustadas em um BIB</h2>
+<div class="text">
+<p>A média ajustada do tratamento <span
+class="math inline"><em>j</em></span> é dada por <span
+class="math display">$$
+\bar{y}^{\text{LS}}_{.j} =  \bar{y}_{..} + \frac{Q_j}{t\lambda}
+$$</span> e tem como variância <span class="math display">$$
+\text{Var}(\bar{y}^{\text{LS}}_{.j}) = \frac{k\sigma^2}{t\lambda}
+$$</span> Logo <span class="math display">$$
+\text{Var}(\bar{y}^{\text{LS}}_{.j} - \bar{y}^{\text{LS}}_{.j'}) =
+2\frac{k\sigma^2}{t\lambda}
+$$</span></p>
+</div>
+</section>
+<section id="anova-para-um-plano-bib" class="slide level2">
+<h2>ANOVA para um Plano BIB</h2>
+<div class="text center" style="font-size:12px;width:500px">
+<table class=" lightable-classic" style="color: black; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Fonte de Variação
+</th>
+<th style="text-align:center;">
+Graus de Liberdade
+</th>
+<th style="text-align:center;">
+Soma dos Quadrados
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Blocos
+</td>
+<td style="text-align:center;">
+<span class="math inline"><em>b</em> − 1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$\sum_{i = 1}^b \frac{B_i^2}{k} -
+\frac{1}{n}\left(\sum_{ij} y_{ij}\right)^2$$</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tratamentos
+</td>
+<td style="text-align:center;">
+<span class="math inline"><em>t</em> − 1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$\sum_{j = 1}^t \frac{Q^2_j}{\lambda k
+t}$$</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Resíduo
+</td>
+<td style="text-align:center;">
+<span
+class="math inline"><em>n</em> − <em>t</em> − <em>b</em> + 1</span>
+</td>
+<td style="text-align:center;">
+<em>por diferença</em>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:center;">
+<span class="math inline"><em>n</em> − 1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$\sum_{ij}  y_{ij}^2 -
+\frac{1}{n}\left(\sum_{ij} y_{ij}\right)^2$$</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mlkinfobox textbox">
+<p>Na <strong>Soma dos Quadrados dos Blocos</strong>, <span
+class="math inline"><em>B</em><sub><em>i</em></sub></span> denota o
+total da variável resposta no bloco <span
+class="math inline"><em>i</em></span>.</p>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="mlkexbox textbox">
+<p>Para contextualizar o assunto, imagine um experimento para estudar os
+efeitos da adição de 3 fatores ( <strong>A</strong>: <em>Proteína
+Animal</em>, <strong>B</strong>: <em>Farinha de Osso</em> e
+<strong>C</strong>: <em>Antibiótico</em>), cada um com dois níveis, na
+dieta de animais de uma mesma espécie. </br></br> A definição dos níveis
+dos <strong>fatores</strong> é sugerida abaixo: </br></br></p>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e83c5b2a696f8601df3a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e83c5b2a696f8601df3a">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[[0],[10],[0],[5],["Sem"],["Com"]],"container":"<table class=\"display\" style=\"font-size:12px;width:600px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">A (Proteína Animal)<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">B (Farinha de Osso)<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">C (Antibiótico)<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">(%)<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">(%)<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\"> <\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">+<\/th>\n      <th style=\"text-align: center;border-left:solid 1px;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">+<\/th>\n      <th style=\"text-align: center;border-left:solid 1px;\" colspan=\"1\">−<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">+<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4,5]},{"bSortable":false,"targets":[0,1,2,3,4,5]},{"name":"Am","targets":0},{"name":"Tp","targets":1},{"name":"Bm","targets":2},{"name":"Bp","targets":3},{"name":"Cm","targets":4},{"name":"Cp","targets":5}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'12px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-left':'solid 1px'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'border-left':'solid 1px'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<p></br> Suponha agora que 16 animais estão disponíveis para o estudo.
+Considerando a necessidade de <strong>controle de uma fonte de variação
+sistemática</strong> — por exemplo, se os animais fossem de linhagens
+distintas.</p>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-1"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<p>As seguintes situações experimentais seriam possíveis de ocorrer:</p>
+</div>
+<div class="mlkinfobox textbox">
+<p><strong>16</strong> animais: 8 da linhagem <strong>X</strong> e 8, de
+uma outra, <strong>Y</strong>.</p>
+<p><strong>Situação Experimental 1:</strong> Duas réplicas de um
+2<sup>3</sup>, em 2 blocos de tamanho 8.</p>
+</div>
+<div class="mlkinfobox textbox">
+<p><strong>16</strong> animais: 4 da linhagem <strong>W</strong>; 4 da
+linhagem, <strong>X</strong>; 4 da linhagem <strong>Y</strong> e 4 da
+<strong>Z</strong></p>
+<p><strong>Situação Experimental 2:</strong> Duas réplicas de um
+2<sup>3</sup>, em 4 blocos de tamanho 4.</p>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-2"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<p>O caso sugerido pela <strong>situação 1</strong> (duas réplicas de um
+2<sup>3</sup> em dois blocos de tamanho 8) não oferece desafios maiores
+por tratar-se de um típico exemplo de experimento aleatorizado em
+blocos.</p>
+<p>A análise da <strong>situação 2</strong>, porém, merece ser vista com
+mais detalhe, pois trata-se de uma estrutura fatorial particionada em
+blocos incompletos.</p>
+<p>A primeira questão que se coloca é a de como escolher quais
+tratamentos serão agrupados para serem designados aleatoriamente aos
+blocos.</p>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-3"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<p>Uma sugestão poderia ser a seguinte:</p>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-131c9f919a33f69bdc5d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-131c9f919a33f69bdc5d">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(1)","b","c","bc"],["a","ab","ac","abc"],["(1)","b","c","bc"],["a","ab","ac","abc"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Réplica 1<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Réplica 2<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Blocos<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Blocos<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">I<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">II<\/th>\n      <th style=\"text-align: center;border-left:solid 1px;\" colspan=\"1\">I<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">II<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3]},{"bSortable":false,"targets":[0,1,2,3]},{"name":"Ir1","targets":0},{"name":"IIr1","targets":1},{"name":"Ir2","targets":2},{"name":"IIr2","targets":3}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<p></br></p>
+<div style="width:50%;margin-left:25%">
+<div class="row_milk text">
+<div class="column_milk">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-40b814353b7b07e1dc5b" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-40b814353b7b07e1dc5b">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["−","−","−","−"],["−","+","−","+"],["−","−","+","+"]],"container":"<table class=\"display\" style=\"font-size:12px;width:150px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Bloco I<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align:center;\" colspan=\"1\">A<\/th>\n      <th style=\"text-align:center\" colspan=\"1\">B<\/th>\n      <th style=\"text-align:center\" colspan=\"1\">C<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2]},{"bSortable":false,"targets":[0,1,2]},{"name":"A","targets":0},{"name":"B","targets":1},{"name":"C","targets":2}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<div class="column_milk">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-348b9a49b4c2f733199c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-348b9a49b4c2f733199c">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["+","+","+","+"],["−","+","−","+"],["−","−","+","+"]],"container":"<table class=\"display\" style=\"font-size:12px;width:150px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"3\">Bloco II<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align:center;\" colspan=\"1\">A<\/th>\n      <th style=\"text-align:center\" colspan=\"1\">B<\/th>\n      <th style=\"text-align:center\" colspan=\"1\">C<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2]},{"bSortable":false,"targets":[0,1,2]},{"name":"A","targets":0},{"name":"B","targets":1},{"name":"C","targets":2}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-4"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<p>Há algum problema com essa sugestão de agrupamento de tratamentos em
+blocos?</p>
+<p>A resposta é afirmativa.</p>
+<div class="mlkalertbox">
+<p>O efeito principal do fator A está confundido com blocos nas duas
+réplicas!</p>
+</div>
+<p>Para executar um experimento fatorial 2<sup>k</sup> em blocos de
+tamanho 2<sup>k-1</sup> é preciso confundir algum efeito ou interação
+com blocos.</p>
+<div class="mlkinfobox">
+<p>Sendo assim, pelo <strong>princípio da ordenação
+hierárquica</strong>, é preferível confundir o efeito da interação de
+mais alta ordem: <strong>ABC</strong>, neste caso.</p>
+</div>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-5"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div style="width:66%;margin-left:17%">
+<div class="row_milk text">
+<div class="column_milk">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-d8866a5e913c0cf4fcfa" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d8866a5e913c0cf4fcfa">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(1)","a","b","ab","c","ac","bc","abc"],["−","+","−","+","−","+","−","+"],["−","−","+","+","−","−","+","+"],["−","−","−","−","+","+","+","+"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Tratamento<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">A<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">B<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">C<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3]},{"bSortable":false,"targets":[0,1,2,3]},{"name":"Tratamento","targets":0},{"name":"A","targets":1},{"name":"B","targets":2},{"name":"C","targets":3}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<div class="column_milk">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e57f07f04720a8e1ab6f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e57f07f04720a8e1ab6f">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["−","+","+","−","+","−","−","+"],["I","II","II","I","II","I","I","II"]],"container":"<table class=\"display\" style=\"font-size:12px;width:100px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">ABC<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Bloco<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1]},{"bSortable":false,"targets":[0,1]},{"name":"ABC","targets":0},{"name":"Bloco","targets":1}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</section>
+<section id="regra-para-construir-os-blocos" class="slide level2">
+<h2>Regra para “construir” os blocos</h2>
+<div class="text">
+<p><span class="math display">Bloco = ABC</span> Para escolher os
+tratamentos do Bloco I, siga o raciocínio seguinte:</p>
+<ul>
+<li>Admita que o tratamento (1) faça parte do Bloco I. Este tratamento
+tem 0 (zero) letras em comum com a interação ABC, que define bloco.
+Logo, todos os tratamentos que farão parte do Bloco I devem ter um
+número par de letras em comum com ABC.</li>
+<li>O tratamento “a” possui <strong>uma</strong> letra em comum com ABC
+— número ímpar — logo, ele não faz parte do Bloco I. Da mesma forma, não
+fazem parte os tratamentos “b” e “c”.</li>
+<li>Já os tratamentos “ab” e “ac” têm ambos, 2 letras em comum com ABC
+e, por isso, estão no Bloco I. Conseqüentemente, a sua multiplicação
+simbólica, <span
+class="math display">ab × ac = a<sup>2</sup>cb = bc</span> também
+pertence ao mesmo bloco.</li>
+</ul>
+</div>
+</section>
+<section id="regra-para-construir-os-blocos-1" class="slide level2">
+<h2>Regra para “construir” os blocos</h2>
+<div class="text">
+<ul>
+<li>Os tratamento s restantes têm todos um número ímpar de letras em
+comum com a interação tripla, formando assim o Bloco II. Uma forma
+alternativa de compor o Bloco II seria considerar um tratamento que não
+pertence ao Bloco I — digamos, o tratamento “a”. Agora basta multiplicar
+simbolicamente o “a” por cada tratamento do Bloco I que teremos a
+formação do Bloco II:</li>
+</ul>
+<p><span class="math display">$$
+\begin{aligned}
+a\times (1) &amp;= a \\
+a\times ab  &amp;= b \\
+a\times ac  &amp;= c \\
+a\times bc  &amp;= abc
+\end{aligned}
+$$</span> Ao final, tem-se:</p>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-23e02fb61f638348b727" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-23e02fb61f638348b727">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(1)","ab","ac","bc"],["a","b","c","abc"],["(1)","ab","ac","bc"],["a","b","c","abc"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Réplica 1<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Réplica 2<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Blocos<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Blocos<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">I<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">II<\/th>\n      <th style=\"text-align: center;border-left:solid 1px;\" colspan=\"1\">III<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">IV<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3]},{"bSortable":false,"targets":[0,1,2,3]},{"name":"Ir1","targets":0},{"name":"IIr1","targets":1},{"name":"Ir2","targets":2},{"name":"IIr2","targets":3}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-6"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<p>Como houve replicação nesse experimento, é possível estimar a
+variância do erro experimental através do quadrado médio do resíduo.</p>
+<p>Para um experimento 2<sup>3</sup>, em blocos de tamanho 4, com <span
+class="math inline"><em>r</em></span> réplicas, tem-se a seguinte ANOVA,
+onde na Soma dos Quadrados dos Blocos, <span
+class="math inline"><em>B</em><sub><em>i</em></sub></span> denota o
+total da variável resposta no bloco <span
+class="math inline"><em>i</em></span></p>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-7"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text center" style="font-size:12px;width:500px">
+<table class=" lightable-classic" style="color: black; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Fonte de Variação
+</th>
+<th style="text-align:center;">
+Graus de Liberdade
+</th>
+<th style="text-align:center;">
+Soma dos Quadrados
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Blocos
+</td>
+<td style="text-align:center;">
+<span class="math inline">2<em>r</em> − 1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$\sum_{i = 1}^{2r} \frac{B_i^2}{4} -
+\frac{1}{8r}\left(\sum_{ij} y_{ij}\right)^2$$</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tratamentos
+</td>
+<td style="text-align:center;">
+<span class="math inline">6</span>
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:center;">
+<span class="math inline">1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">2<em>r</em>[<em>Â</em>]<sup>2</sup></span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B
+</td>
+<td style="text-align:center;">
+<span class="math inline">1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">2<em>r</em>[<em>B̂</em>]<sup>2</sup></span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AB
+</td>
+<td style="text-align:center;">
+<span class="math inline">1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$2r[\hat{AB}]^2$$</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C
+</td>
+<td style="text-align:center;">
+<span class="math inline">1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">2<em>r</em>[<em>Ĉ</em>]<sup>2</sup></span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AC
+</td>
+<td style="text-align:center;">
+<span class="math inline">1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$2r[\hat{AC}]^2$$</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BC
+</td>
+<td style="text-align:center;">
+<span class="math inline">1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$2r[\hat{BC}]^2$$</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Resíduo
+</td>
+<td style="text-align:center;">
+<span class="math inline">6(<em>r</em> − 1</span>
+</td>
+<td style="text-align:center;">
+<em>por diferença</em>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:center;">
+<span class="math inline">8<em>r</em> − 1</span>
+</td>
+<td style="text-align:center;">
+<span class="math display">$$\sum_{ij}  y_{ij}^2 -
+\frac{1}{8r}\left(\sum_{ij} y_{ij}\right)^2$$</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="exercício-em-classe" class="slide level2">
+<h2>Exercício em classe</h2>
+<div class="mlkexbox textbox">
+<p>Imagine que um quarto fator, <strong>D</strong>: <em>Idade do
+Desmame</em>, com dois níveis (precoce e normal) deva ser estudado.
+Tem-se então uma estrutura 2<sup>4</sup>. Mantendo os 16 animais
+disponíveis, como você faria para alocar os tratamentos aos 4 blocos de
+tamanho 4? Apresente uma sugestão identificando o(s) fator(es)
+confundido(s) com blocos.</p>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-8"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>O método de construção de arranjos de tratamentos em
+<strong>blocos</strong> (grupos) usado nos experimentos vistos até o
+momento, serve para construir qualquer <strong>bloco</strong> (grupo)
+cujo tamanho seja potência de 2.</li>
+<li>Na literatura, tal método é comumente referido como <strong>sistema
+de confundimento</strong>.</li>
+<li>No exercício anterior, verificou-se a necessidade de confundir
+completamente dois efeitos com blocos. Pelo princípio da ordenação
+hierárquica, uma boa escolha poderia ser, por exemplo, usar a
+relação</li>
+</ul>
+</div>
+<div class="mlkexbox textbox center">
+<p>Blocos: <strong>ABC</strong>, <strong>BCD</strong> (e portanto
+<strong>AD</strong>)</p>
+</div>
+<!-- $$ -->
+<!-- \textrm{Blocos}: \mathrm{ABC}, \mathrm{BCD}\quad(\Rightarrow \textrm{AD})   -->
+<!-- $$ -->
+<div class="text">
+<ul>
+<li>Nesse caso, a interação <em>AD</em>, também completamente confundida
+com blocos, é chamada de <strong>interação generalizada</strong> entre
+<strong>ABC</strong> e <strong>BCD</strong>.</li>
+</ul>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-9"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>O fato de <strong>ABC</strong> e <strong>BCD</strong> (e de sua
+interação generalizada <strong>AD</strong>) estarem
+<strong>completamente confundidos</strong> com blocos implica que esses
+efeitos <strong>não</strong> são estimáveis.</li>
+<li>Existem situações, no entanto, em que é possível usar um
+<strong>sistema de confundimento parcial</strong> para construir blocos,
+permitindo recuperar alguma informação relativa aos efeitos parcialmente
+confundidos.</li>
+<li>Relembre o exemplo do experimento 2<sup>3</sup> em 4 blocos de
+tamanho 4 discutido anteriormente (<em>Situação Experimental
+2</em>).</li>
+</ul>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-10"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>A interação tripla foi usada duas vezes: para compor os agrupamentos
+relativos aos blocos <strong>I</strong> e <strong>II</strong>, e para
+compor os dos blocos <strong>III</strong> e <strong>IV</strong>.</li>
+<li>Caso fosse de interesse obter alguma informação a respeito de
+<strong>ABC</strong>, seria perfeitamente plausível utilizar, por
+exemplo, uma interação dupla — digamos <strong>AC</strong> — para gerar
+os blocos <strong>III</strong> e <strong>IV</strong>.</li>
+<li>O quadro a seguir fornece um resumo das informações para esta
+situação.</li>
+</ul>
+</div>
+<!-- ## Blocos Incompletos em Fatoriais da Série 2<sup>k</sup> -->
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-2333d17f805249302007" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-2333d17f805249302007">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["I","II","III","IV"],["ABC","ABC","AC","AC"],["A, B, C, AB, AC, BC","A, B, C, AB, AC, BC","A, B, C, AB, BC, ABC","A, B, C, AB, BC, ABC"]],"container":"<table class=\"display\" style=\"font-size:12px;width:400px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" rowspan=\"2\">Bloco<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Efeitos<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Confundidos<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Estimáveis<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2]},{"bSortable":false,"targets":[0,1,2]},{"name":"Bloco","targets":0},{"name":"Confundidos","targets":1},{"name":"Estimáveis","targets":2}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'12px'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'border-left':'solid 1px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="blocos-incompletos-em-fatoriais-da-série-2k-11"
+class="slide level2">
+<h2>Blocos Incompletos em Fatoriais da Série 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>Percebe-se então que todos os efeitos podem ser estimados, variando
+apenas a quantidade de informação disponível sobre cada um deles, a
+saber</li>
+</ul>
+</div>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-cc978430241787deac9f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-cc978430241787deac9f">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["A","B","AB","C","AC","BC","ABC"],["100% (4/4)","100% (4/4)","100% (4/4)","100% (4/4)","50% (2/4)","100% (4/4)","50% (2/4)"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Efeito<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Quantidade de Informação<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":0},{"className":"dt-right","targets":1},{"bSortable":false,"targets":[0,1]},{"name":"Efeito","targets":0},{"name":"QtdeInfo","targets":1}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="experimentos-fatoriais-2k-não-replicados"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> Não-Replicados</h2>
+<div class="text">
+<ul>
+<li>Freqüentemente experimentos fatoriais 2<sup>k</sup> são executados
+sem replicação.</li>
+<li>Por exemplo, em situações onde 16 unidades exeprimentais estão
+disponíveis, é preferível estudar o efeito de 4 fatores (2<sup>4</sup>)
+a executar duas réplicas de um 2<sup>3</sup>, que dariam informação
+apenas sobre três deles.</li>
+<li>Quando isso acontece, a análise dos dados é feita com base nos
+gráficos de probabilidade <strong>half-normal</strong> (e/ou normal) já
+apresentados.</li>
+<li>Como dito antes, pontos no canto superior direito de um gráfico
+<strong>half-normal</strong>, que estejam desalinhados dos demais são
+julgados <strong>ativos</strong>.</li>
+<li>É interessante, nesses casos, construir um novo gráfico
+<strong>half-normal</strong> sem os pontos julgados ativos, para checar
+se os pontos restantes seguem, aproximadamente, uma reta.</li>
+</ul>
+</div>
+</section>
+<section id="experimentos-fatoriais-2k-não-replicados-1"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> Não-Replicados</h2>
+<div class="text">
+<ul>
+<li>O seguinte exemplo ilustra este fato</li>
+</ul>
+</div>
+<div class="mlkexbox textbox">
+<p>Imagine um fatorial 2<sup>4</sup>, sem replicação, com as seguintes
+estimativas de efeitos:</p>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-6f30b448e97159030954" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-6f30b448e97159030954">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["A","B","C","D","AB","AC","AD","BC","BD","CD","ABC","ABD","ACD","BCD","ABCD"],[98.367,-5.164,84.988,-26.513,21.835,18.986,-29.192,15.322,79.765,-14.388,7.874,-42.232,18.843,15.928,7.236]],"container":"<table class=\"display\" style=\"font-size:12px;width:200px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Efeito<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Valor<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":0},{"className":"dt-right","targets":1},{"bSortable":false,"targets":[0,1]},{"name":"Efeito","targets":0},{"name":"Valor","targets":1}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="experimentos-fatoriais-2k-não-replicados-2"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> Não-Replicados</h2>
+<div class="text">
+<p><img src="MATD48-12_files/figure-revealjs/hnpexp-1.png" width="768" style="display: block; margin: auto;" /></p>
+<ul>
+<li>O gráfico acima identifica os efeitos de <strong>A</strong>,
+<strong>C</strong> e <strong>BD</strong> como <strong>ativos</strong>. O
+próximo gráfico é construído <strong>sem</strong> esses pontos.</li>
+</ul>
+</div>
+</section>
+<section id="experimentos-fatoriais-2k-não-replicados-3"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> Não-Replicados</h2>
+<div class="text">
+<p><img src="MATD48-12_files/figure-revealjs/hnpexp2-1.png" width="768" style="display: block; margin: auto;" /></p>
+<ul>
+<li>No gráfico acima, após a retirada dos efeitos significativos,
+<strong>nenhum</strong> ponto se distancia de uma reta.</li>
+</ul>
+</div>
+</section>
+<section id="experimentos-fatoriais-2k-não-replicados-4"
+class="slide level2">
+<h2>Experimentos Fatoriais 2<sup>k</sup> Não-Replicados</h2>
+<div class="text">
+<ul>
+<li>É importante ressaltar que o método, como apresentado aqui,
+pressupõe variância constante e igual para todos os efeitos.</li>
+<li>Em situações onde <strong>blocos incompletos</strong> são usados,
+deve-se identificar os efeitos confundidos com blocos no gráfico
+<strong>half-normal</strong>.</li>
+<li>A eventual detecção de atividade desses efeitos deve-se, muito
+provavelmente ao efeito significativo de <strong>blocos</strong>.</li>
+<li>Para contornar a <strong>subjetividade</strong> de interpretação dos
+gráficos <strong>half-normal</strong> e <strong>normal</strong>, vários
+métodos são sugeridos na literatura. Veja, por exemplo, o método gráfico
+de Lenth (1989).</li>
+</ul>
+</div>
+</section>
+<section id="section-2" class="slide level2 fullpage grad">
+<h2 class="fullpage grad"></h2>
+<div class="topic">
+<p><span style="color:black">ET612 — </span><br> Experimentos fatoriais
+fracionados</p>
+</div>
+</section>
+<section id="réplicas-fracionárias-de-estruturas-fatoriais-2k"
+class="slide level2">
+<h2>Réplicas Fracionárias de Estruturas Fatoriais 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>O fato de que <strong>estruturas fatoriais completas</strong>
+demandam um número grande de unidades experimentais já foi mencionado
+antes.</li>
+<li>Considere uma estrutura fatorial 2<sup>10</sup>.</li>
+<li>Cada réplica de um experimento com tal estrutura demandaria 1024
+unidades experimentais.</li>
+<li>Mesmo que o experimento <strong>não</strong> fosse replicado, os
+1023 graus de liberdade de tratamentos estariam divididos da seguinte
+forma:</li>
+</ul>
+</div>
+</section>
+<section id="réplicas-fracionárias-de-estruturas-fatoriais-2k-1"
+class="slide level2">
+<h2>Réplicas Fracionárias de Estruturas Fatoriais 2<sup>k</sup></h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-99027c52d5047011b653" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-99027c52d5047011b653">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["Efeitos principais","Interações de 2 fatores","Interações de 3 fatores","Interações de 4 fatores","Interações de 5 fatores","Interações de 6 fatores","Interações de 7 fatores","Interações de 8 fatores","Interações de 9 fatores","Interações de 10 fatores"],[10,45,120,210,252,210,120,45,10,1]],"container":"<table class=\"display\" style=\"font-size:12px;width:350px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Efeitos<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"1\">Graus de liberdade<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":0},{"className":"dt-right","targets":1},{"bSortable":false,"targets":[0,1]},{"name":"Efeito","targets":0},{"name":"Valor","targets":1}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="réplicas-fracionárias-de-estruturas-fatoriais-2k-2"
+class="slide level2">
+<h2>Réplicas Fracionárias de Estruturas Fatoriais 2<sup>k</sup></h2>
+<div class="mlkinfobox textbox">
+<p>Pelo <strong>princípio da ordenação hierárquica</strong> e <strong>da
+esparsidade de efeitos</strong>, percebe-se que num experimento como
+este, recursos estariam sendo <strong>disperdiçados</strong> para
+estimar efeitos de interações de <strong>altíssima ordem</strong>.</p>
+</div>
+<div class="text">
+<ul>
+<li>Admitindo que os efeitos de interações de alta ordem são
+negligíveis, é possível estudar os efeitos de baixa ordem através de uma
+<strong>fração</strong> da estrutura fatorial completa: <strong>uma
+estrutura fatorial fracionária.</strong></li>
+<li>A idéia é simples e pode ser resumida em dois passos gerais:</li>
+</ul>
+</div>
+<div class="mlkinfobox textbox">
+<p><strong>Passo 1:</strong> Dividir os tratamentos em blocos, usando um
+sistema de confundimento conveniente.</p>
+<p><strong>Passo 2:</strong> Executar o experimento com apenas um dos
+blocos.</p>
+</div>
+</section>
+<section id="réplicas-fracionárias-de-estruturas-fatoriais-2k-3"
+class="slide level2">
+<h2>Réplicas Fracionárias de Estruturas Fatoriais 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>Para estudar as conseqüências do procedimento sugerido, considere um
+fatorial 2<sup>3</sup>, identificando os fatores por <strong>A</strong>,
+<strong>B</strong> e <strong>C</strong>.</li>
+<li>Usando a interação tripla <strong>ABC</strong> para gerar os blocos,
+tem-se:</li>
+</ul>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e9e2703797347f619e08" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e9e2703797347f619e08">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["(1)","ab","ac","bc"],["a","b","c","abc"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Blocos<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">I<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">II<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1]},{"bSortable":false,"targets":[0,1]},{"name":"Ir1","targets":0},{"name":"IIr1","targets":1}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'background':'#3c763d20'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</section>
+<section id="réplicas-fracionárias-de-estruturas-fatoriais-2k-4"
+class="slide level2">
+<h2>Réplicas Fracionárias de Estruturas Fatoriais 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>Suponha agora que o experimento consista apenas dos tratamentos do
+<strong>Bloco I</strong>: (1), ab, ac, bc.</li>
+<li>Como estimar, por exemplo, o efeito principal de <strong>A</strong>?
+<span class="math display">$$
+\hat{\textrm{A}} = \frac{1}{2}\left[- (1) + ab + ac - bc\right]
+$$</span></li>
+<li>E o efeito de <strong>BC</strong>? <span class="math display">$$
+\hat{\textrm{BC}} = \frac{1}{2}\left[+(1) - ab - ac + bc\right]
+$$</span></li>
+</ul>
+<p></br> Alguma semelhança entre <span
+class="math inline">$\hat{\textrm{A}}$</span> e <span
+class="math inline">$\hat{\textrm{BC}}$</span>?</p>
+</div>
+</section>
+<section id="réplicas-fracionárias-de-estruturas-fatoriais-2k-5"
+class="slide level2">
+<h2>Réplicas Fracionárias de Estruturas Fatoriais 2<sup>k</sup></h2>
+<div class="text">
+<ul>
+<li>Ao estimar o efeito de <strong>A</strong>, também se está estimando
+o efeito de <strong>BC</strong>.</li>
+<li>Logo, só faz sentido a estimativa <span
+class="math inline">$\hat{\textrm{A}}$</span>, se for esperado que o
+efeito de <strong>BC</strong> seja negligível.</li>
+<li>A escolha dos tratamentos do <strong>bloco I</strong>
+(correspondentes ao sinal negativo de ABC) fez com que o efeito de
+<strong>A</strong> esteja associado com o de <strong>BC</strong>.</li>
+<li>Para descobrir que <strong>A</strong> está associado com
+<strong>BC</strong>, basta multiplicar simbolicamente <strong>A</strong>
+por <strong>ABC</strong>: <span
+class="math display">A × ABC = A<sup>2</sup>BC = BC</span></li>
+<li>Similarmente é possível identificar que <strong>B</strong> =
+<strong>AC</strong> e <strong>C</strong> = <strong>AB</strong>.</li>
+</ul>
+</div>
+</section>
+<section id="resolução-de-um-plano" class="slide level2">
+<h2>Resolução de um Plano</h2>
+<div class="text">
+<p>Box e Hunter (1968) definiram o que eles chamaram de
+<strong>resolução de um plano</strong>, sendo esta definição amplamente
+utilizada na literatura de planejamento de experimentos.</p>
+</div>
+<div class="mlkinfobox textbox">
+<p>A <strong>resolução de um plano</strong> corresponde ao tamanho
+(número de letras) do menor efeito que gerou a fração de tratamentos
+considerada.</p>
+</div>
+</section>
+<section id="resolução-de-um-plano-exemplo" class="slide level2">
+<h2>Resolução de um Plano: Exemplo</h2>
+<div class="mlkexbox textbox">
+<p>Suponha que apenas 1/4 de um fatorial 2<sup>6</sup> seja executado,
+escolhendo-se uma fração gerada por</p>
+<div class="center">
+<p>Blocos: <strong>ABC</strong>, <strong>DEF</strong> (e portanto
+<strong>ABCDEF</strong>) </br> I = <strong>ABC</strong> =
+<strong>DEF</strong> = <strong>ABCDEF</strong></p>
+</div>
+</div>
+<div class="text">
+<ul>
+<li>Nesse caso, a resolução do plano seria <strong>III</strong> (usa-se
+algarismos romanos para escrever resoluções).</li>
+<li>Estaria-se lidando com uma estrutura fatorial <span
+class="math inline">2<sub>III</sub><sup>6 − 2</sup></span></li>
+</ul>
+</div>
+</section>
+<section id="resolução-de-um-plano-1" class="slide level2">
+<h2>Resolução de um Plano</h2>
+<div class="text">
+<ul>
+<li>Em planos de resolução <strong>III</strong>, efeitos principais
+estão associados a efeitos de interações duplas.</li>
+<li>Nos de resolução <strong>IV</strong>, efeitos principais estão
+associados a interações triplas, enquanto interações duplas estão
+associadas com interações duplas.</li>
+<li>Planos de resolução mais alta devem ser preferidos aos de resolução
+mais baixa, pelo princípio da ordenação hierárquica.</li>
+</ul>
+</div>
+</section>
+<section id="exercício-em-classe-1" class="slide level2">
+<h2>Exercício em classe</h2>
+<div class="mlkexbox textbox">
+<p>Apresente os tratamentos a serem estudados em um experimento fatorial
+2<sup>8-2</sup> e indique a resolução do plano escolhido.</p>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<p>Para explorar um pouco mais da estrutura fatorial fracionária,
+considere novamente o caso de um experimento 2<sup>3-1</sup>, como
+sugerido no exemplo anterior.</p>
+<p>É possível chegar aos tratamentos escolhidos de uma outra forma,
+seguindo os seguintes passos:</p>
+<div class="mlkinfobox">
+<ol type="i">
+<li>Escreva a matriz de planejamento do fatorial 2<sup>2</sup> completo,
+incluindo a coluna do efeito da interação <strong>AB</strong>;</li>
+<li>No lugar da interação <strong>AB</strong>, superponha um terceiro
+fator, <strong>C</strong>.</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-1"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5bc2dc4154a989781620" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5bc2dc4154a989781620">{"x":{"filter":"none","vertical":false,"class":"compact hover","data":[["−","+","−","+"],["−","−","+","+"],["+","−","−","+"],["c","a","b","abc"],["(1)","ac","bc","ab"]],"container":"<table class=\"display\" style=\"font-size:12px;width:300px\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\"> <\/th>\n      <th style=\"text-align: center;\" colspan=\"1\"> <\/th>\n      <th style=\"text-align: center;background:#3c763d20\" colspan=\"1\">C<\/th>\n      <th style=\"text-align: center;vertical-align: middle;\" colspan=\"2\">Blocos<\/th>\n    <\/tr>\n    <tr>\n      <th style=\"text-align: center;\" colspan=\"1\">A<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">B<\/th>\n      <th style=\"text-align: center;background:#3c763d20\" colspan=\"1\">AB<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">I<\/th>\n      <th style=\"text-align: center;\" colspan=\"1\">II<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"fixedColumns":true,"dom":"t","columnDefs":[{"className":"dt-center","targets":[0,1,2,3,4]},{"bSortable":false,"targets":[0,1,2,3,4]},{"name":"A","targets":0},{"name":"B","targets":1},{"name":"AB","targets":2},{"name":"Ir1","targets":3},{"name":"IIr1","targets":4}],"rowCallback":"function(row,data) {\n                                  if($(row)[\"0\"][\"_DT_RowIndex\"] % 2 <1) \n                                  $(row).css(\"background\",\"#edf4f5\") //#f2f9ec\nvar value=data[-1]; $(this.api().cell(row, -1).node()).css({'font-size':'12px'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'12px'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background':'#3c763d20'});\n                                }","order":[],"orderClasses":false}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<p></br> - A fração de tratamentos correspondente ao <strong>bloco
+II</strong> é obtida confundindo-se deliberadamente o fator
+<strong>C</strong> com <strong>+AB</strong>. - A fração restante
+corresponde aos tratamentos gerados ao confundir deliberadamente o fator
+<strong>C</strong> com <strong>−AB</strong>, como sugere o esquema
+acima.</p>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-2"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<p>Suponha que o plano escolhido tenha sido o gerado por
+<strong>C</strong> = <strong>−AB</strong>.</p>
+<p></br> Multiplicando ambos os lados por <strong>C</strong>, tem-se:
+<span class="math display">$$
+\begin{align*}
+\textrm{C}\times \textrm{C} &amp;= \textrm{C} \times -\textrm{AB}\\
+\textrm{C}^2 &amp;= -\textrm{ABC}\\
+\textrm{I} &amp;= -\textrm{ABC}
+\end{align*}
+$$</span> que é a <strong>relação de identidade</strong> que gera o
+plano.</p>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-3"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<p>Suponha agora que o experimento tenha sido executado e que a seguinte
+estimativa tenha sido produzida: <span class="math display">$$
+\hat{\textrm{A}} = \frac{1}{2}\left[-\textrm{(1) + ab + ac - bc}\right]
+= 20,\!5
+$$</span> Por causa da relação de identidade que gerou o plano, a
+interpretação correta desse valor é que: <span class="math display">$$
+\hat{\textrm{A}} - \hat{\textrm{BC}} = 20,\!5
+$$</span></p>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-4"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<p>Imagine agora que, após ter executado o experimento, decidiu-se
+executar a outra metade dos tratamentos
+(<strong>I</strong>=<strong>+ABC</strong>). Isso poderia ter sido
+motivado por uma suspeita de que a interação <strong>BC</strong> fosse
+significativa. Dessa outra metade, obteve-se a seguinte estimativa:
+<span class="math display">$$
+\hat{\textrm{A}} = \frac{1}{2}\left[-c + a - b + abc\right] = 18,\!5
+$$</span> Mais uma vez, pela relação de associação, tem-se que <span
+class="math display">$$
+\hat{\textrm{A}} + \hat{\textrm{BC}} = 18,\!5
+$$</span></p>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-5"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<p>É possível combinar as estimativas de forma a obter os efeitos
+estimados de <strong>A</strong> e <strong>BC</strong>, livres de
+associação, como segue:</p>
+<p><span class="math display">$$
+\begin{align*}
+\hat{\textrm{A}} - \hat{\textrm{BC}} &amp;= 20,\!5 \\
+\hat{\textrm{A}} + \hat{\textrm{BC}} &amp;= 18,\!5
+\end{align*}
+$$</span> Portanto <span class="math display">$$
+\begin{align*}
+2\hat{\textrm{A}} - \hat{\textrm{BC}} +  \hat{\textrm{BC}} &amp;= 20,\!5
++  18,\!5\quad \Rightarrow\\
+\hat{\textrm{A}} &amp;= 19,\!5 \quad\textrm{e}\\
+\hat{\textrm{BC}} &amp;= 1,\!0
+\end{align*}
+$$</span></p>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-6"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="text">
+<ul>
+<li>A possibilidade de <strong>combinar</strong> valores de duas metades
+complementares de um fatorial 2<sup>k</sup> sugere que seja mais
+interessante para o investigador executar uma primeira metade e
+verificar os seus resultados, do que executar o plano completo.</li>
+<li>Se for necessário, a outra metade poderá ser executada gerando
+estimativas livres de associação.</li>
+<li>Freqüentemente os resultados de uma metade são suficientes para que
+o investigador passe aos estágios seguintes da investigação que poderia
+envolver, por exemplo, outros níveis de fatores e/ou o estudo de novos
+fatores.</li>
+</ul>
+</div>
+</section>
+<section id="anatomia-de-uma-estrutura-fracionária-7"
+class="slide level2">
+<h2>Anatomia de uma Estrutura Fracionária</h2>
+<div class="mlkalertbox textbox">
+<p>Ao utilizar essa abordagem <strong>seqüencial</strong> de
+investigação, é preciso lembrar que:</p>
+<div style="padding-left:50px;font-size:90%">
+<ul>
+<li>A aleatorização deve ser feita <strong>dentro</strong> de cada
+metade, independentemente</li>
+<li>Se as duas metades são executadas, há um efeito de
+<strong>bloco</strong> sendo controlado</li>
+<li>No caso do item anterior, a única informação
+<strong>perdida</strong> será relativa ao efeito confundido com bloco.
+Porém, é possível haver ganho de precisão em comparação ao plano
+fatorial completo (completamente aleatorizado) se, de fato, o bloco
+estiver controlando uma fonte de variação sistemática.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="a-importância-do-conceito-de-resolução"
+class="slide level2">
+<h2>A Importância do Conceito de Resolução</h2>
+<div class="text">
+<p>Pela forma como o plano do exemplo anterior foi gerado, ficou
+evidente a existência de um plano fatorial completo 2<sup>2</sup>
+embutido na estrutura fracionária. O plano gerado tem resolução
+<strong>III</strong>. Mais específicamente, tratou-se da geração de um
+plano <span class="math display">2<sub>III</sub><sup>3 − 1</sup></span>
+Em geral, um plano fatorial <strong>fracionário</strong> de resolução
+<span class="math inline"><em>R</em></span> embute um plano fatorial
+completo (possivelmente replicado) de qualquer subconjunto de <span
+class="math inline"><em>R</em> − 1</span> fatores.</p>
+</div>
+</section>
+<section id="a-importância-do-conceito-de-resolução-1"
+class="slide level2">
+<h2>A Importância do Conceito de Resolução</h2>
+<div class="text">
+<p>A figura abaixo ilustra esse fato para o caso visto, de um plano
+<span class="math inline">2<sub>III</sub><sup>3 − 1</sup></span> e suas
+projeções em 3 fatoriais completos <span
+class="math inline">2<sup>2</sup></span></p>
+</div>
+<p><img src="MATD48-12_files/figure-revealjs/unnamed-chunk-33-1.png" width="768" style="display: block; margin: auto;" /></p>
+</section>
+<section id="a-importância-do-conceito-de-resolução-2"
+class="slide level2">
+<h2>A Importância do Conceito de Resolução</h2>
+<div class="text">
+<p>É possível tirar proveito dessa relação entre o conceito de resolução
+e a existência de uma estrutura fatorial completa.</p>
+<div class="mlkinfobox textbox">
+<p>Suponha que há interesse em estudar o efeito de <span
+class="math inline"><em>k</em></span> fatores, e que acredite-se que
+apenas um número menor deles, <span
+class="math inline"><em>p</em></span> deva ser ativo. Então, se um plano
+fatorial fracionário de resolução <span
+class="math inline"><em>R</em> = <em>p</em> + 1</span> for utilizado, e
+a suspeita de que apenas <span class="math inline"><em>p</em></span>
+fatores são ativos for confirmada, existirá um plano fatorial completo
+<span class="math inline">2<sup><em>p</em></sup></span> embutido na
+estrutura do plano fracionário utilizado. Isso permitirá o estudo de
+todos os efeitos necessários relativos aos <span
+class="math inline"><em>p</em></span> fatores significativos.</p>
+</div>
+</div>
+</section>
+<section id="critérios-de-escolha-de-planos" class="slide level2">
+<h2>Critérios de Escolha de Planos</h2>
+<div class="text">
+<p>A escolha de um plano pode ser baseada em diferentes critérios, além
+do de resolução máxima. Considere, por exemplo, os dois planos fatoriais
+2<sup>7-2</sup> a seguir:</p>
+<div class="center">
+<p>Plano 1:   <strong>I</strong> = <strong>DEFG</strong> =
+<strong>ABCDF</strong> = <strong>ABCEG</strong> </br> </br> Plano 2:  
+<strong>I</strong> = <strong>ABCF</strong> = <strong>ADEG</strong> =
+<strong>BCDEFG</strong></p>
+</div>
+<p>Embora ambos os planos tenham resolução IV, o padrão de tamanho de
+“palavras” dos efeitos geradores do plano é diferente entre eles:</p>
+<p>O <strong>Plano 1</strong> é gerado por 1 “palavra” de 4 letras e
+duas, de 5. Já o <strong>plano 2</strong>, é gerado por 2 “palavras” de
+4 letras e uma, de 5.</p>
+</div>
+</section>
+<section id="critérios-de-escolha-de-planos-1" class="slide level2">
+<h2>Critérios de Escolha de Planos</h2>
+<div class="text">
+<p>Defina <span
+class="math inline"><em>A</em><sub><em>i</em></sub></span> como o número
+de “palavras” de tamanho <span class="math inline"><em>i</em></span>
+presente na relação geradora do plano. Um plano 2<sup>k-p</sup> exibe um
+padrão de tamanho de “palavras” dado por:</p>
+<p><span
+class="math display"><em>W</em> = (<em>A</em><sub><em>p</em> + 1</sub>, …, <em>A</em><sub><em>k</em></sub>)</span></p>
+<p>No exemplo considerado, tem-se</p>
+<p><span class="math display">$$
+\begin{align*}
+W(\textrm{Plano 1}) &amp;= (A_3 = 0, A_4 = 1, A_5 = 2, A_6 = 0, A_7 =
+0)\\
+W(\textrm{Plano 2}) &amp;= (A_3 = 0, A_4 = 2, A_5 = 0, A_6 = 1, A_7 =
+0)\\
+\end{align*}
+$$</span> Ou, simplesmente,</p>
+<p><span class="math display">$$
+\begin{align*}
+W(\textrm{Plano 1}) &amp;= (0, 1, 2, 0, 0)\\
+W(\textrm{Plano 2}) &amp;= (0, 2, 0, 1, 0)\\
+\end{align*}
+$$</span></p>
+</div>
+</section>
+<section id="critérios-de-escolha-de-planos-2" class="slide level2">
+<h2>Critérios de Escolha de Planos</h2>
+<div class="text">
+<p>Enquanto o <strong>plano 1</strong> tem apenas 3 pares de interações
+duplas associados com outras interações duplas (DE = FG, DF = EG, DG =
+EF), o <strong>plano 2</strong> tem 6. Isso acontece porque o
+<strong>plano 1</strong> tem apenas 1 “plavara” de tamanho 4, ao passo
+que o <strong>plano 2</strong> tem 2 delas.</p>
+<p>Para levar em consideração esse tipo de comparação entre planos, <a
+href="https://sci-hub.st/https://www.jstor.org/stable/1268198">Fries e
+Hunter (1980)</a> definiram o seguinte critério.</p>
+<div class="quote--container">
+<p class="quote">
+Para estudar <span class="math inline"><em>k</em></span> variáveis em
+<span class="math inline"><em>N</em></span> execuções de experimento,
+todos os planos de 2<sup><span
+class="math inline"><em>k</em></span>-<span
+class="math inline"><em>p</em></span></sup> de resolução máxima não são
+igualmente bons. […] o conceito de <span
+class="quote--highlight">aberração</span> é proposto como forma de
+selecionar os melhores desenhos dentre aqueles com resolução máxima.
+Algoritmos são apresentados para construir esses projetos de aberração
+mínima.
+</p>
+<p class="quote--author">
+— Fries e Hunter (1980)
+</p>
+</div>
+</div>
+</section>
+<section id="critério-de-aberração-mínima" class="slide level2">
+<h2>Critério de Aberração Mínima</h2>
+<div class="mlkinfobox textbox">
+<p>Considere dois planos 2<sup>k-p</sup>: <span
+class="math inline"><em>d</em><sub>1</sub></span> e <span
+class="math inline"><em>d</em><sub>2</sub></span>. Defina <span
+class="math inline"><em>r</em></span> como o tamanho da menor “palavra”
+para a qual se observa</p>
+<p><span
+class="math display"><em>A</em><sub><em>r</em></sub>(<em>d</em><sub>1</sub>) ≠ <em>A</em><sub><em>r</em></sub>(<em>d</em><sub>2</sub>)</span></p>
+<p>O plano <span class="math inline"><em>d</em><sub>1</sub></span> é
+dito ter <strong>menos aberração</strong> de que o <span
+class="math inline"><em>d</em><sub>2</sub></span>, se</p>
+<p><span
+class="math display"><em>A</em><sub><em>r</em></sub>(<em>d</em><sub>1</sub>) &lt; <em>A</em><sub><em>r</em></sub>(<em>d</em><sub>2</sub>)</span></p>
+<p>O plano <span class="math inline"><em>d</em><sub>1</sub></span> será
+dito ter <strong>aberração mínima</strong> se não houver nenhum outro
+plano com menos aberração que ele.</p>
+</div>
+</section>
+<section id="section-3" class="slide level2 fullpage grad">
+<h2 class="fullpage grad"></h2>
+<div class="topic">
+<p><span style="color:black">ET612 — </span><br> 6. Metodologia de
+Superfície de Resposta</p>
+</div>
+</section>
+
+  <!--
+  To hide progress bar from entire presentation
+  just remove “progress” element.
+  -->
+  <!-- <div class="progress"></div> -->
+  <script src="MATD48-12_files/rmdshower/node_modules/shower/node_modules/shower-core/shower.min.js"></script>
+  <!-- Copyright © 2015 Yours Truly, Famous Inc. -->
+  <!-- Photos by John Carey, fiftyfootshadows.net -->
+
+  
+  
+</body>
+</html>

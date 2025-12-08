@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/892322/acfa0ca2a25c4c2b90c5bf85768d859f
+bundleId: https://api.rpubs.com/api/v1/document/892322/acfa0ca2a25c4c2b90c5bf85768d859f
+url: http://rpubs.com/leite/892322
+when: 1650889562.60054
+lastSyncTime: 1650889562.60055

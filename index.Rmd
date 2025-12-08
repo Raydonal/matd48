@@ -162,16 +162,15 @@ A avaliação tem como objetivo ajudar ao aluno a progredir nas suas aprendizage
 
 | Avaliação | Porcentagem  |	Data da Prova (tentativa) |
 |:-----------:|:-------------:|:-----------------:|
-| Avaliação 1     |    35% 	    |     30/10/2025  |
-| Avaliação 2     |    35% 	    |     11/12/2025  |
-| Avaliação 3     |    30% 	    |     08/01/2026  |
+| Avaliação 1     |    50% 	    |     30/10/2025  |
+| Avaliação 3     |    50% 	    |     05/01/2026  |
 
 
 A avaliação será constituída pela nota das atividades (que podem consistir em provas, Desafios, listas de exercicios e/ou projetos a depender do desempenho e participação da turma). O grau atribuído ao aluno no final do curso será o da sua média global ponderada (média aritmética ponderada) entre as notas, i.e.,
 
 <center>
 <h3>
-    M = (0,35 * A1)+(0,35 * A2)+(0,3 * A3).
+    M = (0,5 * A1)+(0,5 * A2)
 </h3>
 </center>
 
@@ -207,24 +206,23 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
   |  21/10/2025    | 21/10/2025  | ANCOVA e revisão.                                                     |
   |  23/10/2025    | 23/10/2025  |   Comparações de médias. Contrastes                                   |
   |  28/10/2025    | 28/10/2025  | Contrastes ortogonais. **Aula prática em R**   [[Mat-07]](Aulas/MATD48-07.html)|
-  |  **30/10/2025**    | **30/10/2025**  | **<font color="red">APLICAÇÃO DA PROVA 1</font>**             |
+  |  **30/10/2025**    | **30/10/2025**  | **<font color="red">PROVA 1</font>**             |
   |  04/11/2025    | 04/11/2025  | Procedimentos de Tukey e Scheffé.                                     |
   |  06/11/2025    | 06/11/2025  | Procedimentos de Bonferroni e Duncan. **Aula prática em R**           |
   |  11/11/2025    | 11/11/2025  | Aula de exercícios sobre Comparações Múltiplas. [[Mat-08]](Aulas/MATD48-08.html)|
   |  13/11/2025    | 13/11/2025  | Experimentos em Blocos Completos Casualizados (DBC).                 |
   |  18/11/2025    | 18/11/2025  | Modelo matemático e ANOVA para DBC. **Aula prática em R**            |
   |  20/11/2025    | 20/11/2025  | Eficiência do delineamento.                                  [[Mat-09]](Aulas/MATD48-09.html)        |
-  |  25/11/2025    | 25/11/2025  | Experimentos em Quadrados Latinos (DQL).                             |
-  |  27/11/2025    | 27/11/2025  | Modelo matemático e ANOVA para DQL. **Aula prática em R**              |
-  |  02/12/2025    | 04/12/2025  | O problema de parcelas perdidas.                                     |
-  |  **11/12/2025**  | **11/12/2025**  | **<font color="red">APLICAÇÃO DA PROVA 2</font>**                          |
+  |  25/11/2025    | 25/11/2025  | Experimentos em Quadrados Latinos (DQL).              [[Mat-10]](Aulas/MATD48-10.html)                |
+  |  27/11/2025    | 27/11/2025  | Modelo matemático e ANOVA para DQL. **Aula prática em R**            |
+  |  02/12/2025    | 04/12/2025  |  Réplicas em DQL                                     |
+  |  11/12/2025    | 11/12/2025  | Quadrados Greco-latinos          [[Mat-11]](Aulas/MATD48-11.html)              |
   |  16/12/2025    | 16/12/2025  | Experimentos Fatoriais: Introdução.                                  |
   |  18/12/2025    | 18/12/2025  | Fatores aninhados e cruzados. Modelo matemático.                     |
   |  23/12/2025    | 23/12/2025  | Cálculo dos efeitos principais e interações. **Aula prática em R**     |
   |  25/12/2025    | 25/12/2025  | Delineamentos para experimentos fatoriais.                           |
-  |  30/12/2025    | 30/12/2025  | ANOVA para experimentos fatoriais.                                   |
-  |  06/01/2026    | 06/01/2026  | Desdobramento e interpretação de interações. **Aula prática em R**   |
-  |  **08/01/2026**  | **08/01/2026**  | **<font color="red">APLICAÇÃO DA PROVA 3</font>**                          |
+  |  30/12/2025    | 30/12/2025  | ANOVA para experimentos fatoriais.               [[Mat-12]](Aulas/MATD48-12.html)                     |
+  |  **05/01/2026**  | **05/01/2026**  | **<font color="red">PROVA 2</font>**                          |
   </center>
 ***
 #### Dados
