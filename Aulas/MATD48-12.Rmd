@@ -571,12 +571,12 @@ knitr::include_graphics("images/dadosyates.png") # Usando a imagem anterior como
 ---
 ## Estimativa do efeito da temperatura
 
-$$\begin{align*}
-\text{T}  &= \bar{z}(\text{T}_+) - \bar{z}(\text{T}_-)\\
-   &= \frac{72+68+83+80}{4} - \frac{61+53+52+45}{4} \\
-   &= 75,\!75 - 52,\!75 \\
-   &= 23
-\end{align*}$$
+<!-- $$\begin{align*} -->
+<!-- \text{T}  &= \bar{z}(\text{T}_+) - \bar{z}(\text{T}_-)\\ -->
+<!--    &= \frac{72+68+83+80}{4} - \frac{61+53+52+45}{4} \\ -->
+<!--    &= 75,\!75 - 52,\!75 \\ -->
+<!--    &= 23 -->
+<!-- \end{align*}$$ -->
 
 ```{r  class.source="watch-out"}
 exp1data <- tibble(
