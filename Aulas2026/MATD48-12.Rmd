@@ -1,0 +1,501 @@
+---
+title: "Fatoriais A×B e A×B×C"
+subtitle: "Efeitos principais, interação, notação matricial e blocos completos"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 12 — Fatoriais A×B e A×B×C
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Por que cruzar fatores?
+
+"Um fator de cada vez" (OFAT) tem dois defeitos (Box, Hunter & Hunter, 2005; Montgomery, 2017):
+
+1. **Não detecta interação** — pode convergir para um ótimo aparente que está longe do real.
+2. **É ineficiente** — um fatorial completo estima todos os efeitos com a mesma precisão de um
+   experimento dedicado a cada fator, sem custo adicional.
+
+--
+
+Cruzar $A$ e $B$ resolve os dois problemas de uma vez.
+
+---
+
+## O modelo A×B
+
+$$
+y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}, \qquad
+i=1,\dots,a;\ j=1,\dots,b;\ k=1,\dots,r
+$$
+
+com $\sum_i \alpha_i = \sum_j \beta_j = 0$ e $\sum_i(\alpha\beta)_{ij} = \sum_j(\alpha\beta)_{ij}
+= 0$.
+
+--
+
+- $\alpha_i$: efeito principal de $A$, marginalizado sobre $B$.
+- $(\alpha\beta)_{ij}$: **interação** — o quanto a célula $(i,j)$ se desvia de
+  $\alpha_i + \beta_j$; equivalentemente, o quanto o efeito de $A$ muda com o nível de $B$.
+
+---
+
+## Uma leitura causal
+
+Sob a estrutura de resultados potenciais (Imbens & Rubin, 2015):
+
+.pull-left[
+**Efeito principal $\alpha_i$**
+
+= ATE de $A$, **marginalizado** sobre a distribuição de níveis de $B$ no experimento.
+]
+.pull-right[
+**Interação $(\alpha\beta)_{ij}$**
+
+= **heterogeneidade do efeito causal** de $A$ conforme o nível de $B$ — interação
+trata-tratamento.
+]
+
+--
+
+Efeito principal sem interação: "o tratamento funciona, e funciona igual para todo subgrupo de
+$B$." Com interação forte: "o tamanho do efeito depende de $B$" — duas conclusões bem diferentes.
+
+---
+
+## Notação matricial: $\mathbf{X} = [\mathbf{1}\ |\ \mathbf{X}_A\ |\ \mathbf{X}_B\ |\ \mathbf{X}_A \odot \mathbf{X}_B]$
+
+Do Capítulo 2: $\mathbf{Y}=\mathbf{X}\boldsymbol\beta+\boldsymbol\varepsilon$,
+$\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$.
+
+A coluna de interação é o produto de Hadamard ($\odot$, elemento a elemento) de cada coluna de
+$\mathbf{X}_A$ com cada coluna de $\mathbf{X}_B$ — exatamente como `model.matrix()` monta um
+termo de interação.
+
+--
+
+```{r mm-demo}
+pepino <- read_csv("../Livro/data/pepino.csv", show_col_types = FALSE) %>%
+  mutate(riego = factor(riego), silicio = factor(silicio))
+X <- model.matrix(~ riego * silicio, data = pepino)
+colnames(X)[c(2, 3, 6)]
+identical(X[, 6], X[, 2] * X[, 3])   # coluna de interação = produto das principais
+```
+
+---
+
+## Da matriz ao teste de interação
+
+O teste de $H_0:(\alpha\beta)_{ij}=0\ \forall i,j$ (seção "O modelo linear particionado" do livro) é a
+comparação nested entre
+
+$$\mathbf{X}_1 = [\mathbf{1}\ |\ \mathbf{X}_A\ |\ \mathbf{X}_B] \quad \text{vs.} \quad
+\mathbf{X} = [\mathbf{X}_1\ |\ \mathbf{X}_A \odot \mathbf{X}_B],$$
+
+$$F = \frac{(SQE_{reduzido} - SQE_{completo})/(a-1)(b-1)}{QM_{E,\ completo}}.$$
+
+--
+
+Mesma lógica do F-teste geral do Capítulo 2 — só que aplicada ao bloco de colunas de interação.
+
+---
+
+## ANOVA do fatorial A×B balanceado
+
+```{r tabela-anova, echo=FALSE}
+tibble(
+  Fonte = c("A", "B", "A×B", "Erro", "Total"),
+  gl    = c("$a-1$", "$b-1$", "$(a-1)(b-1)$", "$ab(r-1)$", "$abr-1$"),
+  SQ    = c("$SQ_A$", "$SQ_B$", "$SQ_{AB}$", "$SQ_E$", "$SQ_{Total}$")
+) %>%
+  kable(escape = FALSE, format = "html") %>%
+  kable_styling(font_size = 20, full_width = FALSE)
+```
+
+Convenção: examine a interação **primeiro**. Se relevante, efeitos principais isolados podem
+enganar — reporte as médias de célula.
+
+---
+
+## Fatoriais A×B×C
+
+$$
+y_{ijkl} = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + (\alpha\gamma)_{ik} +
+(\beta\gamma)_{jk} + (\alpha\beta\gamma)_{ijk} + \varepsilon_{ijkl}
+$$
+
+**Interação tripla:** mede se a interação $A{\times}B$ muda com o nível de $C$. Difícil de
+interpretar, rara de ser grande — mas nunca deve ser ignorada sem ser testada.
+
+---
+
+## O cubo do 2³: visualizando A×B×C
+
+Com **três fatores de dois níveis**, cada um dos $2^3=8$ tratamentos é um **vértice de um cubo**
+— cada aresta liga dois tratamentos que diferem em exatamente um fator. Dados reais: um
+sub-desenho do $2^4$ de biodiesel (Aula 13), fixando o agente de purificação no nível baixo.
+
+```{r cubo-setup, include=FALSE}
+biodiesel_23 <- read_csv("../Livro/data/biodiesel.csv", show_col_types = FALSE) %>%
+  filter(Agente == -1)
+
+sinais_23 <- tribble(
+  ~trat,  ~A, ~B, ~C,
+  "(1)",  -1, -1, -1, "a", 1, -1, -1, "b", -1, 1, -1, "ab", 1, 1, -1,
+  "c",    -1, -1,  1, "ac", 1, -1, 1, "cb", -1, 1, 1, "abc", 1, 1, 1
+) %>%
+  left_join(
+    biodiesel_23 %>% group_by(Relacion, Catalizador, Temperatura) %>%
+      summarise(media = mean(Rendimiento), .groups = "drop"),
+    by = c("A" = "Relacion", "B" = "Catalizador", "C" = "Temperatura")
+  ) %>%
+  mutate(AB = A*B, AC = A*C, BC = B*C, ABC = A*B*C)
+
+angulo_cubo <- pi / 4.5
+cubo_geo <- tibble(
+  x1 = c(0, 0, 0, 1), x2 = c(0, 1, 1, 1), y1 = c(0, 0, 1, 0), y2 = c(1, 0, 1, 1), tipo = "solido"
+) %>%
+  bind_rows(tibble(
+    x1 = c(cos(angulo_cubo), cos(angulo_cubo), cos(angulo_cubo), 1 + cos(angulo_cubo)),
+    x2 = c(cos(angulo_cubo), 1 + cos(angulo_cubo), 1 + cos(angulo_cubo), 1 + cos(angulo_cubo)),
+    y1 = c(sin(angulo_cubo), sin(angulo_cubo), 1 + sin(angulo_cubo), sin(angulo_cubo)),
+    y2 = c(1 + sin(angulo_cubo), sin(angulo_cubo), 1 + sin(angulo_cubo), 1 + sin(angulo_cubo)),
+    tipo = c("tracejado", "tracejado", "solido", "solido")
+  )) %>%
+  bind_rows(tibble(
+    x1 = c(0, 1, 0, 1), x2 = c(cos(angulo_cubo), 1 + cos(angulo_cubo), cos(angulo_cubo), 1 + cos(angulo_cubo)),
+    y1 = c(0, 0, 1, 1), y2 = c(sin(angulo_cubo), sin(angulo_cubo), 1 + sin(angulo_cubo), 1 + sin(angulo_cubo)),
+    tipo = c("tracejado", "solido", "solido", "solido")
+  ))
+
+vertices_23 <- bind_rows(cubo_geo %>% select(x = x1, y = y1), cubo_geo %>% select(x = x2, y = y2)) %>%
+  distinct() %>%
+  mutate(trat = c("(1)", "c", "a", "b", "cb", "ab", "ac", "abc")) %>%
+  left_join(sinais_23, by = "trat")
+
+AZUL_CUBO <- "#2a78d6"; VERMELHO_CUBO <- "#e34948"
+tema_cubo <- theme_void(base_size = 11) +
+  theme(plot.title = element_text(size = 13), plot.subtitle = element_text(size = 10.5, color = "grey30"))
+```
+
+```{r cubo-base, echo=FALSE, fig.width=6.5, fig.height=5}
+ggplot(cubo_geo) +
+  geom_segment(aes(x1, y1, xend = x2, yend = y2, linetype = tipo), color = gray(.55)) +
+  coord_equal(clip = "off") +
+  scale_linetype_manual(values = c(solido = "solid", tracejado = "dashed"), guide = "none") +
+  theme_void(base_size = 12) + theme(plot.margin = margin(6, 20, 20, 40)) +
+  geom_point(aes(x, y), data = vertices_23, size = 1.5, color = gray(.55)) +
+  geom_label(aes(x, y, label = paste0(trat, "\n", round(media, 1))), data = vertices_23, size = 3.4) +
+  annotate("text", x = c(.5, -.55, 1.35 + .5*cos(angulo_cubo)), y = c(-.4, .5, .12),
+           label = c("A (Relação)", "C (Temperatura)", "B (Catalisador)"), size = 3.3, fontface = "italic") +
+  labs(title = "Rendimento médio de biodiesel em cada vértice do 2³")
+```
+
+---
+
+## Efeitos principais: faces opostas do cubo
+
+```{r cubo-principais, echo=FALSE, fig.width=10, fig.height=4}
+face_principal <- function(sinal, titulo, efeito_valor) {
+  altos  <- vertices_23 %>% filter(.data[[sinal]] ==  1)
+  baixos <- vertices_23 %>% filter(.data[[sinal]] == -1)
+  ordenar <- function(df) { cx <- mean(df$x); cy <- mean(df$y); df[order(atan2(df$y-cy, df$x-cx)), ] }
+  ggplot(cubo_geo) +
+    geom_polygon(aes(x, y), data = ordenar(altos),  fill = VERMELHO_CUBO, alpha = .35) +
+    geom_polygon(aes(x, y), data = ordenar(baixos), fill = AZUL_CUBO,     alpha = .35) +
+    geom_segment(aes(x1, y1, xend = x2, yend = y2, linetype = tipo), color = gray(.5)) +
+    coord_equal() + scale_linetype_manual(values = c(solido="solid", tracejado="dashed"), guide="none") +
+    tema_cubo +
+    geom_point(aes(x, y), data = vertices_23, size = 1, color = gray(.4)) +
+    geom_label(aes(x, y, label = trat), data = vertices_23, size = 2.6) +
+    labs(title = titulo, subtitle = paste0("efeito = ", sprintf("%.2f", efeito_valor)))
+}
+efeito_A <- 2 * mean(sinais_23$A * sinais_23$media)
+efeito_B <- 2 * mean(sinais_23$B * sinais_23$media)
+efeito_C <- 2 * mean(sinais_23$C * sinais_23$media)
+cowplot::plot_grid(
+  face_principal("A", "A (Relação)", efeito_A),
+  face_principal("B", "B (Catalisador)", efeito_B),
+  face_principal("C", "C (Temperatura)", efeito_C), nrow = 1
+)
+```
+
+Face vermelha (nível alto) menos face azul (nível baixo) — literalmente $\bar y(x_j{=}{+}1) -
+\bar y(x_j{=}{-}1)$.
+
+---
+
+## Interações duplas: planos diagonais que se cruzam
+
+```{r cubo-duplas, echo=FALSE, fig.width=10, fig.height=4}
+plano_interacao <- function(pos, neg, titulo, efeito_valor) {
+  ord <- function(labels) vertices_23[match(labels, vertices_23$trat), ]
+  ggplot(cubo_geo) +
+    geom_polygon(aes(x, y), data = ord(pos), fill = VERMELHO_CUBO, alpha = .35) +
+    geom_polygon(aes(x, y), data = ord(neg), fill = AZUL_CUBO,     alpha = .35) +
+    geom_segment(aes(x1, y1, xend = x2, yend = y2, linetype = tipo), color = gray(.5)) +
+    coord_equal() + scale_linetype_manual(values = c(solido="solid", tracejado="dashed"), guide="none") +
+    tema_cubo +
+    geom_point(aes(x, y), data = vertices_23, size = 1, color = gray(.4)) +
+    geom_label(aes(x, y, label = trat), data = vertices_23, size = 2.6) +
+    labs(title = titulo, subtitle = paste0("efeito = ", sprintf("%.2f", efeito_valor)))
+}
+efeito_AB <- 2 * mean(sinais_23$AB * sinais_23$media)
+efeito_AC <- 2 * mean(sinais_23$AC * sinais_23$media)
+efeito_BC <- 2 * mean(sinais_23$BC * sinais_23$media)
+cowplot::plot_grid(
+  plano_interacao(c("(1)","ab","abc","c"), c("a","ac","cb","b"), "AB", efeito_AB),
+  plano_interacao(c("(1)","b","abc","ac"), c("c","cb","ab","a"), "AC", efeito_AC),
+  plano_interacao(c("(1)","a","abc","cb"), c("c","b","ab","ac"), "BC", efeito_BC), nrow = 1
+)
+```
+
+Quando os dois planos coloridos se cruzam no meio do cubo (em vez de serem faces paralelas), há
+interação — geometricamente, não dá para separar o efeito de um fator sem saber o nível do outro.
+
+---
+
+## Interação tripla: dois tetraedros entrelaçados
+
+```{r cubo-tripla, echo=FALSE, fig.width=6, fig.height=4.6}
+efeito_ABC <- 2 * mean(sinais_23$ABC * sinais_23$media)
+tetraedros <- bind_rows(
+  tibble(x=c(0,0,0,cos(angulo_cubo),cos(angulo_cubo),1), y=c(0,0,0,1+sin(angulo_cubo),1+sin(angulo_cubo),1),
+         xend=c(1,1+cos(angulo_cubo),cos(angulo_cubo),1,1+cos(angulo_cubo),1+cos(angulo_cubo)),
+         yend=c(1,sin(angulo_cubo),1+sin(angulo_cubo),1,sin(angulo_cubo),sin(angulo_cubo)), grupo="T1"),
+  tibble(x=c(0,0,1,1,cos(angulo_cubo),0), y=c(1,1,0,0,sin(angulo_cubo),1),
+         xend=c(1,cos(angulo_cubo),1+cos(angulo_cubo),cos(angulo_cubo),1+cos(angulo_cubo),1+cos(angulo_cubo)),
+         yend=c(0,sin(angulo_cubo),1+sin(angulo_cubo),sin(angulo_cubo),1+sin(angulo_cubo),1+sin(angulo_cubo)), grupo="T2")
+)
+ggplot(cubo_geo) +
+  geom_segment(aes(x, y, xend=xend, yend=yend), data=filter(tetraedros, grupo=="T1"), color=VERMELHO_CUBO, linewidth=.5) +
+  geom_segment(aes(x, y, xend=xend, yend=yend), data=filter(tetraedros, grupo=="T2"), color=AZUL_CUBO, linewidth=.5, linetype="22") +
+  geom_segment(aes(x1, y1, xend = x2, yend = y2, linetype = tipo), color = gray(.75)) +
+  coord_equal() + scale_linetype_manual(values = c(solido="solid", tracejado="dashed"), guide="none") +
+  tema_cubo +
+  geom_label(aes(x, y, label = trat, fill = factor(ABC)), data = vertices_23, size = 3.4, color = "white") +
+  scale_fill_manual(values = setNames(c(AZUL_CUBO, VERMELHO_CUBO), c("-1","1")), guide = "none") +
+  labs(title = "ABC (Relação×Catalisador×Temperatura)",
+       subtitle = paste0("efeito = ", sprintf("%.2f", efeito_ABC), " — o maior deste 2³"))
+```
+
+Sem um plano único para representar $ABC$: os 8 vértices se dividem em dois tetraedros alternados.
+Aqui a tripla ($8{,}91$) já domina todos os efeitos principais e duplos — o Capítulo 6/Aula 13
+confirma isso formalmente com os 4 fatores completos.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Irrigação × silício na altura do pepino
+
+**Fatores:** `riego` (2 níveis) × `silicio` (4 níveis), 3 repetições, 24 parcelas.
+
+```{r pepino-fit}
+modelo_axb <- aov(altura ~ riego * silicio, data = pepino)
+summary(modelo_axb)
+```
+
+---
+
+## O diagrama de Hasse deste fatorial A×B
+
+`riego` e `silicio` aparecem no **mesmo nível** — cruzados, sem relação de refinamento entre si —
+e se reencontram na interação, que os refina a ambos.
+
+```{r hasse-axb-12, echo=FALSE, fig.width=5, fig.height=4.6, fig.retina=2}
+nos_axb12 <- tibble(
+  termo = c("Média", "riego (A)", "silicio (B)", "riego×silicio", "Erro"),
+  df    = c(1, 2 - 1, 4 - 1, (2 - 1) * (4 - 1), 2 * 4 * (3 - 1)),
+  x     = c(0, -1, 1, 0, 0),
+  y     = c(4, 3, 3, 2, 1)
+)
+arestas_axb12 <- tibble(
+  de   = c("Média", "Média", "riego (A)", "silicio (B)", "riego×silicio"),
+  para = c("riego (A)", "silicio (B)", "riego×silicio", "riego×silicio", "Erro")
+)
+
+arestas_xy_axb12 <- arestas_axb12 %>%
+  left_join(nos_axb12 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
+  left_join(nos_axb12 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
+
+ggplot() +
+  geom_segment(data = arestas_xy_axb12, aes(x = x0, y = y0, xend = x1, yend = y1),
+               color = "grey45", linewidth = 0.6) +
+  geom_label(data = nos_axb12, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
+             size = 2.8, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
+  theme_void(base_size = 11) +
+  labs(title = "Fatorial A×B: a=2, b=4, r=3 (N=24)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 10.5))
+```
+
+$1+1+3+3+16=24=N$ — os 3 gl de `riego×silicio` são $12-1-1-3=(a-1)(b-1)$, a mesma contagem
+geométrica do exemplo A×B do Cap. 2 do livro-texto, aqui com os números reais do pepino.
+
+---
+
+## Gráfico de interação
+
+```{r pepino-plot, echo=FALSE, fig.width=8, fig.height=4.3}
+pepino %>%
+  group_by(riego, silicio) %>%
+  summarise(altura_media = mean(altura), .groups = "drop") %>%
+  ggplot(aes(x = silicio, y = altura_media, color = riego, group = riego)) +
+  geom_line(linewidth = 1) + geom_point(size = 2.5) +
+  labs(x = "Silício", y = "Altura média (cm)", color = NULL) +
+  theme_minimal(base_size = 14) + theme(legend.position = "top")
+```
+
+Retas quase paralelas — interação discreta ($p \approx 0{,}09$), abaixo do limiar de 5%.
+
+---
+
+## Processo de extração como A/B/n de três fatores
+
+**Cenário:** recuperação de composto volátil, 3 fatores de configuração (viscosidade,
+salinidade, tempo), 3 níveis cada, 2 injeções — $3^3 \times 2 = 54$ corridas.
+
+```{r acuosas-fit}
+acuosas <- read_csv("../Livro/data/acuosas.csv", show_col_types = FALSE) %>%
+  transmute(viscosidade = factor(Viscosidad), salinidade = factor(Salinidad),
+            tempo = factor(Tiempo), recuperacao = recupera)
+mod3 <- aov(recuperacao ~ viscosidade * salinidade * tempo, data = acuosas)
+broom::tidy(mod3) %>% select(term, df, p.value) %>%
+  mutate(p.value = round(p.value, 3)) %>%
+  kable(format = "html") %>% kable_styling(font_size = 16, full_width = FALSE)
+```
+
+---
+
+## Interpretando: efeitos aditivos
+
+Os três efeitos principais são significativos; **nenhuma interação** é. Os fatores atuam de
+forma aproximadamente aditiva — uma conclusão que só podemos afirmar *depois* de testar a
+interação, nunca antes.
+
+---
+
+## Blocos completos: corrigindo o modelo do pepino
+
+```{r pepino-blocos}
+pepino2 <- pepino %>% mutate(bloque = factor(bloque))
+modelo_blocos <- aov(altura ~ bloque + riego * silicio, data = pepino2)
+summary(modelo_blocos)[[1]][1:2, ]
+```
+
+Aqui, o bloco explica pouco ($p \approx 0{,}89$): $QM_E$ com bloco é ligeiramente **maior** do
+que sem ele. Blocar é decisão de desenho, não garantia automática de ganho.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Se a interação viscosidade×salinidade fosse significativa, por que reportar só médias
+   marginais seria enganoso?
+
+2. Nosso desenho tem repetição verdadeira (duas injeções). O que mudaria se houvesse só uma
+   corrida por combinação?
+
+3. Um teste A/B/n online (cor do botão × layout × CTA) é estruturalmente A×B×C. Que cuidado
+   extra ele exige, que um experimento de bancada controla mais facilmente?
+
+4. Na leitura causal, o que significa dizer que $(\alpha\beta)_{ij}$ é "heterogeneidade de efeito
+   de tratamento"? Dê um exemplo em que isso mudaria uma decisão de negócio.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Construindo X manualmente e conferindo a ortogonalidade
+
+```{r uso-r-1}
+X1 <- model.matrix(~ riego, data = pepino)[, 2]
+X2 <- model.matrix(~ silicio, data = pepino)[, 2]
+X12 <- X1 * X2   # coluna de interação, construída à mão
+
+c(cor_A_B  = cor(X1, X2),
+  cor_A_AB = cor(X1, X12))
+```
+
+Em um desenho balanceado, as colunas de efeitos principais tendem a ser pouco correlacionadas —
+mas só no $2^k$ (Aula 13) a ortogonalidade é **exata**.
+
+---
+
+## Nested F-test via `anova()`
+
+```{r uso-r-2}
+mod_reduzido <- aov(altura ~ riego + silicio, data = pepino)
+mod_completo <- aov(altura ~ riego * silicio, data = pepino)
+anova(mod_reduzido, mod_completo)
+```
+
+O `F` e o `Pr(>F)` da segunda linha são idênticos aos da linha `riego:silicio` da ANOVA padrão —
+confirma que o teste de interação **é** exatamente o teste nested da Seção de modelo
+particionado.
+
+---
+
+## Resumo da aula
+
+- Cruzar fatores detecta interação sem custo adicional de unidades.
+- $\mathbf{X} = [\mathbf{1}\,|\,\mathbf{X}_A\,|\,\mathbf{X}_B\,|\,\mathbf{X}_A\odot\mathbf{X}_B]$:
+  a coluna de interação é produto de Hadamard das colunas principais.
+- Leitura causal: efeito principal = ATE marginalizado; interação = heterogeneidade de efeito.
+- A×B×C acrescenta interações duplas e uma tripla; blocos completos somam um termo aditivo.
+- O cubo do 2³: efeitos principais são faces opostas, interações duplas são planos diagonais que
+  se cruzam, e a tripla é a alternância entre dois tetraedros — sem um único "plano" que a
+  represente.
+- Próxima aula: o caso especial $2^k$ — ortogonalidade exata, análise sem repetição e confusão em
+  blocos.
+
+## Referências
+
+- Box, G. E. P., Hunter, J. S. & Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley & Sons.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.
+- Imbens, G. W. & Rubin, D. B. (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*. Cambridge University Press.

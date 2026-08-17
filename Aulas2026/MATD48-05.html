@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Submuestreo e Modelo de Efeitos Aleatórios</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Submuestreo e Modelo de Efeitos Aleatórios
+]
+.subtitle[
+## Dois níveis de erro no DCA e o que fazer quando os tratamentos são uma amostra
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 05 — Submuestreo e Efeitos Aleatórios
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Submuestreo: dois níveis de erro
+
+Quando uma unidade experimental (UE) é medida `\(q\)` vezes (submuestras), o modelo ganha um segundo
+termo de erro:
+
+`$$Y_{ijk} = \mu + \tau_i + \delta_{ij} + \varepsilon_{ijk}$$`
+
+- `\(\delta_{ij}\sim N(0,\sigma_\delta^2)\)`: erro **experimental** (entre UEs).
+- `\(\varepsilon_{ijk}\sim N(0,\sigma_\varepsilon^2)\)`: erro de **amostragem** (entre submuestras).
+- `\(i=1,\ldots,t\)`; `\(j=1,\ldots,r\)` UEs por tratamento; `\(k=1,\ldots,q\)` submuestras por UE.
+
+--
+
+Só `\(\sigma_\delta^2\)` importa para comparar tratamentos — mais submuestras **não** criam novas UEs
+(Cochran &amp; Cox, 1957).
+
+---
+
+## Notação matricial: por que `\(\sigma^2\mathbf{I}\)` não basta
+
+Empilhando as `\(N=trq\)` observações em `\(\mathbf{Y}\)` (Capítulo 2), o submuestreo quebra a suposição
+de erros i.i.d.:
+
+`$$\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}' + \sigma_\varepsilon^2\mathbf{I}_N$$`
+
+- `\(\mathbf{Z}\)`: matriz `\(N\times tr\)` de indicadores de UE — `\(Z_{[ijk],\,i'j'}=\mathbb 1\{i=i',j=j'\}\)`.
+- `\(\mathbf{Z}\mathbf{Z}'\)` tem blocos de `\(1\)`'s do tamanho `\(q\times q\)` (submuestras da mesma UE):
+  observações da mesma UE são correlacionadas, `\(\mathrm{Cov}(Y_{ijk},Y_{ijk'})=\sigma_\delta^2\)`.
+- `\(\mathbf{V}\)` tem estrutura de **simetria composta** por bloco — daí porque MQO com
+  `\(\mathrm{Cov}=\sigma^2\mathbf{I}\)` (Cap. 2) não é mais o modelo certo, e a ANOVA precisa agregar
+  por UE antes de testar (Searle, 1971).
+
+---
+
+## ANOVA com submuestreo
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Gl &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; E[QM] &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; t - 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; σ²_ε + qσ²_δ + qr Στ²/(t-1) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro experimental &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; t(r-1) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; σ²_ε + qσ²_δ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro de amostragem &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; tr(q-1) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; σ²_ε &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; trq - 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Teste correto: `\(F = MS_{\text{Trat}}/MS_{\text{erro experimental}}\)` — **não** o erro de
+amostragem. Usar o erro de amostragem no denominador é pseudorreplicação (Aula 01/Capítulo 1):
+infla `\(F\)` e a taxa de falso positivo.
+
+---
+
+## Modelo de efeitos aleatórios
+
+Quando os níveis do fator são uma **amostra aleatória** de uma população maior de níveis (não os
+níveis de interesse *per se*):
+
+`$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \tau_i\overset{iid}{\sim}N(0,\sigma_\tau^2)$$`
+
+- `\(H_0:\sigma_\tau^2=0\)` em vez de "as médias são iguais".
+- `\(\text{Corr}(Y_{ij},Y_{ij'}) = \sigma_\tau^2/(\sigma_\tau^2+\sigma^2)\)` = ICC.
+- Mesma tabela de ANOVA, mas `\(E[MS_{\text{Entre}}] = \sigma^2+n\sigma_\tau^2\)` (não envolve `\(\tau_i\)`
+  individuais) `\(\Rightarrow \hat\sigma_\tau^2 = (MS_{\text{Entre}}-MS_E)/n\)`, o estimador de
+  momentos clássico para componentes de variância (Montgomery, 2017).
+
+--
+
+Em notação matricial, a mesma estrutura de simetria composta reaparece,
+`\(\mathbf{V}=\sigma_\tau^2\mathbf{Z}\mathbf{Z}'+\sigma^2\mathbf{I}_N\)`, agora com `\(\mathbf{Z}\)`
+indicando o **nível sorteado** (não a UE): submuestreo e efeitos aleatórios são duas instâncias
+do mesmo fenômeno — observações que compartilham um rótulo aleatório deixam de ser independentes.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Agricultura: probiótico e ganho de peso em tilápia
+
+**Dados reais** (`mojarra.csv`): 4 probióticos, 20 aquários (5 por probiótico), ~5 peixes por
+aquário medidos individualmente.
+
+- **UE = aquário** (o probiótico é misturado à ração de todo o aquário).
+- **Unidade amostral = peixe** (submuestra).
+
+
+``` r
+mojarra &lt;- read_csv("../Livro/data/mojarra.csv", show_col_types = FALSE) %&gt;%
+  rename(probiotico = probiotico, aquario = Acuario,
+         peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %&gt;%
+  drop_na(peso_45) %&gt;%
+  mutate(probiotico = factor(probiotico), aquario = factor(aquario),
+         ganho = peso_45 - peso_inicial)
+nrow(mojarra); n_distinct(mojarra$aquario)
+```
+
+```
+## [1] 97
+```
+
+```
+## [1] 20
+```
+
+---
+
+## Visualizando a estrutura hierárquica
+
+&lt;img src="MATD48-05_files/figure-html/plot-hierarquia-05-1.png" alt="" width="612" /&gt;
+
+Losango preto = média do aquário. Variação **entre** losangos de uma mesma cor = erro
+experimental (`\(\sigma_\delta^2\)`); variação dos pontos **ao redor** do seu losango = erro de
+amostragem (`\(\sigma_\varepsilon^2\)`). A ANOVA a seguir compara apenas os 20 losangos — não os
+quase 100 pontos.
+
+---
+
+## ANOVA aninhada
+
+
+``` r
+modelo_sub &lt;- aov(ganho ~ probiotico + Error(probiotico:aquario), data = mojarra)
+summary(modelo_sub)
+```
+
+```
+## 
+## Error: probiotico:aquario
+##            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## probiotico  3   1845   615.0   12.98 0.000149 ***
+## Residuals  16    758    47.4                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Error: Within
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Residuals 77   1360   17.66
+```
+
+Teste do probiótico: `\(MS_{\text{Trat}}/MS_{\text{entre aquários}}\)`, com 16 g.l. no denominador —
+não os 77 g.l. entre peixes dentro de aquário.
+
+---
+
+## O diagrama de Hasse do submuestreo
+
+Quatro nós em **cadeia**: aquário aninhado dentro de probiótico, peixe (submuestra) aninhado
+dentro de aquário — cada nível de aninhamento é um novo elo, ao contrário dos termos cruzados do
+DBCA (Aula 09).
+
+&lt;img src="MATD48-05_files/figure-html/hasse-sub-05-1.png" alt="" width="230.4" /&gt;
+
+`\(1+3+16+77=97=N\)`: os 16 gl de "UE" são exatamente os `\(t(r-1)\)` da tabela simbólica; os 77 gl de
+"Submuestra" são o que sobra depois de já ter explicado probiótico e aquário — a mesma regra de
+subtração do diagrama de Hasse do Cap. 2 do livro-texto.
+
+---
+
+## Efeitos aleatórios: variabilidade entre clipes sonoros
+
+Cinco clipes de som distração sorteados de um banco maior, 8 voluntários por clipe.
+
+
+``` r
+set.seed(77)
+t_niveis &lt;- 5; n_por_nivel &lt;- 8
+efeito_clipe &lt;- rnorm(t_niveis, 0, sqrt(300))
+dados_clipe &lt;- tibble(
+  clipe = factor(rep(paste("Clipe", 1:t_niveis), each = n_por_nivel)),
+  efeito = rep(efeito_clipe, each = n_por_nivel),
+  tempo_reacao = 520 + efeito + rnorm(t_niveis * n_por_nivel, 0, sqrt(1200))
+)
+modelo_clipe &lt;- aov(tempo_reacao ~ clipe, data = dados_clipe)
+tab_cl &lt;- summary(modelo_clipe)[[1]]
+sigma2_tau_hat &lt;- (tab_cl[["Mean Sq"]][1] - tab_cl[["Mean Sq"]][2]) / n_por_nivel
+c(sigma2_tau = sigma2_tau_hat, sigma2 = tab_cl[["Mean Sq"]][2],
+  ICC = sigma2_tau_hat / (sigma2_tau_hat + tab_cl[["Mean Sq"]][2]))
+```
+
+```
+##   sigma2_tau       sigma2          ICC 
+##  242.2223275 1407.0528376    0.1468659
+```
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. No experimento da tilápia, por que **não** seria correto tratar os ~97 peixes como 97
+   réplicas independentes do probiótico?
+
+2. Se o orçamento permitisse 5 aquários adicionais, seria mais eficiente usá-los para mais
+   aquários por probiótico ou mais peixes por aquário existente? Por quê?
+
+3. No exemplo dos clipes sonoros, por que a pergunta de pesquisa deixou de ser "o clipe 3 é
+   diferente do clipe 1?" para se tornar "quanto os clipes variam entre si?"
+
+4. Em que situação você trataria "tipo de distração" (Aula 04) como efeito fixo, mas "clipe
+   sonoro específico" como efeito aleatório, no mesmo experimento?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Retorno decrescente da submuestragem
+
+
+``` r
+tab_sub &lt;- summary(modelo_sub)
+MS_exp &lt;- tab_sub[["Error: probiotico:aquario"]][[1]][["Mean Sq"]][2]
+MS_am  &lt;- tab_sub[["Error: Within"]][[1]][["Mean Sq"]][1]
+q_medio &lt;- nrow(mojarra) / n_distinct(mojarra$aquario)
+sigma2_delta &lt;- (MS_exp - MS_am) / q_medio
+
+tibble(q = c(1, 5, 10, 20, 50)) %&gt;%
+  mutate(var_media_UE = round(sigma2_delta + MS_am / q, 2)) %&gt;%
+  kable(format = "html") %&gt;% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+&lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; q &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; var_media_UE &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.79 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.66 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.89 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.01 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.48 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+O piso `\(\sigma_\delta^2 \approx 6.1\)` nunca desaparece — só mais aquários
+reduzem a incerteza sobre o efeito do probiótico sem limite.
+
+---
+
+## Tamanho de amostra no modelo aleatório
+
+
+``` r
+gamma_alvo &lt;- 300 / 1200
+poder_n &lt;- function(n, t = 5, alpha = 0.05) {
+  Fc &lt;- qf(1 - alpha, t - 1, t * (n - 1))
+  pf(Fc / (1 + n * gamma_alvo), t - 1, t * (n - 1), lower.tail = FALSE)
+}
+tibble(n = c(8, 15, 20, 30)) %&gt;% mutate(poder = round(map_dbl(n, poder_n), 3)) %&gt;%
+  kable(format = "html") %&gt;% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+&lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; poder &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.486 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.716 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.800 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.886 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Com 8 réplicas/clipe, poder ≈ 0,49 para detectar `\(\gamma=0{,}25\)`; seriam necessárias ~20.
+
+---
+
+## Resumo da aula
+
+- Submuestreo: modelo com `\(\delta_{ij}\)` (experimental) e `\(\varepsilon_{ijk}\)` (amostragem); o
+  teste de tratamento usa o erro experimental, nunca o de amostragem.
+- A variância da média de uma UE tem piso `\(\sigma_\delta^2\)`: mais UEs &gt; mais submuestras.
+- Efeitos aleatórios: mesma tabela de ANOVA, `\(E[QM]\)` diferente, foco em `\(\sigma_\tau^2\)` (ICC), e
+  planejamento amostral via `\(F/(1+n\gamma)\)` em vez de `\(F\)` não central.
+- Próxima aula: verificação dos pressupostos (normalidade, homocedasticidade) e transformações
+  que tornam essas ANOVAs confiáveis na prática.
+
+## Referências
+
+- Cochran, W. G. &amp; Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley &amp; Sons.
+- Searle, S. R. (1971). *Linear Models*. John Wiley &amp; Sons.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

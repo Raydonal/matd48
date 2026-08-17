@@ -1,0 +1,166 @@
+---
+documentclass: extarticle
+classoption: landscape
+title:  "Projeto Criativo: PLANEJAMENTO DE EXPERIMENTOS A"
+subtitle:  "Projeto - IV — Otimização Fatorial de um Pipeline de Machine Learning"
+geometry: margin=0.7in
+fontsize: 14pt
+mainfont: Cambria
+author:
+  - Raydonal Ospina <a href='mailto:raydonal@castlab.org'> `r fontawesome::fa(name = 'envelope-circle-check', fill = 'darkgreen')`</a>
+output:
+  html_document:
+        theme: yeti
+        css:  config/StyleHomework.css
+  pdf_document:
+    keep_tex: yes
+lang: pt
+link-citations: yes
+linkcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+**Regras:** O projeto deve ser realizado de forma individual. Você deverá encaminhar a resolução
+do seu projeto digitalizado em formato PDF para o e-mail raydonal@castlab.org até a data indicada
+no cronograma do curso, até as 12:00hs (GMT-3, Horário de Brasília). Forneça código `R` (e/ou
+`Python`/`Julia`, se usar) e quaisquer fontes complementares. Recomendo fortemente não usar LLMs
+(ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral, Falcon, Gemma, Bloom,
+Magistral, Qwen, Kimi, Nova Phi, Grok, etc.) para resolver o projeto, evite constrangimentos.
+**Quero vocês pensando, não a máquina.**
+
+**Avaliação:** este projeto fecha a **Nota 3** do curso (capstone) — N3 = 50% Projeto IV + 50%
+média das Listas 12–14. É o terceiro e último dos três projetos incrementais: ele dá continuidade
+direta ao Projeto III (mesma fintech, mesmo pipeline de crédito) e reaproveita, num único
+delineamento fatorial $2^4$, tudo que os Projetos II e III trabalharam separadamente — repetição
+genuína (Projeto II) e comparação controlada por blocos (Projeto III) — para responder a uma
+pergunta que nenhum dos dois anteriores conseguia sozinho: como vários fatores de decisão
+**interagem** entre si.
+
+**Contexto do Projeto — o capstone do curso:**
+A **CrediScore** (mesma fintech do Projeto III) escolheu a **floresta aleatória** para produção.
+Agora quer **espremer o máximo de desempenho** do pipeline antes do lançamento. A engenharia
+identificou 4 decisões de pipeline que podem afetar a métrica de negócio (F1-score, que penaliza
+tanto aprovar mau pagador quanto recusar bom pagador):
+
+1. **Normalização das variáveis** (Fator A: sim / não)
+2. **Balanceamento de classes via *undersampling*** (Fator B: sim / não)
+3. **Número de árvores** (Fator C: baixo = 50 / alto = 500)
+4. **Profundidade máxima por árvore** (Fator D: baixa = 3 / alta = ilimitada)
+
+Ninguém sabe se essas decisões interagem entre si (ex.: será que balanceamento só ajuda quando a
+normalização também está ativada?). Testar "uma decisão de cada vez" (OFAT) levaria a conclusões
+erradas se houver interação — exatamente o problema que o Capítulo 5 ensina a evitar.
+
+---
+# **Parte 1: Delineando o Experimento Fatorial**
+
+**Atividades (Parte 1):**
+
+1. Este é um fatorial $2^4$: 4 fatores, 2 níveis cada. Quantos **tratamentos** (combinações)
+   existem? Se cada tratamento for treinado com **3 réplicas** (3 sementes aleatórias diferentes
+   para o particionamento treino/teste), quantas execuções de treinamento são necessárias ao todo?
+2. Explique, no vocabulário do Capítulo 5, o que significaria uma **interação entre normalização
+   (A) e balanceamento (B)** neste contexto — dê um cenário concreto e plausível em que o efeito
+   de balancear as classes *depende* de as variáveis estarem normalizadas ou não.
+3. Escreva o modelo estatístico completo do fatorial $2^4$ com 3 réplicas, incluindo todos os
+   termos de interação até a de 4ª ordem, e monte a estrutura da tabela de ANOVA (fontes de
+   variação e graus de liberdade de cada termo).
+
+# **Parte 2: Execute o Fatorial, Identifique os Efeitos e Otimize**
+
+```{r simulacao}
+# Use como semente o mês+dia do seu nascimento + 1011
+minha_semente <- 1 + 6 + 1011
+set.seed(minha_semente)
+
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(randomForest)
+})
+
+# 1. Dados (reaproveite o simulador de credito do Projeto III, ou seu proprio dataset)
+n <- 600
+base <- tibble(
+  renda        = rnorm(n, 3000, 900),
+  divida_pct   = runif(n, 0, 1),
+  idade        = round(rnorm(n, 38, 10)),
+  score_bureau = rnorm(n, 600, 80)
+) %>%
+  mutate(
+    logit = -3 + 0.0009*renda - 3.2*divida_pct + 0.01*idade + 0.004*score_bureau,
+    prob_pagar = 1/(1+exp(-logit)),
+    inadimplente = factor(rbinom(n, 1, 1 - prob_pagar), labels = c("Paga","Inadimplente"))
+  ) %>% select(-logit, -prob_pagar)
+# desbalanceando de proposito, como um caso real de credito
+base <- bind_rows(base %>% filter(inadimplente == "Paga"),
+                   base %>% filter(inadimplente == "Inadimplente") %>% slice_sample(prop = 0.35))
+
+f1_score <- function(pred, real, positivo = "Inadimplente") {
+  tp <- sum(pred == positivo & real == positivo)
+  fp <- sum(pred == positivo & real != positivo)
+  fn <- sum(pred != positivo & real == positivo)
+  prec <- tp / (tp + fp); rec <- tp / (tp + fn)
+  ifelse(is.nan(prec) | is.nan(rec) | (prec+rec)==0, 0, 2*prec*rec/(prec+rec))
+}
+
+niveis <- list(A_norm = c("nao","sim"), B_bal = c("nao","sim"),
+               C_arvores = c("baixo","alto"), D_prof = c("baixa","alta"))
+fatorial <- expand_grid(!!!niveis) %>% expand_grid(replica = 1:3)
+
+fatorial <- fatorial %>%
+  mutate(f1 = pmap_dbl(list(A_norm, B_bal, C_arvores, D_prof, replica), function(A,B,C,D,rep) {
+    set.seed(minha_semente + rep*97)
+    idx <- sample(1:nrow(base), 0.7*nrow(base))
+    treino <- base[idx, ]; teste <- base[-idx, ]
+
+    if (B == "sim") {
+      minoria <- treino %>% filter(inadimplente == "Inadimplente")
+      maioria <- treino %>% filter(inadimplente == "Paga") %>% slice_sample(n = nrow(minoria)*2)
+      treino <- bind_rows(minoria, maioria)
+    }
+    vars <- c("renda","divida_pct","idade","score_bureau")
+    if (A == "sim") {
+      mu <- colMeans(treino[vars]); sdv <- apply(treino[vars], 2, sd)
+      treino[vars] <- scale(treino[vars], center = mu, scale = sdv)
+      teste[vars]  <- scale(teste[vars],  center = mu, scale = sdv)
+    }
+    ntree <- ifelse(C == "baixo", 50, 500)  # profundidade baixa ~ poucos nos terminais
+
+    m <- randomForest(inadimplente ~ renda+divida_pct+idade+score_bureau,
+                       data = treino, ntree = ntree,
+                       maxnodes = if (D == "baixa") 8 else NULL)
+    pred <- predict(m, teste)
+    f1_score(pred, teste$inadimplente)
+  }))
+
+fatorial  # 16 tratamentos x 3 replicas = 48 linhas: seu fatorial 2^4
+```
+
+**Atividades (Parte 2):**
+
+1. **ANOVA completa do $2^4$:** ajuste o modelo com todas as interações, apresente a tabela de
+   ANOVA. Quais efeitos (principais e de interação) são estatisticamente significativos a
+   $\alpha=0{,}05$?
+2. **Gráficos de efeito principal e de interação** para os termos significativos — com discussão
+   de cada um (o que significa, em português, "há interação AB"? traduza para a linguagem do
+   negócio: quando vale a pena balancear as classes?).
+3. **Se você tivesse rodado sem repetição** (1 réplica só, 16 corridas): refaça a análise com
+   apenas a primeira réplica de cada tratamento, construa o gráfico *half-normal* dos efeitos e a
+   margem de erro de Lenth. As conclusões sobre quais efeitos importam mudam em relação à ANOVA
+   completa com repetição? Isso ilustra o trade-off custo (menos corridas) vs. informação.
+4. **Refinamento por superfície de resposta:** feche os fatores categóricos A, B, D no melhor
+   nível encontrado, e trate `C_arvores` como fator quantitativo — rode o modelo para um terceiro
+   valor intermediário (ex.: 200 árvores) além dos dois já testados (50 e 500), ajuste uma curva
+   quadrática de F1 vs. número de árvores, e estime o número de árvores que maximiza o F1
+   (considerando também o custo computacional — mais árvores = mais tempo de treino).
+5. **Recomendação final:** e-mail para a diretoria da CrediScore com a configuração de pipeline
+   recomendada, o ganho de F1-score esperado em relação à configuração "ingênua" (todos os fatores
+   no nível padrão), e uma ressalva sobre generalização (esses resultados valem para outro
+   dataset de crédito, ou são específicos deste?).

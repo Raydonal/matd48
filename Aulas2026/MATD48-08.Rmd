@@ -1,0 +1,354 @@
+---
+title: "Análise de Covariância e o Teste de Kruskal-Wallis"
+subtitle: "Ajustando por uma covariável e testando sem pressupor normalidade"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+  library(emmeans)
+  library(car)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 08 — Análise de Covariância e o Teste de Kruskal-Wallis
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Duas situações, duas soluções
+
+Esta aula fecha o Capítulo 3 com duas ferramentas que resolvem problemas diferentes:
+
+- **ANCOVA** — os grupos foram aleatorizados, mas diferem por acaso em uma variável medida
+  *antes* do tratamento. Como ajustar por isso e ganhar precisão?
+
+- **Kruskal-Wallis** — os pressupostos de normalidade/homocedasticidade da ANOVA não se
+  sustentam. Como comparar grupos sem depender deles?
+
+---
+
+## ANCOVA: o modelo
+
+$$y_{ij} = \mu + \tau_i + \beta\,(x_{ij} - \bar x_{\cdot\cdot}) + \varepsilon_{ij}, \qquad
+\varepsilon_{ij} \sim N(0,\sigma^2)\ \text{i.i.d.}$$
+
+- $x_{ij}$: a **covariável**, medida antes do tratamento (não pode ser afetada por ele).
+- $\beta$: inclinação **comum** a todos os grupos — pressuposto de *homogeneidade das
+  inclinações*, verificado testando a interação $\tau_i \times x_{ij}$.
+
+--
+
+Médias de tratamento **ajustadas** para o valor médio geral da covariável:
+
+$$\bar y_{i\cdot(\text{ajustada})} = \bar y_{i\cdot} - \hat\beta\,(\bar x_{i\cdot} - \bar x_{\cdot\cdot}).$$
+
+A ideia de combinar regressão e ANOVA para ajustar por uma covariável remonta a Fisher
+(1935).
+
+---
+
+## ANCOVA em notação matricial
+
+Nenhuma teoria nova: a covariável é só **mais uma coluna** de $\mathbf X$ (Cap. 2).
+
+$$\mathbf Y = \mathbf X\boldsymbol\beta+\boldsymbol\varepsilon, \qquad
+\mathbf X=\big[\mathbf X_{\text{trat}} \mid \mathbf z\big], \qquad
+\boldsymbol\beta=\begin{bmatrix}\boldsymbol\tau\\\beta\end{bmatrix}.$$
+
+--
+
+$\mathbf P_X$ projeta sobre um espaço-coluna **maior** (uma dimensão a mais que só
+$\mathbf X_{\text{trat}}$). O teste de tratamento ajustado é, de novo, soma de quadrados extra:
+
+$$SQ_{\text{Trat(ajustado)}} = \mathbf Y'\big(\mathbf P_X - \mathbf P_{[\mathbf 1\mid\mathbf z]}\big)\mathbf Y$$
+
+Ajustar por covariável = **projetar a direção de $\mathbf z$ para fora antes** de testar tratamento.
+
+---
+
+## Por que incorporar a covariável?
+
+Dois ganhos simultâneos:
+
+1. **Ajuste**: corrige diferenças de linha de base entre grupos que a aleatorização não
+   eliminou por completo (ela garante comparabilidade *em expectativa*, não em cada amostra).
+
+2. **Precisão**: remove do erro experimental a variação explicada pela covariável — o mesmo
+   espírito da blocagem (Capítulo 4), mas com uma variável contínua em vez de um agrupamento
+   categórico (Montgomery, 2017).
+
+--
+
+A tabela de ANOVA ajustada usa **soma de quadrados sequencial**: a covariável entra
+**primeiro** no modelo, e só então o efeito de tratamento é avaliado sobre o que restou.
+
+---
+
+## Kruskal-Wallis: motivação
+
+ANOVA e os procedimentos da Aula 07 assumem erros normais e variância homogênea.
+
+Quando isso falha de forma severa (assimetria, outliers influentes, amostras pequenas) e
+transformações não resolvem, o teste de **Kruskal-Wallis** (Kruskal & Wallis, 1952) testa se $t$
+populações têm a mesma distribuição, sem assumir normalidade.
+
+---
+
+## Kruskal-Wallis: a estatística
+
+Substitui os valores pelos seus **postos** (ranks) na amostra combinada de $N=\sum n_i$
+observações. Com $R_i$ = soma dos postos no grupo $i$:
+
+$$H = \frac{12}{N(N+1)} \sum_{i=1}^t \frac{R_i^2}{n_i} - 3(N+1) \ \overset{\cdot}{\sim}\ \chi^2_{t-1}
+\quad \text{sob } H_0.$$
+
+--
+
+Um "ANOVA sobre os postos": robusto a outliers e assimetria, ao custo de menor poder quando a
+normalidade de fato se sustenta.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## ANCOVA: cafeína ajustada pela atenção basal
+
+Retomamos o experimento de dose de cafeína (Aula 07), agora usando a covariável **basal**
+(atenção medida antes da dose).
+
+```{r sim-cafeina}
+set.seed(7)
+dose_mg <- c(0, 50, 100, 150, 200)
+dose_f <- factor(rep(dose_mg, each = 8))
+basal <- rnorm(40, 60, 8)
+efeito_dose <- function(d) 20 + 0.35 * d - 0.0013 * d^2
+
+cafeina <- tibble(
+  dose = dose_f, basal = basal,
+  atencao_pos = 40 + 0.5 * basal + efeito_dose(as.numeric(as.character(dose_f))) +
+    rnorm(40, 0, 5)
+)
+```
+
+---
+
+## Passo 1: homogeneidade das inclinações
+
+```{r homog-incl}
+mod_inclinacoes <- lm(atencao_pos ~ basal * dose, data = cafeina)
+anova(mod_inclinacoes)[3, ]   # interação basal:dose -- não significativa?
+```
+
+```{r plot-homog-incl, echo=FALSE, fig.width=7.5, fig.height=3.8}
+ggplot(cafeina, aes(basal, atencao_pos, color = dose)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  labs(x = "Atenção basal", y = "Atenção pós-dose", color = "Dose (mg)",
+       title = "Uma reta por dose: inclinações parecidas?") +
+  theme_minimal(base_size = 13)
+```
+
+Interação não significativa → prossegue com o modelo aditivo (ANCOVA). As cinco retas ajustadas
+separadamente já são visualmente quase paralelas — o teste apenas formaliza o que o olho já
+sugere aqui.
+
+---
+
+## Passo 2: ANCOVA e médias ajustadas
+
+```{r ancova}
+mod_ancova <- lm(atencao_pos ~ basal + dose, data = cafeina)
+anova(mod_ancova)                 # SQ sequencial: covariável entra primeiro
+```
+
+```{r ancova-emm}
+emmeans(mod_ancova, ~ dose)       # médias de dose já ajustadas para o basal médio
+```
+
+`basal` é altamente significativo, e o `QME` (Residuals) cai em relação à ANOVA sem covariável
+da Aula 07 — a comparação entre doses ficou mais precisa.
+
+---
+
+## A visualização canônica da ANCOVA
+
+Resposta vs. covariável, colorida por grupo, com retas **paralelas** (inclinação comum $\hat\beta$):
+
+```{r plot-ancova, echo=FALSE, fig.width=8, fig.height=4}
+grade_basal <- tibble(basal = seq(min(cafeina$basal), max(cafeina$basal), length.out = 50))
+retas_dose <- map_dfr(levels(cafeina$dose), function(d) {
+  g <- grade_basal
+  g$dose <- factor(d, levels = levels(cafeina$dose))
+  g$ajuste <- predict(mod_ancova, newdata = g)
+  g
+})
+
+ggplot() +
+  geom_point(data = cafeina, aes(basal, atencao_pos, color = dose), alpha = 0.7) +
+  geom_line(data = retas_dose, aes(basal, ajuste, color = dose), linewidth = 1) +
+  labs(x = "Atenção basal (covariável)", y = "Atenção pós-dose", color = "Dose (mg)") +
+  theme_minimal(base_size = 14)
+```
+
+A separação **vertical** entre as retas (não a inclinação, que é comum) é o efeito ajustado da
+dose: comparando participantes com o mesmo basal, a dose de 150 mg fica acima das demais.
+
+---
+
+## Ciência de dados: carregamento com conexões lentas
+
+Retomamos o experimento de scripts de terceiros (Aula 07), agora com alguns carregamentos
+medidos em conexões congestionadas — tempos muito acima do resto da amostra.
+
+```{r sim-scripts-out}
+set.seed(2026)
+config <- c("Nenhum", "Analytics", "Anúncios", "Combo")
+efeito_config <- c(Nenhum = 0, Analytics = 60, Anúncios = 140, Combo = 210)
+dados_scripts <- tibble(
+  config = factor(rep(config, each = 10), levels = config),
+  tempo_ms = 900 + efeito_config[as.character(config)] + rnorm(40, 0, 70)
+)
+
+set.seed(3)
+idx_lentos <- sample(1:40, 4)
+dados_scripts$tempo_ms[idx_lentos] <- dados_scripts$tempo_ms[idx_lentos] +
+  rexp(4, rate = 1 / 2000)   # cauda pesada: conexões lentas
+```
+
+---
+
+## Kruskal-Wallis vs. ANOVA sob outliers
+
+```{r plot-out, echo=FALSE, fig.width=7, fig.height=3.3}
+ggplot(dados_scripts, aes(config, tempo_ms, fill = config)) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  labs(x = NULL, y = "Tempo (ms)", title = "Note os outliers acima do resto") +
+  theme_minimal(base_size = 13)
+```
+
+```{r kw}
+shapiro.test(residuals(aov(tempo_ms ~ config, data = dados_scripts)))$p.value
+kruskal.test(tempo_ms ~ config, data = dados_scripts)
+```
+
+---
+
+## Comparações par a par não paramétricas
+
+```{r kw-pairwise}
+pairwise.wilcox.test(dados_scripts$tempo_ms, dados_scripts$config,
+                      p.adjust.method = "bonferroni")
+```
+
+O padrão geral de conclusões da Aula 07 se mantém, mesmo sem supor normalidade — com um pouco
+menos de nitidez nas diferenças mais sutis, o custo esperado de um teste mais robusto.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que é essencial que a covariável da ANCOVA seja medida **antes** do tratamento? O que dá
+   errado se o "basal" fosse medido depois de alguns participantes já terem tomado cafeína?
+
+2. Compare ANCOVA com blocagem por uma variável categórica: em que situação prática uma
+   covariável contínua está disponível, mas uma blocagem categórica não seria possível?
+
+3. O teste de Shapiro-Wilk sobre os resíduos rejeitou normalidade no exemplo de scripts. Isso
+   por si só já justifica abandonar a ANOVA em favor do Kruskal-Wallis? Que outros fatores
+   (tamanho de amostra, magnitude do desvio) você consideraria antes de decidir?
+
+4. Kruskal-Wallis testa igualdade de **distribuições** (não só de médias). O que isso implica
+   sobre a interpretação de uma rejeição de $H_0$, quando os grupos podem diferir em variância
+   e não só em posição central?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## ANCOVA: verificar antes de ajustar
+
+```{r uso-r-1}
+# 1. SEMPRE testar homogeneidade de inclinações antes de interpretar a ANCOVA
+lm(atencao_pos ~ basal * dose, data = cafeina) %>% anova() %>%
+  broom::tidy() %>% filter(term == "basal:dose")
+
+# 2. Se a interação não for significativa, remova-a e ajuste o modelo aditivo
+mod_ancova <- lm(atencao_pos ~ basal + dose, data = cafeina)
+
+# 3. car::Anova(type = 2) para soma de quadrados tipo II (ordem não importa
+#    entre termos de mesmo "nível" quando não há interação no modelo)
+car::Anova(mod_ancova, type = 2)
+```
+
+---
+
+## Kruskal-Wallis: do teste global ao post-hoc
+
+```{r uso-r-2}
+# kruskal.test() aceita a mesma sintaxe de formula que aov()
+kruskal.test(tempo_ms ~ config, data = dados_scripts)
+
+# post-hoc: Wilcoxon par a par, SEMPRE com correção -- nunca sem ajuste
+pairwise.wilcox.test(dados_scripts$tempo_ms, dados_scripts$config,
+                      p.adjust.method = "bonferroni")$p.value[1, 1]
+```
+
+Assim como na ANOVA, um Kruskal-Wallis significativo não localiza a diferença — o post-hoc por
+postos é o análogo não paramétrico das comparações múltiplas da Aula 07.
+
+---
+
+## Resumo da aula
+
+- ANCOVA incorpora uma covariável contínua medida antes do tratamento, ajustando as médias e
+  reduzindo o erro experimental — sempre checando primeiro a homogeneidade das inclinações.
+- A tabela de ANCOVA usa soma de quadrados sequencial: covariável primeiro, tratamento depois.
+- Kruskal-Wallis testa igualdade de distribuições usando postos, sem supor normalidade — a
+  alternativa quando os pressupostos da ANOVA falham e transformações não bastam.
+- Com isso, encerramos o Capítulo 3 (DCA). Próximo bloco de aulas: delineamentos com **blocos**.
+
+## Referências
+
+- Fisher, R. A. (1935). *Statistical Methods for Research Workers* (5ª ed.). Oliver and Boyd.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.
+- Kruskal, W. H. & Wallis, W. A. (1952). Use of Ranks in One-Criterion Variance Analysis. *Journal of the American Statistical Association*, 47(260), 583–621.

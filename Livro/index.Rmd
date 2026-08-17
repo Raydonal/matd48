@@ -1,0 +1,81 @@
+---
+title: "Planejamento e Análise de Experimentos"
+subtitle: "Notas de curso — MATD48"
+author: "Raydonal Ospina Martínez"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+biblio-style: apalike
+description: "Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA."
+---
+
+```{r setup-index, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, warning = FALSE, message = FALSE,
+  fig.align = "center", out.width = "80%"
+)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+})
+```
+
+# Prefácio {-}
+
+Este livro reúne as notas de curso de **MATD48 — Planejamento de Experimentos A**, disciplina do
+Departamento de Estatística da Universidade Federal da Bahia (UFBA). Ele acompanha os slides de
+aula (`Aulas2026/`) e as listas de exercícios semanais (`Listas2026/`), formando um material único
+de apoio, publicado junto à [página do curso](https://raydonal.github.io/matd48/).
+
+## Para quem é este livro {-}
+
+Para estudantes que já cursaram inferência estatística e álgebra linear básica e que agora
+precisam projetar, executar e analisar experimentos — não apenas ajustar um modelo a dados que já
+existem, mas decidir *como os dados deveriam ser gerados* para responder a uma pergunta causal com
+confiança. O planejamento de experimentos é, historicamente, um dos poucos ramos da estatística
+nascidos para resolver problemas reais e urgentes — desde parcelas agrícolas em Rothamsted até
+testes A/B em produtos digitais — e é tratado aqui como tal.
+
+## Como o material está organizado {-}
+
+Este livro é **mais amplo do que a disciplina**: os slides de aula (`Aulas2026/`) e as listas
+semanais (`Listas2026/`) seguem estritamente o cronograma de um semestre, mas o livro não tem essa
+restrição — ele cobre, além do programa da disciplina, tópicos modernos de delineamento
+experimental (Capítulo 8) que não cabem em 14 semanas, mas que são parte do mesmo arcabouço causal
+apresentado desde o Capítulo 1. O livro é deliberadamente **livre de listas de exercícios**: os
+exercícios de cada capítulo alinhado ao semestre vivem nas listas semanais correspondentes em
+`Listas2026/`, com gabarito à parte, para não duplicar conteúdo entre os dois materiais.
+
+| Capítulo | Tópico | Aulas correspondentes |
+|---|---|---|
+| 1 | Princípios do delineamento de experimentos | Aula 01 |
+| 2 | Introdução aos modelos lineares | Aulas 02–03 |
+| 3 | Delineamento completamente aleatorizado (DCA) | Aulas 04–08 |
+| 4 | Delineamentos com fontes de bloqueio (blocos, quadrado latino, greco-latino) | Aulas 09–11 |
+| 5 | Delineamentos com arranjos fatoriais | Aula 12 |
+| 6 | Fatoriais $2^k$/$3^k$, confusão e fracionamento | Aula 13 |
+| 7 | Metodologia de superfície de resposta | Aula 14 |
+| 8 | Testes A/B e bandits em produtos digitais | *(além do programa do semestre)* |
+
+Um fio condutor atravessa os oito capítulos: os mesmos três domínios de aplicação — **psicologia
+experimental**, **agricultura/agroindústria** e **ciência de dados/engenharia** — reaparecem
+capítulo após capítulo, para que o leitor veja como a mesma estrutura formal (unidades, fatores,
+blocos, interações) se manifesta em contextos muito diferentes; o Capítulo 8 é onde esse fio se
+encontra de forma mais direta com a prática atual de experimentação em ciência de dados.
+
+## Convenções tipográficas {-}
+
+```{=html}
+<div class="caixa-aplicacao"><strong>Aplicação</strong> — um exemplo completo, com dados reais ou
+simulados e a pergunta de pesquisa que motiva a técnica em questão.</div>
+<div class="caixa-discussao"><strong>Para discutir</strong> — perguntas abertas, sem resposta única,
+pensadas para debate em sala.</div>
+<div class="caixa-r"><strong>Uso do R</strong> — código comentado, sempre reprodutível a partir do
+próprio capítulo.</div>
+```
+
+Todo o código usa o pacote `tidyverse` para manipulação de dados e `ggplot2` para gráficos, na
+mesma convenção já usada nos slides de aula do curso.

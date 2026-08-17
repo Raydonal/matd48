@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fatoriais 3ᵏ, fracionamento e superfície de resposta</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fatoriais 3ᵏ, fracionamento e superfície de resposta
+]
+.subtitle[
+## Ideia geral de 3ᵏ, resolução em fracionados e otimização de processos
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 14 — Fatoriais `\(3^k\)`, fracionamento e superfície de resposta
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+### Última aula do curso
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Fatoriais `\(3^k\)`: a ideia geral
+
+Fatores com **três** níveis igualmente espaçados (permite estimar curvatura). Cada fator tem
+`\(3-1=2\)` graus de liberdade; uma interação `\(A{\times}B\)` em um `\(3^2\)` tem `\(2\times2=4\)` graus de
+liberdade (Montgomery, 2017).
+
+--
+
+**Confusão em `\(3^k\)`:** usa contrastes de grau único, `\(AB^2\)`: `\(L = i + 2j \pmod 3\)`. Valores
+`\(L=0,1,2\)` definem três blocos de tamanho `\(3^{k-1}\)`.
+
+&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; A &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; B &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; L &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Bloco &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bloco 3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Fracionados `\(2^{k-p}\)`: a ideia geral
+
+Quando `\(k\)` é grande, roda-se só uma fração `\(1/2^p\)`, escolhida por `\(p\)` **relações geradoras**.
+Alguns efeitos ficam **aliasados** — indistinguíveis entre si.
+
+--
+
+Exemplo: gerador `\(D=ABC\)` (`\(I=ABCD\)`) em um `\(2^{4-1}\)` de 8 corridas. Multiplicando por `\(A\)`
+(usando `\(A^2=I\)`): `\(A\cdot I = A\cdot ABCD = A^2BCD = BCD\)`, logo **$A$ e `\(BCD\)` são aliasados**.
+
+--
+
+**Resolução:**
+
+- **III** — efeitos principais aliasados com interações duplas (2fi).
+- **IV** — principais limpos de 2fi; mas 2fi aliasadas entre si.
+- **V** — principais e 2fi todos limpos entre si.
+
+O sistema de resolução como resumo do custo de fracionar é tratado em detalhe por
+(Montgomery, 2017) e (Box, Hunter &amp; Hunter, 2005).
+
+---
+
+## Superfície de resposta: da pergunta "o que importa" para "qual é o ótimo"
+
+$$
+y = \beta_0 + \sum_i \beta_i x_i + \sum_i \beta_{ii} x_i^2 + \sum_{i&lt;j}\beta_{ij}x_ix_j + \varepsilon
+$$
+
+Os termos `\(\beta_{ii}\)` (quadráticos) são o que um `\(2^k\)` nunca estima — um desenho de 2 níveis é
+algebricamente **cego a curvatura**.
+
+--
+
+**Ponto estacionário:** resolvendo `\(\partial y/\partial x_i = 0\)` para todo `\(i\)`. Sua natureza
+(máximo, mínimo, sela) vem dos autovalores da matriz Hessiana das segundas derivadas — a
+metodologia de superfície de resposta como ferramenta de otimização sequencial de processos
+(Box, Hunter &amp; Hunter, 2005).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Energia de corte: velocidade × ângulo (3²)
+
+
+``` r
+energia &lt;- read_csv("../Livro/data/energia.csv", show_col_types = FALSE)
+modelo_rsm &lt;- lm(energia ~ Velocidad + angulo + I(Velocidad^2) + I(angulo^2) +
+                    Velocidad:angulo, data = energia)
+round(summary(modelo_rsm)$coefficients[, c("Estimate", "Pr(&gt;|t|)")], 4)
+```
+
+```
+##                  Estimate Pr(&gt;|t|)
+## (Intercept)        0.0768   0.1193
+## Velocidad          0.0448   0.0946
+## angulo            -0.0041   0.0004
+## I(Velocidad^2)    -0.0055   0.1476
+## I(angulo^2)        0.0000   0.0011
+## Velocidad:angulo  -0.0002   0.2957
+```
+
+O termo `\(\hat\beta_{\text{ângulo}^2}\)` é altamente significativo — evidência real de curvatura.
+
+---
+
+## A superfície ajustada em 3D
+
+&lt;img src="MATD48-14_files/figure-html/superficie-3d-1.png" alt="" width="504" /&gt;
+
+---
+
+## Curvas de nível e o ponto estacionário
+
+&lt;img src="MATD48-14_files/figure-html/contorno-otimo-1.png" alt="" width="504" /&gt;
+
+---
+
+## Interpretando: um ponto de sela, não um mínimo
+
+
+``` r
+eigen(A_hess / 2)$values   # sinais opostos =&gt; ponto de sela
+```
+
+```
+## [1]  4.158071e-05 -5.510702e-03
+```
+
+O ponto estacionário (`\(V\approx3{,}28\)`, ângulo$\approx56{,}4°$) é uma **sela**: a superfície sobe
+em uma direção e desce em outra. O mínimo de energia **na região estudada** fica no canto
+(`\(V=4{,}5\)`, ângulo$\approx59{,}0°$, energia `\(\approx0{,}027\)`) — a busca pelo ótimo prático deve
+seguir para a **fronteira** da região experimental, não parar no ponto estacionário interior.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que um fatorial `\(2^2\)` nos mesmos dois fatores (velocidade, ângulo) jamais revelaria essa
+   curvatura, não importa quantas repetições fossem usadas?
+
+2. Encontrar um ponto de sela, e não um mínimo, muda a estratégia de otimização. O que um
+   engenheiro faria a seguir — ampliar a região experimental, ou buscar na fronteira da região
+   atual? Que informação decide isso?
+
+3. Em um fracionado de resolução III, um efeito principal pode estar aliasado com uma interação
+   dupla. Que tipo de conhecimento prévio do processo tornaria essa perda aceitável?
+
+4. Retrospectiva do curso: cite uma decisão de desenho (repetição, aleatorização, blocagem,
+   fatorial, resolução) que você tomaria diferente hoje, comparado ao que faria na Aula 01.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do gradiente ao ponto estacionário, na mão
+
+
+``` r
+b &lt;- coef(modelo_rsm)
+A_hess &lt;- matrix(c(2*b["I(Velocidad^2)"], b["Velocidad:angulo"],
+                    b["Velocidad:angulo"], 2*b["I(angulo^2)"]), 2, 2)
+rhs     &lt;- c(-b["Velocidad"], -b["angulo"])
+solve(A_hess, rhs)          # ponto estacionário (V, ângulo)
+```
+
+```
+## [1]  3.282264 56.358108
+```
+
+---
+
+## Varrendo a grade para achar o mínimo prático
+
+
+``` r
+grade_fina &lt;- expand_grid(
+  Velocidad = seq(2.3, 4.5, length.out = 100),
+  angulo    = seq(20, 60, length.out = 100)
+)
+grade_fina$pred &lt;- predict(modelo_rsm, newdata = grade_fina)
+grade_fina %&gt;% slice_min(pred, n = 1)
+```
+
+```
+## # A tibble: 1 × 3
+##   Velocidad angulo   pred
+##       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1       4.5   58.8 0.0274
+```
+
+O mesmo raciocínio de varrer uma grade fina e tomar o mínimo/máximo é a base de algoritmos mais
+sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso introdutório.
+
+---
+
+## Encerramento: retrospectiva dos 14 encontros
+
+.pull-left[
+**Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+
+\varepsilon$ como linguagem comum.
+
+**Cap. 3:** DCA, submuestreo, transformações, comparações múltiplas.
+]
+.pull-right[
+**Cap. 4:** blocos, quadrados latinos e greco-latinos.
+
+**Cap. 5–6:** fatoriais A×B/A×B×C, `\(2^k\)`, confusão, fracionamento, superfície de resposta.
+]
+
+--
+
+O fio condutor: **a pergunta de pesquisa determina o desenho**, e o desenho — não a sofisticação
+da análise posterior — determina se essa pergunta pode ser respondida com confiança.
+
+---
+
+## Resumo da aula
+
+- `\(3^k\)` generaliza `\(2^k\)` para fatores de 3 níveis; confusão via contrastes `\(AB^2\)` de grau único.
+- Fracionados `\(2^{k-p}\)` trocam corridas por aliasamento controlado; a resolução resume o custo.
+- Superfície de resposta estima curvatura via termos quadráticos; o ponto estacionário pode ser
+  máximo, mínimo **ou sela** — só os autovalores da Hessiana decidem.
+- Fim do curso: desenhar bem é o que torna a análise posterior quase dispensável.
+
+## Referências
+
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
+- Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley &amp; Sons.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

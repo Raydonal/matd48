@@ -1,0 +1,141 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Gabarito --- Lista 08}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Gabarito --- Lista de Exercícios 08}{Análise de covariância e teste de Kruskal-Wallis (Capítulo 3, segunda metade / Aula 08)}
+
+\begin{questao}{1} \textbf{(Psicologia --- médias ajustadas em ANCOVA)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item $\bar y_{0(\text{aj})} = 91{,}0 - 0{,}60(57-60) = 91{,}0 - 0{,}60(-3) = 91{,}0+1{,}8 =
+    \mathbf{92{,}8}$.
+    $\bar y_{200(\text{aj})} = 108{,}0 - 0{,}60(64-60) = 108{,}0-2{,}4 = \mathbf{105{,}6}$.
+  \item Diferença bruta: $108{,}0-91{,}0=17{,}0$. Diferença ajustada: $105{,}6-92{,}8=12{,}8$. O
+    ajuste \textbf{diminuiu} a diferença estimada. Isso acontece porque o grupo de 200~mg tinha,
+    por acaso, atenção basal \emph{acima} da média geral ($64>60$) e o grupo de 0~mg tinha basal
+    \emph{abaixo} da média geral ($57<60$): parte da diferença bruta de 17 pontos não se deve à
+    dose em si, mas ao fato de que o grupo de 200~mg já começava com atenção basal mais alta. A
+    ANCOVA remove essa parte "emprestada" da diferença, isolando o efeito atribuível à dose.
+  \item As médias ajustadas representam a comparação causal entre doses \emph{mantendo a
+    covariável fixa} no seu valor médio geral, removendo o confundimento causado por
+    desbalanceamento --- ainda que pequeno e devido ao acaso --- da linha de base entre grupos.
+    As médias brutas confundem o efeito do tratamento com diferenças pré-existentes que a
+    aleatorização não eliminou por completo nesta amostra específica (ela só garante
+    comparabilidade \emph{em expectativa}, não em cada realização finita do experimento).
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{2} \textbf{(Ciência de dados --- verificando a homogeneidade das inclinações)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Testa-se se a inclinação (o efeito do número de imagens sobre o tempo de carregamento) é
+    a \textbf{mesma} nas quatro configurações. $H_0: \beta_1=\beta_2=\beta_3=\beta_4$ (equivalente
+    a: não há interação entre a covariável e o fator configuração) --- em outras palavras, o
+    quanto cada imagem adicional atrasa o carregamento não depende de qual configuração de
+    scripts está ativa.
+  \item Sim: $p=0{,}268 > 0{,}05$, não se rejeita $H_0$ de inclinações homogêneas. A equipe pode
+    prosseguir com o modelo aditivo padrão de ANCOVA, com uma única inclinação comum $\beta$.
+  \item Com $p=0{,}004$, rejeitaríamos $H_0$: as inclinações diferem entre as configurações --- o
+    efeito do número de imagens sobre o tempo de carregamento depende de qual configuração está
+    ativa (por exemplo, pode ser que scripts de anúncios piorem desproporcionalmente páginas já
+    carregadas de imagens). Um único $\beta$ comum deixaria de representar corretamente nenhum
+    grupo em particular, produzindo um ajuste tendencioso. A equipe deveria abandonar o modelo
+    aditivo e, por exemplo, analisar a relação covariável-resposta separadamente por
+    configuração (inclinações simples por grupo), ou reportar e interpretar a própria interação
+    como um resultado substantivo do estudo.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{3} \textbf{(Agricultura --- Kruskal-Wallis, cálculo manual)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Ordenando as 9 observações: $10(1), 11(2), 12(3), 14(4), 15(5), 18(6), 20(7), 22(8),
+    25(9)$. Variedade A: $12\to3,\ 18\to6,\ 15\to5$, $R_A=3+6+5=14$. Variedade B:
+    $20\to7,\ 25\to9,\ 22\to8$, $R_B=7+9+8=24$. Variedade C: $10\to1,\ 14\to4,\ 11\to2$,
+    $R_C=1+4+2=7$. Soma: $R_A+R_B+R_C=14+24+7=45=N(N+1)/2=9(10)/2=45$. \checkmark
+  \item
+    \[
+    H = \frac{12}{9(10)}\left(\frac{14^2}{3}+\frac{24^2}{3}+\frac{7^2}{3}\right) - 3(10)
+    = \frac{12}{90}\left(\frac{196+576+49}{3}\right) - 30
+    = 0{,}1333 \times 273{,}67 - 30 \approx \mathbf{6{,}49}.
+    \]
+  \item $H \approx 6{,}49 > 5{,}99 = \chi^2_{0{,}05;2}$: \textbf{rejeita-se $H_0$}. Há evidência,
+    ao nível de 5\%, de que as três variedades diferem quanto à distribuição (mediana) de
+    produtividade.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{4} \textbf{(Dedução --- não viesamento da média ajustada em ANCOVA)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Tomando esperança em $y_{ij}=\mu+\tau_i+\beta(x_{ij}-\bar x_{\cdot\cdot})+\varepsilon_{ij}$
+    (com $x_{ij}$ fixo e $E[\varepsilon_{ij}]=0$): $E[y_{ij}] = \mu+\tau_i+\beta(x_{ij}-\bar
+    x_{\cdot\cdot})$. Tomando a média sobre $j=1,\ldots,n_i$ dentro do grupo $i$:
+    \[
+    E[\bar y_{i\cdot}] = \mu+\tau_i+\beta\left(\frac{1}{n_i}\sum_j x_{ij} - \bar
+    x_{\cdot\cdot}\right) = \mu+\tau_i+\beta(\bar x_{i\cdot}-\bar x_{\cdot\cdot}) =
+    \mu_i+\beta(\bar x_{i\cdot}-\bar x_{\cdot\cdot}).
+    \]
+  \item Como $x_{ij}$ é fixo, $\bar x_{i\cdot}-\bar x_{\cdot\cdot}$ é uma \textbf{constante}, não
+    uma variável aleatória. Logo, por linearidade da esperança,
+    \[
+    E[\bar y_{i\cdot(\text{aj})}] = E\big[\bar y_{i\cdot} - \hat\beta(\bar x_{i\cdot}-\bar
+    x_{\cdot\cdot})\big] = E[\bar y_{i\cdot}] - (\bar x_{i\cdot}-\bar x_{\cdot\cdot})\,E[\hat\beta].
+    \]
+    Substituindo o item (a) e $E[\hat\beta]=\beta$:
+    \[
+    E[\bar y_{i\cdot(\text{aj})}] = \big[\mu_i+\beta(\bar x_{i\cdot}-\bar x_{\cdot\cdot})\big] -
+    (\bar x_{i\cdot}-\bar x_{\cdot\cdot})\,\beta = \mu_i. \qquad \blacksquare
+    \]
+  \item A demonstração usa a hipótese de que a covariável não é afetada pelo tratamento
+    exatamente no passo em que tratamos $x_{ij}$ (e, portanto, $\bar x_{i\cdot}$) como
+    \textbf{fixo/constante}, e não como uma variável aleatória cuja distribuição poderia depender
+    de $\tau_i$. Se a covariável fosse medida \emph{depois} do tratamento (afetada por ele),
+    $\bar x_{i\cdot}$ carregaria parte do próprio efeito de tratamento, e $E[\bar x_{i\cdot}]$
+    dependeria de $i$ por uma razão distinta de mero acaso amostral --- nesse caso, "ajustar" por
+    $x$ removeria também uma parte do efeito causal genuíno do tratamento (viés de
+    superajuste, ou \emph{post-treatment bias}), e a conclusão $E[\bar y_{i\cdot(\text{aj})}] =
+    \mu_i$ deixaria de valer, porque $\mu_i$ deixaria de ser a quantidade causal de interesse
+    isolada corretamente pelo ajuste.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{5} \textbf{(Ciência de dados --- Kruskal-Wallis vs. ANOVA, e o efeito de empates)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item A ANOVA depende de normalidade dos resíduos para a validade (ao menos aproximada) do
+    teste $F$, e é sensível a valores extremos: poucas observações muito grandes (a cauda de
+    conexões lentas) podem dominar a soma de quadrados e distorcer as médias e a estimativa de
+    variância. O Kruskal-Wallis substitui os valores por postos, o que limita a influência de
+    qualquer observação extrema a, no máximo, o maior posto disponível --- tornando o teste
+    robusto à forma da distribuição e a outliers, preservando o controle do erro tipo I mesmo sem
+    transformar os dados.
+  \item Sem a correção por empates, $H$ tende a ficar \textbf{menor} do que deveria (o teste fica
+    \emph{conservador}, não anticonservador). O fator de correção $C = 1-\sum_j(\tau_j^3-\tau_j)/
+    (N^3-N)$ satisfaz $C \leq 1$, e a estatística corrigida é $H_c = H/C \geq H$. Empates
+    comprimem a variabilidade possível entre postos (postos empatados recebem a mesma média de
+    posto, reduzindo a dispersão), e a fórmula padrão de $H$ pressupõe implicitamente ausência de
+    empates; sem dividir por $C<1$ para compensar essa compressão, o valor calculado de $H$ fica
+    artificialmente pequeno relativamente à referência $\chi^2$, reduzindo o poder do teste
+    (mais difícil rejeitar $H_0$ quando ela é de fato falsa) na presença de muitos empates.
+  \item Duas distribuições podem ter a mesma mediana mas formas muito diferentes: por exemplo,
+    um grupo com valores fortemente concentrados perto de 100~ms (baixa dispersão) e outro grupo
+    também com mediana 100~ms, mas bimodal ou de cauda pesada (muitas observações bem abaixo e
+    bem acima de 100~ms). Mesmo com medianas idênticas, a distribuição dos \emph{postos}
+    combinados tende a diferir entre os dois grupos --- o grupo de cauda pesada contribui
+    desproporcionalmente tanto para postos muito baixos quanto muito altos --- e o
+    Kruskal-Wallis, que testa igualdade de distribuições (não só de posição central), pode
+    detectar essa diferença de forma. Isso ilustra por que uma rejeição de $H_0$ no
+    Kruskal-Wallis não deve ser automaticamente interpretada como "as medianas diferem": pode
+    haver diferença de forma/dispersão em vez de (ou além de) diferença de posição central.
+\end{enumerate}
+\end{solucao}
+
+\end{document}

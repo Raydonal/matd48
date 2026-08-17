@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 02 --- Modelos Lineares (Parte 1)}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 02}{Modelo linear, mínimos quadrados e estimabilidade (Capítulo 2 / Aula 02)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas — nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito02.pdf}.}
+
+\begin{questao}{1} \textbf{(Ciência de dados --- mínimos quadrados na mão)}
+
+Uma pequena amostra de 5 medições relaciona o número de \emph{scripts} carregados por uma página
+web ($x$) ao tempo de carregamento em décimos de segundo ($y$):
+
+\begin{center}
+\begin{tabular}{c|ccccc}
+$x$ & 2 & 4 & 6 & 8 & 10 \\
+\hline
+$y$ & 15 & 22 & 25 & 33 & 38
+\end{tabular}
+\end{center}
+
+Considere o modelo $y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Escreva explicitamente a matriz de delineamento $\mathbf{X}$ ($5 \times 2$) e o vetor
+    $\mathbf{Y}$ para este conjunto de dados.
+  \item Calcule $\mathbf{X}'\mathbf{X}$ e $\mathbf{X}'\mathbf{Y}$.
+  \item Resolva as equações normais $\mathbf{X}'\mathbf{X}\hat{\boldsymbol\beta} =
+    \mathbf{X}'\mathbf{Y}$ para obter $\hat{\beta}_0$ e $\hat{\beta}_1$. (Dica:
+    $(\mathbf{X}'\mathbf{X})^{-1}$ para uma matriz $2\times 2$
+    $\begin{bmatrix} a & b \\ b & c\end{bmatrix}$ é $\frac{1}{ac-b^2}\begin{bmatrix} c & -b \\ -b &
+    a \end{bmatrix}$.)
+  \item Interprete $\hat{\beta}_1$ no contexto do problema.
+  \item Sem recalcular tudo: qual deveria ser a soma dos resíduos $\sum_i (y_i - \hat y_i)$?
+    Justifique sua resposta a partir das equações normais, sem apenas calcular os resíduos.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Psicologia --- estimabilidade)}
+
+Um estudo mede o tempo de reação (ms) de 6 participantes, 2 em cada um de três grupos
+experimentais ($G_1$, $G_2$, $G_3$). O modelo utilizado, na parametrização
+\emph{sobreparametrizada} usual de um fator, é
+
+$$
+y_{ij} = \mu + \alpha_j + \varepsilon_{ij}, \qquad j = 1,2,3, \quad i = 1,2,
+$$
+
+com $\mathbf{X}$ formada por uma coluna de 1's (para $\mu$) e uma coluna indicadora para cada
+grupo (para $\alpha_1$, $\alpha_2$, $\alpha_3$).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Escreva a matriz $\mathbf{X}$ ($6 \times 4$) explicitamente, com colunas na ordem $(\mu,
+    \alpha_1, \alpha_2, \alpha_3)$.
+  \item Qual é o posto de $\mathbf{X}$? Explique por que ele é menor do que o número de colunas.
+  \item Para cada função a seguir, diga se é \textbf{estimável} e justifique usando a definição
+    (existe $\mathbf{a}$ tal que $\mathbf{a}'\mathbf{X} = \boldsymbol\lambda'$?):
+    \begin{enumerate}[label=(\roman*)]
+      \item $\mu$
+      \item $\mu + \alpha_1$
+      \item $\alpha_1 - \alpha_2$
+      \item $\alpha_1 + \alpha_2 + \alpha_3$
+    \end{enumerate}
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Agricultura --- especificação do modelo)}
+
+Uma equipe agronômica testa o efeito de dois fatores sobre a produtividade do milho: dose de
+fertilizante (baixa, alta) e variedade (V1, V2), com uma repetição de cada combinação (4 parcelas
+no total). Usando a codificação padrão do \texttt{R} (contrastes de tratamento, que descartam o
+nível de referência de cada fator), o modelo é
+
+$$
+y_i = \beta_0 + \beta_1 \, \mathbf{1}\{\text{dose alta}\} + \beta_2\, \mathbf{1}\{\text{V2}\} +
+\varepsilon_i.
+$$
+
+\begin{enumerate}[label=(\alph*)]
+  \item Escreva $\mathbf{X}$ ($4 \times 3$) para as quatro parcelas (uma de cada combinação
+    dose$\times$variedade).
+  \item $\mathbf{X}$ tem posto coluna completo? Justifique calculando (ou argumentando sobre) o
+    posto.
+  \item Interprete $\beta_0$, $\beta_1$ e $\beta_2$ em termos das médias esperadas das quatro
+    combinações de tratamento.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Ciência de dados --- geometria dos mínimos quadrados)}
+
+Mostre, a partir das equações normais $\mathbf{X}'\mathbf{X}\hat{\boldsymbol\beta} =
+\mathbf{X}'\mathbf{Y}$, que:
+
+\begin{enumerate}[label=(\alph*)]
+  \item $\mathbf{X}'\mathbf{e} = \mathbf{0}$, em que $\mathbf{e} = \mathbf{Y} -
+    \mathbf{X}\hat{\boldsymbol\beta}$ é o vetor de resíduos. (Dica: reescreva as equações normais
+    isolando $\mathbf{X}'(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol\beta})$.)
+  \item Se a primeira coluna de $\mathbf{X}$ é um vetor de 1's (intercepto), conclua a partir do
+    item (a) que $\sum_i e_i = 0$.
+  \item Isso significa que o modelo "acerta em média" no sentido de não haver nenhum padrão
+    sistemático não capturado nos resíduos? Justifique com um contraexemplo conceitual (não
+    precisa ser numérico).
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Ciência de dados --- exercício computacional em R)}
+
+Considere novamente os dados da Questão 1. O código abaixo está incompleto.
+
+\begin{lstlisting}
+x <- c(2, 4, 6, 8, 10)
+y <- c(15, 22, 25, 33, 38)
+X <- cbind(1, x)
+
+# (a) complete a linha abaixo para obter beta_hat via algebra de matrizes
+beta_hat <- ______________________
+
+# (b) obtenha os valores ajustados e os residuos
+y_hat <- X %*% beta_hat
+residuos <- ______________________
+
+# (c) confirme a Questao 1(e): a soma dos residuos deve ser (numericamente) zero
+sum(residuos)
+\end{lstlisting}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete as duas linhas indicadas.
+  \item Rode o código (mentalmente ou em sua máquina) e confirme que os valores de
+    $\hat{\boldsymbol\beta}$ batem com os obtidos manualmente na Questão 1.
+  \item Modifique o código para comparar sua estimativa com a saída de \texttt{lm(y \textasciitilde{}
+    x)}. As duas devem coincidir --- explique, em uma frase, por quê.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{6} \textbf{(Dedução --- equações normais)}
+
+Considere o modelo linear geral $\mathbf{Y} = \mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon$
+e a soma de quadrados dos resíduos $S(\boldsymbol\beta) = (\mathbf{Y} -
+\mathbf{X}\boldsymbol\beta)'(\mathbf{Y} - \mathbf{X}\boldsymbol\beta)$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Expanda $S(\boldsymbol\beta)$ em termos de $\mathbf{Y}'\mathbf{Y}$,
+    $\boldsymbol\beta'\mathbf{X}'\mathbf{Y}$ e $\boldsymbol\beta'\mathbf{X}'\mathbf{X}\boldsymbol\beta$.
+  \item Usando as regras de derivação matricial $\partial(\mathbf{a}'\boldsymbol\beta)/\partial
+    \boldsymbol\beta = \mathbf{a}$ e $\partial(\boldsymbol\beta'\mathbf{A}\boldsymbol\beta)/\partial
+    \boldsymbol\beta = 2\mathbf{A}\boldsymbol\beta$ (para $\mathbf{A}$ simétrica), calcule
+    $\partial S(\boldsymbol\beta)/\partial \boldsymbol\beta$.
+  \item Iguale a derivada a $\mathbf{0}$ e obtenha as equações normais
+    $\mathbf{X}'\mathbf{X}\hat{\boldsymbol\beta} = \mathbf{X}'\mathbf{Y}$.
+  \item Explique por que a matriz Hessiana ($2\mathbf{X}'\mathbf{X}$) sendo semidefinida positiva
+    garante que a solução das equações normais é um \emph{mínimo} de $S(\boldsymbol\beta)$, e não
+    um máximo ou ponto de sela.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{7} \textbf{(Dedução/computacional --- pseudoinversa de Moore-Penrose via SVD)}
+
+Um experimento com dois tratamentos, cada um com 2 réplicas, produz o modelo sobreparametrizado
+$y_{ij} = \mu + \tau_i + \varepsilon_{ij}$ ($i=1,2$), com
+
+$$
+\mathbf{X} = \begin{bmatrix} 1&1&0\\1&1&0\\1&0&1\\1&0&1 \end{bmatrix}, \qquad
+\mathbf{y} = \begin{bmatrix} 15{,}2\\14{,}3\\13{,}5\\14{,}5 \end{bmatrix}, \qquad
+\mathbf{A} := \mathbf{X}'\mathbf{X} = \begin{bmatrix} 4&2&2\\2&2&0\\2&0&2 \end{bmatrix}.
+$$
+
+Como $\mathbf{A}$ é simétrica, sua decomposição em valores singulares coincide com sua
+decomposição espectral, $\mathbf{A} = \mathbf{V}\mathbf{D}\mathbf{V}'$, com autovalores/autovetores
+
+$$
+\lambda_1 = 6,\ \mathbf{v}_1 = \tfrac{1}{\sqrt6}(2,1,1)'; \qquad
+\lambda_2 = 2,\ \mathbf{v}_2 = \tfrac{1}{\sqrt2}(0,-1,1)'; \qquad
+\lambda_3 = 0,\ \mathbf{v}_3 = \tfrac{1}{\sqrt3}(1,-1,-1)'.
+$$
+
+\begin{enumerate}[label=(\alph*)]
+  \item Verifique, multiplicando $\mathbf{A}\mathbf{v}_3$, que $\mathbf{v}_3$ é de fato um
+    autovetor de autovalor $0$ (isto é, $\mathbf{A}\mathbf{v}_3 = \mathbf{0}$) --- e explique por
+    que a existência de um autovalor nulo já era esperada, dado o posto incompleto de
+    $\mathbf{X}$.
+  \item Escreva a matriz $\mathbf{D}^+$ (pseudoinversa de Moore-Penrose de $\mathbf{D} =
+    \mathrm{diag}(6,2,0)$): inverta apenas os valores singulares não nulos e mantenha $0$ na
+    posição correspondente a $\lambda_3$.
+  \item A pseudoinversa é $\mathbf{A}^+ = \mathbf{V}\mathbf{D}^+\mathbf{V}'$, com $\mathbf{V} =
+    [\mathbf{v}_1\ \mathbf{v}_2\ \mathbf{v}_3]$. Calcule explicitamente a entrada $(1,1)$ de
+    $\mathbf{A}^+$ (isto é, $\mathbf{e}_1'\mathbf{A}^+\mathbf{e}_1$), mostrando as contas com
+    $\mathbf{v}_1, \mathbf{v}_2$ (o termo em $\mathbf{v}_3$ some, porque é multiplicado por $0$ em
+    $\mathbf{D}^+$). Confira que sua resposta bate com $1/9 \approx 0{,}1111$.
+  \item Complete o código abaixo, que calcula $\mathbf{A}^+$ inteira via \texttt{svd()} e a compara
+    com \texttt{MASS::ginv(A)}:
+\begin{lstlisting}
+A <- matrix(c(4,2,2, 2,2,0, 2,0,2), ncol = 3, byrow = TRUE)
+sv <- svd(A)
+D_mais <- diag(______________________)      # (i) inverta so os valores singulares > 1e-8
+A_mais <- ______________________             # (ii) V %*% D+ %*% t(U)
+max(abs(A_mais - MASS::ginv(A)))
+\end{lstlisting}
+  \item Use $\mathbf{A}^+$ para obter $\mathbf{b} = \mathbf{A}^+\mathbf{X}'\mathbf{y}$ e, a partir
+    de $\mathbf{b}$, as funções estimáveis $\mu+\tau_1$, $\mu+\tau_2$ e $\tau_1-\tau_2$
+    (multiplicando $\mathbf{b}$ pelos vetores $\boldsymbol\lambda'$ apropriados, como na Questão
+    2). Se algum colega usar uma inversa generalizada \emph{diferente} de $\mathbf{A}^+$ para
+    resolver as equações normais, seu $\mathbf{b}$ será diferente do seu --- mas os três valores
+    estimáveis calculados devem coincidir. Explique, em uma frase, por que a teoria garante essa
+    coincidência mesmo sem saber qual inversa generalizada o colega usou.
+\end{enumerate}
+\end{questao}
+
+\end{document}

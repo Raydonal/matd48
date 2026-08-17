@@ -1,0 +1,487 @@
+---
+title: "Quadrado Latino e Quadrado Greco-Latino"
+subtitle: "Duas e três fontes de bloqueio cruzadas, e quadrados replicados"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 11 — Quadrado Latino e Quadrado Greco-Latino
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Motivação: dois gradientes ortogonais
+
+Fertilidade variando em **duas direções ao mesmo tempo**, independentemente (declividade nas
+linhas, umidade nas colunas):
+
+```{r ql-motivacao-grid, echo=FALSE, fig.width=6, fig.height=4.2}
+set.seed(48)
+campo <- expand_grid(linha = 1:8, coluna = 1:8) %>%
+  mutate(fertilidade = 70 - 3 * linha - 4 * coluna + rnorm(n(), 0, 3))
+ggplot(campo, aes(x = coluna, y = linha, fill = fertilidade)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "khaki1", high = "olivedrab", name = "Fertilidade") +
+  scale_y_reverse() +
+  labs(x = "Coluna (umidade)", y = "Linha (declividade)") +
+  theme_minimal(base_size = 13)
+```
+
+--
+
+Blocar só por linha deixa o gradiente de coluna intacto dentro de cada bloco, e vice-versa —
+**nenhum bloqueio de um único fator resolve os dois**.
+
+---
+
+## Duas fontes de bloqueio cruzadas
+
+O DBCA controla **uma** fonte de variação. Quando há **duas**, cruzadas e conhecidas (linha e
+coluna de um talhão, por exemplo), um **quadrado latino** de ordem $n$ controla as duas com
+apenas $n^2$ unidades, comparando $n$ tratamentos — em vez das $n^3$ que um fatorial completo
+linha$\times$coluna$\times$tratamento exigiria (Fisher, 1935).
+
+--
+
+Regra de construção: cada tratamento aparece **exatamente uma vez em cada linha** e
+**exatamente uma vez em cada coluna**.
+
+---
+
+## O modelo
+
+$$
+Y_{ijk} = \mu + \rho_i + \gamma_j + \tau_k + \varepsilon_{ijk}
+$$
+
+$\rho_i$ = linha, $\gamma_j$ = coluna, $\tau_k$ = tratamento — mas o índice $k$ **não varia
+livremente**: é determinado pelo arranjo do quadrado. $n^2$ observações, não $n^3$. Tabela de
+ANOVA e pressupostos seguem o tratamento padrão de (Montgomery, 2017).
+
+```{r tabela-anova-ql, echo=FALSE}
+tibble(
+  Fonte = c("Linha", "Coluna", "Tratamento", "Erro", "Total"),
+  gl    = c("n-1", "n-1", "n-1", "(n-1)(n-2)", "n²-1")
+) %>%
+  kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+--
+
+Preço: assume-se **ausência de interação** entre linha, coluna e tratamento.
+
+---
+
+## Esperança dos quadrados médios
+
+Sob $\sum\rho_i=\sum\gamma_j=\sum\tau_k=0$:
+
+$$
+\mathbb E[QM_{Trat}] = \sigma^2+\frac{n}{n-1}\sum_k\tau_k^2
+$$
+
+--
+
+Como no DBCA, linha e coluna foram *escolhidas* pelo delineamento, não sorteadas — seus quadrados
+médios servem para purificar o erro, não para serem testados.
+
+---
+
+## Replicando o quadrado
+
+$(n-1)(n-2)$ graus de liberdade do erro é pouco para $n$ pequeno ($6$ para $n=4$, só $2$ para
+$n=3$). Replicar em $p$ conjuntos independentes de unidades (cada um com suas próprias linhas e
+colunas) aumenta $gl_{Erro}$ sem aumentar $n$:
+
+```{r tabela-anova-ql-rep, echo=FALSE}
+tibble(
+  Fonte = c("Réplicas", "Linhas (dentro)", "Colunas (dentro)", "Tratamento", "Erro", "Total"),
+  gl    = c("p-1", "p(n-1)", "p(n-1)", "n-1", "(n-1)[p(n-1)-1]", "pn²-1")
+) %>%
+  kable(format = "html") %>% kable_styling(font_size = 18, full_width = FALSE)
+```
+
+---
+
+## Quantas réplicas? Análise de poder
+
+$\lambda = Nf^2$ ($N=pn^2$, $f$ = tamanho de efeito de Cohen). Poder para detectar um efeito
+**grande** ($f=0{,}4$) em função de $p$, com $n=4$:
+
+```{r poder-ql-func}
+poder_ql_replicado <- function(n, p, alpha = 0.05, f = 0.4) {
+  gl1 <- n - 1; gl2 <- (n - 1) * (p * (n - 1) - 1); N <- p * n^2
+  f_crit <- qf(1 - alpha, gl1, gl2)
+  1 - pf(f_crit, gl1, gl2, N * f^2)
+}
+tab_poder <- tibble(p = 1:6) %>% mutate(poder = poder_ql_replicado(4, p))
+```
+
+```{r poder-ql-plot, echo=FALSE, fig.width=6, fig.height=3.6}
+ggplot(tab_poder, aes(p, poder)) +
+  geom_line(color = "#2a78d6", linewidth = 1) + geom_point(size = 2.4, color = "#2a78d6") +
+  geom_hline(yintercept = 0.8, linetype = "dashed", color = "grey40") +
+  scale_x_continuous(breaks = 1:6) + ylim(0, 1) +
+  labs(x = "Réplicas (p)", y = "Poder") + theme_minimal(base_size = 13)
+```
+
+--
+
+Com $p=1$: poder $=$ `r scales::percent(tab_poder$poder[1], accuracy=1)`. São necessárias
+`r tab_poder$p[which(tab_poder$poder >= 0.8)[1]]` réplicas para poder $\ge0{,}80$ — replicar tem
+custo, e a análise de poder converte "quantas réplicas?" em conta explícita.
+
+---
+
+## Três fontes de bloqueio: o quadrado greco-latino
+
+Sobrepõe dois quadrados latinos **ortogonais** de ordem $n$: um com letras romanas (A,B,C,...),
+outro com letras gregas ($\alpha,\beta,\gamma,\dots$), tais que **cada par (romana, grega) ocorra
+exatamente uma vez** — extensão natural dos quadrados latinos de Fisher para uma terceira fonte de
+bloqueio (Fisher, 1935).
+
+$$
+Y_{ijkl} = \mu + \rho_i + \gamma_j + \tau_k + \omega_l + \varepsilon_{ijkl}
+$$
+
+--
+
+Existe para todo $n\ge3$ **exceto** $n=6$ (problema dos 36 oficiais de Euler, sem solução).
+Cada uma das 4 fontes consome $n-1$ graus de liberdade; sobram $(n-1)(n-3)$ para o erro — em
+$n=4$, só 3.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Agricultura: quatro adubações, duas fontes de bloqueio
+
+**Linha** = declividade do terreno; **coluna** = gradiente de umidade; **tratamento** = 4
+formulações de adubo (A,B,C,D).
+
+```{r ql-construcao}
+quad <- matrix(c(
+  "A","B","C","D",
+  "B","C","D","A",
+  "C","D","A","B",
+  "D","A","B","C"
+), nrow = 4, byrow = TRUE)
+quad
+```
+
+---
+
+## O esquema, como diagrama
+
+```{r ql-heatmap, echo=FALSE, fig.width=5, fig.height=4.6}
+pal4 <- c("#2a78d6", "#eb6834", "#1baf7a", "#eda100")
+
+expand_grid(linha = 1:4, coluna = 1:4) %>%
+  mutate(tratamento = factor(mapply(function(i, j) quad[i, j], linha, coluna),
+                              levels = c("A","B","C","D"))) %>%
+  ggplot(aes(x = factor(coluna), y = factor(linha), fill = tratamento)) +
+  geom_tile(color = "white", linewidth = 1.2) +
+  geom_text(aes(label = tratamento), color = "black", fontface = "bold", size = 6) +
+  scale_fill_manual(values = pal4, name = "Tratamento") +
+  scale_y_discrete(limits = rev) +
+  coord_fixed() +
+  labs(x = "Coluna", y = "Linha") +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid = element_blank())
+```
+
+--
+
+Cada linha e cada coluna contêm as 4 letras exatamente uma vez — a letra sobre cada célula deixa a
+identidade do tratamento legível mesmo sem depender só da cor.
+
+---
+
+## Aleatorização de Yates (1933)
+
+Usar sempre o mesmo quadrado fixo reintroduz confusão (ex.: se A está sempre na diagonal, e a
+diagonal coincidir com algo não modelado). Procedimento em 4 passos:
+
+1. Quadrado latino **reduzido** (construção cíclica).
+2. Permutar **linhas** aleatoriamente.
+3. Permutar **colunas** aleatoriamente.
+4. Sortear quais **tratamentos reais** correspondem a cada símbolo.
+
+```{r yates-aleatorizacao}
+aleatorizar_quadrado_latino <- function(n, tratamentos, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
+  reduzido <- outer(0:(n-1), 0:(n-1), function(i, j) ((i + j) %% n) + 1)
+  design_idx <- reduzido[sample(n), sample(n)]
+  atrib <- sample(tratamentos)
+  matrix(atrib[design_idx], nrow = n)
+}
+set.seed(2026)
+aleatorizar_quadrado_latino(4, c("A","B","C","D"))
+```
+
+--
+
+Rodar de novo com outra semente produz outro arranjo, também válido — é esse espaço de arranjos
+que sustenta a distribuição de referência do teste $F$ (mesmo argumento de Neyman-Rubin da Aula 09,
+agora restrito por linha *e* coluna).
+
+---
+
+## Ajustando o quadrado latino
+
+```{r ql-sim}
+efeito_linha  <- c(0, 2, -1, 1)
+efeito_coluna <- c(0, -2, 1, 1)
+efeito_trat   <- c(A = 0, B = 3, C = 5, D = 1)
+
+set.seed(11)
+dados_ql <- expand_grid(linha = 1:4, coluna = 1:4) %>%
+  mutate(
+    tratamento = factor(mapply(function(i, j) quad[i, j], linha, coluna),
+                         levels = c("A","B","C","D")),
+    linha  = factor(linha), coluna = factor(coluna),
+    resposta = round(20 + efeito_linha[as.integer(linha)] + efeito_coluna[as.integer(coluna)] +
+                 efeito_trat[as.character(tratamento)] + rnorm(n(), 0, 1.2), 2)
+  )
+mod_ql <- aov(resposta ~ linha + coluna + tratamento, data = dados_ql)
+```
+
+```{r ql-sim-tab, echo=FALSE}
+anova(mod_ql) %>% broom::tidy() %>%
+  kable(digits = 4, format = "html") %>% kable_styling(font_size = 18, full_width = FALSE)
+```
+
+---
+
+## A matriz de delineamento tem 3 blocos de colunas
+
+$$
+X = \big[\,\mathbf 1 \mid X_{linha} \mid X_{coluna} \mid X_{trat}\,\big]
+$$
+
+Sem nenhum produto cruzado entre eles — por isso o quadrado latino estima 3 efeitos principais
+com só $n^2$ observações, ao custo de não poder estimar interação alguma entre eles.
+
+```{r ql-matriz}
+X_ql <- model.matrix(mod_ql)
+dim(X_ql)   # 16 x 10: 1 + 3 (linha) + 3 (coluna) + 3 (tratamento)
+X_ql[1:4, ]
+```
+
+---
+
+## O diagrama de Hasse deste quadrado latino
+
+Linha, Coluna e Tratamento aparecem **três a três no mesmo nível** — cruzados dois a dois, sem
+aresta entre si — e só se reencontram no Erro.
+
+```{r hasse-ql-11, echo=FALSE, fig.width=5.4, fig.height=4.4, fig.retina=2}
+nos_ql11 <- tibble(
+  termo = c("Média", "Linha", "Coluna", "Tratamento", "Erro"),
+  df    = c(1, 4 - 1, 4 - 1, 4 - 1, (4 - 1) * (4 - 2)),
+  x     = c(0, -1.4, 0, 1.4, 0),
+  y     = c(3, 2, 2, 2, 1)
+)
+arestas_ql11 <- tibble(
+  de   = c("Média", "Média", "Média", "Linha", "Coluna", "Tratamento"),
+  para = c("Linha", "Coluna", "Tratamento", "Erro", "Erro", "Erro")
+)
+
+arestas_xy_ql11 <- arestas_ql11 %>%
+  left_join(nos_ql11 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
+  left_join(nos_ql11 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
+
+ggplot() +
+  geom_segment(data = arestas_xy_ql11, aes(x = x0, y = y0, xend = x1, yend = y1),
+               color = "grey45", linewidth = 0.6) +
+  geom_label(data = nos_ql11, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
+             size = 3, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
+  theme_void(base_size = 11) +
+  labs(title = "Quadrado latino: n=4 (N=16)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11))
+```
+
+$1+3+3+3+6=16=N=n^2$ — o preço de controlar duas fontes de bloqueio com um só fator cruzado a
+mais é justamente esses $gl$ que, no DBCA (Aula 09, só um bloco), teriam sobrado para o Erro.
+
+---
+
+## Duas réplicas do mesmo quadrado
+
+```{r ql-replicado}
+n <- 4; p <- 2
+dados_rep <- map_dfr(1:p, function(rep_id) {
+  expand_grid(linha = 1:4, coluna = 1:4) %>%
+    mutate(replica = rep_id,
+           tratamento = factor(mapply(function(i, j) quad[i, j], linha, coluna),
+                                levels = c("A","B","C","D")),
+           linha_id = factor(paste0(rep_id, "-", linha)),
+           coluna_id = factor(paste0(rep_id, "-", coluna)))
+})
+set.seed(22)
+dados_rep <- dados_rep %>%
+  mutate(replica = factor(replica),
+         resposta = round(20 + rnorm(n(), 0, 1) + efeito_trat[as.character(tratamento)] +
+                      as.numeric(replica) * 1.5 + rnorm(n(), 0, 1.2), 2))
+mod_rep <- aov(resposta ~ replica + linha_id + coluna_id + tratamento, data = dados_rep)
+anova(mod_rep)["Residuals", "Df"]  # confira: (n-1)[p(n-1)-1] = 3*(2*3-1) = 15
+```
+
+```{r plot-gl-rep, echo=FALSE, fig.width=5.5, fig.height=3.4}
+tibble(quadrados = factor(c("p=1", "p=2"), levels = c("p=1", "p=2")),
+       gl_erro = c(6, 15)) %>%
+  ggplot(aes(quadrados, gl_erro, fill = quadrados)) +
+  geom_col(width = 0.5, show.legend = FALSE) +
+  geom_text(aes(label = gl_erro), vjust = -0.4, size = 4.5) +
+  labs(x = NULL, y = expression(gl[Erro])) +
+  ylim(0, 17) +
+  theme_minimal(base_size = 13)
+```
+
+Replicar elevou $gl_{Erro}$ de 6 (um quadrado) para 15 (dois quadrados).
+
+---
+
+## Quadrado greco-latino: variedade × adubo
+
+```{r glq-construcao}
+L1 <- matrix(c(1,2,3,4, 2,1,4,3, 3,4,1,2, 4,3,2,1), nrow = 4, byrow = TRUE)  # romano
+L2 <- matrix(c(1,2,3,4, 3,4,1,2, 4,3,2,1, 2,1,4,3), nrow = 4, byrow = TRUE)  # grego
+romanos <- c("A","B","C","D"); gregos <- c("alpha","beta","gamma","delta")
+
+dados_glq <- expand_grid(linha = 1:4, coluna = 1:4) %>%
+  mutate(roman = factor(mapply(function(i, j) romanos[L1[i, j]], linha, coluna), levels = romanos),
+         grego = factor(mapply(function(i, j) gregos[L2[i, j]],  linha, coluna), levels = gregos),
+         linha = factor(linha), coluna = factor(coluna))
+
+n_distinct(paste(dados_glq$roman, dados_glq$grego))  # 16: todo par aparece 1 vez
+```
+
+---
+
+## ANOVA do quadrado greco-latino
+
+```{r glq-anova}
+set.seed(33)
+ef_roman <- c(A = 0, B = 2, C = 4, D = 1)
+ef_grego <- c(alpha = 0, beta = 1, gamma = -1, delta = 2)
+dados_glq <- dados_glq %>%
+  mutate(resposta = round(30 + ef_roman[as.character(roman)] + ef_grego[as.character(grego)] +
+               rnorm(n(), 0, 1.5), 2))
+mod_glq <- aov(resposta ~ linha + coluna + roman + grego, data = dados_glq)
+```
+
+```{r glq-anova-tab, echo=FALSE}
+anova(mod_glq) %>% broom::tidy() %>%
+  kable(digits = 4, format = "html") %>% kable_styling(font_size = 18, full_width = FALSE)
+```
+
+Só 3 graus de liberdade para o erro — testes pouco sensíveis ($p\approx0{,}07$–$0{,}08$) mesmo com
+efeitos reais simulados.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que o modelo de um quadrado latino não permite estimar interação linha$\times$tratamento,
+   ao contrário de um fatorial completo?
+
+2. Com $n=4$ tratamentos, comparar um quadrado latino $4\times4$ (16 unidades, duas fontes de
+   bloqueio) a um DBCA com 4 blocos de 4 unidades (16 unidades, uma fonte de bloqueio). Quando vale
+   a pena "gastar" o grau de liberdade extra controlando uma segunda fonte, em vez de deixá-lo para
+   o erro?
+
+3. Um quadrado greco-latino de ordem 6 é impossível (Euler). Isso significa que nunca se pode
+   controlar 3 fontes de bloqueio com 6 níveis? Que alternativas existem?
+
+4. No exemplo variedade×adubo, os testes-$F$ tiveram $p\approx0{,}07$–$0{,}08$ apesar de os efeitos
+   simulados serem reais e razoavelmente grandes. O que isso ensina sobre o uso prático de
+   quadrados greco-latinos pequenos?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Verificando a validade de um quadrado latino
+
+```{r uso-r-valido}
+# cada linha e cada coluna devem conter cada tratamento exatamente uma vez
+linhas_ok  <- all(apply(quad, 1, function(r) length(unique(r)) == 4))
+colunas_ok <- all(apply(quad, 2, function(cl) length(unique(cl)) == 4))
+c(linhas_ok = linhas_ok, colunas_ok = colunas_ok)
+```
+
+---
+
+## Verificando ortogonalidade (greco-latino)
+
+```{r uso-r-ortogonal}
+# ortogonalidade: os n² pares (romano, grego) devem ser todos distintos
+pares <- paste(dados_glq$roman, dados_glq$grego)
+length(unique(pares)) == length(pares)  # TRUE => construção válida
+```
+
+---
+
+## Resumo da aula
+
+- Quadrado latino: controla 2 fontes de bloqueio cruzadas com $n^2$ unidades, sem estimar
+  interação linha/coluna/tratamento — resolve gradientes ortogonais que nenhum bloqueio de um
+  único fator resolveria sozinho.
+- Aleatorização de Yates (1933): permuta linhas, colunas e a atribuição de tratamentos de um
+  quadrado reduzido, garantindo uma distribuição de referência válida para o teste $F$.
+- Replicar recupera graus de liberdade do erro perdidos com $n$ pequeno; a análise de poder
+  converte "quantas réplicas?" em conta explícita a partir do menor efeito relevante.
+- Quadrado greco-latino: controla 3 fontes, sobrepondo 2 quadrados latinos ortogonais — existe
+  para todo $n\ge3$ exceto $n=6$.
+- Encerra o Capítulo 4. Próxima aula: arranjos fatoriais — dois ou mais fatores de tratamento
+  cruzados deliberadamente no mesmo experimento.
+
+## Referências
+
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.
+- Yates, F. (1933). The Formation of Latin Squares for Use in Field Experiments. *Empire Journal of Experimental Agriculture*, 1(3), 235–244.

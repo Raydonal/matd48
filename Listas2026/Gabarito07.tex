@@ -1,0 +1,144 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Gabarito --- Lista 07}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Gabarito --- Lista de Exercícios 07}{Contrastes, comparações múltiplas e polinômios ortogonais (Capítulo 3, segunda metade / Aula 07)}
+
+\begin{questao}{1} \textbf{(Ciência de dados --- cálculo de um contraste)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item $\boldsymbol\lambda = (3, -1, -1, -1)'$. Soma: $3 - 1 - 1 - 1 = 0$, logo
+    $\mathbf 1'\boldsymbol\lambda = 0$: é de fato um contraste.
+  \item $\hat L = 3(860) - 940 - 1080 - 1120 = 2580 - 3140 = -560$.
+  \item $\sum_i c_i^2 = 9+1+1+1 = 12$, $n=10$, logo
+    \[
+    SQ_L = \frac{\hat L^2}{\sum_i c_i^2/n} = \frac{(-560)^2}{12/10} = \frac{313\,600}{1{,}2} \approx
+    261\,333{,}3.
+    \]
+    $F = SQ_L/QME = 261\,333{,}3/4200 \approx 62{,}22$. Como $62{,}22 > 4{,}11 =
+    F_{0{,}05;\,1,36}$, \textbf{rejeitamos $H_0: L=0$}: usar qualquer script de terceiros
+    aumenta o tempo de carregamento em relação a não usar nenhum, com forte evidência
+    estatística.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{2} \textbf{(Ciência de dados --- contrastes ortogonais e partição de $SQ_{\text{Trat}}$)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item $\boldsymbol\lambda_1'\boldsymbol\lambda_2 = 3(0)+(-1)(2)+(-1)(-1)+(-1)(-1) = 0-2+1+1=0$.
+    $\boldsymbol\lambda_1'\boldsymbol\lambda_3 = 3(0)+(-1)(0)+(-1)(1)+(-1)(-1) = 0+0-1+1=0$.
+    $\boldsymbol\lambda_2'\boldsymbol\lambda_3 = 0(0)+2(0)+(-1)(1)+(-1)(-1) = 0+0-1+1=0$. Os três
+    produtos internos são nulos: os três contrastes são mutuamente ortogonais.
+  \item $\hat L_2 = 2(940) - 1080 - 1120 = 1880-2200=-320$. $\sum c_i^2 = 4+1+1=6$, logo
+    $SQ_{L_2} = 320^2/(6/10) = 102\,400/0{,}6 \approx 170\,666{,}7$.
+    $\hat L_3 = 1080-1120=-40$. $\sum c_i^2=1+1=2$, logo $SQ_{L_3}=40^2/(2/10)=1600/0{,}2=8000$.
+  \item $SQ_{L_1}+SQ_{L_2}+SQ_{L_3} = 261\,333{,}3 + 170\,666{,}7 + 8000 = 440\,000 = SQ_{\text{Trat}}$.
+    A partição se confirma exatamente.
+  \item $F_1 \approx 62{,}2$ e $F_2 = 170\,666{,}7/4200 \approx 40{,}6$ são ambos muito maiores
+    que $F_{0{,}05;1,36}\approx 4{,}11$: significativos. $F_3 = 8000/4200 \approx 1{,}90 < 4{,}11$:
+    não significativo. Conclusão: a diferença entre configurações vem de "nenhum script vs.
+    demais" e de "Analytics vs. (Anúncios, Combo)"; Anúncios e Combo, especificamente, não
+    diferem entre si de forma detectável neste experimento.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{3} \textbf{(Psicologia --- Scheffé vs. teste ingênuo)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item $F = 185/40 = 4{,}625$. Como $4{,}625 > 4{,}12 = F_{0{,}05;1,35}$, o teste ingênuo (não
+    corrigido) rejeitaria $H_0$: o contraste "pareceria" significativo.
+  \item Valor crítico de Scheffé: $(t-1)F_{0{,}05;4,35} = 4 \times 2{,}64 = 10{,}56$. Como
+    $F = 4{,}625 < 10{,}56$, \textbf{não rejeitamos $H_0$ pelo critério de Scheffé}: o contraste
+    deixa de ser significativo quando corrigido para o fato de ter sido escolhido a posteriori.
+  \item O teste do item (a) usa $\alpha = 0{,}05$ como se este fosse o \emph{único} contraste
+    possível a ser testado, definido antes de qualquer olhar aos dados. Mas o pesquisador, ao
+    examinar os dados antes de escolher qual comparação testar, efetivamente considerou (mesmo
+    que implicitamente) um número muito maior de contrastes possíveis, e escolheu justamente
+    aquele que parecia mais promissor. Isso é análogo ao problema de comparações múltiplas
+    (ver a seção sobre procedimentos de comparação múltipla no livro-texto, Capítulo 3): a
+    probabilidade de encontrar \emph{algum}
+    contraste "significativo" por puro acaso, entre a enorme quantidade de contrastes possíveis
+    com $t=5$ grupos, é muito maior que 5\%. O critério de Scheffé é desenhado exatamente para
+    controlar essa taxa de erro por família sobre \emph{todos} os contrastes possíveis
+    simultaneamente, não apenas sobre o único que acabou sendo reportado.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{4} \textbf{(Dedução --- independência de contrastes ortogonais)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Como as $t$ unidades experimentais em grupos diferentes são independentes, as médias
+    amostrais $\bar y_{1\cdot},\ldots,\bar y_{t\cdot}$ são independentes entre si, com
+    $\mathrm{Var}(\bar y_{i\cdot}) = \sigma^2/n$ para todo $i$ (balanceado). Logo
+    $\mathrm{Cov}(\bar{\mathbf y}) = (\sigma^2/n)\mathbf I_t$. Para combinações lineares
+    $\hat L_1 = \boldsymbol\lambda_1'\bar{\mathbf y}$ e $\hat L_2 = \boldsymbol\lambda_2'\bar{\mathbf y}$,
+    \[
+    \mathrm{Cov}(\hat L_1,\hat L_2) = \boldsymbol\lambda_1'\,\mathrm{Cov}(\bar{\mathbf y})\,
+    \boldsymbol\lambda_2 = \boldsymbol\lambda_1'\left(\frac{\sigma^2}{n}\mathbf I_t\right)
+    \boldsymbol\lambda_2 = \frac{\sigma^2}{n}\boldsymbol\lambda_1'\boldsymbol\lambda_2.
+    \]
+  \item Se $\boldsymbol\lambda_1'\boldsymbol\lambda_2=0$ (ortogonalidade, por definição), então
+    imediatamente $\mathrm{Cov}(\hat L_1,\hat L_2) = (\sigma^2/n)\cdot 0 = 0$.
+  \item $\bar{\mathbf y}$ é um vetor conjuntamente normal (combinação linear de $Y_{ij}$ normais
+    independentes). $\hat L_1$ e $\hat L_2$ são ambas combinações lineares de $\bar{\mathbf y}$,
+    logo o par $(\hat L_1, \hat L_2)$ também é conjuntamente normal (bivariado). Para vetores
+    conjuntamente normais, é um resultado padrão que covariância nula implica independência
+    estatística (isso \textbf{não} vale, em geral, para variáveis não normais — a normalidade é
+    essencial aqui). Logo $\hat L_1 \perp \hat L_2$. Como $SQ_{L_1} = \hat L_1^2/(\sum c_i^2/n)$ é
+    função determinística apenas de $\hat L_1$, e $SQ_{L_2}$ apenas de $\hat L_2$, a independência
+    de $\hat L_1$ e $\hat L_2$ implica a independência de $SQ_{L_1}$ e $SQ_{L_2}$ (uma função
+    mensurável de uma variável independente de outra função mensurável de outra variável
+    preserva independência).
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{5} \textbf{(Dedução --- coeficientes do polinômio ortogonal linear, $t=3$)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Os níveis codificados são $-1, 0, 1$. Proporcionalidade direta ($c_i = k\cdot
+    \text{nível}_i$) com $k=1$ dá $\boldsymbol\lambda_L = (-1, 0, 1)$ --- já são inteiros de
+    módulo mínimo (o próximo múltiplo inteiro, $k=2$, daria $(-2,0,2)$, com módulo maior). A
+    condição (i) é automática: como os níveis codificados $-1,0,1$ já somam zero por construção
+    (são simétricos em torno do centro), qualquer múltiplo escalar deles também soma zero:
+    $\sum_i c_i = k\sum_i \text{nível}_i = k \cdot 0 = 0$.
+  \item $\boldsymbol\lambda_L'\boldsymbol\lambda_Q = (-1)(1) + (0)(-2) + (1)(1) = -1+0+1=0$:
+    são ortogonais.
+  \item Para $t=3$ níveis, o número máximo de contrastes mutuamente ortogonais é $t-1=2$.
+    $\boldsymbol\lambda_L$ e $\boldsymbol\lambda_Q$ são exatamente 2 contrastes mutuamente
+    ortogonais (item b), logo esgotam a contagem máxima: juntos, eles decompõem completamente
+    $SQ_{\text{Trat}}$ (2 graus de liberdade), sem espaço para nenhum grau polinomial adicional
+    (não existe componente cúbico com apenas 3 níveis).
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{6} \textbf{(Agricultura --- interpretação de polinômios ortogonais)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item $705 + 98 + 9 = 812$, que é exatamente o $SQ$ de "Dose (total)" --- a partição se
+    confirma.
+  \item Ao nível de 5\%, os componentes \textbf{linear} ($p<0{,}001$) e \textbf{quadrático}
+    ($p=0{,}028$) são significativos; o \textbf{cúbico} ($p=0{,}491$) não é. Isso indica que a
+    produtividade cresce com a dose de nitrogênio de forma predominantemente linear, mas com uma
+    curvatura estatisticamente detectável (componente quadrático) --- tipicamente, um padrão de
+    retornos decrescentes: cada incremento de dose aumenta a produtividade, mas em magnitude
+    progressivamente menor à medida que a dose cresce, sem evidência de uma reversão adicional
+    (S ou oscilação) que um termo cúbico capturaria.
+  \item Polinômios ortogonais exigem níveis \textbf{quantitativos, ordenados e igualmente
+    espaçados} para que os coeficientes tabulados representem tendência (linear, quadrática...)
+    de forma interpretável. Variedades de milho são um fator \textbf{categórico (nominal)}: não
+    há uma noção de "meia unidade" entre duas variedades, nem uma ordem numérica natural entre
+    elas, de modo que "tendência linear entre variedades" não tem significado --- para
+    variedades, o procedimento adequado é comparação múltipla (Tukey, Dunnett etc.) ou contrastes
+    específicos definidos pelo interesse do pesquisador, não uma decomposição polinomial.
+\end{enumerate}
+\end{solucao}
+
+\end{document}

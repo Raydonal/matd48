@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 14 --- Fatoriais $3^k$, fracionamento e superfície de resposta}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 14}{Fatoriais $3^k$, fracionados $2^{k-p}$ e superfície de resposta (Capítulo 6 / Aula 14)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito14.pdf}.}
+
+\begin{questao}{1} \textbf{(Engenharia --- estrutura de graus de liberdade de um $3^2$)}
+
+Um experimento de usinagem cruza velocidade de corte (3 níveis) com ângulo de saída da ferramenta
+(3 níveis) sobre a energia de corte consumida, com $r=4$ repetições por combinação
+($n=3\times3\times4=36$).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Quantos graus de liberdade tem cada efeito principal? E a interação $A{\times}B$?
+    Justifique a partir da regra geral de um $3^k$ (Seção 6.4 do livro-texto).
+  \item Monte a tabela de graus de liberdade completa (Velocidade, Ângulo, Velocidade$\times$
+    Ângulo, Erro, Total) para este desenho específico ($a=b=3$, $r=4$).
+  \item Um fatorial $2^2$ nos mesmos dois fatores (só 2 níveis cada) jamais conseguiria estimar um
+    tipo específico de efeito que o $3^2$ estima. Qual é, e por quê?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Dedução --- estrutura de aliases de um fracionado $2^{4-1}$)}
+
+Considere um fatorial fracionado $2^{4-1}$ com relação geradora $D=ABC$, equivalente à relação
+definidora $I=ABCD$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Usando a propriedade $A^2=B^2=C^2=D^2=I$, calcule o alias de $A$ multiplicando ambos os
+    lados de $I=ABCD$ por $A$: simplifique $A\cdot ABCD$ até obter uma expressão do tipo
+    "$A$ é aliasado com \underline{\hspace{2cm}}".
+  \item Repita o procedimento para encontrar o alias de $AB$ (multiplique $I=ABCD$ por $AB$).
+  \item Repita para encontrar o alias de $C$.
+  \item Classifique este fracionado quanto à \textbf{resolução} (III, IV ou V) e explique, em uma
+    frase, o que essa resolução garante sobre a limpeza dos efeitos principais.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Ciência de dados/Engenharia --- ponto estacionário de uma superfície de resposta)}
+
+Um modelo de segunda ordem foi ajustado para o rendimento de um processo, em função de duas
+variáveis codificadas $x_1$ e $x_2$:
+$$
+\hat y = 80 + 4x_1 - 6x_2 - 2x_1^2 - 3x_2^2 + 2x_1x_2.
+$$
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule $\partial \hat y/\partial x_1$ e $\partial \hat y/\partial x_2$.
+  \item Iguale as duas derivadas parciais a zero e resolva o sistema linear resultante para
+    encontrar o ponto estacionário $(x_1^*, x_2^*)$.
+  \item Escreva a matriz Hessiana (segundas derivadas) do modelo e calcule seus autovalores.
+  \item Classifique o ponto estacionário (máximo, mínimo ou sela) a partir dos autovalores, e
+    calcule $\hat y$ no ponto estacionário.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Confusão em $3^k$ --- comparando os geradores $AB$ e $AB^2$)}
+
+Para um fatorial $3^2$ (fatores $A$ e $B$, níveis codificados $0,1,2$), o livro-texto usa o
+gerador $AB^2$ (isto é, $L=A+2B \bmod 3$) para dividir as 9 combinações em 3 blocos de 3.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Construa a tabela completa de $L_{AB^2} = (A+2B)\bmod3$ para as 9 combinações de $(A,B)$.
+  \item Construa agora a tabela de $L_{AB} = (A+B)\bmod3$ para as mesmas 9 combinações.
+  \item Compare as duas partições em blocos. A combinação $(A{=}0,B{=}0)$ e a combinação
+    $(A{=}1,B{=}1)$ ficam no mesmo bloco sob $AB^2$? E sob $AB$? O que essa diferença mostra sobre
+    $AB$ e $AB^2$ serem contrastes \emph{distintos} (não intercambiáveis)?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Ciência de dados/Engenharia --- exercício computacional em R)}
+
+O código abaixo ajusta o modelo de segunda ordem da Questão 3-style aos dados reais de energia de
+corte e varre uma grade para localizar o mínimo predito na região experimental. Está incompleto.
+
+\begin{lstlisting}
+energia <- read.csv("energia.csv")
+
+# (a) complete a formula do modelo de segunda ordem
+modelo <- lm(______________________, data = energia)
+
+# (b) construa uma grade de 100 x 100 pontos dentro do intervalo observado
+#     de Velocidad e angulo, e obtenha a energia predita em cada ponto
+grade <- expand.grid(
+  Velocidad = seq(min(energia$Velocidad), max(energia$Velocidad), length.out = 100),
+  angulo    = seq(______________________, ______________________, length.out = 100)
+)
+grade$pred <- predict(______________________, newdata = grade)
+
+# (c) identifique a linha da grade com a menor energia predita
+grade[______________________, ]
+\end{lstlisting}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete as quatro linhas indicadas.
+  \item O ponto estacionário do modelo ajustado a estes dados (encontrado resolvendo o gradiente
+    igual a zero, como na Questão 3) cai fora da região onde a energia predita é mínima na grade.
+    Que tipo de ponto estacionário (máximo, mínimo ou sela) é consistente com essa observação?
+\end{enumerate}
+\end{questao}
+
+\end{document}

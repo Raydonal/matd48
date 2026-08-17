@@ -1,0 +1,18 @@
+book_filename: "livro-doe"
+delete_merged_file: true
+output_dir: "."
+new_session: yes
+rmd_files: [
+  "index.Rmd",
+  "01-principios.Rmd",
+  "02-modelos-lineares.Rmd",
+  "03-dca.Rmd",
+  "04-blocos.Rmd",
+  "05-fatoriais.Rmd",
+  "06-fatoriais-avancado.Rmd",
+  "07-superficie-resposta.Rmd",
+  "08-ab-testing-bandits.Rmd"
+]
+language:
+  ui:
+    chapter_name: "Capítulo "

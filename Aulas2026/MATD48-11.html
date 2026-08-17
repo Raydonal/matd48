@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Quadrado Latino e Quadrado Greco-Latino</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Quadrado Latino e Quadrado Greco-Latino
+]
+.subtitle[
+## Duas e três fontes de bloqueio cruzadas, e quadrados replicados
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 11 — Quadrado Latino e Quadrado Greco-Latino
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Motivação: dois gradientes ortogonais
+
+Fertilidade variando em **duas direções ao mesmo tempo**, independentemente (declividade nas
+linhas, umidade nas colunas):
+
+&lt;img src="MATD48-11_files/figure-html/ql-motivacao-grid-1.png" alt="" width="432" /&gt;
+
+--
+
+Blocar só por linha deixa o gradiente de coluna intacto dentro de cada bloco, e vice-versa —
+**nenhum bloqueio de um único fator resolve os dois**.
+
+---
+
+## Duas fontes de bloqueio cruzadas
+
+O DBCA controla **uma** fonte de variação. Quando há **duas**, cruzadas e conhecidas (linha e
+coluna de um talhão, por exemplo), um **quadrado latino** de ordem `\(n\)` controla as duas com
+apenas `\(n^2\)` unidades, comparando `\(n\)` tratamentos — em vez das `\(n^3\)` que um fatorial completo
+linha$\times$coluna$\times$tratamento exigiria (Fisher, 1935).
+
+--
+
+Regra de construção: cada tratamento aparece **exatamente uma vez em cada linha** e
+**exatamente uma vez em cada coluna**.
+
+---
+
+## O modelo
+
+$$
+Y_{ijk} = \mu + \rho_i + \gamma_j + \tau_k + \varepsilon_{ijk}
+$$
+
+`\(\rho_i\)` = linha, `\(\gamma_j\)` = coluna, `\(\tau_k\)` = tratamento — mas o índice `\(k\)` **não varia
+livremente**: é determinado pelo arranjo do quadrado. `\(n^2\)` observações, não `\(n^3\)`. Tabela de
+ANOVA e pressupostos seguem o tratamento padrão de (Montgomery, 2017).
+
+&lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; gl &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Linha &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; n-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Coluna &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; n-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; n-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; (n-1)(n-2) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; n²-1 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+Preço: assume-se **ausência de interação** entre linha, coluna e tratamento.
+
+---
+
+## Esperança dos quadrados médios
+
+Sob `\(\sum\rho_i=\sum\gamma_j=\sum\tau_k=0\)`:
+
+$$
+\mathbb E[QM_{Trat}] = \sigma^2+\frac{n}{n-1}\sum_k\tau_k^2
+$$
+
+--
+
+Como no DBCA, linha e coluna foram *escolhidas* pelo delineamento, não sorteadas — seus quadrados
+médios servem para purificar o erro, não para serem testados.
+
+---
+
+## Replicando o quadrado
+
+`\((n-1)(n-2)\)` graus de liberdade do erro é pouco para `\(n\)` pequeno (`\(6\)` para `\(n=4\)`, só `\(2\)` para
+`\(n=3\)`). Replicar em `\(p\)` conjuntos independentes de unidades (cada um com suas próprias linhas e
+colunas) aumenta `\(gl_{Erro}\)` sem aumentar `\(n\)`:
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; gl &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Réplicas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; p-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Linhas (dentro) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; p(n-1) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Colunas (dentro) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; p(n-1) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; n-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; (n-1)[p(n-1)-1] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pn²-1 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Quantas réplicas? Análise de poder
+
+`\(\lambda = Nf^2\)` (`\(N=pn^2\)`, `\(f\)` = tamanho de efeito de Cohen). Poder para detectar um efeito
+**grande** (`\(f=0{,}4\)`) em função de `\(p\)`, com `\(n=4\)`:
+
+
+``` r
+poder_ql_replicado &lt;- function(n, p, alpha = 0.05, f = 0.4) {
+  gl1 &lt;- n - 1; gl2 &lt;- (n - 1) * (p * (n - 1) - 1); N &lt;- p * n^2
+  f_crit &lt;- qf(1 - alpha, gl1, gl2)
+  1 - pf(f_crit, gl1, gl2, N * f^2)
+}
+tab_poder &lt;- tibble(p = 1:6) %&gt;% mutate(poder = poder_ql_replicado(4, p))
+```
+
+&lt;img src="MATD48-11_files/figure-html/poder-ql-plot-1.png" alt="" width="432" /&gt;
+
+--
+
+Com `\(p=1\)`: poder `\(=\)` 15%. São necessárias
+5 réplicas para poder `\(\ge0{,}80\)` — replicar tem
+custo, e a análise de poder converte "quantas réplicas?" em conta explícita.
+
+---
+
+## Três fontes de bloqueio: o quadrado greco-latino
+
+Sobrepõe dois quadrados latinos **ortogonais** de ordem `\(n\)`: um com letras romanas (A,B,C,...),
+outro com letras gregas (`\(\alpha,\beta,\gamma,\dots\)`), tais que **cada par (romana, grega) ocorra
+exatamente uma vez** — extensão natural dos quadrados latinos de Fisher para uma terceira fonte de
+bloqueio (Fisher, 1935).
+
+$$
+Y_{ijkl} = \mu + \rho_i + \gamma_j + \tau_k + \omega_l + \varepsilon_{ijkl}
+$$
+
+--
+
+Existe para todo `\(n\ge3\)` **exceto** `\(n=6\)` (problema dos 36 oficiais de Euler, sem solução).
+Cada uma das 4 fontes consome `\(n-1\)` graus de liberdade; sobram `\((n-1)(n-3)\)` para o erro — em
+`\(n=4\)`, só 3.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Agricultura: quatro adubações, duas fontes de bloqueio
+
+**Linha** = declividade do terreno; **coluna** = gradiente de umidade; **tratamento** = 4
+formulações de adubo (A,B,C,D).
+
+
+``` r
+quad &lt;- matrix(c(
+  "A","B","C","D",
+  "B","C","D","A",
+  "C","D","A","B",
+  "D","A","B","C"
+), nrow = 4, byrow = TRUE)
+quad
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,] "A"  "B"  "C"  "D" 
+## [2,] "B"  "C"  "D"  "A" 
+## [3,] "C"  "D"  "A"  "B" 
+## [4,] "D"  "A"  "B"  "C"
+```
+
+---
+
+## O esquema, como diagrama
+
+&lt;img src="MATD48-11_files/figure-html/ql-heatmap-1.png" alt="" width="360" /&gt;
+
+--
+
+Cada linha e cada coluna contêm as 4 letras exatamente uma vez — a letra sobre cada célula deixa a
+identidade do tratamento legível mesmo sem depender só da cor.
+
+---
+
+## Aleatorização de Yates (1933)
+
+Usar sempre o mesmo quadrado fixo reintroduz confusão (ex.: se A está sempre na diagonal, e a
+diagonal coincidir com algo não modelado). Procedimento em 4 passos:
+
+1. Quadrado latino **reduzido** (construção cíclica).
+2. Permutar **linhas** aleatoriamente.
+3. Permutar **colunas** aleatoriamente.
+4. Sortear quais **tratamentos reais** correspondem a cada símbolo.
+
+
+``` r
+aleatorizar_quadrado_latino &lt;- function(n, tratamentos, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
+  reduzido &lt;- outer(0:(n-1), 0:(n-1), function(i, j) ((i + j) %% n) + 1)
+  design_idx &lt;- reduzido[sample(n), sample(n)]
+  atrib &lt;- sample(tratamentos)
+  matrix(atrib[design_idx], nrow = n)
+}
+set.seed(2026)
+aleatorizar_quadrado_latino(4, c("A","B","C","D"))
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,] "D"  "C"  "B"  "A" 
+## [2,] "B"  "A"  "C"  "D" 
+## [3,] "C"  "D"  "A"  "B" 
+## [4,] "A"  "B"  "D"  "C"
+```
+
+--
+
+Rodar de novo com outra semente produz outro arranjo, também válido — é esse espaço de arranjos
+que sustenta a distribuição de referência do teste `\(F\)` (mesmo argumento de Neyman-Rubin da Aula 09,
+agora restrito por linha *e* coluna).
+
+---
+
+## Ajustando o quadrado latino
+
+
+``` r
+efeito_linha  &lt;- c(0, 2, -1, 1)
+efeito_coluna &lt;- c(0, -2, 1, 1)
+efeito_trat   &lt;- c(A = 0, B = 3, C = 5, D = 1)
+
+set.seed(11)
+dados_ql &lt;- expand_grid(linha = 1:4, coluna = 1:4) %&gt;%
+  mutate(
+    tratamento = factor(mapply(function(i, j) quad[i, j], linha, coluna),
+                         levels = c("A","B","C","D")),
+    linha  = factor(linha), coluna = factor(coluna),
+    resposta = round(20 + efeito_linha[as.integer(linha)] + efeito_coluna[as.integer(coluna)] +
+                 efeito_trat[as.character(tratamento)] + rnorm(n(), 0, 1.2), 2)
+  )
+mod_ql &lt;- aov(resposta ~ linha + coluna + tratamento, data = dados_ql)
+```
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sumsq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; meansq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; linha &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43.6726 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.5575 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.7030 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0080 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; coluna &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.0569 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.0190 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.6309 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0247 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tratamento &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 56.8363 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.9454 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.9291 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0041 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.1608 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.3601 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## A matriz de delineamento tem 3 blocos de colunas
+
+$$
+X = \big[\,\mathbf 1 \mid X_{linha} \mid X_{coluna} \mid X_{trat}\,\big]
+$$
+
+Sem nenhum produto cruzado entre eles — por isso o quadrado latino estima 3 efeitos principais
+com só `\(n^2\)` observações, ao custo de não poder estimar interação alguma entre eles.
+
+
+``` r
+X_ql &lt;- model.matrix(mod_ql)
+dim(X_ql)   # 16 x 10: 1 + 3 (linha) + 3 (coluna) + 3 (tratamento)
+```
+
+```
+## [1] 16 10
+```
+
+``` r
+X_ql[1:4, ]
+```
+
+```
+##   (Intercept) linha2 linha3 linha4 coluna2 coluna3 coluna4 tratamentoB
+## 1           1      0      0      0       0       0       0           0
+## 2           1      0      0      0       1       0       0           1
+## 3           1      0      0      0       0       1       0           0
+## 4           1      0      0      0       0       0       1           0
+##   tratamentoC tratamentoD
+## 1           0           0
+## 2           0           0
+## 3           1           0
+## 4           0           1
+```
+
+---
+
+## O diagrama de Hasse deste quadrado latino
+
+Linha, Coluna e Tratamento aparecem **três a três no mesmo nível** — cruzados dois a dois, sem
+aresta entre si — e só se reencontram no Erro.
+
+&lt;img src="MATD48-11_files/figure-html/hasse-ql-11-1.png" alt="" width="388.8" /&gt;
+
+`\(1+3+3+3+6=16=N=n^2\)` — o preço de controlar duas fontes de bloqueio com um só fator cruzado a
+mais é justamente esses `\(gl\)` que, no DBCA (Aula 09, só um bloco), teriam sobrado para o Erro.
+
+---
+
+## Duas réplicas do mesmo quadrado
+
+
+``` r
+n &lt;- 4; p &lt;- 2
+dados_rep &lt;- map_dfr(1:p, function(rep_id) {
+  expand_grid(linha = 1:4, coluna = 1:4) %&gt;%
+    mutate(replica = rep_id,
+           tratamento = factor(mapply(function(i, j) quad[i, j], linha, coluna),
+                                levels = c("A","B","C","D")),
+           linha_id = factor(paste0(rep_id, "-", linha)),
+           coluna_id = factor(paste0(rep_id, "-", coluna)))
+})
+set.seed(22)
+dados_rep &lt;- dados_rep %&gt;%
+  mutate(replica = factor(replica),
+         resposta = round(20 + rnorm(n(), 0, 1) + efeito_trat[as.character(tratamento)] +
+                      as.numeric(replica) * 1.5 + rnorm(n(), 0, 1.2), 2))
+mod_rep &lt;- aov(resposta ~ replica + linha_id + coluna_id + tratamento, data = dados_rep)
+anova(mod_rep)["Residuals", "Df"]  # confira: (n-1)[p(n-1)-1] = 3*(2*3-1) = 15
+```
+
+```
+## [1] 15
+```
+
+&lt;img src="MATD48-11_files/figure-html/plot-gl-rep-1.png" alt="" width="396" /&gt;
+
+Replicar elevou `\(gl_{Erro}\)` de 6 (um quadrado) para 15 (dois quadrados).
+
+---
+
+## Quadrado greco-latino: variedade × adubo
+
+
+``` r
+L1 &lt;- matrix(c(1,2,3,4, 2,1,4,3, 3,4,1,2, 4,3,2,1), nrow = 4, byrow = TRUE)  # romano
+L2 &lt;- matrix(c(1,2,3,4, 3,4,1,2, 4,3,2,1, 2,1,4,3), nrow = 4, byrow = TRUE)  # grego
+romanos &lt;- c("A","B","C","D"); gregos &lt;- c("alpha","beta","gamma","delta")
+
+dados_glq &lt;- expand_grid(linha = 1:4, coluna = 1:4) %&gt;%
+  mutate(roman = factor(mapply(function(i, j) romanos[L1[i, j]], linha, coluna), levels = romanos),
+         grego = factor(mapply(function(i, j) gregos[L2[i, j]],  linha, coluna), levels = gregos),
+         linha = factor(linha), coluna = factor(coluna))
+
+n_distinct(paste(dados_glq$roman, dados_glq$grego))  # 16: todo par aparece 1 vez
+```
+
+```
+## [1] 16
+```
+
+---
+
+## ANOVA do quadrado greco-latino
+
+
+``` r
+set.seed(33)
+ef_roman &lt;- c(A = 0, B = 2, C = 4, D = 1)
+ef_grego &lt;- c(alpha = 0, beta = 1, gamma = -1, delta = 2)
+dados_glq &lt;- dados_glq %&gt;%
+  mutate(resposta = round(30 + ef_roman[as.character(roman)] + ef_grego[as.character(grego)] +
+               rnorm(n(), 0, 1.5), 2))
+mod_glq &lt;- aov(resposta ~ linha + coluna + roman + grego, data = dados_glq)
+```
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sumsq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; meansq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; linha &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.8191 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.9397 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7245 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6013 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; coluna &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6709 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2236 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0835 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9645 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; roman &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 55.7674 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.5891 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.9428 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0729 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; grego &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 52.2580 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.4193 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.5059 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0792 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.0325 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.6775 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Só 3 graus de liberdade para o erro — testes pouco sensíveis (`\(p\approx0{,}07\)`–$0{,}08$) mesmo com
+efeitos reais simulados.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que o modelo de um quadrado latino não permite estimar interação linha$\times$tratamento,
+   ao contrário de um fatorial completo?
+
+2. Com `\(n=4\)` tratamentos, comparar um quadrado latino `\(4\times4\)` (16 unidades, duas fontes de
+   bloqueio) a um DBCA com 4 blocos de 4 unidades (16 unidades, uma fonte de bloqueio). Quando vale
+   a pena "gastar" o grau de liberdade extra controlando uma segunda fonte, em vez de deixá-lo para
+   o erro?
+
+3. Um quadrado greco-latino de ordem 6 é impossível (Euler). Isso significa que nunca se pode
+   controlar 3 fontes de bloqueio com 6 níveis? Que alternativas existem?
+
+4. No exemplo variedade×adubo, os testes-$F$ tiveram `\(p\approx0{,}07\)`–$0{,}08$ apesar de os efeitos
+   simulados serem reais e razoavelmente grandes. O que isso ensina sobre o uso prático de
+   quadrados greco-latinos pequenos?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Verificando a validade de um quadrado latino
+
+
+``` r
+# cada linha e cada coluna devem conter cada tratamento exatamente uma vez
+linhas_ok  &lt;- all(apply(quad, 1, function(r) length(unique(r)) == 4))
+colunas_ok &lt;- all(apply(quad, 2, function(cl) length(unique(cl)) == 4))
+c(linhas_ok = linhas_ok, colunas_ok = colunas_ok)
+```
+
+```
+##  linhas_ok colunas_ok 
+##       TRUE       TRUE
+```
+
+---
+
+## Verificando ortogonalidade (greco-latino)
+
+
+``` r
+# ortogonalidade: os n² pares (romano, grego) devem ser todos distintos
+pares &lt;- paste(dados_glq$roman, dados_glq$grego)
+length(unique(pares)) == length(pares)  # TRUE =&gt; construção válida
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+## Resumo da aula
+
+- Quadrado latino: controla 2 fontes de bloqueio cruzadas com `\(n^2\)` unidades, sem estimar
+  interação linha/coluna/tratamento — resolve gradientes ortogonais que nenhum bloqueio de um
+  único fator resolveria sozinho.
+- Aleatorização de Yates (1933): permuta linhas, colunas e a atribuição de tratamentos de um
+  quadrado reduzido, garantindo uma distribuição de referência válida para o teste `\(F\)`.
+- Replicar recupera graus de liberdade do erro perdidos com `\(n\)` pequeno; a análise de poder
+  converte "quantas réplicas?" em conta explícita a partir do menor efeito relevante.
+- Quadrado greco-latino: controla 3 fontes, sobrepondo 2 quadrados latinos ortogonais — existe
+  para todo `\(n\ge3\)` exceto `\(n=6\)`.
+- Encerra o Capítulo 4. Próxima aula: arranjos fatoriais — dois ou mais fatores de tratamento
+  cruzados deliberadamente no mesmo experimento.
+
+## Referências
+
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
+- Yates, F. (1933). The Formation of Latin Squares for Use in Field Experiments. *Empire Journal of Experimental Agriculture*, 1(3), 235–244.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

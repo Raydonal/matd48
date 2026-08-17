@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Verificação de Pressupostos e Transformações</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Verificação de Pressupostos e Transformações
+]
+.subtitle[
+## Q-Q plot, testes de normalidade e homogeneidade de variância, Box-Cox
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 06 — Verificação de Pressupostos e Transformações
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Três pressupostos, uma checagem possível
+
+A validade dos testes `\(F\)`, ICs e cálculos de tamanho amostral (Aulas 04–05) repousa em:
+
+1. **Independência** — garantida (ou não) pelo desenho; não se verifica nos dados.
+2. **Normalidade** dos erros.
+3. **Variância constante** entre tratamentos (homocedasticidade).
+
+--
+
+Normalidade e homocedasticidade são checáveis a partir dos **resíduos**
+`\(e_{ij} = Y_{ij}-\bar Y_{i\cdot}\)` do modelo ajustado — a checagem de adequação do modelo via
+análise de resíduos (Montgomery, 2017).
+
+---
+
+## Normalidade: gráfico e teste
+
+- **Q-Q plot**: quantis amostrais dos resíduos vs. quantis teóricos da normal. Mostra **onde**
+  (em qual cauda/região) o desvio ocorre — mais informativo que um único número.
+- **Shapiro-Wilk** (Shapiro &amp; Wilk, 1965): teste formal, útil como confirmação, não como árbitro único
+  — baixo poder em `\(n\)` pequeno, rejeita quase sempre em `\(n\)` muito grande por desvios sem
+  relevância prática.
+
+---
+
+## Homogeneidade de variância
+
+- **Teste de Levene** (Levene, 1960): compara desvios absolutos em torno da **mediana** de cada
+  grupo — robusto a não normalidade (preferível ao de Bartlett (1937), sensível a ela).
+- Ausência de rejeição **não** é evidência de que a homocedasticidade vale — sobretudo com poucas
+  observações por grupo. Inspeção gráfica (resíduos vs. ajustados) continua indispensável.
+
+---
+
+## Transformações usuais
+
+- **Log** (`\(\log Y\)`): variância `\(\propto\)` média$^2$ (erro multiplicativo) — tempos, contagens
+  grandes, dados positivos assimétricos à direita.
+- **Raiz quadrada** (`\(\sqrt Y\)`, ou `\(\sqrt{Y+1/2}\)`): variância `\(\propto\)` média — contagens.
+- **Box-Cox** (Box &amp; Cox, 1964): família `\(Y^{(\lambda)}=(Y^\lambda-1)/\lambda\)` (`\(\log Y\)` se
+  `\(\lambda=0\)`); `\(\lambda\)` escolhido maximizando a verossimilhança perfilada do modelo ajustado a
+  `\(Y^{(\lambda)}\)` (Box, Hunter &amp; Hunter, 2005).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Tempos de reação heterocedásticos
+
+Tempos de reação: assimétricos à direita, variância cresce com a média (efeito multiplicativo).
+
+
+``` r
+set.seed(1234)
+condicao &lt;- c("Nenhuma", "Sonora", "Visual")
+n &lt;- 15
+media_base &lt;- c(420, 470, 560)
+cv &lt;- 0.28
+dados_het &lt;- tibble(
+  sujeito  = 1:(3 * n),
+  condicao = factor(rep(condicao, each = n), levels = condicao),
+  tempo    = rep(media_base, each = n) * exp(rnorm(3 * n, 0, cv))
+)
+modelo_het &lt;- aov(tempo ~ condicao, data = dados_het)
+```
+
+---
+
+## Q-Q plot e boxplot dos resíduos, lado a lado
+
+&lt;img src="MATD48-06_files/figure-html/qqplot-06-1.png" alt="" width="612" /&gt;
+
+Pontos acima da reta na cauda superior direita do Q-Q: cauda mais pesada que a normal, o padrão
+clássico de assimetria à direita em tempos de reação. O boxplot por condição (à direita) já
+antecipa o próximo pressuposto: a altura das caixas cresce de "Nenhuma" para "Visual" — indício
+visual de heterocedasticidade, antes mesmo do gráfico de resíduos vs. ajustados a seguir.
+
+---
+
+## Resíduos vs. valores ajustados
+
+&lt;img src="MATD48-06_files/figure-html/resid-fitted-06-1.png" alt="" width="468" /&gt;
+
+O leque se abre da esquerda (ajustado baixo) para a direita (ajustado alto): a dispersão dos
+resíduos cresce com a média — a marca de um erro multiplicativo, não aditivo.
+
+---
+
+## Testes formais
+
+
+``` r
+shapiro.test(residuals(modelo_het))
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  residuals(modelo_het)
+## W = 0.84551, p-value = 2.812e-05
+```
+
+``` r
+car::leveneTest(tempo ~ condicao, data = dados_het)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group  2  0.1136 0.8929
+##       42
+```
+
+Shapiro-Wilk rejeita normalidade (`\(p&lt;0{,}001\)`); Levene não rejeita — mas com `\(n=15\)`/grupo o teste
+tem pouco poder, mesmo havendo heterocedasticidade por construção (como o gráfico anterior já
+deixava claro visualmente).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. O Q-Q plot mostrou desvio nas caudas, mas o teste de Levene não rejeitou homocedasticidade. Os
+   dois diagnósticos se contradizem? Como você reconciliaria essa leitura?
+
+2. Depois de transformar por log, as conclusões devem ser reportadas em qual escala — a
+   original (ms) ou a log? O que muda na interpretação de "diferença entre médias"?
+
+3. Em que ponto um pesquisador deveria abandonar a transformação e considerar uma alternativa não
+   paramétrica (Kruskal-Wallis, tema da próxima seção do curso), em vez de insistir em uma família
+   de potências?
+
+4. Um teste de Shapiro-Wilk com `\(n=500\)` rejeita a normalidade com `\(p&lt;0{,}001\)`, mas o Q-Q plot
+   parece quase perfeito. O que fazer?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Box-Cox
+
+
+``` r
+bc &lt;- MASS::boxcox(modelo_het, plotit = TRUE, lambda = seq(-2, 2, by = 0.01))
+```
+
+&lt;img src="MATD48-06_files/figure-html/boxcox-06-1.png" alt="" width="432" /&gt;
+
+``` r
+lambda_otimo &lt;- bc$x[which.max(bc$y)]
+lambda_otimo
+```
+
+```
+## [1] -0.6
+```
+
+---
+
+## Depois de transformar (log)
+
+
+``` r
+dados_het &lt;- dados_het %&gt;% mutate(log_tempo = log(tempo))
+modelo_log &lt;- aov(log_tempo ~ condicao, data = dados_het)
+
+shapiro.test(residuals(modelo_log))
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  residuals(modelo_log)
+## W = 0.95569, p-value = 0.08363
+```
+
+``` r
+car::leveneTest(log_tempo ~ condicao, data = dados_het)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group  2  0.0259 0.9744
+##       42
+```
+
+O IC de verossimilhança de `\(\lambda\)` inclui 0: a transformação log, mais interpretável, é
+compatível com os dados — e resolve a não normalidade detectada antes.
+
+---
+
+## Antes e depois, lado a lado
+
+&lt;img src="MATD48-06_files/figure-html/antes-depois-06-1.png" alt="" width="648" /&gt;
+
+O leque de dispersão que crescia da esquerda para a direita desaparece à direita: na escala log, a
+variabilidade dos resíduos é comparável entre as três condições — sinal visual direto de que a
+transformação estabilizou a variância sem distorcer a estrutura de tratamento.
+
+---
+
+## Resumo da aula
+
+- Normalidade: Q-Q plot (onde o desvio ocorre) + Shapiro-Wilk (confirmação formal).
+- Homocedasticidade: Levene, robusto a não normalidade; ausência de rejeição não é prova de que o
+  pressuposto vale, sobretudo em `\(n\)` pequeno.
+- Log e raiz quadrada são casos especiais da família Box-Cox; `\(\lambda\)` escolhido por
+  verossimilhança perfilada, mas interpretabilidade pode justificar arredondar para 0, 1/2 ou 1.
+- Isso fecha a primeira metade do Capítulo 3 (DCA). A próxima seção trata de contrastes,
+  polinômios ortogonais, comparações múltiplas, ANCOVA e Kruskal-Wallis (Kruskal &amp; Wallis, 1952) —
+  quando nem a transformação basta.
+
+## Referências
+
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
+- Shapiro, S. S. &amp; Wilk, M. B. (1965). An Analysis of Variance Test for Normality (Complete Samples). *Biometrika*, 52(3/4), 591–611.
+- Levene, H. (1960). Robust Tests for Equality of Variances. Em *Contributions to Probability and Statistics: Essays in Honor of Harold Hotelling* (pp. 278–292). Stanford University Press.
+- Bartlett, M. S. (1937). Properties of Sufficiency and Statistical Tests. *Proceedings of the Royal Society of London. Series A*, 160(901), 268–282.
+- Box, G. E. P. &amp; Cox, D. R. (1964). An Analysis of Transformations. *Journal of the Royal Statistical Society, Series B*, 26(2), 211–252.
+- Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley &amp; Sons.
+- Kruskal, W. H. &amp; Wallis, W. A. (1952). Use of Ranks in One-Criterion Variance Analysis. *Journal of the American Statistical Association*, 47(260), 583–621.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,792 @@
+# Experimentação em produtos digitais: testes A/B e bandits {#ab-bandits}
+
+
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Sobre este capítulo</strong><br>
+Os sete capítulos anteriores acompanham, aula a aula, o programa do semestre de MATD48 (ver
+cronograma na home do curso). Este capítulo não tem aula correspondente — é material que expande o
+livro além do que cabe em um semestre, cobrindo como os mesmos princípios de delineamento
+(repetição, aleatorização, controle de confusão) aparecem na forma mais comum de experimentação do
+século XXI: testes A/B e bandits em produtos digitais. A referência principal é
+@owen2020experimental (Stanford Stat 263/363), cujo capítulo de abertura trata exatamente dessa
+ponte entre delineamento clássico e experimentação online.
+</div>
+```
+
+Um teste A/B é, ao mesmo tempo, o experimento mais executado no mundo hoje — plataformas grandes de
+tecnologia rodam milhares deles simultaneamente — e, estruturalmente, o delineamento mais simples
+que este livro estuda: dois tratamentos, unidades atribuídas ao acaso, sem blocos, sem fatores
+cruzados. A dificuldade não está na álgebra (é a mesma do Capítulo 3), mas no *contexto* em que ele
+roda: tráfego contínuo em vez de uma amostra fixa coletada de uma vez, efeitos minúsculos em
+relação à variância natural do comportamento humano online, e a tentação constante de olhar o
+resultado antes da hora. A Parte I deste capítulo formaliza o teste A/B como um caso particular do
+delineamento completamente aleatorizado (Capítulo 3) e cataloga os problemas estatísticos que essa
+combinação de "experimento simples, mas contínuo e de alto volume" produz na prática. A Parte II
+introduz uma alternativa: em vez de dividir o tráfego 50/50 até o fim de um horizonte fixo, um
+**bandit** realoca tráfego adaptativamente para o que parece estar funcionando melhor, ao custo de
+uma pergunta causal mais difícil de responder depois que o experimento termina.
+
+## Parte I — Testes A/B como delineamento completamente aleatorizado
+
+### Um teste A/B é um delineamento completamente aleatorizado {#ab-e-dca}
+
+Tire o vocabulário de produto — "variante", "conversão", "tráfego" — e o que resta é exatamente o
+delineamento completamente aleatorizado (DCA) de dois tratamentos do Capítulo 3, na notação de
+resultados potenciais estabelecida na Seção \@ref(neyman-rubin) do Capítulo 1. A unidade
+experimental $i$ é o **usuário** (ou, mais precisamente, a sessão ou o dispositivo, dependendo de
+como o sistema de experimentação identifica "quem" está sendo tratado — voltaremos a essa
+sutileza). O tratamento $Z_i \in \{0,1\}$ indica se o usuário $i$ foi alocado para o controle
+("A", a versão atual do produto) ou para a variante ("B", a mudança proposta). Cada usuário tem
+dois resultados potenciais, $Y_i(0)$ e $Y_i(1)$ — por exemplo, um indicador binário de conversão
+(comprou ou não, em uma sessão), o tempo gasto na página, ou a receita gerada — mas o sistema só
+observa um deles, $Y_i = Z_iY_i(1) + (1-Z_i)Y_i(0)$, exatamente como na equação
+(\@ref(eq:resultado-observado-ab)) abaixo, que repete a estrutura da Seção \@ref(neyman-rubin):
+
+\begin{equation}
+Y_i = Z_i\,Y_i(1) + (1-Z_i)\,Y_i(0), \qquad Z_i \sim \text{Bernoulli}(1/2) \text{ (tipicamente)},
+(\#eq:resultado-observado-ab)
+\end{equation}
+
+com $Z_i$ sorteado independentemente entre usuários. O estimando de interesse é o efeito médio do
+tratamento,
+
+$$
+\text{ATE} = E[Y_i(1) - Y_i(0)],
+$$
+
+que no caso mais comum de uma métrica binária de conversão se reduz a uma diferença de proporções,
+$\text{ATE} = p_1 - p_0$, com $p_1 = P(Y_i(1)=1)$ e $p_0 = P(Y_i(0)=1)$. O estimador natural,
+
+$$
+\widehat{\text{ATE}} = \bar Y_1^{\,obs} - \bar Y_0^{\,obs} = \hat p_1 - \hat p_0,
+$$
+
+é exatamente a diferença de médias amostrais do Capítulo 3, e a demonstração de
+$E[\widehat{\text{ATE}}]=\text{ATE}$ da Seção \@ref(neyman-rubin) se aplica sem alteração alguma:
+não depende do contexto (parcela agrícola, estudante ou usuário de site), só do mecanismo de
+aleatorização. Em notação de modelo linear (Capítulo 2), o mesmo problema se escreve
+
+$$
+Y_i = \beta_0 + \beta_1 Z_i + \varepsilon_i, \qquad i=1,\dots,N,
+$$
+
+com $\hat\beta_1$ (o coeficiente de $Z_i$ em uma regressão OLS de $Y$ contra o indicador de
+tratamento) numericamente idêntico a $\hat p_1 - \hat p_0$ — a regressão com um único regressor
+binário *é* o teste de duas amostras, um fato que já usamos implicitamente no Capítulo 3 e que
+aqui simplesmente reaparece com outro nome de aplicação.
+
+O que muda de fato, em relação ao DCA de laboratório do Capítulo 3, é a **mecânica de
+aleatorização**. Um pesquisador de psicologia sorteia 36 voluntários e anota manualmente quem
+recebeu qual condição; uma plataforma digital recebe milhões de requisições por segundo e precisa
+decidir, em tempo real e sem consultar um banco de dados central, se um usuário específico vê a
+versão A ou B — e precisa que a *mesma* pessoa continue vendo a mesma versão em visitas
+subsequentes (senão a "unidade experimental" se confunde com a "unidade de observação", o mesmo
+problema de submuestreo da Seção \@ref(unidades), só que ao contrário: aqui queremos *evitar*
+múltiplas atribuições da mesma unidade). A solução industrial padrão é a **aleatorização por
+hash**: aplica-se uma função hash determinística (por exemplo, MD5 ou MurmurHash) ao identificador
+do usuário concatenado com um identificador do experimento, e o resultado — um número
+pseudoaleatório, mas *reprodutível* para o mesmo par (usuário, experimento) — decide o grupo. Isso
+tem duas propriedades cruciais: (1) a mesma pessoa sempre cai no mesmo grupo dentro de um mesmo
+experimento, preservando a unidade experimental como o usuário e não a visita; e (2) usada com
+"seeds" (sementes de hash) diferentes por experimento, a mesma pessoa pode estar em experimentos
+*diferentes e não correlacionados* ao mesmo tempo, o que viabiliza rodar milhares de testes A/B
+simultâneos sem que a alocação de um contamine a de outro [@kohavi2020trustworthy].
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: cor do botão de checkout</strong><br>
+Uma loja online quer saber se trocar a cor do botão "Finalizar compra" de cinza para verde aumenta
+a taxa de conversão. O sistema de experimentação faz o hash do <code>user_id</code> de cada
+visitante e atribui metade a cada grupo — grupo A (cinza, controle) e grupo B (verde, variante).
+Cada visitante $i$ tem um resultado potencial binário $Y_i(0)$ (converteria vendo cinza?) e
+$Y_i(1)$ (converteria vendo verde?), mas o hash decide qual dos dois é revelado. Ao final de duas
+semanas de tráfego, o time compara $\hat p_1$ (conversão observada no grupo B) com $\hat p_0$
+(conversão observada no grupo A).
+</div>
+```
+
+Do ponto de vista puramente algébrico, portanto, não há nada de novo aqui — e é exatamente por
+isso que testes A/B se popularizaram tão rápido: qualquer time de produto, sem treinamento formal
+em delineamento de experimentos, consegue programar um teste de duas amostras. O que a Seção
+seguinte argumenta é que a *facilidade de implementar* um teste A/B tecnicamente correto é
+enganosa — o contexto de alto volume, métricas ruidosas e pressão para decidir rápido introduz uma
+família de armadilhas estatísticas que raramente aparecem no experimento de bancada clássico.
+
+### Por que testes A/B em produtos digitais são estatisticamente difíceis {#ab-dificuldades}
+
+Se a matemática é a mesma do Capítulo 3, por que Kohavi, Tang e Xu dedicam um livro inteiro
+[-@kohavi2020trustworthy] só às dificuldades práticas de rodar testes A/B "à escala"? Quatro razões
+concentram a maior parte do problema.
+
+**Efeitos pequenos, variância grande.** Uma mudança de layout raramente move a taxa de conversão
+de um site em mais do que uma fração de ponto percentual — de $p_0=10{,}0\%$ para $p_1=10{,}3\%$,
+digamos. Para uma proporção, a variância do estimador $\hat p$ é $p(1-p)/n$, que para $p\approx0{,}1$
+não é pequena em termos relativos: detectar uma diferença de $0{,}3$ pontos percentuais com poder
+razoável ($1-\beta=0{,}8$, $\alpha=0{,}05$) exige, pela fórmula de tamanho amostral para duas
+proporções análoga à da Seção de poder do Capítulo 3,
+
+$$
+n \approx \frac{\big(z_{\alpha/2} + z_\beta\big)^2 \big[p_0(1-p_0) + p_1(1-p_1)\big]}{(p_1-p_0)^2},
+$$
+
+algo da ordem de **centenas de milhares** de usuários por grupo — perfeitamente viável para uma
+plataforma grande, impossível para a maioria dos experimentos de laboratório do resto deste livro.
+Métricas de receita são ainda piores: distribuições fortemente assimétricas, com uma minoria de
+usuários de alto gasto dominando a variância, de modo que o denominador $p_1(1-p_1)$ acima
+subestima muito a dificuldade real de detectar efeitos em métricas monetárias.
+
+**Múltiplas métricas e múltiplos testes simultâneos.** Um teste A/B raramente monitora uma única
+métrica. Times de produto acompanham um **OEC** (*Overall Evaluation Criterion*, a métrica de
+decisão primária) junto de dezenas de métricas secundárias e de "guarda-corpo" (*guardrail
+metrics* — métricas que não deveriam piorar, como tempo de carregamento ou taxa de erro). Ver
+dezenas de métricas simultaneamente é, estruturalmente, o mesmo problema do
+\@ref(comparacoes-multiplas): sob $\alpha=0{,}05$ por métrica, a chance de pelo menos um falso
+positivo entre 20 métricas independentes já passa de $64\%$
+($1-(1-0{,}05)^{20}\approx0{,}64$). A prática recomendada por @kohavi2020trustworthy — escolher o
+OEC *antes* de rodar o teste e tratá-lo com o rigor de uma hipótese pré-registrada, deixando as
+métricas secundárias para geração de hipóteses, não confirmação — é uma aplicação direta do
+princípio contra *data snooping* já discutido na Seção \@ref(data-snooping).
+
+**Efeito de novidade (e o oposto, efeito de primazia).** Uma mudança de interface pode gerar uma
+reação inicial que não reflete o efeito de longo prazo: usuários clicam em um botão só porque ele é
+diferente (efeito de novidade, que infla o efeito estimado nos primeiros dias e desaparece depois),
+ou resistem a uma mudança só por ser mudança, mesmo que objetivamente melhor (efeito de primazia,
+que faz o teste subestimar o efeito real até os usuários se acostumarem). Isso viola implicitamente
+uma suposição que o Capítulo 1 deixou implícita ao tratar $Y_i(t)$ como fixo: aqui, o resultado
+potencial de um usuário que permanece exposto ao tratamento por semanas não é constante no tempo, e
+o "ATE médio nas primeiras 48 horas" pode ser um estimando diferente do "ATE médio de longo prazo"
+que o time de produto realmente quer.
+
+**Dependência temporal dentro do mesmo usuário.** O mesmo usuário volta ao site várias vezes ao
+longo do período do teste, e cada visita gera uma observação — mas, exatamente como no problema de
+submuestreo formalizado na Seção \@ref(unidades), essas observações repetidas **não são réplicas
+independentes**: são correlacionadas dentro do usuário (alguém propenso a comprar tende a comprar
+em várias visitas; alguém que nunca compra continua não comprando). Tratar cada visita como uma
+unidade experimental independente — em vez de agregar por usuário antes de testar, como manda o
+princípio de submuestreo do Capítulo 1 — infla artificialmente o tamanho amostral efetivo e produz
+erros-padrão anticonservadores, exatamente o mesmo erro de pseudorreplicação identificado naquela
+seção, só que reaparecendo aqui sob um nome de produto diferente.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — poder de um teste A/B para efeitos pequenos</div>
+```
+
+
+``` r
+p0 <- 0.10
+p1 <- 0.103    # lift de 0,3 ponto percentual — típico de um teste de UI em e-commerce
+
+poder_ab <- power.prop.test(p1 = p0, p2 = p1, sig.level = 0.05, power = 0.80)
+poder_ab$n
+```
+
+```
+## [1] 159065.5
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:ab-poder-tabela)(\#tab:ab-poder-tabela)Tamanho amostral necessário por grupo para detectar diferentes lifts, partindo de p0 = 10%, alpha = 0,05, poder = 80%</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Cenário </th>
+   <th style="text-align:right;"> n por grupo </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Lift de 0,3 p.p. (UI) </td>
+   <td style="text-align:right;"> 159066 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lift de 1,0 p.p. (feature nova) </td>
+   <td style="text-align:right;"> 14751 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lift de 3,0 p.p. (mudança grande) </td>
+   <td style="text-align:right;"> 1774 </td>
+  </tr>
+</tbody>
+</table>
+
+O contraste é gritante: para detectar um efeito realista de UI (0,3 ponto percentual) são
+necessários mais de 159,066 usuários **por grupo** — um volume que
+só faz sentido em contexto de alto tráfego, e que explica por que testes A/B de produto digital são
+projetados de forma tão diferente de um experimento de bancada com 30 ou 40 sujeitos.
+
+### O problema do "peeking" {#ab-peeking}
+
+A teoria do teste $t$/$F$ clássica pressupõe que o tamanho amostral $n$ é **fixo antes da coleta**
+e a decisão de rejeitar ou não $H_0$ é tomada **uma única vez**, depois que todos os $n$ dados
+foram coletados. É essa suposição — não nenhuma outra — que garante que $P(\text{rejeitar }
+H_0\mid H_0\text{ verdadeira}) = \alpha$ exatamente. Em um ambiente de produto, porém, é natural
+(e tentador) olhar o painel de resultados do teste todos os dias, calcular o valor-$p$ a cada
+olhada, e parar assim que ele cruza $0{,}05$ — prática conhecida como ***peeking*** ("espiar"). O
+problema é que essa prática transforma silenciosamente o procedimento em outro completamente
+diferente: em vez de "um teste com $\alpha=0{,}05$", o que se está executando é "uma sequência de
+testes, parando no primeiro que rejeitar" — e a probabilidade de que *pelo menos um* desses testes
+rejeite, mesmo sob $H_0$ verdadeira, é muito maior que $0{,}05$ [@johari2017peeking].
+
+A intuição por trás da inflação vem de um argumento de passeio aleatório: sob $H_0$, a estatística
+de teste acumulada ao longo do tempo (por exemplo, a diferença de proporções observadas até o
+instante $t$) evolui como um processo estocástico que oscila em torno de zero, com variância
+crescente. Um resultado clássico de teoria de sequências (relacionado à lei do logaritmo iterado)
+garante que, se o processo é observado continuamente e o pesquisador para assim que ele cruza
+*qualquer* limiar fixo, o cruzamento acontece **quase certamente**, mesmo que a média do processo
+seja exatamente zero — basta esperar o tempo suficiente. Checar o valor-$p$ repetidamente e parar
+no primeiro cruzamento de $0{,}05$ é uma versão discreta exatamente desse fenômeno: quanto mais
+vezes se olha, maior a chance de que, só por acaso, uma das checagens caia abaixo do limiar.
+
+A forma matematicamente correta de testar sequencialmente — permitindo checagens repetidas *sem*
+inflar $\alpha$ — não é simplesmente "não olhar", mas usar um procedimento desenhado para isso. O
+**teste sequencial de razão de verossimilhança** (SPRT, *sequential probability ratio test*) de
+@wald1945sprt formaliza a ideia: em vez de um limiar fixo de significância aplicado a um $n$ fixo,
+o SPRT define dois limiares $A$ e $B$ para a razão de verossimilhanças acumulada
+$\Lambda_n = \prod_{i=1}^n f_1(Y_i)/f_0(Y_i)$ entre a hipótese alternativa e a nula, e continua
+coletando dados enquanto $B < \Lambda_n < A$, parando para rejeitar $H_0$ assim que
+$\Lambda_n \geq A$ e para não rejeitar assim que $\Lambda_n \leq B$. Escolhendo $A$ e $B$ em função
+dos erros tipo I e II desejados ($A \approx (1-\beta)/\alpha$, $B \approx \beta/(1-\alpha)$), o SPRT
+garante as mesmas taxas de erro nominal do teste de tamanho fixo, *mesmo permitindo parar a
+qualquer momento* — a diferença crucial é que os limiares de decisão do SPRT são derivados
+especificamente para controlar o erro acumulado de múltiplas checagens, ao passo que reaplicar
+ingenuamente o limiar $p<0{,}05$ do teste de tamanho fixo a cada checagem não tem essa propriedade.
+Ferramentas modernas de teste sequencial em produto (testes de razão de verossimilhança sempre
+válidos, *always-valid p-values*) generalizam essa ideia para o contexto de testes A/B contínuos
+[@johari2017peeking], mas o princípio já está inteiro no SPRT de 1945.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — simulando a inflação do erro tipo I sob peeking</div>
+```
+
+A simulação a seguir gera dados sob $H_0$ verdadeira (as duas variantes têm exatamente a mesma taxa
+de conversão, $p=0{,}10$) e compara duas formas de decidir: (i) checar o valor-$p$ a cada 100
+usuários acumulados, até um máximo de 2.000 por grupo, e parar assim que $p<0{,}05$ ("peeking"); e
+(ii) checar uma única vez, ao final dos 2.000 usuários. Sob $H_0$, ambas deveriam rejeitar cerca de
+$5\%$ das vezes — a pergunta é se de fato rejeitam.
+
+
+``` r
+set.seed(2026)
+
+n_max      <- 2000                       # tamanho amostral maximo por braco
+checagens  <- seq(100, n_max, by = 100)  # instantes de checagem (a cada 100 usuarios)
+n_sim      <- 3000                       # replicas Monte Carlo
+alpha      <- 0.05
+p_H0       <- 0.10                       # mesma taxa de conversao nos dois bracos (H0 verdadeira)
+
+simula_uma_replica <- function() {
+  grupo_a <- rbinom(n_max, 1, p_H0)
+  grupo_b <- rbinom(n_max, 1, p_H0)
+
+  rejeitou_com_peeking <- FALSE
+  for (n in checagens) {
+    xa <- sum(grupo_a[1:n]); xb <- sum(grupo_b[1:n])
+    pval <- suppressWarnings(prop.test(c(xa, xb), c(n, n), correct = FALSE)$p.value)
+    if (!is.na(pval) && pval < alpha) { rejeitou_com_peeking <- TRUE; break }
+  }
+
+  pval_tamanho_fixo <- suppressWarnings(
+    prop.test(c(sum(grupo_a), sum(grupo_b)), c(n_max, n_max), correct = FALSE)$p.value
+  )
+
+  c(peeking = rejeitou_com_peeking, fixo = pval_tamanho_fixo < alpha)
+}
+
+resultado_peeking <- replicate(n_sim, simula_uma_replica())
+taxa_peeking <- mean(as.logical(resultado_peeking["peeking", ]))
+taxa_fixo    <- mean(as.logical(resultado_peeking["fixo", ]))
+
+tibble(
+  Procedimento = c("Checagem única (n fixo = 2.000)", "Peeking a cada 100 (até n = 2.000)"),
+  `Taxa de rejeição sob H0` = c(taxa_fixo, taxa_peeking)
+) %>%
+  kable(digits = 3, caption = "Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira") %>%
+  kable_styling(full_width = FALSE)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:ab-peeking-sim)(\#tab:ab-peeking-sim)Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Procedimento </th>
+   <th style="text-align:right;"> Taxa de rejeição sob H0 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Checagem única (n fixo = 2.000) </td>
+   <td style="text-align:right;"> 0.051 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Peeking a cada 100 (até n = 2.000) </td>
+   <td style="text-align:right;"> 0.251 </td>
+  </tr>
+</tbody>
+</table>
+
+A checagem única fica, como esperado, muito próxima do $\alpha$ nominal de 0.05
+(5.1% observado). Com peeking a cada 100 usuários — só
+20 checagens ao longo de todo o experimento, uma frequência bem menor do que o
+"olhar o painel todo dia" que de fato acontece em produto — a taxa de falso positivo salta para
+25.1%, quase 4.9 vezes
+o valor nominal. Nenhuma das duas variantes tinha qualquer efeito real: a diferença inteira vem do
+procedimento de parada. Esse é o argumento numérico por trás da recomendação, universal em times de
+experimentação de produto, de nunca decidir "parar porque ficou significativo" sem um procedimento
+sequencial formal (SPRT ou equivalente) desenhado para isso.
+
+### Vício do vencedor (*winner's curse*) {#ab-winners-curse}
+
+Um problema relacionado, mas distinto, aparece quando várias variantes são testadas ao mesmo tempo
+contra o controle (um teste "A/B/n") e a decisão final é lançar a variante com a **maior**
+diferença estimada. Mesmo que todas as variantes tenham, na verdade, o mesmo efeito verdadeiro —
+inclusive nulo —, a variante escolhida por ter a maior estimativa amostral tende a ter sua
+estimativa **viesada para cima**, simplesmente por ter sido selecionada por ser a maior entre
+várias estimativas ruidosas. Esse fenômeno, batizado de **vício do vencedor** (por analogia a
+leilões, em que o lance vencedor tende a superestimar o valor real do item), é uma consequência
+direta de estatística de ordem: entre $k$ estimativas não-viesadas mas ruidosas de um mesmo
+parâmetro, o *máximo* delas tem expectativa maior do que o parâmetro verdadeiro, e a diferença
+cresce com $k$ (mais variantes testadas) e com a variância de cada estimativa individual.
+
+Formalmente, sejam $\hat\delta_1,\dots,\hat\delta_k$ as diferenças estimadas de $k$ variantes
+contra o controle, cada uma com $\hat\delta_j \sim N(\delta, \sigma^2)$ sob a suposição (deliberada,
+para isolar o fenômeno) de que o efeito verdadeiro $\delta$ é o mesmo para todas. A variante
+escolhida é $j^\star = \arg\max_j \hat\delta_j$, e o vício do vencedor é a quantidade
+
+$$
+E\big[\hat\delta_{j^\star}\big] - \delta = E\Big[\max_j \hat\delta_j\Big] - \delta > 0,
+$$
+
+estritamente positiva sempre que $k>1$ e $\sigma^2>0$ — uma consequência do fato de que o máximo de
+variáveis aleatórias tem expectativa maior ou igual à expectativa comum de cada uma (com igualdade
+só no caso degenerado $\sigma^2=0$). É o mesmo fenômeno estatístico, com sinal trocado, por trás da
+"regressão à média": medições extremas tendem a ser seguidas por medições mais próximas da média,
+porque parte do que as tornou extremas foi ruído, não sinal persistente.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — simulando o vício do vencedor</div>
+```
+
+
+``` r
+set.seed(2026)
+
+n_variantes    <- 10    # variantes testadas simultaneamente contra o controle
+n_por_variante <- 500   # usuarios por variante
+efeito_real    <- 0     # todas as variantes tem, de fato, o MESMO efeito verdadeiro
+sigma          <- 1     # desvio-padrao da metrica (escala padronizada)
+n_sim          <- 5000  # replicas Monte Carlo
+
+simula_vencedora <- function() {
+  estimativas <- rnorm(n_variantes, mean = efeito_real, sd = sigma / sqrt(n_por_variante))
+  estimativas[which.max(estimativas)]
+}
+
+estimativas_vencedoras <- replicate(n_sim, simula_vencedora())
+vies_vencedor <- mean(estimativas_vencedoras) - efeito_real
+
+tibble(
+  Quantidade = c("Efeito verdadeiro (idêntico em todas as variantes)",
+                 "Média das estimativas da variante vencedora (5.000 réplicas)",
+                 "Vício do vencedor"),
+  Valor = c(efeito_real, mean(estimativas_vencedoras), vies_vencedor)
+) %>%
+  kable(digits = 4, caption = "Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas") %>%
+  kable_styling(full_width = FALSE)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:ab-winners-curse-sim)(\#tab:ab-winners-curse-sim)Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Quantidade </th>
+   <th style="text-align:right;"> Valor </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Efeito verdadeiro (idêntico em todas as variantes) </td>
+   <td style="text-align:right;"> 0.0000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Média das estimativas da variante vencedora (5.000 réplicas) </td>
+   <td style="text-align:right;"> 0.0691 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Vício do vencedor </td>
+   <td style="text-align:right;"> 0.0691 </td>
+  </tr>
+</tbody>
+</table>
+
+<div class="figure" style="text-align: center">
+<img src="08-ab-testing-bandits_files/figure-html/ab-winners-curse-plot-1.png" alt="Distribuição, sobre 5.000 réplicas Monte Carlo, do efeito estimado da variante vencedora (a de maior estimativa entre 10 variantes com efeito verdadeiro idêntico), com o efeito verdadeiro (zero) marcado pela linha tracejada." width="80%" />
+<p class="caption">(\#fig:ab-winners-curse-plot)Distribuição, sobre 5.000 réplicas Monte Carlo, do efeito estimado da variante vencedora (a de maior estimativa entre 10 variantes com efeito verdadeiro idêntico), com o efeito verdadeiro (zero) marcado pela linha tracejada.</p>
+</div>
+
+Com efeito verdadeiro igual a zero em todas as 10 variantes, a variante escolhida por
+ter a maior estimativa amostral aparenta, em média, um efeito de
+0.069 — inteiramente espúrio, produto só da seleção pelo máximo entre `r
+n_variantes` estimativas ruidosas. A linha tracejada verde no gráfico marca o efeito verdadeiro
+(zero); a linha sólida azul marca a média das estimativas vencedoras — a distância entre as duas é
+o vício do vencedor. Isso não é um argumento contra testar várias variantes (testar várias ideias
+ao mesmo tempo é eficiente), mas um argumento contra **lançar uma variante com base só na
+estimativa do próprio teste que a selecionou**: a prática recomendada em times de experimentação
+maduros é re-testar a variante vencedora isoladamente, contra o controle, em uma segunda rodada com
+tráfego novo — um procedimento de validação *fora da amostra* que quebra exatamente o mecanismo de
+seleção que produz o vício, análogo em espírito à separação treino/validação usada para evitar
+sobreajuste em modelos preditivos.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>A seção sobre validade interna e externa do Capítulo 1 distingue validade interna (a estimativa é
+não-viesada para o ATE <em>da amostra estudada</em>) de validade externa (o resultado generaliza
+para além dela). Usuários que efetivamente participam de um teste A/B — em geral uma fração do
+tráfego total, às vezes restrita a uma região, uma versão de aplicativo ou um segmento de
+usuários "elegíveis" para o experimento — são uma amostra aleatória de <em>todos</em> os usuários
+da plataforma, ou apenas do subconjunto elegível? Que diferença prática isso faz para decidir se
+o resultado se generaliza quando a mudança for lançada para 100% da base?</li>
+<li>Se um teste A/B roda só durante uma semana de dezembro (alta temporada de compras), que tipo
+de ameaça à validade externa isso introduz, além da amostragem de usuários em si?</li>
+<li>Uma plataforma com efeitos de rede (por exemplo, uma rede social, ou um marketplace de duas
+pontas) testa uma mudança que afeta a visibilidade de conteúdo. Por que a suposição SUTVA
+(seção sobre o modelo de resultados potenciais, no Capítulo 1) — o resultado potencial de um usuário depende só do <em>seu</em>
+tratamento, não do tratamento dos demais — é particularmente frágil nesse tipo de produto? O que
+pode dar errado ao interpretar o teste como se SUTVA valesse?</li>
+</ol>
+</div>
+```
+
+## Parte II — Bandits: quando explorar e quando explotar
+
+### Exploração, explotação e a definição de arrependimento (*regret*) {#bandits-motivacao}
+
+Um teste A/B de horizonte fixo, como formalizado na Parte I, tem uma ineficiência estrutural: se a
+variante B é de fato melhor, metade do tráfego continua sendo enviada para a variante A (pior) até
+o experimento terminar, porque a divisão 50/50 foi decidida antes de qualquer dado ser observado, e
+não muda com o que se aprende ao longo do caminho. Em um contexto de decisão sequencial — em que a
+mesma decisão (qual variante mostrar) é tomada repetidamente, uma vez por usuário, e o objetivo
+inclui maximizar o resultado *durante* o próprio experimento, não só aprender o efeito para decidir
+depois — essa rigidez tem um custo real: usuários "gastos" no braço pior enquanto o time já
+suspeita, com razoável confiança, que ele é pior.
+
+Um **bandit de múltiplos braços** (*multi-armed bandit*) formaliza esse problema de decisão
+sequencial. Há $K$ "braços" (variantes), cada um com uma distribuição de recompensa desconhecida de
+média $\mu_k$; a cada rodada $t=1,\dots,T$, uma política escolhe um braço $A_t \in \{1,\dots,K\}$,
+observa uma recompensa $X_t$ amostrada da distribuição do braço escolhido, e usa essa observação
+para informar a escolha da próxima rodada. O objetivo é maximizar a soma das recompensas ao longo
+de $T$ rodadas — equivalentemente, minimizar o **arrependimento acumulado** (*regret*), definido
+como a diferença entre a recompensa que se teria obtido sempre jogando o melhor braço (o oráculo,
+que conhece $\mu^\star = \max_k \mu_k$ desde o início) e a recompensa efetivamente obtida:
+
+\begin{equation}
+R_T = \sum_{t=1}^T \big(\mu^\star - \mu_{A_t}\big).
+(\#eq:regret)
+\end{equation}
+
+$R_T$ cresce sempre que a política joga um braço subótimo; uma política "boa" é aquela cujo regret
+cresce devagar (idealmente, sublinearmente em $T$) — o que exige resolver o **trade-off entre
+exploração e explotação**: jogar demais nos braços que já parecem bons demasiado cedo
+(*explotação* pura, sem testar o suficiente) arrisca convergir prematuramente para um braço
+subótimo, por má sorte nas primeiras observações; jogar demais em busca de mais informação
+(*exploração* pura, tipo alocação uniforme, que é exatamente o que um teste A/B de horizonte fixo
+faz até o fim) desperdiça recompensa em braços já suficientemente conhecidos como inferiores. Duas
+famílias de políticas resolvem esse trade-off de formas distintas, mas com a mesma ideia de fundo:
+usar a **incerteza** sobre cada braço, e não só sua média estimada, para decidir o que jogar a
+seguir.
+
+### Upper Confidence Bound (UCB1): otimismo perante a incerteza {#bandits-ucb1}
+
+A política **UCB1** [@auer2002], com raízes na teoria assintótica de alocação adaptativa de
+@lairobbins1985 e no problema originalmente formulado por @robbins1952, resolve o trade-off por um
+princípio simples de enunciar: **seja otimista sob incerteza**. Em vez de jogar o braço de maior
+média estimada $\bar X_k(t)$ (o que seria explotação pura), UCB1 joga o braço que maximiza um
+**limite superior de confiança** para a média verdadeira,
+
+\begin{equation}
+\text{UCB}_k(t) = \bar X_k(t) + \sqrt{\frac{2\log t}{n_k(t)}},
+(\#eq:ucb1)
+\end{equation}
+
+em que $\bar X_k(t)$ é a média das recompensas observadas do braço $k$ até a rodada $t$ e $n_k(t)$
+é o número de vezes que o braço $k$ já foi jogado até então. O primeiro termo é a explotação (o
+melhor palpite atual sobre $\mu_k$); o segundo é um **bônus de exploração** que cresce quando o
+braço foi jogado poucas vezes ($n_k(t)$ pequeno no denominador) e encolhe conforme mais evidência é
+acumulada sobre ele — refletindo que a incerteza sobre $\mu_k$ diminui com $n_k(t)$, na mesma lógica
+de um intervalo de confiança que estreita com o tamanho amostral (Capítulo 2). Braços pouco
+testados recebem um bônus grande mesmo com média estimada modesta, garantindo que nenhum braço fique
+permanentemente "esquecido" só por má sorte nas primeiras jogadas — e é exatamente esse mecanismo
+que dá a @auer2002 uma prova de que o regret de UCB1 cresce apenas na ordem de $O(\log T)$, a mesma
+taxa assintoticamente ótima estabelecida por @lairobbins1985.
+
+### Thompson sampling: uma solução bayesiana {#bandits-thompson}
+
+A segunda política, **Thompson sampling**, resolve o mesmo trade-off por um caminho bayesiano — e é
+notavelmente mais antiga do que o nome "bandit" (cunhado só décadas depois, por @robbins1952):
+@thompson1933 propôs o método já em 1933, no contexto de decidir qual de dois tratamentos clínicos
+usar em pacientes sucessivos, décadas antes de existir a teoria formal de arrependimento da
+Equação \@ref(eq:regret).
+
+A ideia: mantenha, para cada braço $k$, uma distribuição a posteriori sobre $\mu_k$, atualizada
+bayesianamente a cada observação. Para uma métrica de conversão (Bernoulli), o par conjugado
+Beta-Binomial é a escolha natural: comece com um prior $\mu_k \sim \text{Beta}(1,1)$ (uniforme,
+não-informativo) para cada braço, e a cada recompensa binária $X_t\in\{0,1\}$ observada do braço
+$A_t$, atualize
+
+$$
+\text{Beta}(\alpha_k, \beta_k) \;\longrightarrow\; \text{Beta}\big(\alpha_k + X_t,\; \beta_k +
+(1-X_t)\big),
+$$
+
+que é a mesma atualização conjugada Beta-Binomial de qualquer curso de inferência bayesiana. A
+regra de decisão de Thompson sampling é: a cada rodada $t$, **amostre** um valor
+$\tilde\mu_k \sim \text{Beta}(\alpha_k,\beta_k)$ de cada posteriori (não use a média da posteriori —
+amostre dela) e jogue o braço $A_t = \arg\max_k \tilde\mu_k$. A aleatoriedade da amostragem é o
+próprio mecanismo de exploração: um braço com posteriori ainda muito dispersa (pouco testado) tem
+chance razoável de produzir uma amostra alta mesmo com média posterior modesta, levando a política
+a experimentá-lo; conforme a posteriori se concentra em torno do valor verdadeiro (mais dados
+acumulados), as amostras ficam cada vez mais próximas da média, e a política converge para
+explotação quase pura do melhor braço. Resultados teóricos modernos — fora do escopo de prova
+completa aqui, mas que valem a pena citar como ponteiro — mostram que Thompson sampling também
+atinge a taxa ótima $O(\log T)$ de regret assintótico, e costuma superar UCB1 em termos práticos
+para $T$ finito, como a simulação a seguir ilustra numericamente.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — três políticas de bandit, implementadas do zero</div>
+```
+
+O código abaixo implementa, sem nenhum pacote especializado de bandit, três políticas sobre um
+cenário de 4 braços com taxas de conversão fixas e conhecidas apenas pelo simulador — nunca pelas
+políticas, que só observam recompensas binárias realizadas: alocação **aleatória** (baseline, a
+mesma lógica de um A/B/C/D de horizonte fixo com tráfego dividido igualmente por toda a duração),
+**UCB1** e **Thompson sampling**. Cada política roda por $T=3.000$ rodadas, repetida em $300$
+réplicas Monte Carlo independentes para obter o regret acumulado médio esperado — não o de uma
+única simulação, que seria ruidosa demais para comparação confiável.
+
+
+``` r
+set.seed(2026)
+
+p_verdadeiro <- c(0.10, 0.12, 0.15, 0.11)   # taxas de conversao reais dos 4 bracos (desconhecidas p/ as politicas)
+K        <- length(p_verdadeiro)
+T_rounds <- 3000
+n_mc     <- 300
+mu_star  <- max(p_verdadeiro)
+
+politica_aleatoria <- function() {
+  regret <- numeric(T_rounds)
+  for (t in 1:T_rounds) {
+    a <- sample(K, 1)
+    regret[t] <- mu_star - p_verdadeiro[a]
+  }
+  cumsum(regret)
+}
+
+politica_ucb1 <- function() {
+  contagens <- rep(0, K); somas <- rep(0, K)
+  regret <- numeric(T_rounds)
+
+  # inicializacao: joga cada braco uma vez, para nunca dividir por zero
+  for (a in 1:K) {
+    r <- rbinom(1, 1, p_verdadeiro[a])
+    contagens[a] <- 1; somas[a] <- r
+    regret[a] <- mu_star - p_verdadeiro[a]
+  }
+  for (t in (K + 1):T_rounds) {
+    medias <- somas / contagens
+    ucb <- medias + sqrt(2 * log(t) / contagens)
+    a <- which.max(ucb)
+    r <- rbinom(1, 1, p_verdadeiro[a])
+    contagens[a] <- contagens[a] + 1
+    somas[a]     <- somas[a] + r
+    regret[t]    <- mu_star - p_verdadeiro[a]
+  }
+  cumsum(regret)
+}
+
+politica_thompson <- function() {
+  alpha_post <- rep(1, K); beta_post <- rep(1, K)   # prior Beta(1,1) em cada braco
+  regret <- numeric(T_rounds)
+  for (t in 1:T_rounds) {
+    theta_amostrado <- rbeta(K, alpha_post, beta_post)
+    a <- which.max(theta_amostrado)
+    r <- rbinom(1, 1, p_verdadeiro[a])
+    alpha_post[a] <- alpha_post[a] + r
+    beta_post[a]  <- beta_post[a] + (1 - r)
+    regret[t] <- mu_star - p_verdadeiro[a]
+  }
+  cumsum(regret)
+}
+
+regret_aleatoria <- replicate(n_mc, politica_aleatoria())
+regret_ucb1      <- replicate(n_mc, politica_ucb1())
+regret_thompson  <- replicate(n_mc, politica_thompson())
+
+regret_medio <- tibble(
+  rodada     = rep(1:T_rounds, times = 3),
+  politica   = rep(c("Aleatória", "UCB1", "Thompson sampling"), each = T_rounds),
+  regret_acumulado = c(rowMeans(regret_aleatoria), rowMeans(regret_ucb1), rowMeans(regret_thompson))
+)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:bandit-tabela-final)(\#tab:bandit-tabela-final)Regret acumulado médio ao final de 3.000 rodadas, 300 réplicas Monte Carlo</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Política </th>
+   <th style="text-align:right;"> Regret acumulado médio (T = 3.000) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Thompson sampling </td>
+   <td style="text-align:right;"> 36.46 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> UCB1 </td>
+   <td style="text-align:right;"> 74.14 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Aleatória </td>
+   <td style="text-align:right;"> 90.01 </td>
+  </tr>
+</tbody>
+</table>
+
+<div class="figure" style="text-align: center">
+<img src="08-ab-testing-bandits_files/figure-html/bandit-plot-regret-1.png" alt="Regret acumulado médio (300 réplicas Monte Carlo) das três políticas ao longo de 3.000 rodadas, em um cenário de 4 braços com taxas de conversão 10%, 12%, 15% e 11%." width="80%" />
+<p class="caption">(\#fig:bandit-plot-regret)Regret acumulado médio (300 réplicas Monte Carlo) das três políticas ao longo de 3.000 rodadas, em um cenário de 4 braços com taxas de conversão 10%, 12%, 15% e 11%.</p>
+</div>
+
+Os números confirmam a intuição teórica. A política aleatória, que nunca aprende com os dados
+observados, termina com regret acumulado de 90 —
+crescendo **linearmente** em $T$ (a reta quase perfeita no gráfico), porque continua jogando o
+braço $15\%$ só $1/4$ das vezes até a última rodada, exatamente a mesma ineficiência estrutural do
+teste A/B/n de horizonte fixo discutida na Seção \@ref(bandits-motivacao). UCB1 reduz o regret
+final para 74.1
+(18%
+menor que a aleatória), com a curva visivelmente **desacelerando** (côncava) conforme o algoritmo
+converge para o braço de $15\%$ — a assinatura visual do regret sublinear $O(\log T)$ previsto pela
+teoria. Thompson sampling vai além, terminando em
+36.5, a menor das três — um resultado empírico
+conhecido na literatura de bandits (Thompson sampling costuma superar UCB1 na prática em problemas
+de Bernoulli, mesmo com garantias teóricas de pior caso comparáveis) e que a simulação reproduz
+sem qualquer ajuste fino de parâmetros: nenhuma das três políticas tem hiperparâmetro algum para
+calibrar, a diferença inteira vem de *como* cada uma converte incerteza em decisão de exploração.
+
+### Horizonte fixo ou bandit? {#bandits-vs-ab}
+
+A simulação da seção anterior pode sugerir que bandits deveriam substituir testes A/B em toda
+situação — afinal, por que "desperdiçar" tráfego em um braço pior por um horizonte inteiro, se um
+bandit realoca tráfego automaticamente para o que funciona melhor? A resposta depende do que se
+quer da experimentação, e não é unânime.
+
+O teste A/B de horizonte fixo tem uma vantagem que nenhum bandit reproduz de graça: a
+**simplicidade da inferência causal pós-hoc**. Como a atribuição $Z_i$ é decidida de uma vez, com
+probabilidade fixa e conhecida, independente de qualquer dado já observado, a demonstração de
+não-viés de $\widehat{\text{ATE}}$ da Seção \@ref(neyman-rubin) se aplica diretamente, os
+intervalos de confiança clássicos (Capítulo 2) têm cobertura correta, e a pergunta "qual foi o
+efeito causal da variante B?" tem uma resposta estatisticamente limpa. Em um bandit, a alocação de
+cada rodada **depende dos dados observados até ali** — o próprio mecanismo que faz o bandit ser
+eficiente (jogar mais o que parece melhor) introduz uma dependência entre a decisão de alocação e a
+recompensa observada que quebra a independência simples entre $Z_i$ e $(Y_i(0),Y_i(1))$ pressuposta
+na Seção \@ref(neyman-rubin). Estimar o efeito causal *depois* de uma coleta adaptativa exige
+métodos estatísticos mais delicados (fora do escopo deste capítulo) para corrigir o viés introduzido
+pela própria adaptação — o braço que "pareceu" melhor cedo tende a ser jogado mais, o que
+retroalimenta sua própria média estimada de forma sutilmente enviesada, um primo próximo do vício
+do vencedor da Seção \@ref(ab-winners-curse).
+
+Como regra prática: prefira um **teste A/B de horizonte fixo** quando o objetivo principal é
+**aprender** o efeito causal de forma limpa e reportável (uma decisão de produto de alto risco, uma
+mudança que precisa de aprovação com base em um número defensável, um resultado que será citado
+depois) — o custo de oportunidade do tráfego "desperdiçado" no braço pior é aceitável em troca de
+uma resposta estatisticamente inequívoca. Prefira um **bandit** quando o objetivo principal é
+**maximizar o resultado durante o próprio processo de decisão**, a pergunta causal exata importa
+menos do que o desempenho acumulado, e há muitos braços ou mudanças frequentes (recomendação de
+conteúdo, otimização de preço em tempo real, alocação de criativos de anúncio) — contextos em que
+rodar dezenas de testes A/B sequenciais e formais seria impraticável. Muitas plataformas grandes
+usam os dois em conjunto: bandits para decisões operacionais de alta frequência e baixo risco
+individual, testes A/B de horizonte fixo reservados para mudanças que exigem uma resposta causal
+limpa e defensável.
+
+### Outros tópicos modernos {#outros-topicos}
+
+Este capítulo — e o livro — não esgota o território além do delineamento clássico. Dois ponteiros
+merecem menção, mesmo sem desenvolvimento completo. Quando as "unidades experimentais" não são
+pessoas nem parcelas, mas **execuções de um simulador computacional determinístico** (um modelo de
+elementos finitos, uma simulação climática, um pipeline de aprendizado de máquina caro de treinar),
+a lógica de repetição do Capítulo 1 deixa de fazer sentido — rodar o mesmo simulador duas vezes com
+os mesmos parâmetros de entrada produz exatamente a mesma saída, sem ruído algum a estimar. O campo
+de **desenho e análise de experimentos computacionais** [@sacks1989; @santner2003design] responde a
+esse problema com desenhos **"space-filling"** (preenchedores de espaço, como hipercubos latinos),
+que cobrem o espaço de entradas de forma uniforme em vez de replicar pontos, e com modelos substitutos
+(processos gaussianos) para interpolar a superfície de resposta entre as corridas simuladas — uma
+lógica de vizinhança espacial que estende, mas não substitui, a metodologia de superfície de
+resposta do Capítulo 7.
+
+Um segundo ponteiro: os **métodos de Taguchi** [@taguchi1986] para desenho robusto abordam uma
+pergunta ligeiramente diferente da deste livro — não "qual combinação de fatores maximiza a
+resposta média?" (a pergunta do Capítulo 7), mas "qual combinação de fatores de controle torna a
+resposta **menos sensível** a fatores de ruído que o pesquisador não consegue controlar em
+produção?" (temperatura ambiente, variação de matéria-prima, desgaste de equipamento). A proposta
+de Taguchi — arranjos ortogonais cruzando fatores de controle com fatores de ruído, e uma métrica
+de "razão sinal-ruído" como resposta a otimizar — teve influência industrial enorme, ainda que
+parte de seu ferramental estatístico original tenha sido revisado e criticado por estatísticos
+posteriores por ineficiência estatística em relação a alternativas baseadas em superfície de
+resposta. Fica como direção de leitura para quem quiser ir além mesmo deste capítulo — fora do
+escopo que podemos desenvolver aqui com o rigor que o resto do livro exige.
+
+## Resumo do capítulo
+
+- Um teste A/B é, estruturalmente, o delineamento completamente aleatorizado de dois tratamentos do
+  Capítulo 3, com o usuário como unidade experimental e a aleatorização implementada por hash
+  determinístico do identificador do usuário, garantindo atribuição persistente e SUTVA sob
+  suposições razoáveis.
+- O que torna testes A/B de produto digital difíceis na prática não é a álgebra, mas o contexto:
+  efeitos pequenos relativos à variância exigem amostras enormes, múltiplas métricas monitoradas
+  simultaneamente reintroduzem o problema de comparações múltiplas do Capítulo 3, efeitos de
+  novidade/primazia violam a suposição de resultado potencial estável no tempo, e visitas repetidas
+  do mesmo usuário reintroduzem o problema de submuestreo do Capítulo 1.
+- *Peeking* (checar o resultado repetidamente e parar no primeiro cruzamento de significância) infla
+  drasticamente a taxa de falso positivo em relação ao $\alpha$ nominal — confirmado
+  numericamente por simulação — porque viola a suposição de tamanho amostral fixo do teste
+  clássico; o SPRT de Wald é a forma matematicamente correta de testar sequencialmente sem essa
+  inflação.
+- O vício do vencedor faz com que a estimativa da variante escolhida entre várias, por ter a maior
+  média amostral, seja viesada para cima mesmo quando todas têm o mesmo efeito verdadeiro — motivo
+  para sempre revalidar a variante vencedora com tráfego novo antes de generalizar a conclusão.
+- Bandits (UCB1, Thompson sampling) resolvem o trade-off exploração/explotação realocando tráfego
+  adaptativamente, com regret sublinear comprovado teórica e numericamente — ao custo de uma
+  inferência causal pós-hoc mais delicada do que a de um teste A/B de horizonte fixo, porque a
+  alocação passa a depender dos dados já observados.
+- A escolha entre horizonte fixo e bandit depende do objetivo: aprendizado causal limpo e reportável
+  favorece o primeiro; maximização do resultado durante a própria coleta favorece o segundo.
+
+## Encerrando o livro
+
+Este livro começou, no Capítulo 1, com uma distinção que parece quase trivial — unidade
+experimental versus unidade amostral — e uma pergunta que não é trivial: por que, exatamente,
+sortear um tratamento permite chamar uma diferença observada de *efeito causal*? A resposta,
+formalizada com a notação de resultados potenciais de Neyman e Rubin na Seção \@ref(neyman-rubin),
+é o fio que atravessa todos os sete capítulos, sem exceção. O Capítulo 2 deu a esse fio uma
+maquinaria algébrica — o modelo linear, a matriz de projeção, a decomposição de somas de quadrados
+— que os Capítulos 3 a 6 aplicaram a delineamentos progressivamente mais ricos: um único fator
+(DCA), fontes de variação conhecidas removidas por blocagem, múltiplos fatores cruzados e suas
+interações, superfícies de resposta com curvatura. Este último capítulo mostrou que o mesmo fio
+causal — o mesmo $Y_i(0)$, $Y_i(1)$, a mesma prova de não-viés sob aleatorização — atravessa
+também o domínio de experimentação mais numeroso do século XXI, testes A/B e bandits em produtos
+digitais, ainda que ali surjam problemas práticos (peeking, vício do vencedor, o trade-off
+exploração/explotação) que um experimento de bancada raramente expõe com a mesma urgência.
+
+Se há uma ideia única que vale a pena levar deste livro inteiro, é esta: a análise estatística de
+um experimento é, na melhor das hipóteses, tão boa quanto o delineamento que gerou os dados —
+nenhuma técnica de estimação, por mais sofisticada, salva um experimento confundido, sem repetição
+genuína ou sem aleatorização legítima. Repetição, aleatorização e controle local não são um
+capítulo introdutório a ser esquecido assim que a álgebra do modelo linear aparece; são a razão
+pela qual a álgebra significa o que significa. Um estudante que termina este livro capaz de olhar
+para qualquer questão comparativa — em psicologia, agricultura, engenharia ou produto digital — e
+perguntar primeiro "qual é a unidade experimental, e como o tratamento foi atribuído a ela?" já
+aprendeu o essencial da disciplina; o resto é, como os últimos seis capítulos tentaram mostrar,
+elaboração técnica sobre essa mesma pergunta.

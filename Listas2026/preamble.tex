@@ -1,0 +1,65 @@
+% Preâmbulo compartilhado — MATD48, Listas de Exercícios 2026
+% Usado por Lista{NN}.tex e Gabarito{NN}.tex via \input{preamble}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{fullpage}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+\definecolor{matd48azul}{HTML}{0B4F6C}
+\definecolor{matd48verde}{HTML}{2E8B57}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{matd48azul}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{matd48azul}}{\thesubsection}{1em}{}
+
+\providecommand{\ListaTitulo}{Lista de Exercícios}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small MATD48 --- Planejamento de Experimentos A}
+\rhead{\small \ListaTitulo}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  backgroundcolor=\color{gray!8},
+  commentstyle=\color{matd48verde},
+  keywordstyle=\color{matd48azul}\bfseries,
+  language=R,
+  extendedchars=true,
+  literate=%
+    {á}{{\'a}}1 {à}{{\`a}}1 {â}{{\^a}}1 {ã}{{\~a}}1
+    {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1 {ó}{{\'o}}1
+    {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c c}}1
+    {Á}{{\'A}}1 {À}{{\`A}}1 {Â}{{\^A}}1 {Ã}{{\~A}}1
+    {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1
+    {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c C}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=matd48azul, urlcolor=matd48azul, citecolor=matd48azul}
+
+\newcommand{\cabecalho}[2]{%
+  \begin{center}
+    {\Large\bfseries\color{matd48azul} #1}\\[0.3em]
+    {\large #2}\\[0.3em]
+    \rule{\linewidth}{0.6pt}
+  \end{center}
+  \vspace{0.5em}
+}
+
+\newenvironment{questao}[1]{\vspace{1em}\noindent\textbf{Questão #1.}\hspace{0.4em}}{\par}
+\newenvironment{solucao}{\vspace{0.3em}\noindent\textit{Solução.}\hspace{0.4em}\color{black!85}}{\par\vspace{0.5em}}

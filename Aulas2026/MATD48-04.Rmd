@@ -1,0 +1,330 @@
+---
+title: "Delineamento Completamente Aleatorizado (DCA)"
+subtitle: "Modelo, tabela de ANOVA, intervalos de confiança e número de réplicas"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+  library(pwr)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 04 — Delineamento Completamente Aleatorizado
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## De onde vem a validade de um teste em um experimento?
+
+Sob $H_0$ (tratamento sem efeito), os rótulos de tratamento são **permutáveis** entre as
+unidades — foi o sorteio que escolheu uma entre muitas alocações igualmente prováveis.
+
+Um **teste de aleatorização**: reembaralha os rótulos muitas vezes, recalcula a estatística a
+cada vez, e o valor-$p$ é a proporção de reembaralhamentos tão extremos quanto o observado.
+
+--
+
+A teoria normal-linear (ANOVA) que vem a seguir é uma **excelente aproximação** a esse teste
+exato — sem exigir reembaralhamento computacional (Fisher, 1935; Edgington & Onghena, 2007).
+
+---
+
+## O que $\mu_i-\mu_k$ significa causalmente?
+
+$\mu_i-\mu_k$ é apenas um contraste entre parâmetros do modelo — para interpretá-lo como um
+**efeito causal**, usamos o arcabouço de resultados potenciais de Neyman e Rubin
+(Neyman, 1923; Rubin, 1974; Imbens & Rubin, 2015) (Aula 01) aplicado ao DCA: cada
+UE $u$ tem $t$ valores fixos $Y_u(1),\ldots,Y_u(t)$ (um por tratamento, sob **SUTVA** — sem
+interferência entre UEs, sem versões ocultas de tratamento); só $Y_u(T_u)$ é observado. Estimando
+de interesse: $\tau_{i,k}=\frac{1}{N}\sum_u[Y_u(i)-Y_u(k)]$.
+
+--
+
+**Proposição (Neyman, 1923/1990).** Em um DCA — $n_i$ UEs sorteadas para $i$ por amostragem
+aleatória simples —, $E\big[\bar Y_i^{\text{obs}}-\bar Y_k^{\text{obs}}\big]=\tau_{i,k}$, sem
+**nenhuma** suposição distribucional: a esperança é só sobre o sorteio, com os $Y_u(i)$ fixos.
+
+Complementar ao teste de aleatorização: Fisher testa a hipótese aguda $Y_u(i)=Y_u(k)\;\forall u$;
+Neyman estima/testa a hipótese fraca $\tau_{i,k}=0$ (nenhum efeito, *em média*). O que o modelo
+$Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ acrescenta não é a validade do ponto estimado — já garantida
+por Neyman — mas distribuições exatas ($t$, $F$) em amostra finita para ICs e testes.
+
+---
+
+## O esquema geral (Allen Downey)
+
+```{r fig-only-one-test-04, echo=FALSE, out.width="78%"}
+knitr::include_graphics("../Aulas/images/there_is_only_one_test.png")
+```
+
+Dados → estatística observada; modelo de $H_0$ → dados simulados → distribuição de referência →
+valor-$p$. O reembaralhamento de rótulos **é** esse esquema, com o "modelo de $H_0$" sendo o
+próprio mecanismo de aleatorização do delineamento.
+
+---
+
+## O modelo do DCA a uma via
+
+$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij}\overset{iid}{\sim}N(0,\sigma^2)$$
+
+- $i = 1,\ldots,t$ tratamentos; $j = 1,\ldots,n_i$ repetições; $N=\sum_i n_i$.
+- $\mu_i = \mu+\tau_i$ é a média do tratamento $i$; $\sum_i n_i\tau_i = 0$.
+- $Y_{ij}$, $\varepsilon_{ij}$ são aleatórios; $\mu,\tau_i$ são parâmetros fixos.
+
+--
+
+Estimadores de mínimos quadrados: $\hat\mu_i=\bar Y_{i\cdot}$,
+$\hat\sigma^2=MS_E=\dfrac{1}{N-t}\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2$.
+
+---
+
+## Intervalos de confiança
+
+**Média de um tratamento** ($100(1-\alpha)\%$):
+
+$$\bar Y_{i\cdot} \pm t_{\alpha/2,\,N-t}\sqrt{MS_E/n_i}$$
+
+**Diferença entre duas médias**:
+
+$$(\bar Y_{i\cdot}-\bar Y_{k\cdot}) \pm t_{\alpha/2,\,N-t}\sqrt{MS_E\left(\tfrac{1}{n_i}+\tfrac{1}{n_k}\right)}$$
+
+Os dois usam o **mesmo** $MS_E$ — a ANOVA combina (*pools*) a variabilidade dos $t$ grupos em uma
+única estimativa de $\sigma^2$.
+
+---
+
+## A tabela de ANOVA
+
+```{r tabela-anova, echo=FALSE}
+tibble(
+  Fonte = c("Tratamento", "Erro", "Total"),
+  Gl = c("t - 1", "N - t", "N - 1"),
+  QM = c("MS_Trat = SQ_Trat/(t-1)", "MS_E = SQ_E/(N-t)", ""),
+  F = c("MS_Trat / MS_E", "", "")
+) %>% kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+$H_0:\tau_1=\cdots=\tau_t=0 \;\Rightarrow\; F\sim F_{t-1,N-t}$. Sob $H_1$, $F$ é não central com
+$\phi^2 = \dfrac{\sum_i n_i\tau_i^2}{t\sigma^2}$ — a chave do número de réplicas, adiante.
+
+---
+
+## O diagrama de Hasse deste DCA
+
+Uma cadeia simples — Média $\prec$ Tratamento $\prec$ Erro —, com os $gl$ do nosso próprio
+exemplo (Bloco 2, adiante): $t=3$ condições, $n=12$ voluntários por condição, $N=36$.
+
+```{r hasse-dca-04, echo=FALSE, fig.width=3.2, fig.height=4, fig.retina=2}
+nos_dca04 <- tibble(
+  termo = c("Média", "Tratamento", "Erro"),
+  df    = c(1, 3 - 1, 36 - 3),
+  x     = c(0, 0, 0),
+  y     = c(3, 2, 1)
+)
+arestas_dca04 <- tibble(de = c("Média", "Tratamento"), para = c("Tratamento", "Erro"))
+
+arestas_xy_dca04 <- arestas_dca04 %>%
+  left_join(nos_dca04 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
+  left_join(nos_dca04 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
+
+ggplot() +
+  geom_segment(data = arestas_xy_dca04, aes(x = x0, y = y0, xend = x1, yend = y1),
+               color = "grey45", linewidth = 0.6) +
+  geom_label(data = nos_dca04, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
+             size = 3, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
+  theme_void(base_size = 11) +
+  labs(title = "DCA: t=3, n=12 (N=36)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11))
+```
+
+$1+2+33=36=N$ — sem nenhuma outra fonte estrutural de variação além do tratamento, exatamente
+como a tabela de ANOVA acima já dizia em símbolos.
+
+---
+
+## Notação matricial: o DCA como caso do modelo linear geral
+
+O Capítulo 2 prometeu que $\mathbf{Y}=\mathbf{X}\boldsymbol\beta+\boldsymbol\varepsilon$ reapareceria
+aqui. Parametrização de **médias de célula**: $t$ colunas indicadoras (sem intercepto),
+$\mathbf{X}_{[ij],i'}=\mathbb 1\{i'=i\}$, $\boldsymbol\beta=(\mu_1,\ldots,\mu_t)'$ — sem a
+restrição $\sum_i n_i\tau_i=0$ que a parametrização $\mu+\tau_i$ exige.
+
+--
+
+Como as colunas de $\mathbf X$ são indicadoras de grupos disjuntos, $\mathbf X'\mathbf X=
+\mathrm{diag}(n_1,\ldots,n_t)$ — diagonal, posto completo $t$ — logo **todo** $\mu_i$ é trivialmente
+estimável (sem contrastes especiais, ao contrário do caso geral do Cap. 2), e
+
+$$\hat{\boldsymbol\beta}=(\mathbf X'\mathbf X)^{-1}\mathbf X'\mathbf Y=(\bar Y_{1\cdot},\ldots,\bar Y_{t\cdot})',
+\qquad \mathrm{Cov}(\hat{\boldsymbol\beta})=\sigma^2\,\mathrm{diag}(1/n_1,\ldots,1/n_t)$$
+
+Gauss-Markov (Aula 03) se aplica sem qualificações: cada $\hat\mu_i=\bar Y_{i\cdot}$ é BLUE.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Tempo de reação sob distração
+
+**Pergunta:** nenhuma distração, distração sonora e distração visual diferem quanto ao tempo de
+reação (ms) em uma tarefa de decisão simples?
+
+- 36 voluntários, sorteados 12 por condição (**UE = voluntário**, sem submuestreo aqui).
+- 1 fator (tipo de distração), 3 níveis, DCA sem blocos.
+
+```{r dados-04}
+set.seed(48)
+condicao <- c("Nenhuma", "Sonora", "Visual")
+n_por_grupo <- 12
+dados_tr <- tibble(
+  sujeito  = 1:(3 * n_por_grupo),
+  condicao = factor(rep(condicao, each = n_por_grupo), levels = condicao),
+  tempo_reacao = c(rnorm(n_por_grupo, 480, 45), rnorm(n_por_grupo, 512, 45),
+                    rnorm(n_por_grupo, 555, 45))
+)
+```
+
+---
+
+## Ajustando a ANOVA
+
+```{r anova-04}
+modelo_tr <- aov(tempo_reacao ~ condicao, data = dados_tr)
+summary(modelo_tr)
+```
+
+O tipo de distração afeta o tempo de reação médio ($p < 0{,}01$).
+
+---
+
+## Médias e intervalos de confiança
+
+```{r ic-04, echo=FALSE}
+MS_E <- summary(modelo_tr)[[1]][["Mean Sq"]][2]
+df_E <- summary(modelo_tr)[[1]][["Df"]][2]
+t_crit <- qt(0.975, df_E)
+
+tab_ic <- dados_tr %>%
+  group_by(condicao) %>%
+  summarise(media = mean(tempo_reacao), n = n(), .groups = "drop") %>%
+  mutate(ep = sqrt(MS_E / n), lwr = media - t_crit * ep, upr = media + t_crit * ep)
+
+tab_ic %>% kable(digits = 1, format = "html") %>% kable_styling(font_size = 18, full_width = FALSE)
+```
+
+```{r plot-ic-04, echo=FALSE, fig.width=7.5, fig.height=3.6}
+ggplot(tab_ic, aes(condicao, media)) +
+  geom_point(size = 3, color = "#0B4F6C") +
+  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.15, color = "#0B4F6C") +
+  labs(x = NULL, y = "Tempo de reação (ms)", title = "Médias e IC 95% (MS_E combinado)") +
+  theme_minimal(base_size = 14)
+```
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Os ICs de "Sonora" e "Visual" na figura anterior se sobrepõem parcialmente. Isso já basta para
+   concluir que as duas condições não diferem entre si? Por quê?
+
+2. Por que os dois intervalos de confiança da Teoria (média e diferença de médias) usam o mesmo
+   $MS_E$, em vez de cada grupo estimar sua própria variância separadamente?
+
+3. Se o pesquisador tivesse medido o tempo de reação de cada voluntário em **três tentativas**
+   (não uma só), o que mudaria no cálculo do $N$ usado na tabela de ANOVA? (dica: Capítulo 1 e
+   próxima aula.)
+
+4. O teste de aleatorização da Teoria não pressupõe normalidade. O que a ANOVA "compra" ao
+   assumir normalidade, se o teste de aleatorização já é válido sem ela?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Teste de aleatorização vs. teste F
+
+```{r randomizacao-04}
+F_obs <- summary(modelo_tr)[[1]][["F value"]][1]
+F_perm <- replicate(2000, {
+  rotulo <- sample(dados_tr$condicao)
+  summary(aov(dados_tr$tempo_reacao ~ rotulo))[[1]][["F value"]][1]
+})
+c(p_teorico = pf(F_obs, 2, 33, lower.tail = FALSE), p_aleatorizacao = mean(F_perm >= F_obs))
+```
+
+Os dois valores-$p$ ficam próximos: a aproximação normal-linear é razoável aqui.
+
+---
+
+## Número de réplicas necessário
+
+```{r pwr-04}
+medias_grupo <- c(494, 514, 564)
+f_cohen <- sqrt(mean((medias_grupo - mean(medias_grupo))^2)) / sqrt(MS_E)
+f_cohen
+
+pwr::pwr.anova.test(k = 3, f = f_cohen, sig.level = 0.05, power = 0.80)
+```
+
+Com o tamanho de efeito observado, ~11 réplicas por grupo bastariam para poder de 80% — as 12
+usadas já garantem poder pouco acima disso.
+
+---
+
+## Resumo da aula
+
+- O teste $F$ da ANOVA aproxima um teste de aleatorização exato, sem exigir reembaralhamento.
+- $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$: a tabela de ANOVA decompõe $SQ_{\text{Total}}$ em
+  tratamento + erro; ICs para médias e diferenças usam o $MS_E$ combinado.
+- Número de réplicas: função de $\alpha$, poder desejado e do $f$ de Cohen (via
+  `pwr::pwr.anova.test()`), não há fórmula fechada.
+- Próxima aula: o que muda quando há **submuestreo** (mais de uma medição por unidade
+  experimental) e quando os "tratamentos" são uma **amostra aleatória** de uma população maior.
+
+## Referências
+
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.
+- Edgington, E. S. & Onghena, P. (2007). *Randomization Tests* (4ª ed.). Chapman & Hall/CRC.
+- Splawa-Neyman, J. (1923). On the Application of Probability Theory to Agricultural Experiments. Essay on Principles. Section 9. *Statistical Science*, 5(4), 465–472.
+- Rubin, D. B. (1974). Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies. *Journal of Educational Psychology*, 66(5), 688–701.
+- Imbens, G. W. & Rubin, D. B. (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*. Cambridge University Press.

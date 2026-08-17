@@ -1,0 +1,21 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      collapse: section
+      scroll_highlight: yes
+      before: |
+        <li><a href="./"><strong>Planejamento e Análise de Experimentos</strong></a></li>
+      after: |
+        <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+    edit: null
+    download: null
+    sharing:
+      facebook: no
+      twitter: no
+    fontsettings:
+      theme: white
+      family: sans
+      size: 2
+  split_by: section
+  number_sections: yes

@@ -1,0 +1,436 @@
+---
+title: "Introdução aos Modelos Lineares (Parte 2)"
+subtitle: "Gauss-Markov, matriz de projeção, modelo particionado e formas quadráticas"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 03 — Introdução aos Modelos Lineares (Parte 2)
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## O teorema de Gauss-Markov
+
+Sob $\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}$, $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
+\sigma^2\mathbf{I}_n$ (sem exigir normalidade):
+
+> Se $\boldsymbol{\lambda}'\boldsymbol{\beta}$ é estimável, $\boldsymbol{\lambda}'\hat{\boldsymbol{\beta}}$
+> é o **BLUE** — o estimador linear não viesado de menor variância (Plackett, 1950; Searle, 1971).
+
+--
+
+- "Melhor" = dentro da classe de estimadores **lineares não viesados**. Estimadores viesados
+  (ridge) podem ter EQM menor em certos cenários.
+- Não exige normalidade — só entra para testes/IC exatos.
+
+$$\mathrm{Cov}(\hat{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$$
+
+---
+
+## A matriz de projeção
+
+$$\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{P}_X\mathbf{Y}, \qquad
+\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$$
+
+--
+
+$\mathbf{P}_X$ projeta $\mathbf{Y}$ ortogonalmente sobre o espaço-coluna de $\mathbf{X}$:
+
+- **Simétrica:** $\mathbf{P}_X' = \mathbf{X}\big((\mathbf{X}'\mathbf{X})^{-1}\big)'\mathbf{X}' =
+  \mathbf{P}_X$, pois $(\mathbf{X}'\mathbf{X})^{-1}$ é simétrica.
+- **Idempotente:** $\mathbf{P}_X\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}
+  \underbrace{(\mathbf{X}'\mathbf{X})(\mathbf{X}'\mathbf{X})^{-1}}_{=\,\mathbf{I}_p}\mathbf{X}' =
+  \mathbf{P}_X$.
+- **Autovalores só 0 ou 1** $\Rightarrow$ **posto = traço** = $\mathrm{posto}(\mathbf{X})$.
+
+--
+
+$\mathbf{I}_n - \mathbf{P}_X$ projeta sobre o complemento ortogonal → produz os resíduos, e explica
+por que $\hat{\mathbf{Y}}$ e $\mathbf{e}$ são ortogonais. A diagonal de $\mathbf{P}_X$ dá as
+**alavancagens** $h_{ii}$.
+
+---
+
+## O modelo particionado
+
+$$\mathbf{X} = [\mathbf{X}_1 \ \ \mathbf{X}_2], \quad \boldsymbol{\beta} = \begin{bmatrix}
+\boldsymbol{\beta}_1 \\ \boldsymbol{\beta}_2 \end{bmatrix}, \quad H_0: \boldsymbol{\beta}_2 = \mathbf{0}$$
+
+--
+
+**Soma de quadrados extra:**
+
+$$\mathrm{SQE}(\text{reduzido}) - \mathrm{SQE}(\text{completo}) = \mathbf{Y}'(\mathbf{P}_X -
+\mathbf{P}_{X_1})\mathbf{Y}$$
+
+--
+
+$$F = \frac{[\mathrm{SQE}(\text{red.}) - \mathrm{SQE}(\text{compl.})]/(p-p_1)}{\mathrm{SQE}(\text{compl.})/(n-p)}
+\ \sim\ F_{p-p_1,\, n-p} \text{ sob } H_0$$
+
+É exatamente o que `anova(reduzido, completo)` calcula — e o mesmo mecanismo por trás da ANOVA do
+Capítulo 3.
+
+---
+
+## O teorema de Frisch-Waugh-Lovell (FWL)
+
+**Pergunta:** dá para *calcular* $\hat{\boldsymbol{\beta}}_2$ (não só testar $H_0:
+\boldsymbol{\beta}_2=\mathbf{0}$) sem ajustar a regressão múltipla completa de uma vez?
+
+--
+
+**Teorema** (Frisch & Waugh, 1933; Lovell, 1963). Seja $\mathbf{M}_1 = \mathbf{I}_n - \mathbf{P}_{X_1}$.
+$\hat{\boldsymbol{\beta}}_2$ da regressão completa é idêntico ao coeficiente de:
+
+1. Regredir $\mathbf{Y}$ em $\mathbf{X}_1$, tomar resíduos $\tilde{\mathbf{Y}} = \mathbf{M}_1\mathbf{Y}$;
+2. Regredir $\mathbf{X}_2$ em $\mathbf{X}_1$, tomar resíduos $\tilde{\mathbf{X}}_2 = \mathbf{M}_1\mathbf{X}_2$;
+3. Regredir $\tilde{\mathbf{Y}}$ em $\tilde{\mathbf{X}}_2$.
+
+--
+
+**Prova (esboço):** das equações normais em blocos, $\hat{\boldsymbol{\beta}}_1 =
+(\mathbf{X}_1'\mathbf{X}_1)^{-1}(\mathbf{X}_1'\mathbf{Y}-\mathbf{X}_1'\mathbf{X}_2\hat{\boldsymbol{\beta}}_2)$;
+substituindo na segunda linha de blocos e usando $\mathbf{P}_{X_1} = \mathbf{X}_1(\mathbf{X}_1'\mathbf{X}_1)^{-1}\mathbf{X}_1'$:
+
+$$\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2\,\hat{\boldsymbol{\beta}}_2 = \mathbf{X}_2'\mathbf{M}_1\mathbf{Y}
+\ \Longrightarrow\ \hat{\boldsymbol{\beta}}_2 = (\tilde{\mathbf{X}}_2'\tilde{\mathbf{X}}_2)^{-1}\tilde{\mathbf{X}}_2'\tilde{\mathbf{Y}}$$
+
+(usando $\mathbf{M}_1=\mathbf{M}_1'\mathbf{M}_1$, simétrica e idempotente). $\blacksquare$
+
+---
+
+## FWL e planejamento experimental: por que a ANCOVA funciona
+
+Sob **aleatorização** (Capítulo 1), o tratamento $\mathbf{X}_1$ é independente de qualquer
+covariável pré-tratamento $\mathbf{X}_2$ — residualizar uma na outra quase não muda nada.
+
+--
+
+1. **Sem viés, com ou sem covariável:** aleatorização já garante isso; a covariável não é
+   necessária para identificar o efeito causal.
+2. **Com precisão maior:** se $\mathbf{X}_2$ explica parte de $\mathbf{Y}$, $\tilde{\mathbf{Y}} =
+   \mathbf{M}_1\mathbf{Y}$ tem variância menor $\Rightarrow$ erro-padrão menor de
+   $\hat{\boldsymbol{\beta}}_2$ (o coeficiente de interesse) $\Rightarrow$ mais poder no teste $F$
+   da seção anterior.
+
+--
+
+Essa é exatamente a lógica da **ANCOVA** (Fisher, 1935): covariáveis pré-tratamento não
+enviesam, mas "limpam" $\mathbf{Y}$ e aumentam a precisão.
+
+---
+
+## Formas lineares e quadráticas
+
+Sob normalidade, $\mathbf{L} = \mathbf{a}'\mathbf{Y} \sim N(\mathbf{a}'\mathbf{X}\boldsymbol{\beta},
+\ \sigma^2\mathbf{a}'\mathbf{a})$ — exato, não assintótico.
+
+--
+
+**Teorema.** Se $\mathbf{A}$ é idempotente com posto $r$ e $\mathbf{Y} \sim N(\boldsymbol{\mu},
+\sigma^2\mathbf{I}_n)$, então $\mathbf{Y}'\mathbf{A}\mathbf{Y}/\sigma^2 \sim \chi^2_r$ (não central,
+a menos que $\mathbf{A}\boldsymbol{\mu} = \mathbf{0}$).
+
+--
+
+Como $\mathbf{I}_n - \mathbf{P}_X$ é idempotente e $(\mathbf{I}_n - \mathbf{P}_X)\mathbf{X}\boldsymbol{\beta}
+= \mathbf{0}$:
+
+$$\frac{\mathrm{SQE}}{\sigma^2} \sim \chi^2_{\,n-\mathrm{posto}(\mathbf{X})} \quad \text{(central)}$$
+
+A base algébrica exata de toda tabela de ANOVA do Capítulo 3.
+
+---
+
+## Diagramas de Hasse: retrato da estrutura antes da álgebra
+
+$n-\mathrm{posto}(\mathbf{X})$ acima é uma contagem algébrica de graus de liberdade — o
+**diagrama de Hasse** é a mesma contagem, em figura. Cada termo do delineamento (média, fatores,
+erro) é um **nó** com seu $gl$; uma aresta liga $u\to v$ quando $v$ refina $u$ sem termo
+intermediário. Termos **cruzados** ficam lado a lado, sem aresta entre si; termos **aninhados**
+formam uma cadeia.
+
+```{r hasse-intro, echo=FALSE, fig.width=3.2, fig.height=4, fig.retina=2}
+nos_intro <- tibble(
+  termo = c("Média", "Tratamento", "Erro"),
+  df    = c(1, 4 - 1, 24 - 4),
+  x     = c(0, 0, 0),
+  y     = c(3, 2, 1)
+)
+arestas_intro <- tibble(de = c("Média", "Tratamento"), para = c("Tratamento", "Erro"))
+
+arestas_xy_intro <- arestas_intro %>%
+  left_join(nos_intro %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
+  left_join(nos_intro %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
+
+ggplot() +
+  geom_segment(data = arestas_xy_intro, aes(x = x0, y = y0, xend = x1, yend = y1),
+               color = "grey45", linewidth = 0.6) +
+  geom_label(data = nos_intro, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
+             size = 3, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
+  theme_void(base_size = 11) +
+  labs(title = "DCA: t=4, n=6 (N=24)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11))
+```
+
+$1+3+20=24=N$: os $gl$ de todos os nós sempre somam $N$. O Cap. 2 do livro-texto (Seção
+"Diagramas de Hasse") desenvolve essa ferramenta em profundidade, inclusive para fatoriais
+cruzados e aninhados — usaremos o mesmo diagrama já na próxima aula (DCA) e de novo nos
+Capítulos 4–6 (blocos, quadrados latinos, fatoriais).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Tempo de reação, sono e cafeína
+
+**Cenário:** 60 participantes; medimos **tempo de reação** (ms) em tarefa de atenção, **horas de
+sono** na noite anterior e **cafeína** (mg) consumida antes do teste.
+
+**Pergunta:** controlando pelas horas de sono, a cafeína ainda ajuda a explicar o tempo de reação?
+
+--
+
+```{r sim-sono}
+set.seed(2026)
+n <- 60
+dados_sono <- tibble(
+  id = 1:n,
+  horas_sono = round(runif(n, 4, 9), 1),
+  cafeina_mg = round(runif(n, 0, 200))
+) %>%
+  mutate(tempo_reacao = 480 - 18 * horas_sono + 0.22 * cafeina_mg + rnorm(n, 0, 22))
+```
+
+---
+
+## Visualizando os dados
+
+```{r plot-sono, echo=FALSE, fig.width=8, fig.height=4.3}
+ggplot(dados_sono, aes(x = horas_sono, y = tempo_reacao, color = cafeina_mg)) +
+  geom_point(size = 2.2, alpha = 0.8) +
+  scale_color_gradient(low = "#eef3fb", high = "#0B4F6C") +
+  labs(x = "Horas de sono", y = "Tempo de reação (ms)", color = "Cafeína (mg)") +
+  theme_minimal(base_size = 14)
+```
+
+Tendência decrescente geral (mais sono, reação mais rápida); os pontos mais escuros (mais
+cafeína) tendem a ficar acima da reta para a mesma quantidade de sono — um indício visual de que
+`cafeina_mg` carrega informação extra sobre `tempo_reacao`.
+
+---
+
+## Testando o submodelo
+
+```{r fit-sono}
+model.matrix(~ horas_sono, data = dados_sono)[1:3, ]                 # X1 (reduzido)
+model.matrix(~ horas_sono + cafeina_mg, data = dados_sono)[1:3, ]    # X = [X1 X2] (completo)
+
+mod_reduzido <- lm(tempo_reacao ~ horas_sono, data = dados_sono)
+mod_completo <- lm(tempo_reacao ~ horas_sono + cafeina_mg, data = dados_sono)
+
+anova(mod_reduzido, mod_completo)
+```
+
+`r ifelse(anova(mod_reduzido, mod_completo)[2, "Pr(>F)"] < 0.05, "Rejeitamos", "Não rejeitamos")`
+$H_0: \beta_{\text{cafeína}} = 0$: a cafeína contribui além das horas de sono.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. O teorema de Gauss-Markov garante variância mínima **entre estimadores lineares não
+   viesados**. Em que sentido isso é diferente de dizer que $\hat{\boldsymbol{\beta}}$ é
+   incondicionalmente "o melhor" estimador?
+
+2. Se, em vez de cafeína, tivéssemos adicionado ao modelo completo uma variável irrelevante
+   sorteada aleatoriamente (por exemplo, o dia da semana do teste), o que aconteceria com a soma
+   de quadrados extra em expectativa? O teste $F$ continuaria válido sob $H_0$?
+
+3. A matriz $\mathbf{P}_X$ depende só de $\mathbf{X}$, nunca de $\mathbf{Y}$. Que consequência
+   prática isso tem para planejar, *antes* de coletar dados, quão precisas serão as estimativas
+   de um experimento?
+
+4. Alavancagens altas ($h_{ii}$ próximo de 1) indicam que uma observação influencia fortemente seu
+   próprio valor ajustado. Em um experimento planejado (com $\mathbf{X}$ fixado pelo
+   pesquisador), isso é um problema de *dados* ou um problema de *desenho*?
+
+5. Pelo FWL, o coeficiente da cafeína é o mesmo obtido regredindo os resíduos de tempo de reação
+   nos resíduos de cafeína (ambos residualizados em horas de sono). Se horas de sono e cafeína
+   fossem **perfeitamente independentes** por desenho (por exemplo, doses de cafeína sorteadas
+   aleatoriamente, sem relação com o sono de cada participante), o que aconteceria com
+   $\tilde{\mathbf{X}}_2$ em relação a $\mathbf{X}_2$ original? Que implicação isso tem para a
+   necessidade de incluir `horas_sono` no modelo, se o objetivo é só estimar o efeito da cafeína?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Construindo e verificando a matriz de projeção
+
+```{r uso-r-projecao}
+X <- model.matrix(~ horas_sono + cafeina_mg, data = dados_sono)
+P <- X %*% solve(t(X) %*% X) %*% t(X)
+
+c(
+  simetrica_max_diff   = max(abs(P - t(P))),
+  idempotente_max_diff = max(abs(P %*% P - P)),
+  traco                = sum(diag(P)),
+  posto_X              = qr(X)$rank
+)
+
+max(abs(diag(P) - hatvalues(mod_completo)))
+```
+
+---
+
+## Alavancagem de cada participante
+
+```{r plot-leverage, echo=FALSE, fig.width=7.5, fig.height=3.8}
+tibble(horas_sono = dados_sono$horas_sono, h = diag(P)) %>%
+  ggplot(aes(x = horas_sono, y = h)) +
+  geom_hline(yintercept = mean(diag(P)), linetype = "dashed", color = "gray50") +
+  geom_point(color = "#0B4F6C", alpha = 0.75, size = 2) +
+  labs(x = "Horas de sono", y = expression(h[ii])) +
+  theme_minimal(base_size = 14)
+```
+
+Participantes com poucas ou muitas horas de sono (extremos do eixo) puxam mais a reta ajustada —
+maior alavancagem — porque $\mathbf{P}_X$ só depende de $\mathbf{X}$, nunca de $\mathbf{Y}$.
+
+---
+
+## Verificando o FWL na prática
+
+```{r fwl-r}
+Y_tilde  <- resid(lm(tempo_reacao ~ horas_sono, data = dados_sono))   # passo 1
+X2_tilde <- resid(lm(cafeina_mg  ~ horas_sono, data = dados_sono))    # passo 2
+mod_fwl  <- lm(Y_tilde ~ X2_tilde)                                    # passo 3
+
+c(beta_regressao_completa = unname(coef(mod_completo)["cafeina_mg"]),
+  beta_via_fwl             = unname(coef(mod_fwl)[2]))
+```
+
+--
+
+```{r plot-fwl, echo=FALSE, fig.width=7, fig.height=3.6}
+tibble(X2_tilde = X2_tilde, Y_tilde = Y_tilde) %>%
+  ggplot(aes(x = X2_tilde, y = Y_tilde)) +
+  geom_point(alpha = 0.7, color = "#0B4F6C") +
+  geom_smooth(method = "lm", se = FALSE, color = "#d98324", linewidth = 0.9) +
+  labs(x = "Cafeína residualizada em sono", y = "Tempo de reação residualizado em sono") +
+  theme_minimal(base_size = 13)
+```
+
+Os dois coeficientes coincidem exatamente — a inclinação desta regressão simples entre resíduos
+*é* o coeficiente da cafeína na regressão múltipla completa.
+
+---
+
+## A soma de quadrados extra, na mão
+
+```{r uso-r-extra-ss}
+X1 <- model.matrix(~ horas_sono, data = dados_sono)
+P1 <- X1 %*% solve(t(X1) %*% X1) %*% t(X1)
+Yv <- dados_sono$tempo_reacao
+
+sqe_red <- as.numeric(t(Yv) %*% (diag(n) - P1) %*% Yv)
+sqe_com <- as.numeric(t(Yv) %*% (diag(n) - P)  %*% Yv)
+gl_extra <- qr(X)$rank - qr(X1)$rank
+gl_res   <- n - qr(X)$rank
+F_extra  <- ((sqe_red - sqe_com) / gl_extra) / (sqe_com / gl_res)
+
+c(F = F_extra, p_valor = pf(F_extra, gl_extra, gl_res, lower.tail = FALSE))
+```
+
+Bate exatamente com `anova(mod_reduzido, mod_completo)` — a soma de quadrados extra é a mesma
+conta, feita por álgebra explícita.
+
+---
+
+## Verificando a qui-quadrado por simulação
+
+```{r uso-r-montecarlo, fig.width=7.5, fig.height=3.8}
+set.seed(2026)
+sigma <- 22; gl_res2 <- n - qr(X)$rank
+stats <- replicate(3000, {
+  Ys <- as.numeric(X %*% coef(mod_completo)) + rnorm(n, 0, sigma)
+  as.numeric(t(Ys) %*% (diag(n) - P) %*% Ys) / sigma^2
+})
+ggplot(tibble(stats), aes(stats)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 35, fill = "#3b5bdb", alpha = 0.6) +
+  stat_function(fun = dchisq, args = list(df = gl_res2), color = "#d98324", linewidth = 1) +
+  theme_minimal(base_size = 13)
+```
+
+O histograma de 3.000 réplicas de Monte Carlo acompanha de perto a densidade qui-quadrado teórica
+(linha laranja) com `r gl_res2` graus de liberdade — a confirmação empírica de que
+$\mathrm{SQE}/\sigma^2$ se comporta exatamente como o teorema prevê.
+
+---
+
+## Resumo da aula
+
+- Gauss-Markov: mínimos quadrados é BLUE entre estimadores lineares não viesados, sem exigir
+  normalidade.
+- Matriz de projeção $\mathbf{P}_X$: simétrica, idempotente, posto = traço = $\mathrm{posto}(\mathbf{X})$;
+  formaliza "ajustar" como projeção ortogonal.
+- Modelo particionado + soma de quadrados extra: mecanismo algébrico de todo teste $F$ de
+  submodelo.
+- Teorema de Frisch-Waugh-Lovell: o coeficiente de uma covariável é idêntico ao de uma regressão
+  simples entre resíduos — a base algébrica da ANCOVA em experimentos aleatorizados.
+- Sob normalidade, formas quadráticas idempotentes de $\mathbf{Y}$ são qui-quadrado — a base exata
+  da ANOVA.
+- Próximo capítulo: aplicamos tudo isso ao delineamento completamente aleatorizado (DCA).
+
+## Referências
+
+- Plackett, R. L. (1950). Some Theorems in Least Squares. *Biometrika*, 37(1/2), 149–157.
+- Searle, S. R. (1971). *Linear Models*. John Wiley & Sons.
+- Frisch, R. & Waugh, F. V. (1933). Partial Time Regressions as Compared with Individual Trends. *Econometrica*, 1(4), 387–401.
+- Lovell, M. C. (1963). Seasonal Adjustment of Economic Time Series and Multiple Regression Analysis. *Journal of the American Statistical Association*, 58(304), 993–1010.
+- Fisher, R. A. (1935). *Statistical Methods for Research Workers* (5ª ed.). Oliver and Boyd.

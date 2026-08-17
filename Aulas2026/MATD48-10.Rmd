@@ -1,0 +1,306 @@
+---
+title: "Teste de Friedman e Blocos Incompletos Balanceados"
+subtitle: "Alternativa não paramétrica ao DBCA e desenhos com blocos pequenos"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 10 — Teste de Friedman e Blocos Incompletos Balanceados
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Quando o DBCA não serve
+
+O DBCA assume $\varepsilon_{ij}\sim N(0,\sigma^2)$. Isso fica implausível quando:
+
+- a resposta é ordinal (ranking, escala Likert);
+- há poucos blocos e distribuição muito assimétrica;
+- há valores extremos que dominam a soma de quadrados.
+
+--
+
+O **teste de Friedman** (Friedman, 1937) troca a suposição de normalidade por uma suposição bem
+mais fraca: sob $H_0$, qualquer ordenação dos $t$ tratamentos dentro de um bloco é igualmente
+provável.
+
+Especialmente natural quando **bloco = sujeito** em medidas repetidas.
+
+---
+
+## A estatística de Friedman
+
+Dentro de cada bloco $j$, atribua postos $1,\dots,t$ às $t$ respostas. Sejam
+$R_i=\sum_j \text{posto}(Y_{ij})$ as somas de posto por tratamento.
+
+$$
+F_r = \frac{12}{bt(t+1)}\sum_{i=1}^t R_i^2 - 3b(t+1)
+$$
+
+Sob $H_0$, $F_r \overset{aprox}{\sim} \chi^2_{t-1}$.
+
+--
+
+Preço da robustez: quando a normalidade **de fato** vale, o teste de Friedman é menos sensível que
+a ANOVA do DBCA — ele usa só a ordem das respostas dentro de cada bloco, não seus valores exatos.
+
+---
+
+## Blocos incompletos: por que existem
+
+Às vezes o bloco não comporta todos os $t$ tratamentos:
+
+- um degustador só avalia poucas amostras antes de saturar o paladar;
+- uma parcela só tem espaço físico para poucas variedades;
+- um paciente só tolera um número limitado de sessões de teste.
+
+--
+
+Um **BIB** (bloco incompleto **balanceado**) usa blocos de tamanho $k<t$, construídos para que
+**todo par de tratamentos coocorra o mesmo número $\lambda$ de vezes** (Yates, 1936) —
+preserva a comparabilidade entre quaisquer dois tratamentos. Tabelas de arranjos BIB conhecidos
+para $t$ e $k$ pequenos estão catalogadas desde os primeiros manuais de delineamento
+(Cochran & Cox, 1957).
+
+---
+
+## Parâmetros de um BIB
+
+$t$ tratamentos, $b$ blocos, $r$ = repetições por tratamento, $k$ = tamanho do bloco,
+$\lambda$ = coocorrências por par:
+
+$$
+bk = tr \qquad \lambda(t-1) = r(k-1)
+$$
+
+Essas identidades servem como **checagem de consistência** de qualquer arranjo proposto — se elas
+falham, o arranjo não é um BIB válido. A análise de variância de um BIB, com a soma de quadrados
+de tratamento ajustada pelo desbalanceamento de blocos, segue o tratamento padrão de
+(Montgomery, 2017).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Psicologia: bloco = paciente, medidas repetidas
+
+Três técnicas terapêuticas breves — **TCC**, **terapia interpessoal**, **ativação
+comportamental** — comparadas quanto à redução percentual de sintomas depressivos.
+
+- 12 pacientes (**bloco**), cada um recebe as 3 técnicas em ordem aleatorizada, com *washout*.
+- Resposta assimétrica à direita: normalidade questionável com só 12 blocos → Friedman.
+
+---
+
+## Simulando e testando
+
+```{r friedman-sim}
+set.seed(2026)
+n_pac <- 12
+tecnicas <- c("TCC", "Terapia_Interpessoal", "Ativacao_Comportamental")
+efeito_pac <- rexp(n_pac, rate = 1 / 8)
+efeito_tec <- c(TCC = 2, Terapia_Interpessoal = 0, Ativacao_Comportamental = 4)
+
+dados_terapia <- expand_grid(paciente = 1:n_pac, tecnica = tecnicas) %>%
+  mutate(
+    tecnica = factor(tecnica, levels = tecnicas),
+    reducao = round(5 + efeito_pac[paciente] + efeito_tec[as.character(tecnica)] +
+                     rexp(n(), rate = 1 / 2), 1)
+  )
+
+mat <- dados_terapia %>%
+  pivot_wider(names_from = tecnica, values_from = reducao) %>%
+  select(-paciente) %>% as.matrix()
+
+friedman.test(mat)
+```
+
+---
+
+## Interpretando
+
+```{r friedman-ranks, echo=FALSE}
+ranks <- t(apply(mat, 1, rank))
+tibble(Técnica = colnames(mat), `Soma de postos` = colSums(ranks)) %>%
+  kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+$\chi^2_2=2{,}09$, $p=0{,}35$: sem evidência de diferença sistemática, apesar de a ativação
+comportamental ter a maior soma de postos (mais frequentemente "melhor" por paciente) — a
+diferença não supera a variabilidade entre pacientes com apenas 12 blocos.
+
+---
+
+## Uma linha por paciente
+
+```{r friedman-perfis, echo=FALSE, fig.width=7, fig.height=4.2}
+pal_blocos <- c("#2a78d6", "#eb6834", "#1baf7a")
+ggplot(dados_terapia, aes(x = tecnica, y = reducao)) +
+  geom_line(aes(group = paciente), color = "grey70", alpha = 0.6) +
+  geom_boxplot(aes(fill = tecnica), width = 0.35, alpha = 0.7, outlier.shape = NA) +
+  geom_point(aes(color = tecnica), size = 1.8) +
+  scale_fill_manual(values = pal_blocos, guide = "none") +
+  scale_color_manual(values = pal_blocos, guide = "none") +
+  labs(x = NULL, y = "Redução de sintomas (%)") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+```
+
+--
+
+Assimetria à direita (poucos melhoram muito) e linhas que se cruzam bastante — poucos pacientes
+mantêm a mesma ordenação relativa entre técnicas, coerente com o $p$-valor não significativo.
+
+---
+
+## Agricultura: painel sensorial (BIB)
+
+Quatro variedades de café ($t=4$), mas cada degustador avalia só 3 xícaras por sessão ($k=3$):
+
+```{r bibd-tabela, echo=FALSE}
+tribble(
+  ~Bloco, ~Tratamentos,
+  1, "1, 2, 3",
+  2, "1, 2, 4",
+  3, "1, 3, 4",
+  4, "2, 3, 4"
+) %>%
+  kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+$t=4,\ b=4,\ k=3,\ r=3,\ \lambda=2$: $bk=12=tr$; $\lambda(t-1)=6=r(k-1)$. Válido.
+
+---
+
+## A matriz de incidência
+
+```{r bibd-incidencia, echo=FALSE, fig.width=5, fig.height=3.6}
+incidencia <- tribble(
+  ~Bloco, ~Tratamento, ~presente,
+  1,1,1, 1,2,1, 1,3,1, 1,4,0,
+  2,1,1, 2,2,1, 2,3,0, 2,4,1,
+  3,1,1, 3,2,0, 3,3,1, 3,4,1,
+  4,1,0, 4,2,1, 4,3,1, 4,4,1
+) %>% mutate(Bloco = factor(Bloco), Tratamento = factor(Tratamento))
+
+ggplot(incidencia, aes(x = Tratamento, y = Bloco, fill = factor(presente))) +
+  geom_tile(color = "white", linewidth = 1) +
+  scale_fill_manual(values = c("0"="grey92","1"="#2a78d6"), labels=c("ausente","presente"), name=NULL) +
+  coord_fixed() + theme_minimal(base_size = 13) + theme(panel.grid = element_blank())
+```
+
+--
+
+Cada linha tem $k=3$ células azuis, cada coluna $r=3$, e todo par de colunas compartilha azul em
+$\lambda=2$ linhas — o balanceamento é visível de imediato.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. No exemplo terapêutico, o que mudaria na conclusão se, em vez de ranks, tivéssemos assumido
+   normalidade e rodado o DBCA da Aula 09 diretamente sobre a redução percentual?
+
+2. Por que o teste de Friedman usa apenas a *ordem* das respostas dentro de cada bloco, e não seus
+   valores numéricos? Que informação se perde nesse processo?
+
+3. No painel sensorial, por que balancear a *frequência* de coocorrência de pares de variedades, e
+   não apenas garantir que cada variedade apareça o mesmo número total de vezes?
+
+4. Seria possível montar um BIB com $t=4$ tratamentos e blocos de tamanho $k=2$? Quais valores de
+   $b$, $r$ e $\lambda$ satisfariam as identidades de contagem?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## `friedman.test()` passo a passo
+
+```{r uso-r-friedman}
+# friedman.test() espera uma matriz: linhas = blocos, colunas = tratamentos
+class(mat)
+dim(mat)  # 12 pacientes x 3 técnicas
+
+ft <- friedman.test(mat)
+broom::tidy(ft)
+```
+
+--
+
+```{r uso-r-friedman-2}
+# checagem manual da estatística, a partir das somas de postos
+b <- nrow(mat); t <- ncol(mat)
+R <- colSums(t(apply(mat, 1, rank)))
+Fr <- (12 / (b * t * (t + 1))) * sum(R^2) - 3 * b * (t + 1)
+round(Fr, 3)  # deve bater com o valor de friedman.test()
+```
+
+---
+
+## Verificando as identidades de um BIB
+
+```{r uso-r-bib}
+t <- 4; b <- 4; k <- 3; r <- 3; lambda <- 2
+c(bk = b * k, tr = t * r)                    # devem ser iguais
+c(lambda_t1 = lambda * (t - 1), r_k1 = r * (k - 1))  # devem ser iguais
+```
+
+---
+
+## Resumo da aula
+
+- Teste de Friedman: alternativa não paramétrica ao DBCA, baseada em postos dentro de bloco.
+- Robustez tem custo: menor sensibilidade quando a normalidade de fato vale.
+- BIB: quando $k<t$, é preciso balancear a coocorrência de pares de tratamentos, não só sua
+  frequência total.
+- Próxima aula: duas e três fontes de bloqueio cruzadas — quadrado latino e greco-latino.
+
+## Referências
+
+- Friedman, M. (1937). The use of ranks to avoid the assumption of normality implicit in the analysis of variance. *Journal of the American Statistical Association*, 32(200), 675–701.
+- Yates, F. (1936). Incomplete randomized blocks. *Annals of Eugenics*, 7(2), 121–140.
+- Cochran, W. G. & Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley & Sons.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.

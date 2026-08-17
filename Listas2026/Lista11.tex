@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 11 --- Quadrado Latino e Greco-Latino}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 11}{Quadrado latino e quadrado greco-latino (Capítulo 4 / Aula 11)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas — nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito11.pdf}.}
+
+\begin{questao}{1} \textbf{(Agricultura --- ANOVA de um quadrado latino)}
+
+Um experimento com $n=5$ variedades de soja é conduzido em um quadrado latino $5\times5$, com
+linha = faixa de declividade e coluna = faixa de umidade do talhão. O ajuste produziu
+$SQ_{Total}=300$, $SQ_{Linha}=40$, $SQ_{Coluna}=35$ e $SQ_{Variedade}=150$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete a tabela de ANOVA (graus de liberdade de cada fonte, $SQ_{Erro}$, quadrados
+    médios).
+  \item Calcule $F_0$ para o teste do efeito de variedade.
+  \item Sabendo que $F_{0{,}05;\,4;\,12}=3{,}26$, há evidência de diferença entre variedades?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Dedução --- graus de liberdade do erro em um quadrado latino replicado)}
+
+Considere $p$ réplicas independentes de um quadrado latino de ordem $n$, cada réplica com suas
+próprias linhas e colunas (não compartilhadas entre réplicas), mas com os mesmos $n$
+tratamentos em todas as réplicas. O modelo tem termos para réplica, linha-dentro-de-réplica,
+coluna-dentro-de-réplica e tratamento.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Quantas observações há ao todo? Quantos graus de liberdade totais isso representa?
+  \item Escreva os graus de liberdade consumidos por cada termo do modelo (réplica, linhas dentro
+    de réplica, colunas dentro de réplica, tratamento).
+  \item Subtraia a soma do item (b) do total do item (a) e mostre, com álgebra, que o resultado
+    se simplifica para $gl_{Erro} = (n-1)\big[p(n-1)-1\big]$.
+  \item Confira sua fórmula para $n=4$ e $p=2$: o valor deve coincidir com o que foi mostrado em
+    aula.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Verificação --- validade de um quadrado latino)}
+
+Um técnico propõe o seguinte arranjo $4\times4$ para 4 fertilizantes (A, B, C, D), com linhas =
+talhões e colunas = datas de aplicação:
+$$
+\begin{array}{cccc}
+A & B & C & D \\
+B & A & D & C \\
+C & D & A & B \\
+D & C & A & B \\
+\end{array}
+$$
+
+\begin{enumerate}[label=(\alph*)]
+  \item Verifique, linha a linha e coluna a coluna, se este arranjo satisfaz a definição de
+    quadrado latino. Se não satisfizer, aponte exatamente onde a definição é violada.
+  \item Caso tenha encontrado um problema no item (a), proponha uma correção mínima (alterando o
+    menor número possível de células) que restaure a validade do quadrado.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Quadrado greco-latino --- existência e graus de liberdade)}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule os graus de liberdade do erro, $(n-1)(n-3)$, para quadrados greco-latinos de
+    ordem $n=5$ e $n=7$.
+  \item Por que não existe um quadrado greco-latino de ordem $n=6$? A que resultado clássico esse
+    fato se refere?
+  \item Um pesquisador com $n=4$ fontes de bloqueio a controlar (por exemplo, linha, coluna e
+    \emph{dois} fatores de tratamento adicionais) percebe que precisaria de um "quadrado
+    hiper-greco-latino" com 3 conjuntos de letras sobrepostos, não apenas 2. Quantos graus de
+    liberdade sobrariam para o erro nesse caso, com $n=4$? Esse desenho é praticamente viável?
+    Justifique.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Psicologia --- quadrado latino para contrabalancear ordem)}
+
+Um estudo de carga cognitiva expõe cada participante a $4$ tipos de tarefa (A, B, C, D) em $4$
+sessões consecutivas. O pesquisador teme dois efeitos de confusão: diferenças individuais entre
+participantes e efeito de \emph{prática/fadiga} (a ordem em que uma tarefa é apresentada — 1ª,
+2ª, 3ª ou 4ª posição — pode, por si só, afetar o desempenho).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Proponha um desenho em quadrado latino $4\times4$ para este estudo, identificando
+    explicitamente o que fará o papel de linha, de coluna e de tratamento.
+  \item Explique por que esse desenho, e não um DBCA com bloco = participante apenas, é apropriado
+    aqui — que fonte de variação um DBCA simples deixaria de controlar?
+  \item O desenho do item (a) assume ausência de interação entre ordem de apresentação e tipo de
+    tarefa. Dê um exemplo concreto de como essa suposição poderia falhar neste estudo.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{6} \textbf{(Aleatorização de Yates e análise de poder)}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Um técnico decide sempre usar o mesmo quadrado latino $4\times4$ fixo (com o tratamento A
+    sempre na diagonal principal) em todo experimento de sua empresa que peça esse desenho.
+    Explique por que essa prática pode comprometer a validade da inferência, e descreva os quatro
+    passos do procedimento de aleatorização de Yates (1933) que evitam o problema.
+  \item Um pesquisador com $n=4$ tratamentos planeja usar quadrados latinos replicados e deseja
+    poder $\ge0{,}80$ para detectar um efeito grande ($f=0{,}4$ de Cohen) a $\alpha=0{,}05$. A
+    tabela abaixo (vista em aula) mostra o poder em função do número de réplicas $p$:
+    $$
+    \begin{array}{c|ccccc}
+    p & 1 & 2 & 3 & 4 & 5 \\\hline
+    \text{Poder} & 0{,}148 & 0{,}356 & 0{,}557 & 0{,}716 & 0{,}828
+    \end{array}
+    $$
+    Quantas réplicas são necessárias? Que trade-off prático essa escolha envolve, em termos de
+    unidades experimentais totais gastas?
+\end{enumerate}
+\end{questao}
+
+\end{document}

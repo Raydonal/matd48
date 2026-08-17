@@ -1,0 +1,140 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 12 --- Fatoriais A×B e A×B×C}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 12}{Fatoriais A×B, A×B×C e blocos completos (Capítulo 5 / Aula 12)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito12.pdf}.}
+
+\begin{questao}{1} \textbf{(Ciência de dados --- ANOVA de um fatorial A×B na mão)}
+
+Uma equipe de engenharia mede o tempo de resposta médio (ms) de um endpoint sob dois algoritmos
+de cache ($A$: LRU vs. LFU) cruzados com dois tamanhos de payload ($B$: pequeno vs. grande), com
+$r=2$ execuções independentes por combinação:
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & \multicolumn{2}{c}{Payload ($B$)} \\
+Algoritmo ($A$) & pequeno & grande \\ \hline
+LRU & 10, 14 & 20, 24 \\
+LFU & 16, 20 & 34, 38
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule as quatro médias de célula, as duas médias marginais de $A$, as duas médias
+    marginais de $B$ e a média geral.
+  \item Usando as fórmulas $SQ_A = rb\sum_i(\bar y_{i\cdot\cdot}-\bar y_{\cdot\cdot\cdot})^2$,
+    $SQ_B$ análogo, $SQ_{AB}=r\sum_{ij}(\bar y_{ij\cdot}-\bar y_{i\cdot\cdot}-\bar
+    y_{\cdot j\cdot}+\bar y_{\cdot\cdot\cdot})^2$ e $SQ_E=\sum(y_{ijk}-\bar y_{ij\cdot})^2$,
+    monte a tabela de ANOVA completa (gl, SQ, QM, F) para $A$, $B$, $A{\times}B$ e Erro.
+  \item Ao nível $\alpha=0{,}05$, o valor crítico é $F_{1,4}=7{,}71$. Quais efeitos são
+    significativos?
+  \item Interprete o resultado: o algoritmo de cache e o tamanho do payload afetam o tempo de
+    resposta de forma aditiva, ou o efeito de um depende do outro?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Agricultura --- interpretando uma ANOVA real)}
+
+Um experimento cruza lâmina de irrigação (2 níveis) com dose de silício (4 níveis) sobre a altura
+de plantas de pepino, com 3 repetições (24 parcelas). A ANOVA (ignorando blocos) resultou em:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Fonte & gl & SQ & QM & $F$ \\ \midrule
+Irrigação & 1 & 0,260 & 0,260 & 5,28 \\
+Silício & 3 & 1,387 & 0,462 & 9,38 \\
+Irrigação:Silício & 3 & 0,388 & 0,129 & 2,63 \\
+Erro & 16 & 0,789 & 0,049 & \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Ao nível de 5\%, quais fontes são estatisticamente significativas? (Use $F_{1,16} \approx
+    4{,}49$ e $F_{3,16}\approx3{,}24$ como valores críticos aproximados.)
+  \item O experimento também registrou 3 blocos de terreno. Ao incluir o bloco no modelo, o
+    $QM$ do erro \emph{aumentou} ligeiramente, de 0,049 para 0,055. O que isso sugere sobre a
+    escolha de blocar por terreno neste experimento específico?
+  \item A blocagem, mesmo quando "não ajuda" como neste caso, ainda é uma decisão defensável de
+    se tomar \emph{antes} de ver os dados? Justifique.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Dedução --- ortogonalidade no fatorial 2×2 e o estimador de
+interação)}
+
+Considere um fatorial $2\times2$ ($a=b=2$) com $r$ repetições por célula, fatores codificados em
+efeito $\pm1$: $x_A \in \{-1,+1\}$ para o fator $A$, $x_B\in\{-1,+1\}$ para $B$, e a coluna de
+interação $x_{AB} = x_A x_B$ (produto de Hadamard, Seção 5.4 do livro-texto).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\mathbf{x}_A'\mathbf{x}_B = 0$ (ortogonalidade entre os efeitos principais).
+    (Dica: liste as 4 combinações de $(x_A,x_B)$ e some os produtos $x_A x_B$ sobre as $4r$
+    observações balanceadas.)
+  \item Mostre, da mesma forma, que $\mathbf{x}_A'\mathbf{x}_{AB} = 0$ e
+    $\mathbf{x}_B'\mathbf{x}_{AB} = 0$.
+  \item Conclua que, neste desenho balanceado $2\times2$, $\mathbf{X}'\mathbf{X}$ (para
+    $\mathbf{X}=[\mathbf{1}\,|\,\mathbf{x}_A\,|\,\mathbf{x}_B\,|\,\mathbf{x}_{AB}]$) é uma matriz
+    diagonal.
+  \item Usando a fórmula geral $\hat\beta_j = \mathbf{x}_j'\mathbf{Y}/\mathbf{x}_j'\mathbf{x}_j$
+    válida quando $\mathbf{X}'\mathbf{X}$ é diagonal, mostre que o coeficiente de interação
+    $\hat\beta_{AB}$ é proporcional ao contraste $\bar y_{11\cdot} - \bar y_{12\cdot} - \bar
+    y_{21\cdot} + \bar y_{22\cdot}$, e identifique a constante de proporcionalidade em função de
+    $r$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Ciência de dados --- leitura causal de um teste A/B/n)}
+
+Uma equipe de produto testa cor do botão ($A$: azul vs. laranja) cruzada com o dispositivo do
+usuário ($B$: celular vs. desktop) sobre a taxa de conversão (\%). As médias de célula observadas
+foram: (azul, celular) $=3{,}0$; (azul, desktop) $=5{,}0$; (laranja, celular) $=5{,}0$; (laranja,
+desktop) $=5{,}0$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule o efeito principal estimado da cor do botão (a diferença laranja $-$ azul,
+    marginalizada sobre dispositivo).
+  \item Calcule o efeito da cor \emph{separadamente} para cada dispositivo (celular e desktop).
+    Os dois valores coincidem com o efeito principal do item (a)?
+  \item Na linguagem da Seção 5.2 do livro-texto, o que esse padrão revela sobre a
+    \textbf{heterogeneidade do efeito de tratamento}? Que decisão de produto (mostrar a mesma cor
+    para todos vs. personalizar por dispositivo) esse padrão sugere?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Ciência de dados --- exercício computacional em R)}
+
+O código abaixo ajusta o fatorial A×B do algoritmo de cache (Questão 1) usando \texttt{aov()} e
+constrói a matriz de delineamento manualmente. Está incompleto.
+
+\begin{lstlisting}
+algoritmo <- factor(rep(c("LRU","LFU"), each = 4))
+payload   <- factor(rep(rep(c("pequeno","grande"), each = 2), times = 2))
+tempo     <- c(10, 14, 20, 24, 16, 20, 34, 38)
+dados <- data.frame(algoritmo, payload, tempo)
+
+# (a) complete para obter a matriz de delineamento com termo de interacao
+X <- model.matrix(______________________, data = dados)
+
+# (b) complete para confirmar que a coluna de interacao e o produto das principais
+identical(X[, 4], ______________________)
+
+# (c) ajuste o modelo e obtenha a tabela de ANOVA
+modelo <- aov(______________________, data = dados)
+summary(modelo)
+\end{lstlisting}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete as três linhas indicadas.
+  \item A tabela de ANOVA produzida por \texttt{summary(modelo)} deve reproduzir os valores de
+    $F$ que você calculou manualmente na Questão 1(b)--(c). Confirme (mentalmente ou rodando o
+    código) que os graus de liberdade batem: quantos há para $A$, $B$, $A{:}B$ e Resíduos?
+\end{enumerate}
+\end{questao}
+
+\end{document}

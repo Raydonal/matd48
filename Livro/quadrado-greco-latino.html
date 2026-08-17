@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4.5 Delineamento em quadrado greco-latino | Planejamento e Análise de Experimentos</title>
+  <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4.5 Delineamento em quadrado greco-latino | Planejamento e Análise de Experimentos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4.5 Delineamento em quadrado greco-latino | Planejamento e Análise de Experimentos" />
+  
+  <meta name="twitter:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+<meta name="author" content="Raydonal Ospina Martínez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="quadrado-latino.html"/>
+<link rel="next" href="resumo-do-capítulo-3.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./"><strong>Planejamento e Análise de Experimentos</strong></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prefácio</a>
+<ul>
+<li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
+<li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
+<li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html"><i class="fa fa-check"></i><b>1.1</b> O método científico e o papel do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#o-ciclo-empírico-de-observação-a-hipótese-testável"><i class="fa fa-check"></i><b>1.1.1</b> O ciclo empírico: de observação a hipótese testável</a></li>
+<li class="chapter" data-level="1.1.2" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#observação-vs.-experimentação-por-que-controlado-importa"><i class="fa fa-check"></i><b>1.1.2</b> Observação vs. experimentação: por que “controlado” importa</a></li>
+<li class="chapter" data-level="1.1.3" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#uma-nota-histórica-fisher-rothamsted-e-a-origem-do-delineamento-moderno"><i class="fa fa-check"></i><b>1.1.3</b> Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno</a></li>
+<li class="chapter" data-level="1.1.4" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#confusão-confounding-o-problema-que-a-aleatorização-resolve"><i class="fa fa-check"></i><b>1.1.4</b> Confusão (<em>confounding</em>): o problema que a aleatorização resolve</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="unidades.html"><a href="unidades.html"><i class="fa fa-check"></i><b>1.2</b> Unidades experimentais e unidades amostrais</a></li>
+<li class="chapter" data-level="1.3" data-path="fontes-variacao.html"><a href="fontes-variacao.html"><i class="fa fa-check"></i><b>1.3</b> Fontes de variação</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fontes-variacao.html"><a href="fontes-variacao.html#aditividade-aleatorizacao"><i class="fa fa-check"></i><b>1.3.1</b> Por que essa decomposição força a forma aditiva do modelo</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fontes-variacao.html"><a href="fontes-variacao.html#fatores-niveis"><i class="fa fa-check"></i><b>1.3.2</b> Fatores e níveis</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html"><i class="fa fa-check"></i><b>1.4</b> Os três aspectos do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="tres-aspectos.html"><a href="tres-aspectos.html#repetição-replicação"><i class="fa fa-check"></i><b>1.4.1</b> Repetição (replicação)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="tres-aspectos.html"><a href="tres-aspectos.html#aleatorização"><i class="fa fa-check"></i><b>1.4.2</b> Aleatorização</a></li>
+<li class="chapter" data-level="1.4.3" data-path="tres-aspectos.html"><a href="tres-aspectos.html#neyman-rubin"><i class="fa fa-check"></i><b>1.4.3</b> Por que a aleatorização funciona: o modelo de resultados potenciais</a></li>
+<li class="chapter" data-level="1.4.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.4</b> Validade interna e validade externa</a></li>
+<li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.5</b> O elo entre amostragem e planejamento de experimentos</a></li>
+<li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.6</b> Controle local (blocagem)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-lineares.html"><a href="modelos-lineares.html"><i class="fa fa-check"></i><b>2</b> Introdução aos modelos lineares</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="hasse.html"><a href="hasse.html"><i class="fa fa-check"></i><b>2.1</b> Diagramas de Hasse: a estrutura do delineamento antes da álgebra</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="hasse.html"><a href="hasse.html#o-diagrama-como-um-retrato-da-estrutura-do-dado"><i class="fa fa-check"></i><b>2.1.1</b> O diagrama como um retrato da estrutura do dado</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modelo-geral.html"><a href="modelo-geral.html"><i class="fa fa-check"></i><b>2.2</b> O modelo linear geral</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="modelo-geral.html"><a href="modelo-geral.html#porque-xbeta-mais-erro"><i class="fa fa-check"></i><b>2.2.1</b> Por que esta é a forma natural, não arbitrária, do modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="minimos-quadrados.html"><a href="minimos-quadrados.html"><i class="fa fa-check"></i><b>2.3</b> Estimação por mínimos quadrados</a></li>
+<li class="chapter" data-level="2.4" data-path="estimabilidade.html"><a href="estimabilidade.html"><i class="fa fa-check"></i><b>2.4</b> Estimabilidade de funções lineares dos parâmetros</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.4.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.5</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.6</b> A matriz de projeção</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.6.1</b> A soma de quadrados total como forma quadrática</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="modelo-particionado.html"><a href="modelo-particionado.html"><i class="fa fa-check"></i><b>2.7</b> O modelo linear particionado</a></li>
+<li class="chapter" data-level="2.8" data-path="fwl.html"><a href="fwl.html"><i class="fa fa-check"></i><b>2.8</b> O teorema de Frisch-Waugh-Lovell</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.8.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.9</b> Distribuição de formas lineares e quadráticas</a></li>
+<li class="chapter" data-level="2.10" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.10</b> Resumo do capítulo</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="dca.html"><a href="dca.html"><i class="fa fa-check"></i><b>3</b> Delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html"><i class="fa fa-check"></i><b>3.1</b> Princípios de aleatorização: a ideia de um teste de aleatorização</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html#randomizacao-df-f"><i class="fa fa-check"></i><b>3.1.1</b> De onde vêm os graus de liberdade <span class="math inline">\((2,33)\)</span>: a ponte entre aleatorização, variância decomposta e <span class="math inline">\(F\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html"><i class="fa fa-check"></i><b>3.2</b> O delineamento completamente aleatorizado a uma via de classificação</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="dca-uma-via.html"><a href="dca-uma-via.html#modelo-dca"><i class="fa fa-check"></i><b>3.2.1</b> O modelo estatístico</a></li>
+<li class="chapter" data-level="3.2.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html#matricial-dca"><i class="fa fa-check"></i><b>3.2.2</b> Notação matricial: o DCA como caso particular do modelo linear geral</a></li>
+<li class="chapter" data-level="3.2.3" data-path="dca-uma-via.html"><a href="dca-uma-via.html#potencial-causal"><i class="fa fa-check"></i><b>3.2.3</b> Resultados potenciais e o estimando causal</a></li>
+<li class="chapter" data-level="3.2.4" data-path="dca-uma-via.html"><a href="dca-uma-via.html#ic-dca"><i class="fa fa-check"></i><b>3.2.4</b> Estimação e intervalos de confiança</a></li>
+<li class="chapter" data-level="3.2.5" data-path="dca-uma-via.html"><a href="dca-uma-via.html#anova-dca"><i class="fa fa-check"></i><b>3.2.5</b> A tabela de análise de variância</a></li>
+<li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#modelo-aleatorio"><i class="fa fa-check"></i><b>3.4.1</b> Quando os tratamentos são uma amostra aleatória</a></li>
+<li class="chapter" data-level="3.4.2" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#anova-aleatorio"><i class="fa fa-check"></i><b>3.4.2</b> ANOVA e componentes de variância</a></li>
+<li class="chapter" data-level="3.4.3" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#amostra-aleatorio"><i class="fa fa-check"></i><b>3.4.3</b> Tamanho de amostra no modelo de efeitos aleatórios</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html"><i class="fa fa-check"></i><b>3.5</b> Verificação de pressupostos</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
+<li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="ancova.html"><a href="ancova.html#o-modelo"><i class="fa fa-check"></i><b>3.9.1</b> O modelo</a></li>
+<li class="chapter" data-level="3.9.2" data-path="ancova.html"><a href="ancova.html#ancova-em-notação-matricial-mais-uma-coluna-em-mathbf-x"><i class="fa fa-check"></i><b>3.9.2</b> ANCOVA em notação matricial: mais uma coluna em <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.9.3" data-path="ancova.html"><a href="ancova.html#a-tabela-de-anova-ajustada-pela-covariável"><i class="fa fa-check"></i><b>3.9.3</b> A tabela de ANOVA ajustada pela covariável</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html"><i class="fa fa-check"></i><b>3.10</b> Teste de Kruskal-Wallis</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dbca.html"><a href="dbca.html"><i class="fa fa-check"></i><b>4.1</b> O delineamento em blocos completos aleatorizados (DBCA)</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dbca.html"><a href="dbca.html#motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos"><i class="fa fa-check"></i><b>4.1.1</b> Motivação: o que dá errado sem controle local — fatores confundidos</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dbca.html"><a href="dbca.html#o-modelo-1"><i class="fa fa-check"></i><b>4.1.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dbca.html"><a href="dbca.html#notação-matricial-yxbetavarepsilon"><i class="fa fa-check"></i><b>4.1.3</b> Notação matricial: <span class="math inline">\(Y=X\beta+\varepsilon\)</span></a></li>
+<li class="chapter" data-level="4.1.4" data-path="dbca.html"><a href="dbca.html#blocagem-como-aleatorização-restrita-a-camada-causal"><i class="fa fa-check"></i><b>4.1.4</b> Blocagem como aleatorização restrita: a camada causal</a></li>
+<li class="chapter" data-level="4.1.5" data-path="dbca.html"><a href="dbca.html#tabela-de-anova"><i class="fa fa-check"></i><b>4.1.5</b> Tabela de ANOVA</a></li>
+<li class="chapter" data-level="4.1.6" data-path="dbca.html"><a href="dbca.html#esperança-dos-quadrados-médios"><i class="fa fa-check"></i><b>4.1.6</b> Esperança dos quadrados médios</a></li>
+<li class="chapter" data-level="4.1.7" data-path="dbca.html"><a href="dbca.html#visualizando-aditividade-o-gráfico-de-perfis"><i class="fa fa-check"></i><b>4.1.7</b> Visualizando aditividade: o gráfico de perfis</a></li>
+<li class="chapter" data-level="4.1.8" data-path="dbca.html"><a href="dbca.html#diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação"><i class="fa fa-check"></i><b>4.1.8</b> Diagrama de Hasse do DBCA: por que não há nó de interação</a></li>
+<li class="chapter" data-level="4.1.9" data-path="dbca.html"><a href="dbca.html#dados-faltantes-estimação-do-valor-perdido"><i class="fa fa-check"></i><b>4.1.9</b> Dados faltantes: estimação do valor perdido</a></li>
+<li class="chapter" data-level="4.1.10" data-path="dbca.html"><a href="dbca.html#eficiência-relativa-do-dbca-frente-ao-dca"><i class="fa fa-check"></i><b>4.1.10</b> Eficiência relativa do DBCA frente ao DCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="friedman.html"><a href="friedman.html"><i class="fa fa-check"></i><b>4.2</b> Teste de Friedman</a></li>
+<li class="chapter" data-level="4.3" data-path="bib.html"><a href="bib.html"><i class="fa fa-check"></i><b>4.3</b> Blocos incompletos balanceados</a></li>
+<li class="chapter" data-level="4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html"><i class="fa fa-check"></i><b>4.4</b> Delineamento em quadrado latino</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="quadrado-latino.html"><a href="quadrado-latino.html#motivação-dois-gradientes-ortogonais-e-por-que-um-bloqueio-simples-não-basta"><i class="fa fa-check"></i><b>4.4.1</b> Motivação: dois gradientes ortogonais, e por que um bloqueio simples não basta</a></li>
+<li class="chapter" data-level="4.4.2" data-path="quadrado-latino.html"><a href="quadrado-latino.html#o-modelo-2"><i class="fa fa-check"></i><b>4.4.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.4.3" data-path="quadrado-latino.html"><a href="quadrado-latino.html#diagrama-de-hasse-do-quadrado-latino-três-fatores-cruzados-dois-a-dois"><i class="fa fa-check"></i><b>4.4.3</b> Diagrama de Hasse do quadrado latino: três fatores cruzados dois a dois</a></li>
+<li class="chapter" data-level="4.4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html#aleatorização-de-um-quadrado-latino-yates1933latin"><i class="fa fa-check"></i><b>4.4.4</b> Aleatorização de um quadrado latino <span class="citation">(Yates, 1933)</span></a></li>
+<li class="chapter" data-level="4.4.5" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quadrados-latinos-replicados"><i class="fa fa-check"></i><b>4.4.5</b> Quadrados latinos replicados</a></li>
+<li class="chapter" data-level="4.4.6" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quantas-réplicas-uma-análise-de-poder"><i class="fa fa-check"></i><b>4.4.6</b> Quantas réplicas? Uma análise de poder</a></li>
+<li class="chapter" data-level="4.4.7" data-path="quadrado-latino.html"><a href="quadrado-latino.html#eficiencia-ql"><i class="fa fa-check"></i><b>4.4.7</b> Eficiência relativa do quadrado latino frente ao DBCA e ao DCA</a></li>
+<li class="chapter" data-level="4.4.8" data-path="quadrado-latino.html"><a href="quadrado-latino.html#ql-exemplo-ecommerce"><i class="fa fa-check"></i><b>4.4.8</b> Um segundo exemplo completo: cinco variantes de checkout em e-commerce</a></li>
+<li class="chapter" data-level="4.4.9" data-path="quadrado-latino.html"><a href="quadrado-latino.html#youden"><i class="fa fa-check"></i><b>4.4.9</b> Quadrados de Youden: quando o quadrado latino não pode ser completo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html"><i class="fa fa-check"></i><b>4.5</b> Delineamento em quadrado greco-latino</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#mols"><i class="fa fa-check"></i><b>4.5.1</b> Quadrados latinos mutuamente ortogonais (MOLS): existência e o problema de Euler</a></li>
+<li class="chapter" data-level="4.5.2" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#o-modelo-3"><i class="fa fa-check"></i><b>4.5.2</b> O modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.6</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
+<li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a></li>
+<li class="chapter" data-level="5.4" data-path="matriz-axb.html"><a href="matriz-axb.html"><i class="fa fa-check"></i><b>5.4</b> Notação matricial do fatorial A×B</a></li>
+<li class="chapter" data-level="5.5" data-path="axbxc.html"><a href="axbxc.html"><i class="fa fa-check"></i><b>5.5</b> Fatoriais A×B×C: interações duplas e tripla</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="axbxc.html"><a href="axbxc.html#cubo-2x2x2"><i class="fa fa-check"></i><b>5.5.1</b> O cubo do <span class="math inline">\(2^3\)</span>: visualizando efeitos principais, duplos e triplo</a></li>
+<li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
+<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
+<li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="nao-replicado.html"><a href="nao-replicado.html"><i class="fa fa-check"></i><b>6.2</b> Análise de um fatorial <span class="math inline">\(2^k\)</span> não replicado</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-probabilidade-normal-half-normal-plot"><i class="fa fa-check"></i><b>6.2.1</b> Gráfico de probabilidade normal (half-normal plot)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-pareto-dos-efeitos"><i class="fa fa-check"></i><b>6.2.2</b> Gráfico de Pareto dos efeitos</a></li>
+<li class="chapter" data-level="6.2.3" data-path="nao-replicado.html"><a href="nao-replicado.html#margem-de-erro-pelo-método-de-lenth"><i class="fa fa-check"></i><b>6.2.3</b> Margem de erro pelo método de Lenth</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="confusao-2k.html"><a href="confusao-2k.html"><i class="fa fa-check"></i><b>6.3</b> Confusão em <span class="math inline">\(2^k\)</span>: designação de tratamentos a blocos</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="confusao-2k.html"><a href="confusao-2k.html#esquema-de-designação-o-contraste-definidor"><i class="fa fa-check"></i><b>6.3.1</b> Esquema de designação: o contraste definidor</a></li>
+<li class="chapter" data-level="6.3.2" data-path="confusao-2k.html"><a href="confusao-2k.html#confusao-projecao"><i class="fa fa-check"></i><b>6.3.2</b> Confusão como colinearidade em <span class="math inline">\(\mathbf{X}\)</span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="confusao-2k.html"><a href="confusao-2k.html#confusão-total-vs.-confusão-parcial"><i class="fa fa-check"></i><b>6.3.3</b> Confusão total vs. confusão parcial</a></li>
+<li class="chapter" data-level="6.3.4" data-path="confusao-2k.html"><a href="confusao-2k.html#hasse-confusao"><i class="fa fa-check"></i><b>6.3.4</b> Visualizando a confusão com um diagrama de Hasse</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
+<li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
+<li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
+<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html"><i class="fa fa-check"></i><b>7.1</b> Introdução à superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ponto-estacionario"><i class="fa fa-check"></i><b>7.1.1</b> Classificando o ponto estacionário: gradiente e Hessiana</a></li>
+<li class="chapter" data-level="7.1.2" data-path="superficie-resposta.html"><a href="superficie-resposta.html#analise-canonica"><i class="fa fa-check"></i><b>7.1.2</b> Análise canônica: além de classificar, descrever a forma da superfície</a></li>
+<li class="chapter" data-level="7.1.3" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ridge-analysis"><i class="fa fa-check"></i><b>7.1.3</b> Análise de ridge: otimizando dentro de um raio fixo da região experimental</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="steepest-ascent.html"><a href="steepest-ascent.html"><i class="fa fa-check"></i><b>7.2</b> O caminho de máxima inclinação: de um fatorial inicial até a região do ótimo</a></li>
+<li class="chapter" data-level="7.3" data-path="ccd.html"><a href="ccd.html"><i class="fa fa-check"></i><b>7.3</b> Delineamento composto central (CCD)</a></li>
+<li class="chapter" data-level="7.4" data-path="desejabilidade.html"><a href="desejabilidade.html"><i class="fa fa-check"></i><b>7.4</b> Otimização de múltiplas respostas: funções de desejabilidade</a></li>
+<li class="chapter" data-level="7.5" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.5</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.6" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.6</b> Fim do programa do semestre</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><i class="fa fa-check"></i><b>8.1</b> Parte I — Testes A/B como delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-e-dca"><i class="fa fa-check"></i><b>8.1.1</b> Um teste A/B é um delineamento completamente aleatorizado</a></li>
+<li class="chapter" data-level="8.1.2" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-dificuldades"><i class="fa fa-check"></i><b>8.1.2</b> Por que testes A/B em produtos digitais são estatisticamente difíceis</a></li>
+<li class="chapter" data-level="8.1.3" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-peeking"><i class="fa fa-check"></i><b>8.1.3</b> O problema do “peeking”</a></li>
+<li class="chapter" data-level="8.1.4" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-winners-curse"><i class="fa fa-check"></i><b>8.1.4</b> Vício do vencedor (<em>winner’s curse</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><i class="fa fa-check"></i><b>8.2</b> Parte II — Bandits: quando explorar e quando explotar</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-motivacao"><i class="fa fa-check"></i><b>8.2.1</b> Exploração, explotação e a definição de arrependimento (<em>regret</em>)</a></li>
+<li class="chapter" data-level="8.2.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-ucb1"><i class="fa fa-check"></i><b>8.2.2</b> Upper Confidence Bound (UCB1): otimismo perante a incerteza</a></li>
+<li class="chapter" data-level="8.2.3" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-thompson"><i class="fa fa-check"></i><b>8.2.3</b> Thompson sampling: uma solução bayesiana</a></li>
+<li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
+<li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Planejamento e Análise de Experimentos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="quadrado-greco-latino" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Delineamento em quadrado greco-latino<a href="quadrado-greco-latino.html#quadrado-greco-latino" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Quando há <strong>três</strong> fontes de bloqueio cruzadas — ou, equivalentemente, duas fontes de bloqueio e
+um segundo fator de tratamento que se deseja controlar simultaneamente à primeira — o <strong>quadrado
+greco-latino</strong> sobrepõe dois quadrados latinos <strong>ortogonais</strong> de ordem <span class="math inline">\(n\)</span>: um com letras romanas
+(A, B, C, …) e outro com letras gregas (<span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span>), construídos de modo que
+<strong>cada par (letra romana, letra grega) ocorra exatamente uma vez</strong> no quadrado <span class="math inline">\(n\times n\)</span>. Isso só
+é possível quando existe um <strong>par de quadrados latinos ortogonais</strong> de ordem <span class="math inline">\(n\)</span> — a próxima
+subseção formaliza para quais <span class="math inline">\(n\)</span> isso vale, e conta a história de sua exceção mais famosa.</p>
+<div id="mols" class="section level3 hasAnchor" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Quadrados latinos mutuamente ortogonais (MOLS): existência e o problema de Euler<a href="quadrado-greco-latino.html#mols" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Dois quadrados latinos <span class="math inline">\(L_1\)</span> e <span class="math inline">\(L_2\)</span> de ordem <span class="math inline">\(n\)</span> são <strong>ortogonais</strong> se, ao sobrepô-los, cada um
+dos <span class="math inline">\(n^2\)</span> pares ordenados de símbolos <span class="math inline">\((L_1(i,j), L_2(i,j))\)</span> ocorre exatamente uma vez — a
+propriedade exigida na construção do quadrado greco-latino acima. Um conjunto de <span class="math inline">\(k\)</span> quadrados
+latinos de ordem <span class="math inline">\(n\)</span>, ortogonais dois a dois, é chamado de <strong>MOLS</strong> de ordem <span class="math inline">\(n\)</span> (<em>mutually
+orthogonal Latin squares</em>), denotado <span class="math inline">\(\text{MOLS}(n,k)\)</span>.</p>
+<p><strong>Cota superior.</strong> O número máximo <span class="math inline">\(N(n)\)</span> de quadrados latinos de ordem <span class="math inline">\(n\)</span> mutuamente ortogonais
+satisfaz
+<span class="math display">\[
+N(n) \le n-1
+\]</span>
+<span class="citation">(<a href="#ref-dean2017design">Dean et al., 2017</a>; <a href="#ref-montgomery2017design">Montgomery, 2017</a>)</span>. Esse máximo é <strong>atingido</strong> — existe um conjunto completo
+de <span class="math inline">\(n-1\)</span> MOLS — sempre que <span class="math inline">\(n\)</span> é uma potência de primo: identificando os <span class="math inline">\(n\)</span> símbolos com os
+elementos do corpo de Galois <span class="math inline">\(GF(n)\)</span>, os <span class="math inline">\(n-1\)</span> quadrados <span class="math inline">\(L_a(x,y) = ax+y\)</span> (aritmética em <span class="math inline">\(GF(n)\)</span>),
+para <span class="math inline">\(a\in GF(n)\setminus\{0\}\)</span>, são ortogonais dois a dois — duas linhas <span class="math inline">\(x,x&#39;\)</span> de <span class="math inline">\(L_a\)</span> coincidem
+em coluna <span class="math inline">\(y\)</span> apenas se <span class="math inline">\(ax+y=ax&#39;+y\)</span>, ou seja <span class="math inline">\(x=x&#39;\)</span>, e o mesmo argumento aplicado a
+<span class="math inline">\(L_a(x,y)-L_{a&#39;}(x,y)=(a-a&#39;)x\)</span> garante que <span class="math inline">\(L_a\)</span> e <span class="math inline">\(L_{a&#39;}\)</span> (<span class="math inline">\(a\ne a&#39;\)</span>) nunca repetem um par
+<span class="math inline">\((s,t)\)</span>. Essa é exatamente a construção por trás dos exemplos de quadrado greco-latino desta seção
+(que usam <span class="math inline">\(n=4=2^2\)</span>, potência de primo).</p>
+<div class="caixa-r"><strong>Uso do R</strong> — construindo e verificando um conjunto completo de MOLS de ordem 5</div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="quadrado-greco-latino.html#cb198-1" tabindex="-1"></a>n_mols <span class="ot">&lt;-</span> <span class="dv">5</span>   <span class="co"># primo: GF(5) = Z_5 com aritmetica usual</span></span>
+<span id="cb198-2"><a href="quadrado-greco-latino.html#cb198-2" tabindex="-1"></a>mols5 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>(n_mols <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(a) {</span>
+<span id="cb198-3"><a href="quadrado-greco-latino.html#cb198-3" tabindex="-1"></a>  <span class="fu">outer</span>(<span class="dv">0</span><span class="sc">:</span>(n_mols <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">0</span><span class="sc">:</span>(n_mols <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(x, y) (a <span class="sc">*</span> x <span class="sc">+</span> y) <span class="sc">%%</span> n_mols)</span>
+<span id="cb198-4"><a href="quadrado-greco-latino.html#cb198-4" tabindex="-1"></a>})</span>
+<span id="cb198-5"><a href="quadrado-greco-latino.html#cb198-5" tabindex="-1"></a></span>
+<span id="cb198-6"><a href="quadrado-greco-latino.html#cb198-6" tabindex="-1"></a>ortogonais <span class="ot">&lt;-</span> <span class="cf">function</span>(A, B) <span class="fu">length</span>(<span class="fu">unique</span>(<span class="fu">paste</span>(A, B))) <span class="sc">==</span> n_mols<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb198-7"><a href="quadrado-greco-latino.html#cb198-7" tabindex="-1"></a>pares_idx  <span class="ot">&lt;-</span> <span class="fu">combn</span>(<span class="dv">1</span><span class="sc">:</span>(n_mols <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">2</span>)</span>
+<span id="cb198-8"><a href="quadrado-greco-latino.html#cb198-8" tabindex="-1"></a>todos_ortogonais <span class="ot">&lt;-</span> <span class="fu">all</span>(<span class="fu">apply</span>(pares_idx, <span class="dv">2</span>, <span class="cf">function</span>(p) <span class="fu">ortogonais</span>(mols5[[p[<span class="dv">1</span>]]], mols5[[p[<span class="dv">2</span>]]])))</span>
+<span id="cb198-9"><a href="quadrado-greco-latino.html#cb198-9" tabindex="-1"></a></span>
+<span id="cb198-10"><a href="quadrado-greco-latino.html#cb198-10" tabindex="-1"></a><span class="fu">c</span>(<span class="at">quadrados_construidos =</span> <span class="fu">length</span>(mols5), <span class="at">maximo_teorico =</span> n_mols <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb198-11"><a href="quadrado-greco-latino.html#cb198-11" tabindex="-1"></a>  <span class="at">todos_pares_ortogonais =</span> todos_ortogonais)</span></code></pre></div>
+<pre><code>##  quadrados_construidos         maximo_teorico todos_pares_ortogonais 
+##                      4                      4                      1</code></pre>
+<p>Os 4 quadrados <span class="math inline">\(L_1,\dots,L_4\)</span> atingem exatamente a cota <span class="math inline">\(N(5)\le4\)</span> — um conjunto
+completo de MOLS de ordem 5.</p>
+<p><strong>A exceção de Euler: o problema dos 36 oficiais (<span class="math inline">\(n=6\)</span>).</strong> Em 1782, Euler propôs o problema dos
+<em>36 oficiais</em>: arranjar 36 oficiais, provenientes de 6 regimentos e com 6 postos distintos — um
+oficial de cada posto por regimento —, em uma formação <span class="math inline">\(6\times6\)</span> de modo que cada fileira e cada
+coluna contenha exatamente um oficial de cada posto <strong>e</strong> um de cada regimento. Isso é, exatamente,
+um quadrado greco-latino de ordem 6 (postos = letras romanas, regimentos = letras gregas), e
+portanto exige um <strong>par</strong> de quadrados latinos ortogonais de ordem 6, ou seja, <span class="math inline">\(N(6)\ge2\)</span>. Euler
+não encontrou solução e conjecturou que não existe nenhuma; Tarry <span class="citation">(<a href="#ref-tarry1900">1900</a>)</span> confirmou a conjectura por
+enumeração exaustiva de todos os quadrados latinos de ordem 6: <span class="math inline">\(N(6)=1\)</span> — não há sequer <strong>um</strong> par
+de quadrados latinos ortogonais de ordem 6, o único caso, entre todas as ordens <span class="math inline">\(n\ge3\)</span>, em que o
+quadrado greco-latino é impossível de construir.</p>
+<p><strong>O caso geral.</strong> Euler foi além do caso <span class="math inline">\(n=6\)</span> e conjecturou que <span class="math inline">\(N(n)=1\)</span> (nenhum par ortogonal)
+para <strong>todo</strong> <span class="math inline">\(n\equiv2\pmod4\)</span>, isto é, <span class="math inline">\(n=2,6,10,14,18,\dots\)</span> — o caso <span class="math inline">\(n=2\)</span> é trivial (só existe
+um quadrado latino de ordem 2, a menos de renomear símbolos, então nada pode ser ortogonal a ele).
+Essa conjectura mais geral permaneceu em aberto por quase 180 anos, até que Bose, Shrikhande e
+Parker <span class="citation">(<a href="#ref-boseshrikhandeparker1960">1960</a>)</span> a <strong>refutaram</strong>: construíram explicitamente pares de quadrados latinos
+ortogonais para <strong>todo</strong> <span class="math inline">\(n\equiv2\pmod4\)</span> com <span class="math inline">\(n\ge10\)</span> — ficando conhecidos, por isso, como os
+“Euler spoilers”. Combinando esse resultado com a verificação direta de Tarry para <span class="math inline">\(n=6\)</span> e a
+trivialidade de <span class="math inline">\(n=2\)</span>, o quadro completo é
+<span class="math display">\[
+N(n)\ge2 \quad \text{para todo } n\ge3 \text{ exceto } n=6.
+\]</span>
+Ou seja: <span class="math inline">\(n=6\)</span> não é apenas um exemplo de dificuldade — é a <strong>única</strong> ordem, entre todas as
+possíveis, em que o quadrado greco-latino simplesmente não existe <span class="citation">(<a href="#ref-boseshrikhandeparker1960">Bose et al., 1960</a>; <a href="#ref-tarry1900">Tarry, 1900</a>)</span>.</p>
+</div>
+<div id="o-modelo-3" class="section level3 hasAnchor" number="4.5.2">
+<h3><span class="header-section-number">4.5.2</span> O modelo<a href="quadrado-greco-latino.html#o-modelo-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math display">\[
+Y_{ijkl} = \mu + \rho_i + \gamma_j + \tau_k + \omega_l + \varepsilon_{ijkl},
+\]</span></p>
+<p>com <span class="math inline">\(\rho_i\)</span> (linha), <span class="math inline">\(\gamma_j\)</span> (coluna), <span class="math inline">\(\tau_k\)</span> (tratamento romano) e <span class="math inline">\(\omega_l\)</span> (tratamento
+grego), <span class="math inline">\(i,j,k,l=1,\dots,n\)</span>, novamente com apenas <span class="math inline">\(n^2\)</span> observações — cada uma das quatro fontes
+consome <span class="math inline">\(n-1\)</span> graus de liberdade, restando <span class="math inline">\((n-1)(n-3)\)</span> para o erro.</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tabela-anova-glq">Table 4.29: </span><span id="tab:tabela-anova-glq">Table 4.30: </span>Tabela de ANOVA do quadrado greco-latino
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Fonte de variação
+</th>
+<th style="text-align:left;">
+Graus de liberdade
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Linha
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n-1\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Coluna
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n-1\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tratamento (romano)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n-1\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tratamento (grego)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n-1\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Erro
+</td>
+<td style="text-align:left;">
+<span class="math inline">\((n-1)(n-3)\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n^2-1\)</span>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Com <span class="math inline">\((n-1)(n-3)\)</span> graus de liberdade para o erro, o quadrado greco-latino só é útil quando <span class="math inline">\(n\)</span> é
+razoavelmente grande — em <span class="math inline">\(n=4\)</span>, restam apenas 3 graus de liberdade, insuficientes para uma
+estimativa confiável do erro na prática, mas ainda ilustrativos para o exemplo abaixo.</p>
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: variedade e adubo, controlando linha e coluna</strong><br>
+Ao experimento de quadrado latino anterior (linha = declividade, coluna = umidade,
+tratamento romano = variedade de semente), acrescenta-se um segundo fator de tratamento —
+<strong>tipo de adubo</strong> ($\alpha,\beta,\gamma,\delta$) — que também se deseja balancear
+perfeitamente contra variedade, linha e coluna, sem aumentar o número de parcelas.
+</div>
+<div class="caixa-r"><strong>Uso do R</strong> — sobrepondo dois quadrados latinos ortogonais</div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="quadrado-greco-latino.html#cb200-1" tabindex="-1"></a>L1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>, <span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">3</span>, <span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">2</span>, <span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)  <span class="co"># letras romanas</span></span>
+<span id="cb200-2"><a href="quadrado-greco-latino.html#cb200-2" tabindex="-1"></a>L2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>, <span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">2</span>, <span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>, <span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)  <span class="co"># letras gregas</span></span>
+<span id="cb200-3"><a href="quadrado-greco-latino.html#cb200-3" tabindex="-1"></a>romanos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>)</span>
+<span id="cb200-4"><a href="quadrado-greco-latino.html#cb200-4" tabindex="-1"></a>gregos  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>,<span class="st">&quot;beta&quot;</span>,<span class="st">&quot;gamma&quot;</span>,<span class="st">&quot;delta&quot;</span>)</span>
+<span id="cb200-5"><a href="quadrado-greco-latino.html#cb200-5" tabindex="-1"></a></span>
+<span id="cb200-6"><a href="quadrado-greco-latino.html#cb200-6" tabindex="-1"></a>dados_glq <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb200-7"><a href="quadrado-greco-latino.html#cb200-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb200-8"><a href="quadrado-greco-latino.html#cb200-8" tabindex="-1"></a>    <span class="at">roman  =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) romanos[L1[i, j]], linha, coluna), <span class="at">levels =</span> romanos),</span>
+<span id="cb200-9"><a href="quadrado-greco-latino.html#cb200-9" tabindex="-1"></a>    <span class="at">grego  =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) gregos[L2[i, j]],  linha, coluna), <span class="at">levels =</span> gregos),</span>
+<span id="cb200-10"><a href="quadrado-greco-latino.html#cb200-10" tabindex="-1"></a>    <span class="at">linha  =</span> <span class="fu">factor</span>(linha), <span class="at">coluna =</span> <span class="fu">factor</span>(coluna)</span>
+<span id="cb200-11"><a href="quadrado-greco-latino.html#cb200-11" tabindex="-1"></a>  )</span>
+<span id="cb200-12"><a href="quadrado-greco-latino.html#cb200-12" tabindex="-1"></a></span>
+<span id="cb200-13"><a href="quadrado-greco-latino.html#cb200-13" tabindex="-1"></a><span class="fu">n_distinct</span>(<span class="fu">paste</span>(dados_glq<span class="sc">$</span>roman, dados_glq<span class="sc">$</span>grego))  <span class="co"># 16: todo par (romano, grego) aparece 1 vez</span></span></code></pre></div>
+<pre><code>## [1] 16</code></pre>
+<p>A sobreposição dos dois quadrados fica mais concreta como diagrama: a cor de cada célula marca a
+variedade (letra romana), e o rótulo mostra o par completo (variedade, adubo).</p>
+<p><img src="04-blocos_files/figure-html/glq-heatmap-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<p>O padrão de cores reproduz exatamente o quadrado latino de variedades da seção anterior — cada cor
+(romano) ainda aparece uma vez por linha e uma vez por coluna —, mas agora cada célula também traz
+um rótulo grego, e <strong>nenhum par (romano, grego) se repete</strong> no quadro inteiro: é essa dupla
+ortogonalidade, visível de imediato, que permite estimar os efeitos de variedade e de adubo
+simultaneamente, além de linha e coluna, com as mesmas 16 unidades experimentais do quadrado latino
+original.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="quadrado-greco-latino.html#cb202-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">33</span>)</span>
+<span id="cb202-2"><a href="quadrado-greco-latino.html#cb202-2" tabindex="-1"></a>ef_roman <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">0</span>, <span class="at">B =</span> <span class="dv">2</span>, <span class="at">C =</span> <span class="dv">4</span>, <span class="at">D =</span> <span class="dv">1</span>)</span>
+<span id="cb202-3"><a href="quadrado-greco-latino.html#cb202-3" tabindex="-1"></a>ef_grego <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta =</span> <span class="dv">1</span>, <span class="at">gamma =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">delta =</span> <span class="dv">2</span>)</span>
+<span id="cb202-4"><a href="quadrado-greco-latino.html#cb202-4" tabindex="-1"></a></span>
+<span id="cb202-5"><a href="quadrado-greco-latino.html#cb202-5" tabindex="-1"></a>dados_glq <span class="ot">&lt;-</span> dados_glq <span class="sc">%&gt;%</span></span>
+<span id="cb202-6"><a href="quadrado-greco-latino.html#cb202-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resposta =</span> <span class="fu">round</span>(<span class="dv">30</span> <span class="sc">+</span> ef_roman[<span class="fu">as.character</span>(roman)] <span class="sc">+</span> ef_grego[<span class="fu">as.character</span>(grego)] <span class="sc">+</span></span>
+<span id="cb202-7"><a href="quadrado-greco-latino.html#cb202-7" tabindex="-1"></a>               <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.5</span>), <span class="dv">2</span>))</span>
+<span id="cb202-8"><a href="quadrado-greco-latino.html#cb202-8" tabindex="-1"></a></span>
+<span id="cb202-9"><a href="quadrado-greco-latino.html#cb202-9" tabindex="-1"></a>mod_glq <span class="ot">&lt;-</span> <span class="fu">aov</span>(resposta <span class="sc">~</span> linha <span class="sc">+</span> coluna <span class="sc">+</span> roman <span class="sc">+</span> grego, <span class="at">data =</span> dados_glq)</span>
+<span id="cb202-10"><a href="quadrado-greco-latino.html#cb202-10" tabindex="-1"></a><span class="fu">anova</span>(mod_glq) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb202-11"><a href="quadrado-greco-latino.html#cb202-11" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado greco-latino 4x4 (dados simulados)&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb202-12"><a href="quadrado-greco-latino.html#cb202-12" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:glq-anova">Table 4.31: </span><span id="tab:glq-anova">Table 4.32: </span>ANOVA do quadrado greco-latino 4x4 (dados simulados)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+sumsq
+</th>
+<th style="text-align:right;">
+meansq
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+linha
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5.8191
+</td>
+<td style="text-align:right;">
+1.9397
+</td>
+<td style="text-align:right;">
+0.7245
+</td>
+<td style="text-align:right;">
+0.6013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+coluna
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.6709
+</td>
+<td style="text-align:right;">
+0.2236
+</td>
+<td style="text-align:right;">
+0.0835
+</td>
+<td style="text-align:right;">
+0.9645
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+roman
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+55.7674
+</td>
+<td style="text-align:right;">
+18.5891
+</td>
+<td style="text-align:right;">
+6.9428
+</td>
+<td style="text-align:right;">
+0.0729
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+grego
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+52.2580
+</td>
+<td style="text-align:right;">
+17.4193
+</td>
+<td style="text-align:right;">
+6.5059
+</td>
+<td style="text-align:right;">
+0.0792
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Residuals
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.0325
+</td>
+<td style="text-align:right;">
+2.6775
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<p>Com apenas 3 graus de liberdade para o erro, os testes-<span class="math inline">\(F\)</span> de variedade e adubo ficam pouco
+sensíveis (<span class="math inline">\(p\approx0{,}07\)</span> e <span class="math inline">\(p\approx0{,}08\)</span>, respectivamente, apesar de os efeitos simulados
+serem reais) — o preço de controlar quatro fontes de variação com só 16 unidades experimentais.
+Na prática, quadrados greco-latinos só compensam quando <span class="math inline">\(n\)</span> é grande o bastante para deixar um
+erro estimável com confiança, ou quando são replicados como na Seção anterior.</p>
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>Por que o modelo de um quadrado latino não permite estimar uma interação entre linha e
+tratamento, ao contrário de um fatorial completo linha$\times$tratamento?</li>
+<li>No exemplo do painel sensorial (BIB), por que faz sentido balancear a <em>frequência</em> com
+que cada par de variedades é degustado junto, e não apenas garantir que cada variedade apareça o
+mesmo número de vezes no total?</li>
+<li>Um pesquisador tem $n=4$ tratamentos e poderia usar um quadrado latino $4\times4$ (16
+unidades) ou um DBCA com 4 blocos de 4 unidades cada (também 16 unidades, mas controlando só uma
+fonte de bloqueio). Em que condições vale a pena "gastar" o grau de liberdade extra do quadrado
+latino controlando uma segunda fonte de variação, em vez de usá-lo para estimar o erro com mais
+precisão?</li>
+</ol>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-boseshrikhandeparker1960" class="csl-entry">
+Bose, R. C., Shrikhande, S. S., &amp; Parker, E. T. (1960). Further results on the construction of mutually orthogonal latin squares and the falsity of euler’s conjecture. <em>Canadian Journal of Mathematics</em>, <em>12</em>, 189–203.
+</div>
+<div id="ref-dean2017design" class="csl-entry">
+Dean, A., Voss, D., &amp; Draguljić, D. (2017). <em>Design and analysis of experiments</em> (2nd ed.). Springer.
+</div>
+<div id="ref-montgomery2017design" class="csl-entry">
+Montgomery, D. C. (2017). <em>Design and analysis of experiments</em> (9th ed.). John Wiley &amp; Sons.
+</div>
+<div id="ref-tarry1900" class="csl-entry">
+Tarry, G. (1900). Le problème de 36 officiers. <em>Compte Rendu de l’Association Française Pour l’Avancement Des Sciences</em>, <em>1</em>, 122–123.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="quadrado-latino.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="resumo-do-capítulo-3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

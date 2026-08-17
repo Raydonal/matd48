@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6.3 Confusão em \(2^k\): designação de tratamentos a blocos | Planejamento e Análise de Experimentos</title>
+  <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="6.3 Confusão em \(2^k\): designação de tratamentos a blocos | Planejamento e Análise de Experimentos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6.3 Confusão em \(2^k\): designação de tratamentos a blocos | Planejamento e Análise de Experimentos" />
+  
+  <meta name="twitter:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+<meta name="author" content="Raydonal Ospina Martínez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="nao-replicado.html"/>
+<link rel="next" href="fatoriais-3k.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./"><strong>Planejamento e Análise de Experimentos</strong></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prefácio</a>
+<ul>
+<li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
+<li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
+<li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html"><i class="fa fa-check"></i><b>1.1</b> O método científico e o papel do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#o-ciclo-empírico-de-observação-a-hipótese-testável"><i class="fa fa-check"></i><b>1.1.1</b> O ciclo empírico: de observação a hipótese testável</a></li>
+<li class="chapter" data-level="1.1.2" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#observação-vs.-experimentação-por-que-controlado-importa"><i class="fa fa-check"></i><b>1.1.2</b> Observação vs. experimentação: por que “controlado” importa</a></li>
+<li class="chapter" data-level="1.1.3" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#uma-nota-histórica-fisher-rothamsted-e-a-origem-do-delineamento-moderno"><i class="fa fa-check"></i><b>1.1.3</b> Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno</a></li>
+<li class="chapter" data-level="1.1.4" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#confusão-confounding-o-problema-que-a-aleatorização-resolve"><i class="fa fa-check"></i><b>1.1.4</b> Confusão (<em>confounding</em>): o problema que a aleatorização resolve</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="unidades.html"><a href="unidades.html"><i class="fa fa-check"></i><b>1.2</b> Unidades experimentais e unidades amostrais</a></li>
+<li class="chapter" data-level="1.3" data-path="fontes-variacao.html"><a href="fontes-variacao.html"><i class="fa fa-check"></i><b>1.3</b> Fontes de variação</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fontes-variacao.html"><a href="fontes-variacao.html#aditividade-aleatorizacao"><i class="fa fa-check"></i><b>1.3.1</b> Por que essa decomposição força a forma aditiva do modelo</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fontes-variacao.html"><a href="fontes-variacao.html#fatores-niveis"><i class="fa fa-check"></i><b>1.3.2</b> Fatores e níveis</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html"><i class="fa fa-check"></i><b>1.4</b> Os três aspectos do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="tres-aspectos.html"><a href="tres-aspectos.html#repetição-replicação"><i class="fa fa-check"></i><b>1.4.1</b> Repetição (replicação)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="tres-aspectos.html"><a href="tres-aspectos.html#aleatorização"><i class="fa fa-check"></i><b>1.4.2</b> Aleatorização</a></li>
+<li class="chapter" data-level="1.4.3" data-path="tres-aspectos.html"><a href="tres-aspectos.html#neyman-rubin"><i class="fa fa-check"></i><b>1.4.3</b> Por que a aleatorização funciona: o modelo de resultados potenciais</a></li>
+<li class="chapter" data-level="1.4.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.4</b> Validade interna e validade externa</a></li>
+<li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.5</b> O elo entre amostragem e planejamento de experimentos</a></li>
+<li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.6</b> Controle local (blocagem)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-lineares.html"><a href="modelos-lineares.html"><i class="fa fa-check"></i><b>2</b> Introdução aos modelos lineares</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="hasse.html"><a href="hasse.html"><i class="fa fa-check"></i><b>2.1</b> Diagramas de Hasse: a estrutura do delineamento antes da álgebra</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="hasse.html"><a href="hasse.html#o-diagrama-como-um-retrato-da-estrutura-do-dado"><i class="fa fa-check"></i><b>2.1.1</b> O diagrama como um retrato da estrutura do dado</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modelo-geral.html"><a href="modelo-geral.html"><i class="fa fa-check"></i><b>2.2</b> O modelo linear geral</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="modelo-geral.html"><a href="modelo-geral.html#porque-xbeta-mais-erro"><i class="fa fa-check"></i><b>2.2.1</b> Por que esta é a forma natural, não arbitrária, do modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="minimos-quadrados.html"><a href="minimos-quadrados.html"><i class="fa fa-check"></i><b>2.3</b> Estimação por mínimos quadrados</a></li>
+<li class="chapter" data-level="2.4" data-path="estimabilidade.html"><a href="estimabilidade.html"><i class="fa fa-check"></i><b>2.4</b> Estimabilidade de funções lineares dos parâmetros</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.4.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.5</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.6</b> A matriz de projeção</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.6.1</b> A soma de quadrados total como forma quadrática</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="modelo-particionado.html"><a href="modelo-particionado.html"><i class="fa fa-check"></i><b>2.7</b> O modelo linear particionado</a></li>
+<li class="chapter" data-level="2.8" data-path="fwl.html"><a href="fwl.html"><i class="fa fa-check"></i><b>2.8</b> O teorema de Frisch-Waugh-Lovell</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.8.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.9</b> Distribuição de formas lineares e quadráticas</a></li>
+<li class="chapter" data-level="2.10" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.10</b> Resumo do capítulo</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="dca.html"><a href="dca.html"><i class="fa fa-check"></i><b>3</b> Delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html"><i class="fa fa-check"></i><b>3.1</b> Princípios de aleatorização: a ideia de um teste de aleatorização</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html#randomizacao-df-f"><i class="fa fa-check"></i><b>3.1.1</b> De onde vêm os graus de liberdade <span class="math inline">\((2,33)\)</span>: a ponte entre aleatorização, variância decomposta e <span class="math inline">\(F\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html"><i class="fa fa-check"></i><b>3.2</b> O delineamento completamente aleatorizado a uma via de classificação</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="dca-uma-via.html"><a href="dca-uma-via.html#modelo-dca"><i class="fa fa-check"></i><b>3.2.1</b> O modelo estatístico</a></li>
+<li class="chapter" data-level="3.2.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html#matricial-dca"><i class="fa fa-check"></i><b>3.2.2</b> Notação matricial: o DCA como caso particular do modelo linear geral</a></li>
+<li class="chapter" data-level="3.2.3" data-path="dca-uma-via.html"><a href="dca-uma-via.html#potencial-causal"><i class="fa fa-check"></i><b>3.2.3</b> Resultados potenciais e o estimando causal</a></li>
+<li class="chapter" data-level="3.2.4" data-path="dca-uma-via.html"><a href="dca-uma-via.html#ic-dca"><i class="fa fa-check"></i><b>3.2.4</b> Estimação e intervalos de confiança</a></li>
+<li class="chapter" data-level="3.2.5" data-path="dca-uma-via.html"><a href="dca-uma-via.html#anova-dca"><i class="fa fa-check"></i><b>3.2.5</b> A tabela de análise de variância</a></li>
+<li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#modelo-aleatorio"><i class="fa fa-check"></i><b>3.4.1</b> Quando os tratamentos são uma amostra aleatória</a></li>
+<li class="chapter" data-level="3.4.2" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#anova-aleatorio"><i class="fa fa-check"></i><b>3.4.2</b> ANOVA e componentes de variância</a></li>
+<li class="chapter" data-level="3.4.3" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#amostra-aleatorio"><i class="fa fa-check"></i><b>3.4.3</b> Tamanho de amostra no modelo de efeitos aleatórios</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html"><i class="fa fa-check"></i><b>3.5</b> Verificação de pressupostos</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
+<li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="ancova.html"><a href="ancova.html#o-modelo"><i class="fa fa-check"></i><b>3.9.1</b> O modelo</a></li>
+<li class="chapter" data-level="3.9.2" data-path="ancova.html"><a href="ancova.html#ancova-em-notação-matricial-mais-uma-coluna-em-mathbf-x"><i class="fa fa-check"></i><b>3.9.2</b> ANCOVA em notação matricial: mais uma coluna em <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.9.3" data-path="ancova.html"><a href="ancova.html#a-tabela-de-anova-ajustada-pela-covariável"><i class="fa fa-check"></i><b>3.9.3</b> A tabela de ANOVA ajustada pela covariável</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html"><i class="fa fa-check"></i><b>3.10</b> Teste de Kruskal-Wallis</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dbca.html"><a href="dbca.html"><i class="fa fa-check"></i><b>4.1</b> O delineamento em blocos completos aleatorizados (DBCA)</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dbca.html"><a href="dbca.html#motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos"><i class="fa fa-check"></i><b>4.1.1</b> Motivação: o que dá errado sem controle local — fatores confundidos</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dbca.html"><a href="dbca.html#o-modelo-1"><i class="fa fa-check"></i><b>4.1.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dbca.html"><a href="dbca.html#notação-matricial-yxbetavarepsilon"><i class="fa fa-check"></i><b>4.1.3</b> Notação matricial: <span class="math inline">\(Y=X\beta+\varepsilon\)</span></a></li>
+<li class="chapter" data-level="4.1.4" data-path="dbca.html"><a href="dbca.html#blocagem-como-aleatorização-restrita-a-camada-causal"><i class="fa fa-check"></i><b>4.1.4</b> Blocagem como aleatorização restrita: a camada causal</a></li>
+<li class="chapter" data-level="4.1.5" data-path="dbca.html"><a href="dbca.html#tabela-de-anova"><i class="fa fa-check"></i><b>4.1.5</b> Tabela de ANOVA</a></li>
+<li class="chapter" data-level="4.1.6" data-path="dbca.html"><a href="dbca.html#esperança-dos-quadrados-médios"><i class="fa fa-check"></i><b>4.1.6</b> Esperança dos quadrados médios</a></li>
+<li class="chapter" data-level="4.1.7" data-path="dbca.html"><a href="dbca.html#visualizando-aditividade-o-gráfico-de-perfis"><i class="fa fa-check"></i><b>4.1.7</b> Visualizando aditividade: o gráfico de perfis</a></li>
+<li class="chapter" data-level="4.1.8" data-path="dbca.html"><a href="dbca.html#diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação"><i class="fa fa-check"></i><b>4.1.8</b> Diagrama de Hasse do DBCA: por que não há nó de interação</a></li>
+<li class="chapter" data-level="4.1.9" data-path="dbca.html"><a href="dbca.html#dados-faltantes-estimação-do-valor-perdido"><i class="fa fa-check"></i><b>4.1.9</b> Dados faltantes: estimação do valor perdido</a></li>
+<li class="chapter" data-level="4.1.10" data-path="dbca.html"><a href="dbca.html#eficiência-relativa-do-dbca-frente-ao-dca"><i class="fa fa-check"></i><b>4.1.10</b> Eficiência relativa do DBCA frente ao DCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="friedman.html"><a href="friedman.html"><i class="fa fa-check"></i><b>4.2</b> Teste de Friedman</a></li>
+<li class="chapter" data-level="4.3" data-path="bib.html"><a href="bib.html"><i class="fa fa-check"></i><b>4.3</b> Blocos incompletos balanceados</a></li>
+<li class="chapter" data-level="4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html"><i class="fa fa-check"></i><b>4.4</b> Delineamento em quadrado latino</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="quadrado-latino.html"><a href="quadrado-latino.html#motivação-dois-gradientes-ortogonais-e-por-que-um-bloqueio-simples-não-basta"><i class="fa fa-check"></i><b>4.4.1</b> Motivação: dois gradientes ortogonais, e por que um bloqueio simples não basta</a></li>
+<li class="chapter" data-level="4.4.2" data-path="quadrado-latino.html"><a href="quadrado-latino.html#o-modelo-2"><i class="fa fa-check"></i><b>4.4.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.4.3" data-path="quadrado-latino.html"><a href="quadrado-latino.html#diagrama-de-hasse-do-quadrado-latino-três-fatores-cruzados-dois-a-dois"><i class="fa fa-check"></i><b>4.4.3</b> Diagrama de Hasse do quadrado latino: três fatores cruzados dois a dois</a></li>
+<li class="chapter" data-level="4.4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html#aleatorização-de-um-quadrado-latino-yates1933latin"><i class="fa fa-check"></i><b>4.4.4</b> Aleatorização de um quadrado latino <span class="citation">(Yates, 1933)</span></a></li>
+<li class="chapter" data-level="4.4.5" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quadrados-latinos-replicados"><i class="fa fa-check"></i><b>4.4.5</b> Quadrados latinos replicados</a></li>
+<li class="chapter" data-level="4.4.6" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quantas-réplicas-uma-análise-de-poder"><i class="fa fa-check"></i><b>4.4.6</b> Quantas réplicas? Uma análise de poder</a></li>
+<li class="chapter" data-level="4.4.7" data-path="quadrado-latino.html"><a href="quadrado-latino.html#eficiencia-ql"><i class="fa fa-check"></i><b>4.4.7</b> Eficiência relativa do quadrado latino frente ao DBCA e ao DCA</a></li>
+<li class="chapter" data-level="4.4.8" data-path="quadrado-latino.html"><a href="quadrado-latino.html#ql-exemplo-ecommerce"><i class="fa fa-check"></i><b>4.4.8</b> Um segundo exemplo completo: cinco variantes de checkout em e-commerce</a></li>
+<li class="chapter" data-level="4.4.9" data-path="quadrado-latino.html"><a href="quadrado-latino.html#youden"><i class="fa fa-check"></i><b>4.4.9</b> Quadrados de Youden: quando o quadrado latino não pode ser completo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html"><i class="fa fa-check"></i><b>4.5</b> Delineamento em quadrado greco-latino</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#mols"><i class="fa fa-check"></i><b>4.5.1</b> Quadrados latinos mutuamente ortogonais (MOLS): existência e o problema de Euler</a></li>
+<li class="chapter" data-level="4.5.2" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#o-modelo-3"><i class="fa fa-check"></i><b>4.5.2</b> O modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.6</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
+<li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a></li>
+<li class="chapter" data-level="5.4" data-path="matriz-axb.html"><a href="matriz-axb.html"><i class="fa fa-check"></i><b>5.4</b> Notação matricial do fatorial A×B</a></li>
+<li class="chapter" data-level="5.5" data-path="axbxc.html"><a href="axbxc.html"><i class="fa fa-check"></i><b>5.5</b> Fatoriais A×B×C: interações duplas e tripla</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="axbxc.html"><a href="axbxc.html#cubo-2x2x2"><i class="fa fa-check"></i><b>5.5.1</b> O cubo do <span class="math inline">\(2^3\)</span>: visualizando efeitos principais, duplos e triplo</a></li>
+<li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
+<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
+<li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="nao-replicado.html"><a href="nao-replicado.html"><i class="fa fa-check"></i><b>6.2</b> Análise de um fatorial <span class="math inline">\(2^k\)</span> não replicado</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-probabilidade-normal-half-normal-plot"><i class="fa fa-check"></i><b>6.2.1</b> Gráfico de probabilidade normal (half-normal plot)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-pareto-dos-efeitos"><i class="fa fa-check"></i><b>6.2.2</b> Gráfico de Pareto dos efeitos</a></li>
+<li class="chapter" data-level="6.2.3" data-path="nao-replicado.html"><a href="nao-replicado.html#margem-de-erro-pelo-método-de-lenth"><i class="fa fa-check"></i><b>6.2.3</b> Margem de erro pelo método de Lenth</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="confusao-2k.html"><a href="confusao-2k.html"><i class="fa fa-check"></i><b>6.3</b> Confusão em <span class="math inline">\(2^k\)</span>: designação de tratamentos a blocos</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="confusao-2k.html"><a href="confusao-2k.html#esquema-de-designação-o-contraste-definidor"><i class="fa fa-check"></i><b>6.3.1</b> Esquema de designação: o contraste definidor</a></li>
+<li class="chapter" data-level="6.3.2" data-path="confusao-2k.html"><a href="confusao-2k.html#confusao-projecao"><i class="fa fa-check"></i><b>6.3.2</b> Confusão como colinearidade em <span class="math inline">\(\mathbf{X}\)</span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="confusao-2k.html"><a href="confusao-2k.html#confusão-total-vs.-confusão-parcial"><i class="fa fa-check"></i><b>6.3.3</b> Confusão total vs. confusão parcial</a></li>
+<li class="chapter" data-level="6.3.4" data-path="confusao-2k.html"><a href="confusao-2k.html#hasse-confusao"><i class="fa fa-check"></i><b>6.3.4</b> Visualizando a confusão com um diagrama de Hasse</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
+<li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
+<li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
+<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html"><i class="fa fa-check"></i><b>7.1</b> Introdução à superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ponto-estacionario"><i class="fa fa-check"></i><b>7.1.1</b> Classificando o ponto estacionário: gradiente e Hessiana</a></li>
+<li class="chapter" data-level="7.1.2" data-path="superficie-resposta.html"><a href="superficie-resposta.html#analise-canonica"><i class="fa fa-check"></i><b>7.1.2</b> Análise canônica: além de classificar, descrever a forma da superfície</a></li>
+<li class="chapter" data-level="7.1.3" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ridge-analysis"><i class="fa fa-check"></i><b>7.1.3</b> Análise de ridge: otimizando dentro de um raio fixo da região experimental</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="steepest-ascent.html"><a href="steepest-ascent.html"><i class="fa fa-check"></i><b>7.2</b> O caminho de máxima inclinação: de um fatorial inicial até a região do ótimo</a></li>
+<li class="chapter" data-level="7.3" data-path="ccd.html"><a href="ccd.html"><i class="fa fa-check"></i><b>7.3</b> Delineamento composto central (CCD)</a></li>
+<li class="chapter" data-level="7.4" data-path="desejabilidade.html"><a href="desejabilidade.html"><i class="fa fa-check"></i><b>7.4</b> Otimização de múltiplas respostas: funções de desejabilidade</a></li>
+<li class="chapter" data-level="7.5" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.5</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.6" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.6</b> Fim do programa do semestre</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><i class="fa fa-check"></i><b>8.1</b> Parte I — Testes A/B como delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-e-dca"><i class="fa fa-check"></i><b>8.1.1</b> Um teste A/B é um delineamento completamente aleatorizado</a></li>
+<li class="chapter" data-level="8.1.2" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-dificuldades"><i class="fa fa-check"></i><b>8.1.2</b> Por que testes A/B em produtos digitais são estatisticamente difíceis</a></li>
+<li class="chapter" data-level="8.1.3" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-peeking"><i class="fa fa-check"></i><b>8.1.3</b> O problema do “peeking”</a></li>
+<li class="chapter" data-level="8.1.4" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-winners-curse"><i class="fa fa-check"></i><b>8.1.4</b> Vício do vencedor (<em>winner’s curse</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><i class="fa fa-check"></i><b>8.2</b> Parte II — Bandits: quando explorar e quando explotar</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-motivacao"><i class="fa fa-check"></i><b>8.2.1</b> Exploração, explotação e a definição de arrependimento (<em>regret</em>)</a></li>
+<li class="chapter" data-level="8.2.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-ucb1"><i class="fa fa-check"></i><b>8.2.2</b> Upper Confidence Bound (UCB1): otimismo perante a incerteza</a></li>
+<li class="chapter" data-level="8.2.3" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-thompson"><i class="fa fa-check"></i><b>8.2.3</b> Thompson sampling: uma solução bayesiana</a></li>
+<li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
+<li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Planejamento e Análise de Experimentos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="confusao-2k" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Confusão em <span class="math inline">\(2^k\)</span>: designação de tratamentos a blocos<a href="confusao-2k.html#confusao-2k" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Fatoriais <span class="math inline">\(2^k\)</span> crescem rápido: um <span class="math inline">\(2^6\)</span> já tem 64 tratamentos. Se uma única unidade de bloqueio
+(um lote de matéria-prima, um turno de operação, um dia) só comporta metade das corridas, o
+fatorial completo precisa ser dividido em blocos — e queremos que a divisão <strong>não contamine</strong> os
+efeitos que nos interessam. A técnica de <strong>confusão</strong> (do inglês <em>confounding</em>) escolhe
+deliberadamente um efeito de interação — normalmente de ordem alta, o que consideramos menos
+provável de ser grande e mais fácil de “sacrificar” — para ficar indistinguível do efeito de
+bloco.</p>
+<div id="esquema-de-designação-o-contraste-definidor" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Esquema de designação: o contraste definidor<a href="confusao-2k.html#esquema-de-designação-o-contraste-definidor" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Para dividir um <span class="math inline">\(2^k\)</span> em 2 blocos de <span class="math inline">\(2^{k-1}\)</span> corridas, escolhemos um efeito — o <strong>contraste
+definidor</strong> — e calculamos seu sinal (produto dos níveis codificados <span class="math inline">\(\pm1\)</span> dos fatores
+envolvidos) para cada tratamento. Tratamentos com sinal <span class="math inline">\(+1\)</span> vão para um bloco; com sinal <span class="math inline">\(-1\)</span>,
+para o outro.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — confundindo ABCD com o bloco no 2⁴ do biodiesel
+(construção didática)</div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="confusao-2k.html#cb227-1" tabindex="-1"></a><span class="co"># Suponha que as 16 combinações do 2^4 só coubessem em 2 lotes de solvente (bloco),</span></span>
+<span id="cb227-2"><a href="confusao-2k.html#cb227-2" tabindex="-1"></a><span class="co"># de 8 corridas cada, e que quiséssemos &quot;sacrificar&quot; a interação de quarta ordem ABCD.</span></span>
+<span id="cb227-3"><a href="confusao-2k.html#cb227-3" tabindex="-1"></a><span class="co"># rep_unica já está na codificação numérica -1/+1 (seção &quot;Ortogonalidade da matriz de desenho&quot;), então o</span></span>
+<span id="cb227-4"><a href="confusao-2k.html#cb227-4" tabindex="-1"></a><span class="co"># sinal de ABCD é só o produto direto das quatro colunas.</span></span>
+<span id="cb227-5"><a href="confusao-2k.html#cb227-5" tabindex="-1"></a>combinacoes <span class="ot">&lt;-</span> rep_unica <span class="sc">%&gt;%</span></span>
+<span id="cb227-6"><a href="confusao-2k.html#cb227-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ABCD =</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
+<span id="cb227-7"><a href="confusao-2k.html#cb227-7" tabindex="-1"></a>         <span class="at">bloco =</span> <span class="fu">if_else</span>(ABCD <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Bloco 1&quot;</span>, <span class="st">&quot;Bloco 2&quot;</span>))</span>
+<span id="cb227-8"><a href="confusao-2k.html#cb227-8" tabindex="-1"></a></span>
+<span id="cb227-9"><a href="confusao-2k.html#cb227-9" tabindex="-1"></a><span class="fu">count</span>(combinacoes, bloco)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
+##   bloco       n
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 Bloco 1     8
+## 2 Bloco 2     8</code></pre>
+<p>Como o sinal de <span class="math inline">\(ABCD\)</span> é constante <em>dentro</em> de cada bloco e varia <em>entre</em> blocos, a diferença
+entre as médias dos dois blocos é algebricamente idêntica à estimativa do efeito <span class="math inline">\(ABCD\)</span> — os dois
+ficam <strong>totalmente confundidos</strong>: é impossível, a partir dos dados, separar “efeito do lote de
+solvente” de “interação de quarta ordem entre os quatro fatores”. Isso é aceitável precisamente
+porque escolhemos confundir um efeito que, a priori, julgamos pouco provável de ser grande (efeitos
+de ordem 3 ou 4 raramente dominam, pelo princípio da esparsidade da Seção <a href="nao-replicado.html#nao-replicado">6.2</a>) —
+mas seria um erro grave confundir um efeito principal ou uma interação dupla dessa forma.</p>
+</div>
+<div id="confusao-projecao" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Confusão como colinearidade em <span class="math inline">\(\mathbf{X}\)</span><a href="confusao-2k.html#confusao-projecao" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Seção <a href="fatoriais-2k.html#ortogonalidade-2k">6.1.1</a> mostrou que a força do <span class="math inline">\(2^k\)</span> vem de <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span> ser
+diagonal — cada efeito, incluindo <span class="math inline">\(ABCD\)</span>, ocupa sua própria coluna, ortogonal a todas as outras.
+Confundir <span class="math inline">\(ABCD\)</span> com o bloco é, em termos exatamente matriciais, <strong>construir a coluna de bloco
+<span class="math inline">\(\mathbf{x}_{bloco}\)</span> para ser idêntica à coluna <span class="math inline">\(\mathbf{x}_{ABCD}\)</span></strong> (a menos de uma
+reescala/sinal): ambas separam as mesmas 8 corridas do mesmo lado. O efeito é que, se
+tentássemos colocar as duas colunas simultaneamente na matriz de desenho, <span class="math inline">\(\mathbf{X}\)</span> deixaria de
+ter posto coluna completo — exatamente a situação de deficiência de posto do Capítulo 2 (Seção
+<a href="estimabilidade.html#estimabilidade">2.4</a>) — e <span class="math inline">\((\mathbf{X}&#39;\mathbf{X})^{-1}\)</span> deixaria de existir.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — a colinearidade exata entre bloco e ABCD</div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="confusao-2k.html#cb229-1" tabindex="-1"></a>combinacoes <span class="ot">&lt;-</span> combinacoes <span class="sc">%&gt;%</span></span>
+<span id="cb229-2"><a href="confusao-2k.html#cb229-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bloco_num =</span> <span class="fu">if_else</span>(bloco <span class="sc">==</span> <span class="st">&quot;Bloco 1&quot;</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb229-3"><a href="confusao-2k.html#cb229-3" tabindex="-1"></a></span>
+<span id="cb229-4"><a href="confusao-2k.html#cb229-4" tabindex="-1"></a><span class="co"># A coluna de bloco é, literalmente, a coluna ABCD (correlação perfeita)</span></span>
+<span id="cb229-5"><a href="confusao-2k.html#cb229-5" tabindex="-1"></a><span class="fu">cor</span>(combinacoes<span class="sc">$</span>ABCD, combinacoes<span class="sc">$</span>bloco_num)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="confusao-2k.html#cb231-1" tabindex="-1"></a><span class="co"># Ao incluir as duas no mesmo modelo, R %&gt;% lm() detecta a colinearidade exata</span></span>
+<span id="cb231-2"><a href="confusao-2k.html#cb231-2" tabindex="-1"></a><span class="co"># e descarta uma delas, reportando coeficiente NA:</span></span>
+<span id="cb231-3"><a href="confusao-2k.html#cb231-3" tabindex="-1"></a>dados_conf <span class="ot">&lt;-</span> rep_unica <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(combinacoes<span class="sc">$</span>bloco))</span>
+<span id="cb231-4"><a href="confusao-2k.html#cb231-4" tabindex="-1"></a>mod_confundido <span class="ot">&lt;-</span> <span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente <span class="sc">+</span> bloco,</span>
+<span id="cb231-5"><a href="confusao-2k.html#cb231-5" tabindex="-1"></a>                      <span class="at">data =</span> dados_conf)</span>
+<span id="cb231-6"><a href="confusao-2k.html#cb231-6" tabindex="-1"></a><span class="fu">coef</span>(mod_confundido)[<span class="fu">c</span>(<span class="st">&quot;blocoBloco 2&quot;</span>, <span class="st">&quot;Relacion:Catalizador:Temperatura:Agente&quot;</span>)]</span></code></pre></div>
+<pre><code>##                            blocoBloco 2 Relacion:Catalizador:Temperatura:Agente 
+##                                  3.0375                                      NA</code></pre>
+<p>O <code>NA</code> no coeficiente da interação de quarta ordem não é um erro numérico — é o R relatando, da
+única forma possível, que <strong>não existe informação nos dados capaz de distinguir</strong> “efeito de
+bloco” de “interação <span class="math inline">\(ABCD\)</span>”: as duas colunas de <span class="math inline">\(\mathbf{X}\)</span> apontam exatamente na mesma direção
+do espaço-coluna, e <span class="math inline">\(\mathbf{P}_X\)</span> (Seção <a href="matriz-projecao.html#matriz-projecao">2.6</a>) não consegue projetar
+separadamente sobre duas direções que coincidem. Esta é a face matricial, concreta, de uma ideia
+que de outra forma permanece abstrata: <strong>confundir é, literalmente, fazer duas colunas do modelo
+colidirem</strong>, e a escolha de qual efeito confundir é a escolha de qual coluna estamos dispostos a
+sacrificar.</p>
+</div>
+<div id="confusão-total-vs.-confusão-parcial" class="section level3 hasAnchor" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Confusão total vs. confusão parcial<a href="confusao-2k.html#confusão-total-vs.-confusão-parcial" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>O esquema acima é <strong>confusão total</strong>: o mesmo efeito é sacrificado em <em>todas</em> as repetições do
+experimento. Quando há mais de uma repetição (como no biodiesel, com 2 réplicas), uma alternativa
+melhor é a <strong>confusão parcial</strong>: usar um contraste definidor diferente em cada repetição (por
+exemplo, <span class="math inline">\(ABCD\)</span> na repetição 1 e <span class="math inline">\(ABC\)</span> na repetição 2). Cada efeito confundido perde informação
+apenas na repetição em que foi sacrificado — nas demais, permanece estimável a partir das
+comparações intra-bloco — de modo que <strong>nenhum efeito é totalmente perdido</strong>, ao custo de uma
+análise ligeiramente mais elaborada (a informação de cada efeito parcialmente confundido é
+recuperada combinando as repetições em que ele não foi sacrificado, com peso proporcional à
+informação disponível). A confusão parcial é preferível sempre que o número de repetições permite,
+justamente porque nenhuma pergunta de pesquisa fica inteiramente sem resposta.</p>
+</div>
+<div id="hasse-confusao" class="section level3 hasAnchor" number="6.3.4">
+<h3><span class="header-section-number">6.3.4</span> Visualizando a confusão com um diagrama de Hasse<a href="confusao-2k.html#hasse-confusao" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Seção <a href="hasse.html#hasse">2.1</a> (Capítulo 2) definiu o diagrama de Hasse pela regra de que os graus de
+liberdade de todos os termos, somados, esgotam exatamente <span class="math inline">\(N\)</span> — nenhum termo novo pode entrar no
+diagrama sem “tomar” seus graus de liberdade de algum lugar. É exatamente essa contabilidade
+rígida que torna a confusão visualmente clara: o desenho de réplica única do <span class="math inline">\(2^4\)</span> (<code>rep_unica</code>,
+<span class="math inline">\(N=16\)</span>) é <strong>saturado</strong> — a Seção <a href="nao-replicado.html#nao-replicado">6.2</a> já observou que os <span class="math inline">\(2^4-1=15\)</span> efeitos mais a
+média esgotam os 16 graus de liberdade disponíveis, sem sobrar nenhum para um termo de erro. Um
+diagrama de Hasse desse desenho (agrupando, por clareza visual, os quatro efeitos principais em um
+só nó, as seis interações duplas em outro, e as quatro triplas em um terceiro — mantendo apenas
+<span class="math inline">\(ABCD\)</span> em destaque, o termo que a próxima figura vai confundir) tem exatamente esta forma:</p>
+<div class="caixa-r"><strong>Uso do R</strong> — Hasse do 2⁴ saturado, sem e com bloco confundido
+com ABCD</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-confusao"></span>
+<img src="06-fatoriais-avancado_files/figure-html/hasse-confusao-1.png" alt="Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo." width="80%" />
+<p class="caption">
+Figure 6.5: Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado – todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura – o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo.
+</p>
+</div>
+<p>O painel esquerdo é o retrato do problema: com réplica única, todo grau de liberdade do desenho já
+tem dono, incluindo o próprio <span class="math inline">\(ABCD\)</span> — não existe espaço “livre” para um termo de Bloco entrar sem
+que algum outro termo perca graus de liberdade. O painel direito mostra a solução da confusão, e é
+aqui que o diagrama de Hasse ganha um significado que a tabela de ANOVA sozinha não deixa tão
+explícito: <strong>Bloco</strong> e <strong>ABCD</strong> aparecem lado a lado, no mesmo nível, ambos descendo do mesmo nó de
+interações triplas — não porque sejam dois termos novos de 1 grau de liberdade cada (o que somaria
+17, estourando <span class="math inline">\(N=16\)</span>), mas porque são <strong>o mesmo</strong> grau de liberdade, com dois rótulos possíveis
+para a mesma coluna de <span class="math inline">\(\mathbf{X}\)</span> (exatamente a colinearidade exata demonstrada algebricamente
+acima, Seção <a href="confusao-2k.html#confusao-projecao">6.3.2</a>). Somando o diagrama corretamente — contando o par
+Bloco/ABCD como um único grau de liberdade compartilhado, não dois —, a contabilidade volta a
+fechar: <span class="math inline">\(1+4+6+4+1=16=N\)</span>, a mesma soma do painel sem bloco, só que agora um dos 16 “lugares” tem
+duas etiquetas em vez de uma. É essa disputa por espaço no diagrama — não uma analogia, mas a
+mesma regra de contagem de graus de liberdade da Seção <a href="hasse.html#hasse">2.1</a> aplicada literalmente — que
+explica por que confusão sempre sacrifica <em>algum</em> termo: adicionar uma fonte de variação a um
+desenho saturado nunca é gratuito, e a única escolha real é <em>qual</em> termo aceita dividir sua coluna
+com o novo bloco.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="nao-replicado.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="fatoriais-3k.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

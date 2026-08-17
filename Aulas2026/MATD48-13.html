@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Fatoriais 2ᵏ: ortogonalidade, análise sem repetição e confusão</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Fatoriais 2ᵏ: ortogonalidade, análise sem repetição e confusão
+]
+.subtitle[
+## Half-normal, Pareto, método de Lenth e designação de blocos
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 13 — Fatoriais `\(2^k\)`
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Por que `\(2^k\)`?
+
+Todos os fatores em **dois níveis** (`\(-1\)`/$+1$). Popular porque:
+
+- Estima todos os efeitos com o **menor** número de corridas possível.
+- Cada efeito tem **1 grau de liberdade** — a álgebra é simples o bastante para fazer à mão.
+- `\(\text{efeito}_j = \bar y(x_j{=}{+}1) - \bar y(x_j{=}{-}1) = 2\hat\beta_j\)`.
+
+---
+
+## Ortogonalidade: a propriedade central do `\(2^k\)`
+
+No fatorial A×B (Aula 12), $\mathbf{X} = [\mathbf{1}\,|\,\mathbf{X}_A\,|\,\mathbf{X}_B\,|\,
+\mathbf{X}_A\odot\mathbf{X}_B]$. No `\(2^k\)` codificado `\(\pm1\)`, **todas** essas colunas — de
+qualquer ordem — são mutuamente ortogonais: `\(\mathbf{X}'\mathbf{X}\)` é **diagonal**.
+
+
+
+
+``` r
+X &lt;- model.matrix(~ Relacion * Catalizador * Temperatura * Agente, data = biodiesel)
+XtX &lt;- t(X) %*% X
+all(XtX[upper.tri(XtX)] == 0)   # zero fora da diagonal
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+range(diag(XtX))                # todos os 16 valores da diagonal = n = 32
+```
+
+```
+## [1] 32 32
+```
+
+---
+
+## Da ortogonalidade ao contraste de Yates
+
+`\(\mathbf{X}'\mathbf{X}\)` diagonal `\(\Rightarrow\)` equações normais **desacopladas**:
+
+$$
+\hat\beta_j = \frac{\mathbf{x}_j'\mathbf{Y}}{n}, \qquad
+\text{efeito}_j = \frac{2}{n}\sum_{i=1}^n (\pm1)\,y_i
+$$
+
+--
+
+
+``` r
+xa &lt;- X[, "Relacion"]
+y  &lt;- biodiesel$Rendimiento
+2 * sum(xa * y) / sum(xa * xa)                      # via produto interno
+```
+
+```
+## [1] -1.99375
+```
+
+``` r
+2 * coef(lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente,
+            data = biodiesel))["Relacion"]           # via regressão — idêntico
+```
+
+```
+## Relacion 
+## -1.99375
+```
+
+Mesmo número, duas contas: o "contraste de Yates" (Yates, 1937) **é** mínimos quadrados com
+`\(\mathbf{X}'\mathbf{X}\)` diagonal, não uma regra à parte.
+
+---
+
+## Sem repetição: o princípio da esparsidade
+
+Sem réplicas, o modelo saturado consome todos os graus de liberdade — não sobra erro puro.
+Saída (Daniel, 1959; Box, Hunter &amp; Hunter, 2005): a maioria dos efeitos de ordem alta é ~zero; os
+poucos efeitos reais se destacam como discrepantes.
+
+.pull-left[
+**Half-normal plot**
+Efeitos ordenados por `\(|{\cdot}|\)` contra quantis teóricos da meia-normal; nulos caem numa reta
+pela origem.
+]
+.pull-right[
+**Pareto dos efeitos**
+Mesmo ranking, como barras, com a margem de erro de Lenth sobreposta.
+]
+
+---
+
+## Margem de erro de Lenth
+
+$$
+s_0 = 1{,}5\cdot\text{med}_i|c_i|, \qquad
+\text{PSE} = 1{,}5\cdot\text{med}_{\{|c_i|&lt;2{,}5s_0\}}|c_i|, \qquad
+\text{ME} = t_{0{,}975;\,d}\cdot\text{PSE},\ d=\tfrac{m}{3}
+$$
+
+Um efeito é "grande" se `\(|c_i| &gt; \text{ME}\)` (Lenth, 1989).
+
+---
+
+## Confusão: sacrificando uma coluna de `\(\mathbf{X}\)`
+
+Para dividir um `\(2^k\)` em 2 blocos, escolhemos um **contraste definidor** (ex.: `\(ABCD\)`) e
+separamos pelo sinal. A coluna de bloco fica **idêntica** à coluna do efeito escolhido —
+colinearidade exata em `\(\mathbf{X}\)`.
+
+--
+
+- **Confusão total:** mesmo gerador em todas as repetições — o efeito é perdido por completo.
+- **Confusão parcial:** geradores diferentes por repetição — cada efeito é recuperável nas
+  repetições em que não foi sacrificado.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Rendimento de biodiesel: 2⁴ completo, 2 repetições
+
+
+``` r
+mod_2k &lt;- aov(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente, data = biodiesel)
+broom::tidy(mod_2k) %&gt;% filter(p.value &lt; 0.10) %&gt;%
+  mutate(p.value = round(p.value, 4)) %&gt;% select(term, df, p.value) %&gt;%
+  kable(format = "html") %&gt;% kable_styling(font_size = 17, full_width = FALSE)
+```
+
+&lt;table class="table" style="font-size: 17px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Temperatura &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0051 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Relacion:Catalizador &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0987 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Relacion:Temperatura &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0046 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Relacion:Agente &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0203 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Catalizador:Agente &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0479 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Relacion:Catalizador:Temperatura &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0010 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Relacion:Catalizador:Agente &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0811 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Significativos: temperatura, razão:temperatura, razão:agente, catalisador:agente, e — dominante —
+razão:catalisador:temperatura.
+
+---
+
+## Interação catalisador × agente: retas que se cruzam
+
+&lt;img src="MATD48-13_files/figure-html/interacao-catag-1.png" alt="" width="504" /&gt;
+
+Trocar o agente **aumenta** o rendimento com catalisador `\(-1\)` e **reduz** com catalisador `\(+1\)` —
+o sinal do efeito se inverte. É essa inversão visual que a ANOVA está formalizando.
+
+---
+
+## Fingindo uma única repetição: half-normal e Pareto
+
+
+``` r
+rep1 &lt;- biodiesel %&gt;% distinct(Relacion, Catalizador, Temperatura, Agente, .keep_all = TRUE)
+mod_sat &lt;- lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente, data = rep1)
+ef &lt;- sort(2 * coef(mod_sat)[-1], decreasing = TRUE)
+s0 &lt;- 1.5*median(abs(ef)); pse &lt;- 1.5*median(abs(ef)[abs(ef) &lt; 2.5*s0])
+me &lt;- qt(0.975, length(ef)/3) * pse
+round(me, 2)
+```
+
+```
+## [1] 6.65
+```
+
+``` r
+ef[abs(ef) &gt; me]
+```
+
+```
+## Relacion:Catalizador:Temperatura 
+##                           8.2875
+```
+
+---
+
+## Os dois gráficos, lado a lado
+
+&lt;img src="MATD48-13_files/figure-html/halfnormal-pareto-1.png" alt="" width="720" /&gt;
+
+Só a interação tripla razão:catalisador:temperatura cruza a margem de Lenth — o método acerta o
+efeito dominante, mas é conservador com os quatro efeitos moderados que a repetição completa
+revelou.
+
+---
+
+## Confusão do ABCD com o bloco: colinearidade em ação
+
+
+``` r
+# rep1 já está em -1/+1 numérico (chunk biodiesel-load), então ABCD é só o produto direto
+comb &lt;- rep1 %&gt;%
+  mutate(ABCD = Relacion*Catalizador*Temperatura*Agente,
+         bloco = factor(if_else(ABCD &gt; 0, "Bloco 1", "Bloco 2")))
+
+cor(comb$ABCD, as.numeric(comb$bloco))   # correlação perfeita: mesma coluna
+```
+
+```
+## [1] -1
+```
+
+``` r
+mod_conf &lt;- lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente + bloco,
+               data = bind_cols(rep1, bloco = comb$bloco))
+coef(mod_conf)[c("blocoBloco 2", "Relacion:Catalizador:Temperatura:Agente")]
+```
+
+```
+##                            blocoBloco 2 Relacion:Catalizador:Temperatura:Agente 
+##                                  3.0375                                      NA
+```
+
+O `NA` na interação de 4ª ordem é o R relatando que as duas colunas de `\(\mathbf{X}\)` colidem —
+**não existe** informação nos dados para separar "efeito de bloco" de "$ABCD$".
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que a **mediana**, e não o desvio-padrão, protege o método de Lenth dos próprios efeitos
+   grandes que ele tenta detectar?
+
+2. No gráfico de Pareto, vários efeitos "parecem grandes" perto da barra vencedora, mas nenhum
+   cruza a linha de Lenth. Que erro de interpretação isso evita?
+
+3. Por que confundir `\(ABCD\)` (ordem 4) é aceitável, mas confundir um efeito principal com o bloco
+   seria grave? Responda em termos de `\(\mathbf{X}'\mathbf{X}\)` e não só "porque é mais importante".
+
+4. Se você tivesse orçamento para **2 repetições** de um `\(2^4\)` dividido em blocos de 8, por que
+   confusão **parcial** (geradores diferentes por repetição) é preferível à total?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do zero: sinais, contraste e ANOVA em paralelo
+
+
+``` r
+# Reconstruindo o efeito "na mão" a partir dos sinais ±1 (rep1 já é numérico)
+efeito_agente &lt;- 2 * mean(rep1$Rendimiento[rep1$Agente ==  1]) -
+                  2 * mean(rep1$Rendimiento[rep1$Agente == -1])
+# (o contraste de médias, dividido por 2, é igual a 1/2 efeito -&gt; aqui já com o fator 2)
+efeito_agente / 2 + mean(rep1$Rendimiento[rep1$Agente == -1]) -
+  mean(rep1$Rendimiento) # checagem de consistência
+```
+
+```
+## [1] 0.84375
+```
+
+---
+
+## Confusão parcial: dois geradores diferentes
+
+
+``` r
+rep2 &lt;- biodiesel %&gt;% anti_join(rep1, by = c("Relacion","Catalizador","Temperatura","Agente")) %&gt;%
+  distinct(Relacion, Catalizador, Temperatura, Agente, .keep_all = TRUE)
+
+g1 &lt;- rep1$Relacion * rep1$Catalizador * rep1$Temperatura * rep1$Agente   # ABCD (réplica 1)
+g2 &lt;- rep2$Relacion * rep2$Catalizador * rep2$Temperatura                # ABC (réplica 2)
+
+table(bloco_rep1 = g1 &gt; 0)
+```
+
+```
+## bloco_rep1
+## FALSE  TRUE 
+##     8     8
+```
+
+``` r
+table(bloco_rep2 = g2 &gt; 0)
+```
+
+```
+## &lt; table of extent 0 &gt;
+```
+
+Geradores diferentes (`\(ABCD\)` na réplica 1, `\(ABC\)` na réplica 2) significam que nenhum dos dois
+efeitos é perdido em **todas** as réplicas — a essência da confusão parcial.
+
+---
+
+## Resumo da aula
+
+- `\(2^k\)` codificado `\(\pm1\)`: `\(\mathbf{X}'\mathbf{X}\)` é diagonal — cada efeito tem fórmula fechada,
+  equivalente ao contraste de Yates.
+- Sem repetição: half-normal e Pareto separam sinal de ruído visualmente; a ME de Lenth formaliza
+  o limiar.
+- Confundir é fazer duas colunas de `\(\mathbf{X}\)` colidirem — escolha efeitos de ordem alta para
+  sacrificar; use confusão parcial quando há mais de uma repetição.
+- Próxima aula: `\(3^k\)`, fracionamento e a metodologia de superfície de resposta.
+
+## Referências
+
+- Yates, F. (1937). *The Design and Analysis of Factorial Experiments*. Imperial Bureau of Soil Science.
+- Daniel, C. (1959). Use of Half-Normal Plots in Interpreting Factorial Two-Level Experiments. *Technometrics*, 1(4), 311–341.
+- Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley &amp; Sons.
+- Lenth, R. V. (1989). Quick and Easy Analysis of Unreplicated Factorials. *Technometrics*, 31(4), 469–473.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

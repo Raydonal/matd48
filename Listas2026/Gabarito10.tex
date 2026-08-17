@@ -1,0 +1,115 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Gabarito --- Lista 10}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Gabarito --- Lista de Exercícios 10}{Teste de Friedman e blocos incompletos balanceados (Capítulo 4 / Aula 10)}
+
+\begin{questao}{1} \textbf{(Psicologia --- estatística de Friedman)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Cada um dos $b=10$ estudantes distribui os postos $1,2,3$ (uma vez cada) entre as três
+    técnicas, então a soma de \emph{todos} os postos atribuídos, somando as 3 técnicas, é
+    $b\cdot(1+2+3) = 10\times 6 = 60$. De fato, $R_1+R_2+R_3=12+20+28=60$. \checkmark
+  \item
+    $$
+    F_r = \frac{12}{bt(t+1)}\sum_i R_i^2 - 3b(t+1)
+        = \frac{12}{10\cdot3\cdot4}(12^2+20^2+28^2) - 3\cdot10\cdot4
+        = \frac{12}{120}(144+400+784) - 120
+    $$
+    $$
+    = 0{,}1\times1328 - 120 = 132{,}8-120 = \textbf{12{,}8}.
+    $$
+  \item Como $F_r=12{,}8 > \chi^2_{0{,}05;2}=5{,}99$, \textbf{rejeita-se $H_0$}: há evidência de
+    diferença sistemática entre as três técnicas de estudo (a técnica associada a $R_3=28$ tende
+    a ser mais frequentemente a "melhor" dentro de cada estudante).
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{2} \textbf{(Dedução --- valor esperado da soma de postos sob $H_0$)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Sob $H_0$, as $t!$ ordenações possíveis dos $t$ tratamentos dentro de um bloco são
+    igualmente prováveis (nenhum tratamento é sistematicamente favorecido). Fixado um tratamento
+    $i$, cada um dos $t$ postos possíveis $1,\dots,t$ aparece associado a $i$ em exatamente
+    $(t-1)!$ das $t!$ ordenações (basta permutar os $t-1$ tratamentos restantes nas demais
+    posições), a mesma contagem para todo posto. Logo, marginalmente, o posto de $i$ é uniforme
+    sobre $\{1,\dots,t\}$.
+  \item Pelo item (a), $\text{posto}(Y_{ij}) \sim \text{Uniforme}\{1,\dots,t\}$, logo
+    $$
+    \mathbb E[\text{posto}(Y_{ij})] = \frac{1}{t}\sum_{k=1}^t k = \frac{1}{t}\cdot\frac{t(t+1)}{2}
+    = \frac{t+1}{2}.
+    $$
+  \item Como os $b$ blocos são independentes, $R_i=\sum_{j=1}^b \text{posto}(Y_{ij})$ é soma de
+    $b$ variáveis com a mesma esperança $\frac{t+1}{2}$, logo
+    $$
+    \mathbb E[R_i] = b\cdot\frac{t+1}{2}.
+    $$
+    Com $b=10$, $t=3$: $\mathbb E[R_i]=10\times2=\textbf{20}$ para cada técnica, sob $H_0$. Os
+    valores observados $R=(12,20,28)$ do Exercício 1 se afastam bastante e de forma assimétrica
+    dessa expectativa comum de 20 — consistente com a rejeição de $H_0$ obtida ali.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{3} \textbf{(Agricultura --- parâmetros de um BIB)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item De $\lambda(t-1)=r(k-1)$ com $t=6,k=3$: $5\lambda = 2r \Rightarrow r = \dfrac{5\lambda}{2}$.
+    Para $r$ inteiro, $\lambda$ deve ser par; o menor valor positivo é $\lambda=2$, dando
+    $r=\dfrac{5\times2}{2}=5$. De $bk=tr$: $b=\dfrac{tr}{k}=\dfrac{6\times5}{3}=10$.
+    Portanto $(t,b,r,k,\lambda)=(6,10,5,3,2)$.
+  \item Verificação: $bk=10\times3=30$ e $tr=6\times5=30$ \checkmark;
+    $\lambda(t-1)=2\times5=10$ e $r(k-1)=5\times2=10$ \checkmark. Ambas as identidades se
+    confirmam.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{4} \textbf{(Agricultura --- verificando e completando um BIB)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Contando as ocorrências: variedade 1 aparece nos blocos 1, 2 e 3 ($r_1=3$); variedade 2
+    aparece nos blocos 1 e 2 ($r_2=2$); variedade 3 aparece nos blocos 1 e 3 ($r_3=2$);
+    variedade 4 aparece nos blocos 2 e 3 ($r_4=2$). Como $r_1\ne r_2=r_3=r_4$, \textbf{este
+    arranjo de 3 blocos não é um BIB}. A condição de $r$ constante é necessária porque, em um
+    BIB, todo tratamento deve ter a mesma precisão (o mesmo número de repetições); sem isso, as
+    variâncias das médias estimadas de tratamento já diferem antes mesmo de considerar os pares —
+    por isso a condição é necessária, mas não suficiente: mesmo com $r$ igual para todos, ainda
+    seria preciso conferir que todo \emph{par} de tratamentos coocorre o mesmo número de vezes.
+  \item Basta acrescentar o bloco que contém exatamente as três variedades ainda não combinadas
+    entre si na proporção correta: $\text{Bloco 4}=\{2,3,4\}$. Com os 4 blocos
+    $\{1,2,3\},\{1,2,4\},\{1,3,4\},\{2,3,4\}$, cada variedade aparece em $r=3$ blocos, e cada par
+    coocorre em exatamente $\lambda=2$ blocos (por exemplo, o par $(1,2)$ aparece nos blocos 1 e
+    2; o par $(2,3)$ aparece nos blocos 1 e 4; e assim por diante para os $\binom{4}{2}=6$ pares).
+    Este é exatamente o BIB $(t,b,r,k,\lambda)=(4,4,3,3,2)$ apresentado em aula.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{5} \textbf{(Dissertativa --- Friedman vs. DBCA, blocos completos vs. incompletos)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Quando a normalidade de fato vale, o teste de Friedman é \textbf{menos sensível} (tem
+    menor poder) que a ANOVA do DBCA, porque descarta a magnitude das diferenças entre respostas
+    e usa apenas sua ordem dentro de cada bloco — informação estritamente menor do que os valores
+    numéricos completos. Com $b=20$ blocos e dados bem comportados, o pesquisador provavelmente
+    não muda a decisão qualitativa (rejeitar ou não $H_0$), mas paga o preço de um teste menos
+    poderoso do que precisaria ser: mais provável não detectar uma diferença real de magnitude
+    moderada (erro tipo II mais frequente) do que se tivesse usado a ANOVA apropriada para dados
+    normais.
+  \item Blocos incompletos balanceados fazem sentido mesmo quando o tamanho do bloco não é uma
+    restrição física, mas quando incluir todos os $t$ tratamentos em cada bloco comprometeria a
+    \textbf{homogeneidade interna do bloco} que justifica blocar em primeiro lugar — por exemplo,
+    se blocos maiores (para caber mais tratamentos) precisassem se espalhar por uma área com mais
+    heterogeneidade de solo, ou se a sessão de avaliação ficasse tão longa que introduzisse fadiga
+    ou efeitos de ordem não controlados. Nesses casos, blocos incompletos, porém pequenos e
+    homogêneos, podem produzir comparações mais precisas do que blocos completos, porém
+    heterogêneos.
+\end{enumerate}
+\end{solucao}
+
+\end{document}

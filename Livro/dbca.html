@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4.1 O delineamento em blocos completos aleatorizados (DBCA) | Planejamento e Análise de Experimentos</title>
+  <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4.1 O delineamento em blocos completos aleatorizados (DBCA) | Planejamento e Análise de Experimentos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4.1 O delineamento em blocos completos aleatorizados (DBCA) | Planejamento e Análise de Experimentos" />
+  
+  <meta name="twitter:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+<meta name="author" content="Raydonal Ospina Martínez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="blocos.html"/>
+<link rel="next" href="friedman.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./"><strong>Planejamento e Análise de Experimentos</strong></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prefácio</a>
+<ul>
+<li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
+<li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
+<li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html"><i class="fa fa-check"></i><b>1.1</b> O método científico e o papel do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#o-ciclo-empírico-de-observação-a-hipótese-testável"><i class="fa fa-check"></i><b>1.1.1</b> O ciclo empírico: de observação a hipótese testável</a></li>
+<li class="chapter" data-level="1.1.2" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#observação-vs.-experimentação-por-que-controlado-importa"><i class="fa fa-check"></i><b>1.1.2</b> Observação vs. experimentação: por que “controlado” importa</a></li>
+<li class="chapter" data-level="1.1.3" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#uma-nota-histórica-fisher-rothamsted-e-a-origem-do-delineamento-moderno"><i class="fa fa-check"></i><b>1.1.3</b> Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno</a></li>
+<li class="chapter" data-level="1.1.4" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#confusão-confounding-o-problema-que-a-aleatorização-resolve"><i class="fa fa-check"></i><b>1.1.4</b> Confusão (<em>confounding</em>): o problema que a aleatorização resolve</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="unidades.html"><a href="unidades.html"><i class="fa fa-check"></i><b>1.2</b> Unidades experimentais e unidades amostrais</a></li>
+<li class="chapter" data-level="1.3" data-path="fontes-variacao.html"><a href="fontes-variacao.html"><i class="fa fa-check"></i><b>1.3</b> Fontes de variação</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fontes-variacao.html"><a href="fontes-variacao.html#aditividade-aleatorizacao"><i class="fa fa-check"></i><b>1.3.1</b> Por que essa decomposição força a forma aditiva do modelo</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fontes-variacao.html"><a href="fontes-variacao.html#fatores-niveis"><i class="fa fa-check"></i><b>1.3.2</b> Fatores e níveis</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html"><i class="fa fa-check"></i><b>1.4</b> Os três aspectos do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="tres-aspectos.html"><a href="tres-aspectos.html#repetição-replicação"><i class="fa fa-check"></i><b>1.4.1</b> Repetição (replicação)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="tres-aspectos.html"><a href="tres-aspectos.html#aleatorização"><i class="fa fa-check"></i><b>1.4.2</b> Aleatorização</a></li>
+<li class="chapter" data-level="1.4.3" data-path="tres-aspectos.html"><a href="tres-aspectos.html#neyman-rubin"><i class="fa fa-check"></i><b>1.4.3</b> Por que a aleatorização funciona: o modelo de resultados potenciais</a></li>
+<li class="chapter" data-level="1.4.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.4</b> Validade interna e validade externa</a></li>
+<li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.5</b> O elo entre amostragem e planejamento de experimentos</a></li>
+<li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.6</b> Controle local (blocagem)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-lineares.html"><a href="modelos-lineares.html"><i class="fa fa-check"></i><b>2</b> Introdução aos modelos lineares</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="hasse.html"><a href="hasse.html"><i class="fa fa-check"></i><b>2.1</b> Diagramas de Hasse: a estrutura do delineamento antes da álgebra</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="hasse.html"><a href="hasse.html#o-diagrama-como-um-retrato-da-estrutura-do-dado"><i class="fa fa-check"></i><b>2.1.1</b> O diagrama como um retrato da estrutura do dado</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modelo-geral.html"><a href="modelo-geral.html"><i class="fa fa-check"></i><b>2.2</b> O modelo linear geral</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="modelo-geral.html"><a href="modelo-geral.html#porque-xbeta-mais-erro"><i class="fa fa-check"></i><b>2.2.1</b> Por que esta é a forma natural, não arbitrária, do modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="minimos-quadrados.html"><a href="minimos-quadrados.html"><i class="fa fa-check"></i><b>2.3</b> Estimação por mínimos quadrados</a></li>
+<li class="chapter" data-level="2.4" data-path="estimabilidade.html"><a href="estimabilidade.html"><i class="fa fa-check"></i><b>2.4</b> Estimabilidade de funções lineares dos parâmetros</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.4.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.5</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.6</b> A matriz de projeção</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.6.1</b> A soma de quadrados total como forma quadrática</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="modelo-particionado.html"><a href="modelo-particionado.html"><i class="fa fa-check"></i><b>2.7</b> O modelo linear particionado</a></li>
+<li class="chapter" data-level="2.8" data-path="fwl.html"><a href="fwl.html"><i class="fa fa-check"></i><b>2.8</b> O teorema de Frisch-Waugh-Lovell</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.8.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.9</b> Distribuição de formas lineares e quadráticas</a></li>
+<li class="chapter" data-level="2.10" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.10</b> Resumo do capítulo</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="dca.html"><a href="dca.html"><i class="fa fa-check"></i><b>3</b> Delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html"><i class="fa fa-check"></i><b>3.1</b> Princípios de aleatorização: a ideia de um teste de aleatorização</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html#randomizacao-df-f"><i class="fa fa-check"></i><b>3.1.1</b> De onde vêm os graus de liberdade <span class="math inline">\((2,33)\)</span>: a ponte entre aleatorização, variância decomposta e <span class="math inline">\(F\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html"><i class="fa fa-check"></i><b>3.2</b> O delineamento completamente aleatorizado a uma via de classificação</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="dca-uma-via.html"><a href="dca-uma-via.html#modelo-dca"><i class="fa fa-check"></i><b>3.2.1</b> O modelo estatístico</a></li>
+<li class="chapter" data-level="3.2.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html#matricial-dca"><i class="fa fa-check"></i><b>3.2.2</b> Notação matricial: o DCA como caso particular do modelo linear geral</a></li>
+<li class="chapter" data-level="3.2.3" data-path="dca-uma-via.html"><a href="dca-uma-via.html#potencial-causal"><i class="fa fa-check"></i><b>3.2.3</b> Resultados potenciais e o estimando causal</a></li>
+<li class="chapter" data-level="3.2.4" data-path="dca-uma-via.html"><a href="dca-uma-via.html#ic-dca"><i class="fa fa-check"></i><b>3.2.4</b> Estimação e intervalos de confiança</a></li>
+<li class="chapter" data-level="3.2.5" data-path="dca-uma-via.html"><a href="dca-uma-via.html#anova-dca"><i class="fa fa-check"></i><b>3.2.5</b> A tabela de análise de variância</a></li>
+<li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#modelo-aleatorio"><i class="fa fa-check"></i><b>3.4.1</b> Quando os tratamentos são uma amostra aleatória</a></li>
+<li class="chapter" data-level="3.4.2" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#anova-aleatorio"><i class="fa fa-check"></i><b>3.4.2</b> ANOVA e componentes de variância</a></li>
+<li class="chapter" data-level="3.4.3" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#amostra-aleatorio"><i class="fa fa-check"></i><b>3.4.3</b> Tamanho de amostra no modelo de efeitos aleatórios</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html"><i class="fa fa-check"></i><b>3.5</b> Verificação de pressupostos</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
+<li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="ancova.html"><a href="ancova.html#o-modelo"><i class="fa fa-check"></i><b>3.9.1</b> O modelo</a></li>
+<li class="chapter" data-level="3.9.2" data-path="ancova.html"><a href="ancova.html#ancova-em-notação-matricial-mais-uma-coluna-em-mathbf-x"><i class="fa fa-check"></i><b>3.9.2</b> ANCOVA em notação matricial: mais uma coluna em <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.9.3" data-path="ancova.html"><a href="ancova.html#a-tabela-de-anova-ajustada-pela-covariável"><i class="fa fa-check"></i><b>3.9.3</b> A tabela de ANOVA ajustada pela covariável</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html"><i class="fa fa-check"></i><b>3.10</b> Teste de Kruskal-Wallis</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dbca.html"><a href="dbca.html"><i class="fa fa-check"></i><b>4.1</b> O delineamento em blocos completos aleatorizados (DBCA)</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dbca.html"><a href="dbca.html#motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos"><i class="fa fa-check"></i><b>4.1.1</b> Motivação: o que dá errado sem controle local — fatores confundidos</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dbca.html"><a href="dbca.html#o-modelo-1"><i class="fa fa-check"></i><b>4.1.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dbca.html"><a href="dbca.html#notação-matricial-yxbetavarepsilon"><i class="fa fa-check"></i><b>4.1.3</b> Notação matricial: <span class="math inline">\(Y=X\beta+\varepsilon\)</span></a></li>
+<li class="chapter" data-level="4.1.4" data-path="dbca.html"><a href="dbca.html#blocagem-como-aleatorização-restrita-a-camada-causal"><i class="fa fa-check"></i><b>4.1.4</b> Blocagem como aleatorização restrita: a camada causal</a></li>
+<li class="chapter" data-level="4.1.5" data-path="dbca.html"><a href="dbca.html#tabela-de-anova"><i class="fa fa-check"></i><b>4.1.5</b> Tabela de ANOVA</a></li>
+<li class="chapter" data-level="4.1.6" data-path="dbca.html"><a href="dbca.html#esperança-dos-quadrados-médios"><i class="fa fa-check"></i><b>4.1.6</b> Esperança dos quadrados médios</a></li>
+<li class="chapter" data-level="4.1.7" data-path="dbca.html"><a href="dbca.html#visualizando-aditividade-o-gráfico-de-perfis"><i class="fa fa-check"></i><b>4.1.7</b> Visualizando aditividade: o gráfico de perfis</a></li>
+<li class="chapter" data-level="4.1.8" data-path="dbca.html"><a href="dbca.html#diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação"><i class="fa fa-check"></i><b>4.1.8</b> Diagrama de Hasse do DBCA: por que não há nó de interação</a></li>
+<li class="chapter" data-level="4.1.9" data-path="dbca.html"><a href="dbca.html#dados-faltantes-estimação-do-valor-perdido"><i class="fa fa-check"></i><b>4.1.9</b> Dados faltantes: estimação do valor perdido</a></li>
+<li class="chapter" data-level="4.1.10" data-path="dbca.html"><a href="dbca.html#eficiência-relativa-do-dbca-frente-ao-dca"><i class="fa fa-check"></i><b>4.1.10</b> Eficiência relativa do DBCA frente ao DCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="friedman.html"><a href="friedman.html"><i class="fa fa-check"></i><b>4.2</b> Teste de Friedman</a></li>
+<li class="chapter" data-level="4.3" data-path="bib.html"><a href="bib.html"><i class="fa fa-check"></i><b>4.3</b> Blocos incompletos balanceados</a></li>
+<li class="chapter" data-level="4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html"><i class="fa fa-check"></i><b>4.4</b> Delineamento em quadrado latino</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="quadrado-latino.html"><a href="quadrado-latino.html#motivação-dois-gradientes-ortogonais-e-por-que-um-bloqueio-simples-não-basta"><i class="fa fa-check"></i><b>4.4.1</b> Motivação: dois gradientes ortogonais, e por que um bloqueio simples não basta</a></li>
+<li class="chapter" data-level="4.4.2" data-path="quadrado-latino.html"><a href="quadrado-latino.html#o-modelo-2"><i class="fa fa-check"></i><b>4.4.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.4.3" data-path="quadrado-latino.html"><a href="quadrado-latino.html#diagrama-de-hasse-do-quadrado-latino-três-fatores-cruzados-dois-a-dois"><i class="fa fa-check"></i><b>4.4.3</b> Diagrama de Hasse do quadrado latino: três fatores cruzados dois a dois</a></li>
+<li class="chapter" data-level="4.4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html#aleatorização-de-um-quadrado-latino-yates1933latin"><i class="fa fa-check"></i><b>4.4.4</b> Aleatorização de um quadrado latino <span class="citation">(Yates, 1933)</span></a></li>
+<li class="chapter" data-level="4.4.5" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quadrados-latinos-replicados"><i class="fa fa-check"></i><b>4.4.5</b> Quadrados latinos replicados</a></li>
+<li class="chapter" data-level="4.4.6" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quantas-réplicas-uma-análise-de-poder"><i class="fa fa-check"></i><b>4.4.6</b> Quantas réplicas? Uma análise de poder</a></li>
+<li class="chapter" data-level="4.4.7" data-path="quadrado-latino.html"><a href="quadrado-latino.html#eficiencia-ql"><i class="fa fa-check"></i><b>4.4.7</b> Eficiência relativa do quadrado latino frente ao DBCA e ao DCA</a></li>
+<li class="chapter" data-level="4.4.8" data-path="quadrado-latino.html"><a href="quadrado-latino.html#ql-exemplo-ecommerce"><i class="fa fa-check"></i><b>4.4.8</b> Um segundo exemplo completo: cinco variantes de checkout em e-commerce</a></li>
+<li class="chapter" data-level="4.4.9" data-path="quadrado-latino.html"><a href="quadrado-latino.html#youden"><i class="fa fa-check"></i><b>4.4.9</b> Quadrados de Youden: quando o quadrado latino não pode ser completo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html"><i class="fa fa-check"></i><b>4.5</b> Delineamento em quadrado greco-latino</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#mols"><i class="fa fa-check"></i><b>4.5.1</b> Quadrados latinos mutuamente ortogonais (MOLS): existência e o problema de Euler</a></li>
+<li class="chapter" data-level="4.5.2" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#o-modelo-3"><i class="fa fa-check"></i><b>4.5.2</b> O modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.6</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
+<li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a></li>
+<li class="chapter" data-level="5.4" data-path="matriz-axb.html"><a href="matriz-axb.html"><i class="fa fa-check"></i><b>5.4</b> Notação matricial do fatorial A×B</a></li>
+<li class="chapter" data-level="5.5" data-path="axbxc.html"><a href="axbxc.html"><i class="fa fa-check"></i><b>5.5</b> Fatoriais A×B×C: interações duplas e tripla</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="axbxc.html"><a href="axbxc.html#cubo-2x2x2"><i class="fa fa-check"></i><b>5.5.1</b> O cubo do <span class="math inline">\(2^3\)</span>: visualizando efeitos principais, duplos e triplo</a></li>
+<li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
+<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
+<li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="nao-replicado.html"><a href="nao-replicado.html"><i class="fa fa-check"></i><b>6.2</b> Análise de um fatorial <span class="math inline">\(2^k\)</span> não replicado</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-probabilidade-normal-half-normal-plot"><i class="fa fa-check"></i><b>6.2.1</b> Gráfico de probabilidade normal (half-normal plot)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-pareto-dos-efeitos"><i class="fa fa-check"></i><b>6.2.2</b> Gráfico de Pareto dos efeitos</a></li>
+<li class="chapter" data-level="6.2.3" data-path="nao-replicado.html"><a href="nao-replicado.html#margem-de-erro-pelo-método-de-lenth"><i class="fa fa-check"></i><b>6.2.3</b> Margem de erro pelo método de Lenth</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="confusao-2k.html"><a href="confusao-2k.html"><i class="fa fa-check"></i><b>6.3</b> Confusão em <span class="math inline">\(2^k\)</span>: designação de tratamentos a blocos</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="confusao-2k.html"><a href="confusao-2k.html#esquema-de-designação-o-contraste-definidor"><i class="fa fa-check"></i><b>6.3.1</b> Esquema de designação: o contraste definidor</a></li>
+<li class="chapter" data-level="6.3.2" data-path="confusao-2k.html"><a href="confusao-2k.html#confusao-projecao"><i class="fa fa-check"></i><b>6.3.2</b> Confusão como colinearidade em <span class="math inline">\(\mathbf{X}\)</span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="confusao-2k.html"><a href="confusao-2k.html#confusão-total-vs.-confusão-parcial"><i class="fa fa-check"></i><b>6.3.3</b> Confusão total vs. confusão parcial</a></li>
+<li class="chapter" data-level="6.3.4" data-path="confusao-2k.html"><a href="confusao-2k.html#hasse-confusao"><i class="fa fa-check"></i><b>6.3.4</b> Visualizando a confusão com um diagrama de Hasse</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
+<li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
+<li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
+<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html"><i class="fa fa-check"></i><b>7.1</b> Introdução à superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ponto-estacionario"><i class="fa fa-check"></i><b>7.1.1</b> Classificando o ponto estacionário: gradiente e Hessiana</a></li>
+<li class="chapter" data-level="7.1.2" data-path="superficie-resposta.html"><a href="superficie-resposta.html#analise-canonica"><i class="fa fa-check"></i><b>7.1.2</b> Análise canônica: além de classificar, descrever a forma da superfície</a></li>
+<li class="chapter" data-level="7.1.3" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ridge-analysis"><i class="fa fa-check"></i><b>7.1.3</b> Análise de ridge: otimizando dentro de um raio fixo da região experimental</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="steepest-ascent.html"><a href="steepest-ascent.html"><i class="fa fa-check"></i><b>7.2</b> O caminho de máxima inclinação: de um fatorial inicial até a região do ótimo</a></li>
+<li class="chapter" data-level="7.3" data-path="ccd.html"><a href="ccd.html"><i class="fa fa-check"></i><b>7.3</b> Delineamento composto central (CCD)</a></li>
+<li class="chapter" data-level="7.4" data-path="desejabilidade.html"><a href="desejabilidade.html"><i class="fa fa-check"></i><b>7.4</b> Otimização de múltiplas respostas: funções de desejabilidade</a></li>
+<li class="chapter" data-level="7.5" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.5</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.6" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.6</b> Fim do programa do semestre</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><i class="fa fa-check"></i><b>8.1</b> Parte I — Testes A/B como delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-e-dca"><i class="fa fa-check"></i><b>8.1.1</b> Um teste A/B é um delineamento completamente aleatorizado</a></li>
+<li class="chapter" data-level="8.1.2" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-dificuldades"><i class="fa fa-check"></i><b>8.1.2</b> Por que testes A/B em produtos digitais são estatisticamente difíceis</a></li>
+<li class="chapter" data-level="8.1.3" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-peeking"><i class="fa fa-check"></i><b>8.1.3</b> O problema do “peeking”</a></li>
+<li class="chapter" data-level="8.1.4" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-winners-curse"><i class="fa fa-check"></i><b>8.1.4</b> Vício do vencedor (<em>winner’s curse</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><i class="fa fa-check"></i><b>8.2</b> Parte II — Bandits: quando explorar e quando explotar</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-motivacao"><i class="fa fa-check"></i><b>8.2.1</b> Exploração, explotação e a definição de arrependimento (<em>regret</em>)</a></li>
+<li class="chapter" data-level="8.2.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-ucb1"><i class="fa fa-check"></i><b>8.2.2</b> Upper Confidence Bound (UCB1): otimismo perante a incerteza</a></li>
+<li class="chapter" data-level="8.2.3" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-thompson"><i class="fa fa-check"></i><b>8.2.3</b> Thompson sampling: uma solução bayesiana</a></li>
+<li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
+<li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Planejamento e Análise de Experimentos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dbca" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> O delineamento em blocos completos aleatorizados (DBCA)<a href="dbca.html#dbca" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Motivação: o que dá errado sem controle local — fatores confundidos<a href="dbca.html#motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Antes de descrever o DBCA formalmente, vale entender <strong>o que exatamente ele evita</strong>. Dois fatores
+<span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> são ditos <strong>completamente confundidos</strong> quando, no delineamento usado, seus efeitos são
+matematicamente indistinguíveis — toda vez que <span class="math inline">\(A\)</span> está em um certo nível, <span class="math inline">\(B\)</span> também está, sem
+exceção, de modo que nenhuma comparação isola um do outro.</p>
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: um programa de incentivo mal desenhado</strong><br>
+Uma prefeitura lança um programa de incentivo ao comércio local e, por conveniência logística,
+implementa-o apenas em bairros de renda alta, usando bairros de renda baixa como "controle" (sem
+o programa). Depois de um trimestre, compara o faturamento médio do comércio nos bairros com
+programa contra os sem programa.
+</div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="dbca.html#cb140-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
+<span id="cb140-2"><a href="dbca.html#cb140-2" tabindex="-1"></a>dados_confundido <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb140-3"><a href="dbca.html#cb140-3" tabindex="-1"></a>  <span class="at">bairro    =</span> <span class="fu">c</span>(<span class="st">&quot;Boa Viagem&quot;</span>, <span class="st">&quot;Casa Forte&quot;</span>, <span class="st">&quot;Graças&quot;</span>, <span class="st">&quot;Ibura&quot;</span>, <span class="st">&quot;Coelhos&quot;</span>, <span class="st">&quot;Brasília Teimosa&quot;</span>),</span>
+<span id="cb140-4"><a href="dbca.html#cb140-4" tabindex="-1"></a>  <span class="at">renda     =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Alta&quot;</span>, <span class="st">&quot;Baixa&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Alta&quot;</span>, <span class="st">&quot;Baixa&quot;</span>)),</span>
+<span id="cb140-5"><a href="dbca.html#cb140-5" tabindex="-1"></a>  <span class="at">programa  =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Incentivo&quot;</span>, <span class="st">&quot;Controle&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Incentivo&quot;</span>, <span class="st">&quot;Controle&quot;</span>)),</span>
+<span id="cb140-6"><a href="dbca.html#cb140-6" tabindex="-1"></a>  <span class="co"># bairros de renda alta já faturam mais, com ou sem programa</span></span>
+<span id="cb140-7"><a href="dbca.html#cb140-7" tabindex="-1"></a>  <span class="at">faturamento =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">520</span>, <span class="dv">40</span>), <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">210</span>, <span class="dv">25</span>))</span>
+<span id="cb140-8"><a href="dbca.html#cb140-8" tabindex="-1"></a>)</span>
+<span id="cb140-9"><a href="dbca.html#cb140-9" tabindex="-1"></a>dados_confundido</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 4
+##   bairro           renda programa  faturamento
+##   &lt;chr&gt;            &lt;fct&gt; &lt;fct&gt;           &lt;dbl&gt;
+## 1 Boa Viagem       Alta  Incentivo        540.
+## 2 Casa Forte       Alta  Incentivo        504.
+## 3 Graças           Alta  Incentivo        540.
+## 4 Ibura            Baixa Controle         200.
+## 5 Coelhos          Baixa Controle         251.
+## 6 Brasília Teimosa Baixa Controle         226.</code></pre>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="dbca.html#cb142-1" tabindex="-1"></a><span class="fu">ggplot</span>(dados_confundido, <span class="fu">aes</span>(<span class="at">x =</span> programa, <span class="at">y =</span> faturamento, <span class="at">fill =</span> renda)) <span class="sc">+</span></span>
+<span id="cb142-2"><a href="dbca.html#cb142-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb142-3"><a href="dbca.html#cb142-3" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
+<span id="cb142-4"><a href="dbca.html#cb142-4" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>), <span class="at">name =</span> <span class="st">&quot;Renda do bairro&quot;</span>) <span class="sc">+</span></span>
+<span id="cb142-5"><a href="dbca.html#cb142-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Faturamento médio (R$ mil)&quot;</span>,</span>
+<span id="cb142-6"><a href="dbca.html#cb142-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Efeito aparente do programa — ou efeito de renda?&quot;</span>) <span class="sc">+</span></span>
+<span id="cb142-7"><a href="dbca.html#cb142-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<p><img src="04-blocos_files/figure-html/confundido-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<p>O grupo “Incentivo” fatura visivelmente mais — mas <strong>não há como saber se isso é efeito do
+programa, da renda pré-existente do bairro, ou de ambos</strong>, porque <code>renda</code> e <code>programa</code> variam em
+perfeita sincronia nesse delineamento: todo bairro de renda alta recebeu o programa, e nenhum de
+renda baixa recebeu. Ajustar <code>lm(faturamento ~ renda + programa)</code> sequer é possível de forma
+identificável aqui (as duas colunas de <span class="math inline">\(X\)</span> seriam idênticas a menos de uma constante) — o R
+reportaria um coeficiente <code>NA</code> para uma delas. Isso não é uma falha de estimação, é uma falha de
+<strong>delineamento</strong>: nenhuma quantidade de dados adicionais no mesmo esquema resolveria o problema.</p>
+<p>O DBCA é, em certo sentido, o oposto desse erro. Ele <strong>não</strong> trava um tratamento a um nível fixo de
+uma variável de ruído (o que criaria confusão); ao contrário, ele <strong>agrupa</strong> unidades por essa
+variável de ruído em blocos e depois <strong>sorteia</strong> os tratamentos dentro de cada bloco, de modo que
+todo tratamento seja observado em todo nível da variável de ruído. Um bairro poderia, por exemplo,
+funcionar como bloco geográfico legítimo — desde que a alocação do tratamento dentro dele seja
+aleatória, não determinada pela própria característica do bloco. O mapa abaixo, com os bairros do
+Recife (RPA — Região Político-Administrativa) coloridos por sua área de planejamento, ilustra a
+escala em que uma blocagem geográfica desse tipo é definida: cada RPA agruparia unidades vizinhas,
+presumivelmente mais parecidas entre si, dentro das quais os tratamentos seriam então sorteados.</p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="dbca.html#cb143-1" tabindex="-1"></a>recife <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">&quot;../Aulas/Bairros_Recife/bairros-polygon.shp&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb143-2"><a href="dbca.html#cb143-2" tabindex="-1"></a></span>
+<span id="cb143-3"><a href="dbca.html#cb143-3" tabindex="-1"></a><span class="fu">ggplot</span>(recife) <span class="sc">+</span></span>
+<span id="cb143-4"><a href="dbca.html#cb143-4" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(rpa)), <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb143-5"><a href="dbca.html#cb143-5" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>, <span class="at">name =</span> <span class="st">&quot;RPA</span><span class="sc">\n</span><span class="st">(bloco geográfico)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb143-6"><a href="dbca.html#cb143-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Bairros do Recife agrupados por Região Político-Administrativa&quot;</span>,</span>
+<span id="cb143-7"><a href="dbca.html#cb143-7" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cada RPA poderia servir de bloco geográfico em um DBCA&quot;</span>) <span class="sc">+</span></span>
+<span id="cb143-8"><a href="dbca.html#cb143-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb143-9"><a href="dbca.html#cb143-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<p><img src="04-blocos_files/figure-html/confundido-mapa-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<p>Com 94 bairros distribuídos em seis RPAs, um pesquisador que quisesse comparar, por
+exemplo, três estratégias de precificação no comércio local poderia blocar por RPA (controlando
+diferenças regionais de renda e densidade comercial) e, <strong>dentro de cada RPA</strong>, sortear os bairros
+participantes entre as três estratégias — o mesmo princípio do exemplo agrícola que segue, só que
+com blocos definidos por geografia urbana em vez de área de viveiro.</p>
+</div>
+<div id="o-modelo-1" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> O modelo<a href="dbca.html#o-modelo-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Sejam <span class="math inline">\(t\)</span> tratamentos e <span class="math inline">\(b\)</span> blocos. No DBCA, cada bloco contém exatamente uma unidade experimental
+por tratamento — os blocos são “completos” porque nenhum tratamento fica de fora de nenhum bloco —
+e a ordem de aplicação dos tratamentos dentro de cada bloco é sorteada independentemente em cada
+bloco. O modelo estatístico é</p>
+<p><span class="math display">\[
+Y_{ij} = \mu + \tau_i + \beta_j + \varepsilon_{ij}, \qquad i = 1,\dots,t;\ j = 1,\dots,b,
+\]</span></p>
+<p>em que <span class="math inline">\(\mu\)</span> é a média geral, <span class="math inline">\(\tau_i\)</span> é o efeito (fixo) do <span class="math inline">\(i\)</span>-ésimo tratamento, <span class="math inline">\(\beta_j\)</span> é o
+efeito do <span class="math inline">\(j\)</span>-ésimo bloco (em geral tratado como aleatório, <span class="math inline">\(\beta_j \sim N(0,\sigma^2_\beta)\)</span>,
+independente dos erros, embora a análise de efeitos fixos produza os mesmos testes-<span class="math inline">\(F\)</span> sobre os
+tratamentos) e <span class="math inline">\(\varepsilon_{ij} \sim N(0,\sigma^2)\)</span>, independentes. Usamos as restrições
+<span class="math inline">\(\sum_i \tau_i = 0\)</span> e <span class="math inline">\(\sum_j \beta_j = 0\)</span> para identificabilidade. Note a ausência de um termo de
+interação tratamento<span class="math inline">\(\times\)</span>bloco: o modelo assume que o efeito de um tratamento é o mesmo, a
+menos de erro aleatório, em todos os blocos (<strong>aditividade</strong> tratamento-bloco) — retomaremos essa
+suposição ao final da seção.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-ue-uo-blocos"></span>
+<img src="../Aulas/images/sit4.png" alt="Situação Experimental 4: a mesma lógica de unidade experimental (UE) e unidade amostral da Seção 3.5, agora cruzada com blocos. Dentro de cada Bloco, os três tratamentos são sorteados independentemente entre as UEs daquele bloco; cada UE contém, por sua vez, duas unidades amostrais (vasos) medidas individualmente." width="55%" />
+<p class="caption">
+Figure 4.1: Situação Experimental 4: a mesma lógica de unidade experimental (UE) e unidade amostral da Seção 3.5, agora cruzada com blocos. Dentro de cada Bloco, os três tratamentos são sorteados independentemente entre as UEs daquele bloco; cada UE contém, por sua vez, duas unidades amostrais (vasos) medidas individualmente.
+</p>
+</div>
+<p>O diagrama retoma as Situações Experimentais 1 e 2 da Seção <a href="dca-submuestreo.html#dca-submuestreo">3.3</a>, acrescentando
+agora a estrutura de blocagem: cada retângulo maior (“Bloco 1”, “Bloco 2”) é um bloco completo, e o
+sorteio dos três tratamentos ocorre <strong>dentro</strong> de cada bloco, de forma independente — Bloco 1
+sorteia a ordem Trat. 3, Trat. 1, Trat. 2, enquanto Bloco 2 sorteia Trat. 1, Trat. 3, Trat. 2, uma
+permutação diferente, exatamente como a Seção <a href="dbca.html#dbca">4.1</a> descreve a aleatorização restrita: cada
+UE dentro de um bloco tem a mesma chance de receber cada tratamento, mas o sorteio não se estende
+entre blocos. Note também que cada UE aqui contém duas unidades amostrais (dois vasos), o que
+significa que este desenho combina blocagem <strong>e</strong> submuestreo simultaneamente — um lembrete de que
+as duas ideias (Seção <a href="dca-submuestreo.html#dca-submuestreo">3.3</a> e esta seção) não são mutuamente exclusivas: é
+perfeitamente possível ter um DBCA com submuestreo dentro de cada UE, embora o modelo <span class="math inline">\(Y_{ij} = \mu + \tau_i + \beta_j + \varepsilon_{ij}\)</span> apresentado acima descreva o caso mais simples, sem
+submuestreo (uma única observação por combinação tratamento-bloco).</p>
+</div>
+<div id="notação-matricial-yxbetavarepsilon" class="section level3 hasAnchor" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Notação matricial: <span class="math inline">\(Y=X\beta+\varepsilon\)</span><a href="dbca.html#notação-matricial-yxbetavarepsilon" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>O modelo do DBCA é um caso particular do modelo linear geral que formalizaremos no Capítulo 2,
+<span class="math inline">\(Y = X\beta + \varepsilon\)</span>, e vale a pena escrevê-lo assim desde já, porque a estrutura de <span class="math inline">\(X\)</span>
+deixa visualmente óbvio um fato que, em palavras, é fácil de esquecer: <strong>não há colunas de
+produto entre tratamento e bloco</strong>. Empilhando as <span class="math inline">\(tb\)</span> observações em um vetor <span class="math inline">\(Y\)</span>, a matriz de
+delineamento tem a forma em blocos de colunas</p>
+<p><span class="math display">\[
+X = \big[\,\mathbf{1} \mid X_{trat} \mid X_{bloco}\,\big],
+\]</span></p>
+<p>em que <span class="math inline">\(\mathbf 1\)</span> é a coluna de uns (intercepto), <span class="math inline">\(X_{trat}\)</span> tem <span class="math inline">\(t-1\)</span> colunas indicadoras dos
+tratamentos e <span class="math inline">\(X_{bloco}\)</span> tem <span class="math inline">\(b-1\)</span> colunas indicadoras dos blocos (uma coluna é omitida em cada
+grupo para evitar colinearidade com o intercepto, na parametrização usual de “tratamento de
+referência”). O vetor de parâmetros é <span class="math inline">\(\beta=(\mu,\tau_2,\dots,\tau_t,\beta_2,\dots,\beta_b)&#39;\)</span>.
+Repare que <strong>não existe</strong> nenhuma coluna do tipo (indicador de tratamento) <span class="math inline">\(\times\)</span> (indicador de
+bloco): é exatamente essa ausência — não uma suposição adicional escondida em algum lugar — que
+constitui, em termos de <span class="math inline">\(X\)</span>, a suposição de aditividade tratamento-bloco. Um quadrado latino
+(Seção <a href="quadrado-latino.html#quadrado-latino">4.4</a>) terá a mesma estrutura, só que com <strong>três</strong> blocos de colunas
+lado a lado (tratamento, linha, coluna) em vez de dois — e nenhuma delas cruzada com as outras.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — a estrutura de X para um DBCA pequeno (t=3, b=2)</div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="dbca.html#cb144-1" tabindex="-1"></a>dados_toy <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb144-2"><a href="dbca.html#cb144-2" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> dados_toy)</span></code></pre></div>
+<pre><code>##   (Intercept) tratamento2 tratamento3 bloco2
+## 1           1           0           0      0
+## 2           1           1           0      0
+## 3           1           0           1      0
+## 4           1           0           0      1
+## 5           1           1           0      1
+## 6           1           0           1      1
+## attr(,&quot;assign&quot;)
+## [1] 0 1 1 2
+## attr(,&quot;contrasts&quot;)
+## attr(,&quot;contrasts&quot;)$tratamento
+## [1] &quot;contr.treatment&quot;
+## 
+## attr(,&quot;contrasts&quot;)$bloco
+## [1] &quot;contr.treatment&quot;</code></pre>
+<p>O estimador de mínimos quadrados <span class="math inline">\(\hat\beta=(X&#39;X)^{-1}X&#39;Y\)</span> e a matriz de projeção
+<span class="math inline">\(H=X(X&#39;X)^{-1}X&#39;\)</span> (Capítulo 2) aplicam-se sem modificação — a ANOVA que segue nada mais é do que
+uma forma de organizar <span class="math inline">\(\|Y-\hat Y\|^2=\|(I-H)Y\|^2\)</span> e suas partes atribuíveis a cada bloco de
+colunas de <span class="math inline">\(X\)</span>.</p>
+</div>
+<div id="blocagem-como-aleatorização-restrita-a-camada-causal" class="section level3 hasAnchor" number="4.1.4">
+<h3><span class="header-section-number">4.1.4</span> Blocagem como aleatorização restrita: a camada causal<a href="dbca.html#blocagem-como-aleatorização-restrita-a-camada-causal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Vale a pena revisitar a blocagem sob a ótica causal potencial-outcomes de Neyman e Rubin
+<span class="citation">(<a href="#ref-imbensrubin2015">Imbens &amp; Rubin, 2015</a>; <a href="#ref-rubin1974estimating">Rubin, 1974</a>; <a href="#ref-neyman1923application">Splawa-Neyman, 1990</a>)</span>, já que ela explica <em>por que</em> o
+DBCA continua produzindo um estimador não viesado do efeito do tratamento, e não apenas <em>como</em>
+calculá-lo. Para cada unidade <span class="math inline">\(u\)</span> e tratamento <span class="math inline">\(i\)</span>, existe um resultado potencial <span class="math inline">\(Y_u(i)\)</span> — a
+resposta que <span class="math inline">\(u\)</span> <em>teria</em> sob o tratamento <span class="math inline">\(i\)</span>, quer esse tratamento tenha sido de fato aplicado a
+<span class="math inline">\(u\)</span> ou não. O efeito causal médio do tratamento <span class="math inline">\(i\)</span> contra o tratamento <span class="math inline">\(i&#39;\)</span> é
+<span class="math inline">\(\mathbb E[Y_u(i)-Y_u(i&#39;)]\)</span>, tomado sobre a população de unidades.</p>
+<p>Em um DCA (sem blocos), o sorteio é <em>completo</em>: cada unidade tem a mesma probabilidade de receber
+cada tratamento, e essa aleatorização garante <span class="math inline">\(\mathbb E[Y_u(i)\mid \text{recebeu }i] = \mathbb E[Y_u(i)]\)</span> — o grupo que de fato recebeu <span class="math inline">\(i\)</span> é, em expectativa, uma amostra representativa
+de como <em>toda</em> a população responderia a <span class="math inline">\(i\)</span>. No DBCA, o sorteio é <strong>restrito</strong> (ou
+<em>estratificado</em>): dentro de cada bloco <span class="math inline">\(j\)</span>, sorteiam-se os <span class="math inline">\(t\)</span> tratamentos entre as unidades
+daquele bloco. Isso ainda é aleatorização — cada unidade dentro do bloco tem a mesma chance de
+receber cada tratamento —, só que aplicada separadamente em cada estrato. A analogia com
+amostragem estratificada é direta: assim como estimar uma média populacional estratificando por
+uma variável correlacionada com a resposta produz um estimador <strong>igualmente não viesado</strong>, mas com
+<strong>variância menor</strong> que a amostragem aleatória simples, blocar por uma variável correlacionada com
+a resposta produz um estimador do efeito de tratamento igualmente não viesado, mas com erro-padrão
+menor — precisamente o ganho que a eficiência relativa, adiante, quantifica. A condição para que a
+blocagem <em>não piore nada</em> é fraca (basta que o sorteio dentro de cada bloco seja de fato aleatório);
+a condição para que ela <em>ajude</em> é que os blocos correlacionem com a resposta — se não
+correlacionarem, o único custo é gastar <span class="math inline">\(b-1\)</span> graus de liberdade do erro à toa, como veremos no
+exemplo do viveiro de pepineiros.</p>
+</div>
+<div id="tabela-de-anova" class="section level3 hasAnchor" number="4.1.5">
+<h3><span class="header-section-number">4.1.5</span> Tabela de ANOVA<a href="dbca.html#tabela-de-anova" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A soma de quadrados total se decompõe em três partes:</p>
+<p><span class="math display">\[
+\underbrace{\sum_{i,j}(Y_{ij}-\bar Y_{..})^2}_{SQ_{Total}} =
+\underbrace{b\sum_i(\bar Y_{i.}-\bar Y_{..})^2}_{SQ_{Trat}} +
+\underbrace{t\sum_j(\bar Y_{.j}-\bar Y_{..})^2}_{SQ_{Bloco}} +
+\underbrace{SQ_{Total}-SQ_{Trat}-SQ_{Bloco}}_{SQ_{Erro}}.
+\]</span></p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tabela-anova-dbca">Table 4.1: </span><span id="tab:tabela-anova-dbca">Table 4.2: </span>Tabela de ANOVA do DBCA
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Fonte de variação
+</th>
+<th style="text-align:left;">
+Graus de liberdade
+</th>
+<th style="text-align:left;">
+Soma de quadrados
+</th>
+<th style="text-align:left;">
+Quadrado médio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Tratamento
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t-1\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SQ_{Trat}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(QM_{Trat}=SQ_{Trat}/(t-1)\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bloco
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(b-1\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SQ_{Bloco}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(QM_{Bloco}=SQ_{Bloco}/(b-1)\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Erro
+</td>
+<td style="text-align:left;">
+<span class="math inline">\((t-1)(b-1)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SQ_{Erro}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(QM_{Erro}=SQ_{Erro}/[(t-1)(b-1)]\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(tb-1\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SQ_{Total}\)</span>
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+</table>
+<p>O teste de interesse compara <span class="math inline">\(F_0 = QM_{Trat}/QM_{Erro}\)</span> com <span class="math inline">\(F_{\alpha,\,t-1,\,(t-1)(b-1)}\)</span>. Um
+teste sobre os blocos (<span class="math inline">\(QM_{Bloco}/QM_{Erro}\)</span>) também é produzido pelo software, mas <strong>não deve
+guiar decisões de retirar a blocagem do modelo</strong>: os blocos foram fixados pelo delineamento (não
+sorteados), então o objetivo de incluí-los é reduzir o erro experimental, não testar sua
+significância — mesmo um bloco “não significativo” já removeu variação do erro que, de outra
+forma, inflaria <span class="math inline">\(QM_{Erro}\)</span> e reduziria o poder do teste sobre os tratamentos.</p>
+</div>
+<div id="esperança-dos-quadrados-médios" class="section level3 hasAnchor" number="4.1.6">
+<h3><span class="header-section-number">4.1.6</span> Esperança dos quadrados médios<a href="dbca.html#esperança-dos-quadrados-médios" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A afirmação anterior — que o teste <span class="math inline">\(F\)</span> sobre blocos não deve orientar decisão alguma — não é só uma
+convenção prática; ela é uma consequência direta de quem entra na <strong>esperança</strong> de cada quadrado
+médio. Sob o modelo de efeitos fixos <span class="math inline">\(\sum_i\tau_i=0\)</span>, <span class="math inline">\(\sum_j\beta_j=0\)</span>,</p>
+<p><span class="math display">\[
+\mathbb E[QM_{Trat}] = \sigma^2 + \frac{b}{t-1}\sum_{i=1}^t \tau_i^2, \qquad
+\mathbb E[QM_{Bloco}] = \sigma^2 + \frac{t}{b-1}\sum_{j=1}^b \beta_j^2, \qquad
+\mathbb E[QM_{Erro}] = \sigma^2.
+\]</span></p>
+<p>O denominador correto de um teste <span class="math inline">\(F\)</span> é sempre um quadrado médio cuja esperança é <span class="math inline">\(\sigma^2\)</span> <strong>sob
+a hipótese nula de interesse</strong> — e <span class="math inline">\(QM_{Erro}\)</span> cumpre esse papel tanto para o teste de tratamentos
+quanto, formalmente, para um teste de blocos. O problema não é a matemática do teste
+<span class="math inline">\(QM_{Bloco}/QM_{Erro}\)</span> (ele é perfeitamente calculável e o software o reporta sem erro); é que
+<span class="math inline">\(H_0:\beta_1=\dots=\beta_b=0\)</span> não corresponde a pergunta científica alguma neste delineamento — os
+blocos não foram sorteados de uma população de blocos possíveis, foram <em>escolhidos</em> porque já se
+sabia, a priori, que representavam uma fonte real de heterogeneidade (áreas do viveiro com solos e
+insolação diferentes). Testar se algo que já sabíamos ser heterogêneo é “estatisticamente
+heterogêneo” é uma pergunta mal colocada; a pergunta que importa — “quanto essa heterogeneidade
+conhecida contaminaria o erro se eu a ignorasse?” — é justamente o que a eficiência relativa,
+adiante, responde.</p>
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: irrigação, silício e altura de pepineiros</strong><br>
+Um experimento de horticultura investiga o efeito conjunto de dois <strong>níveis de
+irrigação</strong> (0,5 e 1,0, uma fração da lâmina de referência) e <strong>quatro doses de
+silício</strong> (0, 500, 1000 e 1500 ml) sobre a altura de plantas de pepino. As oito
+combinações de irrigação e silício foram aplicadas em <strong>três blocos</strong> (áreas
+contíguas do viveiro, cada uma com sua própria heterogeneidade de solo e insolação), com uma
+planta de cada combinação por bloco.
+</div>
+<p>Para introduzir o DBCA de um único fator, tratamos cada uma das <span class="math inline">\(2\times 4=8\)</span> combinações de
+irrigação e silício como um “tratamento” só, deixando a decomposição desse efeito em irrigação,
+silício e sua interação para o Capítulo 5 (fatoriais em blocos), quando retomaremos exatamente
+este conjunto de dados.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — ajustando o DBCA</div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="dbca.html#cb146-1" tabindex="-1"></a>pepino <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pepino.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb146-2"><a href="dbca.html#cb146-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb146-3"><a href="dbca.html#cb146-3" tabindex="-1"></a>    <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;riego&quot;</span>, riego, <span class="st">&quot;_&quot;</span>, silicio)),</span>
+<span id="cb146-4"><a href="dbca.html#cb146-4" tabindex="-1"></a>    <span class="at">bloco      =</span> <span class="fu">factor</span>(bloque)</span>
+<span id="cb146-5"><a href="dbca.html#cb146-5" tabindex="-1"></a>  )</span>
+<span id="cb146-6"><a href="dbca.html#cb146-6" tabindex="-1"></a><span class="fu">glimpse</span>(pepino)</span></code></pre></div>
+<pre><code>## Rows: 24
+## Columns: 6
+## $ riego      &lt;dbl&gt; 0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5,…
+## $ silicio    &lt;chr&gt; &quot;0 ml&quot;, &quot;500 ml&quot;, &quot;1000 ml&quot;, &quot;1500 ml&quot;, &quot;0 ml&quot;, &quot;500 ml&quot;, &quot;…
+## $ bloque     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,…
+## $ altura     &lt;dbl&gt; 4.26, 4.91, 4.35, 4.44, 4.72, 5.22, 4.62, 5.25, 4.07, 5.21,…
+## $ tratamento &lt;fct&gt; riego0.5_0 ml, riego0.5_500 ml, riego0.5_1000 ml, riego0.5_…
+## $ bloco      &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,…</code></pre>
+<p>A coluna <code>bloco</code> não é uma variável de interesse científico — ninguém pergunta “o bloco 2 produz
+plantas mais altas que o bloco 1?” — ela apenas identifica <strong>qual área contígua do viveiro</strong>
+originou cada planta, uma fonte conhecida de heterogeneidade de solo e insolação que queremos
+neutralizar antes de comparar irrigação e silício. É por isso, e não por acaso de notação, que a
+Seção anterior insistiu em não usar o teste <span class="math inline">\(F\)</span> de blocos para decidir se vale a pena mantê-los no
+modelo: a pergunta “o bloco é estatisticamente significativo?” não é a pergunta que nos interessa
+sobre essa coluna.</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="dbca.html#cb148-1" tabindex="-1"></a>mod_dbca <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> pepino)</span>
+<span id="cb148-2"><a href="dbca.html#cb148-2" tabindex="-1"></a><span class="fu">anova</span>(mod_dbca) <span class="sc">%&gt;%</span></span>
+<span id="cb148-3"><a href="dbca.html#cb148-3" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb148-4"><a href="dbca.html#cb148-4" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do DBCA — altura de pepineiros&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb148-5"><a href="dbca.html#cb148-5" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:dbca-pepino-mod">Table 4.3: </span><span id="tab:dbca-pepino-mod">Table 4.4: </span>ANOVA do DBCA — altura de pepineiros
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+sumsq
+</th>
+<th style="text-align:right;">
+meansq
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+tratamento
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+2.0359
+</td>
+<td style="text-align:right;">
+0.2908
+</td>
+<td style="text-align:right;">
+5.2478
+</td>
+<td style="text-align:right;">
+0.0041
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bloco
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0128
+</td>
+<td style="text-align:right;">
+0.0064
+</td>
+<td style="text-align:right;">
+0.1157
+</td>
+<td style="text-align:right;">
+0.8916
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Residuals
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0.7759
+</td>
+<td style="text-align:right;">
+0.0554
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<p>Há evidência forte de efeito de tratamento (<span class="math inline">\(F_{7,14}=5{,}25\)</span>, <span class="math inline">\(p=0{,}0041\)</span>): pelo menos uma
+combinação de irrigação/silício produz altura média diferente das demais. O efeito de bloco é
+pequeno neste conjunto de dados (<span class="math inline">\(p=0{,}89\)</span>) — voltaremos a esse ponto na discussão sobre
+eficiência relativa, adiante.</p>
+</div>
+<div id="visualizando-aditividade-o-gráfico-de-perfis" class="section level3 hasAnchor" number="4.1.7">
+<h3><span class="header-section-number">4.1.7</span> Visualizando aditividade: o gráfico de perfis<a href="dbca.html#visualizando-aditividade-o-gráfico-de-perfis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A suposição de aditividade tratamento-bloco (Seção anterior) tem um diagnóstico visual direto:
+plotar a resposta por tratamento, com uma linha ligando as observações de cada bloco. Se o efeito
+de bloco fosse puramente aditivo — um simples deslocamento vertical, igual para todos os
+tratamentos —, as três linhas seriam <strong>aproximadamente paralelas</strong>.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — gráfico de perfis por bloco</div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="dbca.html#cb149-1" tabindex="-1"></a>pal_blocos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>, <span class="st">&quot;#1baf7a&quot;</span>)  <span class="co"># paleta categórica validada (3 blocos)</span></span>
+<span id="cb149-2"><a href="dbca.html#cb149-2" tabindex="-1"></a></span>
+<span id="cb149-3"><a href="dbca.html#cb149-3" tabindex="-1"></a><span class="fu">ggplot</span>(pepino, <span class="fu">aes</span>(<span class="at">x =</span> tratamento, <span class="at">y =</span> altura, <span class="at">group =</span> bloco, <span class="at">color =</span> bloco)) <span class="sc">+</span></span>
+<span id="cb149-4"><a href="dbca.html#cb149-4" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.9</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb149-5"><a href="dbca.html#cb149-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
+<span id="cb149-6"><a href="dbca.html#cb149-6" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_blocos, <span class="at">name =</span> <span class="st">&quot;Bloco&quot;</span>) <span class="sc">+</span></span>
+<span id="cb149-7"><a href="dbca.html#cb149-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Altura (cm)&quot;</span>,</span>
+<span id="cb149-8"><a href="dbca.html#cb149-8" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Altura por combinação irrigação-silício, uma linha por bloco&quot;</span>) <span class="sc">+</span></span>
+<span id="cb149-9"><a href="dbca.html#cb149-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb149-10"><a href="dbca.html#cb149-10" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="04-blocos_files/figure-html/dbca-perfis-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<p>As três linhas <strong>não</strong> são paralelas: cruzam-se em vários pontos (por exemplo, em torno de
+<code>riego1_0 ml</code>, o bloco 3 despenca abaixo dos blocos 1 e 2, invertendo a ordem que tinham no
+tratamento anterior). Isso sugere que a suposição de aditividade é, na melhor das hipóteses,
+aproximada — mas, com uma única observação por célula tratamento<span class="math inline">\(\times\)</span>bloco (sem repetição
+dentro da célula), <strong>não há graus de liberdade sobráveis para testar formalmente</strong> uma interação
+tratamento<span class="math inline">\(\times\)</span>bloco: qualquer desvio da aditividade fica automaticamente absorvido no termo de
+erro do DBCA, inflando-o. O gráfico de perfis não substitui esse teste (que exigiria repetição
+dentro de cada combinação tratamento-bloco), mas é o diagnóstico informal mais direto disponível, e
+vale examiná-lo sempre antes de confiar cegamente na tabela de ANOVA.</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="dbca.html#cb150-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_dbca)</span>
+<span id="cb150-2"><a href="dbca.html#cb150-2" tabindex="-1"></a><span class="fu">dim</span>(X)               <span class="co"># 24 linhas (unidades), 10 colunas: 1 + (8-1) trat + (3-1) bloco</span></span></code></pre></div>
+<pre><code>## [1] 24 10</code></pre>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="dbca.html#cb152-1" tabindex="-1"></a>X[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">9</span>)]  <span class="co"># note: nenhuma coluna cruza tratamento com bloco</span></span></code></pre></div>
+<pre><code>##   (Intercept) tratamentoriego0.5_1000 ml tratamentoriego0.5_1500 ml
+## 1           1                          0                          0
+## 2           1                          0                          0
+## 3           1                          1                          0
+## 4           1                          0                          1
+##   tratamentoriego1_500 ml bloco2
+## 1                       0      0
+## 2                       0      0
+## 3                       0      0
+## 4                       0      0</code></pre>
+</div>
+<div id="diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação" class="section level3 hasAnchor" number="4.1.8">
+<h3><span class="header-section-number">4.1.8</span> Diagrama de Hasse do DBCA: por que não há nó de interação<a href="dbca.html#diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A ausência de colunas de produto em <span class="math inline">\(X\)</span>, confirmada acima, e a ausência de graus de liberdade
+sobráveis para testar tratamento<span class="math inline">\(\times\)</span>bloco (parágrafo anterior) são a mesma afirmação vista de
+dois ângulos diferentes — e o diagrama de Hasse do Capítulo 2 (Seção <a href="hasse.html#hasse">2.1</a>) é o terceiro
+ângulo, geométrico, que amarra os outros dois. No fatorial <span class="math inline">\(A\times B\)</span> cruzado do Capítulo 2
+(Figura <a href="hasse.html#fig:hasse-axb">2.2</a>), <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> aparecem no mesmo nível e se reencontram em um nó de
+interação <span class="math inline">\(A{\times}B\)</span>, que absorve <span class="math inline">\((a-1)(b-1)\)</span> graus de liberdade <em>antes</em> de chegar ao erro. O
+DBCA tem a mesma estrutura de topo — Tratamento e Bloco cruzados, no mesmo nível — mas <strong>sem</strong>
+esse nó intermediário:</p>
+<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DBCA (exemplo pepino)</div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="dbca.html#cb154-1" tabindex="-1"></a>nos_dbca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb154-2"><a href="dbca.html#cb154-2" tabindex="-1"></a>  <span class="at">termo =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
+<span id="cb154-3"><a href="dbca.html#cb154-3" tabindex="-1"></a>  <span class="at">df    =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">8</span> <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">3</span> <span class="sc">-</span> <span class="dv">1</span>, (<span class="dv">8</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">3</span> <span class="sc">-</span> <span class="dv">1</span>)),</span>
+<span id="cb154-4"><a href="dbca.html#cb154-4" tabindex="-1"></a>  <span class="at">x     =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb154-5"><a href="dbca.html#cb154-5" tabindex="-1"></a>  <span class="at">y     =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb154-6"><a href="dbca.html#cb154-6" tabindex="-1"></a>)</span>
+<span id="cb154-7"><a href="dbca.html#cb154-7" tabindex="-1"></a>arestas_dbca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb154-8"><a href="dbca.html#cb154-8" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>),</span>
+<span id="cb154-9"><a href="dbca.html#cb154-9" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
+<span id="cb154-10"><a href="dbca.html#cb154-10" tabindex="-1"></a>)</span>
+<span id="cb154-11"><a href="dbca.html#cb154-11" tabindex="-1"></a></span>
+<span id="cb154-12"><a href="dbca.html#cb154-12" tabindex="-1"></a><span class="fu">plot_hasse</span>(nos_dbca, arestas_dbca, <span class="at">titulo =</span> <span class="st">&quot;DBCA (pepino): t=8, b=3 (N=24)&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-dbca"></span>
+<img src="04-blocos_files/figure-html/hasse-dbca-1.png" alt="Diagrama de Hasse do DBCA, exemplo pepino: t=8 combinações irrigação-silício (tratamento), b=3 blocos, N=24. Tratamento e Bloco aparecem no mesmo nível (cruzados), mas -- ao contrário do fatorial A x B do Capítulo 2 (seção sobre diagramas de Hasse) -- não há nó de interação entre eles: com uma única observação por casela tratamento x bloco, os dois convergem direto no Erro." width="75%" />
+<p class="caption">
+Figure 4.2: Diagrama de Hasse do DBCA, exemplo pepino: t=8 combinações irrigação-silício (tratamento), b=3 blocos, N=24. Tratamento e Bloco aparecem no mesmo nível (cruzados), mas – ao contrário do fatorial A x B do Capítulo 2 (seção sobre diagramas de Hasse) – não há nó de interação entre eles: com uma única observação por casela tratamento x bloco, os dois convergem direto no Erro.
+</p>
+</div>
+<p>Os quatro nós somam <span class="math inline">\(1+7+2+14=24=tb=N\)</span>: nada sobra para um quinto nó de interação. A razão
+algébrica é a mesma que gera esse fato geométrico — cada casela tratamento<span class="math inline">\(\times\)</span>bloco do DBCA
+contém <strong>exatamente uma</strong> unidade experimental, então o próprio Erro <em>é</em> a variação residual
+dentro de cada casela, o mesmo lugar onde um eventual efeito de interação teria de morar. Não é
+que a interação tratamento<span class="math inline">\(\times\)</span>bloco seja assumida igual a zero por conveniência; é que o
+delineamento, ao não replicar dentro de casela, não deixa <strong>nenhum</strong> grau de liberdade disponível
+para separar os dois — a formalização de <span class="math inline">\(\mathbb E[QM_{Erro}]=\sigma^2\)</span> da Seção anterior já
+assume essa ausência, e o diagrama simplesmente torna visível, como contagem de nós e arestas, o
+motivo pelo qual <span class="math inline">\(\mathbb E[QM_{Erro}]\)</span> não tem outro termo a mais somado a <span class="math inline">\(\sigma^2\)</span>: não há
+onde ele seria estimado. É por isso que o gráfico de perfis logo acima é o único diagnóstico
+disponível para uma possível não aditividade — nenhum teste <span class="math inline">\(F\)</span> formal pode substituí-lo neste
+delineamento.</p>
+</div>
+<div id="dados-faltantes-estimação-do-valor-perdido" class="section level3 hasAnchor" number="4.1.9">
+<h3><span class="header-section-number">4.1.9</span> Dados faltantes: estimação do valor perdido<a href="dbca.html#dados-faltantes-estimação-do-valor-perdido" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Perder uma observação é comum em campo (planta morre, parcela é destruída por um evento externo).
+O DBCA deixa de ser balanceado, e o cálculo manual das somas de quadrados deixa de ser trivial. A
+solução clássica de Yates <span class="citation">(<a href="#ref-yates1936incomplete">Yates, 1936</a>)</span> é <strong>estimar o valor perdido</strong> de modo a minimizar
+a soma de quadrados do erro, e então prosseguir com a ANOVA usual, com duas ressalvas: (i) reduz-se
+em 1 o grau de liberdade do erro (a observação estimada não traz informação nova), e (ii) a soma de
+quadrados de tratamentos calculada com o valor estimado fica levemente viesada para cima e pode ser
+corrigida.</p>
+<p>Para uma única observação perdida na célula (tratamento <span class="math inline">\(i^\*\)</span>, bloco <span class="math inline">\(j^\*\)</span>), o valor que
+minimiza <span class="math inline">\(SQ_{Erro}\)</span> é</p>
+<p><span class="math display">\[
+\hat y_{i^*j^*} = \frac{t\,T&#39;_{i^*} + b\,B&#39;_{j^*} - G&#39;}{(t-1)(b-1)},
+\]</span></p>
+<p>em que <span class="math inline">\(T&#39;_{i^*}\)</span> é o total do tratamento <span class="math inline">\(i^\*\)</span> (excluindo a observação perdida), <span class="math inline">\(B&#39;_{j^*}\)</span> é o
+total do bloco <span class="math inline">\(j^\*\)</span> (idem) e <span class="math inline">\(G&#39;\)</span> é o total geral (idem). A correção aproximada para a soma de
+quadrados de tratamentos é</p>
+<p><span class="math display">\[
+SQ_{Trat}^{\,ajustada} = SQ_{Trat}^{\,ingênua} - \frac{\left[B&#39;_{j^*} - (t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}.
+\]</span></p>
+<div class="caixa-r"><strong>Uso do R</strong> — estimando um valor perdido (fórmula de Yates)</div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="dbca.html#cb155-1" tabindex="-1"></a><span class="co"># Removemos, propositalmente, a altura observada para riego = 1, silicio = &quot;1000 ml&quot;, bloco 2</span></span>
+<span id="cb155-2"><a href="dbca.html#cb155-2" tabindex="-1"></a>alvo <span class="ot">&lt;-</span> <span class="fu">which</span>(pepino<span class="sc">$</span>riego <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pepino<span class="sc">$</span>silicio <span class="sc">==</span> <span class="st">&quot;1000 ml&quot;</span> <span class="sc">&amp;</span> pepino<span class="sc">$</span>bloque <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb155-3"><a href="dbca.html#cb155-3" tabindex="-1"></a>valor_real <span class="ot">&lt;-</span> pepino<span class="sc">$</span>altura[alvo]</span>
+<span id="cb155-4"><a href="dbca.html#cb155-4" tabindex="-1"></a></span>
+<span id="cb155-5"><a href="dbca.html#cb155-5" tabindex="-1"></a>pepino_miss <span class="ot">&lt;-</span> pepino</span>
+<span id="cb155-6"><a href="dbca.html#cb155-6" tabindex="-1"></a>pepino_miss<span class="sc">$</span>altura[alvo] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb155-7"><a href="dbca.html#cb155-7" tabindex="-1"></a></span>
+<span id="cb155-8"><a href="dbca.html#cb155-8" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>tratamento); b <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>bloco)</span>
+<span id="cb155-9"><a href="dbca.html#cb155-9" tabindex="-1"></a>trat_alvo  <span class="ot">&lt;-</span> pepino<span class="sc">$</span>tratamento[alvo]</span>
+<span id="cb155-10"><a href="dbca.html#cb155-10" tabindex="-1"></a>bloco_alvo <span class="ot">&lt;-</span> pepino<span class="sc">$</span>bloco[alvo]</span>
+<span id="cb155-11"><a href="dbca.html#cb155-11" tabindex="-1"></a></span>
+<span id="cb155-12"><a href="dbca.html#cb155-12" tabindex="-1"></a>Tlinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura[pepino_miss<span class="sc">$</span>tratamento <span class="sc">==</span> trat_alvo], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb155-13"><a href="dbca.html#cb155-13" tabindex="-1"></a>Blinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura[pepino_miss<span class="sc">$</span>bloco <span class="sc">==</span> bloco_alvo], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb155-14"><a href="dbca.html#cb155-14" tabindex="-1"></a>Glinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb155-15"><a href="dbca.html#cb155-15" tabindex="-1"></a></span>
+<span id="cb155-16"><a href="dbca.html#cb155-16" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> (t <span class="sc">*</span> Tlinha <span class="sc">+</span> b <span class="sc">*</span> Blinha <span class="sc">-</span> Glinha) <span class="sc">/</span> ((t <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (b <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb155-17"><a href="dbca.html#cb155-17" tabindex="-1"></a><span class="fu">c</span>(<span class="at">valor_real =</span> valor_real, <span class="at">estimado =</span> y_hat, <span class="at">erro =</span> y_hat <span class="sc">-</span> valor_real)</span></code></pre></div>
+<pre><code>## valor_real   estimado       erro 
+##  5.1200000  4.6914286 -0.4285714</code></pre>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="dbca.html#cb157-1" tabindex="-1"></a>pepino_imputado <span class="ot">&lt;-</span> pepino_miss</span>
+<span id="cb157-2"><a href="dbca.html#cb157-2" tabindex="-1"></a>pepino_imputado<span class="sc">$</span>altura[alvo] <span class="ot">&lt;-</span> y_hat</span>
+<span id="cb157-3"><a href="dbca.html#cb157-3" tabindex="-1"></a>mod_imputado <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> pepino_imputado)</span>
+<span id="cb157-4"><a href="dbca.html#cb157-4" tabindex="-1"></a>tab_imp <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_imputado)</span>
+<span id="cb157-5"><a href="dbca.html#cb157-5" tabindex="-1"></a></span>
+<span id="cb157-6"><a href="dbca.html#cb157-6" tabindex="-1"></a>correcao <span class="ot">&lt;-</span> (Blinha <span class="sc">-</span> (t <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> y_hat)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t <span class="sc">*</span> (t <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb157-7"><a href="dbca.html#cb157-7" tabindex="-1"></a>SS_trat_ajustado <span class="ot">&lt;-</span> tab_imp[<span class="st">&quot;tratamento&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>] <span class="sc">-</span> correcao</span>
+<span id="cb157-8"><a href="dbca.html#cb157-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_ingenua =</span> tab_imp[<span class="st">&quot;tratamento&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>],</span>
+<span id="cb157-9"><a href="dbca.html#cb157-9" tabindex="-1"></a>  <span class="at">correcao =</span> correcao, <span class="at">SQ_trat_ajustada =</span> SS_trat_ajustado)</span></code></pre></div>
+<pre><code>##  SQ_trat_ingenua         correcao SQ_trat_ajustada 
+##      2.010202381      0.001207143      2.008995238</code></pre>
+<p>Neste exemplo, o valor real era <span class="math inline">\(5{,}12\)</span> cm e a fórmula de Yates estimou <span class="math inline">\(4{,}69\)</span> cm — um erro de
+<span class="math inline">\(0{,}43\)</span> cm, razoável frente ao desvio-padrão residual do modelo completo. A correção da soma de
+quadrados de tratamentos foi minúscula (<span class="math inline">\(0{,}0012\)</span>), porque a discrepância entre bloco e
+tratamento neste conjunto de dados já era pequena. Em conjuntos de dados com blocos muito
+diferentes entre si, a correção pode ser relevante, e ignorá-la infla ligeiramente a estatística
+<span class="math inline">\(F\)</span> de tratamentos. Com <strong>mais de um valor perdido</strong>, o mesmo princípio se generaliza por
+iteração: estima-se cada valor faltante pela fórmula acima usando os demais valores (observados
+e já estimados), repetindo o processo até os valores estimados convergirem — na prática, hoje,
+resolve-se de forma exata por mínimos quadrados com dados desbalanceados (Capítulo 2), e a fórmula
+de Yates permanece valiosa por seu valor didático e por dispensar software especializado.</p>
+</div>
+<div id="eficiência-relativa-do-dbca-frente-ao-dca" class="section level3 hasAnchor" number="4.1.10">
+<h3><span class="header-section-number">4.1.10</span> Eficiência relativa do DBCA frente ao DCA<a href="dbca.html#eficiência-relativa-do-dbca-frente-ao-dca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Ter reduzido o erro experimental valeu a pena? A <strong>eficiência relativa (ER)</strong> do DBCA em relação a
+um DCA hipotético (que teria usado as mesmas <span class="math inline">\(tb\)</span> unidades, mas ignorado os blocos) responde essa
+pergunta comparando as variâncias por unidade experimental que os dois desenhos produziriam. Uma
+aproximação amplamente usada <span class="citation">(<a href="#ref-cochran1957experimental">Cochran &amp; Cox, 1957</a>; <a href="#ref-montgomery2017design">Montgomery, 2017</a>)</span>, que leva em conta
+a perda de graus de liberdade do erro ao se estimar <span class="math inline">\(QM_{Bloco}\)</span> a mais, é</p>
+<p><span class="math display">\[
+ER(DBCA, DCA) = \frac{(gl_B+1)(gl_{E,DCA}+3)\, QM_{Bloco} + gl_{E,DCA}(gl_B+3)\, QM_{Erro}}
+                     {(gl_{E,DCA}+1)(gl_B+3)\, QM_{Erro}},
+\]</span></p>
+<p>em que <span class="math inline">\(gl_B = b-1\)</span> e <span class="math inline">\(gl_{E,DCA} = gl_{Erro} + gl_B = t(b-1)\)</span> são os graus de liberdade do erro
+que um DCA teria tido com o mesmo número de observações. <span class="math inline">\(ER&gt;1\)</span> indica que o DBCA foi mais
+eficiente: seria necessário aumentar o número de repetições do DCA por um fator <span class="math inline">\(ER\)</span> para igualar
+a precisão do DBCA.</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="dbca.html#cb159-1" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_dbca)</span>
+<span id="cb159-2"><a href="dbca.html#cb159-2" tabindex="-1"></a>MSB <span class="ot">&lt;-</span> tab[<span class="st">&quot;bloco&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>];      MSE      <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
+<span id="cb159-3"><a href="dbca.html#cb159-3" tabindex="-1"></a>gl_b <span class="ot">&lt;-</span> tab[<span class="st">&quot;bloco&quot;</span>, <span class="st">&quot;Df&quot;</span>];          gl_e_dbca <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
+<span id="cb159-4"><a href="dbca.html#cb159-4" tabindex="-1"></a>gl_e_dca <span class="ot">&lt;-</span> gl_e_dbca <span class="sc">+</span> gl_b</span>
+<span id="cb159-5"><a href="dbca.html#cb159-5" tabindex="-1"></a></span>
+<span id="cb159-6"><a href="dbca.html#cb159-6" tabindex="-1"></a>ER <span class="ot">&lt;-</span> ((gl_b <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">*</span> (gl_e_dca <span class="sc">+</span> <span class="dv">3</span>) <span class="sc">*</span> MSB <span class="sc">+</span> gl_e_dca <span class="sc">*</span> (gl_b <span class="sc">+</span> <span class="dv">3</span>) <span class="sc">*</span> MSE) <span class="sc">/</span></span>
+<span id="cb159-7"><a href="dbca.html#cb159-7" tabindex="-1"></a>      ((gl_e_dca <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">*</span> (gl_b <span class="sc">+</span> <span class="dv">3</span>) <span class="sc">*</span> MSE)</span>
+<span id="cb159-8"><a href="dbca.html#cb159-8" tabindex="-1"></a>ER</span></code></pre></div>
+<pre><code>## [1] 1.018766</code></pre>
+<p><span class="math inline">\(ER \approx 1{,}02\)</span>: a blocagem por área do viveiro trouxe um ganho de eficiência muito modesto
+neste experimento — coerente com o quadrado médio de blocos ser menor que o quadrado médio do
+erro na Tabela acima. Isso não é falha do delineamento: <strong>a blocagem só compensa quando os blocos
+capturam uma fonte real de heterogeneidade</strong>; quando as unidades já eram homogêneas, o DBCA “gasta”
+<span class="math inline">\(b-1\)</span> graus de liberdade do erro sem retorno proporcional. Antes de blocar, vale perguntar se há
+motivo concreto (agronômico, temporal, logístico) para esperar heterogeneidade entre as unidades
+que vão compor cada bloco.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — comparando o quadrado médio do erro dos dois desenhos</div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="dbca.html#cb161-1" tabindex="-1"></a>QME_dbca <span class="ot">&lt;-</span> MSE</span>
+<span id="cb161-2"><a href="dbca.html#cb161-2" tabindex="-1"></a>QME_dca  <span class="ot">&lt;-</span> (tab[<span class="st">&quot;Residuals&quot;</span>,<span class="st">&quot;Sum Sq&quot;</span>] <span class="sc">+</span> tab[<span class="st">&quot;bloco&quot;</span>,<span class="st">&quot;Sum Sq&quot;</span>]) <span class="sc">/</span> gl_e_dca  <span class="co"># erro + bloco, agrupados</span></span>
+<span id="cb161-3"><a href="dbca.html#cb161-3" tabindex="-1"></a></span>
+<span id="cb161-4"><a href="dbca.html#cb161-4" tabindex="-1"></a>df_re <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb161-5"><a href="dbca.html#cb161-5" tabindex="-1"></a>  <span class="at">Delineamento =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;DBCA&quot;</span>, <span class="st">&quot;DCA (hipotético)&quot;</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;DBCA&quot;</span>, <span class="st">&quot;DCA (hipotético)&quot;</span>)),</span>
+<span id="cb161-6"><a href="dbca.html#cb161-6" tabindex="-1"></a>  <span class="at">QM_Erro =</span> <span class="fu">c</span>(QME_dbca, QME_dca)</span>
+<span id="cb161-7"><a href="dbca.html#cb161-7" tabindex="-1"></a>)</span>
+<span id="cb161-8"><a href="dbca.html#cb161-8" tabindex="-1"></a></span>
+<span id="cb161-9"><a href="dbca.html#cb161-9" tabindex="-1"></a><span class="fu">ggplot</span>(df_re, <span class="fu">aes</span>(<span class="at">x =</span> Delineamento, <span class="at">y =</span> QM_Erro, <span class="at">fill =</span> Delineamento)) <span class="sc">+</span></span>
+<span id="cb161-10"><a href="dbca.html#cb161-10" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.55</span>) <span class="sc">+</span></span>
+<span id="cb161-11"><a href="dbca.html#cb161-11" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.4f&quot;</span>, QM_Erro)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">4.2</span>) <span class="sc">+</span></span>
+<span id="cb161-12"><a href="dbca.html#cb161-12" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>), <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb161-13"><a href="dbca.html#cb161-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="fu">expression</span>(QM[Erro]),</span>
+<span id="cb161-14"><a href="dbca.html#cb161-14" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Quadrado médio do erro: DBCA vs. DCA hipotético&quot;</span>) <span class="sc">+</span></span>
+<span id="cb161-15"><a href="dbca.html#cb161-15" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="fu">max</span>(df_re<span class="sc">$</span>QM_Erro) <span class="sc">*</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb161-16"><a href="dbca.html#cb161-16" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<p><img src="04-blocos_files/figure-html/dbca-re-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<p>Este gráfico expõe uma armadilha comum: comparado ingenuamente, o <span class="math inline">\(QM_{Erro}\)</span> do DCA hipotético
+(<span class="math inline">\(0{,}0493\)</span>) é, na verdade, <strong>menor</strong> que o do DBCA (<span class="math inline">\(0{,}0554\)</span>) — o que, à primeira vista,
+sugeriria que o DCA teria sido a escolha melhor! Isso acontece porque agrupar <span class="math inline">\(SQ_{Bloco}\)</span> (muito
+pequena) de volta ao erro, dividido por mais graus de liberdade (<span class="math inline">\(16\)</span> em vez de <span class="math inline">\(14\)</span>), reduz
+ligeiramente a média. Mas comparar apenas os quadrados médios ignora que uma estimativa de
+variância com <strong>mais</strong> graus de liberdade é, por si só, mais confiável (produz intervalos de
+confiança e testes mais precisos) do que uma com menos graus — é exatamente essa troca entre
+“quadrado médio menor” e “menos graus de liberdade” que a fórmula de <span class="math inline">\(ER\)</span> pondera formalmente
+através dos termos <span class="math inline">\((gl_{E,DCA}+3)\)</span> e <span class="math inline">\((gl_B+3)\)</span>. Ao aplicá-la, o resultado (<span class="math inline">\(ER\approx1{,}02\)</span>)
+ainda favorece — por pouco — o DBCA, mostrando que a comparação direta e ingênua das barras acima
+pode enganar: <strong>eficiência relativa não é o mesmo que “quadrado médio do erro menor”</strong>.</p>
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>Se, neste experimento, o quadrado médio de blocos tivesse sido bem maior que o quadrado médio
+do erro, o que isso indicaria sobre a decisão original de blocar por área do viveiro?</li>
+<li>O modelo do DBCA não inclui interação tratamento$\times$bloco. O que essa suposição de
+aditividade significa em termos práticos — por exemplo, é razoável supor que a diferença entre
+duas doses de silício seja a mesma nos três blocos deste experimento?</li>
+<li>Por que não se deve decidir remover o termo de bloco do modelo com base no teste $F$ de
+blocos não ser significativo?</li>
+</ol>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-cochran1957experimental" class="csl-entry">
+Cochran, W. G., &amp; Cox, G. M. (1957). <em>Experimental designs</em> (2nd ed.). John Wiley &amp; Sons.
+</div>
+<div id="ref-imbensrubin2015" class="csl-entry">
+Imbens, G. W., &amp; Rubin, D. B. (2015). <em>Causal inference for statistics, social, and biomedical sciences: An introduction</em>. Cambridge University Press.
+</div>
+<div id="ref-montgomery2017design" class="csl-entry">
+Montgomery, D. C. (2017). <em>Design and analysis of experiments</em> (9th ed.). John Wiley &amp; Sons.
+</div>
+<div id="ref-rubin1974estimating" class="csl-entry">
+Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. <em>Journal of Educational Psychology</em>, <em>66</em>(5), 688–701.
+</div>
+<div id="ref-neyman1923application" class="csl-entry">
+Splawa-Neyman, J. (1990). On the application of probability theory to agricultural experiments. Essay on principles. Section 9. <em>Statistical Science</em>, <em>5</em>(4), 465–472.
+</div>
+<div id="ref-yates1936incomplete" class="csl-entry">
+Yates, F. (1936). Incomplete randomized blocks. <em>Annals of Eugenics</em>, <em>7</em>(2), 121–140.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="blocos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="friedman.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

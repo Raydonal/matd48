@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 04 --- DCA: Modelo, ANOVA e Número de Réplicas}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 04}{Delineamento completamente aleatorizado: modelo, ANOVA, intervalos de confiança e tamanho amostral (Capítulo 3 / Aula 04)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito04.pdf}.}
+
+\begin{questao}{1} \textbf{(Psicologia --- ANOVA a partir de somas de quadrados)}
+
+Uma psicóloga compara três técnicas de relaxamento (respiração guiada, meditação breve e
+alongamento) quanto à redução do nível de cortisol salivar (em nmol/L) após uma tarefa
+estressante. Ela sorteia 30 voluntários, 10 por técnica, e obtém $SQ_{\text{Trat}} = 148{,}2$ e
+$SQ_{\text{Total}} = 402{,}6$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete a tabela de ANOVA (fonte, g.l., SQ, QM, $F$).
+  \item Ao nível $\alpha = 0{,}05$, com $F_{2,27;0{,}05} \approx 3{,}35$, as três técnicas diferem
+    quanto à redução média de cortisol? Justifique com base no valor de $F$ calculado.
+  \item O que exatamente essa conclusão permite afirmar --- e o que ela \emph{não} permite
+    afirmar --- sobre quais pares de técnicas diferem entre si?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Agricultura --- intervalos de confiança)}
+
+Um experimento com quatro doses de um fertilizante nitrogenado (0, 40, 80 e 120 kg/ha) sobre a
+produtividade do milho (sc/ha) usa 8 parcelas por dose ($N=32$). O ajuste da ANOVA fornece
+$MS_E = 18{,}4$ com $28$ graus de liberdade, e as médias observadas são $\bar Y_{0} = 62{,}1$,
+$\bar Y_{40} = 68{,}7$, $\bar Y_{80} = 74{,}3$ e $\bar Y_{120} = 73{,}5$. Use
+$t_{28;0{,}025} \approx 2{,}048$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Construa um IC de 95\% para a produtividade média da dose de 80 kg/ha.
+  \item Construa um IC de 95\% para a diferença de produtividade entre as doses de 80 e 40 kg/ha.
+  \item Por que os dois intervalos acima usam o mesmo $MS_E = 18{,}4$, em vez de cada dose estimar
+    sua própria variância a partir de suas 8 parcelas?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Ciência de dados --- notação matricial do DCA)}
+
+Considere um DCA com $t = 3$ tratamentos e $n_1 = 4$, $n_2 = 3$, $n_3 = 5$ unidades ($N=12$),
+usando a parametrização de médias de célula $\mathbf{Y} = \mathbf{X}\boldsymbol\beta +
+\boldsymbol\varepsilon$, com $\mathbf{X}$ a matriz $N\times t$ de indicadoras de tratamento e
+$\boldsymbol\beta = (\mu_1,\mu_2,\mu_3)'$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Dê as dimensões e o conteúdo explícito de $\mathbf{X}'\mathbf{X}$ e de
+    $(\mathbf{X}'\mathbf{X})^{-1}$.
+  \item Explique por que, nesta parametrização (diferente da parametrização $\mu + \tau_i$ com
+    restrição de soma zero), \emph{todo} $\mu_i$ é trivialmente estimável.
+  \item Usando $\mathrm{Cov}(\hat{\boldsymbol\beta}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$, dê a
+    expressão de $\mathrm{Var}(\hat\mu_2 - \hat\mu_3)$ em função de $\sigma^2$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Dedução --- $\hat{\boldsymbol\beta}$ é BLUE no DCA)}
+
+Seja $\mathbf{X}$ a matriz $N\times t$ de indicadoras de tratamento (uma coluna por tratamento,
+sem intercepto) do DCA, de posto coluna completo $t$, e $\mathbf{Y} = \mathbf{X}\boldsymbol\beta +
+\boldsymbol\varepsilon$ com $E[\boldsymbol\varepsilon] = \mathbf{0}$ e
+$\mathrm{Cov}(\boldsymbol\varepsilon) = \sigma^2\mathbf{I}_N$ (sem exigir normalidade).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\hat{\boldsymbol\beta} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$ é
+    não viesado para $\boldsymbol\beta$.
+  \item Mostre que $\mathrm{Cov}(\hat{\boldsymbol\beta}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$ e
+    que essa matriz é diagonal, com $i$-ésimo elemento $\sigma^2/n_i$.
+  \item Enuncie o Teorema de Gauss-Markov e explique por que suas hipóteses estão satisfeitas
+    aqui, concluindo que $\hat\mu_i = \bar Y_{i\cdot}$ é o BLUE de $\mu_i$ para cada $i$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Número de réplicas --- ciência de dados)}
+
+Uma equipe de engenharia testa três estratégias de \emph{cache} (nenhuma, LRU, LFU) quanto ao
+tempo de carregamento de uma página (ms). Um piloto pequeno sugere médias aproximadas de
+$320$, $290$ e $270$ ms e um desvio-padrão comum $\sigma \approx 55$ ms. A tabela abaixo mostra o
+poder de um teste ANOVA a $\alpha = 0{,}05$, para $k=3$ grupos e $f = 0{,}30$ (o tamanho de efeito
+de Cohen implícito nessas médias piloto), em função do número de réplicas $n$ por grupo:
+
+\begin{center}
+\begin{tabular}{lcccccc}
+\toprule
+$n$ & 15 & 20 & 30 & 40 & 50 & 60 \\
+\midrule
+Poder & 0{,}38 & 0{,}50 & 0{,}69 & 0{,}80 & 0{,}88 & 0{,}92 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Qual o menor $n$ por grupo, entre os valores tabelados, que garante poder de pelo menos
+    $0{,}80$? Quantas observações totais isso representa?
+  \item Se o orçamento só permitir $n=20$ por grupo, o que isso implica sobre a chance de a
+    equipe \emph{não} detectar uma diferença real do tamanho assumido no piloto?
+  \item O valor de $\sigma$ usado veio de um piloto pequeno e é, portanto, incerto. Que direção de
+    erro nessa estimativa (superestimar ou subestimar $\sigma$) tornaria o planejamento de $n$
+    baseado nesta tabela otimista demais (poder real menor que o nominal)?
+\end{enumerate}
+\end{questao}
+
+\end{document}

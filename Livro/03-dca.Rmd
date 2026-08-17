@@ -1,0 +1,2159 @@
+# Delineamento completamente aleatorizado {#dca}
+
+```{r setup-cap3, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                       fig.align = "center", out.width = "75%")
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+  library(car)
+  library(MASS)
+  library(pwr)
+})
+source("hasse_helpers.R")
+```
+
+O Capítulo 1 estabeleceu repetição, aleatorização e controle local como os três pilares do
+controle do erro experimental; o Capítulo 2 deu a esses pilares uma linguagem formal — o modelo
+linear. Este capítulo une as duas coisas no delineamento mais simples possível: o
+**delineamento completamente aleatorizado (DCA)**, em que um único fator é sorteado livremente
+entre as unidades experimentais, sem qualquer restrição de blocagem. É o ponto de partida de
+todo o resto do curso — e, por ser o desenho mais simples, também é o lugar certo para introduzir
+com rigor a ideia de **teste de aleatorização**, o modelo estatístico, a ANOVA, o planejamento do
+tamanho amostral, o problema do submuestreo, o modelo de efeitos aleatórios e a verificação dos
+pressupostos que tornam a inferência clássica válida.
+
+## Princípios de aleatorização: a ideia de um teste de aleatorização {#principios-aleatorizacao}
+
+Antes de introduzir qualquer suposição distribucional, vale a pena perguntar: *de onde vem*, em
+termos lógicos, a validade de um teste estatístico em um experimento aleatorizado? A resposta de
+Fisher é elegante e não depende de normalidade alguma [@fisher1935design].
+
+Considere um DCA com $t$ tratamentos e $N$ unidades experimentais ao todo. Sob a hipótese nula de
+que o tratamento não tem efeito algum, o valor que cada unidade experimental produziria é o
+*mesmo*, não importa qual tratamento ela receba — os rótulos de tratamento são, sob $H_0$,
+completamente permutáveis entre as unidades. O mecanismo físico de aleatorização escolheu **uma**
+entre as $\binom{N}{n_1, n_2, \ldots, n_t}$ formas possíveis de distribuir os tratamentos pelas
+unidades; sob $H_0$, todas essas formas são igualmente prováveis e teriam produzido exatamente os
+mesmos $N$ valores de resposta, apenas reagrupados de outra maneira.
+
+Um **teste de aleatorização** (ou teste de permutação) explora essa ideia diretamente:
+
+1. Calcula-se uma estatística de teste $T$ nos dados observados (por exemplo, a estatística $F$
+   da ANOVA, definida na Seção \@ref(anova-dca)).
+2. Reembaralham-se os rótulos de tratamento entre as $N$ unidades, muitas vezes (idealmente, todas
+   as permutações possíveis; na prática, um grande número delas sorteado aleatoriamente), e
+   recalcula-se $T$ a cada reembaralhamento.
+3. O valor-$p$ de aleatorização é a proporção de reembaralhamentos que produziu um $T$ tão grande
+   quanto (ou maior que) o observado.
+
+```{r fig-esquema-teste-aleatorizacao, echo=FALSE, fig.width=6, fig.height=3.2, fig.cap="O esquema geral por trás de todo teste de aleatorização, em quatro passos: dados observados produzem uma estatística observada T*; o mecanismo de aleatorização do próprio delineamento gera reembaralhamentos sob H0 e T é recalculado em cada um; a distribuição desses valores é a distribuição de referência; localizar T* nela define o valor-p."}
+caixas <- tibble(
+  passo  = 1:4,
+  rotulo = c("Dados observados\n→ estatística T*", "Mecanismo de\naleatorização (H0)",
+             "Reembaralhamentos:\nT recalculado", "Distribuição de\nreferência → valor-p"),
+  x = c(1, 1, 2, 3),
+  y = c(2, 1, 1, 1)
+)
+setas <- tibble(
+  x = c(1, 1, 2), y = c(2, 1, 1),
+  xend = c(1, 2, 3), yend = c(1.25, 1, 1)
+)
+ggplot() +
+  geom_segment(data = setas, aes(x = x, y = y, xend = xend, yend = yend),
+               color = "grey40", arrow = arrow(length = unit(0.2, "cm"), type = "closed")) +
+  geom_label(data = caixas, aes(x = x, y = y, label = rotulo), size = 3.2,
+             label.padding = unit(0.4, "lines")) +
+  xlim(0.5, 3.5) + ylim(0.5, 2.5) +
+  theme_void(base_size = 12)
+```
+
+O diagrama resume o princípio geral por trás não só do teste de aleatorização, mas de qualquer
+teste de hipótese baseado em simulação: (i) computar a estatística nos dados reais; (ii) simular
+repetidamente sob um modelo explícito de $H_0$; (iii) localizar a estatística observada na
+distribuição simulada. O reembaralhamento de rótulos descrito acima **é** esse esquema, com o
+"modelo de $H_0$" sendo, literalmente, o mecanismo físico de aleatorização do próprio
+delineamento — não uma suposição extra importada de fora dos dados.
+
+Esse procedimento não assume normalidade, nem variâncias iguais, nem qualquer outra forma
+distribucional — sua validade vem inteiramente do mecanismo de aleatorização em si
+[@edgington2007randomization]. O que a teoria normal-linear faz, a partir da Seção
+\@ref(modelo-dca), é oferecer uma **aproximação** ao teste de aleatorização exato — uma
+aproximação excelente quando os erros são razoavelmente próximos de normais, e que tem a enorme
+vantagem prática de fornecer fórmulas fechadas em vez de exigir reembaralhamento computacional.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — comparando o teste de aleatorização com o teste F</div>
+```
+
+```{r randomizacao-vs-f}
+set.seed(48)
+condicao <- c("Nenhuma", "Sonora", "Visual")
+n_por_grupo <- 12
+
+dados_tr <- tibble(
+  sujeito      = 1:(3 * n_por_grupo),
+  condicao     = factor(rep(condicao, each = n_por_grupo), levels = condicao),
+  tempo_reacao = c(rnorm(n_por_grupo, 480, 45),
+                    rnorm(n_por_grupo, 512, 45),
+                    rnorm(n_por_grupo, 555, 45))
+)
+
+F_obs <- summary(aov(tempo_reacao ~ condicao, data = dados_tr))[[1]][["F value"]][1]
+
+R_perm <- 4000
+F_perm <- replicate(R_perm, {
+  rotulo_embaralhado <- sample(dados_tr$condicao)
+  summary(aov(dados_tr$tempo_reacao ~ rotulo_embaralhado))[[1]][["F value"]][1]
+})
+
+tibble(
+  Método   = c("Teste F (teórico)", "Teste de aleatorização"),
+  `Valor-p` = c(pf(F_obs, 2, 33, lower.tail = FALSE), mean(F_perm >= F_obs))
+) %>%
+  kable(digits = 4, caption = "Valor-p teórico vs. valor-p por aleatorização, mesmos dados") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r plot-f-perm, echo=FALSE, fig.width=6.5, fig.height=4, fig.cap="Distribuição de referência: os 4.000 valores de F recalculados sob reembaralhamentos aleatórios dos rótulos de condição (histograma), com o F observado nos dados reais (linha tracejada) e a densidade F(2,33) teórica sobreposta (curva). A área à direita da linha tracejada, sob o histograma, é o valor-p de aleatorização; sob a curva teórica, é o valor-p do teste F."}
+tibble(F_perm = F_perm) %>%
+  ggplot(aes(x = F_perm)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 40, fill = "#3b5bdb", alpha = 0.6) +
+  stat_function(fun = df, args = list(df1 = 2, df2 = 33), color = "#d98324", linewidth = 1) +
+  geom_vline(xintercept = F_obs, color = "grey15", linetype = "dashed", linewidth = 0.8) +
+  labs(x = "Estatística F recalculada sob H0", y = "Densidade") +
+  theme_minimal(base_size = 13)
+```
+
+O histograma (distribuição empírica de aleatorização) e a curva $F(2,33)$ teórica praticamente se
+sobrepõem, e a linha tracejada ($F$ observado) cai na cauda direita de ambas — confirmação visual
+de que a aproximação normal-linear captura bem a distribuição de referência exata neste exemplo,
+sem que nenhuma das duas dependa de suposição alguma sobre a forma de $Y$: a curva $F$ é válida
+sob normalidade dos erros; o histograma é válido apenas pelo mecanismo de aleatorização em si,
+qualquer que seja a distribuição verdadeira dos dados.
+
+Os dois valores-$p$ ficam muito próximos — é exatamente o comportamento esperado quando os
+pressupostos do modelo normal-linear (que introduzimos a seguir) são razoáveis. A Seção
+\@ref(dca-pressupostos) trata de como verificar, na prática, se essa aproximação é confiável.
+
+### De onde vêm os graus de liberdade $(2,33)$: a ponte entre aleatorização, variância decomposta e $F$ {#randomizacao-df-f}
+
+Vale amarrar, com todo o rigor já disponível neste ponto do livro, *por que* a curva $F(2,33)$ é
+uma boa aproximação da distribuição de aleatorização — não apenas *que* ela é, como a Figura
+\@ref(fig:plot-f-perm) já mostrou empiricamente. A resposta liga três coisas que, até aqui,
+apareceram em capítulos diferentes: a decomposição da variação em fontes (Capítulo 1, Seção
+\@ref(fontes-variacao)), a forma aditiva do modelo que essa decomposição força sob aleatorização
+(Seção \@ref(aditividade-aleatorizacao) do Capítulo 1) e a contagem de graus de liberdade via posto
+de matrizes de projeção e diagramas de Hasse (Capítulo 2, Seções \@ref(matriz-projecao) e
+\@ref(hasse)).
+
+**O que permanece fixo em cada reembaralhamento, e o que muda.** Reembaralhar os rótulos de
+tratamento entre as $N=36$ unidades, como no chunk anterior, não move nenhum valor de resposta —
+os 36 tempos de reação observados são exatamente os mesmos a cada repetição, só a *partição* deles
+em três grupos de 12 muda. Consequentemente, $SQ_{\text{Total}} = \mathbf{Y}'\mathbf{M}\mathbf{Y}$
+(Capítulo 2, Seção \@ref(soma-quadrados-total)) é **idêntica** em todas as 4.000 reamostragens — só
+$\mathbf{X}$ muda a cada reembaralhamento (a matriz de delineamento reflete a nova partição), e com
+ela a forma como $SQ_{\text{Total}}$ se reparte entre $SQ_{\text{Trat}}=\mathbf{Y}'(\mathbf{P}_X-
+\tfrac1N\mathbf{J})\mathbf{Y}$ e $SQ_E=\mathbf{Y}'(\mathbf{I}_N-\mathbf{P}_X)\mathbf{Y}$. Essa é,
+literalmente, a mesma decomposição de fontes de variação do Capítulo 1 — fonte 1 (tratamento) *versus*
+fontes 2+3 combinadas (o que sobra) — só que agora vista sob 4.000 partições diferentes dos mesmos
+36 valores, em vez de uma única partição observada.
+
+**Por que os graus de liberdade não mudam.** Embora $\mathbf{X}$ mude a cada reembaralhamento, seu
+*posto* não muda: qualquer reembaralhamento continua produzindo $t=3$ grupos não vazios (o sorteio
+apenas troca *quais* 12 unidades vão para cada grupo, nunca o número de grupos nem o tamanho de
+cada um, que ficam fixados pelo desenho). Logo $\mathrm{posto}(\mathbf{X})=3$ em toda reamostragem,
+e a contagem por subtração do diagrama de Hasse (Capítulo 2, Seção \@ref(hasse)) — $\text{gl}
+(\text{Trat})=t-1=2$, $\text{gl}(\text{Erro})=N-t=33$ — vale identicamente para as 4.000 partições,
+não só para os dados observados. É exatamente por isso que a *forma* da curva de referência (uma
+$F$ com $(2,33)$ graus de liberdade) é estável sob reembaralhamento, mesmo sem nenhuma suposição de
+normalidade: os graus de liberdade são uma propriedade do **desenho** ($t$ e $N$ fixos), não da
+distribuição dos erros — o que muda de uma reamostragem para outra é só *onde*, dentro dessa forma
+fixa, cada estatística $F$ recalculada cai.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — confirmando que os graus de liberdade vêm do posto de X, não da distribuição dos dados</div>
+```
+
+```{r df-hasse-vs-f}
+X_dca_tr <- model.matrix(~ condicao, data = dados_tr)
+
+gl_trat_matriz <- qr(X_dca_tr)$rank - 1          # posto(X) - 1 (Cap. 2, Secao matriz-projecao)
+gl_erro_matriz <- nrow(dados_tr) - qr(X_dca_tr)$rank  # N - posto(X)
+
+c(gl_trat = gl_trat_matriz, gl_erro = gl_erro_matriz)
+```
+
+Os valores batem exatamente com o $(2,33)$ já usado em `df(..., df1 = 2, df2 = 33)` na Figura
+\@ref(fig:plot-f-perm) — não por coincidência ou por termos "sabido de antemão" quais graus de
+liberdade usar, mas porque $2=3-1$ e $33=36-3$ vêm diretamente do posto de $\mathbf{X}$, exatamente
+como a regra de subtração do diagrama de Hasse prediz, e esse posto é uma função só de $t$ e $N$
+(quantos grupos o desenho tem e quantas unidades ao todo), não de $\mathbf{Y}$.
+
+**Por que a aproximação $F$ funciona tão bem aqui.** A teoria normal-linear (Capítulo 2, Seção
+\@ref(formas-quadraticas)) prevê que, *se* os erros fossem exatamente normais e i.i.d. — a leitura
+de $\varepsilon_{ij}$ que a Seção \@ref(aditividade-aleatorizacao) do Capítulo 1 justificou como
+consequência da aleatorização, não como suposição gratuita —, então $SQ_{\text{Trat}}/\sigma^2$ e
+$SQ_E/\sigma^2$ seriam qui-quadrado independentes com $2$ e $33$ graus de liberdade sob $H_0$, e sua
+razão (normalizada pelos respectivos graus de liberdade) seguiria $F_{2,33}$ **exatamente**, não
+apenas aproximadamente. A distribuição de aleatorização, por outro lado, não usa normalidade
+alguma: ela é exata *por construção*, qualquer que seja a distribuição de $Y$, porque enumera (ou
+amostra) diretamente as $\binom{36}{12,12,12}$ formas de particionar os mesmos 36 valores. As duas
+curvas da Figura \@ref(fig:plot-f-perm) quase se sobrepõem porque, quando $n_i=12$ por grupo já não
+é pequeno e a distribuição de $Y$ não é patologicamente assimétrica, o Teorema Central do Limite
+aplicado a cada média de grupo $\bar Y_{i\cdot}$ torna a distribuição de $SQ_{\text{Trat}}$ sob
+reembaralhamento cada vez mais próxima da qui-quadrado teórica que a normalidade exigiria
+[@edgington2007randomization; @boxhunterhunter2005] — a aproximação melhora com $n$, e pioraria em
+desenhos com $n_i$ muito pequeno ou $Y$ muito assimétrico (o cenário de heterocedasticidade da
+Seção \@ref(dca-pressupostos), adiante). Em suma: **aleatorização** garante que o modelo aditivo
+$Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ é uma leitura válida dos dados (Seção
+\@ref(aditividade-aleatorizacao)); a **decomposição de variância** em fontes fixa os graus de
+liberdade $(t-1,\,N-t)$ como propriedade do desenho, geometricamente visível no diagrama de Hasse
+(Capítulo 2); e é só quando essas duas peças já estão no lugar que a normalidade entra — não para
+criar a validade da inferência, que já vem da aleatorização, mas para trocar reembaralhamento
+computacional por uma fórmula fechada, a $F_{t-1,N-t}$.
+
+## O delineamento completamente aleatorizado a uma via de classificação {#dca-uma-via}
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: tempo de reação sob distração</strong><br>
+Um pesquisador em psicologia cognitiva quer saber se o tipo de distração afeta o tempo de reação
+em uma tarefa de decisão simples (pressionar um botão assim que um estímulo aparece na tela). Ele
+recruta 36 voluntários e sorteia 12 para cada uma de três condições: <strong>nenhuma
+distração</strong>, <strong>distração sonora</strong> (um ruído constante de fundo) e
+<strong>distração visual</strong> (elementos piscando na periferia da tela). Cada voluntário
+realiza a tarefa uma única vez sob sua condição sorteada, e o tempo de reação (em milissegundos)
+é registrado.
+</div>
+```
+
+Este é um DCA a uma via de classificação: um único fator (tipo de distração), três níveis, sem
+blocagem — a atribuição de voluntários às condições é inteiramente aleatória. A **unidade
+experimental e a unidade amostral coincidem** aqui (um voluntário, uma medição): não há
+submuestreo — assunto ao qual voltaremos na Seção \@ref(dca-submuestreo).
+
+```{r fig-layout-dca, echo=FALSE, fig.width=6.2, fig.height=6.2, fig.cap="Layout de um DCA: 36 unidades experimentais dispostas em uma grade puramente ilustrativa (a posição na grade não tem nenhum significado -- não há linha, coluna nem vizinhança relevante), coloridas pelo tratamento sorteado. Note a ausência de qualquer padrão espacial ou de agrupamento: essa é justamente a marca do DCA -- nenhuma restrição além do sorteio -- que o contrasta com os delineamentos em blocos do Capítulo 4."}
+set.seed(11)
+grade <- expand_grid(col = 1:6, lin = 1:6) %>%
+  mutate(trat = factor(sample(rep(c("Nenhuma", "Sonora", "Visual"), length.out = 36)),
+                        levels = c("Nenhuma", "Sonora", "Visual")))
+ggplot(grade, aes(x = col, y = lin, fill = trat)) +
+  geom_tile(color = "white", linewidth = 1.1, width = 0.92, height = 0.92) +
+  scale_fill_manual(values = c(Nenhuma = "#8c8c8c", Sonora = "#0B4F6C", Visual = "#d98324")) +
+  coord_equal() +
+  labs(fill = "Condição sorteada") +
+  theme_void(base_size = 13) +
+  theme(legend.position = "bottom")
+```
+
+Antes de qualquer ajuste de modelo, vale sempre inspecionar a estrutura completa do dado e deixar
+explícito, coluna a coluna, o papel de cada variável — o hábito que evita, mais adiante, o erro de
+pseudorreplicação descrito no Capítulo 1 (Seção \@ref(unidades)):
+
+```{r estrutura-dados-04}
+glimpse(dados_tr)   # dados_tr foi simulado na Seção 3.1, ao comparar teste F e aleatorização
+```
+
+```{r tabela-papel-variaveis-04, echo=FALSE}
+tibble(
+  Variável = c("`sujeito`", "`condicao`", "`tempo_reacao`"),
+  Papel = c("Identificador da unidade experimental (e, aqui, também da unidade amostral)",
+            "Fator de tratamento (3 níveis) — sorteado por `sujeito`",
+            "Resposta — uma única medição por `sujeito`")
+) %>%
+  kable(caption = "Estrutura do dado: papel de cada variável") %>%
+  kable_styling(full_width = FALSE)
+```
+
+### O modelo estatístico {#modelo-dca}
+
+O modelo de efeitos fixos para um DCA com $t$ tratamentos, cada um com $n_i$ repetições
+($i = 1, \ldots, t$; $j = 1, \ldots, n_i$; $N = \sum_i n_i$), é
+
+$$
+Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij} \overset{iid}{\sim} N(0, \sigma^2),
+$$
+
+em que $\mu$ é a média geral, $\tau_i$ é o efeito (fixo, desconhecido) do $i$-ésimo tratamento,
+sujeito à restrição $\sum_i n_i \tau_i = 0$ (ou $\sum_i \tau_i = 0$ no caso balanceado) para
+tornar o modelo identificável, e $\varepsilon_{ij}$ é o erro experimental — a soma de tudo aquilo
+que não é explicado pelo tratamento nem pela média geral (Capítulo 1, Seção
+\@ref(fontes-variacao)). A média do $i$-ésimo tratamento é $\mu_i = \mu + \tau_i$, de modo que o
+modelo pode ser lido, de forma equivalente, como $Y_{ij} = \mu_i + \varepsilon_{ij}$: cada
+observação é a média populacional do seu grupo mais um desvio aleatório.
+
+As variáveis aleatórias envolvidas são: $Y_{ij}$ (a resposta observada, aleatória antes da coleta
+de dados), $\varepsilon_{ij}$ (o erro experimental, aleatório e não observável diretamente) — já
+$\mu$ e $\tau_i$ são parâmetros fixos e desconhecidos, e $t$, $n_i$ são constantes de
+delineamento, fixadas pelo pesquisador antes do experimento.
+
+Os estimadores de mínimos quadrados — que, sob o modelo acima, coincidem com os estimadores de
+máxima verossimilhança — são as médias amostrais:
+
+$$
+\hat\mu_i = \bar Y_{i \cdot} = \frac{1}{n_i}\sum_{j=1}^{n_i} Y_{ij}, \qquad
+\hat\sigma^2 = \text{MS}_E = \frac{1}{N - t}\sum_{i=1}^t \sum_{j=1}^{n_i} (Y_{ij} - \bar Y_{i\cdot})^2,
+$$
+
+em que $\text{MS}_E$ (quadrado médio do erro) é definido formalmente na próxima seção.
+
+### Notação matricial: o DCA como caso particular do modelo linear geral {#matricial-dca}
+
+O Capítulo 2 (Seções \@ref(matriz-projecao) e \@ref(soma-quadrados-total)) já anunciava que a
+decomposição $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$, especializada
+para um único fator categórico, se tornaria a soma de quadrados entre e dentro de tratamentos da
+ANOVA. Cumprimos essa promessa aqui, usando a **parametrização de médias de célula**: $t$ colunas
+indicadoras (sem intercepto), uma por tratamento, de modo que $\boldsymbol{\beta} =
+(\mu_1,\ldots,\mu_t)'$ diretamente — sem a restrição de soma zero que a parametrização
+$\mu+\tau_i$ da Seção \@ref(modelo-dca) exige para identificabilidade.
+
+$$
+\mathbf{X}_{[ij],\,i'} = \mathbb{1}\{i'=i\}, \qquad
+\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, \qquad
+\boldsymbol{\varepsilon}\sim N(\mathbf{0},\sigma^2\mathbf{I}_N).
+$$
+
+Para os seis primeiros voluntários do experimento de distração (dois por condição), $\mathbf{X}$ é
+
+```{r matriz-X-toy}
+toy <- dados_tr %>% group_by(condicao) %>% slice_head(n = 2) %>% ungroup()
+X_toy <- model.matrix(~ condicao - 1, data = toy)
+X_toy
+```
+
+Como as colunas de $\mathbf{X}$ são indicadoras de grupos disjuntos, $\mathbf{X}'\mathbf{X} =
+\mathrm{diag}(n_1,\ldots,n_t)$ — diagonal, sem termos cruzados — e $\mathbf{X}$ tem **posto
+completo** ($t$, um por coluna): diferente do caso geral do Capítulo 2, aqui **todo** $\mu_i$ (e
+toda diferença $\mu_i-\mu_k$) é trivialmente estimável, sem exigir contrastes especiais.
+
+```{r matriz-XtX-full}
+Xfull <- model.matrix(~ condicao - 1, data = dados_tr)
+t(Xfull) %*% Xfull
+```
+
+Consequentemente, $\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y} =
+(\bar Y_{1\cdot}, \ldots, \bar Y_{t\cdot})'$: o vetor de médias amostrais reaparece, agora como
+instância direta da fórmula geral de mínimos quadrados, não como um resultado ad hoc.
+
+Como $\mathbf{X}$ tem posto completo, o Teorema de Gauss-Markov (Seção \@ref(gauss-markov)) se
+aplica sem qualificações: $\hat{\boldsymbol{\beta}}$ é o **BLUE** de $\boldsymbol{\beta}$ — em
+particular, $\hat\mu_i=\bar Y_{i\cdot}$ é o BLUE de $\mu_i$ — e
+
+$$
+\mathrm{Cov}(\hat{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}
+= \sigma^2\,\mathrm{diag}(1/n_1,\ldots,1/n_t),
+$$
+
+exatamente o erro-padrão $\sqrt{\sigma^2/n_i}$ usado nos ICs da próxima seção — agora com
+justificativa matricial completa em vez de apenas invocada. A dedução detalhada, para este $\mathbf{X}$
+específico, é o Exercício 4 da Lista 04.
+
+A matriz de projeção $\mathbf{P}_X=\mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ herda a
+estrutura de blocos de $\mathbf{X}'\mathbf{X}$: é **bloco-diagonal**, com o bloco do grupo $i$
+igual a $\tfrac{1}{n_i}\mathbf{J}_{n_i}$ (a matriz $n_i\times n_i$ de 1's dividida por $n_i$) —
+projetar $\mathbf{Y}$ com $\mathbf{P}_X$ substitui cada observação pela média do seu próprio
+grupo, e nada mais:
+
+```{r matriz-P-toy}
+P_toy <- X_toy %*% solve(t(X_toy) %*% X_toy) %*% t(X_toy)
+round(P_toy, 3)
+```
+
+Com $\mathbf{P}_X$ em mãos, a decomposição $\mathbf{M}=(\mathbf{P}_X-\tfrac1N\mathbf{J})+
+(\mathbf{I}_N-\mathbf{P}_X)$ do Capítulo 2 (Seção \@ref(soma-quadrados-total)) — válida porque o
+espaço-coluna de $\mathbf{X}$ contém $\mathbf{1}$ (a soma das $t$ colunas indicadoras é o vetor de
+uns) — dá, sem nenhuma soma indexada por $i,j$,
+
+$$
+\underbrace{\mathbf{Y}'\mathbf{M}\mathbf{Y}}_{SQ_{\text{Total}}} =
+\underbrace{\mathbf{Y}'\!\left(\mathbf{P}_X-\tfrac1N\mathbf{J}\right)\!\mathbf{Y}}_{SQ_{\text{Trat}}}
++ \underbrace{\mathbf{Y}'(\mathbf{I}_N-\mathbf{P}_X)\mathbf{Y}}_{SQ_E}.
+$$
+
+Substituindo a forma em blocos de $\mathbf{P}_X$, essas duas formas quadráticas se reduzem
+exatamente às somas indexadas $\sum_i n_i(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})^2$ e $\sum_{i,j}
+(Y_{ij}-\bar Y_{i\cdot})^2$ da Seção \@ref(anova-dca) — a tabela de ANOVA não é maquinaria nova,
+é o Teorema de formas quadráticas idempotentes do Capítulo 2 (Seção \@ref(formas-quadraticas))
+aplicado às matrizes $\mathbf{P}_X-\tfrac1N\mathbf{J}$ (idempotente, posto $t-1$) e
+$\mathbf{I}_N-\mathbf{P}_X$ (idempotente, posto $N-t$), que são independentes pelo Teorema de
+Cochran. Daí decorre diretamente a distribuição $F_{t-1,N-t}$ sob $H_0$ e a não centralidade
+$\phi^2$ sob $H_1$ da Seção \@ref(anova-dca): nenhuma suposição adicional além das já feitas no
+Capítulo 2.
+
+### Resultados potenciais e o estimando causal {#potencial-causal}
+
+O que significa, formalmente, "o tipo de distração afeta o tempo de reação"? Até aqui,
+$\mu_i-\mu_k$ é apenas um contraste entre parâmetros do modelo — para interpretá-lo como um
+**efeito causal**, precisamos do arcabouço de resultados potenciais de Neyman e Rubin
+[@neyman1923application; @rubin1974estimating; @imbensrubin2015].
+
+Para cada uma das $N$ unidades experimentais $u=1,\ldots,N$ da população em estudo, postulamos
+$t$ **resultados potenciais** $Y_u(1),\ldots,Y_u(t)$ — um por tratamento —, valores fixos
+(não aleatórios) que existiriam se $u$ recebesse cada um dos tratamentos. Dois pressupostos,
+reunidos sob o nome **SUTVA** (*stable unit treatment value assumption*)
+[@imbensrubin2015], tornam $Y_u(i)$ bem definido:
+
+1. **Sem interferência:** o resultado potencial de $u$ depende apenas do tratamento atribuído a
+   $u$, não do que é atribuído às demais unidades (um voluntário sob "nenhuma distração" não é
+   afetado pela condição sorteada para outro voluntário).
+2. **Sem versões ocultas de tratamento:** "distração sonora" significa a mesma intervenção,
+   consistente, para toda unidade que a recebe.
+
+Sob SUTVA, o resultado **observado** é $Y_u = Y_u(T_u)$, em que $T_u\in\{1,\ldots,t\}$ é o
+tratamento efetivamente sorteado para $u$ — apenas um dos $t$ resultados potenciais de cada
+unidade é jamais observável; os demais permanecem contrafactuais. O **estimando causal** de
+interesse, para dois tratamentos $i,k$, é o efeito médio de tratamento na população finita do
+experimento,
+
+$$
+\tau_{i,k} = \frac{1}{N}\sum_{u=1}^N \big[Y_u(i) - Y_u(k)\big].
+$$
+
+**Proposição (Neyman, 1923/1990).** Em um DCA — $N$ unidades, $n_i$ sorteadas para o tratamento
+$i$ por amostragem aleatória simples sem reposição, para cada $i$ —, a diferença de médias
+observadas $\bar Y_i^{\text{obs}} - \bar Y_k^{\text{obs}}$ é **não viesada** para $\tau_{i,k}$, em
+que a esperança é tomada sobre o mecanismo de aleatorização, mantendo os $Y_u(i)$ fixos.
+
+*Demonstração.* Seja $R_{u,i}=\mathbb{1}\{T_u=i\}$. O mecanismo de aleatorização completa garante,
+por simetria, que toda unidade $u$ tem a mesma chance marginal de cair no grupo $i$:
+$P(R_{u,i}=1)=n_i/N$, para todo $u$ — essa é a única propriedade probabilística de que
+precisamos, e ela não depende de $Y_u(i)$ de forma alguma. Como $Y_u^{\text{obs}}=Y_u(i)$ quando
+$R_{u,i}=1$,
+
+$$
+\bar Y_i^{\text{obs}} = \frac{1}{n_i}\sum_{u=1}^N R_{u,i}\,Y_u(i)
+\;\Longrightarrow\;
+E\big[\bar Y_i^{\text{obs}}\big] = \frac{1}{n_i}\sum_{u=1}^N E[R_{u,i}]\,Y_u(i)
+= \frac{1}{n_i}\sum_{u=1}^N \frac{n_i}{N}\,Y_u(i) = \frac{1}{N}\sum_{u=1}^N Y_u(i),
+$$
+
+pela linearidade da esperança — os $Y_u(i)$ são constantes, só $R_{u,i}$ é aleatório. O mesmo
+argumento vale para o tratamento $k$, e subtraindo,
+
+$$
+E\big[\bar Y_i^{\text{obs}} - \bar Y_k^{\text{obs}}\big]
+= \frac{1}{N}\sum_u Y_u(i) - \frac{1}{N}\sum_u Y_u(k) = \tau_{i,k}. \qquad\blacksquare
+$$
+
+Note o que a demonstração **não** usa: nenhuma suposição sobre a distribuição dos $Y_u(i)$,
+nenhuma normalidade, nenhum modelo $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$. A validade do estimador
+$\bar Y_i^{\cdot}-\bar Y_k^{\cdot}$ para o efeito causal médio vem inteiramente do **mecanismo
+físico de aleatorização** — o mesmo mecanismo que justificou o teste de aleatorização da Seção
+\@ref(principios-aleatorizacao). Os dois resultados são complementares: o argumento de Fisher
+testa a hipótese nula "aguda" $Y_u(i)=Y_u(k)$ para *toda* unidade $u$ (nenhum efeito, em nenhum
+caso), enquanto o argumento de Neyman estima e testa a hipótese "fraca" $\tau_{i,k}=0$ (nenhum
+efeito, *em média*). O que o modelo normal-linear $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ acrescenta
+a essa base puramente aleatorizada não é a validade do ponto estimado — já garantida por Neyman —
+mas sim distribuições exatas em amostra finita ($t$, $F$) para intervalos de confiança e testes,
+como visto na Seção \@ref(ic-dca) a seguir.
+
+### Estimação e intervalos de confiança {#ic-dca}
+
+Sob o modelo normal, $\bar Y_{i\cdot} \sim N\!\left(\mu_i, \sigma^2/n_i\right)$ e
+$(N-t)\,\text{MS}_E/\sigma^2 \sim \chi^2_{N-t}$, independente de todas as $\bar Y_{i\cdot}$. Isso
+dá origem a dois intervalos de confiança fundamentais, ambos baseados na distribuição $t$ de
+Student com $N-t$ graus de liberdade (os graus de liberdade do erro).
+
+**IC para a média de um tratamento.** Um intervalo de $100(1-\alpha)\%$ de confiança para
+$\mu_i$ é
+
+$$
+\bar Y_{i\cdot} \; \pm \; t_{\alpha/2,\, N-t} \sqrt{\frac{\text{MS}_E}{n_i}}.
+$$
+
+**IC para a diferença entre duas médias de tratamento.** Um intervalo de $100(1-\alpha)\%$ de
+confiança para $\mu_i - \mu_k$ ($i \neq k$) é
+
+$$
+(\bar Y_{i\cdot} - \bar Y_{k\cdot}) \; \pm \; t_{\alpha/2,\, N-t} \sqrt{\text{MS}_E\left(\frac{1}{n_i} + \frac{1}{n_k}\right)}.
+$$
+
+Note que os dois intervalos usam o mesmo $\text{MS}_E$ — a *combinação* (pooling) da
+variabilidade de todos os $t$ grupos para estimar um único $\sigma^2$ comum é o que torna a ANOVA
+mais eficiente do que fazer $t$ estimativas de variância separadas, uma por grupo, desde que a
+suposição de variância comum (Seção \@ref(dca-pressupostos)) seja razoável.
+
+### A tabela de análise de variância {#anova-dca}
+
+A ANOVA decompõe a soma de quadrados total em uma parte atribuível ao tratamento e uma parte
+residual (erro):
+
+$$
+\underbrace{\sum_{i,j}(Y_{ij}-\bar Y_{\cdot\cdot})^2}_{SQ_{\text{Total}}} =
+\underbrace{\sum_i n_i(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})^2}_{SQ_{\text{Trat}}} +
+\underbrace{\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2}_{SQ_E}.
+$$
+
+```{r tabela-anova-teorica, echo=FALSE}
+tibble(
+  `Fonte de variação` = c("Tratamento", "Erro", "Total"),
+  `G.l.` = c("$t-1$", "$N-t$", "$N-1$"),
+  `Soma de quadrados` = c("$SQ_{\\text{Trat}}$", "$SQ_E$", "$SQ_{\\text{Total}}$"),
+  `Quadrado médio` = c("$MS_{\\text{Trat}} = SQ_{\\text{Trat}}/(t-1)$",
+                        "$MS_E = SQ_E/(N-t)$", ""),
+  `F` = c("$MS_{\\text{Trat}}/MS_E$", "", "")
+) %>%
+  kable(escape = FALSE, caption = "Tabela de análise de variância do DCA a uma via") %>%
+  kable_styling(full_width = FALSE)
+```
+
+A coluna de graus de liberdade da tabela acima é, em miniatura, o diagrama de Hasse de um único
+fator já apresentado no Capítulo 2 (Seção \@ref(hasse)): uma cadeia de três nós Média $\prec$
+Tratamento $\prec$ Erro. Vale a pena vê-lo com os números concretos deste próprio experimento
+($t=3$ condições, $n=12$ voluntários por condição, $N=36$), em vez de reler apenas o exemplo
+genérico do capítulo anterior:
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA de distração</div>
+```
+
+```{r hasse-dca-distracao, fig.width=3, fig.height=5, fig.cap="Diagrama de Hasse do DCA de distração e tempo de reação: t=3 condições, n=12 voluntários por condição (N=36). A mesma cadeia de três nós do exemplo genérico do Capítulo 2 (Seção sobre diagramas de Hasse), agora com os graus de liberdade deste experimento."}
+nos_tr <- tibble(
+  termo = c("Média", "Condição", "Erro"),
+  df    = c(1, 3 - 1, 36 - 3),
+  x     = c(0, 0, 0),
+  y     = c(3, 2, 1)
+)
+arestas_tr <- tibble(de = c("Média", "Condição"), para = c("Condição", "Erro"))
+
+plot_hasse(nos_tr, arestas_tr, titulo = "DCA de distração: t=3, n=12 (N=36)")
+```
+
+Os três nós somam $1+2+33=36=N$, confirmando a leitura da tabela: nenhuma outra fonte de variação
+estrutural além da condição experimental, exatamente como no exemplo genérico do Capítulo 2 — a
+diferença entre os dois diagramas é só de escala ($t=3$ contra $t=4$), não de forma, porque os dois
+são o mesmo delineamento (um único fator, sem blocagem nem aninhamento).
+
+Sob $H_0: \tau_1 = \cdots = \tau_t = 0$ (nenhum efeito de tratamento), $F = MS_{\text{Trat}}/MS_E
+\sim F_{t-1,\,N-t}$; rejeita-se $H_0$ para valores grandes de $F$. Quando $H_0$ é falsa, $F$ segue
+uma distribuição $F$ **não central**, com parâmetro de não centralidade
+
+$$
+\phi^2 = \frac{\sum_i n_i \tau_i^2}{t\,\sigma^2}
+$$
+
+(no caso balanceado, $n_i \equiv n$) — quanto maiores os efeitos de tratamento em relação ao
+erro, maior $\phi^2$ e maior o poder do teste. Esse parâmetro é a chave da Seção
+\@ref(numero-replicas-dca).
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — ajustando o DCA e obtendo IC's</div>
+```
+
+```{r ajuste-dca}
+modelo_tr <- aov(tempo_reacao ~ condicao, data = dados_tr)
+summary(modelo_tr)
+
+MS_E  <- summary(modelo_tr)[[1]][["Mean Sq"]][2]
+df_E  <- summary(modelo_tr)[[1]][["Df"]][2]
+t_crit <- qt(0.975, df_E)
+
+dados_tr %>%
+  group_by(condicao) %>%
+  summarise(media = mean(tempo_reacao), n = n(), .groups = "drop") %>%
+  mutate(
+    ep  = sqrt(MS_E / n),
+    lwr = media - t_crit * ep,
+    upr = media + t_crit * ep
+  ) %>%
+  kable(digits = 1, caption = "Médias por condição com IC de 95% (pooled MS_E)") %>%
+  kable_styling(full_width = FALSE)
+```
+
+O teste $F$ rejeita $H_0$ ($p = `r round(summary(modelo_tr)[[1]][["Pr(>F)"]][1], 4)`$): o tipo de
+distração afeta o tempo de reação médio. Os intervalos de confiança individuais mostram que a
+condição visual se destaca das demais, um ponto que será formalizado com comparações múltiplas
+(próxima seção do capítulo, além do escopo deste texto).
+
+```{r plot-medias-ic-dca, echo=FALSE, fig.width=6.5, fig.height=4, fig.cap="Médias de tempo de reação por condição, com intervalos de confiança de 95% construídos a partir do quadrado médio do erro (QME) comum às três condições."}
+dados_tr %>%
+  group_by(condicao) %>%
+  summarise(media = mean(tempo_reacao), n = n(), .groups = "drop") %>%
+  mutate(
+    ep  = sqrt(MS_E / n),
+    lwr = media - t_crit * ep,
+    upr = media + t_crit * ep
+  ) %>%
+  ggplot(aes(x = condicao, y = media)) +
+  geom_pointrange(aes(ymin = lwr, ymax = upr), color = "#0B4F6C", linewidth = 0.9, size = 0.8) +
+  labs(x = "Condição de distração", y = "Tempo de reação médio (ms)",
+       title = "Médias por condição, com IC de 95% (erro-padrão pooled)") +
+  theme_minimal(base_size = 13)
+```
+
+O gráfico traduz visualmente a tabela anterior: os três intervalos usam a mesma largura, porque
+todos compartilham o mesmo $QME$ (o erro-padrão pooled da ANOVA, não um erro-padrão calculado
+grupo a grupo), o que é, por si só, a suposição de variância homogênea em ação. A condição visual
+se destaca claramente das demais — seu intervalo não se sobrepõe ao das outras duas —, enquanto os
+intervalos de "Nenhuma" e "Sonora" se tocam, sugerindo que a diferença entre elas é mais tênue.
+Essa leitura visual antecipa exatamente o que os procedimentos de comparação múltipla da Seção
+\@ref(contrastes) vão formalizar com rigor estatístico.
+
+### Número de réplicas necessário {#numero-replicas-dca}
+
+Quantas unidades experimentais por tratamento são necessárias? A resposta depende de três
+escolhas do pesquisador — o nível de significância $\alpha$, o poder desejado $1-\beta$, e o
+**tamanho de efeito** mínimo que se quer ter boa chance de detectar — e de uma quantidade que
+raramente é conhecida com exatidão antes do experimento: $\sigma^2$, normalmente estimada a
+partir de um estudo piloto ou da literatura.
+
+Uma forma conveniente de expressar o tamanho de efeito para $t$ grupos é o **$f$ de Cohen**,
+
+$$
+f = \frac{\sigma_\mu}{\sigma}, \qquad \sigma_\mu^2 = \frac{1}{t}\sum_i (\mu_i - \bar\mu)^2,
+$$
+
+isto é, o desvio-padrão das médias populacionais dividido pelo desvio-padrão comum dentro dos
+grupos — quanto mais as médias se afastam entre si em relação ao ruído, maior $f$. A relação com
+o parâmetro de não centralidade da Seção \@ref(anova-dca) é direta: $\phi^2 = n\, t\, f^2/t = n
+f^2$ no caso balanceado. Dado $f$, $\alpha$ e o poder desejado, o número de réplicas $n$ por
+grupo é obtido numericamente (não há fórmula fechada, pois a distribuição $F$ não central não se
+inverte analiticamente).
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — número de réplicas via `pwr::pwr.anova.test()`</div>
+```
+
+```{r pwr-dca}
+medias_grupo <- c(494, 514, 564)     # estimativa piloto das médias por condição
+sigma_piloto <- sqrt(MS_E)           # estimativa piloto do desvio-padrão comum
+
+f_cohen <- sqrt(mean((medias_grupo - mean(medias_grupo))^2)) / sigma_piloto
+f_cohen
+
+pwr::pwr.anova.test(k = 3, f = f_cohen, sig.level = 0.05, power = 0.80)
+```
+
+Com o tamanho de efeito observado neste estudo ($f \approx `r round(f_cohen, 2)`$), seriam
+necessárias cerca de 11 unidades por grupo para poder de 80% — as 12 efetivamente usadas já
+garantem poder ligeiramente superior a 80%. Na prática, essa conta deve ser feita **antes** da
+coleta de dados, com $f$ estimado a partir de um piloto, da literatura, ou de uma diferença
+mínima de interesse prático especificada pelo próprio pesquisador (por exemplo, "uma diferença de
+40 ms ou mais entre condições é relevante clinicamente").
+
+## Submuestreo em um DCA {#dca-submuestreo}
+
+Retomamos aqui, com rigor, a distinção entre unidade experimental (UE) e unidade amostral
+introduzida no Capítulo 1 (Seção \@ref(unidades)): quando uma UE é medida mais de uma vez —
+várias tentativas de um mesmo sujeito, vários peixes do mesmo aquário, várias leituras do mesmo
+lote — dizemos que há **submuestreo**. As submuestras não são réplicas do tratamento: são
+réplicas da *medição* dentro de uma única aplicação do tratamento, e carregam uma fonte de
+variação a mais, que precisa ser modelada separadamente.
+
+```{r fig-ue-uo-submuestreo, echo=FALSE, out.width="95%", fig.cap="Duas formas de organizar o mesmo experimento com três tratamentos (cores/rótulos Trat. 1-3). Situação Experimental 1 (esquerda): cada caixa de 4 vasos recebe um sorteio de tratamento -- a caixa é a UE e cada vaso individual dentro dela é uma unidade amostral (submuestra), gerando submuestreo. Situação Experimental 2 (direita): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, sem submuestreo."}
+knitr::include_graphics(c("../Aulas/images/experimento1.png", "../Aulas/images/sit2.png"))
+```
+
+Os dois diagramas mostram o mesmo número de plantas (12 no total, três tratamentos) organizadas de
+formas distintas. Na Situação 1, o sorteio de tratamento ocorre **caixa a caixa**: uma vez que uma
+caixa recebe, digamos, o Tratamento 1, todos os quatro vasos dentro dela recebem necessariamente o
+mesmo tratamento — a caixa é a UE, e as quatro plantas dentro dela são submuestras da mesma UE, com
+apenas 3 UEs por tratamento efetivamente sorteadas de forma independente. Na Situação 2, cada vaso
+é sorteado **individualmente**: a moeda do desenho aleatorizado é lançada 12 vezes, uma por vaso, e
+UE e unidade amostral coincidem — não há submuestreo, e as 12 observações são, de fato, 12
+réplicas independentes do sorteio de tratamento. A diferença entre as duas situações não aparece em
+nenhuma estatística descritiva calculada ingenuamente sobre os 12 valores brutos — só se torna
+visível quando se pergunta, explicitamente, "quantas vezes o mecanismo de aleatorização foi
+acionado?" — e é exatamente essa pergunta que a distinção UE/unidade amostral formaliza.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: probiótico e ganho de peso em tilápia</strong><br>
+Um estudo de aquicultura testa quatro formulações de probiótico (dados <code>mojarra.csv</code>)
+quanto ao ganho de peso de tilápias entre o início do experimento e o dia 45. O delineamento usa
+20 aquários, sorteados 5 para cada probiótico — o <strong>aquário é a unidade experimental</strong>,
+pois é nele que o probiótico é aplicado (misturado à ração de todo o aquário) e não é possível
+sortear o probiótico peixe a peixe dentro de um mesmo aquário. Cada aquário contém, em geral, 5
+peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong> (submuestra).
+</div>
+```
+
+### O modelo com dois níveis de erro {#modelo-submuestreo}
+
+Com $t$ tratamentos, $r$ unidades experimentais (UEs) por tratamento e $q$ unidades amostrais
+(submuestras) por UE, o modelo passa a ter **dois** termos de erro:
+
+$$
+Y_{ijk} = \mu + \tau_i + \delta_{ij} + \varepsilon_{ijk},
+$$
+
+$$
+i = 1,\ldots,t; \quad j = 1,\ldots,r; \quad k = 1,\ldots,q,
+$$
+
+em que $\delta_{ij} \overset{iid}{\sim} N(0,\sigma_\delta^2)$ é o **erro experimental** (o desvio
+específico da UE $j$ dentro do tratamento $i$ — por exemplo, algo peculiar daquele aquário, além
+do efeito do probiótico) e $\varepsilon_{ijk} \overset{iid}{\sim} N(0,\sigma_\varepsilon^2)$ é o
+**erro de amostragem** (o desvio específico da submuestra $k$ dentro da UE — a variação entre
+peixes de um mesmo aquário), independente de $\delta_{ij}$. A variância total de uma observação
+individual é $\text{Var}(Y_{ijk}) = \sigma_\delta^2 + \sigma_\varepsilon^2$, mas o que importa
+para comparar tratamentos é apenas $\sigma_\delta^2$: aumentar $q$ (mais peixes por aquário) nunca
+reduz a incerteza sobre o efeito do tratamento além de um certo ponto, porque não gera novas UEs.
+
+Em notação matricial, o submuestreo quebra a suposição $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
+\sigma^2\mathbf{I}_N$ do Capítulo 2 (Seção \@ref(gauss-markov)): empilhando as $N=trq$
+observações, $\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}' +
+\sigma_\varepsilon^2\mathbf{I}_N$, em que $\mathbf{Z}$ é a matriz $N\times tr$ de indicadores de
+UE ($Z_{[ijk],\,i'j'} = \mathbb{1}\{i=i',j=j'\}$). $\mathbf{V}$ tem estrutura de blocos de
+**simetria composta**: dentro de uma mesma UE, $\mathrm{Cov}(Y_{ijk},Y_{ijk'}) = \sigma_\delta^2$
+($k\neq k'$); entre UEs diferentes, covariância nula. Um $\mathbf{X}$ com $\mathrm{Cov}(\mathbf{Y})
+=\sigma^2\mathbf{I}$ deixa de bastar — é exatamente essa estrutura de $\mathbf{V}$ que faz do DCA
+com submuestreo um caso particular de **modelo linear misto**, ajustável de forma exata (inclusive
+sob desbalanceamento) por `nlme::lme()` ou `lme4::lmer()`, embora a ANOVA clássica com `Error()`
+usada adiante já recupere o teste correto no caso balanceado.
+
+### O diagrama de Hasse do submuestreo: aninhamento em duas camadas
+
+A estrutura de dois erros descrita acima tem um retrato imediato no diagrama de Hasse introduzido
+no Capítulo 2 (Seção \@ref(hasse)). O DCA simples é uma cadeia de três nós — Média $\prec$
+Tratamento $\prec$ Erro (Figura \@ref(fig:hasse-dca) do Capítulo 2). O submuestreo insere um quarto
+elo *abaixo* do erro experimental: a unidade experimental (aquário) é, ela própria, refinada pela
+unidade amostral (peixe) dentro dela — exatamente o padrão de **aninhamento** que a Seção
+\@ref(hasse) definiu como "uma cadeia direta de arestas, sem ramificação".
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA com submuestreo</div>
+```
+
+```{r hasse-submuestreo, fig.width=3.4, fig.height=6.8, fig.cap="Diagrama de Hasse do DCA com submuestreo, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): o submuestreo insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico."}
+nos_sub <- tibble(
+  termo = c("Média", "Tratamento", "UE (aquário)", "Unidade amostral (peixe)"),
+  df    = c(1, 4 - 1, 4 * (5 - 1), 4 * 5 * (5 - 1)),
+  x     = c(0, 0, 0, 0),
+  y     = c(4, 3, 2, 1)
+)
+arestas_sub <- tibble(
+  de   = c("Média", "Tratamento", "UE (aquário)"),
+  para = c("Tratamento", "UE (aquário)", "Unidade amostral (peixe)")
+)
+
+plot_hasse(nos_sub, arestas_sub, titulo = "DCA com submuestreo: t=4, r=5, q=5 (N=100)")
+```
+
+Os graus de liberdade dos quatro nós somam exatamente $N=trq=4\times5\times5=100$: $1$ (Média) $+\,
+3$ (Tratamento, $t-1$) $+\,16$ (UE dentro de tratamento, $t(r-1)$) $+\,80$ (unidade amostral dentro
+de UE, $tr(q-1)$) $=100$ — os mesmos dois últimos números que aparecem, com outros nomes ("erro
+experimental" e "erro de amostragem"), na tabela de ANOVA da seção seguinte. O diagrama não
+acrescenta informação nova à tabela; torna **visível** algo que a tabela só codifica em símbolos:
+os dois erros do modelo não são dois termos soltos e paralelos, são dois elos sucessivos de uma
+mesma cadeia de refinamento, e o segundo só existe *dentro* do primeiro.
+
+Essa dupla estrutura de aninhamento é precisamente o que a Seção \@ref(amostragem-e-desenho) do
+Capítulo 1 antecipava ao introduzir o elo entre teoria de amostragem e planejamento de
+experimentos: a atribuição do probiótico acontece uma única vez, no aquário (a unidade
+experimental, sorteada por aleatorização de tratamento); mas decidir **quantos e quais** peixes
+medir dentro de cada aquário é um problema de amostragem — literalmente, qual subconjunto de
+peixes daquele aquário entra na base de dados — aninhado *dentro* do desenho experimental já
+definido. O diagrama de Hasse deixa essa dupla camada impossível de confundir: os dois nós
+superiores (Média, Tratamento) pertencem à lógica de atribuição aleatória de Neyman-Rubin
+formalizada no Capítulo 1; o nó de UE e o nó de unidade amostral, abaixo dele, pertencem à lógica
+de amostragem de Kish — e é exatamente por isso que aumentar $q$ (mais amostragem dentro da UE)
+nunca substitui aumentar $r$ (mais aleatorização de tratamento), como a Seção
+\@ref(amostra-submuestreo), adiante, quantifica.
+
+### ANOVA com submuestreo {#anova-submuestreo}
+
+A soma de quadrados total se decompõe agora em três partes, não duas:
+
+```{r tabela-anova-sub-teorica, echo=FALSE}
+tibble(
+  `Fonte de variação` = c("Tratamento", "Erro experimental (entre UEs, dentro de trat.)",
+                           "Erro de amostragem (dentro de UEs)", "Total"),
+  `G.l.` = c("$t-1$", "$t(r-1)$", "$tr(q-1)$", "$trq-1$"),
+  `E[QM]` = c("$\\sigma_\\varepsilon^2 + q\\sigma_\\delta^2 + \\frac{qr\\sum\\tau_i^2}{t-1}$",
+              "$\\sigma_\\varepsilon^2 + q\\sigma_\\delta^2$",
+              "$\\sigma_\\varepsilon^2$", "")
+) %>%
+  kable(escape = FALSE,
+        caption = "ANOVA do DCA com submuestreo balanceado (q submuestras por UE)") %>%
+  kable_styling(full_width = FALSE)
+```
+
+O ponto crucial está na coluna de esperanças de quadrados médios (E[QM]): o teste correto para o
+efeito do tratamento é
+
+$$
+F = \frac{MS_{\text{Trat}}}{MS_{\text{Erro experimental}}} \sim F_{t-1,\, t(r-1)} \text{ sob } H_0,
+$$
+
+**não** $MS_{\text{Trat}}/MS_{\text{Erro de amostragem}}$. Usar o erro de amostragem no
+denominador — como aconteceria ao rodar a ANOVA diretamente nas $trq$ observações individuais,
+ignorando a estrutura de aquários — é exatamente o erro de pseudorreplicação descrito no
+Capítulo 1: o denominador fica artificialmente pequeno (baseado em $tr(q-1)$ graus de liberdade
+"emprestados" de dentro das UEs, não entre elas), o que infla o valor de $F$ e a taxa de falsos
+positivos.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — ANOVA aninhada com `Error()`</div>
+```
+
+```{r dca-submuestreo-r}
+mojarra <- read_csv("data/mojarra.csv", show_col_types = FALSE) %>%
+  rename(probiotico = probiotico, aquario = Acuario,
+         peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %>%
+  drop_na(peso_45) %>%                                  # 3 peixes sem medição no dia 45
+  mutate(
+    probiotico = factor(probiotico),
+    aquario    = factor(aquario),
+    ganho      = peso_45 - peso_inicial
+  )
+
+glimpse(mojarra)
+```
+
+```{r tabela-papel-variaveis-mojarra, echo=FALSE}
+tibble(
+  Variável = c("`probiotico`", "`aquario`", "`peso_inicial`, `peso_45`, `ganho`"),
+  Papel = c("Fator de tratamento (4 níveis) — sorteado por aquário",
+            "Identificador da unidade experimental (20 níveis, aninhado em `probiotico`)",
+            "Peso por peixe (unidade amostral) e resposta derivada (`ganho`)")
+) %>%
+  kable(caption = "Mojarra: papel de cada variável e mapeamento UE/unidade amostral") %>%
+  kable_styling(full_width = FALSE)
+
+mojarra %>%
+  count(probiotico, aquario) %>%
+  count(probiotico, name = "n_aquarios") %>%
+  kable(caption = "Aquários por probiótico (20 UEs no total)") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r plot-hierarquia-mojarra, echo=FALSE, fig.width=8.5, fig.height=4.3}
+ggplot(mojarra, aes(x = aquario, y = ganho, color = probiotico)) +
+  geom_jitter(width = 0.08, size = 1.8, alpha = 0.75) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  labs(x = "Aquário (unidade experimental)", y = "Ganho de peso (g)", color = "Probiótico",
+       title = "Estrutura hierárquica: peixes dentro de aquários dentro de probióticos",
+       subtitle = "Cada ponto colorido é um peixe (submuestra); losango preto = média do aquário") +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Cada bloco de cor agrupa os aquários de um mesmo probiótico, e dentro de cada aquário os peixes
+(pontos) se espalham em torno da média daquele aquário (losango) — a variação *entre* losangos
+dentro de uma mesma cor é o erro experimental $\sigma_\delta^2$; a variação dos pontos *ao redor*
+do losango do seu próprio aquário é o erro de amostragem $\sigma_\varepsilon^2$. O gráfico deixa
+visível o que a seção seguinte formaliza: as 20 médias de aquário (os losangos) já parecem crescer
+de probiótico 1 para 4, um padrão que a ANOVA a seguir testa formalmente usando apenas essas 20
+médias como unidade de comparação — não os quase 100 pontos coloridos.
+
+```{r dca-submuestreo-anova}
+modelo_sub <- aov(ganho ~ probiotico + Error(probiotico:aquario), data = mojarra)
+summary(modelo_sub)
+```
+
+Note que o erro-padrão de mortalidade (3 peixes sem peso registrado no dia 45) deixa o desenho
+levemente desbalanceado — 4 ou 5 peixes por aquário em vez de exatamente 5 — o que é comum em
+dados reais e não invalida a lógica da decomposição, ainda que a fórmula fechada de E[QM] acima
+valha exatamente apenas no caso perfeitamente balanceado. O teste do efeito do probiótico usa o
+quadrado médio **entre aquários dentro de probiótico** como erro (16 g.l.), não o quadrado médio
+entre peixes dentro de aquário (77 g.l.) — se o pesquisador tivesse usado este último por engano,
+o denominador do teste $F$ seria bem menor, inflando artificialmente a significância.
+
+### Tamanho de amostra com submuestreo {#amostra-submuestreo}
+
+Combinando $\delta_{ij}$ e $\varepsilon_{ijk}$, a variância efetiva da média de uma UE baseada em
+$q$ submuestras é
+
+$$
+\text{Var}(\bar Y_{ij\cdot}) = \sigma_\delta^2 + \frac{\sigma_\varepsilon^2}{q}.
+$$
+
+Essa expressão tem uma implicação prática importante: como função de $q$, ela decresce, mas com
+retornos decrescentes, aproximando-se assintoticamente de um **piso** igual a $\sigma_\delta^2$ —
+nenhuma quantidade de submuestragem elimina a variação entre unidades experimentais. Se o
+objetivo é reduzir a incerteza sobre o efeito do tratamento, aumentar $r$ (mais UEs) tem retorno
+direto e ilimitado; aumentar $q$ (mais submuestras por UE) tem retorno limitado por esse piso.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — retorno decrescente da submuestragem</div>
+```
+
+```{r retorno-decrescente-sub}
+tab_sub <- summary(modelo_sub)
+MS_exp <- tab_sub[["Error: probiotico:aquario"]][[1]][["Mean Sq"]][2]  # erro experimental
+MS_am  <- tab_sub[["Error: Within"]][[1]][["Mean Sq"]][1]              # erro de amostragem
+q_medio <- nrow(mojarra) / n_distinct(mojarra$aquario)
+
+sigma2_delta <- (MS_exp - MS_am) / q_medio
+sigma2_eps   <- MS_am
+
+tibble(q = c(1, 2, 5, 10, 20, 50)) %>%
+  mutate(var_media_UE = sigma2_delta + sigma2_eps / q) %>%
+  kable(digits = 2,
+        caption = "Variância da média de uma UE conforme o número de submuestras q") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r reducao-q-r, echo=FALSE}
+var_q5  <- sigma2_delta + sigma2_eps / 5
+var_q20 <- sigma2_delta + sigma2_eps / 20
+reducao_q <- 1 - var_q20 / var_q5
+```
+
+Com $\hat\sigma_\delta^2 \approx `r round(sigma2_delta,1)`$ e $\hat\sigma_\varepsilon^2 \approx
+`r round(sigma2_eps,1)`$, passar de $q=5$ (o desenho usado) para $q=20$ reduziria a variância da
+média de UE em cerca de `r scales::percent(reducao_q, accuracy = 1)`
+(de `r round(var_q5,2)` para `r round(var_q20,2)`) — uma melhora real, mas limitada pelo piso
+$\sigma_\delta^2$. Já passar de $r=5$ para $r=20$ aquários por tratamento (o mesmo fator de
+aumento, $4\times$) reduziria a variância da **média de tratamento**, que decresce como
+$\sigma_\delta^2/r$ sem nenhum piso, em exatos 75% ($1 - 1/4$) — quase o triplo da redução obtida
+investindo o mesmo fator de aumento em submuestras. Sempre que o custo por UE adicional for
+comparável ao custo por submuestra adicional, investir em mais UEs é a escolha mais eficiente —
+uma recomendação de delineamento amostral que decorre diretamente da estrutura do modelo, não de
+intuição.
+
+## O modelo de efeitos aleatórios {#dca-efeitos-aleatorios}
+
+Até aqui, os níveis do fator eram os níveis de interesse *per se*: o pesquisador queria comparar
+justamente aquelas três condições de distração, ou justamente aqueles quatro probióticos. Há
+situações, porém, em que os níveis usados no experimento são apenas **uma amostra aleatória** de
+uma população maior e muito mais numerosa de níveis possíveis — e o interesse não está nos
+níveis específicos sorteados, mas em **quanto** a fonte de variação que eles representam
+contribui para a variabilidade total da resposta, de modo a generalizar para toda a população de
+níveis.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: variabilidade entre estímulos sonoros de distração</strong><br>
+Voltando ao experimento de distração sonora: existe, na prática, uma população enorme de
+possíveis sons de distração (sirenes, conversas, tráfego, música...). Em vez de fixar um único
+som, o pesquisador sorteia aleatoriamente <strong>5 clipes sonoros</strong> de um banco com
+centenas de gravações e testa cada clipe em 8 novos voluntários (sorteados independentemente
+entre clipes). A pergunta não é "o clipe 3 difere do clipe 1?" — não há interesse nesses clipes
+específicos — mas sim "o tipo de som usado, de modo geral, contribui de forma relevante para a
+variabilidade do tempo de reação?".
+</div>
+```
+
+### Quando os tratamentos são uma amostra aleatória {#modelo-aleatorio}
+
+O modelo tem a mesma forma algébrica de antes,
+
+$$
+Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad i = 1,\ldots,t; \; j = 1,\ldots,n,
+$$
+
+mas agora $\tau_i \overset{iid}{\sim} N(0, \sigma_\tau^2)$ é **aleatório** (não mais sujeito à
+restrição de soma zero), independente de $\varepsilon_{ij} \overset{iid}{\sim} N(0,\sigma^2)$.
+Consequentemente, $\text{Var}(Y_{ij}) = \sigma_\tau^2 + \sigma^2$, e observações da mesma UE de
+nível $i$ (aqui, do mesmo clipe sonoro) são correlacionadas: $\text{Corr}(Y_{ij}, Y_{ij'}) =
+\sigma_\tau^2/(\sigma_\tau^2+\sigma^2)$ para $j \neq j'$ — o **coeficiente de correlação
+intraclasse (ICC)**. Em notação matricial, isso é a mesma estrutura de blocos de simetria
+composta $\mathbf{V}=\sigma_\tau^2\mathbf{Z}\mathbf{Z}'+\sigma^2\mathbf{I}_N$ da Seção
+\@ref(modelo-submuestreo), agora com $\mathbf{Z}$ indicando o **nível sorteado** (o clipe), não a
+UE — sinal de que submuestreo e efeitos aleatórios são duas instâncias do mesmo fenômeno
+estatístico: observações que compartilham um rótulo aleatório deixam de ser independentes. A
+hipótese de interesse muda de "as médias são iguais?" para "a variância entre níveis é nula?":
+
+$$
+H_0: \sigma_\tau^2 = 0 \quad \text{vs.} \quad H_1: \sigma_\tau^2 > 0.
+$$
+
+### ANOVA e componentes de variância {#anova-aleatorio}
+
+A tabela de ANOVA é calculada exatamente como no modelo de efeitos fixos (as somas de quadrados
+não mudam — a diferença está só na interpretação e nas esperanças de quadrados médios):
+
+```{r tabela-anova-aleatoria-teorica, echo=FALSE}
+tibble(
+  `Fonte de variação` = c("Entre níveis", "Erro", "Total"),
+  `G.l.` = c("$t-1$", "$t(n-1)$", "$tn-1$"),
+  `E[QM]` = c("$\\sigma^2 + n\\sigma_\\tau^2$", "$\\sigma^2$", "")
+) %>%
+  kable(escape = FALSE, caption = "ANOVA do DCA de efeitos aleatórios balanceado") %>%
+  kable_styling(full_width = FALSE)
+```
+
+O teste $F = MS_{\text{Entre}}/MS_E$ é numericamente idêntico ao do modelo fixo, mas a estimativa
+de interesse passa a ser o **componente de variância** $\sigma_\tau^2$, obtido pelo método dos
+momentos a partir da tabela de ANOVA (método de Henderson tipo I):
+
+$$
+\hat\sigma^2 = MS_E, \qquad \hat\sigma_\tau^2 = \frac{MS_{\text{Entre}} - MS_E}{n}.
+$$
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — variância entre clipes sonoros</div>
+```
+
+```{r dca-aleatorio-r}
+set.seed(77)
+t_niveis <- 5; n_por_nivel <- 8
+efeito_clipe <- rnorm(t_niveis, 0, sqrt(300))
+
+dados_clipe <- tibble(
+  clipe        = factor(rep(paste("Clipe", 1:t_niveis), each = n_por_nivel)),
+  efeito       = rep(efeito_clipe, each = n_por_nivel),   # efeito ALEATÓRIO do clipe sorteado
+  tempo_reacao = 520 + efeito + rnorm(t_niveis * n_por_nivel, 0, sqrt(1200))
+)
+glimpse(dados_clipe)
+# UE = voluntário (8 por clipe, sem submuestreo); "clipe" é o nível sorteado da população de sons
+
+modelo_clipe <- aov(tempo_reacao ~ clipe, data = dados_clipe)
+summary(modelo_clipe)
+
+tab_cl <- summary(modelo_clipe)[[1]]
+MS_entre <- tab_cl[["Mean Sq"]][1]; MS_erro <- tab_cl[["Mean Sq"]][2]
+sigma2_tau_hat <- (MS_entre - MS_erro) / n_por_nivel
+
+tibble(
+  Componente = c("Entre clipes (sigma_tau^2)", "Erro (sigma^2)", "ICC"),
+  Estimativa = c(sigma2_tau_hat, MS_erro, sigma2_tau_hat / (sigma2_tau_hat + MS_erro))
+) %>%
+  kable(digits = 3, caption = "Componentes de variância estimados") %>%
+  kable_styling(full_width = FALSE)
+```
+
+O ICC estimado de cerca de 0,15 sugere que a *identidade do clipe sonoro* explica uma fração
+modesta, mas não desprezível, da variabilidade do tempo de reação — informação que o modelo de
+efeitos fixos, ao tratar os cinco clipes como se fossem os únicos de interesse, simplesmente não
+poderia fornecer.
+
+```{r plot-clipe-icc, echo=FALSE, fig.width=7.5, fig.height=4.2, fig.cap="Tempo de reação por clipe sonoro (pontos), com a média de cada clipe (losango preto). A dispersão dos losangos em torno da média geral estima sigma_tau^2 (entre clipes); a dispersão dos pontos em torno do próprio losango estima sigma^2 (dentro de clipe)."}
+media_geral_clipe <- mean(dados_clipe$tempo_reacao)
+ggplot(dados_clipe, aes(x = clipe, y = tempo_reacao)) +
+  geom_hline(yintercept = media_geral_clipe, linetype = "dashed", color = "gray50") +
+  geom_jitter(width = 0.08, alpha = 0.55, color = "#0B4F6C") +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4.5, color = "black") +
+  labs(x = "Clipe sonoro (nível sorteado)", y = "Tempo de reação (ms)",
+       title = "Duas fontes de variação: entre clipes e dentro de clipe") +
+  theme_minimal(base_size = 13)
+```
+
+A linha tracejada marca a média geral. Os losangos (médias de cada clipe) se espalham em torno
+dela — essa dispersão *entre* losangos é o que $\hat\sigma_\tau^2$ mede — enquanto os pontos
+individuais (voluntários) se espalham em torno do losango do seu próprio clipe — a dispersão
+*dentro* de cada coluna, que $\hat\sigma^2$ mede. Note que nenhum clipe específico se destaca de
+forma sistemática: é exatamente esse padrão, em que os cinco níveis observados parecem uma amostra
+de uma população maior de clipes possíveis, que justifica tratá-los como efeitos aleatórios em vez
+de fixos.
+
+### Tamanho de amostra no modelo de efeitos aleatórios {#amostra-aleatorio}
+
+O planejamento de $n$ (réplicas por nível) no modelo aleatório não usa a distribuição $F$ não
+central da Seção \@ref(numero-replicas-dca) — em vez disso, sob $H_1$,
+
+$$
+\frac{F}{1 + n\gamma} \sim F_{t-1,\,t(n-1)} \quad \text{(central)}, \qquad
+\gamma = \frac{\sigma_\tau^2}{\sigma^2},
+$$
+
+de modo que o poder do teste, para um dado $\gamma$ (a razão de variâncias que se deseja detectar)
+e um número de níveis $t$ fixado de antemão, é
+
+$$
+\text{Poder}(n) = P\!\left(F_{t-1,\,t(n-1)} > \frac{F_{\alpha,\,t-1,\,t(n-1)}}{1+n\gamma}\right).
+$$
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — poder em função de n, dado gamma</div>
+```
+
+```{r amostra-aleatorio-r}
+gamma_alvo <- 300 / 1200   # sigma_tau^2 / sigma^2 assumido no planejamento
+t_niveis   <- 5
+alpha      <- 0.05
+
+poder_n <- function(n) {
+  Fc <- qf(1 - alpha, t_niveis - 1, t_niveis * (n - 1))
+  pf(Fc / (1 + n * gamma_alvo), t_niveis - 1, t_niveis * (n - 1), lower.tail = FALSE)
+}
+
+tibble(n = c(8, 10, 15, 20, 25, 30)) %>%
+  mutate(poder = map_dbl(n, poder_n)) %>%
+  kable(digits = 3, caption = "Poder para detectar gamma = 0,25 com t = 5 níveis") %>%
+  kable_styling(full_width = FALSE)
+```
+
+Com apenas 8 réplicas por clipe (o desenho do exemplo), o poder para detectar $\gamma=0{,}25$ é de
+apenas cerca de 0,49 — seriam necessárias por volta de 20 réplicas por nível para atingir poder de
+0,80. O modelo aleatório costuma exigir mais réplicas por nível do que o modelo fixo para o mesmo
+poder nominal, porque a variabilidade entre níveis ($\sigma_\tau^2$) se soma à incerteza da
+estimativa, em vez de ser um efeito fixo perfeitamente estimável.
+
+## Verificação de pressupostos {#dca-pressupostos}
+
+Toda a inferência das seções anteriores — testes $F$, intervalos de confiança, cálculos de
+tamanho amostral — depende de três suposições sobre os erros do modelo: **normalidade**,
+**variância constante** entre tratamentos (homocedasticidade) e **independência**. A
+independência é garantida (ou não) pelo desenho — pela aleatorização e pela ausência de
+dependências não modeladas, como o submuestreo tratado incorretamente — e não se verifica
+diretamente nos dados; normalidade e homocedasticidade, por sua vez, são checáveis a partir dos
+**resíduos** do modelo ajustado, $e_{ij} = Y_{ij} - \bar Y_{i\cdot}$ — em notação matricial da
+Seção \@ref(matricial-dca), o vetor $\mathbf{e} = (\mathbf{I}_N-\mathbf{P}_X)\mathbf{Y}$, a
+projeção de $\mathbf{Y}$ sobre o complemento ortogonal do espaço-coluna de $\mathbf{X}$. É
+precisamente por $\mathbf{e}$ viver nesse subespaço, ortogonal aos valores ajustados, que ele
+funciona como um proxy observável dos erros $\boldsymbol{\varepsilon}$ não observáveis.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: heterocedasticidade em tempos de reação</strong><br>
+Tempos de reação são um exemplo clássico de variável que raramente é normal em escala bruta: a
+distribuição costuma ser assimétrica à direita (a maioria das respostas é rápida, mas há uma
+cauda de respostas bem mais lentas) e a variância tende a crescer com a média — sujeitos/condições
+mais lentos não são apenas deslocados, são também mais variáveis. Simulamos abaixo um cenário
+assim, com efeito multiplicativo (e não aditivo) do tipo de distração.
+</div>
+```
+
+### Normalidade: gráfico Q-Q e testes formais {#normalidade-dca}
+
+```{r dados-heterocedasticos}
+set.seed(1234)
+condicao <- c("Nenhuma", "Sonora", "Visual")
+n <- 15
+media_base <- c(420, 470, 560)
+cv <- 0.28  # erro multiplicativo: log(tempo) tem desvio-padrão constante nessa escala
+
+dados_het <- tibble(
+  sujeito  = 1:(3 * n),
+  condicao = factor(rep(condicao, each = n), levels = condicao),
+  tempo    = rep(media_base, each = n) * exp(rnorm(3 * n, 0, cv))
+)
+
+modelo_het <- aov(tempo ~ condicao, data = dados_het)
+```
+
+```{r qqplot-boxplot-dca, echo=FALSE, fig.width=8.5, fig.height=4}
+p_qq <- dados_het %>%
+  mutate(residuo = residuals(modelo_het)) %>%
+  ggplot(aes(sample = residuo)) +
+  stat_qq() + stat_qq_line(color = "firebrick") +
+  labs(title = "Q-Q plot dos resíduos", x = "Quantis teóricos", y = "Quantis amostrais") +
+  theme_minimal(base_size = 12)
+
+p_box <- dados_het %>%
+  mutate(residuo = residuals(modelo_het)) %>%
+  ggplot(aes(x = condicao, y = residuo, fill = condicao)) +
+  geom_boxplot(alpha = 0.75, show.legend = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey30") +
+  labs(title = "Boxplot dos resíduos por condição", x = NULL, y = "Resíduo") +
+  theme_minimal(base_size = 12)
+
+gridExtra::grid.arrange(p_qq, p_box, ncol = 2)
+```
+
+O gráfico à esquerda é o Q-Q plot de todos os resíduos combinados; o da direita — um diagnóstico
+complementar, tão útil quanto o Q-Q e frequentemente esquecido — mostra a **distribuição dos
+resíduos separada por tratamento**: além de revelar o mesmo afastamento de simetria (caixas
+alongadas para cima em vez de centradas), ele já antecipa o próximo pressuposto a checar, porque a
+altura das três caixas cresce visivelmente de "Nenhuma" para "Visual" — sinal de que a variância
+não é a mesma nos três grupos, o assunto da próxima seção.
+
+O afastamento sistemático da reta nas caudas do Q-Q — pontos acima da reta à direita, indicando uma
+cauda mais pesada que a normal — é o padrão típico de assimetria à direita. O gráfico Q-Q é
+sempre o primeiro diagnóstico: mais informativo que um único número, porque mostra *onde* (em
+qual parte da distribuição) o desvio da normalidade ocorre. Ele é complementado, não substituído,
+por um teste formal — mais útil como confirmação do que o olho já sugeriu do que como árbitro
+único, sobretudo em amostras pequenas (baixo poder) ou muito grandes (rejeita quase sempre, por
+desvios sem relevância prática):
+
+```{r shapiro-dca}
+shapiro.test(residuals(modelo_het))
+```
+
+O teste de **Shapiro-Wilk** [@shapirowilk1965] rejeita a normalidade dos resíduos ($p < 0{,}001$),
+consistente com o Q-Q plot.
+
+### Homogeneidade de variância {#homocedasticidade-dca}
+
+Antes do teste formal, o gráfico de **resíduos contra valores ajustados** é o diagnóstico visual
+mais direto de heterocedasticidade: se a dispersão vertical dos pontos aumenta sistematicamente
+da esquerda para a direita (grupos com médias maiores), a variância não é constante.
+
+```{r residuos-ajustados-dca, fig.width=5.5, fig.height=4.2}
+tibble(
+  ajustado = fitted(modelo_het),
+  residuo  = residuals(modelo_het),
+  condicao = dados_het$condicao
+) %>%
+  ggplot(aes(ajustado, residuo, color = condicao)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_point(size = 2, alpha = 0.75) +
+  labs(title = "Resíduos vs. valores ajustados", x = "Valor ajustado (média do grupo)",
+       y = "Resíduo", color = "Condição") +
+  theme_minimal(base_size = 13)
+```
+
+O leque se abre visivelmente da esquerda (condição "Nenhuma", ajustado mais baixo) para a direita
+(condição "Visual", ajustado mais alto): os resíduos ficam mais dispersos exatamente onde a média
+é maior — a marca registrada de um erro multiplicativo, e o mesmo padrão que o teste de Levene, a
+seguir, tentará (sem muito sucesso, dado o $n$ pequeno) capturar formalmente.
+
+```{r levene-dca}
+car::leveneTest(tempo ~ condicao, data = dados_het)
+```
+
+O teste de **Levene** [@levene1960] (que compara os desvios absolutos em torno da mediana de cada
+grupo, sendo por isso mais robusto a não normalidade do que o teste de Bartlett [-@bartlett1937])
+não rejeita a homogeneidade
+de variância aqui — mas isso não deve surpreender: com apenas 15 observações por grupo, o teste
+tem pouco poder para detectar diferenças de variância moderadas, mesmo quando, por construção
+(erro multiplicativo) e como o gráfico acima já deixou claro, a variância populacional realmente
+cresce com a média. É outro lembrete de que ausência de significância não é evidência de que o
+pressuposto vale — sobretudo em amostras pequenas, a inspeção gráfica continua indispensável.
+
+### Transformações usuais {#transformacoes-dca}
+
+Quando a normalidade e/ou a homocedasticidade falham, a estratégia clássica é **transformar** a
+variável resposta para uma escala em que o modelo se comporte melhor, em vez de abandonar a ANOVA
+por um método menos eficiente. As transformações mais comuns:
+
+- **Logaritmo** ($\log Y$): indicada quando a variância cresce proporcionalmente ao *quadrado* da
+  média (erro multiplicativo, como simulado acima) — muito comum em tempos, concentrações,
+  contagens grandes e dados sempre positivos com assimetria à direita.
+- **Raiz quadrada** ($\sqrt{Y}$, ou $\sqrt{Y+1/2}$ com contagens pequenas ou zeros): indicada
+  quando a variância cresce proporcionalmente à média, o padrão típico de dados de **contagem**
+  (número de erros, número de respostas corretas).
+- **Box-Cox** [@boxcox1964]: uma família de transformações de potência que generaliza as duas anteriores,
+
+$$
+Y^{(\lambda)} = \begin{cases} \dfrac{Y^\lambda - 1}{\lambda}, & \lambda \neq 0 \\[4pt] \log Y, & \lambda = 0 \end{cases}
+$$
+
+  em que $\lambda$ é escolhido pelos dados, maximizando a log-verossimilhança perfilada do modelo
+  ANOVA ajustado a $Y^{(\lambda)}$ para uma grade de valores de $\lambda$ (frequentemente entre
+  $-2$ e $2$). $\lambda=1$ (sem transformar), $\lambda=0$ (log) e $\lambda=1/2$ (raiz quadrada)
+  são casos particulares interpretáveis dessa família.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — Box-Cox e verificação pós-transformação</div>
+```
+
+```{r boxcox-dca, fig.width=5, fig.height=4.2}
+bc <- MASS::boxcox(modelo_het, plotit = TRUE, lambda = seq(-2, 2, by = 0.01))
+lambda_otimo <- bc$x[which.max(bc$y)]
+lambda_otimo
+```
+
+O valor que maximiza a verossimilhança perfilada é $\hat\lambda \approx `r round(lambda_otimo,2)`$,
+mas o intervalo de verossimilhança de 95% ao redor desse máximo é largo o bastante para incluir
+$\lambda=0$ — ou seja, a transformação **logarítmica**, mais simples de interpretar (diferenças
+na escala log correspondem a razões, não diferenças, na escala original), é estatisticamente
+compatível com os dados e é a escolha usual nesse tipo de situação:
+
+```{r boxcox-log-dca}
+dados_het <- dados_het %>% mutate(log_tempo = log(tempo))
+modelo_log <- aov(log_tempo ~ condicao, data = dados_het)
+
+shapiro.test(residuals(modelo_log))
+car::leveneTest(log_tempo ~ condicao, data = dados_het)
+```
+
+Depois de transformar, o teste de Shapiro-Wilk deixa de rejeitar a normalidade ($p \approx
+`r round(shapiro.test(residuals(modelo_log))$p.value, 3)`$) e a homogeneidade de variância
+permanece não rejeitada — evidência de que a escala logarítmica é adequada para a ANOVA neste
+conjunto de dados. As conclusões substantivas devem então ser reportadas na escala transformada
+(por exemplo, "a condição visual aumenta o tempo de reação em um fator estimado de..."), com
+cuidado ao traduzir de volta diferenças na escala log para razões multiplicativas na escala
+original.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — antes e depois da transformação, lado a lado</div>
+```
+
+```{r antes-depois-transf, echo=FALSE, fig.width=8.5, fig.height=4}
+p_antes <- tibble(ajustado = fitted(modelo_het), residuo = residuals(modelo_het)) %>%
+  ggplot(aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_point(color = "#d98324", size = 2, alpha = 0.75) +
+  labs(title = "Antes (escala original)", x = "Ajustado", y = "Resíduo") +
+  theme_minimal(base_size = 12)
+
+p_depois <- tibble(ajustado = fitted(modelo_log), residuo = residuals(modelo_log)) %>%
+  ggplot(aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_point(color = "#2e8b57", size = 2, alpha = 0.75) +
+  labs(title = "Depois (escala log)", x = "Ajustado", y = "Resíduo") +
+  theme_minimal(base_size = 12)
+
+gridExtra::grid.arrange(p_antes, p_depois, ncol = 2)
+```
+
+O leque de dispersão que crescia da esquerda para a direita no painel "Antes" desaparece no painel
+"Depois": na escala log, a variabilidade dos resíduos é visualmente comparável entre as três
+condições, sinal direto (mais informativo do que qualquer teste isolado) de que a transformação
+cumpriu o que se propunha — estabilizar a variância sem distorcer a estrutura de tratamento que
+estamos tentando comparar.
+
+Reunindo as três camadas desenvolvidas até aqui para o DCA a uma via: a camada **algébrica**
+(Seção \@ref(matricial-dca)) mostra que $SQ_{\text{Trat}}$ e $SQ_E$ são formas quadráticas em
+projeções ortogonais, herdadas diretamente do Capítulo 2; a camada **causal**
+(Seção \@ref(potencial-causal)) mostra que $\bar Y_i^{\cdot}-\bar Y_k^{\cdot}$ estima um efeito de
+tratamento bem definido *independentemente* do modelo normal, só em função da aleatorização; e a
+camada **distribucional** (Seções \@ref(anova-dca) a \@ref(transformacoes-dca)) usa a normalidade
+para transformar essa base algébrica e causal em testes e ICs exatos em amostra finita — e para
+diagnosticar quando essa última camada, especificamente, está em risco.
+
+O restante deste capítulo trata de perguntas mais refinadas dentro do mesmo DCA — comparações
+planejadas (contrastes), tendências ao longo de níveis quantitativos (polinômios ortogonais),
+comparações múltiplas *a posteriori*, ajuste por covariáveis (ANCOVA) e a alternativa não
+paramétrica de Kruskal-Wallis quando nem mesmo as transformações da seção anterior bastam para
+justificar o modelo normal.
+
+## Contrastes e comparações múltiplas {#contrastes}
+
+A ANOVA de um fator responde a uma pergunta agregada: *existe pelo menos uma diferença entre as
+$t$ médias de tratamento?* Rejeitar $H_0: \mu_1 = \mu_2 = \cdots = \mu_t$ não diz **quais**
+médias diferem, nem **em que direção**. Contrastes e procedimentos de comparação múltipla
+respondem exatamente a essas perguntas mais específicas — mas, como veremos, fazê-lo com rigor
+exige cuidado extra, porque testar muitas hipóteses sobre o mesmo conjunto de dados infla a
+chance de pelo menos um falso positivo.
+
+Vale explicitar a leitura causal por trás desta seção, retomando o arcabouço de resultados
+potenciais introduzido no Capítulo 1: cada unidade experimental tem $t$ resultados potenciais
+$Y_i(1), \ldots, Y_i(t)$ — um por braço de tratamento —, dos quais só o do braço sorteado é
+observado. Cada média $\mu_i = E[Y(i)]$ é a média populacional do resultado potencial sob o
+tratamento $i$, e um contraste par a par $\mu_i - \mu_j$ é, literalmente, um **efeito médio de
+tratamento** (ATE) entre os braços $i$ e $j$. Quando $t>2$, existem $\binom{t}{2}$ ATEs par a par
+possíveis — mais uma infinidade de contrastes que agregam grupos de braços —, e é essa
+multiplicidade de efeitos causais estimados simultaneamente sobre o mesmo experimento que faz
+emergir, de forma natural e não como artefato técnico do procedimento estatístico, o problema de
+comparações múltiplas da próxima seção: cada ATE testado isoladamente carrega seu próprio risco
+de falso positivo, e responder "algum desses efeitos é diferente de zero?" exige um controle de
+erro que leve todos eles em conta simultaneamente.
+
+```{r c3b-sim-scripts, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+  library(emmeans)
+  library(multcomp)
+  library(car)
+  library(agricolae)
+})
+
+set.seed(2026)
+config <- c("Nenhum", "Analytics", "Anúncios", "Combo")
+n_por_grupo <- 10
+
+# efeito verdadeiro (ms) de cada configuração de scripts de terceiros sobre o
+# tempo de carregamento da página, em relação à configuração "Nenhum" (controle)
+efeito_config <- c(Nenhum = 0, Analytics = 60, Anúncios = 140, Combo = 210)
+
+dados_scripts <- tibble(
+  pagina   = 1:(4 * n_por_grupo),
+  config   = factor(rep(config, each = n_por_grupo), levels = config),
+  tempo_ms = 900 + efeito_config[as.character(config)] +
+    rnorm(4 * n_por_grupo, mean = 0, sd = 70)
+)
+
+mod_scripts <- aov(tempo_ms ~ config, data = dados_scripts)
+```
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: scripts de terceiros e tempo de carregamento</strong><br>
+Uma equipe de engenharia web quer comparar quatro configurações de uma página de produto quanto
+ao tempo de carregamento: <strong>Nenhum</strong> script de terceiros (controle),
+<strong>Analytics</strong> apenas, <strong>Anúncios</strong> apenas, e <strong>Combo</strong>
+(chat de suporte + anúncios). Dez carregamentos independentes são medidos em cada configuração
+(<code>n = 10</code> por grupo, 40 no total), sob condições de rede controladas.
+</div>
+```
+
+```{r c3b-scripts-tab, echo=FALSE}
+dados_scripts %>%
+  group_by(config) %>%
+  summarise(n = n(), media_ms = mean(tempo_ms), dp_ms = sd(tempo_ms), .groups = "drop") %>%
+  kable(digits = 1, caption = "Tempo de carregamento (ms) por configuração de scripts") %>%
+  kable_styling(full_width = FALSE)
+```
+
+### Definição, esperança e variância de um contraste
+
+Sejam $\mu_1, \ldots, \mu_t$ as médias populacionais dos $t$ tratamentos. Um **contraste** é
+qualquer combinação linear
+
+$$L = \sum_{i=1}^{t} c_i \mu_i, \qquad \text{sujeita a} \qquad \sum_{i=1}^{t} c_i = 0.$$
+
+A restrição $\sum c_i = 0$ é o que distingue um contraste de uma combinação linear qualquer: ela
+garante que $L$ mede uma **diferença** entre grupos (ou grupos de grupos), não um nível geral. Com
+os dados, $L$ é estimado por $\hat L = \sum_{i=1}^t c_i \bar y_{i\cdot}$, trocando cada $\mu_i$
+pela média amostral do respectivo grupo. Como as médias amostrais dos $t$ grupos são
+independentes (unidades experimentais diferentes) e $E(\bar y_{i\cdot}) = \mu_i$,
+
+$$E(\hat L) = \sum_{i=1}^t c_i\, E(\bar y_{i\cdot}) = \sum_{i=1}^t c_i \mu_i = L,$$
+
+ou seja, $\hat L$ é um estimador não viesado de $L$. Assumindo variância homogênea $\sigma^2$
+entre tratamentos (o mesmo pressuposto de homocedasticidade da ANOVA) e $n_i$ réplicas no
+tratamento $i$,
+
+$$\mathrm{Var}(\hat L) = \sum_{i=1}^t c_i^2\, \mathrm{Var}(\bar y_{i\cdot}) = \sigma^2 \sum_{i=1}^t \frac{c_i^2}{n_i},$$
+
+que se reduz a $\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\displaystyle\sum_{i=1}^t c_i^2$ no caso
+balanceado ($n_i = n$ para todo $i$), o caso mais comum na prática e o único em que os
+coeficientes $c_i$ tabulados na literatura clássica se aplicam diretamente.
+
+### Soma de quadrados de um contraste e sua distribuição
+
+A soma de quadrados atribuível a um contraste é
+
+$$SQ_L = \frac{\hat L^{\,2}}{\sum_{i=1}^t c_i^2/n_i},$$
+
+com **1 grau de liberdade**, qualquer que seja o número de tratamentos $t$ — um contraste é,
+por construção, uma comparação de uma única dimensão. Sob $H_0: L = 0$ e o modelo usual de
+ANOVA com erros $\varepsilon_{ij} \sim N(0,\sigma^2)$ independentes,
+
+$$F = \frac{SQ_L}{QME} \sim F_{1,\, gl_{\text{erro}}},$$
+
+onde $QME$ é o quadrado médio do erro da ANOVA completa. Essa estatística é equivalente a um
+teste $t$ com $gl_{\text{erro}}$ graus de liberdade ($t^2 = F$), que é a forma mais comum de
+reportar um contraste isolado:
+
+$$t = \frac{\hat L}{\sqrt{QME \sum_i c_i^2/n_i}}.$$
+
+Um contraste é, portanto, um teste com 1 grau de liberdade **encaixado dentro** da ANOVA — mais
+específico e, em geral, mais poderoso do que o teste F global de $t-1$ graus de liberdade, desde
+que a pergunta específica seja definida **antes** de olhar os dados.
+
+### Notação matricial: contraste como forma linear e quadrática
+
+Recorde o modelo linear do Capítulo 2 (Seção \@ref(modelo-geral)) e sua parametrização de médias
+de casela (*cell-means*) para o DCA: $\mathbf Y = \mathbf X\boldsymbol\mu + \boldsymbol\varepsilon$,
+em que $\mathbf X$ é a matriz $N\times t$ de indicadoras de tratamento (posto coluna completo
+nessa parametrização) e $\mathbf X'\mathbf X = \mathrm{diag}(n_1,\ldots,n_t)$. Nessa notação, um
+contraste é a forma linear
+
+$$L = \boldsymbol\lambda'\boldsymbol\mu, \qquad \boldsymbol\lambda = (c_1,\ldots,c_t)', \qquad \mathbf 1'\boldsymbol\lambda = 0,$$
+
+estimado por $\hat L = \boldsymbol\lambda'\hat{\boldsymbol\mu} = \boldsymbol\lambda'\bar{\mathbf y}$.
+Como $\boldsymbol\lambda'\boldsymbol\mu$ é uma combinação linear estimável (Capítulo 2, Seção
+\@ref(estimabilidade): toda combinação linear é estimável quando $\mathbf X$ tem posto completo),
+o teorema de Gauss-Markov (Capítulo 2, Seção \@ref(gauss-markov)) garante que $\hat L$ é BLUE, com
+variância
+
+$$\mathrm{Var}(\hat L) = \sigma^2\,\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda = \sigma^2\sum_{i=1}^t \frac{c_i^2}{n_i},$$
+
+que reproduz exatamente o resultado escalar da subseção anterior — agora como caso particular de
+$\mathrm{Cov}(\hat{\boldsymbol\beta}) = \sigma^2(\mathbf X'\mathbf X)^{-1}$.
+
+A soma de quadrados do contraste é a forma quadrática de posto 1
+
+$$SQ_L = (\boldsymbol\lambda'\hat{\boldsymbol\mu})\,\big[\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda\big]^{-1}\,(\boldsymbol\lambda'\hat{\boldsymbol\mu}) \;=\; \mathbf Y'\mathbf A_{\boldsymbol\lambda}\mathbf Y,$$
+
+em que $\mathbf A_{\boldsymbol\lambda}$ é simétrica e idempotente, de posto 1 — uma projeção sobre
+a direção definida por $\boldsymbol\lambda$ dentro do subespaço de tratamento. Pelo teorema sobre
+formas quadráticas idempotentes do Capítulo 2 (Seção \@ref(formas-quadraticas)),
+$SQ_L/\sigma^2 \sim \chi^2_1$ sob $H_0: L=0$ — a mesma conclusão obtida escalarmente acima, agora
+como caso particular de um resultado geral, não uma coincidência.
+
+Essa leitura geométrica também explica *por que* contrastes ortogonais se comportam tão bem: um
+conjunto de $t-1$ contrastes ortogonais $\boldsymbol\lambda_1,\ldots,\boldsymbol\lambda_{t-1}$
+corresponde a $t-1$ projeções de posto 1 mutuamente ortogonais, cuja soma reconstrói exatamente a
+projeção sobre todo o subespaço de tratamento:
+
+$$\sum_{k=1}^{t-1} \mathbf A_{\boldsymbol\lambda_k} \;=\; \mathbf P_X - \mathbf P_{\mathbf 1},$$
+
+a mesma diferença de projeções do princípio da soma de quadrados extra (Capítulo 2, Seção
+\@ref(modelo-particionado)), com $\mathbf X_1 = \mathbf 1$ (só o intercepto). É essa identidade —
+uma soma de $t-1$ projeções ortogonais de posto 1 reconstruindo a projeção de posto $t-1$ — que,
+pelo teorema de Cochran citado no Capítulo 2, garante a independência estatística entre os $t-1$
+testes $F$ de contrastes ortogonais, formalizada a seguir.
+
+### Contrastes ortogonais
+
+Dois contrastes com coeficientes $\{c_i\}$ e $\{d_i\}$ são **ortogonais** se
+
+$$\sum_{i=1}^t \frac{c_i d_i}{n_i} = 0 \qquad \Big(\text{balanceado: } \sum_{i=1}^t c_i d_i = 0\Big).$$
+
+Para $t$ tratamentos existem no máximo $t - 1$ contrastes mutuamente ortogonais. A propriedade
+notável de um **conjunto completo** de $t-1$ contrastes ortogonais é que suas somas de quadrados
+particionam exatamente a soma de quadrados de tratamento, sem sobra e sem sobreposição:
+
+$$SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_{L_k}, \qquad gl_{\text{Trat}} = \sum_{k=1}^{t-1} 1 = t-1.$$
+
+Além disso, sob normalidade, os $t-1$ testes $F$ resultantes são **estatisticamente
+independentes** entre si — uma propriedade que nenhuma coleção arbitrária de contrastes possui.
+Isso torna contrastes ortogonais a ferramenta natural para decompor a variação entre tratamentos
+em perguntas específicas, planejadas antes da coleta de dados.
+
+Para os quatro grupos do exemplo de carregamento de página, um conjunto de 3 contrastes
+ortogonais planejados a priori poderia ser:
+
+```{r c3b-contrastes-tab, echo=FALSE}
+tibble(
+  Contraste = c("$L_1$: Nenhum vs. demais",
+                "$L_2$: Analytics vs. (Anúncios, Combo)",
+                "$L_3$: Anúncios vs. Combo"),
+  Nenhum = c(3, 0, 0), Analytics = c(-1, 2, 0),
+  `Anúncios` = c(-1, -1, 1), Combo = c(-1, -1, -1)
+) %>%
+  kable(caption = "Um conjunto de 3 contrastes ortogonais (3 graus de liberdade = $gl_{Trat}$)",
+        escape = FALSE) %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — calculando contrastes e verificando a partição de $SQ_{Trat}$</div>
+```
+
+```{r c3b-contrastes-calc}
+medias  <- with(dados_scripts, tapply(tempo_ms, config, mean))
+ns      <- with(dados_scripts, tapply(tempo_ms, config, length))
+qme     <- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
+gl_erro <- summary(mod_scripts)[[1]]["Residuals", "Df"]
+
+coefs <- list(
+  L1 = c(Nenhum = 3, Analytics = -1, `Anúncios` = -1, Combo = -1),
+  L2 = c(Nenhum = 0, Analytics =  2, `Anúncios` = -1, Combo = -1),
+  L3 = c(Nenhum = 0, Analytics =  0, `Anúncios` =  1, Combo = -1)
+)
+
+resultado_contrastes <- map_dfr(names(coefs), function(nm) {
+  cc   <- coefs[[nm]][names(medias)]
+  Lhat <- sum(cc * medias)
+  SQ   <- Lhat^2 / sum(cc^2 / ns)
+  Fval <- SQ / qme
+  tibble(contraste = nm, L_hat = Lhat, SQ = SQ, F = Fval,
+         p_valor = pf(Fval, 1, gl_erro, lower.tail = FALSE))
+})
+resultado_contrastes
+
+# verificação: a soma das SQ dos 3 contrastes ortogonais reproduz SQ_Trat da ANOVA
+sum(resultado_contrastes$SQ)
+summary(mod_scripts)[[1]]["config", "Sum Sq"]
+```
+
+A soma das três somas de quadrados dos contrastes reproduz exatamente a soma de quadrados de
+tratamento da ANOVA — confirmando a partição. Os contrastes $L_1$ e $L_2$ são significativos
+(scripts, de fato, atrasam o carregamento, e Analytics sozinho atrasa menos que Anúncios/Combo);
+$L_3$ não é (Anúncios e Combo não diferem significativamente entre si neste conjunto de dados).
+
+## Procedimentos de comparação múltipla {#comparacoes-multiplas}
+
+Contrastes ortogonais planejados a priori resolvem o problema de forma elegante quando o número
+de perguntas é pequeno e conhecido antes da coleta de dados. Mas frequentemente queremos comparar
+**todos os pares de médias**, ou comparar cada tratamento contra um grupo controle, sem ter
+decidido de antemão exatamente quais comparações importam. Fazer isso com testes $t$ repetidos,
+um por par, é perigoso: com $t=4$ grupos há $\binom{4}{2}=6$ comparações possíveis, e mesmo que
+$H_0$ seja verdadeira em todas elas, a probabilidade de pelo menos um falso positivo ao nível
+nominal $\alpha=0{,}05$ por teste é
+
+$$P(\text{pelo menos 1 falso positivo}) = 1 - (1-\alpha)^{6} \approx 1 - 0{,}95^6 \approx 0{,}26,$$
+
+mais de cinco vezes o nível nominal. Essa inflação da **taxa de erro por família**
+(*family-wise error rate*, FWER) é o problema que os procedimentos a seguir resolvem, cada um
+com um compromisso diferente entre conservadorismo e poder.
+
+### O perigo do "data snooping" {#data-snooping}
+
+Antes de listar os procedimentos, vale nomear explicitamente o problema mais sutil que eles
+resolvem — não apenas "muitos testes $t$", mas a prática de decidir **qual** comparação fazer
+depois de já ter visto os dados. O método científico usual segue a ordem hipótese $\to$
+delineamento $\to$ coleta $\to$ análise; o **"data snooping"** ("espionagem de dados", ou
+garimpagem de hipóteses) inverte essa ordem: primeiro se exploram os dados em busca de qualquer
+padrão que pareça interessante, e só então se formula — e se "testa" — uma hipótese construída
+sob medida para aquele padrão, usando os **mesmos** dados que a sugeriram.
+
+O problema não é hipotético. Suponha $t$ grupos cujas médias populacionais são, na verdade,
+idênticas. Por puro ruído amostral, as $t$ médias observadas nunca serão exatamente iguais; haverá
+sempre um par de médias mais distante entre si do que os demais. Se o pesquisador percorre os
+dados à procura do par mais discrepante e só então formula a hipótese "esses dois grupos
+diferem", o teste $t$ usual sobre esse par específico quase certamente rejeitará $H_0$ com
+frequência bem maior que $\alpha$ — não porque exista um efeito real, mas porque **escolher o
+maior de vários desvios aleatórios e testá-lo como se fosse a única comparação planejada** ignora
+toda a variabilidade dos $\binom{t}{2}-1$ pares que não foram escolhidos. A analogia usual é a do
+atirador que dispara uma flecha na parede e só depois desenha o alvo ao redor do ponto de impacto:
+ele acerta o "alvo" sempre, mas isso nada prova sobre sua pontaria.
+
+Os procedimentos planejados a priori (contrastes ortogonais da Seção \@ref(contrastes), Tukey,
+Dunnett, Bonferroni) protegem apenas o conjunto de comparações **especificado antes** de examinar
+os dados — nenhum deles oferece garantia alguma sobre um contraste "descoberto" depois. O método
+de Scheffé, a seguir, é a resposta formal a essa lacuna: ele protege simultaneamente **todo** o
+espaço infinito de contrastes lineares possíveis, de modo que, mesmo que o pesquisador escolha o
+contraste mais favorável depois de olhar os dados, o FWER continua controlado em $\alpha$.
+
+### Método de Scheffé
+
+Controla o FWER para **qualquer** contraste que se queira testar, incluindo contrastes definidos
+*depois* de examinar os dados (comparações não planejadas, ou "garimpadas", na linha da Seção
+\@ref(data-snooping)) — é o procedimento mais geral e, por isso, o mais conservador. Rejeita-se
+$H_0: L=0$ se
+
+$$\frac{SQ_L}{QME} > (t-1)\, F_{\alpha;\, t-1,\, gl_{\text{erro}}}.$$
+
+O fator $(t-1)$ multiplicando o valor crítico de $F$ é o preço pago por proteger simultaneamente
+uma família infinita de contrastes possíveis [@scheffe1959analysis] — e é exatamente esse fator
+extra que torna Scheffé a "licença para bisbilhotar os dados" de forma estatisticamente honesta:
+qualquer contraste, planejado ou não, só é declarado significativo se for grande o bastante para
+não ser apenas o maior entre muitos desvios aleatórios possíveis.
+
+### Método de Bonferroni
+
+O método de Bonferroni [-@bonferroni1936] divide o nível de significância global $\alpha$
+igualmente entre as $m$ comparações planejadas:
+cada teste individual é avaliado contra $\alpha/m$ (equivalentemente, cada p-valor é multiplicado
+por $m$). É simples, aplica-se a qualquer conjunto pré-especificado de comparações (não só
+pares), mas é conservador quando $m$ é grande, perdendo poder.
+
+### Tukey HSD (*honestly significant difference*)
+
+Desenhado especificamente para **todas as comparações par a par** entre $t$ médias, usa a
+distribuição da **amplitude estudentizada** (*studentized range*) em vez da distribuição $t$, o
+que o torna mais poderoso que Bonferroni para essa família específica de comparações
+[@tukey1949comparing]. É o procedimento padrão quando o objetivo é "comparar tudo com tudo" sem
+um grupo controle privilegiado.
+
+### Comparação com um grupo controle: Dunnett
+
+Quando o interesse não é comparar todos os pares, mas sim **cada tratamento contra um único grupo
+controle** (como "Nenhum" no exemplo de scripts), o número de comparações cai de $\binom{t}{2}$
+para $t-1$, e essas comparações são correlacionadas entre si (todas compartilham o mesmo grupo
+controle). O teste de Dunnett explora essa estrutura, sendo mais poderoso que Tukey ou Bonferroni
+para esse propósito específico [@dunnett1955multiple].
+
+### Teste de amplitude múltipla de Duncan
+
+Todos os procedimentos anteriores usam um **único** valor crítico para julgar qualquer par de
+médias. O teste de **Duncan** [@duncan1955multiple] rompe com essa ideia: ordena as $t$ médias
+amostrais, $\bar y_{(1)} \le \cdots \le \bar y_{(t)}$, e define a **amplitude** $p$ de uma
+comparação como o número de médias ordenadas que ela abrange ($p=2$ para médias adjacentes,
+$p=t$ para a maior contra a menor). Para cada amplitude $p = 2, \ldots, t$, calcula-se um valor
+crítico próprio — a **amplitude mínima significativa**
+
+$$R_p = r_{\alpha,\,p,\,gl_{\text{erro}}} \sqrt{\frac{QME}{n}},$$
+
+em que $r_{\alpha,p,\nu}$ vem de uma tabela específica de Duncan (implementada, por exemplo, em
+`agricolae::duncan.test()`) e cresce com $p$: $R_2 < R_3 < \cdots < R_t$. A diferença
+$\bar y_{(j)} - \bar y_{(i)}$ é declarada significativa se exceder $R_{j-i+1}$ — médias adjacentes
+($p=2$) só precisam superar o menor valor crítico da lista, enquanto a diferença entre a maior e a
+menor média precisa superar o maior.
+
+Essa escala móvel equivale a proteger cada amplitude $p$ com um nível $\alpha_p = 1 -
+(1-\alpha)^{p-1}$, que **cresce** com $p$ em vez de permanecer fixo em $\alpha$ — ao contrário de
+Tukey, que usa o mesmo nível $\alpha$ para toda comparação par a par, qualquer que seja sua
+amplitude. Na prática, isso torna Duncan sistematicamente mais liberal (mais poder, mais
+comparações declaradas significativas) do que Tukey, mas ao custo de **não controlar o FWER** no
+nível nominal $\alpha$ para o conjunto de comparações como um todo — a taxa real de pelo menos um
+falso positivo na família de testes fica acima de $\alpha$. Por essa razão, seu uso vem sendo
+desaconselhado na literatura em favor de procedimentos que controlam o FWER de forma rigorosa
+(Tukey para pares, Dunnett contra um controle); ainda assim, permanece comum em periódicos de
+ciências agrárias, o que torna sua interpretação correta — inclusive de suas limitações —
+relevante para quem for ler ou revisar esse tipo de trabalho.
+
+### Agrupamento de tratamentos (*compact letter display*)
+
+Uma forma compacta de reportar o resultado de comparações múltiplas par a par é atribuir letras
+às médias: tratamentos que compartilham pelo menos uma letra **não** diferem significativamente
+entre si; tratamentos sem letra em comum diferem. Essa representação (*compact letter display*,
+CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — Tukey, Bonferroni, Scheffé, Dunnett, Duncan e agrupamento</div>
+```
+
+```{r c3b-comparacoes-multiplas}
+emm_scripts <- emmeans(mod_scripts, ~ config)
+
+# todos os pares, três correções diferentes
+pairs(emm_scripts, adjust = "tukey")
+pairs(emm_scripts, adjust = "bonferroni")
+pairs(emm_scripts, adjust = "scheffe")
+
+# cada tratamento vs. o controle "Nenhum" (Dunnett)
+contrast(emm_scripts, method = "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")
+
+# agrupamento compacto por letras (compact letter display)
+multcomp::cld(emm_scripts, Letters = letters, adjust = "tukey")
+```
+
+```{r c3b-duncan}
+# Teste de Duncan (amplitude múltipla): fora do R base, via agricolae
+duncan_scripts <- agricolae::duncan.test(mod_scripts, "config", console = FALSE)
+duncan_scripts$groups   # médias ordenadas + agrupamento por letras (Duncan)
+```
+
+O agrupamento de Duncan reaparece na coluna `groups` acima: neste conjunto de dados, ele coincide
+com o `cld()` de Tukey exibido antes (mesma partição em três grupos, "a"/"b"/"c"), porque os
+quatro efeitos de configuração são grandes o bastante para que até o critério mais rigoroso de
+Tukey já os separe. A diferença entre os dois métodos fica visível justamente nos casos de
+fronteira — pares cuja diferença observada fica **entre** o valor crítico mais liberal de Duncan
+para aquela amplitude e o valor crítico único, mais conservador, de Tukey; nesses casos, e só
+neles, Duncan declara significativo um par que Tukey não declara, exatamente o preço, discutido
+acima, de usar valores críticos $R_p$ menores para amplitudes pequenas sem controlar
+rigorosamente o FWER no nível nominal.
+
+```{r c3b-plot-cld, echo=FALSE, fig.width=6.5, fig.height=4}
+ggplot(dados_scripts, aes(x = config, y = tempo_ms, fill = config)) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  labs(x = NULL, y = "Tempo de carregamento (ms)",
+       title = "Tempo de carregamento por configuração de scripts") +
+  theme_minimal(base_size = 13)
+```
+
+Note que os quatro procedimentos concordam nas conclusões mais nítidas (Nenhum difere de todos os
+demais) mas divergem nos casos de fronteira: Bonferroni e Scheffé — os mais conservadores — não
+rejeitam a diferença entre "Nenhum" e "Analytics" ao nível de 5%, enquanto Tukey a considera
+significativa. Não existe um procedimento universalmente "correto"; a escolha depende de qual
+família de comparações reflete a pergunta de pesquisa.
+
+```{r c3b-plot-tukey-ic, echo=FALSE, fig.width=7, fig.height=3.8}
+ic_tukey <- as.data.frame(confint(pairs(emm_scripts, adjust = "tukey")))
+ggplot(ic_tukey, aes(x = estimate, y = reorder(contrast, estimate))) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_pointrange(aes(xmin = lower.CL, xmax = upper.CL), color = "#0B4F6C", linewidth = 0.8) +
+  labs(x = "Diferença estimada (ms)", y = NULL,
+       title = "Intervalos de confiança simultâneos (Tukey HSD, 95%)") +
+  theme_minimal(base_size = 13)
+```
+
+Um par difere significativamente quando seu IC não cruza zero: só "Anúncios − Combo" cruza,
+confirmando $SQ_{L_3}$ não significativo da partição por contrastes ortogonais.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>Por que faz sentido usar Dunnett (não Tukey) quando a única pergunta de interesse é "cada
+configuração aumenta o tempo de carregamento em relação a não usar nenhum script?"</li>
+<li>Um pesquisador roda a ANOVA, olha os dados, percebe uma diferença "interessante" entre dois
+grupos que não tinha planejado comparar, e testa essa diferença com um teste $t$ comum. Por que
+isso viola as premissas por trás de todos os procedimentos desta seção, mesmo que o p-valor
+reportado pareça pequeno?</li>
+<li>Em que situação prática o conservadorismo extra do método de Scheffé compensa a perda de
+poder, em vez de ser simplesmente um custo a evitar?</li>
+<li>O teste de Duncan é mais liberal que Tukey porque usa um nível de proteção $\alpha_p$ que
+cresce com a amplitude $p$ da comparação, em vez de manter $\alpha$ fixo. Isso é uma vantagem ou
+uma desvantagem? Em que tipo de publicação você esperaria ver Duncan preferido a Tukey, apesar de
+sua FWER não controlada?</li>
+</ol>
+</div>
+```
+
+## Polinômios ortogonais {#polinomios-ortogonais}
+
+Quando os níveis do fator são **quantitativos e igualmente espaçados** — como doses de um
+fármaco, ou concentrações de um insumo — comparar médias par a par desperdiça a informação de que
+os níveis têm uma ordem e uma métrica. Nesses casos, é mais informativo perguntar: *a resposta
+cresce linearmente com o nível? Há curvatura (efeito quadrático)? A curva se inverte de novo
+(cúbico)?* Polinômios ortogonais decompõem $SQ_{\text{Trat}}$ exatamente nesses componentes.
+
+```{r c3b-sim-cafeina}
+set.seed(7)
+dose_mg <- c(0, 50, 100, 150, 200)
+n_dose  <- 8
+
+# covariável: nível basal de atenção (medido ANTES da dose), usado adiante na ANCOVA
+basal <- rnorm(5 * n_dose, mean = 60, sd = 8)
+dose_f <- factor(rep(dose_mg, each = n_dose))
+
+# efeito verdadeiro tem forma de "U invertido": atenção sobe com a dose até um
+# ponto e depois cai (excesso de estimulação) -- um caso clássico de curvatura
+efeito_dose <- function(d) 20 + 0.35 * d - 0.0013 * d^2
+
+cafeina <- tibble(
+  participante = 1:(5 * n_dose),
+  dose         = dose_f,
+  basal        = basal,
+  atencao_pos  = 40 + 0.5 * basal + efeito_dose(as.numeric(as.character(dose_f))) +
+    rnorm(5 * n_dose, mean = 0, sd = 5)
+)
+```
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: dose de cafeína e atenção sustentada</strong><br>
+Um laboratório testa o efeito da cafeína (0, 50, 100, 150 e 200 mg) sobre o desempenho em um
+teste de atenção sustentada, aplicado 40 minutos após a ingestão. Quarenta participantes são
+sorteados em 5 grupos de 8 (<strong>UE = participante</strong>). Os níveis do fator — a dose — são
+quantitativos e igualmente espaçados em 50 mg, o cenário ideal para polinômios ortogonais.
+</div>
+```
+
+### Esperança, variância e soma de quadrados
+
+Para níveis quantitativos igualmente espaçados e $n$ constante por grupo, existe uma tabela
+padrão de coeficientes ortogonais $\lambda_i$ (Fisher \& Yates) para cada grau do polinômio —
+linear, quadrático, cúbico etc. — com até $t-1$ graus disponíveis para $t$ níveis:
+
+```{r c3b-tabela-poly, echo=FALSE}
+tibble(
+  Grau = c("Linear", "Quadrático", "Cúbico", "Quártico"),
+  `0 mg` = c(-2, 2, -1, 1), `50 mg` = c(-1, -1, 2, -4),
+  `100 mg` = c(0, -2, 0, 6), `150 mg` = c(1, -1, -2, -4),
+  `200 mg` = c(2, 2, 1, 1)
+) %>%
+  kable(caption = "Coeficientes ortogonais tabulados para $t=5$ níveis igualmente espaçados") %>%
+  kable_styling(full_width = FALSE)
+```
+
+Cada linha da tabela é um contraste com $\sum_i \lambda_i = 0$, e quaisquer duas linhas são
+ortogonais entre si ($\sum_i \lambda_i \lambda_i' = 0$) — são exatamente o caso particular de
+contrastes ortogonais da Seção \@ref(contrastes), com coeficientes escolhidos para isolar
+tendência polinomial em vez de comparações ad hoc entre grupos. Para o componente de grau $k$,
+com coeficientes $\lambda_i$:
+
+$$\hat L_k = \sum_{i=1}^t \lambda_i \bar y_{i\cdot}, \qquad
+\mathrm{Var}(\hat L_k) = \frac{\sigma^2}{n}\sum_{i=1}^t \lambda_i^2, \qquad
+SQ_k = \frac{n\,\hat L_k^{\,2}}{\sum_{i=1}^t \lambda_i^2},$$
+
+cada um com 1 grau de liberdade, e $SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_k$ exatamente como na
+partição por contrastes ortogonais gerais. Na prática, o R constrói esses coeficientes
+automaticamente (função `contr.poly()`), reescalados para ter norma 1.
+
+### A matriz de polinômios ortogonais como parte de $\mathbf X$
+
+Os coeficientes tabulados acima não são um truque à parte: são, literalmente, colunas adicionais
+da matriz de delineamento $\mathbf X$. Na parametrização por polinômios ortogonais, o modelo do
+DCA para a cafeína se escreve
+
+$$\mathbf Y = \mathbf X_{\text{poly}}\boldsymbol\beta + \boldsymbol\varepsilon, \qquad
+\mathbf X_{\text{poly}} = \big[\ \mathbf 1 \ \big|\ \boldsymbol\lambda_L \ \big|\ \boldsymbol\lambda_Q \ \big|\ \boldsymbol\lambda_C \ \big|\ \boldsymbol\lambda_{4}\ \big], \qquad
+\boldsymbol\beta = (\mu,\ \beta_L,\ \beta_Q,\ \beta_C,\ \beta_4)',$$
+
+em que cada $\boldsymbol\lambda_k$ ($N\times 1$) repete o coeficiente tabulado do grau $k$ tantas
+vezes quanto o número de réplicas na respectiva dose — exatamente as colunas que `contr.poly(5)`
+gera. Como as cinco colunas de $\mathbf X_{\text{poly}}$ são mutuamente ortogonais por construção
+(o intercepto $\mathbf 1$ incluído: $\mathbf 1'\boldsymbol\lambda_k=0$ para todo $k$),
+$\mathbf X_{\text{poly}}'\mathbf X_{\text{poly}}$ é **diagonal** — a situação mais simples possível
+para mínimos quadrados: cada $\hat\beta_k$ se estima independentemente dos demais, sem
+covariância entre as estimativas, e $SQ_k$ é exatamente a forma quadrática de posto 1 da Seção
+\@ref(contrastes), com $\boldsymbol\lambda = \boldsymbol\lambda_k$. Essa é a razão algébrica — não
+apenas um resultado feliz — de $SQ_{\text{Trat}}$ se decompor sem sobra em $t-1$ somas de
+quadrados de 1 grau de liberdade cada.
+
+```{r c3b-poly-matriz}
+contrasts(cafeina$dose) <- contr.poly(5)
+X_poly <- model.matrix(atencao_pos ~ dose, data = cafeina)  # 5 colunas: 1, L, Q, C, quártico
+
+round(crossprod(X_poly), 3)  # X'X_poly -- diagonal, exatamente como o argumento algébrico prevê
+```
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — ANOVA com componentes polinomiais</div>
+```
+
+```{r c3b-poly-r}
+contrasts(cafeina$dose) <- contr.poly(5)  # coeficientes ortogonais, dose como fator
+mod_poly <- aov(atencao_pos ~ dose, data = cafeina)
+
+summary(mod_poly, split = list(dose = list(Linear = 1, Quadratic = 2,
+                                            Cubic = 3, Quartic = 4)))
+```
+
+Como no experimento do algodão de Montgomery — um DCA clássico em que a resistência de um fio
+têxtil é medida sob cinco concentrações de algodão igualmente espaçadas —, o jeito mais direto de
+"ver" qual grau de polinômio é necessário é ajustar os quatro graus possíveis lado a lado e
+comparar visualmente o quanto cada um se aproxima das cinco médias observadas:
+
+```{r c3b-plot-poly, echo=FALSE, fig.width=8.5, fig.height=6.5}
+cafeina_num <- cafeina %>% mutate(dose_num = as.numeric(as.character(dose)))
+mod_lin_num   <- lm(atencao_pos ~ dose_num, data = cafeina_num)
+mod_quad_num  <- lm(atencao_pos ~ dose_num + I(dose_num^2), data = cafeina_num)
+mod_cub_num   <- lm(atencao_pos ~ dose_num + I(dose_num^2) + I(dose_num^3), data = cafeina_num)
+mod_quart_num <- lm(atencao_pos ~ dose_num + I(dose_num^2) + I(dose_num^3) + I(dose_num^4),
+                     data = cafeina_num)
+medias_dose <- cafeina_num %>% group_by(dose_num) %>% summarise(media = mean(atencao_pos))
+
+plot_grau <- function(modelo, titulo, cor) {
+  grade <- tibble(dose_num = seq(0, 200, length.out = 200)) %>%
+    mutate(ajuste = predict(modelo, newdata = .))
+  r2 <- round(summary(modelo)$r.squared, 3)
+  ggplot() +
+    geom_jitter(data = cafeina_num, aes(dose_num, atencao_pos), width = 4, alpha = 0.2) +
+    geom_point(data = medias_dose, aes(dose_num, media), size = 2.5, color = "black") +
+    geom_line(data = grade, aes(dose_num, ajuste), color = cor, linewidth = 1.1) +
+    labs(title = paste0(titulo, " (R² = ", r2, ")"), x = "Dose (mg)", y = "Atenção") +
+    theme_minimal(base_size = 11)
+}
+
+gridExtra::grid.arrange(
+  plot_grau(mod_lin_num,   "Ajuste linear",     "#d98324"),
+  plot_grau(mod_quad_num,  "Ajuste quadrático", "#0B4F6C"),
+  plot_grau(mod_cub_num,   "Ajuste cúbico",     "#2e8b57"),
+  plot_grau(mod_quart_num, "Ajuste quártico",   "#8b2e6e"),
+  ncol = 2
+)
+```
+
+```{r c3b-r2-poly}
+c(R2_linear = summary(mod_lin_num)$r.squared, R2_quadratico = summary(mod_quad_num)$r.squared,
+  R2_cubico = summary(mod_cub_num)$r.squared, R2_quartico = summary(mod_quart_num)$r.squared)
+```
+
+O painel deixa a progressão visível: a reta (canto superior esquerdo) claramente erra por baixo no
+meio da faixa de doses e por cima nas pontas, com $R^2\approx$ `r round(summary(mod_lin_num)$r.squared, 2)`
+apenas; a parábola (canto superior direito) já captura a maior parte do padrão — sobe até um pico
+e desce —, saltando para $R^2\approx$ `r round(summary(mod_quad_num)$r.squared, 2)`; os ajustes
+cúbico e quártico (linha de baixo) acrescentam flexibilidade extra, mas a melhora de $R^2$ de um
+para o outro é pequena, sinal de que os termos de ordem mais alta agregam pouco além do que a
+parábola já explica. Essa é a mesma conclusão que a tabela ANOVA particionada abaixo confirma
+numericamente, mas o painel a torna imediatamente visível: o **grau necessário** para descrever a
+curva de resposta é o menor grau que já "parece certo" a olho, antes mesmo de olhar qualquer
+p-valor — os testes formais servem para confirmar, com rigor, o que o gráfico já sugeriu.
+
+O termo **linear** e o **quadrático** são ambos significativos, consistente com a curva de
+resposta desenhada por construção: a atenção sobe com a dose até um ponto e depois se estabiliza
+ou cai — um clássico efeito de "U invertido" na relação entre estimulação e desempenho. Isso é
+informação que uma ANOVA comum, ou comparações par a par entre as 5 doses, não expõe diretamente:
+a decomposição polinomial responde à pergunta de forma que o pesquisador realmente tem em mente
+quando o fator é uma dose.
+
+## Análise de covariância (ANCOVA) {#ancova}
+
+Mesmo com aleatorização perfeita, grupos podem diferir por acaso em alguma variável relevante
+medida **antes** do tratamento — aqui, o nível basal de atenção de cada participante. A **análise
+de covariância** incorpora essa covariável ao modelo para (i) ajustar as médias de tratamento
+pela diferença de linha de base entre grupos e (ii) remover parte da variação residual explicada
+pela covariável, aumentando a precisão da comparação entre tratamentos.
+
+### O modelo
+
+$$y_{ij} = \mu + \tau_i + \beta\,(x_{ij} - \bar x_{\cdot\cdot}) + \varepsilon_{ij}, \qquad
+\varepsilon_{ij} \sim N(0, \sigma^2)\ \text{i.i.d.},$$
+
+onde $x_{ij}$ é a covariável (o basal, medido antes de qualquer tratamento) e $\beta$ é a
+inclinação **comum** a todos os grupos — pressuposto central da ANCOVA, chamado de
+*homogeneidade das inclinações*, que deve ser verificado antes de interpretar o modelo: se a
+relação entre covariável e resposta difere por grupo (interação $\tau_i \times x_{ij}$
+significativa), o ajuste simples por uma única inclinação comum deixa de fazer sentido, e a
+covariável deve ser tratada de outra forma (por exemplo, analisando os grupos separadamente).
+
+As médias de tratamento são reportadas **ajustadas** para o valor médio geral da covariável:
+
+$$\bar y_{i\cdot(\text{ajustada})} = \bar y_{i\cdot} - \hat\beta\,(\bar x_{i\cdot} - \bar x_{\cdot\cdot}).$$
+
+### ANCOVA em notação matricial: mais uma coluna em $\mathbf X$
+
+Nenhuma teoria nova precisa ser aprendida para tratar a ANCOVA algebricamente: basta acrescentar
+a covariável como mais uma coluna de $\mathbf X$. Com qualquer parametrização de posto completo
+para o efeito de tratamento,
+
+$$\mathbf Y = \mathbf X\boldsymbol\beta + \boldsymbol\varepsilon, \qquad
+\mathbf X = \big[\ \mathbf X_{\text{trat}} \ \big|\ \mathbf z\ \big], \qquad
+\boldsymbol\beta = \begin{bmatrix}\boldsymbol\tau \\ \beta\end{bmatrix},$$
+
+em que $\mathbf X_{\text{trat}}$ codifica o fator dose como em qualquer DCA (Capítulo 2, Seção
+\@ref(modelo-geral)) e $\mathbf z$ ($N\times 1$) é a coluna da covariável (o basal). A ANCOVA é,
+literalmente, **um caso particular do modelo linear geral** — a única novidade é uma coluna extra
+em $\mathbf X$.
+
+Geometricamente, essa coluna extra amplia o espaço-coluna de $\mathbf X_{\text{trat}}$ em uma
+dimensão. A projeção $\mathbf P_X$ passa a projetar sobre esse espaço maior, e o teste de
+tratamento **ajustado** pela covariável é, de novo, uma soma de quadrados extra (Capítulo 2, Seção
+\@ref(modelo-particionado)) — mas comparando dois modelos que **já incluem** a covariável:
+
+$$SQ_{\text{Trat(ajustado)}} = \mathbf Y'\big(\mathbf P_X - \mathbf P_{[\mathbf 1\,\mid\, \mathbf z]}\big)\mathbf Y,$$
+
+a diferença entre projetar sobre $[\mathbf X_{\text{trat}} \mid \mathbf z]$ e projetar apenas sobre
+$[\mathbf 1 \mid \mathbf z]$ (o modelo só com a covariável, sem tratamento). O ajuste pela
+covariável é, nesse sentido, **uma projeção adicional**: primeiro removemos a direção de
+$\mathbf z$ do espaço de resposta, e só então perguntamos se o tratamento explica alguma variação
+**além** dela — exatamente por que a soma de quadrados sequencial da tabela a seguir entra a
+covariável primeiro.
+
+```{r c3b-ancova-matriz}
+X_ancova <- model.matrix(atencao_pos ~ dose + basal, data = cafeina)  # X_trat | z
+dim(X_ancova)                                    # N x (t + 1): 5 colunas de dose + basal
+beta_hat_ancova <- solve(t(X_ancova) %*% X_ancova) %*% t(X_ancova) %*% cafeina$atencao_pos
+round(t(beta_hat_ancova), 3)                     # bate com coef(mod_ancova) abaixo
+```
+
+### A tabela de ANOVA ajustada pela covariável
+
+A soma de quadrados total se particiona em covariável (regressão), tratamento (ajustado pela
+covariável) e erro — nessa ordem, porque a covariável deve ser removida do erro **antes** de
+avaliar o efeito de tratamento:
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — ANCOVA: ajustando pela atenção basal</div>
+```
+
+```{r c3b-ancova}
+# 1. Verificar homogeneidade das inclinações: a interação basal:dose deve ser não significativa
+mod_inclinacoes <- lm(atencao_pos ~ basal * dose, data = cafeina)
+anova(mod_inclinacoes)
+```
+
+```{r c3b-ancova-2}
+# 2. Interação não significativa (p > 0.05) -> prossegue com o modelo aditivo (ANCOVA)
+mod_ancova <- lm(atencao_pos ~ basal + dose, data = cafeina)
+anova(mod_ancova)          # soma de quadrados sequencial: covariável entra primeiro
+```
+
+```{r c3b-ancova-3}
+# médias de dose ajustadas para o valor médio de basal (emmeans faz o ajuste automaticamente)
+emmeans(mod_ancova, ~ dose)
+```
+
+O termo `basal` é altamente significativo — confirma que a covariável de fato explica parte da
+variação em atenção pós-dose e "vale a pena" incorporar ao modelo — e o termo `dose`, ajustado
+para basal, permanece significativo, com quadrado médio do erro (`Residuals`) menor do que na
+ANOVA sem covariável da seção anterior: a ANCOVA tornou a comparação entre doses mais precisa ao
+remover uma fonte de variação conhecida (a atenção basal) do erro experimental, no mesmo espírito
+da blocagem — mas usando uma covariável contínua, medida, em vez de um agrupamento categórico.
+
+A visualização canônica da ANCOVA é o gráfico de dispersão da resposta contra a covariável,
+colorido por tratamento, com uma reta de regressão ajustada para cada grupo. Sob o modelo aditivo
+(inclinações homogêneas), essas retas são **paralelas por construção** — a mesma inclinação
+$\hat\beta$, só com interceptos diferentes por dose:
+
+```{r c3b-plot-ancova, echo=FALSE, fig.width=7.5, fig.height=4.5}
+grade_basal <- tibble(basal = seq(min(cafeina$basal), max(cafeina$basal), length.out = 50))
+
+retas_dose <- map_dfr(levels(cafeina$dose), function(d) {
+  g <- grade_basal
+  g$dose <- factor(d, levels = levels(cafeina$dose))
+  g$ajuste <- predict(mod_ancova, newdata = g)
+  g
+})
+
+ggplot() +
+  geom_point(data = cafeina, aes(basal, atencao_pos, color = dose), alpha = 0.7) +
+  geom_line(data = retas_dose, aes(basal, ajuste, color = dose), linewidth = 1) +
+  labs(x = "Atenção basal (covariável, medida antes da dose)",
+       y = "Atenção pós-dose", color = "Dose (mg)",
+       title = "ANCOVA: retas paralelas por grupo (inclinação comum, interceptos diferentes)") +
+  theme_minimal(base_size = 13)
+```
+
+As cinco retas sobem juntas (inclinação comum $\hat\beta \approx$
+`r round(coef(mod_ancova)["basal"], 2)`: cada ponto a mais de atenção basal está associado, em
+média, a esse mesmo ganho de atenção pós-dose, **qualquer que seja a dose**), mas partem de
+alturas diferentes — é essa separação vertical entre as retas, e não a inclinação, que representa
+o efeito ajustado da dose. Visualmente, a reta da dose de 150 mg fica acima das demais mesmo
+comparando participantes com o **mesmo** nível basal, confirmando que a diferença não é
+inteiramente explicada pela covariável — é exatamente essa comparação "a covariável igual" que a
+ANCOVA formaliza e que a inspeção das médias brutas (sem ajuste) não deixaria clara.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>Por que é essencial que a covariável seja medida <em>antes</em> do tratamento (ou, ao menos,
+não ser afetada por ele)? O que dá errado se, em vez do basal, o "basal" fosse medido depois de
+alguns participantes já terem recebido cafeína?</li>
+<li>Compare ANCOVA com blocagem por uma variável categórica (Capítulo 4): em que situação prática
+uma covariável contínua está disponível, mas uma blocagem categórica não seria possível ou seria
+menos eficiente?</li>
+</ol>
+</div>
+```
+
+## Teste de Kruskal-Wallis {#kruskal-wallis}
+
+Todos os procedimentos anteriores neste capítulo assumem normalidade dos erros e variância
+homogênea entre grupos — pressupostos que a seção sobre verificação de pressupostos ensinou a
+checar. Quando esses pressupostos falham de forma severa (assimetria acentuada, valores atípicos
+influentes, amostras muito pequenas) e nenhuma transformação os resolve satisfatoriamente, o
+**teste de Kruskal-Wallis** oferece uma alternativa não paramétrica à ANOVA de um fator
+[@kruskalwallis1952], testando se as $t$ populações têm a mesma distribuição (em particular, a
+mesma mediana) sem assumir normalidade.
+
+```{r c3b-sim-scripts-out}
+# tempos de carregamento reais são tipicamente assimétricos à direita: a maioria das
+# cargas é rápida, mas uma cauda de conexões lentas/congestionadas produz outliers.
+# Simulamos esse cenário contaminando o dataset de scripts com alguns tempos extremos.
+dados_scripts_out <- dados_scripts
+set.seed(3)
+idx_lentos <- sample(seq_len(nrow(dados_scripts_out)), 4)
+dados_scripts_out$tempo_ms[idx_lentos] <- dados_scripts_out$tempo_ms[idx_lentos] +
+  rexp(4, rate = 1 / 2000)
+```
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: carregamento de página com conexões lentas</strong><br>
+Retomamos o experimento de configurações de scripts, mas agora quatro carregamentos (de 40) foram
+medidos em conexões congestionadas, produzindo tempos muito acima do restante da amostra. Um
+teste de Shapiro-Wilk sobre os resíduos da ANOVA rejeitaria normalidade — o cenário em que o
+Kruskal-Wallis é a escolha mais defensável.
+</div>
+```
+
+### O que muda em relação à ANOVA
+
+O procedimento substitui os valores observados pelos seus **postos** (*ranks*) na amostra
+combinada de $N = \sum n_i$ observações (posto 1 para o menor valor, $N$ para o maior, com médias
+de posto em caso de empates). Sendo $R_i$ a soma dos postos no grupo $i$, a estatística é
+
+$$H = \frac{12}{N(N+1)} \sum_{i=1}^t \frac{R_i^2}{n_i} \; - \; 3(N+1),$$
+
+que, sob $H_0$ (as $t$ populações têm a mesma distribuição) e amostras não muito pequenas, segue
+aproximadamente $H \sim \chi^2_{t-1}$. Intuitivamente, $H$ mede o quanto os postos médios de cada
+grupo se afastam do posto médio esperado sob a hipótese nula — um "ANOVA sobre os postos", em vez
+de sobre os valores originais, o que o torna robusto a outliers e a distribuições assimétricas,
+ao custo de menor poder quando a normalidade de fato se sustenta.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — Kruskal-Wallis e comparações par a par não paramétricas</div>
+```
+
+```{r c3b-kw}
+kruskal.test(tempo_ms ~ config, data = dados_scripts_out)
+
+# comparações par a par não paramétricas, com correção de Bonferroni
+pairwise.wilcox.test(dados_scripts_out$tempo_ms, dados_scripts_out$config,
+                      p.adjust.method = "bonferroni")
+```
+
+```{r plot-scripts-outliers, echo=FALSE, fig.width=6.5, fig.height=4, fig.cap="Tempo de carregamento por configuração, com os quatro tempos contaminados por conexões lentas (destacados). A cauda assimétrica à direita, presente em pelo menos uma configuração, é o sintoma visual que motiva a troca da ANOVA pelo teste de Kruskal-Wallis."}
+dados_scripts_out %>%
+  mutate(contaminado = row_number() %in% idx_lentos) %>%
+  ggplot(aes(x = config, y = tempo_ms)) +
+  geom_boxplot(fill = "#0B4F6C", alpha = 0.35, outlier.shape = NA) +
+  geom_jitter(aes(color = contaminado), width = 0.12, size = 2, alpha = 0.8) +
+  scale_color_manual(values = c(`FALSE` = "gray40", `TRUE` = "#d98324"),
+                      labels = c("Não", "Sim"), name = "Conexão lenta") +
+  labs(x = NULL, y = "Tempo de carregamento (ms)",
+       title = "Tempos de carregamento com contaminação por conexões lentas") +
+  theme_minimal(base_size = 13)
+```
+
+Os quatro pontos em laranja — sorteados aleatoriamente entre as 40 observações, portanto
+espalhados de forma desigual entre as quatro configurações — puxam a caixa correspondente para
+cima e alongam sua cauda superior, exatamente o tipo de assimetria que infla a variância dentro de
+grupo e compromete a suposição de normalidade dos resíduos por trás do teste $F$ clássico. É essa
+distorção visual, e não apenas o resultado do teste de Shapiro-Wilk mencionado na aplicação acima,
+que justifica substituir os valores brutos pelos seus postos.
+
+O teste de Kruskal-Wallis rejeita $H_0$ com folga, confirmando que as configurações diferem
+mesmo na presença dos valores atípicos que violariam os pressupostos da ANOVA clássica — e as
+comparações par a par por postos (Wilcoxon com correção de Bonferroni) mantêm o padrão geral de
+conclusões da Seção \@ref(comparacoes-multiplas), com um pouco menos de nitidez nas diferenças
+mais sutis, o preço esperado por abrir mão do pressuposto de normalidade.
+
+## Resumo do capítulo
+
+Este capítulo cobriu o delineamento completamente aleatorizado (DCA) do início ao fim:
+
+- Um **teste de aleatorização** obtém validade diretamente do mecanismo físico de sorteio dos
+  tratamentos, sem pressupor normalidade; o teste $F$ da ANOVA normal-linear é, sob condições
+  razoáveis, uma excelente aproximação a ele.
+- O modelo do DCA, $Y_{ij} = \mu + \tau_i + \varepsilon_{ij}$, gera a tabela de ANOVA, ICs para
+  médias e diferenças de médias, e um cálculo de número de réplicas baseado em tamanho de efeito.
+- **Submuestreo** exige um segundo termo de erro no modelo; o teste correto do tratamento usa o
+  erro *experimental* (entre unidades experimentais), não o de amostragem — usar o segundo por
+  engano é pseudorreplicação.
+- O **modelo de efeitos aleatórios** troca "os níveis diferem?" por "quanto os níveis variam?",
+  com a mesma tabela de ANOVA mas esperanças de quadrados médios e planejamento amostral
+  diferentes.
+- Normalidade e homocedasticidade dos resíduos devem ser verificadas antes de confiar na ANOVA;
+  quando falham, transformações da família Box-Cox costumam restaurar a validade da análise.
+- **Contrastes**: sua esperança, variância, soma de quadrados com 1 grau de liberdade e
+  distribuição $F$; e **contrastes ortogonais**, que particionam $SQ_{\text{Trat}}$ em perguntas
+  independentes planejadas a priori.
+- O perigo do **"data snooping"** — testar como planejada uma hipótese formulada só depois de ver
+  os dados — e por que o método de **Scheffé** é a resposta formal a ele, protegendo o espaço
+  infinito de todos os contrastes possíveis.
+- **Procedimentos de comparação múltipla** (Scheffé, Bonferroni, Tukey, Dunnett, Duncan,
+  agrupamento por letras) para controlar (ou, no caso de Duncan, deliberadamente não controlar) a
+  taxa de erro por família quando muitas comparações são feitas sobre o mesmo conjunto de dados.
+- **Polinômios ortogonais**, o caso particular de contrastes ortogonais mais útil quando os
+  níveis do fator são quantitativos e igualmente espaçados, decompondo a tendência em componentes
+  linear, quadrático, cúbico etc.
+- **ANCOVA**, que ajusta as médias de tratamento e reduz o erro experimental incorporando uma
+  covariável contínua medida antes do tratamento — o análogo, para covariáveis contínuas, do que
+  a blocagem faz para fatores categóricos.
+- O teste de **Kruskal-Wallis**, alternativa não paramétrica baseada em postos para quando os
+  pressupostos da ANOVA não se sustentam.
+
+Todo esse ferramental resolve comparações dentro de **um único** fator de classificação. O
+Capítulo 4 introduz uma segunda fonte de estrutura no delineamento — os **blocos** — mostrando
+como controlar formalmente uma fonte de variação sistemática conhecida (turma, dia, sujeito,
+talhão) sem sacrificar a validade da comparação entre tratamentos.

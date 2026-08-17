@@ -1,0 +1,160 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 07 --- Contrastes e Comparações Múltiplas}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 07}{Contrastes, comparações múltiplas e polinômios ortogonais (Capítulo 3, segunda metade / Aula 07)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas e mostre os cálculos
+intermediários --- nestas listas, a justificativa vale mais que a resposta final. O gabarito
+completo está em \texttt{Gabarito07.pdf}.}
+
+\begin{questao}{1} \textbf{(Ciência de dados --- cálculo de um contraste)}
+
+Uma equipe de engenharia web mede o tempo de carregamento (ms) de uma página sob quatro
+configurações de scripts de terceiros: \textbf{Nenhum} (controle), \textbf{Analytics},
+\textbf{Anúncios} e \textbf{Combo}, com $n=10$ carregamentos independentes em cada uma. As médias
+amostrais observadas foram
+\[
+\bar y_{\text{Nenhum}} = 860, \quad \bar y_{\text{Analytics}} = 940, \quad
+\bar y_{\text{Anúncios}} = 1080, \quad \bar y_{\text{Combo}} = 1120 \ \text{(ms)},
+\]
+com quadrado médio do erro $QME = 4200$ e $gl_{\text{erro}} = 36$. Considere o contraste
+$L = 3\mu_{\text{Nenhum}} - \mu_{\text{Analytics}} - \mu_{\text{Anúncios}} - \mu_{\text{Combo}}$,
+que compara o grupo controle contra a média dos demais.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Escreva o vetor de coeficientes $\boldsymbol\lambda$ deste contraste e verifique que
+    $\mathbf 1'\boldsymbol\lambda = 0$.
+  \item Calcule $\hat L$.
+  \item Calcule $SQ_L$ e a estatística $F = SQ_L/QME$. Compare com o valor crítico
+    $F_{0{,}05;\,1,36} \approx 4{,}11$ e conclua.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Ciência de dados --- contrastes ortogonais e partição de $SQ_{\text{Trat}}$)}
+
+Usando os mesmos dados da Questão 1, considere o conjunto de três contrastes definidos pela
+tabela de coeficientes abaixo.
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Contraste & Nenhum & Analytics & Anúncios & Combo \\
+\midrule
+$L_1$ (Questão 1) & 3 & $-1$ & $-1$ & $-1$ \\
+$L_2$ & 0 & 2 & $-1$ & $-1$ \\
+$L_3$ & 0 & 0 & 1 & $-1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Verifique que $L_1$, $L_2$ e $L_3$ são mutuamente ortogonais, calculando os três produtos
+    internos $\boldsymbol\lambda_1'\boldsymbol\lambda_2$, $\boldsymbol\lambda_1'\boldsymbol\lambda_3$
+    e $\boldsymbol\lambda_2'\boldsymbol\lambda_3$.
+  \item Calcule $\hat L_2$, $SQ_{L_2}$ e $\hat L_3$, $SQ_{L_3}$ (mesmas fórmulas da Questão 1).
+  \item Sabendo que $SQ_{\text{Trat}} = 440\,000$ nesta ANOVA, verifique que
+    $SQ_{L_1} + SQ_{L_2} + SQ_{L_3} = SQ_{\text{Trat}}$ (use o $SQ_{L_1}$ calculado na Questão 1).
+  \item Interpretando os três testes $F$ individuais, o que você concluiria sobre \emph{onde}
+    está a diferença entre as quatro configurações, além de "existe alguma diferença"?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Psicologia --- Scheffé vs. teste ingênuo)}
+
+No experimento de dose de cafeína (0, 50, 100, 150, 200 mg; $t=5$; $n=8$ por dose;
+$QME = 40$, $gl_{\text{erro}} = 35$), um pesquisador \emph{examina os dados antes} de decidir
+qual comparação testar e escolhe, a posteriori, um contraste específico entre grupos de doses
+intermediárias. O contraste resultante tem $SQ_L = 185$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule $F = SQ_L/QME$. Testando ao nível $\alpha = 0{,}05$ contra
+    $F_{0{,}05;\,1,35} \approx 4{,}12$, o contraste pareceria significativo?
+  \item Como o contraste foi escolhido \emph{depois} de examinar os dados (não planejado a
+    priori), o procedimento correto é o de Scheffé, que rejeita $H_0$ apenas se
+    $F > (t-1)\,F_{0{,}05;\,t-1,\,gl_{\text{erro}}}$. Usando $F_{0{,}05;\,4,35} \approx 2{,}64$,
+    calcule o valor crítico de Scheffé e decida se o contraste permanece significativo.
+  \item Explique, em suas palavras, por que o teste do item (a) é anticonservador nesta situação
+    --- isto é, por que ele rejeita $H_0$ com mais frequência do que o nível nominal de 5\%
+    permitiria, se o pesquisador estiver livre para escolher o contraste depois de ver os dados.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Dedução --- independência de contrastes ortogonais)}
+
+Considere a parametrização de médias de casela do DCA, $\mathbf Y = \mathbf X\boldsymbol\mu +
+\boldsymbol\varepsilon$, balanceada ($n_i = n$ para todo $i$), com
+$\boldsymbol\varepsilon \sim N(\mathbf 0, \sigma^2\mathbf I_N)$. Sejam dois contrastes
+$L_1 = \boldsymbol\lambda_1'\boldsymbol\mu$ e $L_2 = \boldsymbol\lambda_2'\boldsymbol\mu$, com
+estimadores $\hat L_1 = \boldsymbol\lambda_1'\bar{\mathbf y}$ e
+$\hat L_2 = \boldsymbol\lambda_2'\bar{\mathbf y}$, em que $\bar{\mathbf y} = (\bar y_{1\cdot},
+\ldots, \bar y_{t\cdot})'$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\mathrm{Cov}(\hat L_1, \hat L_2) = \dfrac{\sigma^2}{n}\boldsymbol\lambda_1'
+    \boldsymbol\lambda_2$. (Dica: $\bar{\mathbf y}$ tem matriz de covariância
+    $\dfrac{\sigma^2}{n}\mathbf I_t$, porque as $t$ médias amostrais são independentes entre si.)
+  \item Conclua que, se $\boldsymbol\lambda_1'\boldsymbol\lambda_2 = 0$ (contrastes ortogonais),
+    então $\mathrm{Cov}(\hat L_1, \hat L_2) = 0$.
+  \item Como $\hat L_1$ e $\hat L_2$ são combinações lineares do vetor conjuntamente normal
+    $\bar{\mathbf y}$, o par $(\hat L_1, \hat L_2)$ é conjuntamente normal. Usando o fato de que,
+    para vetores conjuntamente normais, covariância zero implica independência estatística,
+    conclua que $\hat L_1 \perp \hat L_2$ e, portanto, que $SQ_{L_1}$ e $SQ_{L_2}$ (funções
+    determinísticas de $\hat L_1$ e $\hat L_2$, respectivamente) também são independentes.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Dedução --- coeficientes do polinômio ortogonal linear, $t=3$)}
+
+Considere um fator quantitativo com $t=3$ níveis igualmente espaçados. Após centralizar e
+escalar, os níveis podem ser representados pelos valores codificados $-1, 0, 1$. Procuramos o
+contraste linear $\boldsymbol\lambda_L = (c_1, c_2, c_3)$ que:
+\begin{enumerate}[label=(\roman*)]
+  \item soma zero: $c_1 + c_2 + c_3 = 0$;
+  \item é diretamente proporcional ao nível codificado de cada grupo (isto é, $c_i = k \cdot
+    (\text{nível codificado}_i)$ para alguma constante $k \neq 0$);
+  \item tem coeficientes inteiros de menor módulo possível.
+\end{enumerate}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Encontre $\boldsymbol\lambda_L$. Mostre que a condição (i) é automaticamente satisfeita
+    por qualquer escolha proporcional aos níveis codificados $-1, 0, 1$, e explique por quê.
+  \item O contraste quadrático tabulado para $t=3$ é $\boldsymbol\lambda_Q = (1,-2,1)$. Verifique
+    que $\boldsymbol\lambda_L$ (encontrado no item a) e $\boldsymbol\lambda_Q$ são ortogonais.
+  \item $t=3$ níveis admitem, no máximo, quantos contrastes ortogonais? $\boldsymbol\lambda_L$ e
+    $\boldsymbol\lambda_Q$ esgotam essa contagem?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{6} \textbf{(Agricultura --- interpretação de polinômios ortogonais)}
+
+Um experimento testa quatro doses de nitrogênio (0, 40, 80, 120 kg/ha) sobre a produtividade do
+milho, com $n$ igual em cada dose. A ANOVA decomposta em componentes polinomiais produziu:
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+Fonte & $gl$ & $SQ$ & $QM$ & $F$ & valor-$p$ \\
+\midrule
+Dose (total)   & 3 & 812 & --      & --    & --      \\
+\ \ Linear     & 1 & 705 & 705{,}0 & 38{,}1 & $<0{,}001$ \\
+\ \ Quadrático & 1 & 98  & 98{,}0  & 5{,}3  & 0{,}028 \\
+\ \ Cúbico     & 1 & 9   & 9{,}0   & 0{,}5  & 0{,}491 \\
+Erro           & 20 & 370 & 18{,}5 & --    & --      \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Verifique que a soma dos três componentes bate com $SQ$ de "Dose (total)".
+  \item Quais componentes são estatisticamente significativos ao nível de 5\%? O que isso
+    significa, em termos agronômicos, sobre a forma da curva de resposta da produtividade à dose
+    de nitrogênio?
+  \item Por que faz sentido usar polinômios ortogonais aqui, e não faria sentido usar o mesmo
+    procedimento se as quatro doses fossem, por exemplo, quatro \emph{variedades} de milho?
+\end{enumerate}
+\end{questao}
+
+\end{document}

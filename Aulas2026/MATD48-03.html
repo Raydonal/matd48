@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introdução aos Modelos Lineares (Parte 2)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introdução aos Modelos Lineares (Parte 2)
+]
+.subtitle[
+## Gauss-Markov, matriz de projeção, modelo particionado e formas quadráticas
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 03 — Introdução aos Modelos Lineares (Parte 2)
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## O teorema de Gauss-Markov
+
+Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
+\sigma^2\mathbf{I}_n$ (sem exigir normalidade):
+
+&gt; Se `\(\boldsymbol{\lambda}'\boldsymbol{\beta}\)` é estimável, `\(\boldsymbol{\lambda}'\hat{\boldsymbol{\beta}}\)`
+&gt; é o **BLUE** — o estimador linear não viesado de menor variância (Plackett, 1950; Searle, 1971).
+
+--
+
+- "Melhor" = dentro da classe de estimadores **lineares não viesados**. Estimadores viesados
+  (ridge) podem ter EQM menor em certos cenários.
+- Não exige normalidade — só entra para testes/IC exatos.
+
+`$$\mathrm{Cov}(\hat{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$$`
+
+---
+
+## A matriz de projeção
+
+`$$\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{P}_X\mathbf{Y}, \qquad
+\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$$`
+
+--
+
+`\(\mathbf{P}_X\)` projeta `\(\mathbf{Y}\)` ortogonalmente sobre o espaço-coluna de `\(\mathbf{X}\)`:
+
+- **Simétrica:** $\mathbf{P}_X' = \mathbf{X}\big((\mathbf{X}'\mathbf{X})^{-1}\big)'\mathbf{X}' =
+  \mathbf{P}_X$, pois `\((\mathbf{X}'\mathbf{X})^{-1}\)` é simétrica.
+- **Idempotente:** $\mathbf{P}_X\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}
+  \underbrace{(\mathbf{X}'\mathbf{X})(\mathbf{X}'\mathbf{X})^{-1}}_{=\,\mathbf{I}_p}\mathbf{X}' =
+  \mathbf{P}_X$.
+- **Autovalores só 0 ou 1** `\(\Rightarrow\)` **posto = traço** = `\(\mathrm{posto}(\mathbf{X})\)`.
+
+--
+
+`\(\mathbf{I}_n - \mathbf{P}_X\)` projeta sobre o complemento ortogonal → produz os resíduos, e explica
+por que `\(\hat{\mathbf{Y}}\)` e `\(\mathbf{e}\)` são ortogonais. A diagonal de `\(\mathbf{P}_X\)` dá as
+**alavancagens** `\(h_{ii}\)`.
+
+---
+
+## O modelo particionado
+
+`$$\mathbf{X} = [\mathbf{X}_1 \ \ \mathbf{X}_2], \quad \boldsymbol{\beta} = \begin{bmatrix}
+\boldsymbol{\beta}_1 \\ \boldsymbol{\beta}_2 \end{bmatrix}, \quad H_0: \boldsymbol{\beta}_2 = \mathbf{0}$$`
+
+--
+
+**Soma de quadrados extra:**
+
+`$$\mathrm{SQE}(\text{reduzido}) - \mathrm{SQE}(\text{completo}) = \mathbf{Y}'(\mathbf{P}_X -
+\mathbf{P}_{X_1})\mathbf{Y}$$`
+
+--
+
+`$$F = \frac{[\mathrm{SQE}(\text{red.}) - \mathrm{SQE}(\text{compl.})]/(p-p_1)}{\mathrm{SQE}(\text{compl.})/(n-p)}
+\ \sim\ F_{p-p_1,\, n-p} \text{ sob } H_0$$`
+
+É exatamente o que `anova(reduzido, completo)` calcula — e o mesmo mecanismo por trás da ANOVA do
+Capítulo 3.
+
+---
+
+## O teorema de Frisch-Waugh-Lovell (FWL)
+
+**Pergunta:** dá para *calcular* `\(\hat{\boldsymbol{\beta}}_2\)` (não só testar $H_0:
+\boldsymbol{\beta}_2=\mathbf{0}$) sem ajustar a regressão múltipla completa de uma vez?
+
+--
+
+**Teorema** (Frisch &amp; Waugh, 1933; Lovell, 1963). Seja `\(\mathbf{M}_1 = \mathbf{I}_n - \mathbf{P}_{X_1}\)`.
+`\(\hat{\boldsymbol{\beta}}_2\)` da regressão completa é idêntico ao coeficiente de:
+
+1. Regredir `\(\mathbf{Y}\)` em `\(\mathbf{X}_1\)`, tomar resíduos `\(\tilde{\mathbf{Y}} = \mathbf{M}_1\mathbf{Y}\)`;
+2. Regredir `\(\mathbf{X}_2\)` em `\(\mathbf{X}_1\)`, tomar resíduos `\(\tilde{\mathbf{X}}_2 = \mathbf{M}_1\mathbf{X}_2\)`;
+3. Regredir `\(\tilde{\mathbf{Y}}\)` em `\(\tilde{\mathbf{X}}_2\)`.
+
+--
+
+**Prova (esboço):** das equações normais em blocos, $\hat{\boldsymbol{\beta}}_1 =
+(\mathbf{X}_1'\mathbf{X}_1)^{-1}(\mathbf{X}_1'\mathbf{Y}-\mathbf{X}_1'\mathbf{X}_2\hat{\boldsymbol{\beta}}_2)$;
+substituindo na segunda linha de blocos e usando `\(\mathbf{P}_{X_1} = \mathbf{X}_1(\mathbf{X}_1'\mathbf{X}_1)^{-1}\mathbf{X}_1'\)`:
+
+`$$\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2\,\hat{\boldsymbol{\beta}}_2 = \mathbf{X}_2'\mathbf{M}_1\mathbf{Y}
+\ \Longrightarrow\ \hat{\boldsymbol{\beta}}_2 = (\tilde{\mathbf{X}}_2'\tilde{\mathbf{X}}_2)^{-1}\tilde{\mathbf{X}}_2'\tilde{\mathbf{Y}}$$`
+
+(usando `\(\mathbf{M}_1=\mathbf{M}_1'\mathbf{M}_1\)`, simétrica e idempotente). `\(\blacksquare\)`
+
+---
+
+## FWL e planejamento experimental: por que a ANCOVA funciona
+
+Sob **aleatorização** (Capítulo 1), o tratamento `\(\mathbf{X}_1\)` é independente de qualquer
+covariável pré-tratamento `\(\mathbf{X}_2\)` — residualizar uma na outra quase não muda nada.
+
+--
+
+1. **Sem viés, com ou sem covariável:** aleatorização já garante isso; a covariável não é
+   necessária para identificar o efeito causal.
+2. **Com precisão maior:** se `\(\mathbf{X}_2\)` explica parte de `\(\mathbf{Y}\)`, $\tilde{\mathbf{Y}} =
+   \mathbf{M}_1\mathbf{Y}$ tem variância menor `\(\Rightarrow\)` erro-padrão menor de
+   `\(\hat{\boldsymbol{\beta}}_2\)` (o coeficiente de interesse) `\(\Rightarrow\)` mais poder no teste `\(F\)`
+   da seção anterior.
+
+--
+
+Essa é exatamente a lógica da **ANCOVA** (Fisher, 1935): covariáveis pré-tratamento não
+enviesam, mas "limpam" `\(\mathbf{Y}\)` e aumentam a precisão.
+
+---
+
+## Formas lineares e quadráticas
+
+Sob normalidade, $\mathbf{L} = \mathbf{a}'\mathbf{Y} \sim N(\mathbf{a}'\mathbf{X}\boldsymbol{\beta},
+\ \sigma^2\mathbf{a}'\mathbf{a})$ — exato, não assintótico.
+
+--
+
+**Teorema.** Se `\(\mathbf{A}\)` é idempotente com posto `\(r\)` e $\mathbf{Y} \sim N(\boldsymbol{\mu},
+\sigma^2\mathbf{I}_n)$, então `\(\mathbf{Y}'\mathbf{A}\mathbf{Y}/\sigma^2 \sim \chi^2_r\)` (não central,
+a menos que `\(\mathbf{A}\boldsymbol{\mu} = \mathbf{0}\)`).
+
+--
+
+Como `\(\mathbf{I}_n - \mathbf{P}_X\)` é idempotente e $(\mathbf{I}_n - \mathbf{P}_X)\mathbf{X}\boldsymbol{\beta}
+= \mathbf{0}$:
+
+`$$\frac{\mathrm{SQE}}{\sigma^2} \sim \chi^2_{\,n-\mathrm{posto}(\mathbf{X})} \quad \text{(central)}$$`
+
+A base algébrica exata de toda tabela de ANOVA do Capítulo 3.
+
+---
+
+## Diagramas de Hasse: retrato da estrutura antes da álgebra
+
+`\(n-\mathrm{posto}(\mathbf{X})\)` acima é uma contagem algébrica de graus de liberdade — o
+**diagrama de Hasse** é a mesma contagem, em figura. Cada termo do delineamento (média, fatores,
+erro) é um **nó** com seu `\(gl\)`; uma aresta liga `\(u\to v\)` quando `\(v\)` refina `\(u\)` sem termo
+intermediário. Termos **cruzados** ficam lado a lado, sem aresta entre si; termos **aninhados**
+formam uma cadeia.
+
+&lt;img src="MATD48-03_files/figure-html/hasse-intro-1.png" alt="" width="230.4" /&gt;
+
+`\(1+3+20=24=N\)`: os `\(gl\)` de todos os nós sempre somam `\(N\)`. O Cap. 2 do livro-texto (Seção
+"Diagramas de Hasse") desenvolve essa ferramenta em profundidade, inclusive para fatoriais
+cruzados e aninhados — usaremos o mesmo diagrama já na próxima aula (DCA) e de novo nos
+Capítulos 4–6 (blocos, quadrados latinos, fatoriais).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Tempo de reação, sono e cafeína
+
+**Cenário:** 60 participantes; medimos **tempo de reação** (ms) em tarefa de atenção, **horas de
+sono** na noite anterior e **cafeína** (mg) consumida antes do teste.
+
+**Pergunta:** controlando pelas horas de sono, a cafeína ainda ajuda a explicar o tempo de reação?
+
+--
+
+
+``` r
+set.seed(2026)
+n &lt;- 60
+dados_sono &lt;- tibble(
+  id = 1:n,
+  horas_sono = round(runif(n, 4, 9), 1),
+  cafeina_mg = round(runif(n, 0, 200))
+) %&gt;%
+  mutate(tempo_reacao = 480 - 18 * horas_sono + 0.22 * cafeina_mg + rnorm(n, 0, 22))
+```
+
+---
+
+## Visualizando os dados
+
+&lt;img src="MATD48-03_files/figure-html/plot-sono-1.png" alt="" width="576" /&gt;
+
+Tendência decrescente geral (mais sono, reação mais rápida); os pontos mais escuros (mais
+cafeína) tendem a ficar acima da reta para a mesma quantidade de sono — um indício visual de que
+`cafeina_mg` carrega informação extra sobre `tempo_reacao`.
+
+---
+
+## Testando o submodelo
+
+
+``` r
+model.matrix(~ horas_sono, data = dados_sono)[1:3, ]                 # X1 (reduzido)
+```
+
+```
+##   (Intercept) horas_sono
+## 1           1        7.5
+## 2           1        6.8
+## 3           1        4.7
+```
+
+``` r
+model.matrix(~ horas_sono + cafeina_mg, data = dados_sono)[1:3, ]    # X = [X1 X2] (completo)
+```
+
+```
+##   (Intercept) horas_sono cafeina_mg
+## 1           1        7.5         60
+## 2           1        6.8        179
+## 3           1        4.7        113
+```
+
+``` r
+mod_reduzido &lt;- lm(tempo_reacao ~ horas_sono, data = dados_sono)
+mod_completo &lt;- lm(tempo_reacao ~ horas_sono + cafeina_mg, data = dados_sono)
+
+anova(mod_reduzido, mod_completo)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: tempo_reacao ~ horas_sono
+## Model 2: tempo_reacao ~ horas_sono + cafeina_mg
+##   Res.Df   RSS Df Sum of Sq      F   Pr(&gt;F)   
+## 1     58 35885                                
+## 2     57 31598  1    4286.7 7.7328 0.007337 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+Rejeitamos
+`\(H_0: \beta_{\text{cafeína}} = 0\)`: a cafeína contribui além das horas de sono.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. O teorema de Gauss-Markov garante variância mínima **entre estimadores lineares não
+   viesados**. Em que sentido isso é diferente de dizer que `\(\hat{\boldsymbol{\beta}}\)` é
+   incondicionalmente "o melhor" estimador?
+
+2. Se, em vez de cafeína, tivéssemos adicionado ao modelo completo uma variável irrelevante
+   sorteada aleatoriamente (por exemplo, o dia da semana do teste), o que aconteceria com a soma
+   de quadrados extra em expectativa? O teste `\(F\)` continuaria válido sob `\(H_0\)`?
+
+3. A matriz `\(\mathbf{P}_X\)` depende só de `\(\mathbf{X}\)`, nunca de `\(\mathbf{Y}\)`. Que consequência
+   prática isso tem para planejar, *antes* de coletar dados, quão precisas serão as estimativas
+   de um experimento?
+
+4. Alavancagens altas (`\(h_{ii}\)` próximo de 1) indicam que uma observação influencia fortemente seu
+   próprio valor ajustado. Em um experimento planejado (com `\(\mathbf{X}\)` fixado pelo
+   pesquisador), isso é um problema de *dados* ou um problema de *desenho*?
+
+5. Pelo FWL, o coeficiente da cafeína é o mesmo obtido regredindo os resíduos de tempo de reação
+   nos resíduos de cafeína (ambos residualizados em horas de sono). Se horas de sono e cafeína
+   fossem **perfeitamente independentes** por desenho (por exemplo, doses de cafeína sorteadas
+   aleatoriamente, sem relação com o sono de cada participante), o que aconteceria com
+   `\(\tilde{\mathbf{X}}_2\)` em relação a `\(\mathbf{X}_2\)` original? Que implicação isso tem para a
+   necessidade de incluir `horas_sono` no modelo, se o objetivo é só estimar o efeito da cafeína?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Construindo e verificando a matriz de projeção
+
+
+``` r
+X &lt;- model.matrix(~ horas_sono + cafeina_mg, data = dados_sono)
+P &lt;- X %*% solve(t(X) %*% X) %*% t(X)
+
+c(
+  simetrica_max_diff   = max(abs(P - t(P))),
+  idempotente_max_diff = max(abs(P %*% P - P)),
+  traco                = sum(diag(P)),
+  posto_X              = qr(X)$rank
+)
+```
+
+```
+##   simetrica_max_diff idempotente_max_diff                traco 
+##         1.942890e-16         2.359224e-16         3.000000e+00 
+##              posto_X 
+##         3.000000e+00
+```
+
+``` r
+max(abs(diag(P) - hatvalues(mod_completo)))
+```
+
+```
+## [1] 1.94289e-16
+```
+
+---
+
+## Alavancagem de cada participante
+
+&lt;img src="MATD48-03_files/figure-html/plot-leverage-1.png" alt="" width="540" /&gt;
+
+Participantes com poucas ou muitas horas de sono (extremos do eixo) puxam mais a reta ajustada —
+maior alavancagem — porque `\(\mathbf{P}_X\)` só depende de `\(\mathbf{X}\)`, nunca de `\(\mathbf{Y}\)`.
+
+---
+
+## Verificando o FWL na prática
+
+
+``` r
+Y_tilde  &lt;- resid(lm(tempo_reacao ~ horas_sono, data = dados_sono))   # passo 1
+X2_tilde &lt;- resid(lm(cafeina_mg  ~ horas_sono, data = dados_sono))    # passo 2
+mod_fwl  &lt;- lm(Y_tilde ~ X2_tilde)                                    # passo 3
+
+c(beta_regressao_completa = unname(coef(mod_completo)["cafeina_mg"]),
+  beta_via_fwl             = unname(coef(mod_fwl)[2]))
+```
+
+```
+## beta_regressao_completa            beta_via_fwl 
+##               0.1493076               0.1493076
+```
+
+--
+
+&lt;img src="MATD48-03_files/figure-html/plot-fwl-1.png" alt="" width="504" /&gt;
+
+Os dois coeficientes coincidem exatamente — a inclinação desta regressão simples entre resíduos
+*é* o coeficiente da cafeína na regressão múltipla completa.
+
+---
+
+## A soma de quadrados extra, na mão
+
+
+``` r
+X1 &lt;- model.matrix(~ horas_sono, data = dados_sono)
+P1 &lt;- X1 %*% solve(t(X1) %*% X1) %*% t(X1)
+Yv &lt;- dados_sono$tempo_reacao
+
+sqe_red &lt;- as.numeric(t(Yv) %*% (diag(n) - P1) %*% Yv)
+sqe_com &lt;- as.numeric(t(Yv) %*% (diag(n) - P)  %*% Yv)
+gl_extra &lt;- qr(X)$rank - qr(X1)$rank
+gl_res   &lt;- n - qr(X)$rank
+F_extra  &lt;- ((sqe_red - sqe_com) / gl_extra) / (sqe_com / gl_res)
+
+c(F = F_extra, p_valor = pf(F_extra, gl_extra, gl_res, lower.tail = FALSE))
+```
+
+```
+##           F     p_valor 
+## 7.732760105 0.007336544
+```
+
+Bate exatamente com `anova(mod_reduzido, mod_completo)` — a soma de quadrados extra é a mesma
+conta, feita por álgebra explícita.
+
+---
+
+## Verificando a qui-quadrado por simulação
+
+
+``` r
+set.seed(2026)
+sigma &lt;- 22; gl_res2 &lt;- n - qr(X)$rank
+stats &lt;- replicate(3000, {
+  Ys &lt;- as.numeric(X %*% coef(mod_completo)) + rnorm(n, 0, sigma)
+  as.numeric(t(Ys) %*% (diag(n) - P) %*% Ys) / sigma^2
+})
+ggplot(tibble(stats), aes(stats)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 35, fill = "#3b5bdb", alpha = 0.6) +
+  stat_function(fun = dchisq, args = list(df = gl_res2), color = "#d98324", linewidth = 1) +
+  theme_minimal(base_size = 13)
+```
+
+&lt;img src="MATD48-03_files/figure-html/uso-r-montecarlo-1.png" alt="" width="540" /&gt;
+
+O histograma de 3.000 réplicas de Monte Carlo acompanha de perto a densidade qui-quadrado teórica
+(linha laranja) com 57 graus de liberdade — a confirmação empírica de que
+`\(\mathrm{SQE}/\sigma^2\)` se comporta exatamente como o teorema prevê.
+
+---
+
+## Resumo da aula
+
+- Gauss-Markov: mínimos quadrados é BLUE entre estimadores lineares não viesados, sem exigir
+  normalidade.
+- Matriz de projeção `\(\mathbf{P}_X\)`: simétrica, idempotente, posto = traço = `\(\mathrm{posto}(\mathbf{X})\)`;
+  formaliza "ajustar" como projeção ortogonal.
+- Modelo particionado + soma de quadrados extra: mecanismo algébrico de todo teste `\(F\)` de
+  submodelo.
+- Teorema de Frisch-Waugh-Lovell: o coeficiente de uma covariável é idêntico ao de uma regressão
+  simples entre resíduos — a base algébrica da ANCOVA em experimentos aleatorizados.
+- Sob normalidade, formas quadráticas idempotentes de `\(\mathbf{Y}\)` são qui-quadrado — a base exata
+  da ANOVA.
+- Próximo capítulo: aplicamos tudo isso ao delineamento completamente aleatorizado (DCA).
+
+## Referências
+
+- Plackett, R. L. (1950). Some Theorems in Least Squares. *Biometrika*, 37(1/2), 149–157.
+- Searle, S. R. (1971). *Linear Models*. John Wiley &amp; Sons.
+- Frisch, R. &amp; Waugh, F. V. (1933). Partial Time Regressions as Compared with Individual Trends. *Econometrica*, 1(4), 387–401.
+- Lovell, M. C. (1963). Seasonal Adjustment of Economic Time Series and Multiple Regression Analysis. *Journal of the American Statistical Association*, 58(304), 993–1010.
+- Fisher, R. A. (1935). *Statistical Methods for Research Workers* (5ª ed.). Oliver and Boyd.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

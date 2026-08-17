@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 06 --- Pressupostos e Transformações}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 06}{Verificação de pressupostos e transformações no DCA (Capítulo 3 / Aula 06)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito06.pdf}.}
+
+\begin{questao}{1} \textbf{(Psicologia --- interpretando um Q-Q plot)}
+
+O Q-Q plot dos resíduos de uma ANOVA (tempo de reação sob três condições de distração)
+acompanha bem a reta de referência na região central, mas na cauda superior direita alguns
+poucos pontos se destacam claramente \emph{acima} da reta (resíduos maiores do que a normal
+prevê), enquanto a cauda inferior esquerda segue a reta normalmente.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Que tipo de desvio de normalidade esse padrão sugere? Relacione com o formato típico de
+    dados de tempo de reação.
+  \item O pesquisador tem $N=45$ observações. Um teste de Shapiro-Wilk aplicado a esses resíduos
+    não rejeita a normalidade ($p=0{,}09$). Isso contradiz o que o Q-Q plot sugere? Como você
+    reconciliaria as duas informações antes de decidir se a ANOVA é confiável?
+  \item Supondo que o padrão do Q-Q plot reflita um problema real, qual transformação da família
+    de potências você tentaria primeiro, e por quê?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Psicologia --- homogeneidade de variância)}
+
+Um estudo compara o tempo de reação (ms) sob quatro níveis de privação de sono (0h, 12h, 24h,
+36h), com $n=20$ participantes por grupo ($N=80$). Os desvios-padrão amostrais observados são,
+respectivamente, $30$, $34$, $68$ e $81$ ms. O teste de Levene aplicado a esses dados fornece
+$F_{3,76} = 5{,}87$, $p = 0{,}0012$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item O teste de Levene rejeita a hipótese de homocedasticidade a $\alpha=0{,}05$? O que isso
+    implica para a validade dos ICs e do teste $F$ da ANOVA, tais como definidos na Aula 04?
+  \item Calcule a razão entre a maior e a menor variância amostral ($s^2_{36h}/s^2_{0h}$). Esse
+    padrão --- variância crescendo junto com a severidade da privação de sono --- é consistente
+    com erro aditivo ou multiplicativo? Justifique.
+  \item Proponha uma transformação para estabilizar a variância e explique, em termos do padrão
+    observado (variância cresce com a média), por que ela deveria funcionar.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Dedução --- por que o log estabiliza a variância sob erro multiplicativo)}
+
+Suponha que, em vez do modelo aditivo usual, o tempo de reação siga um modelo com erro
+\textbf{multiplicativo}: $Y_{ij} = \mu_i \cdot \exp(\varepsilon_{ij})$, com $\varepsilon_{ij}
+\overset{iid}{\sim} N(0,\sigma^2)$ e $\mu_i > 0$ a "escala" típica do grupo $i$. Use o fato de
+que, se $\varepsilon \sim N(0,\sigma^2)$, então $W=\exp(\varepsilon)$ (lognormal) tem $E[W] =
+e^{\sigma^2/2}$ e $\mathrm{Var}(W) = \big(e^{\sigma^2}-1\big)e^{\sigma^2}$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\log Y_{ij} = \log\mu_i + \varepsilon_{ij}$ segue exatamente o modelo aditivo
+    usual do DCA (Aula 04), com erro $N(0,\sigma^2)$ de variância \textbf{constante}, não
+    dependendo de $i$.
+  \item Mostre que, na escala original, $\mathrm{Var}(Y_{ij}) = \mu_i^2 \cdot C$, em que $C =
+    \big(e^{\sigma^2}-1\big)e^{\sigma^2}$ é uma constante que não depende de $i$ --- ou seja, a
+    variância na escala original é proporcional ao \textbf{quadrado} da média do grupo.
+  \item Combine os itens (a) e (b) para explicar, em uma frase, por que grupos com médias maiores
+    aparecem com variância amostral maior na escala original (o padrão da Questão 2), e por que a
+    transformação log elimina esse padrão.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Ciência de dados --- interpretando Box-Cox)}
+
+O procedimento de Box-Cox aplicado aos resíduos de um modelo ANOVA (tempo de carregamento de uma
+página, três configurações de servidor) estima $\hat\lambda = -0{,}4$, com intervalo de
+verossimilhança de 95\% igual a $(-1{,}1,\ 0{,}3)$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item O intervalo inclui $\lambda=0$ (log)? E $\lambda=1$ (sem transformar)? O que cada resposta
+    implica?
+  \item Com base no item (a), qual transformação você recomendaria usar na prática, e por quê a
+    interpretabilidade pesa nessa escolha (não só o valor que maximiza a verossimilhança)?
+  \item Se, em vez disso, o intervalo de 95\% fosse $(-2{,}5,\ -1{,}8)$ --- não contendo nenhum
+    valor "redondo" usual ($0$, $1/2$, $-1$, $1$) --- que estratégias você consideraria?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Integradora --- decidindo o que fazer)}
+
+Uma pesquisadora mede o número de erros cometidos em uma tarefa de revisão de texto sob três
+condições de iluminação (fraca, média, forte), com 15 participantes por condição. Os dados são
+contagens (0, 1, 2, 3, ...), a maioria concentrada em valores baixos, com alguns participantes
+cometendo bem mais erros que a média em cada grupo.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Que diagnósticos você aplicaria, e em que ordem, antes de confiar em uma ANOVA padrão
+    nesses dados?
+  \item Dado que são dados de contagem, qual transformação da Aula 06 é a candidata natural, e
+    por quê?
+  \item Suponha que, mesmo após tentar as transformações usuais, o Q-Q plot dos resíduos ainda
+    mostre desvios severos de normalidade. Sem entrar em detalhes técnicos (assunto da próxima
+    seção do curso), que tipo de alternativa a pesquisadora deveria considerar, e o que essa
+    alternativa muda conceitualmente em relação a comparar médias?
+\end{enumerate}
+\end{questao}
+
+\end{document}

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Delineamento em Blocos Completos Aleatorizados (DBCA)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Delineamento em Blocos Completos Aleatorizados (DBCA)
+]
+.subtitle[
+## Modelo, ANOVA, dados faltantes e eficiência relativa
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 09 — Delineamento em Blocos Completos Aleatorizados
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Motivação: o que dá errado sem controle — fatores confundidos
+
+Dois fatores estão **completamente confundidos** quando seus efeitos são matematicamente
+indistinguíveis: toda vez que um está em certo nível, o outro também está, sempre.
+
+**Exemplo:** uma prefeitura lança um programa de incentivo comercial só em bairros de renda
+**alta**, usando bairros de renda **baixa** como "controle".
+
+
+``` r
+set.seed(777)
+dados_confundido &lt;- tibble(
+  renda    = factor(rep(c("Alta","Baixa"), each = 3), levels = c("Alta","Baixa")),
+  programa = factor(rep(c("Incentivo","Controle"), each = 3), levels = c("Incentivo","Controle")),
+  faturamento = c(rnorm(3, 520, 40), rnorm(3, 210, 25))
+)
+```
+
+---
+
+## Programa ou renda? Impossível saber
+
+&lt;img src="MATD48-09_files/figure-html/confundido-plot-1.png" alt="" width="432" /&gt;
+
+--
+
+`renda` e `programa` variam em perfeita sincronia — `lm(faturamento ~ renda + programa)` nem é
+identificável. **Isso não é uma falha de estimação, é uma falha de delineamento.**
+
+---
+
+## O antídoto: blocos, não confusão
+
+O DBCA é o oposto desse erro: ele **agrupa** unidades por uma variável de ruído em blocos, mas
+**sorteia** os tratamentos dentro de cada bloco — todo tratamento aparece em todo nível de ruído.
+
+&lt;img src="MATD48-09_files/figure-html/confundido-mapa-1.png" alt="" width="432" /&gt;
+
+--
+
+Cada RPA poderia ser um bloco geográfico: dentro dela, o tratamento é sorteado — não fixado pela
+própria característica da região.
+
+---
+
+## Do controle local ao DBCA
+
+Na Aula 01 vimos o princípio do **controle local**: agrupar unidades heterogêneas em blocos
+homogêneos e sortear tratamentos *dentro* de cada bloco.
+
+O **DBCA** formaliza isso para `\(t\)` tratamentos e `\(b\)` blocos completos (todo tratamento aparece
+uma vez em cada bloco):
+
+$$
+Y_{ij} = \mu + \tau_i + \beta_j + \varepsilon_{ij}, \qquad i=1,\dots,t;\ j=1,\dots,b
+$$
+
+`\(\varepsilon_{ij}\sim N(0,\sigma^2)\)` independentes. **Sem** interação tratamento$\times$bloco: o
+efeito de um tratamento é o mesmo (a menos de erro) em todo bloco.
+
+---
+
+## Notação matricial: `\(Y = X\beta + \varepsilon\)`
+
+$$
+X = \big[\,\mathbf 1 \mid X_{trat} \mid X_{bloco}\,\big]
+$$
+
+Sem colunas de produto tratamento$\times$bloco — é isso, na matriz, que é a suposição de
+aditividade.
+
+
+``` r
+dados_toy &lt;- expand_grid(bloco = factor(1:2), tratamento = factor(1:3))
+model.matrix(~ tratamento + bloco, data = dados_toy)
+```
+
+```
+##   (Intercept) tratamento2 tratamento3 bloco2
+## 1           1           0           0      0
+## 2           1           1           0      0
+## 3           1           0           1      0
+## 4           1           0           0      1
+## 5           1           1           0      1
+## 6           1           0           1      1
+## attr(,"assign")
+## [1] 0 1 1 2
+## attr(,"contrasts")
+## attr(,"contrasts")$tratamento
+## [1] "contr.treatment"
+## 
+## attr(,"contrasts")$bloco
+## [1] "contr.treatment"
+```
+
+--
+
+`\(\hat\beta=(X'X)^{-1}X'Y\)`, `\(H=X(X'X)^{-1}X'\)`: a ANOVA que segue é só uma forma de organizar
+`\(\|Y-\hat Y\|^2\)` pelos blocos de colunas de `\(X\)` (Capítulo 2).
+
+---
+
+## Blocagem é aleatorização restrita
+
+Modelo causal de Neyman-Rubin (Neyman, 1923; Rubin, 1974; Imbens &amp; Rubin, 2015):
+`\(Y_u(i)\)` = resultado potencial da unidade `\(u\)` sob tratamento `\(i\)`.
+
+- **DCA:** sorteio *completo* entre todas as unidades.
+- **DBCA:** sorteio *restrito* — dentro de cada bloco, separadamente (aleatorização
+  estratificada).
+
+--
+
+Ambos são não viesados para `\(\mathbb E[Y_u(i)-Y_u(i')]\)`. A diferença é **variância**: blocar por
+uma variável correlacionada com a resposta reduz o erro-padrão, exatamente como estratificar em
+amostragem reduz a variância de uma média — a mesma lógica da eficiência relativa, adiante.
+
+---
+
+## Tabela de ANOVA
+
+&lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; gl &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; t-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bloco &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; b-1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; (t-1)(b-1) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; tb-1 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Teste de interesse: `\(F_0 = QM_{Trat}/QM_{Erro}\)`.
+
+--
+
+**Cuidado:** o teste `\(F\)` sobre blocos não deve guiar a decisão de removê-los do modelo — os blocos
+foram *fixados pelo delineamento*, não sorteados; sua função é reduzir o erro, não ser
+"significativo".
+
+---
+
+## Por que o teste de blocos não deve orientar decisão
+
+Sob `\(\sum_i\tau_i=0\)`, `\(\sum_j\beta_j=0\)`:
+
+$$
+\mathbb E[QM_{Trat}] = \sigma^2 + \frac{b}{t-1}\sum_i \tau_i^2, \qquad
+\mathbb E[QM_{Bloco}] = \sigma^2 + \frac{t}{b-1}\sum_j \beta_j^2
+$$
+
+`\(\mathbb E[QM_{Erro}]=\sigma^2\)` em ambos os casos — a matemática do teste `\(QM_{Bloco}/QM_{Erro}\)`
+é perfeitamente válida.
+
+--
+
+O problema é a **pergunta**: `\(H_0:\beta_1=\dots=\beta_b=0\)` não interessa aqui, porque os blocos
+não foram sorteados de uma população de blocos — foram *escolhidos* por já se saber que eram
+heterogêneos. A pergunta que importa é a eficiência relativa, adiante.
+
+---
+
+## Dados faltantes: fórmula de Yates
+
+Uma observação perdida na célula (tratamento `\(i^*\)`, bloco `\(j^*\)`) pode ser estimada por
+(Yates, 1936):
+
+$$
+\hat y_{i^*j^*} = \frac{t\,T'_{i^*} + b\,B'_{j^*} - G'}{(t-1)(b-1)}
+$$
+
+`\(T'\)`, `\(B'\)`, `\(G'\)`: totais de tratamento, bloco e geral, **excluindo** a observação perdida.
+
+--
+
+Duas ressalvas ao prosseguir com a ANOVA:
+
+1. Reduza `\(gl_{Erro}\)` em 1 (a observação estimada não é informação nova).
+2. `\(SQ_{Trat}\)` fica levemente viesada para cima; correção aproximada:
+
+$$
+SQ_{Trat}^{ajustada} = SQ_{Trat}^{ingênua} - \frac{\left[B'_{j^*}-(t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}
+$$
+
+---
+
+## Eficiência relativa do DBCA frente ao DCA
+
+Valeu a pena blocar? (Montgomery, 2017; Cochran &amp; Cox, 1957):
+
+$$
+ER(DBCA,DCA) = \frac{(gl_B+1)(gl_{E,DCA}+3)\,QM_{Bloco} + gl_{E,DCA}(gl_B+3)\,QM_{Erro}}
+                     {(gl_{E,DCA}+1)(gl_B+3)\,QM_{Erro}}
+$$
+
+com `\(gl_B=b-1\)` e `\(gl_{E,DCA}=gl_{Erro}+gl_B\)` (graus de liberdade do erro que um DCA teria tido com
+o mesmo número de unidades).
+
+--
+
+`\(ER&gt;1\)`: o DBCA foi mais eficiente — seria preciso aumentar as repetições do DCA por um fator `\(ER\)`
+para igualar a precisão do DBCA. **$ER$ só é grande quando os blocos capturam heterogeneidade real.**
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Irrigação, silício e altura de pepineiros
+
+**Pergunta:** oito combinações de irrigação (0,5 / 1,0) e dose de silício (0/500/1000/1500 ml)
+diferem quanto à altura de plantas de pepino?
+
+- **Bloco** = área do viveiro (3 blocos, cada um com sua heterogeneidade de solo/insolação).
+- **Tratamento** = cada uma das 8 combinações irrigação$\times$silício (simplificação de um fator
+  só; no Capítulo 5/Aula 12 decompomos esse efeito em irrigação, silício e interação).
+
+--
+
+24 unidades experimentais no total: `\(t=8\)`, `\(b=3\)`.
+
+---
+
+## A estrutura dos dados
+
+
+``` r
+pepino &lt;- read_csv("../Livro/data/pepino.csv", show_col_types = FALSE) %&gt;%
+  mutate(
+    tratamento = factor(paste0("riego", riego, "_", silicio)),
+    bloco      = factor(bloque)
+  )
+glimpse(pepino)
+```
+
+```
+## Rows: 24
+## Columns: 6
+## $ riego      &lt;dbl&gt; 0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5,…
+## $ silicio    &lt;chr&gt; "0 ml", "500 ml", "1000 ml", "1500 ml", "0 ml", "500 ml", "…
+## $ bloque     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,…
+## $ altura     &lt;dbl&gt; 4.26, 4.91, 4.35, 4.44, 4.72, 5.22, 4.62, 5.25, 4.07, 5.21,…
+## $ tratamento &lt;fct&gt; riego0.5_0 ml, riego0.5_500 ml, riego0.5_1000 ml, riego0.5_…
+## $ bloco      &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,…
+```
+
+`bloco` não é uma variável de interesse científico — só identifica a área do viveiro. Não faz
+sentido perguntar "o bloco 2 é significativo?"; ele só existe para ser neutralizado.
+
+---
+
+## A população conceitual de respostas de um DBCA
+
+&lt;img src="../Aulas/images/quadro5Blocos.png" alt="" width="55%" /&gt;
+
+`\(Y_{ijk}\)` = resultado (potencial) do tratamento `\(k\)` na `\(j\)`-ésima UE do bloco `\(i\)`: uma tabela
+bloco `\(\times\)` tratamento, não um vetor solto de 24 números — é essa estrutura que o
+`aov(altura ~ tratamento + bloco)` a seguir está de fato ajustando.
+
+---
+
+## Ajustando o DBCA
+
+
+``` r
+mod_dbca &lt;- aov(altura ~ tratamento + bloco, data = pepino)
+X &lt;- model.matrix(mod_dbca)
+dim(X)  # 24 x 10: 1 + 7 (tratamento) + 2 (bloco), sem colunas cruzadas
+```
+
+```
+## [1] 24 10
+```
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sumsq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; meansq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tratamento &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.0359 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2908 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.2478 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0041 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; bloco &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0128 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0064 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1157 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8916 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Residuals &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7759 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0554 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Evidência forte de efeito de tratamento (`\(F_{7,14}=5{,}25\)`, `\(p=0{,}004\)`); efeito de bloco pequeno
+neste conjunto de dados (`\(p=0{,}89\)`).
+
+---
+
+## O diagrama de Hasse deste DBCA
+
+Tratamento e Bloco aparecem no **mesmo nível** — nenhum refina o outro, a assinatura de fatores
+**cruzados** — e só se reencontram no Erro, que sobra depois de descontar ambos.
+
+&lt;img src="MATD48-09_files/figure-html/hasse-dbca-09-1.png" alt="" width="331.2" /&gt;
+
+`\(1+7+2+14=24=N\)` — os 14 gl de Erro batem com `dim(X)` do slide anterior: `\(24-1-7-2=14\)`, a mesma
+regra de subtração do Cap. 2/4 do livro-texto, agora aplicada a dois fatores cruzados em vez de
+um só.
+
+---
+
+## Simulando um dado faltante
+
+
+``` r
+alvo &lt;- which(pepino$riego == 1 &amp; pepino$silicio == "1000 ml" &amp; pepino$bloque == 2)
+valor_real &lt;- pepino$altura[alvo]
+
+pepino_miss &lt;- pepino
+pepino_miss$altura[alvo] &lt;- NA
+
+t &lt;- nlevels(pepino$tratamento); b &lt;- nlevels(pepino$bloco)
+Tlinha &lt;- sum(pepino_miss$altura[pepino_miss$tratamento == pepino$tratamento[alvo]], na.rm = TRUE)
+Blinha &lt;- sum(pepino_miss$altura[pepino_miss$bloco == pepino$bloco[alvo]], na.rm = TRUE)
+Glinha &lt;- sum(pepino_miss$altura, na.rm = TRUE)
+
+y_hat &lt;- (t * Tlinha + b * Blinha - Glinha) / ((t - 1) * (b - 1))
+c(valor_real = valor_real, estimado = round(y_hat, 3), erro = round(y_hat - valor_real, 3))
+```
+
+```
+## valor_real   estimado       erro 
+##      5.120      4.691     -0.429
+```
+
+O valor real era `\(5{,}12\)`; a fórmula de Yates estimou `\(4{,}69\)` — erro de `\(0{,}43\)` cm.
+
+---
+
+## Eficiência relativa
+
+
+``` r
+tab &lt;- anova(mod_dbca)
+MSB &lt;- tab["bloco", "Mean Sq"];      MSE      &lt;- tab["Residuals", "Mean Sq"]
+gl_b &lt;- tab["bloco", "Df"];          gl_e_dbca &lt;- tab["Residuals", "Df"]
+gl_e_dca &lt;- gl_e_dbca + gl_b
+
+ER &lt;- ((gl_b + 1) * (gl_e_dca + 3) * MSB + gl_e_dca * (gl_b + 3) * MSE) /
+      ((gl_e_dca + 1) * (gl_b + 3) * MSE)
+round(ER, 3)
+```
+
+```
+## [1] 1.019
+```
+
+`\(ER\approx1{,}02\)`: ganho de eficiência muito modesto — coerente com `\(QM_{Bloco} &lt; QM_{Erro}\)` na
+tabela de ANOVA. A blocagem por área do viveiro quase não capturou heterogeneidade real aqui.
+
+---
+
+## Uma armadilha: comparar QM_Erro diretamente
+
+&lt;img src="MATD48-09_files/figure-html/dbca-re-plot-1.png" alt="" width="432" /&gt;
+
+--
+
+`\(QM_{Erro}\)`(DCA hipotético) `\(=0{,}0493\)` é **menor** que `\(QM_{Erro}\)`(DBCA)$=0{,}0554$! Isso não
+significa que o DCA seria melhor: a estimativa do DCA tem mais graus de liberdade (16 vs. 14), o
+que por si só a torna mais confiável — exatamente o que a fórmula de `\(ER\)` pondera. Comparar
+`\(QM_{Erro}\)` cru engana; `\(ER\)` não.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Se `\(QM_{Bloco}\)` tivesse sido bem maior que `\(QM_{Erro}\)` neste experimento, o que isso indicaria
+   sobre a decisão original de blocar por área do viveiro?
+
+2. O modelo do DBCA não inclui interação tratamento$\times$bloco. É razoável supor que a diferença
+   entre duas doses de silício seja a mesma nos três blocos? Como você verificaria essa suposição
+   informalmente com um gráfico?
+
+3. Por que não se deve decidir remover o termo de bloco do modelo com base no teste `\(F\)` de blocos
+   não ser significativo?
+
+4. Se, em vez de uma observação, tivessem faltado duas plantas em blocos e tratamentos diferentes,
+   a fórmula de Yates ainda se aplicaria diretamente? O que mudaria?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do desenho ao código
+
+
+``` r
+# tratamento e bloco precisam ser fatores explícitos antes do aov()
+pepino$tratamento &lt;- factor(pepino$tratamento)
+pepino$bloco      &lt;- factor(pepino$bloque)
+
+# a ordem tratamento + bloco (e não bloco + tratamento) não muda os testes-F
+# de um DBCA balanceado, porque as somas de quadrados são ortogonais aqui
+mod_a &lt;- aov(altura ~ tratamento + bloco, data = pepino)
+mod_b &lt;- aov(altura ~ bloco + tratamento, data = pepino)
+all.equal(anova(mod_a)["tratamento", "F value"], anova(mod_b)["tratamento", "F value"])
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+## Visualizando aditividade: gráfico de perfis
+
+&lt;img src="MATD48-09_files/figure-html/plot-dbca-1.png" alt="" width="576" /&gt;
+
+--
+
+As linhas **cruzam-se** em vários pontos — a aditividade tratamento-bloco é só aproximada aqui.
+Sem repetição por célula, não há como testar formalmente a interação: qualquer desvio de
+aditividade é absorvido pelo erro. O gráfico de perfis é o diagnóstico informal disponível.
+
+---
+
+## Resumo da aula
+
+- Sem controle, um fator de ruído pode ficar completamente **confundido** com o tratamento; o DBCA
+  evita isso sorteando dentro de blocos, não fixando o tratamento por bloco.
+- DBCA: uma fonte de bloqueio, ANOVA decompõe `\(SQ_{Total}\)` em tratamento + bloco + erro; a
+  esperança dos quadrados médios explica formalmente por que não se testa o bloco.
+- Valor perdido: fórmula de Yates, com ajuste em `\(gl_{Erro}\)` e em `\(SQ_{Trat}\)`.
+- Eficiência relativa quantifica se blocar valeu a pena — não é automático.
+- Próxima aula: teste de Friedman (alternativa não paramétrica) e blocos incompletos balanceados.
+
+## Referências
+
+- Splawa-Neyman, J. (1923). On the Application of Probability Theory to Agricultural Experiments. Essay on Principles. Section 9. *Statistical Science*, 5(4), 465–472.
+- Rubin, D. B. (1974). Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies. *Journal of Educational Psychology*, 66(5), 688–701.
+- Imbens, G. W. &amp; Rubin, D. B. (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*. Cambridge University Press.
+- Yates, F. (1936). Incomplete randomized blocks. *Annals of Eugenics*, 7(2), 121–140.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
+- Cochran, W. G. &amp; Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley &amp; Sons.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

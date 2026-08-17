@@ -1,0 +1,156 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Gabarito --- Lista 11}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Gabarito --- Lista de Exercícios 11}{Quadrado latino e quadrado greco-latino (Capítulo 4 / Aula 11)}
+
+\begin{questao}{1} \textbf{(Agricultura --- ANOVA de um quadrado latino)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item $SQ_{Erro} = SQ_{Total} - SQ_{Linha} - SQ_{Coluna} - SQ_{Variedade}
+    = 300-40-35-150 = \textbf{75}$. Graus de liberdade: $gl_{Linha}=gl_{Coluna}=gl_{Var}=n-1=4$,
+    $gl_{Erro}=(n-1)(n-2)=(4)(3)=12$, $gl_{Total}=n^2-1=24$ (confira: $4+4+4+12=24$
+    \checkmark). Quadrados médios: $QM_{Var}=150/4=37{,}5$; $QM_{Erro}=75/12=6{,}25$.
+  \item $F_0 = QM_{Var}/QM_{Erro} = 37{,}5/6{,}25 = \textbf{6{,}00}$.
+  \item Como $F_0=6{,}00 > F_{0{,}05;4;12}=3{,}26$, \textbf{rejeita-se $H_0$}: há evidência de
+    diferença entre as variedades de soja.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{2} \textbf{(Dedução --- graus de liberdade do erro em um quadrado latino replicado)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Cada uma das $p$ réplicas tem $n^2$ observações (uma por célula do quadrado $n\times n$),
+    logo o total é $pn^2$ observações, e $gl_{Total}=pn^2-1$.
+  \item Réplica: $p-1$ graus de liberdade. Linhas dentro de réplica: cada réplica contribui
+    $n-1$ graus de liberdade (linhas são específicas de cada réplica, não compartilhadas), num
+    total de $p(n-1)$. Colunas dentro de réplica: pelo mesmo argumento, $p(n-1)$. Tratamento:
+    como o tratamento é comum a todas as réplicas, apenas $n-1$ graus de liberdade.
+  \item Somando os termos do item (b):
+    $$
+    (p-1) + p(n-1) + p(n-1) + (n-1) = (p-1) + 2p(n-1) + (n-1).
+    $$
+    Subtraindo do total do item (a):
+    $$
+    gl_{Erro} = \big[pn^2-1\big] - \big[(p-1)+2p(n-1)+(n-1)\big]
+              = pn^2 - p - 2p(n-1) - (n-1).
+    $$
+    Fatorando $p$ dos dois primeiros termos que o contêm:
+    $$
+    gl_{Erro} = p\big[n^2-1-2(n-1)\big] - (n-1) = p(n-1)(n+1-2) - (n-1) = p(n-1)^2 - (n-1),
+    $$
+    usando $n^2-1=(n-1)(n+1)$. Colocando $(n-1)$ em evidência:
+    $$
+    gl_{Erro} = (n-1)\big[p(n-1)-1\big].
+    $$
+  \item Para $n=4$, $p=2$: $gl_{Erro} = (3)\big[2(3)-1\big] = 3\times5 = \textbf{15}$ — o mesmo
+    valor obtido pelo ajuste em R na Aula 11.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{3} \textbf{(Verificação --- validade de um quadrado latino)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item As quatro linhas são, cada uma, uma permutação de \{A,B,C,D\} (nenhuma linha repete
+    letra) — a condição de linha está satisfeita. Já as colunas: a coluna 3 tem
+    (C, D, A, A) — as letras \textbf{A aparece duas vezes} (nas linhas 3 e 4), e a letra B nunca
+    aparece nessa coluna; a coluna 4 tem (D, C, B, B) — a letra \textbf{B aparece duas vezes}
+    (linhas 3 e 4), e a letra A nunca aparece nessa coluna. \textbf{O arranjo não é um quadrado
+    latino válido}: a violação está exatamente nas linhas 3 e 4, que coincidem nas duas últimas
+    colunas ("$\dots$A B").
+  \item Basta trocar as duas últimas entradas da linha 4, de "A B" para "B A": a linha 4 passa de
+    $D\ C\ A\ B$ para $D\ C\ B\ A$. O quadrado corrigido é
+    $$
+    \begin{array}{cccc}
+    A & B & C & D \\
+    B & A & D & C \\
+    C & D & A & B \\
+    D & C & B & A \\
+    \end{array}
+    $$
+    Confira: toda linha é uma permutação de \{A,B,C,D\}, e as colunas agora são
+    (A,B,C,D), (B,A,D,C), (C,D,A,B), (D,C,B,A) — todas também permutações completas, sem
+    repetição. O quadrado corrigido é válido.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{4} \textbf{(Quadrado greco-latino --- existência e graus de liberdade)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Para $n=5$: $(n-1)(n-3)=(4)(2)=\textbf{8}$. Para $n=7$: $(n-1)(n-3)=(6)(4)=\textbf{24}$.
+  \item Não existe quadrado greco-latino de ordem 6 porque não existe um par de quadrados latinos
+    \textbf{ortogonais} de ordem 6 — este é o célebre resultado do "problema dos 36 oficiais" de
+    Euler (conjecturado por Euler em 1782 e demonstrado rigorosamente por Tarry em 1900): é
+    impossível arranjar 36 oficiais de 6 regimentos e 6 patentes em um quadrado $6\times6$ de modo
+    que cada linha e coluna contenha exatamente um oficial de cada regimento e de cada patente.
+  \item Um "quadrado hiper-greco-latino" com 3 conjuntos de letras sobrepostos (linha, coluna e
+    3 fatores de tratamento, cada um com $n-1$ graus de liberdade, totalizando 5 fontes) deixaria
+    $gl_{Erro} = n^2-1-5(n-1)$. Para $n=4$: $gl_{Erro}=15-5(3)=15-15=\textbf{0}$ graus de
+    liberdade para o erro — \textbf{inviável na prática}: não sobra nenhuma informação para
+    estimar a variabilidade residual, tornando impossível qualquer teste de hipótese. Esse desenho
+    só se torna viável para $n$ maior (é necessário $n^2-1 > 5(n-1)$, ou seja $n>5$), e ainda
+    exige a existência de 3 quadrados latinos mutuamente ortogonais de ordem $n$, o que nem sempre
+    é garantido.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{5} \textbf{(Psicologia --- quadrado latino para contrabalancear ordem)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{Linha} = participante (4 participantes); \textbf{coluna} = posição de
+    apresentação (1ª, 2ª, 3ª, 4ª sessão); \textbf{tratamento} = tipo de tarefa (A, B, C, D). O
+    arranjo garante que cada participante realiza as 4 tarefas (uma vez cada) e que cada tarefa
+    aparece exatamente uma vez em cada posição de apresentação ao longo dos 4 participantes —
+    contrabalanceando tanto diferenças entre participantes quanto efeitos de ordem.
+  \item Um DBCA com bloco = participante apenas controlaria as diferenças individuais entre
+    participantes, mas \textbf{não controlaria o efeito de posição/ordem}: se a tarefa B fosse
+    sistematicamente apresentada em 3º ou 4º lugar para a maioria dos participantes (por
+    conveniência do protocolo, por exemplo), um eventual efeito de fadiga ficaria confundido com
+    o efeito da tarefa B, sem que o DBCA tivesse como separá-los. O quadrado latino resolve isso
+    tratando a posição como uma segunda fonte de bloqueio, cruzada com participante.
+  \item A suposição de ausência de interação ordem$\times$tarefa falharia, por exemplo, se a
+    tarefa D exigisse memória de trabalho intensa e fosse desproporcionalmente prejudicada por
+    fadiga quando apresentada na 4ª posição (mas não nas demais tarefas, mais automáticas ou menos
+    exigentes) — nesse caso, o efeito de "ser a tarefa D" dependeria de \emph{quando} ela foi
+    apresentada, violando a aditividade que o modelo do quadrado latino assume.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{6} \textbf{(Aleatorização de Yates e análise de poder)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Reutilizar sempre o mesmo quadrado fixo torna a atribuição de tratamentos a células
+    \textbf{determinística}, não aleatória: se, por coincidência, a diagonal principal (onde A
+    sempre cai) se alinhar com alguma característica não modelada do processo (por exemplo, todas
+    as máquinas na diagonal serem as mais novas, ou todos os horários na diagonal serem o turno da
+    manhã), o efeito do tratamento A ficaria \textbf{confundido} com essa característica em
+    \emph{todo} experimento que reusasse esse mesmo quadrado — exatamente o tipo de falha de
+    delineamento estudado na Aula 09. Os quatro passos de Yates (1933) evitam isso: (1) partir de
+    um quadrado latino reduzido; (2) permutar aleatoriamente as \textbf{linhas}; (3) permutar
+    aleatoriamente as \textbf{colunas}; (4) sortear aleatoriamente quais \textbf{tratamentos
+    reais} correspondem a cada símbolo $1,\dots,n$. O resultado é que cada execução do
+    procedimento produz um arranjo diferente, todos igualmente prováveis, e é esse espaço de
+    arranjos possíveis — não um único quadrado fixo — que sustenta a distribuição de referência
+    sob a qual o teste $F$ é válido (o mesmo argumento de Neyman-Rubin da Aula 09, agora aplicado a
+    uma aleatorização restrita simultaneamente por linha e por coluna).
+  \item São necessárias $p=\textbf{5}$ réplicas para cruzar poder $\ge0{,}80$ (a tabela salta de
+    $0{,}716$ com $p=4$ para $0{,}828$ com $p=5$). O trade-off: com $n=4$, cada réplica usa
+    $n^2=16$ unidades experimentais, de modo que $p=5$ réplicas exigem $N=5\times16=\textbf{80}$
+    unidades no total, contra apenas 16 unidades (e poder de só $14{,}8\%$) com um único quadrado —
+    um aumento de 5 vezes no custo experimental para elevar o poder de detecção de um efeito
+    grande de $14{,}8\%$ para $82{,}8\%$. Na prática, essa é uma decisão de custo-benefício: se
+    recursos são escassos, o pesquisador pode aceitar um poder menor, buscar reduzir $\sigma^2$ por
+    um controle experimental mais rígido (em vez de mais réplicas), ou reconsiderar se $f=0{,}4$ é
+    de fato o menor efeito cientificamente relevante a detectar.
+\end{enumerate}
+\end{solucao}
+
+\end{document}

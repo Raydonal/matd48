@@ -1,0 +1,361 @@
+---
+title: "Introdução aos Modelos Lineares (Parte 1)"
+subtitle: "Modelo Y = Xβ + ε, mínimos quadrados e estimabilidade"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 02 — Introdução aos Modelos Lineares (Parte 1)
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## O modelo linear geral
+
+$$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$$
+
+- $\mathbf{X}$ ($n \times p$): matriz de delineamento, conhecida.
+- $\boldsymbol{\beta}$ ($p \times 1$): parâmetros desconhecidos.
+- $\boldsymbol{\varepsilon}$: erro aleatório, $\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}$,
+  $\mathrm{Cov}(\boldsymbol{\varepsilon}) = \sigma^2\mathbf{I}_n$.
+
+--
+
+"Linear" refere-se à linearidade em $\boldsymbol{\beta}$ — $\mathbf{X}$ pode conter termos
+quadráticos, indicadoras de fator, o que for, desde que $\mathbf{Y}$ seja combinação linear das
+**colunas** de $\mathbf{X}$.
+
+Dominar essa álgebra é o que permite, no Capítulo 3, *deduzir* por que a ANOVA funciona, em vez de
+apenas aplicá-la mecanicamente (Searle, 1971; Rao, 1973).
+
+---
+
+## Mínimos quadrados
+
+Escolhemos $\hat{\boldsymbol{\beta}}$ que minimiza
+
+$$S(\boldsymbol{\beta}) = \mathbf{Y}'\mathbf{Y} - 2\boldsymbol{\beta}'\mathbf{X}'\mathbf{Y} +
+\boldsymbol{\beta}'\mathbf{X}'\mathbf{X}\boldsymbol{\beta}$$
+
+--
+
+$$\frac{\partial S}{\partial \boldsymbol{\beta}} = -2\mathbf{X}'\mathbf{Y} +
+2\mathbf{X}'\mathbf{X}\boldsymbol{\beta} \ \overset{\text{set}}{=}\ \mathbf{0}$$
+
+--
+
+**Equações normais:**
+
+$$\mathbf{X}'\mathbf{X}\,\hat{\boldsymbol{\beta}} = \mathbf{X}'\mathbf{Y}$$
+
+Hessiana $2\mathbf{X}'\mathbf{X}$ semidefinida positiva $\Rightarrow$ ponto crítico é mínimo
+global.
+
+--
+
+Se $\mathbf{X}$ tem posto coluna completo:
+
+$$\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$$
+
+Se não tem: $\mathbf{X}'\mathbf{X}$ é singular, e usamos uma **inversa generalizada**
+$(\mathbf{X}'\mathbf{X})^-$. $\hat{\boldsymbol{\beta}}$ deixa de ser único, mas
+$\mathbf{X}\hat{\boldsymbol{\beta}}$ e toda função **estimável** $\boldsymbol{\lambda}'\hat{\boldsymbol{\beta}}$
+permanecem invariantes à escolha da inversa generalizada.
+
+---
+
+## Uma propriedade geométrica
+
+Nas equações normais, $\mathbf{X}'\mathbf{e} = \mathbf{0}$, com $\mathbf{e} = \mathbf{Y} -
+\mathbf{X}\hat{\boldsymbol{\beta}}$: os **resíduos são ortogonais** a cada coluna de $\mathbf{X}$.
+
+- Com intercepto, $\sum_i e_i = 0$ sempre.
+- $\hat{\boldsymbol{\beta}}$ é o ponto do espaço-coluna de $\mathbf{X}$ mais próximo de
+  $\mathbf{Y}$, em distância euclidiana — isso *é* mínimos quadrados, geometricamente.
+
+---
+
+## Estimabilidade
+
+Quando $\mathbf{X}$ **não** tem posto coluna completo, $\mathbf{X}'\mathbf{X}$ não é invertível, e
+nem todo $\beta_j$ tem estimativa única.
+
+--
+
+**Definição.** $\boldsymbol{\lambda}'\boldsymbol{\beta}$ é **estimável** se existe $\mathbf{a}$ tal
+que $\mathrm{E}[\mathbf{a}'\mathbf{Y}] = \boldsymbol{\lambda}'\boldsymbol{\beta}$ para todo
+$\boldsymbol{\beta}$ — equivalentemente, $\boldsymbol{\lambda}'$ pertence ao espaço-linha de
+$\mathbf{X}$.
+
+--
+
+Isso importa muito para modelos de ANOVA (Capítulo 3): a codificação usual de um fator com $k$
+níveis por $k$ indicadoras + intercepto é, de propósito, deficiente em posto.
+
+---
+
+### **Detalhe técnico: a pseudoinversa de Moore-Penrose**
+
+Entre as infinitas inversas generalizadas $(\mathbf{X}'\mathbf{X})^-$, existe uma única mais
+"simétrica": a **pseudoinversa de Moore-Penrose** $\mathbf{A}^+$ (Penrose, 1955), caracterizada por
+quatro condições: $\mathbf{A}\mathbf{A}^+\mathbf{A}=\mathbf{A}$,
+$\mathbf{A}^+\mathbf{A}\mathbf{A}^+=\mathbf{A}^+$, e $\mathbf{A}\mathbf{A}^+$, $\mathbf{A}^+\mathbf{A}$
+ambas simétricas.
+
+--
+
+Ela se constrói via **decomposição em valores singulares** (SVD) (Golub & Van Loan, 2013):
+$$\mathbf{A} = \mathbf{U}\mathbf{D}\mathbf{V}' \quad\Longrightarrow\quad
+\mathbf{A}^+ = \mathbf{V}\mathbf{D}^+\mathbf{U}'$$
+em que $\mathbf{D}^+$ inverte só os valores singulares **não nulos** de $\mathbf{D}$.
+
+--
+
+Não é privilégio estatístico — é o algoritmo que `MASS::ginv()` roda internamente. Toda função
+estimável usa qualquer inversa generalizada com o mesmo resultado; $\mathbf{A}^+$ ganha por ser
+numericamente mais estável.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Tempo de resposta de uma API
+
+**Cenário:** uma equipe de engenharia mede o **tempo de resposta** (ms) de uma API sob diferentes
+números de **requisições simultâneas**, em três configurações de **servidor** (A, B, C).
+
+**Pergunta:** o tempo de resposta cresce com a carga? Difere entre servidores?
+
+--
+
+```{r sim-api}
+set.seed(2026)
+n <- 60
+dados_api <- tibble(
+  id = 1:n,
+  requisicoes = round(runif(n, 10, 500)),
+  servidor = factor(sample(c("A", "B", "C"), n, replace = TRUE), levels = c("A", "B", "C"))
+) %>%
+  mutate(tempo_resposta = 42 + 0.35 * requisicoes +
+           c(A = 0, B = 15, C = -8)[as.character(servidor)] + rnorm(n, 0, 12))
+```
+
+---
+
+## Visualizando os dados
+
+```{r plot-api, echo=FALSE, fig.width=8, fig.height=4.3}
+ggplot(dados_api, aes(x = requisicoes, y = tempo_resposta, color = servidor)) +
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  labs(x = "Requisições simultâneas", y = "Tempo de resposta (ms)", color = "Servidor") +
+  theme_minimal(base_size = 14)
+```
+
+Inclinações parecidas entre servidores (efeito da carga é similar), mas retas deslocadas
+verticalmente — a diferença de intercepto que vamos tratar como função estimável $\alpha_B -
+\alpha_A$.
+
+---
+
+## Ajustando o modelo simples
+
+```{r fit-api}
+X <- model.matrix(~ requisicoes, data = dados_api)   # a matriz de delineamento, explícita
+X[1:4, ]
+
+Y <- dados_api$tempo_resposta
+beta_hat <- solve(t(X) %*% X) %*% t(X) %*% Y
+t(beta_hat)
+
+coef(lm(tempo_resposta ~ requisicoes, data = dados_api))
+```
+
+Cada requisição simultânea adicional soma cerca de `r round(beta_hat[2], 2)` ms ao tempo de
+resposta esperado.
+
+---
+
+## Estimabilidade com o fator servidor sobreparametrizado
+
+```{r estim-api}
+contrastes_completos <- contrasts(dados_api$servidor, contrasts = FALSE)
+X_sobre <- model.matrix(~ servidor, data = dados_api,
+                         contrasts.arg = list(servidor = contrastes_completos))
+X_sobre[1:4, ]
+c(colunas = ncol(X_sobre), posto = qr(X_sobre)$rank)
+```
+
+--
+
+4 colunas, posto 3: $\mu$ isolado não é estimável, mas $\mu + \alpha_A$ (média do servidor A) e
+$\alpha_A - \alpha_B$ (diferença entre servidores) são.
+
+---
+
+## A invariância das funções estimáveis
+
+```{r invariancia-api}
+mod_trat <- lm(tempo_resposta ~ servidor, data = dados_api)
+mod_soma <- lm(tempo_resposta ~ servidor, data = dados_api,
+                contrasts = list(servidor = "contr.sum"))
+
+rbind(trat = coef(mod_trat), soma = coef(mod_soma))   # betas diferentes...
+max(abs(fitted(mod_trat) - fitted(mod_soma)))          # ...ajustados identicos
+```
+
+Duas parametrizações completamente diferentes do mesmo fator dão $\hat{\boldsymbol{\beta}}$
+diferentes, mas os valores ajustados (e toda função estimável) coincidem — é isso que garante que
+a escolha de contrastes no R nunca muda a conclusão de um teste.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que o intercepto "puro" $\mu$, na codificação sobreparametrizada do servidor, não é
+   estimável — mas a média de cada servidor, $\mu + \alpha_j$, é?
+
+2. Se adicionássemos ao modelo uma segunda covariável perfeitamente correlacionada com
+   `requisicoes` (por exemplo, o mesmo valor em outra escala), o que aconteceria com
+   $\mathbf{X}'\mathbf{X}$?
+
+3. Os resíduos de um modelo com intercepto sempre somam zero. Isso significa que o modelo "acerta
+   em média"? Que tipo de erro sistemático essa propriedade **não** descarta?
+
+4. Em um estudo observacional (sem aleatorização), a matriz $\mathbf{X}$ ainda pode ser escrita e
+   $\hat{\boldsymbol{\beta}}$ ainda pode ser calculado. O que muda na interpretação de
+   $\hat{\boldsymbol{\beta}}$ em relação a um experimento aleatorizado?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Verificando a ortogonalidade dos resíduos
+
+```{r uso-r-1}
+mod_simples <- lm(tempo_resposta ~ requisicoes, data = dados_api)
+e <- residuals(mod_simples)
+
+c(soma_residuos = sum(e), produto_com_x = sum(e * dados_api$requisicoes))
+```
+
+Ambos numericamente zero — exatamente o que $\mathbf{X}'\mathbf{e} = \mathbf{0}$ prevê.
+
+---
+
+## Diagnóstico: resíduos vs. ajustados
+
+```{r plot-residuos, echo=FALSE, fig.width=7.5, fig.height=3.8}
+tibble(ajustado = fitted(mod_simples), residuo = e) %>%
+  ggplot(aes(x = ajustado, y = residuo)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_point(alpha = 0.7, color = "#3b5bdb") +
+  geom_smooth(se = FALSE, method = "loess", formula = y ~ x, color = "#d98324") +
+  theme_minimal(base_size = 14)
+```
+
+Sem curvatura sistemática e dispersão aproximadamente constante — nenhum indício visual de má
+especificação no modelo simples.
+
+---
+
+## Estimando uma função estimável diretamente
+
+```{r uso-r-2}
+# lambda'beta = mu + alpha_A (média do servidor A), via a'Y
+a <- as.numeric(dados_api$servidor == "A") / sum(dados_api$servidor == "A")
+lambda_hat <- t(a) %*% dados_api$tempo_resposta
+
+c(via_a_transposto_Y = as.numeric(lambda_hat),
+  media_direta        = mean(dados_api$tempo_resposta[dados_api$servidor == "A"]))
+```
+
+O vetor $\mathbf{a}$ que soma $1/n_A$ para as observações do servidor A e 0 nas demais recupera
+exatamente a média do grupo — a definição de estimabilidade em ação.
+
+---
+
+## Construindo $\mathbf{A}^+$ à mão via `svd()`
+
+```{r svd-r}
+XtX <- t(X_sobre) %*% X_sobre     # deficiente em posto: 4 colunas, posto 3
+
+svd_XtX <- svd(XtX)               # svd() devolve u, d (vetor) e v: XtX = u %*% diag(d) %*% t(v)
+svd_XtX$d                         # 4o valor singular ~ 0 -> confirma posto 3
+
+d_inv <- ifelse(svd_XtX$d > 1e-8, 1 / svd_XtX$d, 0)
+XtX_svd  <- svd_XtX$v %*% diag(d_inv) %*% t(svd_XtX$u)   # A+ = V D+ U'
+XtX_ginv <- MASS::ginv(XtX)                              # a "caixa-preta"
+
+max(abs(XtX_svd - XtX_ginv))
+```
+
+--
+
+Diferença numericamente zero: `ginv()` não faz nada além de `svd()` + inverter os valores
+singulares não nulos + remontar. A mesma pseudoinversa que construímos à mão é a que a Seção de
+estimabilidade já vinha usando por trás de `MASS::ginv()`.
+
+---
+
+## Resumo da aula
+
+- Modelo linear: $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$, com
+  $\mathbf{X}$ codificando o desenho.
+- Mínimos quadrados resolve $\mathbf{X}'\mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}'\mathbf{Y}$;
+  resíduos ortogonais às colunas de $\mathbf{X}$.
+- Estimabilidade: só combinações lineares $\boldsymbol{\lambda}'\boldsymbol{\beta}$ no espaço-linha
+  de $\mathbf{X}$ têm estimativa única, quando $\mathbf{X}$ é deficiente em posto.
+- A pseudoinversa de Moore-Penrose $\mathbf{A}^+ = \mathbf{V}\mathbf{D}^+\mathbf{U}'$ (via SVD) é a
+  inversa generalizada mais simétrica — e o que `ginv()` calcula por dentro.
+- Próxima aula: Gauss-Markov/BLUE, matriz de projeção, modelo particionado e a distribuição das
+  formas lineares e quadráticas — a base algébrica da ANOVA do Capítulo 3.
+
+## Referências
+
+- Searle, S. R. (1971). *Linear Models*. John Wiley & Sons.
+- Rao, C. R. (1973). *Linear Statistical Inference and Its Applications* (2ª ed.). John Wiley & Sons.
+- Penrose, R. (1955). A Generalized Inverse for Matrices. *Mathematical Proceedings of the Cambridge Philosophical Society*, 51(3), 406–413.
+- Golub, G. H. & Van Loan, C. F. (2013). *Matrix Computations* (4ª ed.). Johns Hopkins University Press.

@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 10 --- Friedman e Blocos Incompletos}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 10}{Teste de Friedman e blocos incompletos balanceados (Capítulo 4 / Aula 10)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas — nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito10.pdf}.}
+
+\begin{questao}{1} \textbf{(Psicologia --- estatística de Friedman)}
+
+Um estudo de medidas repetidas compara $t=3$ técnicas de estudo em $b=10$ estudantes (o bloco).
+Dentro de cada estudante, as três técnicas são ranqueadas de 1 (pior) a 3 (melhor) quanto à nota
+obtida. As somas de posto por técnica foram $R_1=12$, $R_2=20$, $R_3=28$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Verifique que $R_1+R_2+R_3$ é consistente com $b=10$ estudantes ranqueando 3 técnicas
+    cada (qual deve ser essa soma total, e por quê?).
+  \item Calcule a estatística de Friedman $F_r$.
+  \item Sabendo que $\chi^2_{0{,}05;\,2}=5{,}99$, há evidência de diferença sistemática entre as
+    técnicas? Justifique.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Dedução --- valor esperado da soma de postos sob $H_0$)}
+
+Sob $H_0$ do teste de Friedman, dentro de cada bloco todas as $t!$ ordenações dos $t$
+tratamentos são igualmente prováveis.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Argumente, por simetria, que sob $H_0$ o posto atribuído a um tratamento específico
+    \emph{dentro de um bloco} é uniformemente distribuído sobre $\{1,2,\dots,t\}$.
+  \item Use o item (a) para mostrar que $\mathbb E[\text{posto}(Y_{ij})] = \frac{t+1}{2}$ para
+    todo tratamento $i$ e todo bloco $j$, sob $H_0$.
+  \item Conclua que $\mathbb E[R_i] = \frac{b(t+1)}{2}$ para todo tratamento $i$, sob $H_0$, e
+    confira que essa é a média (não necessariamente o valor) que cada $R_i$ do exercício anterior
+    deveria ter, em expectativa, se as três técnicas fossem de fato equivalentes.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Agricultura --- parâmetros de um BIB)}
+
+Uma cooperativa quer montar um painel de degustação com $t=6$ variedades de café, mas cada
+degustador (bloco) só avalia $k=3$ xícaras por sessão.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Usando as identidades $bk=tr$ e $\lambda(t-1)=r(k-1)$, encontre o menor valor inteiro
+    positivo de $\lambda$ para o qual $r$ resulta inteiro, e calcule o $r$ e o $b$
+    correspondentes.
+  \item Verifique numericamente as duas identidades com os valores encontrados.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Agricultura --- verificando e completando um BIB)}
+
+Para $t=4$ variedades de tomate e blocos de tamanho $k=3$, um técnico propõe inicialmente estes
+três blocos:
+$$
+\text{Bloco 1}=\{1,2,3\}, \quad \text{Bloco 2}=\{1,2,4\}, \quad \text{Bloco 3}=\{1,3,4\}.
+$$
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule $r_i$ (número de blocos em que aparece) para cada uma das 4 variedades. Esse
+    arranjo de 3 blocos já é um BIB válido? Justifique por que a condição de $r$ constante entre
+    tratamentos é necessária (ainda que não suficiente) para balanceamento.
+  \item Proponha um quarto bloco que corrija o problema identificado em (a), e verifique, para o
+    arranjo de 4 blocos resultante, que todo par de variedades coocorre o mesmo número $\lambda$
+    de vezes.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Dissertativa --- Friedman vs. DBCA, blocos completos vs. incompletos)}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Um pesquisador tem uma resposta claramente normal, sem outliers, com $b=20$ blocos. Ele
+    ainda assim decide usar o teste de Friedman "por segurança". Que preço estatístico ele paga
+    por essa escolha, mesmo que a conclusão qualitativa não mude?
+  \item Em que situação um pesquisador deveria preferir um delineamento em blocos
+    \emph{incompletos} balanceados a um DBCA, mesmo quando seria fisicamente possível caber todos
+    os tratamentos em cada bloco?
+\end{enumerate}
+\end{questao}
+
+\end{document}

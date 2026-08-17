@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Princípios do Delineamento de Experimentos</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Princípios do Delineamento de Experimentos
+]
+.subtitle[
+## Unidades, fontes de variação, fatores e os três pilares do controle do erro
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 01 — Princípios do Delineamento de Experimentos
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Por que planejar, e não só analisar?
+
+Um experimento bem desenhado responde a uma pergunta causal antes de qualquer dado existir — a
+análise só formaliza o que o desenho já tornou possível.
+
+&gt; "Fazer uma análise estatística depois que o experimento terminou é, frequentemente, apenas uma
+&gt; tentativa de resgatar o que já foi arruinado." — paráfrase de R. A. Fisher (Fisher, 1935)
+
+Nenhuma técnica de análise, por mais sofisticada, conserta um desenho ruim
+(Fisher, 1935; Box, Hunter &amp; Hunter, 2005).
+
+---
+
+## O método científico: de observação a hipótese testável
+
+&lt;img src="../Aulas/images/circular_flowchart.png" alt="" width="42%" /&gt;
+
+Popper (1959): uma hipótese só é cientificamente informativa se for **falseável** —
+se existir algum resultado observável que a contradiga. O delineamento de experimentos entra
+exatamente aqui: é a engenharia de **como coletar dados que de fato podem contradizer a
+hipótese**, caso ela seja falsa.
+
+--
+
+Um desenho fraco (sem repetição, sem aleatorização, com confusão não controlada) produz dados que
+"confirmam" a hipótese do pesquisador quase independentemente dela ser verdadeira — o oposto do
+que Popper pede.
+
+---
+
+## Observação vs. experimentação
+
+- **Estudo observacional:** o pesquisador só registra o que já aconteceria de qualquer forma —
+  não decide quem recebe qual tratamento.
+- **Estudo experimental:** o pesquisador **atribui** o tratamento às unidades, idealmente por
+  sorteio.
+
+--
+
+Em um observacional, qualquer diferença entre grupos pode vir do tratamento *ou* de alguma
+característica que levou aquelas unidades a receber aquele tratamento (auto-seleção, viés de
+indicação, tendência histórica) — "correlação não implica causalidade". Em um experimento bem
+desenhado, é a **aleatorização** — não a unidade, não nenhuma característica dela — que decide o
+tratamento, e é esse fato (formalizado a seguir) que permite a leitura causal.
+
+**Nota histórica:** a formalização de repetição/aleatorização/blocagem como resposta ao problema
+causal nasce de R. A. Fisher em Rothamsted (1919–1933) (Fisher, 1935) — antes dele, ensaios
+agrícolas comparavam parcelas "parecidas" escolhidas por julgamento, vulnerável a exatamente o
+problema de confusão da próxima seção.
+
+---
+
+## Confusão (*confounding*)
+
+Duas variáveis estão **confundidas** quando seus efeitos sobre a resposta não podem ser separados
+a partir dos dados — tipicamente porque uma determinou (ou influenciou fortemente) os valores da
+outra.
+
+--
+
+**Exemplo clássico** (Owen, 2020): todo o grupo tratado é medido de manhã, todo o
+controle à tarde — o efeito do tratamento e o efeito do horário ficam **perfeitamente
+confundidos**; nenhuma análise, por mais sofisticada, os separa a partir desses dados. O mesmo
+ocorre ao comparar um grupo "tratado agora" com um **controle histórico**: qualquer tendência de
+fundo (sazonalidade, aprendizado, mudança de público) se confunde com o tratamento.
+
+--
+
+Confusão por variável **medida** pode, em princípio, entrar no modelo como covariável (ANCOVA,
+Capítulo 3). Confusão por variável **desconhecida** é o caso perigoso — e é exatamente aí que a
+aleatorização mostra sua força: sorteando o tratamento, nenhuma variável, medida ou não, fica
+sistematicamente desbalanceada entre grupos, em expectativa (prova formal a seguir).
+
+---
+
+## Unidade experimental vs. unidade amostral
+
+- **Unidade experimental (UE):** onde o tratamento é sorteado. É o nível da aleatorização.
+- **Unidade amostral:** onde a resposta é efetivamente medida.
+
+Quando várias unidades amostrais vêm da mesma UE, há **submuestreo**. Contá-las como réplicas
+independentes é um erro clássico: infla artificialmente o *n* e reduz o erro-padrão de forma
+ilegítima.
+
+--
+
+.pull-left[
+**UE = pessoa**
+Cada pessoa recebe *um* tratamento.
+]
+.pull-right[
+**Unidade amostral = medição**
+Uma pessoa pode gerar várias medições.
+]
+
+---
+
+## Fontes de variação
+
+Toda resposta varia por três razões simultâneas:
+
+1. **Efeito do tratamento** — o que queremos detectar.
+2. **Variação sistemática entre unidades** — diferenças preexistentes (habilidade, fertilidade
+   do solo, navegador do usuário) que não são o foco, mas afetam a resposta.
+3. **Erro experimental** — o que sobra depois de contabilizar (1) e (2).
+
+O delineamento isola (1), controla (2) e estima honestamente (3).
+
+---
+
+## Fator, nível, tratamento
+
+- **Fator:** variável controlada pelo pesquisador.
+- **Níveis:** valores específicos que o fator assume.
+- **Tratamento:** combinação de níveis atribuída a uma unidade experimental.
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Domínio &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Fator &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Níveis &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Psicologia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Técnica de estudo &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Releitura / Flashcards / Teste-prática &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Agricultura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Dose de fertilizante &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0, 50, 100 kg/ha &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ciência de dados &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Layout da página &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Lista / Grade &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Os três aspectos do delineamento
+
+Seguindo a formalização clássica (Fisher, 1935; Cochran &amp; Cox, 1957):
+
+1. **Desenho de tratamentos** — *o quê* comparar.
+2. **Desenho para controle do erro** — *como* atribuir tratamentos com justiça.
+3. **Desenho amostral** — *quantas* unidades, como medir.
+
+Os três princípios a seguir pertencem sobretudo ao aspecto 2.
+
+---
+
+## Por que a aleatorização funciona: resultados potenciais
+
+Formalização de Neyman (1923) / Rubin (1974)
+(Imbens &amp; Rubin, 2015). Para cada unidade `\(i\)`: dois **resultados potenciais**, `\(Y_i(0)\)` e `\(Y_i(1)\)` —
+só um é observável. `\(Z_i \in \{0,1\}\)`: tratamento sorteado. Observado: `\(Y_i = Z_iY_i(1)+(1-Z_i)Y_i(0)\)`.
+
+`$$\text{ATE} = \bar Y(1) - \bar Y(0), \qquad
+\widehat{\text{ATE}} = \bar Y_1^{\,obs} - \bar Y_0^{\,obs}$$`
+
+--
+
+Tratando `\(\{Y_i(0),Y_i(1)\}\)` como **fixos** e só `\(Z_i\)` como aleatório (sorteio de qual
+subconjunto de tamanho `\(n_1\)` recebe tratamento):
+
+`$$E\!\left[\bar Y_1^{\,obs}\right] = \frac{1}{N}\sum_i Y_i(1) = \bar Y(1)
+\;\;\Longrightarrow\;\; E\!\left[\widehat{\text{ATE}}\right] = \text{ATE}$$`
+
+porque a aleatorização faz do grupo tratado uma **amostra aleatória simples** dos `\(N\)` valores
+`\(Y_i(1)\)` — não-viés **sem** suposição distribucional. Sem sorteio, `\(Z_i\)` pode depender de
+`\((Y_i(0),Y_i(1))\)`: a igualdade quebra, e `\(\widehat{\text{ATE}}\)` mistura efeito causal com viés de
+seleção.
+
+---
+
+## Validade interna vs. validade externa
+
+A demonstração acima garante **validade interna**: dentro da amostra de `\(N\)` unidades estudadas, a
+diferença de médias é não-viesada para o ATE *dessa amostra*. É uma afirmação sobre o mecanismo
+de atribuição (a aleatorização), não sobre quem são as `\(N\)` unidades.
+
+--
+
+**Validade externa** (Owen, 2020): o efeito estimado nessas `\(N\)` unidades se generaliza
+para outras unidades, fora do estudo? Validade interna alta **não implica** validade externa
+alta — um experimento com aleatorização impecável ainda pode dizer pouco sobre uma população mais
+ampla, se a amostra não for representativa dela (voluntários de um "programa beta", estudantes de
+graduação como sujeitos de laboratório, parcelas de uma única estação experimental).
+
+Não há solução puramente estatística para validade externa — só o cuidado de deixar explícito
+**a que população** e **sob quais condições** a conclusão se aplica.
+
+---
+
+## Os três pilares
+
+.pull-left[
+### Repetição
+Tratamentos em várias UEs independentes → estima o erro experimental.
+
+### Aleatorização
+Sorteio (não conveniência) → grupos comparáveis em tudo, observado ou não. Sem ela, não há
+interpretação causal legítima.
+]
+.pull-right[
+### Controle local (blocagem)
+Agrupar UEs heterogêneas em blocos homogêneos, aleatorizando *dentro* de cada bloco → reduz o
+erro experimental sem abrir mão da aleatorização.
+]
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Técnicas de estudo e desempenho em prova
+
+**Pergunta:** releitura, flashcards e teste-prática diferem quanto à nota em uma prova de
+vocabulário?
+
+- 30 estudantes, sorteados em 3 grupos de 10 (**UE = estudante**).
+- Cada estudante responde **duas provas paralelas** (A e B) sobre o mesmo material
+  (**unidade amostral = prova**, submuestreo).
+
+--
+
+**Desenho de tratamentos:** 1 fator (técnica), 3 níveis.
+**Controle do erro:** aleatorização simples, sem blocos.
+**Desenho amostral:** 10 UEs por grupo, 2 submuestras por UE.
+
+---
+
+## Os dados simulados
+
+
+``` r
+set.seed(2026)
+tecnica &lt;- c("Releitura", "Flashcards", "Teste-prática")
+
+dados_estudantes &lt;- tibble(
+  estudante  = 1:30,
+  tecnica    = factor(rep(tecnica, each = 10), levels = tecnica),
+  habilidade = rnorm(30, 0, 6)
+)
+efeito &lt;- c("Releitura" = 0, "Flashcards" = 4, "Teste-prática" = 9)
+
+dados_provas &lt;- dados_estudantes %&gt;%
+  crossing(prova = c("A", "B")) %&gt;%
+  mutate(nota = 65 + efeito[as.character(tecnica)] + habilidade +
+           rnorm(n(), 0, 3))
+```
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; tecnica &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n_estudantes &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n_provas &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; media &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Releitura &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Flashcards &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Teste-prática &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78.2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+O *n* relevante para inferência é **10 por grupo** (estudantes), não 20 (provas).
+
+---
+
+## Visualizando: cada ponto é uma prova, cada cor uma técnica, a forma distingue A de B
+
+&lt;img src="MATD48-01_files/figure-html/plot-submuestreo-1.png" alt="" width="576" /&gt;
+
+As duas notas de um mesmo estudante estão ligadas — são mais parecidas entre si do que notas de
+estudantes diferentes. Isso é exatamente o que a distinção UE/unidade amostral prevê.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Se o professor deixasse os alunos **escolherem** a técnica de estudo, em vez de sortear,
+   quais variáveis de confusão plausíveis contaminariam a comparação?
+
+2. Em um experimento agrícola em que cada bloco é um **dia de plantio** (chuva, temperatura e
+   luz diferentes), o que a blocagem por dia consegue controlar — e o que ela **não** consegue?
+
+3. Uma equipe de produto testa um novo layout de site só com usuários que se voluntariam para o
+   "programa beta". Isso é aleatorização? Qual população a conclusão do teste realmente
+   representa?
+
+4. No exemplo das provas paralelas, o que mudaria na análise se, em vez de reportar a média das
+   duas provas por estudante, alguém rodasse a ANOVA diretamente nas 60 notas?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do desenho ao código: declarando a estrutura
+
+
+``` r
+# 1. O fator de tratamento, com os níveis na ordem que queremos exibir
+dados_estudantes$tecnica &lt;- factor(dados_estudantes$tecnica,
+                                    levels = c("Releitura", "Flashcards", "Teste-prática"))
+
+# 2. A unidade experimental precisa de um identificador único e explícito —
+#    é ele que usaremos para agregar o submuestreo antes de qualquer teste.
+media_por_estudante &lt;- dados_provas %&gt;%
+  group_by(estudante, tecnica) %&gt;%
+  summarise(nota_media = mean(nota), .groups = "drop")
+
+nrow(dados_provas)          # 60 unidades amostrais
+```
+
+```
+## [1] 60
+```
+
+``` r
+nrow(media_por_estudante)   # 30 unidades experimentais — o n correto
+```
+
+```
+## [1] 30
+```
+
+---
+
+## Uma prévia do que vem no Capítulo 3
+
+
+``` r
+modelo_ingenuo  &lt;- aov(nota ~ tecnica, data = dados_provas)          # errado: usa 60
+modelo_correto  &lt;- aov(nota_media ~ tecnica, data = media_por_estudante)  # certo: usa 30
+
+broom::tidy(modelo_ingenuo)[1, c("term","df","p.value")]
+```
+
+```
+## # A tibble: 1 × 3
+##   term       df  p.value
+##   &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 tecnica     2 7.36e-10
+```
+
+``` r
+broom::tidy(modelo_correto)[1, c("term","df","p.value")]
+```
+
+```
+## # A tibble: 1 × 3
+##   term       df   p.value
+##   &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+## 1 tecnica     2 0.0000230
+```
+
+Note a diferença nos graus de liberdade e no p-valor: tratar submuestras como réplicas
+independentes muda a conclusão. Formalizaremos por que isso acontece — e como corrigi-lo — ao
+estudar o **modelo de submuestreo em um DCA**, no Capítulo 3.
+
+---
+
+## Resumo da aula
+
+- UE = onde o tratamento é sorteado; unidade amostral = onde a resposta é medida.
+- Três fontes de variação: tratamento, variação sistemática entre UEs, erro experimental.
+- Fator, nível, tratamento: o vocabulário do desenho de tratamentos.
+- Repetição, aleatorização, controle local: os três pilares do controle do erro.
+- Próxima aula: a maquinaria formal — o **modelo linear** — para expressar tudo isso com precisão.
+
+## Referências
+
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.
+- Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley &amp; Sons.
+- Popper, K. R. (1959). *The Logic of Scientific Discovery*. Hutchinson &amp; Co.
+- Owen, A. B. (2020). *A First Course in Experimental Design: Notes from Stat 263/363*. Stanford University.
+- Cochran, W. G. &amp; Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley &amp; Sons.
+- Splawa-Neyman, J. (1923). On the Application of Probability Theory to Agricultural Experiments. Essay on Principles. Section 9. *Statistical Science*, 5(4), 465–472.
+- Rubin, D. B. (1974). Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies. *Journal of Educational Psychology*, 66(5), 688–701.
+- Imbens, G. W. &amp; Rubin, D. B. (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*. Cambridge University Press.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

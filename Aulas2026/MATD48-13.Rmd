@@ -1,0 +1,317 @@
+---
+title: "Fatoriais 2ᵏ: ortogonalidade, análise sem repetição e confusão"
+subtitle: "Half-normal, Pareto, método de Lenth e designação de blocos"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 13 — Fatoriais $2^k$
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Por que $2^k$?
+
+Todos os fatores em **dois níveis** ($-1$/$+1$). Popular porque:
+
+- Estima todos os efeitos com o **menor** número de corridas possível.
+- Cada efeito tem **1 grau de liberdade** — a álgebra é simples o bastante para fazer à mão.
+- $\text{efeito}_j = \bar y(x_j{=}{+}1) - \bar y(x_j{=}{-}1) = 2\hat\beta_j$.
+
+---
+
+## Ortogonalidade: a propriedade central do $2^k$
+
+No fatorial A×B (Aula 12), $\mathbf{X} = [\mathbf{1}\,|\,\mathbf{X}_A\,|\,\mathbf{X}_B\,|\,
+\mathbf{X}_A\odot\mathbf{X}_B]$. No $2^k$ codificado $\pm1$, **todas** essas colunas — de
+qualquer ordem — são mutuamente ortogonais: $\mathbf{X}'\mathbf{X}$ é **diagonal**.
+
+```{r biodiesel-load, include=FALSE}
+# Mantemos os fatores em codificação numérica -1/+1 (não factor()): é essa codificação
+# simétrica que torna X'X diagonal a seguir. A ANOVA (mais adiante) dá o mesmo resultado
+# de qualquer forma, mas ortogonalidade, contraste de Yates e Lenth dependem disso.
+biodiesel <- read_csv("../Livro/data/biodiesel.csv", show_col_types = FALSE)
+```
+
+```{r ortho-demo}
+X <- model.matrix(~ Relacion * Catalizador * Temperatura * Agente, data = biodiesel)
+XtX <- t(X) %*% X
+all(XtX[upper.tri(XtX)] == 0)   # zero fora da diagonal
+range(diag(XtX))                # todos os 16 valores da diagonal = n = 32
+```
+
+---
+
+## Da ortogonalidade ao contraste de Yates
+
+$\mathbf{X}'\mathbf{X}$ diagonal $\Rightarrow$ equações normais **desacopladas**:
+
+$$
+\hat\beta_j = \frac{\mathbf{x}_j'\mathbf{Y}}{n}, \qquad
+\text{efeito}_j = \frac{2}{n}\sum_{i=1}^n (\pm1)\,y_i
+$$
+
+--
+
+```{r yates-demo}
+xa <- X[, "Relacion"]
+y  <- biodiesel$Rendimiento
+2 * sum(xa * y) / sum(xa * xa)                      # via produto interno
+2 * coef(lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente,
+            data = biodiesel))["Relacion"]           # via regressão — idêntico
+```
+
+Mesmo número, duas contas: o "contraste de Yates" (Yates, 1937) **é** mínimos quadrados com
+$\mathbf{X}'\mathbf{X}$ diagonal, não uma regra à parte.
+
+---
+
+## Sem repetição: o princípio da esparsidade
+
+Sem réplicas, o modelo saturado consome todos os graus de liberdade — não sobra erro puro.
+Saída (Daniel, 1959; Box, Hunter & Hunter, 2005): a maioria dos efeitos de ordem alta é ~zero; os
+poucos efeitos reais se destacam como discrepantes.
+
+.pull-left[
+**Half-normal plot**
+Efeitos ordenados por $|{\cdot}|$ contra quantis teóricos da meia-normal; nulos caem numa reta
+pela origem.
+]
+.pull-right[
+**Pareto dos efeitos**
+Mesmo ranking, como barras, com a margem de erro de Lenth sobreposta.
+]
+
+---
+
+## Margem de erro de Lenth
+
+$$
+s_0 = 1{,}5\cdot\text{med}_i|c_i|, \qquad
+\text{PSE} = 1{,}5\cdot\text{med}_{\{|c_i|<2{,}5s_0\}}|c_i|, \qquad
+\text{ME} = t_{0{,}975;\,d}\cdot\text{PSE},\ d=\tfrac{m}{3}
+$$
+
+Um efeito é "grande" se $|c_i| > \text{ME}$ (Lenth, 1989).
+
+---
+
+## Confusão: sacrificando uma coluna de $\mathbf{X}$
+
+Para dividir um $2^k$ em 2 blocos, escolhemos um **contraste definidor** (ex.: $ABCD$) e
+separamos pelo sinal. A coluna de bloco fica **idêntica** à coluna do efeito escolhido —
+colinearidade exata em $\mathbf{X}$.
+
+--
+
+- **Confusão total:** mesmo gerador em todas as repetições — o efeito é perdido por completo.
+- **Confusão parcial:** geradores diferentes por repetição — cada efeito é recuperável nas
+  repetições em que não foi sacrificado.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Rendimento de biodiesel: 2⁴ completo, 2 repetições
+
+```{r biodiesel-anova-slide}
+mod_2k <- aov(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente, data = biodiesel)
+broom::tidy(mod_2k) %>% filter(p.value < 0.10) %>%
+  mutate(p.value = round(p.value, 4)) %>% select(term, df, p.value) %>%
+  kable(format = "html") %>% kable_styling(font_size = 17, full_width = FALSE)
+```
+
+Significativos: temperatura, razão:temperatura, razão:agente, catalisador:agente, e — dominante —
+razão:catalisador:temperatura.
+
+---
+
+## Interação catalisador × agente: retas que se cruzam
+
+```{r interacao-catag, echo=FALSE, fig.width=7, fig.height=4}
+biodiesel %>%
+  mutate(Catalizador = factor(Catalizador), Agente = factor(Agente)) %>%
+  group_by(Catalizador, Agente) %>%
+  summarise(rendimento = mean(Rendimiento), .groups = "drop") %>%
+  ggplot(aes(x = Agente, y = rendimento, color = Catalizador, group = Catalizador)) +
+  geom_line(linewidth = 1.1) + geom_point(size = 3) +
+  labs(x = "Agente", y = "Rendimento médio (%)", color = "Catalisador") +
+  theme_minimal(base_size = 14) + theme(legend.position = "top")
+```
+
+Trocar o agente **aumenta** o rendimento com catalisador $-1$ e **reduz** com catalisador $+1$ —
+o sinal do efeito se inverte. É essa inversão visual que a ANOVA está formalizando.
+
+---
+
+## Fingindo uma única repetição: half-normal e Pareto
+
+```{r lenth-slide, fig.width=9, fig.height=4}
+rep1 <- biodiesel %>% distinct(Relacion, Catalizador, Temperatura, Agente, .keep_all = TRUE)
+mod_sat <- lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente, data = rep1)
+ef <- sort(2 * coef(mod_sat)[-1], decreasing = TRUE)
+s0 <- 1.5*median(abs(ef)); pse <- 1.5*median(abs(ef)[abs(ef) < 2.5*s0])
+me <- qt(0.975, length(ef)/3) * pse
+round(me, 2)
+ef[abs(ef) > me]
+```
+
+---
+
+## Os dois gráficos, lado a lado
+
+```{r halfnormal-pareto, echo=FALSE, fig.width=10, fig.height=4.5}
+tab <- tibble(termo = names(ef), efeito = as.numeric(ef)) %>%
+  mutate(destaque = abs(efeito) > me)
+
+p1 <- tab %>% arrange(abs(efeito)) %>%
+  mutate(q = qnorm(0.5 + 0.5*(row_number()-0.5)/n())) %>%
+  ggplot(aes(q, abs(efeito), color = destaque)) + geom_point(size = 2.2) +
+  scale_color_manual(values = c("grey50","#c0392b"), guide = "none") +
+  labs(x = "Quantil meia-normal", y = "|efeito|", title = "Half-normal") +
+  theme_minimal(base_size = 12)
+
+p2 <- tab %>% arrange(desc(abs(efeito))) %>% mutate(termo = fct_reorder(termo, abs(efeito))) %>%
+  ggplot(aes(termo, abs(efeito), fill = destaque)) + geom_col() +
+  geom_hline(yintercept = me, linetype = "dashed", color = "#c0392b") +
+  scale_fill_manual(values = c("grey60","#c0392b"), guide = "none") +
+  coord_flip() + labs(x = NULL, y = "|efeito|", title = "Pareto") +
+  theme_minimal(base_size = 10)
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+Só a interação tripla razão:catalisador:temperatura cruza a margem de Lenth — o método acerta o
+efeito dominante, mas é conservador com os quatro efeitos moderados que a repetição completa
+revelou.
+
+---
+
+## Confusão do ABCD com o bloco: colinearidade em ação
+
+```{r confusao-slide}
+# rep1 já está em -1/+1 numérico (chunk biodiesel-load), então ABCD é só o produto direto
+comb <- rep1 %>%
+  mutate(ABCD = Relacion*Catalizador*Temperatura*Agente,
+         bloco = factor(if_else(ABCD > 0, "Bloco 1", "Bloco 2")))
+
+cor(comb$ABCD, as.numeric(comb$bloco))   # correlação perfeita: mesma coluna
+
+mod_conf <- lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente + bloco,
+               data = bind_cols(rep1, bloco = comb$bloco))
+coef(mod_conf)[c("blocoBloco 2", "Relacion:Catalizador:Temperatura:Agente")]
+```
+
+O `NA` na interação de 4ª ordem é o R relatando que as duas colunas de $\mathbf{X}$ colidem —
+**não existe** informação nos dados para separar "efeito de bloco" de "$ABCD$".
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que a **mediana**, e não o desvio-padrão, protege o método de Lenth dos próprios efeitos
+   grandes que ele tenta detectar?
+
+2. No gráfico de Pareto, vários efeitos "parecem grandes" perto da barra vencedora, mas nenhum
+   cruza a linha de Lenth. Que erro de interpretação isso evita?
+
+3. Por que confundir $ABCD$ (ordem 4) é aceitável, mas confundir um efeito principal com o bloco
+   seria grave? Responda em termos de $\mathbf{X}'\mathbf{X}$ e não só "porque é mais importante".
+
+4. Se você tivesse orçamento para **2 repetições** de um $2^4$ dividido em blocos de 8, por que
+   confusão **parcial** (geradores diferentes por repetição) é preferível à total?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do zero: sinais, contraste e ANOVA em paralelo
+
+```{r uso-r-1}
+# Reconstruindo o efeito "na mão" a partir dos sinais ±1 (rep1 já é numérico)
+efeito_agente <- 2 * mean(rep1$Rendimiento[rep1$Agente ==  1]) -
+                  2 * mean(rep1$Rendimiento[rep1$Agente == -1])
+# (o contraste de médias, dividido por 2, é igual a 1/2 efeito -> aqui já com o fator 2)
+efeito_agente / 2 + mean(rep1$Rendimiento[rep1$Agente == -1]) -
+  mean(rep1$Rendimiento) # checagem de consistência
+```
+
+---
+
+## Confusão parcial: dois geradores diferentes
+
+```{r uso-r-2}
+rep2 <- biodiesel %>% anti_join(rep1, by = c("Relacion","Catalizador","Temperatura","Agente")) %>%
+  distinct(Relacion, Catalizador, Temperatura, Agente, .keep_all = TRUE)
+
+g1 <- rep1$Relacion * rep1$Catalizador * rep1$Temperatura * rep1$Agente   # ABCD (réplica 1)
+g2 <- rep2$Relacion * rep2$Catalizador * rep2$Temperatura                # ABC (réplica 2)
+
+table(bloco_rep1 = g1 > 0)
+table(bloco_rep2 = g2 > 0)
+```
+
+Geradores diferentes ($ABCD$ na réplica 1, $ABC$ na réplica 2) significam que nenhum dos dois
+efeitos é perdido em **todas** as réplicas — a essência da confusão parcial.
+
+---
+
+## Resumo da aula
+
+- $2^k$ codificado $\pm1$: $\mathbf{X}'\mathbf{X}$ é diagonal — cada efeito tem fórmula fechada,
+  equivalente ao contraste de Yates.
+- Sem repetição: half-normal e Pareto separam sinal de ruído visualmente; a ME de Lenth formaliza
+  o limiar.
+- Confundir é fazer duas colunas de $\mathbf{X}$ colidirem — escolha efeitos de ordem alta para
+  sacrificar; use confusão parcial quando há mais de uma repetição.
+- Próxima aula: $3^k$, fracionamento e a metodologia de superfície de resposta.
+
+## Referências
+
+- Yates, F. (1937). *The Design and Analysis of Factorial Experiments*. Imperial Bureau of Soil Science.
+- Daniel, C. (1959). Use of Half-Normal Plots in Interpreting Factorial Two-Level Experiments. *Technometrics*, 1(4), 311–341.
+- Box, G. E. P., Hunter, J. S. & Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley & Sons.
+- Lenth, R. V. (1989). Quick and Easy Analysis of Unreplicated Factorials. *Technometrics*, 31(4), 469–473.

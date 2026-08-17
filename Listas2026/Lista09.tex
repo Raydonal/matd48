@@ -1,0 +1,128 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 09 --- DBCA}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 09}{Delineamento em blocos completos aleatorizados (Capítulo 4 / Aula 09)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas — nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito09.pdf}.}
+
+\begin{questao}{1} \textbf{(Agricultura --- tabela de ANOVA do DBCA)}
+
+Um agrônomo compara $t=4$ variedades de milho em $b=5$ blocos (talhões com fertilidade
+diferente), medindo produtividade (sc/ha). O ajuste do DBCA produziu $SQ_{Total}=850$,
+$SQ_{Trat}=320$ e $SQ_{Bloco}=210$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete a tabela de ANOVA (graus de liberdade, $SQ_{Erro}$, quadrados médios).
+  \item Calcule a estatística $F_0$ para o teste do efeito de variedade.
+  \item Sabendo que $F_{0{,}05;\,3;\,12}=3{,}49$, há evidência de diferença entre variedades ao
+    nível de $5\%$? Justifique com base no valor de $F_0$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Dedução --- decomposição ortogonal da soma de quadrados)}
+
+Considere um DBCA balanceado com $t$ tratamentos e $b$ blocos (uma observação $Y_{ij}$ por
+combinação tratamento-bloco). Defina
+$$
+a_i = \bar Y_{i\cdot} - \bar Y_{\cdot\cdot}, \qquad
+b_j = \bar Y_{\cdot j} - \bar Y_{\cdot\cdot}, \qquad
+e_{ij} = Y_{ij} - \bar Y_{i\cdot} - \bar Y_{\cdot j} + \bar Y_{\cdot\cdot},
+$$
+de modo que $Y_{ij}-\bar Y_{\cdot\cdot} = a_i + b_j + e_{ij}$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\sum_i a_i = 0$ e $\sum_j b_j = 0$.
+  \item Mostre que, para cada $i$ fixo, $\sum_j e_{ij}=0$, e que, para cada $j$ fixo,
+    $\sum_i e_{ij}=0$.
+  \item Use os itens (a) e (b) para mostrar que os três produtos cruzados que aparecem ao
+    elevar $Y_{ij}-\bar Y_{\cdot\cdot}$ ao quadrado e somar sobre $i,j$ se anulam, concluindo que
+    $$
+    SQ_{Total} = SQ_{Trat} + SQ_{Bloco} + SQ_{Erro}
+    $$
+    exatamente, sem termo de covariância entre tratamento e bloco.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Psicologia --- blocagem como aleatorização restrita)}
+
+Uma psicóloga quer comparar três técnicas de relaxamento (respiração guiada, relaxamento
+muscular progressivo, mindfulness breve) quanto à redução de ansiedade. Ela classifica os 30
+pacientes recrutados em três blocos por gravidade basal da ansiedade (leve, moderada, grave; 10
+pacientes por bloco) e, \emph{dentro de cada bloco}, sorteia os pacientes entre as três técnicas.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Na notação de resultados potenciais, escreva o efeito causal médio que compara a técnica
+    de respiração guiada ($i=1$) ao mindfulness breve ($i=3$).
+  \item Explique por que sortear \emph{dentro} de cada bloco de gravidade (em vez de sortear entre
+    todos os 30 pacientes ignorando a gravidade) ainda produz um estimador não viesado desse
+    efeito causal. Que papel exato a aleatorização (agora restrita a cada bloco) desempenha nessa
+    garantia?
+  \item Sob quais circunstâncias a blocagem por gravidade basal reduz o erro-padrão da comparação
+    entre técnicas, em vez de apenas gastar graus de liberdade do erro sem retorno?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Agricultura --- dado faltante, fórmula de Yates)}
+
+Em um DBCA com $t=5$ tratamentos e $b=4$ blocos, a produtividade de uma parcela foi perdida
+(praga localizada). Excluindo essa observação: o total do tratamento correspondente é
+$T'=58$, o total do bloco correspondente é $B'=78$, e o total geral é $G'=380$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Estime o valor perdido pela fórmula de Yates.
+  \item Após substituir o valor estimado e recalcular a ANOVA, quantos graus de liberdade tem o
+    erro (em relação ao DBCA completo, sem dado faltante)? Justifique.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Eficiência relativa)}
+
+Em um DBCA com $t=6$ tratamentos e $b=5$ blocos, obteve-se $QM_{Bloco}=45$ e $QM_{Erro}=15$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule $gl_{Bloco}$, $gl_{Erro}$ (do DBCA) e $gl_{Erro}$ que um DCA hipotético teria
+    tido com o mesmo número de unidades.
+  \item Calcule a eficiência relativa $ER(DBCA,DCA)$.
+  \item Interprete o valor numérico: quantas vezes mais repetições um DCA precisaria para igualar
+    a precisão deste DBCA? Compare qualitativamente com o exemplo do viveiro de pepineiros visto
+    em aula, em que $ER\approx1{,}02$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{6} \textbf{(Dissertativa --- matriz de delineamento)}
+
+A matriz de delineamento de um DBCA pode ser escrita como $X=[\mathbf 1\mid X_{trat}\mid
+X_{bloco}]$, sem nenhuma coluna de produto entre $X_{trat}$ e $X_{bloco}$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item O que, exatamente, essa ausência de colunas de produto representa em termos do modelo
+    estatístico do DBCA?
+  \item Por que essa mesma estrutura de $X$ explica por que não se deve usar o teste $F$ sobre o
+    termo de bloco para decidir se ele deve permanecer no modelo?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{7} \textbf{(Ciência de dados --- fatores confundidos vs. blocagem)}
+
+Um analista quer avaliar se um novo algoritmo de recomendação (\texttt{Algoritmo}: novo vs. antigo)
+aumenta o tempo médio de sessão em um site. Por decisão de produto, o algoritmo novo foi ativado
+\emph{apenas} para usuários cadastrados depois de 1º de janeiro de 2026; usuários cadastrados antes
+dessa data continuam recebendo o algoritmo antigo, sem exceção.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Identifique o segundo fator que está \textbf{completamente confundido} com
+    \texttt{Algoritmo} nesse desenho, e explique por quê.
+  \item Explique por que \emph{nenhuma quantidade adicional} de dados coletados sob essa mesma
+    regra resolveria o problema — em particular, o que aconteceria ao tentar ajustar
+    \texttt{lm(tempo\_sessao \textasciitilde{} Algoritmo + <o fator do item (a)>)}.
+  \item Reformule o desenho usando o princípio de blocagem para que o efeito do algoritmo possa
+    ser estimado sem confusão, identificando explicitamente o que faria o papel de bloco e como o
+    tratamento seria sorteado dentro de cada bloco.
+\end{enumerate}
+\end{questao}
+
+\end{document}

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.4 Estimabilidade de funções lineares dos parâmetros | Planejamento e Análise de Experimentos</title>
+  <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.4 Estimabilidade de funções lineares dos parâmetros | Planejamento e Análise de Experimentos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.4 Estimabilidade de funções lineares dos parâmetros | Planejamento e Análise de Experimentos" />
+  
+  <meta name="twitter:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+<meta name="author" content="Raydonal Ospina Martínez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="minimos-quadrados.html"/>
+<link rel="next" href="gauss-markov.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./"><strong>Planejamento e Análise de Experimentos</strong></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prefácio</a>
+<ul>
+<li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
+<li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
+<li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html"><i class="fa fa-check"></i><b>1.1</b> O método científico e o papel do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#o-ciclo-empírico-de-observação-a-hipótese-testável"><i class="fa fa-check"></i><b>1.1.1</b> O ciclo empírico: de observação a hipótese testável</a></li>
+<li class="chapter" data-level="1.1.2" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#observação-vs.-experimentação-por-que-controlado-importa"><i class="fa fa-check"></i><b>1.1.2</b> Observação vs. experimentação: por que “controlado” importa</a></li>
+<li class="chapter" data-level="1.1.3" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#uma-nota-histórica-fisher-rothamsted-e-a-origem-do-delineamento-moderno"><i class="fa fa-check"></i><b>1.1.3</b> Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno</a></li>
+<li class="chapter" data-level="1.1.4" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#confusão-confounding-o-problema-que-a-aleatorização-resolve"><i class="fa fa-check"></i><b>1.1.4</b> Confusão (<em>confounding</em>): o problema que a aleatorização resolve</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="unidades.html"><a href="unidades.html"><i class="fa fa-check"></i><b>1.2</b> Unidades experimentais e unidades amostrais</a></li>
+<li class="chapter" data-level="1.3" data-path="fontes-variacao.html"><a href="fontes-variacao.html"><i class="fa fa-check"></i><b>1.3</b> Fontes de variação</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fontes-variacao.html"><a href="fontes-variacao.html#aditividade-aleatorizacao"><i class="fa fa-check"></i><b>1.3.1</b> Por que essa decomposição força a forma aditiva do modelo</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fontes-variacao.html"><a href="fontes-variacao.html#fatores-niveis"><i class="fa fa-check"></i><b>1.3.2</b> Fatores e níveis</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html"><i class="fa fa-check"></i><b>1.4</b> Os três aspectos do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="tres-aspectos.html"><a href="tres-aspectos.html#repetição-replicação"><i class="fa fa-check"></i><b>1.4.1</b> Repetição (replicação)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="tres-aspectos.html"><a href="tres-aspectos.html#aleatorização"><i class="fa fa-check"></i><b>1.4.2</b> Aleatorização</a></li>
+<li class="chapter" data-level="1.4.3" data-path="tres-aspectos.html"><a href="tres-aspectos.html#neyman-rubin"><i class="fa fa-check"></i><b>1.4.3</b> Por que a aleatorização funciona: o modelo de resultados potenciais</a></li>
+<li class="chapter" data-level="1.4.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.4</b> Validade interna e validade externa</a></li>
+<li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.5</b> O elo entre amostragem e planejamento de experimentos</a></li>
+<li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.6</b> Controle local (blocagem)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-lineares.html"><a href="modelos-lineares.html"><i class="fa fa-check"></i><b>2</b> Introdução aos modelos lineares</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="hasse.html"><a href="hasse.html"><i class="fa fa-check"></i><b>2.1</b> Diagramas de Hasse: a estrutura do delineamento antes da álgebra</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="hasse.html"><a href="hasse.html#o-diagrama-como-um-retrato-da-estrutura-do-dado"><i class="fa fa-check"></i><b>2.1.1</b> O diagrama como um retrato da estrutura do dado</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modelo-geral.html"><a href="modelo-geral.html"><i class="fa fa-check"></i><b>2.2</b> O modelo linear geral</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="modelo-geral.html"><a href="modelo-geral.html#porque-xbeta-mais-erro"><i class="fa fa-check"></i><b>2.2.1</b> Por que esta é a forma natural, não arbitrária, do modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="minimos-quadrados.html"><a href="minimos-quadrados.html"><i class="fa fa-check"></i><b>2.3</b> Estimação por mínimos quadrados</a></li>
+<li class="chapter" data-level="2.4" data-path="estimabilidade.html"><a href="estimabilidade.html"><i class="fa fa-check"></i><b>2.4</b> Estimabilidade de funções lineares dos parâmetros</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.4.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.5</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.6</b> A matriz de projeção</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.6.1</b> A soma de quadrados total como forma quadrática</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="modelo-particionado.html"><a href="modelo-particionado.html"><i class="fa fa-check"></i><b>2.7</b> O modelo linear particionado</a></li>
+<li class="chapter" data-level="2.8" data-path="fwl.html"><a href="fwl.html"><i class="fa fa-check"></i><b>2.8</b> O teorema de Frisch-Waugh-Lovell</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.8.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.9</b> Distribuição de formas lineares e quadráticas</a></li>
+<li class="chapter" data-level="2.10" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.10</b> Resumo do capítulo</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="dca.html"><a href="dca.html"><i class="fa fa-check"></i><b>3</b> Delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html"><i class="fa fa-check"></i><b>3.1</b> Princípios de aleatorização: a ideia de um teste de aleatorização</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html#randomizacao-df-f"><i class="fa fa-check"></i><b>3.1.1</b> De onde vêm os graus de liberdade <span class="math inline">\((2,33)\)</span>: a ponte entre aleatorização, variância decomposta e <span class="math inline">\(F\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html"><i class="fa fa-check"></i><b>3.2</b> O delineamento completamente aleatorizado a uma via de classificação</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="dca-uma-via.html"><a href="dca-uma-via.html#modelo-dca"><i class="fa fa-check"></i><b>3.2.1</b> O modelo estatístico</a></li>
+<li class="chapter" data-level="3.2.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html#matricial-dca"><i class="fa fa-check"></i><b>3.2.2</b> Notação matricial: o DCA como caso particular do modelo linear geral</a></li>
+<li class="chapter" data-level="3.2.3" data-path="dca-uma-via.html"><a href="dca-uma-via.html#potencial-causal"><i class="fa fa-check"></i><b>3.2.3</b> Resultados potenciais e o estimando causal</a></li>
+<li class="chapter" data-level="3.2.4" data-path="dca-uma-via.html"><a href="dca-uma-via.html#ic-dca"><i class="fa fa-check"></i><b>3.2.4</b> Estimação e intervalos de confiança</a></li>
+<li class="chapter" data-level="3.2.5" data-path="dca-uma-via.html"><a href="dca-uma-via.html#anova-dca"><i class="fa fa-check"></i><b>3.2.5</b> A tabela de análise de variância</a></li>
+<li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#modelo-aleatorio"><i class="fa fa-check"></i><b>3.4.1</b> Quando os tratamentos são uma amostra aleatória</a></li>
+<li class="chapter" data-level="3.4.2" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#anova-aleatorio"><i class="fa fa-check"></i><b>3.4.2</b> ANOVA e componentes de variância</a></li>
+<li class="chapter" data-level="3.4.3" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#amostra-aleatorio"><i class="fa fa-check"></i><b>3.4.3</b> Tamanho de amostra no modelo de efeitos aleatórios</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html"><i class="fa fa-check"></i><b>3.5</b> Verificação de pressupostos</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
+<li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="ancova.html"><a href="ancova.html#o-modelo"><i class="fa fa-check"></i><b>3.9.1</b> O modelo</a></li>
+<li class="chapter" data-level="3.9.2" data-path="ancova.html"><a href="ancova.html#ancova-em-notação-matricial-mais-uma-coluna-em-mathbf-x"><i class="fa fa-check"></i><b>3.9.2</b> ANCOVA em notação matricial: mais uma coluna em <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.9.3" data-path="ancova.html"><a href="ancova.html#a-tabela-de-anova-ajustada-pela-covariável"><i class="fa fa-check"></i><b>3.9.3</b> A tabela de ANOVA ajustada pela covariável</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html"><i class="fa fa-check"></i><b>3.10</b> Teste de Kruskal-Wallis</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dbca.html"><a href="dbca.html"><i class="fa fa-check"></i><b>4.1</b> O delineamento em blocos completos aleatorizados (DBCA)</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dbca.html"><a href="dbca.html#motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos"><i class="fa fa-check"></i><b>4.1.1</b> Motivação: o que dá errado sem controle local — fatores confundidos</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dbca.html"><a href="dbca.html#o-modelo-1"><i class="fa fa-check"></i><b>4.1.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dbca.html"><a href="dbca.html#notação-matricial-yxbetavarepsilon"><i class="fa fa-check"></i><b>4.1.3</b> Notação matricial: <span class="math inline">\(Y=X\beta+\varepsilon\)</span></a></li>
+<li class="chapter" data-level="4.1.4" data-path="dbca.html"><a href="dbca.html#blocagem-como-aleatorização-restrita-a-camada-causal"><i class="fa fa-check"></i><b>4.1.4</b> Blocagem como aleatorização restrita: a camada causal</a></li>
+<li class="chapter" data-level="4.1.5" data-path="dbca.html"><a href="dbca.html#tabela-de-anova"><i class="fa fa-check"></i><b>4.1.5</b> Tabela de ANOVA</a></li>
+<li class="chapter" data-level="4.1.6" data-path="dbca.html"><a href="dbca.html#esperança-dos-quadrados-médios"><i class="fa fa-check"></i><b>4.1.6</b> Esperança dos quadrados médios</a></li>
+<li class="chapter" data-level="4.1.7" data-path="dbca.html"><a href="dbca.html#visualizando-aditividade-o-gráfico-de-perfis"><i class="fa fa-check"></i><b>4.1.7</b> Visualizando aditividade: o gráfico de perfis</a></li>
+<li class="chapter" data-level="4.1.8" data-path="dbca.html"><a href="dbca.html#diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação"><i class="fa fa-check"></i><b>4.1.8</b> Diagrama de Hasse do DBCA: por que não há nó de interação</a></li>
+<li class="chapter" data-level="4.1.9" data-path="dbca.html"><a href="dbca.html#dados-faltantes-estimação-do-valor-perdido"><i class="fa fa-check"></i><b>4.1.9</b> Dados faltantes: estimação do valor perdido</a></li>
+<li class="chapter" data-level="4.1.10" data-path="dbca.html"><a href="dbca.html#eficiência-relativa-do-dbca-frente-ao-dca"><i class="fa fa-check"></i><b>4.1.10</b> Eficiência relativa do DBCA frente ao DCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="friedman.html"><a href="friedman.html"><i class="fa fa-check"></i><b>4.2</b> Teste de Friedman</a></li>
+<li class="chapter" data-level="4.3" data-path="bib.html"><a href="bib.html"><i class="fa fa-check"></i><b>4.3</b> Blocos incompletos balanceados</a></li>
+<li class="chapter" data-level="4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html"><i class="fa fa-check"></i><b>4.4</b> Delineamento em quadrado latino</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="quadrado-latino.html"><a href="quadrado-latino.html#motivação-dois-gradientes-ortogonais-e-por-que-um-bloqueio-simples-não-basta"><i class="fa fa-check"></i><b>4.4.1</b> Motivação: dois gradientes ortogonais, e por que um bloqueio simples não basta</a></li>
+<li class="chapter" data-level="4.4.2" data-path="quadrado-latino.html"><a href="quadrado-latino.html#o-modelo-2"><i class="fa fa-check"></i><b>4.4.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.4.3" data-path="quadrado-latino.html"><a href="quadrado-latino.html#diagrama-de-hasse-do-quadrado-latino-três-fatores-cruzados-dois-a-dois"><i class="fa fa-check"></i><b>4.4.3</b> Diagrama de Hasse do quadrado latino: três fatores cruzados dois a dois</a></li>
+<li class="chapter" data-level="4.4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html#aleatorização-de-um-quadrado-latino-yates1933latin"><i class="fa fa-check"></i><b>4.4.4</b> Aleatorização de um quadrado latino <span class="citation">(Yates, 1933)</span></a></li>
+<li class="chapter" data-level="4.4.5" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quadrados-latinos-replicados"><i class="fa fa-check"></i><b>4.4.5</b> Quadrados latinos replicados</a></li>
+<li class="chapter" data-level="4.4.6" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quantas-réplicas-uma-análise-de-poder"><i class="fa fa-check"></i><b>4.4.6</b> Quantas réplicas? Uma análise de poder</a></li>
+<li class="chapter" data-level="4.4.7" data-path="quadrado-latino.html"><a href="quadrado-latino.html#eficiencia-ql"><i class="fa fa-check"></i><b>4.4.7</b> Eficiência relativa do quadrado latino frente ao DBCA e ao DCA</a></li>
+<li class="chapter" data-level="4.4.8" data-path="quadrado-latino.html"><a href="quadrado-latino.html#ql-exemplo-ecommerce"><i class="fa fa-check"></i><b>4.4.8</b> Um segundo exemplo completo: cinco variantes de checkout em e-commerce</a></li>
+<li class="chapter" data-level="4.4.9" data-path="quadrado-latino.html"><a href="quadrado-latino.html#youden"><i class="fa fa-check"></i><b>4.4.9</b> Quadrados de Youden: quando o quadrado latino não pode ser completo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html"><i class="fa fa-check"></i><b>4.5</b> Delineamento em quadrado greco-latino</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#mols"><i class="fa fa-check"></i><b>4.5.1</b> Quadrados latinos mutuamente ortogonais (MOLS): existência e o problema de Euler</a></li>
+<li class="chapter" data-level="4.5.2" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#o-modelo-3"><i class="fa fa-check"></i><b>4.5.2</b> O modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.6</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
+<li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a></li>
+<li class="chapter" data-level="5.4" data-path="matriz-axb.html"><a href="matriz-axb.html"><i class="fa fa-check"></i><b>5.4</b> Notação matricial do fatorial A×B</a></li>
+<li class="chapter" data-level="5.5" data-path="axbxc.html"><a href="axbxc.html"><i class="fa fa-check"></i><b>5.5</b> Fatoriais A×B×C: interações duplas e tripla</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="axbxc.html"><a href="axbxc.html#cubo-2x2x2"><i class="fa fa-check"></i><b>5.5.1</b> O cubo do <span class="math inline">\(2^3\)</span>: visualizando efeitos principais, duplos e triplo</a></li>
+<li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
+<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
+<li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="nao-replicado.html"><a href="nao-replicado.html"><i class="fa fa-check"></i><b>6.2</b> Análise de um fatorial <span class="math inline">\(2^k\)</span> não replicado</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-probabilidade-normal-half-normal-plot"><i class="fa fa-check"></i><b>6.2.1</b> Gráfico de probabilidade normal (half-normal plot)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-pareto-dos-efeitos"><i class="fa fa-check"></i><b>6.2.2</b> Gráfico de Pareto dos efeitos</a></li>
+<li class="chapter" data-level="6.2.3" data-path="nao-replicado.html"><a href="nao-replicado.html#margem-de-erro-pelo-método-de-lenth"><i class="fa fa-check"></i><b>6.2.3</b> Margem de erro pelo método de Lenth</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="confusao-2k.html"><a href="confusao-2k.html"><i class="fa fa-check"></i><b>6.3</b> Confusão em <span class="math inline">\(2^k\)</span>: designação de tratamentos a blocos</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="confusao-2k.html"><a href="confusao-2k.html#esquema-de-designação-o-contraste-definidor"><i class="fa fa-check"></i><b>6.3.1</b> Esquema de designação: o contraste definidor</a></li>
+<li class="chapter" data-level="6.3.2" data-path="confusao-2k.html"><a href="confusao-2k.html#confusao-projecao"><i class="fa fa-check"></i><b>6.3.2</b> Confusão como colinearidade em <span class="math inline">\(\mathbf{X}\)</span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="confusao-2k.html"><a href="confusao-2k.html#confusão-total-vs.-confusão-parcial"><i class="fa fa-check"></i><b>6.3.3</b> Confusão total vs. confusão parcial</a></li>
+<li class="chapter" data-level="6.3.4" data-path="confusao-2k.html"><a href="confusao-2k.html#hasse-confusao"><i class="fa fa-check"></i><b>6.3.4</b> Visualizando a confusão com um diagrama de Hasse</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
+<li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
+<li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
+<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html"><i class="fa fa-check"></i><b>7.1</b> Introdução à superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ponto-estacionario"><i class="fa fa-check"></i><b>7.1.1</b> Classificando o ponto estacionário: gradiente e Hessiana</a></li>
+<li class="chapter" data-level="7.1.2" data-path="superficie-resposta.html"><a href="superficie-resposta.html#analise-canonica"><i class="fa fa-check"></i><b>7.1.2</b> Análise canônica: além de classificar, descrever a forma da superfície</a></li>
+<li class="chapter" data-level="7.1.3" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ridge-analysis"><i class="fa fa-check"></i><b>7.1.3</b> Análise de ridge: otimizando dentro de um raio fixo da região experimental</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="steepest-ascent.html"><a href="steepest-ascent.html"><i class="fa fa-check"></i><b>7.2</b> O caminho de máxima inclinação: de um fatorial inicial até a região do ótimo</a></li>
+<li class="chapter" data-level="7.3" data-path="ccd.html"><a href="ccd.html"><i class="fa fa-check"></i><b>7.3</b> Delineamento composto central (CCD)</a></li>
+<li class="chapter" data-level="7.4" data-path="desejabilidade.html"><a href="desejabilidade.html"><i class="fa fa-check"></i><b>7.4</b> Otimização de múltiplas respostas: funções de desejabilidade</a></li>
+<li class="chapter" data-level="7.5" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.5</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.6" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.6</b> Fim do programa do semestre</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><i class="fa fa-check"></i><b>8.1</b> Parte I — Testes A/B como delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-e-dca"><i class="fa fa-check"></i><b>8.1.1</b> Um teste A/B é um delineamento completamente aleatorizado</a></li>
+<li class="chapter" data-level="8.1.2" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-dificuldades"><i class="fa fa-check"></i><b>8.1.2</b> Por que testes A/B em produtos digitais são estatisticamente difíceis</a></li>
+<li class="chapter" data-level="8.1.3" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-peeking"><i class="fa fa-check"></i><b>8.1.3</b> O problema do “peeking”</a></li>
+<li class="chapter" data-level="8.1.4" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-winners-curse"><i class="fa fa-check"></i><b>8.1.4</b> Vício do vencedor (<em>winner’s curse</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><i class="fa fa-check"></i><b>8.2</b> Parte II — Bandits: quando explorar e quando explotar</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-motivacao"><i class="fa fa-check"></i><b>8.2.1</b> Exploração, explotação e a definição de arrependimento (<em>regret</em>)</a></li>
+<li class="chapter" data-level="8.2.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-ucb1"><i class="fa fa-check"></i><b>8.2.2</b> Upper Confidence Bound (UCB1): otimismo perante a incerteza</a></li>
+<li class="chapter" data-level="8.2.3" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-thompson"><i class="fa fa-check"></i><b>8.2.3</b> Thompson sampling: uma solução bayesiana</a></li>
+<li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
+<li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Planejamento e Análise de Experimentos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimabilidade" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Estimabilidade de funções lineares dos parâmetros<a href="estimabilidade.html#estimabilidade" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Quando <span class="math inline">\(\mathbf{X}\)</span> não tem posto coluna completo, nem todo parâmetro individual de
+<span class="math inline">\(\boldsymbol{\beta}\)</span> pode ser estimado de forma única — mas certas <em>combinações lineares</em> dos
+parâmetros podem. Essa distinção é o conceito de <strong>estimabilidade</strong>, essencial para interpretar
+corretamente os modelos de ANOVA do Capítulo 3, onde a codificação usual de um fator com <span class="math inline">\(k\)</span>
+níveis por <span class="math inline">\(k\)</span> variáveis indicadoras mais um intercepto é, propositalmente, deficiente em posto.</p>
+<p><strong>Definição (estimabilidade).</strong> Uma função linear <span class="math inline">\(\boldsymbol{\lambda}&#39;\boldsymbol{\beta}\)</span> é
+<strong>estimável</strong> se existe um vetor <span class="math inline">\(\mathbf{a}\)</span> tal que <span class="math inline">\(\mathrm{E}[\mathbf{a}&#39;\mathbf{Y}] = \boldsymbol{\lambda}&#39;\boldsymbol{\beta}\)</span> para <strong>todo</strong> valor de <span class="math inline">\(\boldsymbol{\beta}\)</span>. Como
+<span class="math inline">\(\mathrm{E}[\mathbf{Y}] = \mathbf{X}\boldsymbol{\beta}\)</span>, isso equivale a <span class="math inline">\(\mathbf{a}&#39;\mathbf{X} = \boldsymbol{\lambda}&#39;\)</span> — ou seja, <span class="math inline">\(\boldsymbol{\lambda}&#39;\boldsymbol{\beta}\)</span> é estimável se e
+somente se <span class="math inline">\(\boldsymbol{\lambda}&#39;\)</span> pertence ao <strong>espaço-linha de <span class="math inline">\(\mathbf{X}\)</span></strong>.</p>
+<p>Em outras palavras: <span class="math inline">\(\boldsymbol{\lambda}&#39;\boldsymbol{\beta}\)</span> é estimável quando podemos escrevê-la
+como uma combinação linear das <em>médias</em> que o modelo de fato observa (as linhas de
+<span class="math inline">\(\mathrm{E}[\mathbf{Y}]\)</span>), sem depender de uma parametrização específica e não identificável de
+<span class="math inline">\(\boldsymbol{\beta}\)</span>. Quando <span class="math inline">\(\mathbf{X}\)</span> tem posto coluna completo, toda função linear é
+estimável, porque o espaço-linha de <span class="math inline">\(\mathbf{X}\)</span> é todo <span class="math inline">\(\mathbb{R}^p\)</span>.</p>
+<div class="caixa-aplicacao">
+<strong>Aplicação — codificação sobreparametrizada do fator servidor</strong><br>
+Em vez do contraste usual do R (que descarta uma coluna), codifique o fator
+<code>servidor</code> com uma coluna indicadora para <strong>cada</strong> nível (A, B, C) mais o
+intercepto. A matriz resultante tem 4 colunas, mas posto 3: a coluna do intercepto é a soma exata
+das três colunas indicadoras.
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="estimabilidade.html#cb17-1" tabindex="-1"></a>contrastes_completos <span class="ot">&lt;-</span> <span class="fu">contrasts</span>(dados_api<span class="sc">$</span>servidor, <span class="at">contrasts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-2"><a href="estimabilidade.html#cb17-2" tabindex="-1"></a>X_sobre <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> servidor, <span class="at">data =</span> dados_api,</span>
+<span id="cb17-3"><a href="estimabilidade.html#cb17-3" tabindex="-1"></a>                         <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">servidor =</span> contrastes_completos))</span>
+<span id="cb17-4"><a href="estimabilidade.html#cb17-4" tabindex="-1"></a><span class="fu">colnames</span>(X_sobre) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Intercepto&quot;</span>, <span class="st">&quot;servidorA&quot;</span>, <span class="st">&quot;servidorB&quot;</span>, <span class="st">&quot;servidorC&quot;</span>)</span>
+<span id="cb17-5"><a href="estimabilidade.html#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="estimabilidade.html#cb17-6" tabindex="-1"></a><span class="fu">c</span>(<span class="at">colunas =</span> <span class="fu">ncol</span>(X_sobre), <span class="at">posto =</span> <span class="fu">qr</span>(X_sobre)<span class="sc">$</span>rank)</span></code></pre></div>
+<pre><code>## colunas   posto 
+##       4       3</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="estimabilidade.html#cb19-1" tabindex="-1"></a>X_sobre[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ] <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="estimabilidade.html#cb19-2" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Primeiras linhas de X na codificação sobreparametrizada do fator servidor&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="estimabilidade.html#cb19-3" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:estimabilidade-r">Table 2.5: </span><span id="tab:estimabilidade-r">Table 2.6: </span>Primeiras linhas de X na codificação sobreparametrizada do fator servidor
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Intercepto
+</th>
+<th style="text-align:right;">
+servidorA
+</th>
+<th style="text-align:right;">
+servidorB
+</th>
+<th style="text-align:right;">
+servidorC
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>A matriz tem 4 colunas e posto 3 — exatamente uma deficiência de posto, refletindo a redundância
+<span class="math inline">\(\text{Intercepto} = \text{servidorA} + \text{servidorB} + \text{servidorC}\)</span> (a primeira coluna é
+a soma exata das três últimas). Escrevendo o modelo como
+<span class="math inline">\(y_i = \mu + \alpha_{A} \mathbb{1}\{\text{servidor}_i = A\} + \alpha_B \mathbb{1}\{\cdot=B\} + \alpha_C \mathbb{1}\{\cdot=C\} + \varepsilon_i\)</span>:</p>
+<ul>
+<li><span class="math inline">\(\mu\)</span> sozinho <strong>não é estimável</strong>: não existe combinação de linhas de <span class="math inline">\(\mathrm{E}[\mathbf{Y}]\)</span>
+que isole <span class="math inline">\(\mu\)</span> sem também carregar algum <span class="math inline">\(\alpha_j\)</span>, porque toda observação tem exatamente um
+<span class="math inline">\(\alpha_j\)</span> “ligado”.</li>
+<li><span class="math inline">\(\mu + \alpha_A\)</span> <strong>é estimável</strong>: é exatamente a média populacional do tempo de resposta para o
+servidor A (a média dos <span class="math inline">\(y_i\)</span> com <span class="math inline">\(\text{servidor}_i = A\)</span>, ajustada por requisições se estas
+entrarem no modelo).</li>
+<li><span class="math inline">\(\alpha_A - \alpha_B\)</span> <strong>é estimável</strong>: é a diferença entre as médias dos servidores A e B,
+independente de como <span class="math inline">\(\mu\)</span> foi parametrizado. Esta é a razão pela qual, na ANOVA de um fator
+(Capítulo 3), <em>contrastes</em> entre níveis são sempre estimáveis e interpretáveis, mesmo quando os
+efeitos individuais <span class="math inline">\(\alpha_j\)</span>, isoladamente, não são.</li>
+</ul>
+<p>A regra prática para verificar estimabilidade sem procurar <span class="math inline">\(\mathbf{a}\)</span> à mão:
+<span class="math inline">\(\boldsymbol{\lambda}&#39;\boldsymbol{\beta}\)</span> é estimável se e somente se
+<span class="math inline">\(\boldsymbol{\lambda}&#39;(\mathbf{X}&#39;\mathbf{X})^-(\mathbf{X}&#39;\mathbf{X}) = \boldsymbol{\lambda}&#39;\)</span>,
+para <strong>qualquer</strong> inversa generalizada <span class="math inline">\((\mathbf{X}&#39;\mathbf{X})^-\)</span>. Aplicando essa regra às quatro
+funções lineares discutidas acima:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="estimabilidade.html#cb20-1" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X_sobre) <span class="sc">%*%</span> X_sobre</span>
+<span id="cb20-2"><a href="estimabilidade.html#cb20-2" tabindex="-1"></a>XtX_g <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(XtX)               <span class="co"># uma inversa generalizada de X&#39;X (Moore-Penrose)</span></span>
+<span id="cb20-3"><a href="estimabilidade.html#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="estimabilidade.html#cb20-4" tabindex="-1"></a>lambdas <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb20-5"><a href="estimabilidade.html#cb20-5" tabindex="-1"></a>  <span class="st">&quot;mu&quot;</span>              <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb20-6"><a href="estimabilidade.html#cb20-6" tabindex="-1"></a>  <span class="st">&quot;alpha_A&quot;</span>         <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb20-7"><a href="estimabilidade.html#cb20-7" tabindex="-1"></a>  <span class="st">&quot;mu + alpha_A&quot;</span>    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb20-8"><a href="estimabilidade.html#cb20-8" tabindex="-1"></a>  <span class="st">&quot;alpha_A - alpha_B&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb20-9"><a href="estimabilidade.html#cb20-9" tabindex="-1"></a>)</span>
+<span id="cb20-10"><a href="estimabilidade.html#cb20-10" tabindex="-1"></a>estimavel <span class="ot">&lt;-</span> <span class="fu">map_lgl</span>(lambdas, <span class="cf">function</span>(lam) {</span>
+<span id="cb20-11"><a href="estimabilidade.html#cb20-11" tabindex="-1"></a>  <span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(<span class="fu">as.numeric</span>(<span class="fu">t</span>(lam) <span class="sc">%*%</span> XtX_g <span class="sc">%*%</span> XtX), lam, <span class="at">tolerance =</span> <span class="fl">1e-8</span>))</span>
+<span id="cb20-12"><a href="estimabilidade.html#cb20-12" tabindex="-1"></a>})</span>
+<span id="cb20-13"><a href="estimabilidade.html#cb20-13" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">funcao =</span> <span class="fu">names</span>(lambdas), <span class="at">estimavel =</span> estimavel) <span class="sc">%&gt;%</span></span>
+<span id="cb20-14"><a href="estimabilidade.html#cb20-14" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Verificação algébrica de estimabilidade via inversa generalizada&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-15"><a href="estimabilidade.html#cb20-15" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:estimabilidade-criterio">Table 2.7: </span><span id="tab:estimabilidade-criterio">Table 2.8: </span>Verificação algébrica de estimabilidade via inversa generalizada
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+funcao
+</th>
+<th style="text-align:left;">
+estimavel
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+mu
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alpha_A
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mu + alpha_A
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alpha_A - alpha_B
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+</tbody>
+</table>
+<p>O critério confirma exatamente a leitura intuitiva. Mais importante: embora <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span>
+não seja único quando <span class="math inline">\(\mathbf{X}\)</span> é deficiente em posto, <strong>o valor de uma função estimável não
+depende de qual solução das equações normais usamos</strong>. Comparando duas parametrizações
+completamente diferentes do mesmo fator (contrastes de tratamento vs. contrastes de soma no R):</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="estimabilidade.html#cb21-1" tabindex="-1"></a>mod_trat <span class="ot">&lt;-</span> <span class="fu">lm</span>(tempo_resposta <span class="sc">~</span> servidor, <span class="at">data =</span> dados_api)                      <span class="co"># contrastes de tratamento</span></span>
+<span id="cb21-2"><a href="estimabilidade.html#cb21-2" tabindex="-1"></a>mod_soma <span class="ot">&lt;-</span> <span class="fu">lm</span>(tempo_resposta <span class="sc">~</span> servidor, <span class="at">data =</span> dados_api,</span>
+<span id="cb21-3"><a href="estimabilidade.html#cb21-3" tabindex="-1"></a>                <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">servidor =</span> <span class="st">&quot;contr.sum&quot;</span>))                        <span class="co"># contrastes de soma</span></span>
+<span id="cb21-4"><a href="estimabilidade.html#cb21-4" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="estimabilidade.html#cb21-5" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">trat =</span> <span class="fu">coef</span>(mod_trat), <span class="at">soma =</span> <span class="fu">coef</span>(mod_soma))    <span class="co"># betas diferentes...</span></span></code></pre></div>
+<pre><code>##      (Intercept) servidorB servidorC
+## trat    117.0447 30.356612 -8.310288
+## soma    124.3934 -7.348775 23.007837</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="estimabilidade.html#cb23-1" tabindex="-1"></a><span class="fu">c</span>(<span class="at">max_diff_ajustados =</span> <span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">fitted</span>(mod_trat) <span class="sc">-</span> <span class="fu">fitted</span>(mod_soma))),            <span class="co"># ...mas ajustados idênticos</span></span>
+<span id="cb23-2"><a href="estimabilidade.html#cb23-2" tabindex="-1"></a>  <span class="at">media_grupo_A_direta =</span> <span class="fu">mean</span>(dados_api<span class="sc">$</span>tempo_resposta[dados_api<span class="sc">$</span>servidor <span class="sc">==</span> <span class="st">&quot;A&quot;</span>]))</span></code></pre></div>
+<pre><code>##   max_diff_ajustados media_grupo_A_direta 
+##         1.421085e-13         1.170447e+02</code></pre>
+<p>Os vetores <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> são completamente diferentes entre as duas parametrizações
+— como deveria ser, já que <span class="math inline">\(\boldsymbol{\beta}\)</span> não é identificável sozinho —, mas os valores
+ajustados <span class="math inline">\(\mathbf{X}\hat{\boldsymbol{\beta}}\)</span> (e, portanto, qualquer função estimável, como a
+média do grupo A) coincidem exatamente. Essa invariância é a garantia formal de que a ANOVA do
+Capítulo 3 produz as mesmas conclusões independentemente de qual codificação de contrastes o
+software usa internamente.</p>
+<div id="svd-moore-penrose" class="section level3 hasAnchor" number="2.4.1">
+<h3><span class="header-section-number">2.4.1</span> A pseudoinversa de Moore-Penrose via decomposição em valores singulares<a href="estimabilidade.html#svd-moore-penrose" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>O chunk anterior usou <code>MASS::ginv()</code> para obter <em>uma</em> inversa generalizada de <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span>
+sem explicar como essa função a calcula por dentro. Vale a pena abrir essa caixa-preta, porque a
+construção é ao mesmo tempo concreta (poucas linhas de R) e a resposta canônica à pergunta “dentre
+as infinitas inversas generalizadas de uma matriz, existe uma mais natural?” — e a resposta é sim.</p>
+<p>Toda matriz <span class="math inline">\(\mathbf{A}\)</span> (<span class="math inline">\(m \times n\)</span>, posto <span class="math inline">\(r\)</span>) admite uma <strong>decomposição em valores singulares</strong>
+(SVD, <em>singular value decomposition</em>):</p>
+<p><span class="math display">\[
+\mathbf{A} = \mathbf{U}\mathbf{D}\mathbf{V}&#39;,
+\]</span></p>
+<p>em que <span class="math inline">\(\mathbf{U}\)</span> (<span class="math inline">\(m\times m\)</span>) e <span class="math inline">\(\mathbf{V}\)</span> (<span class="math inline">\(n\times n\)</span>) são matrizes ortogonais
+(<span class="math inline">\(\mathbf{U}&#39;\mathbf{U}=\mathbf{I}_m\)</span>, <span class="math inline">\(\mathbf{V}&#39;\mathbf{V}=\mathbf{I}_n\)</span>) e <span class="math inline">\(\mathbf{D}\)</span>
+(<span class="math inline">\(m\times n\)</span>) é “diagonal” (zero fora da diagonal principal), com entradas <span class="math inline">\(d_1 \geq d_2 \geq \cdots \geq d_{\min(m,n)} \geq 0\)</span>, os <strong>valores singulares</strong> de <span class="math inline">\(\mathbf{A}\)</span> — exatamente <span class="math inline">\(r\)</span>
+deles são estritamente positivos <span class="citation">(<a href="#ref-golubvanloan2013">Golub &amp; Van Loan, 2013</a>)</span>. A SVD existe para <em>qualquer</em> matriz, quadrada
+ou não, de posto completo ou não, o que a torna mais geral do que a decomposição espectral (que
+exige simetria).</p>
+<p><strong>Definição (inversa de Moore-Penrose).</strong> Para qualquer matriz <span class="math inline">\(\mathbf{A}\)</span>, existe uma única
+matriz <span class="math inline">\(\mathbf{A}^+\)</span>, a <strong>pseudoinversa de Moore-Penrose</strong>, que satisfaz simultaneamente
+<span class="citation">(<a href="#ref-penrose1955">Penrose, 1955</a>)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(\mathbf{A}\mathbf{A}^+\mathbf{A} = \mathbf{A}\)</span> (é uma inversa generalizada, no sentido já
+usado nesta seção);</li>
+<li><span class="math inline">\(\mathbf{A}^+\mathbf{A}\mathbf{A}^+ = \mathbf{A}^+\)</span>;</li>
+<li><span class="math inline">\(\mathbf{A}\mathbf{A}^+\)</span> é simétrica;</li>
+<li><span class="math inline">\(\mathbf{A}^+\mathbf{A}\)</span> é simétrica.</li>
+</ol>
+<p>A condição 1 é a única que <span class="math inline">\((\mathbf{X}&#39;\mathbf{X})^-\)</span> genérica precisa satisfazer; as condições
+2–4 são o que torna <span class="math inline">\(\mathbf{A}^+\)</span> <em>única</em> entre as infinitas inversas generalizadas — é, em certo
+sentido, a “mais simétrica” de todas. Ela se constrói diretamente da SVD invertendo apenas os
+valores singulares não nulos e transpondo o formato:</p>
+<p><span class="math display">\[
+\mathbf{A}^+ = \mathbf{V}\mathbf{D}^+\mathbf{U}&#39;, \qquad
+\mathbf{D}^+ = \begin{bmatrix} \mathbf{D}_r^{-1} &amp; \mathbf{0} \\ \mathbf{0} &amp; \mathbf{0}
+\end{bmatrix},
+\]</span></p>
+<p>em que <span class="math inline">\(\mathbf{D}_r^{-1}\)</span> inverte, um a um, os <span class="math inline">\(r\)</span> valores singulares positivos. Quando
+<span class="math inline">\(\mathbf{A}\)</span> tem posto coluna completo, <span class="math inline">\(\mathbf{A}^+ = (\mathbf{A}&#39;\mathbf{A})^{-1}\mathbf{A}&#39;\)</span>
+(a inversa “de mínimos quadrados” usual); quando não tem, <span class="math inline">\(\mathbf{A}^+\)</span> generaliza essa fórmula
+de forma que as condições 1–4 continuem valendo.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — construindo A⁺ à mão via svd() e comparando com MASS::ginv()</div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="estimabilidade.html#cb25-1" tabindex="-1"></a><span class="co"># Reaproveitamos a mesma X&#39;X deficiente em posto do exemplo do servidor (posto 3, 4 colunas)</span></span>
+<span id="cb25-2"><a href="estimabilidade.html#cb25-2" tabindex="-1"></a>svd_XtX <span class="ot">&lt;-</span> <span class="fu">svd</span>(XtX)          <span class="co"># svd() do R devolve $u, $d (vetor) e $v tais que XtX = u %*% diag(d) %*% t(v)</span></span>
+<span id="cb25-3"><a href="estimabilidade.html#cb25-3" tabindex="-1"></a>svd_XtX<span class="sc">$</span>d                    <span class="co"># valores singulares: o quarto é (numericamente) zero -&gt; posto 3</span></span></code></pre></div>
+<pre><code>## [1] 8.431114e+01 2.213304e+01 1.355582e+01 1.789853e-15</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="estimabilidade.html#cb27-1" tabindex="-1"></a>tol <span class="ot">&lt;-</span> <span class="fl">1e-8</span></span>
+<span id="cb27-2"><a href="estimabilidade.html#cb27-2" tabindex="-1"></a>d_inv <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(svd_XtX<span class="sc">$</span>d <span class="sc">&gt;</span> tol, <span class="dv">1</span> <span class="sc">/</span> svd_XtX<span class="sc">$</span>d, <span class="dv">0</span>)   <span class="co"># inverte só os valores singulares &quot;reais&quot;</span></span>
+<span id="cb27-3"><a href="estimabilidade.html#cb27-3" tabindex="-1"></a>XtX_svd <span class="ot">&lt;-</span> svd_XtX<span class="sc">$</span>v <span class="sc">%*%</span> <span class="fu">diag</span>(d_inv) <span class="sc">%*%</span> <span class="fu">t</span>(svd_XtX<span class="sc">$</span>u)  <span class="co"># A+ = V D+ U&#39;</span></span>
+<span id="cb27-4"><a href="estimabilidade.html#cb27-4" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="estimabilidade.html#cb27-5" tabindex="-1"></a><span class="co"># Comparação com a &quot;caixa-preta&quot; MASS::ginv(), já usada acima</span></span>
+<span id="cb27-6"><a href="estimabilidade.html#cb27-6" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(XtX_svd <span class="sc">-</span> XtX_g))</span></code></pre></div>
+<pre><code>## [1] 6.938894e-18</code></pre>
+<p>A diferença máxima entre as duas construções é numericamente zero: <code>MASS::ginv()</code> calcula
+exatamente essa fórmula <span class="math inline">\(\mathbf{V}\mathbf{D}^+\mathbf{U}&#39;\)</span> internamente — não há mágica adicional.
+O quarto valor singular de <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span> está na casa de <span class="math inline">\(10^{-15}\)</span>, e não exatamente
+zero, por causa do arredondamento de ponto flutuante — daí a necessidade da tolerância <code>tol</code> para
+decidir quais valores singulares tratar como nulos, uma escolha prática que reaparece toda vez que
+se resolve um sistema linear deficiente em posto numericamente.</p>
+<p>Note que a pseudoinversa de Moore-Penrose é apenas <strong>uma</strong> entre infinitas inversas generalizadas
+válidas de <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span> — a Seção anterior já mostrou que o critério de estimabilidade
+<span class="math inline">\(\boldsymbol{\lambda}&#39;(\mathbf{X}&#39;\mathbf{X})^-(\mathbf{X}&#39;\mathbf{X}) = \boldsymbol{\lambda}&#39;\)</span>
+vale para <em>qualquer</em> inversa generalizada, incluindo esta. A vantagem prática de <span class="math inline">\(\mathbf{A}^+\)</span>
+não é estatística (nenhuma inversa generalizada é “mais correta” para calcular funções estimáveis
+— todas dão o mesmo resultado, por definição), mas computacional e numérica: a SVD é o método mais
+estável para lidar com matrizes próximas de deficientes em posto (por exemplo, quando duas
+covariáveis são quase, mas não exatamente, colineares), e é o algoritmo que pacotes de álgebra
+linear (R, <code>numpy</code>, <code>MATLAB</code>) de fato usam por trás de rotinas como <code>MASS::ginv()</code>.</p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-golubvanloan2013" class="csl-entry">
+Golub, G. H., &amp; Van Loan, C. F. (2013). <em>Matrix computations</em> (4th ed.). Johns Hopkins University Press.
+</div>
+<div id="ref-penrose1955" class="csl-entry">
+Penrose, R. (1955). A generalized inverse for matrices. <em>Mathematical Proceedings of the Cambridge Philosophical Society</em>, <em>51</em>(3), 406–413.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="minimos-quadrados.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gauss-markov.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

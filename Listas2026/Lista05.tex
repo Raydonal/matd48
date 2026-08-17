@@ -1,0 +1,115 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 05 --- Submuestreo e Efeitos Aleatórios}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 05}{DCA com submuestreo e modelo de efeitos aleatórios (Capítulo 3 / Aula 05)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito05.pdf}.}
+
+\begin{questao}{1} \textbf{(Agricultura/pecuária --- identificação de unidades com submuestreo)}
+
+Um zootecnista testa o efeito de três dietas (A, B, C) sobre o teor de gordura no leite (\%).
+Doze vacas são usadas, sorteadas 4 para cada dieta; cada vaca é ordenhada 3 vezes ao longo do
+dia, e o teor de gordura é medido em cada ordenha separadamente.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Identifique a unidade experimental e a unidade amostral. Quantos níveis $t$, UEs por
+    tratamento $r$ e submuestras por UE $q$ há neste desenho? Confira que $N = trq$ bate com o
+    número total de medições.
+  \item Escreva o modelo estatístico apropriado para $Y_{ijk}$, definindo cada termo.
+  \item Se o zootecnista rodasse uma ANOVA de um fator diretamente nas $N$ medições de gordura
+    (ignorando que vêm de apenas 12 vacas), qual seria o erro cometido e por que ele tende a
+    produzir significância "fácil demais"?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Dedução --- esperança do quadrado médio do erro experimental)}
+
+Considere o modelo balanceado de submuestreo $Y_{ijk} = \mu + \tau_i + \delta_{ij} +
+\varepsilon_{ijk}$, $i=1,\ldots,t$, $j=1,\ldots,r$, $k=1,\ldots,q$, com $\delta_{ij}
+\overset{iid}{\sim} N(0,\sigma_\delta^2)$ e $\varepsilon_{ijk} \overset{iid}{\sim}
+N(0,\sigma_\varepsilon^2)$ independentes entre si. A soma de quadrados do erro experimental é
+$$
+SQ_{\text{exp}} = q\sum_{i=1}^t\sum_{j=1}^r (\bar Y_{ij\cdot} - \bar Y_{i\cdot\cdot})^2 .
+$$
+Você pode usar, sem demonstrar, o fato de que se $X_1,\ldots,X_r$ são i.i.d. com variância
+$\sigma_X^2$, então $E\!\left[\sum_{j=1}^r (X_j-\bar X)^2\right] = (r-1)\sigma_X^2$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\bar Y_{ij\cdot} - \bar Y_{i\cdot\cdot} = (\delta_{ij}-\bar\delta_{i\cdot}) +
+    (\bar\varepsilon_{ij\cdot} - \bar\varepsilon_{i\cdot\cdot})$, e dê a variância de
+    $\delta_{ij}+\bar\varepsilon_{ij\cdot}$ (trate as $r$ quantidades $\delta_{ij} +
+    \bar\varepsilon_{ij\cdot}$, $j=1,\ldots,r$, como i.i.d. dentro de cada tratamento $i$).
+  \item Usando o item (a) e o fato fornecido, mostre que $E[SQ_{\text{exp}}] = t(r-1)(\sigma_\varepsilon^2
+    + q\sigma_\delta^2)$.
+  \item Conclua que $E[MS_{\text{exp}}] = E[SQ_{\text{exp}}]/[t(r-1)] = \sigma_\varepsilon^2 +
+    q\sigma_\delta^2$, confirmando a coluna $E[QM]$ da tabela de ANOVA com submuestreo.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Agricultura/pecuária --- ANOVA com submuestreo, tabela incompleta)}
+
+Retomando o experimento das dietas (Questão 1: $t=3$, $r=4$, $q=3$, $N=36$), o ajuste da ANOVA
+aninhada produziu os valores abaixo (alguns propositalmente omitidos, marcados com "?").
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+Fonte & g.l. & SQ & QM & $F$ \\
+\midrule
+Dieta & ? & 54{,}0 & ? & ? \\
+Erro experimental (entre vacas) & ? & 39{,}0 & ? & --- \\
+Erro de amostragem (entre ordenhas) & ? & 48{,}0 & 2{,}00 & --- \\
+Total & 35 & ? & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete todos os graus de liberdade, o $SQ_{\text{Total}}$, e os quadrados médios
+    faltantes.
+  \item Calcule o $F$ \textbf{correto} para testar o efeito da dieta. Usando
+    $F_{2,9;0{,}05}\approx 4{,}26$, há evidência de efeito de dieta?
+  \item Calcule o que aconteceria se, por engano, o zootecnista usasse o erro de amostragem no
+    denominador em vez do erro experimental. Compare esse $F$ "errado" (e seus graus de liberdade)
+    com o $F$ correto do item (b), e explique em uma frase por que o erro é sempre nessa direção
+    (favorece rejeitar $H_0$ com mais facilidade do que deveria).
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Psicologia --- componentes de variância)}
+
+Um pesquisador sorteia 6 vídeos motivacionais de um banco de 40 vídeos possíveis e mostra cada
+um a 10 novos participantes antes de um teste de resistência física, medindo o tempo de
+resistência (segundos). O objetivo não é comparar esses 6 vídeos específicos, mas estimar o
+quanto a escolha do vídeo, de modo geral, contribui para a variabilidade do desempenho. A ANOVA
+fornece $MS_{\text{Entre vídeos}} = 850$ e $MS_E = 310$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Qual modelo (efeitos fixos ou aleatórios) é apropriado aqui? Justifique com base no
+    processo de seleção dos vídeos.
+  \item Estime $\hat\sigma_\tau^2$ (variância entre vídeos) e $\hat\sigma^2$ (variância residual).
+  \item Calcule o coeficiente de correlação intraclasse (ICC) e interprete seu valor em uma frase.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Dedução --- variância e correlação no modelo de efeitos aleatórios)}
+
+No modelo de efeitos aleatórios $Y_{ij} = \mu + \tau_i + \varepsilon_{ij}$, $i=1,\ldots,t$,
+$j=1,\ldots,n$, com $\tau_i \overset{iid}{\sim} N(0,\sigma_\tau^2)$ independente de
+$\varepsilon_{ij}\overset{iid}{\sim} N(0,\sigma^2)$:
+
+\begin{enumerate}[label=(\alph*)]
+  \item Obtenha $\mathrm{Var}(Y_{ij})$.
+  \item Obtenha $\mathrm{Cov}(Y_{ij}, Y_{ij'})$ para $j\neq j'$ (mesmo nível $i$) e
+    $\mathrm{Cov}(Y_{ij}, Y_{i'j'})$ para $i \neq i'$ (níveis diferentes).
+  \item Usando os itens (a) e (b), mostre que $\mathrm{Corr}(Y_{ij},Y_{ij'}) =
+    \sigma_\tau^2/(\sigma_\tau^2+\sigma^2)$ para $j\neq j'$, e explique por que essa quantidade é
+    chamada de coeficiente de correlação intraclasse.
+\end{enumerate}
+\end{questao}
+
+\end{document}

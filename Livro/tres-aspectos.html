@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.4 Os três aspectos do delineamento experimental | Planejamento e Análise de Experimentos</title>
+  <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.4 Os três aspectos do delineamento experimental | Planejamento e Análise de Experimentos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.4 Os três aspectos do delineamento experimental | Planejamento e Análise de Experimentos" />
+  
+  <meta name="twitter:description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
+  
+
+<meta name="author" content="Raydonal Ospina Martínez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="fontes-variacao.html"/>
+<link rel="next" href="resumo-do-capítulo.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./"><strong>Planejamento e Análise de Experimentos</strong></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prefácio</a>
+<ul>
+<li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
+<li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
+<li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html"><i class="fa fa-check"></i><b>1.1</b> O método científico e o papel do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#o-ciclo-empírico-de-observação-a-hipótese-testável"><i class="fa fa-check"></i><b>1.1.1</b> O ciclo empírico: de observação a hipótese testável</a></li>
+<li class="chapter" data-level="1.1.2" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#observação-vs.-experimentação-por-que-controlado-importa"><i class="fa fa-check"></i><b>1.1.2</b> Observação vs. experimentação: por que “controlado” importa</a></li>
+<li class="chapter" data-level="1.1.3" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#uma-nota-histórica-fisher-rothamsted-e-a-origem-do-delineamento-moderno"><i class="fa fa-check"></i><b>1.1.3</b> Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno</a></li>
+<li class="chapter" data-level="1.1.4" data-path="metodo-cientifico.html"><a href="metodo-cientifico.html#confusão-confounding-o-problema-que-a-aleatorização-resolve"><i class="fa fa-check"></i><b>1.1.4</b> Confusão (<em>confounding</em>): o problema que a aleatorização resolve</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="unidades.html"><a href="unidades.html"><i class="fa fa-check"></i><b>1.2</b> Unidades experimentais e unidades amostrais</a></li>
+<li class="chapter" data-level="1.3" data-path="fontes-variacao.html"><a href="fontes-variacao.html"><i class="fa fa-check"></i><b>1.3</b> Fontes de variação</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fontes-variacao.html"><a href="fontes-variacao.html#aditividade-aleatorizacao"><i class="fa fa-check"></i><b>1.3.1</b> Por que essa decomposição força a forma aditiva do modelo</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fontes-variacao.html"><a href="fontes-variacao.html#fatores-niveis"><i class="fa fa-check"></i><b>1.3.2</b> Fatores e níveis</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html"><i class="fa fa-check"></i><b>1.4</b> Os três aspectos do delineamento experimental</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="tres-aspectos.html"><a href="tres-aspectos.html#repetição-replicação"><i class="fa fa-check"></i><b>1.4.1</b> Repetição (replicação)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="tres-aspectos.html"><a href="tres-aspectos.html#aleatorização"><i class="fa fa-check"></i><b>1.4.2</b> Aleatorização</a></li>
+<li class="chapter" data-level="1.4.3" data-path="tres-aspectos.html"><a href="tres-aspectos.html#neyman-rubin"><i class="fa fa-check"></i><b>1.4.3</b> Por que a aleatorização funciona: o modelo de resultados potenciais</a></li>
+<li class="chapter" data-level="1.4.4" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.4</b> Validade interna e validade externa</a></li>
+<li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.5</b> O elo entre amostragem e planejamento de experimentos</a></li>
+<li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.6</b> Controle local (blocagem)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-lineares.html"><a href="modelos-lineares.html"><i class="fa fa-check"></i><b>2</b> Introdução aos modelos lineares</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="hasse.html"><a href="hasse.html"><i class="fa fa-check"></i><b>2.1</b> Diagramas de Hasse: a estrutura do delineamento antes da álgebra</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="hasse.html"><a href="hasse.html#o-diagrama-como-um-retrato-da-estrutura-do-dado"><i class="fa fa-check"></i><b>2.1.1</b> O diagrama como um retrato da estrutura do dado</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modelo-geral.html"><a href="modelo-geral.html"><i class="fa fa-check"></i><b>2.2</b> O modelo linear geral</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="modelo-geral.html"><a href="modelo-geral.html#porque-xbeta-mais-erro"><i class="fa fa-check"></i><b>2.2.1</b> Por que esta é a forma natural, não arbitrária, do modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="minimos-quadrados.html"><a href="minimos-quadrados.html"><i class="fa fa-check"></i><b>2.3</b> Estimação por mínimos quadrados</a></li>
+<li class="chapter" data-level="2.4" data-path="estimabilidade.html"><a href="estimabilidade.html"><i class="fa fa-check"></i><b>2.4</b> Estimabilidade de funções lineares dos parâmetros</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.4.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.5</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.6</b> A matriz de projeção</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.6.1</b> A soma de quadrados total como forma quadrática</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="modelo-particionado.html"><a href="modelo-particionado.html"><i class="fa fa-check"></i><b>2.7</b> O modelo linear particionado</a></li>
+<li class="chapter" data-level="2.8" data-path="fwl.html"><a href="fwl.html"><i class="fa fa-check"></i><b>2.8</b> O teorema de Frisch-Waugh-Lovell</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.8.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.9</b> Distribuição de formas lineares e quadráticas</a></li>
+<li class="chapter" data-level="2.10" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.10</b> Resumo do capítulo</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="dca.html"><a href="dca.html"><i class="fa fa-check"></i><b>3</b> Delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html"><i class="fa fa-check"></i><b>3.1</b> Princípios de aleatorização: a ideia de um teste de aleatorização</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="principios-aleatorizacao.html"><a href="principios-aleatorizacao.html#randomizacao-df-f"><i class="fa fa-check"></i><b>3.1.1</b> De onde vêm os graus de liberdade <span class="math inline">\((2,33)\)</span>: a ponte entre aleatorização, variância decomposta e <span class="math inline">\(F\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html"><i class="fa fa-check"></i><b>3.2</b> O delineamento completamente aleatorizado a uma via de classificação</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="dca-uma-via.html"><a href="dca-uma-via.html#modelo-dca"><i class="fa fa-check"></i><b>3.2.1</b> O modelo estatístico</a></li>
+<li class="chapter" data-level="3.2.2" data-path="dca-uma-via.html"><a href="dca-uma-via.html#matricial-dca"><i class="fa fa-check"></i><b>3.2.2</b> Notação matricial: o DCA como caso particular do modelo linear geral</a></li>
+<li class="chapter" data-level="3.2.3" data-path="dca-uma-via.html"><a href="dca-uma-via.html#potencial-causal"><i class="fa fa-check"></i><b>3.2.3</b> Resultados potenciais e o estimando causal</a></li>
+<li class="chapter" data-level="3.2.4" data-path="dca-uma-via.html"><a href="dca-uma-via.html#ic-dca"><i class="fa fa-check"></i><b>3.2.4</b> Estimação e intervalos de confiança</a></li>
+<li class="chapter" data-level="3.2.5" data-path="dca-uma-via.html"><a href="dca-uma-via.html#anova-dca"><i class="fa fa-check"></i><b>3.2.5</b> A tabela de análise de variância</a></li>
+<li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#modelo-aleatorio"><i class="fa fa-check"></i><b>3.4.1</b> Quando os tratamentos são uma amostra aleatória</a></li>
+<li class="chapter" data-level="3.4.2" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#anova-aleatorio"><i class="fa fa-check"></i><b>3.4.2</b> ANOVA e componentes de variância</a></li>
+<li class="chapter" data-level="3.4.3" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html#amostra-aleatorio"><i class="fa fa-check"></i><b>3.4.3</b> Tamanho de amostra no modelo de efeitos aleatórios</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html"><i class="fa fa-check"></i><b>3.5</b> Verificação de pressupostos</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
+<li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="ancova.html"><a href="ancova.html#o-modelo"><i class="fa fa-check"></i><b>3.9.1</b> O modelo</a></li>
+<li class="chapter" data-level="3.9.2" data-path="ancova.html"><a href="ancova.html#ancova-em-notação-matricial-mais-uma-coluna-em-mathbf-x"><i class="fa fa-check"></i><b>3.9.2</b> ANCOVA em notação matricial: mais uma coluna em <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.9.3" data-path="ancova.html"><a href="ancova.html#a-tabela-de-anova-ajustada-pela-covariável"><i class="fa fa-check"></i><b>3.9.3</b> A tabela de ANOVA ajustada pela covariável</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html"><i class="fa fa-check"></i><b>3.10</b> Teste de Kruskal-Wallis</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dbca.html"><a href="dbca.html"><i class="fa fa-check"></i><b>4.1</b> O delineamento em blocos completos aleatorizados (DBCA)</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dbca.html"><a href="dbca.html#motivação-o-que-dá-errado-sem-controle-local-fatores-confundidos"><i class="fa fa-check"></i><b>4.1.1</b> Motivação: o que dá errado sem controle local — fatores confundidos</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dbca.html"><a href="dbca.html#o-modelo-1"><i class="fa fa-check"></i><b>4.1.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dbca.html"><a href="dbca.html#notação-matricial-yxbetavarepsilon"><i class="fa fa-check"></i><b>4.1.3</b> Notação matricial: <span class="math inline">\(Y=X\beta+\varepsilon\)</span></a></li>
+<li class="chapter" data-level="4.1.4" data-path="dbca.html"><a href="dbca.html#blocagem-como-aleatorização-restrita-a-camada-causal"><i class="fa fa-check"></i><b>4.1.4</b> Blocagem como aleatorização restrita: a camada causal</a></li>
+<li class="chapter" data-level="4.1.5" data-path="dbca.html"><a href="dbca.html#tabela-de-anova"><i class="fa fa-check"></i><b>4.1.5</b> Tabela de ANOVA</a></li>
+<li class="chapter" data-level="4.1.6" data-path="dbca.html"><a href="dbca.html#esperança-dos-quadrados-médios"><i class="fa fa-check"></i><b>4.1.6</b> Esperança dos quadrados médios</a></li>
+<li class="chapter" data-level="4.1.7" data-path="dbca.html"><a href="dbca.html#visualizando-aditividade-o-gráfico-de-perfis"><i class="fa fa-check"></i><b>4.1.7</b> Visualizando aditividade: o gráfico de perfis</a></li>
+<li class="chapter" data-level="4.1.8" data-path="dbca.html"><a href="dbca.html#diagrama-de-hasse-do-dbca-por-que-não-há-nó-de-interação"><i class="fa fa-check"></i><b>4.1.8</b> Diagrama de Hasse do DBCA: por que não há nó de interação</a></li>
+<li class="chapter" data-level="4.1.9" data-path="dbca.html"><a href="dbca.html#dados-faltantes-estimação-do-valor-perdido"><i class="fa fa-check"></i><b>4.1.9</b> Dados faltantes: estimação do valor perdido</a></li>
+<li class="chapter" data-level="4.1.10" data-path="dbca.html"><a href="dbca.html#eficiência-relativa-do-dbca-frente-ao-dca"><i class="fa fa-check"></i><b>4.1.10</b> Eficiência relativa do DBCA frente ao DCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="friedman.html"><a href="friedman.html"><i class="fa fa-check"></i><b>4.2</b> Teste de Friedman</a></li>
+<li class="chapter" data-level="4.3" data-path="bib.html"><a href="bib.html"><i class="fa fa-check"></i><b>4.3</b> Blocos incompletos balanceados</a></li>
+<li class="chapter" data-level="4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html"><i class="fa fa-check"></i><b>4.4</b> Delineamento em quadrado latino</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="quadrado-latino.html"><a href="quadrado-latino.html#motivação-dois-gradientes-ortogonais-e-por-que-um-bloqueio-simples-não-basta"><i class="fa fa-check"></i><b>4.4.1</b> Motivação: dois gradientes ortogonais, e por que um bloqueio simples não basta</a></li>
+<li class="chapter" data-level="4.4.2" data-path="quadrado-latino.html"><a href="quadrado-latino.html#o-modelo-2"><i class="fa fa-check"></i><b>4.4.2</b> O modelo</a></li>
+<li class="chapter" data-level="4.4.3" data-path="quadrado-latino.html"><a href="quadrado-latino.html#diagrama-de-hasse-do-quadrado-latino-três-fatores-cruzados-dois-a-dois"><i class="fa fa-check"></i><b>4.4.3</b> Diagrama de Hasse do quadrado latino: três fatores cruzados dois a dois</a></li>
+<li class="chapter" data-level="4.4.4" data-path="quadrado-latino.html"><a href="quadrado-latino.html#aleatorização-de-um-quadrado-latino-yates1933latin"><i class="fa fa-check"></i><b>4.4.4</b> Aleatorização de um quadrado latino <span class="citation">(Yates, 1933)</span></a></li>
+<li class="chapter" data-level="4.4.5" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quadrados-latinos-replicados"><i class="fa fa-check"></i><b>4.4.5</b> Quadrados latinos replicados</a></li>
+<li class="chapter" data-level="4.4.6" data-path="quadrado-latino.html"><a href="quadrado-latino.html#quantas-réplicas-uma-análise-de-poder"><i class="fa fa-check"></i><b>4.4.6</b> Quantas réplicas? Uma análise de poder</a></li>
+<li class="chapter" data-level="4.4.7" data-path="quadrado-latino.html"><a href="quadrado-latino.html#eficiencia-ql"><i class="fa fa-check"></i><b>4.4.7</b> Eficiência relativa do quadrado latino frente ao DBCA e ao DCA</a></li>
+<li class="chapter" data-level="4.4.8" data-path="quadrado-latino.html"><a href="quadrado-latino.html#ql-exemplo-ecommerce"><i class="fa fa-check"></i><b>4.4.8</b> Um segundo exemplo completo: cinco variantes de checkout em e-commerce</a></li>
+<li class="chapter" data-level="4.4.9" data-path="quadrado-latino.html"><a href="quadrado-latino.html#youden"><i class="fa fa-check"></i><b>4.4.9</b> Quadrados de Youden: quando o quadrado latino não pode ser completo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html"><i class="fa fa-check"></i><b>4.5</b> Delineamento em quadrado greco-latino</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#mols"><i class="fa fa-check"></i><b>4.5.1</b> Quadrados latinos mutuamente ortogonais (MOLS): existência e o problema de Euler</a></li>
+<li class="chapter" data-level="4.5.2" data-path="quadrado-greco-latino.html"><a href="quadrado-greco-latino.html#o-modelo-3"><i class="fa fa-check"></i><b>4.5.2</b> O modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.6</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
+<li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a></li>
+<li class="chapter" data-level="5.4" data-path="matriz-axb.html"><a href="matriz-axb.html"><i class="fa fa-check"></i><b>5.4</b> Notação matricial do fatorial A×B</a></li>
+<li class="chapter" data-level="5.5" data-path="axbxc.html"><a href="axbxc.html"><i class="fa fa-check"></i><b>5.5</b> Fatoriais A×B×C: interações duplas e tripla</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="axbxc.html"><a href="axbxc.html#cubo-2x2x2"><i class="fa fa-check"></i><b>5.5.1</b> O cubo do <span class="math inline">\(2^3\)</span>: visualizando efeitos principais, duplos e triplo</a></li>
+<li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
+<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
+<li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="nao-replicado.html"><a href="nao-replicado.html"><i class="fa fa-check"></i><b>6.2</b> Análise de um fatorial <span class="math inline">\(2^k\)</span> não replicado</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-probabilidade-normal-half-normal-plot"><i class="fa fa-check"></i><b>6.2.1</b> Gráfico de probabilidade normal (half-normal plot)</a></li>
+<li class="chapter" data-level="6.2.2" data-path="nao-replicado.html"><a href="nao-replicado.html#gráfico-de-pareto-dos-efeitos"><i class="fa fa-check"></i><b>6.2.2</b> Gráfico de Pareto dos efeitos</a></li>
+<li class="chapter" data-level="6.2.3" data-path="nao-replicado.html"><a href="nao-replicado.html#margem-de-erro-pelo-método-de-lenth"><i class="fa fa-check"></i><b>6.2.3</b> Margem de erro pelo método de Lenth</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="confusao-2k.html"><a href="confusao-2k.html"><i class="fa fa-check"></i><b>6.3</b> Confusão em <span class="math inline">\(2^k\)</span>: designação de tratamentos a blocos</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="confusao-2k.html"><a href="confusao-2k.html#esquema-de-designação-o-contraste-definidor"><i class="fa fa-check"></i><b>6.3.1</b> Esquema de designação: o contraste definidor</a></li>
+<li class="chapter" data-level="6.3.2" data-path="confusao-2k.html"><a href="confusao-2k.html#confusao-projecao"><i class="fa fa-check"></i><b>6.3.2</b> Confusão como colinearidade em <span class="math inline">\(\mathbf{X}\)</span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="confusao-2k.html"><a href="confusao-2k.html#confusão-total-vs.-confusão-parcial"><i class="fa fa-check"></i><b>6.3.3</b> Confusão total vs. confusão parcial</a></li>
+<li class="chapter" data-level="6.3.4" data-path="confusao-2k.html"><a href="confusao-2k.html#hasse-confusao"><i class="fa fa-check"></i><b>6.3.4</b> Visualizando a confusão com um diagrama de Hasse</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
+<li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
+<li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
+<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html"><i class="fa fa-check"></i><b>7.1</b> Introdução à superfície de resposta</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ponto-estacionario"><i class="fa fa-check"></i><b>7.1.1</b> Classificando o ponto estacionário: gradiente e Hessiana</a></li>
+<li class="chapter" data-level="7.1.2" data-path="superficie-resposta.html"><a href="superficie-resposta.html#analise-canonica"><i class="fa fa-check"></i><b>7.1.2</b> Análise canônica: além de classificar, descrever a forma da superfície</a></li>
+<li class="chapter" data-level="7.1.3" data-path="superficie-resposta.html"><a href="superficie-resposta.html#ridge-analysis"><i class="fa fa-check"></i><b>7.1.3</b> Análise de ridge: otimizando dentro de um raio fixo da região experimental</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="steepest-ascent.html"><a href="steepest-ascent.html"><i class="fa fa-check"></i><b>7.2</b> O caminho de máxima inclinação: de um fatorial inicial até a região do ótimo</a></li>
+<li class="chapter" data-level="7.3" data-path="ccd.html"><a href="ccd.html"><i class="fa fa-check"></i><b>7.3</b> Delineamento composto central (CCD)</a></li>
+<li class="chapter" data-level="7.4" data-path="desejabilidade.html"><a href="desejabilidade.html"><i class="fa fa-check"></i><b>7.4</b> Otimização de múltiplas respostas: funções de desejabilidade</a></li>
+<li class="chapter" data-level="7.5" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.5</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.6" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.6</b> Fim do programa do semestre</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><i class="fa fa-check"></i><b>8.1</b> Parte I — Testes A/B como delineamento completamente aleatorizado</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-e-dca"><i class="fa fa-check"></i><b>8.1.1</b> Um teste A/B é um delineamento completamente aleatorizado</a></li>
+<li class="chapter" data-level="8.1.2" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-dificuldades"><i class="fa fa-check"></i><b>8.1.2</b> Por que testes A/B em produtos digitais são estatisticamente difíceis</a></li>
+<li class="chapter" data-level="8.1.3" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-peeking"><i class="fa fa-check"></i><b>8.1.3</b> O problema do “peeking”</a></li>
+<li class="chapter" data-level="8.1.4" data-path="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#ab-winners-curse"><i class="fa fa-check"></i><b>8.1.4</b> Vício do vencedor (<em>winner’s curse</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><i class="fa fa-check"></i><b>8.2</b> Parte II — Bandits: quando explorar e quando explotar</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-motivacao"><i class="fa fa-check"></i><b>8.2.1</b> Exploração, explotação e a definição de arrependimento (<em>regret</em>)</a></li>
+<li class="chapter" data-level="8.2.2" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-ucb1"><i class="fa fa-check"></i><b>8.2.2</b> Upper Confidence Bound (UCB1): otimismo perante a incerteza</a></li>
+<li class="chapter" data-level="8.2.3" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-thompson"><i class="fa fa-check"></i><b>8.2.3</b> Thompson sampling: uma solução bayesiana</a></li>
+<li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
+<li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Planejamento e Análise de Experimentos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="tres-aspectos" class="section level2 hasAnchor" number="1.4">
+<h2><span class="header-section-number">1.4</span> Os três aspectos do delineamento experimental<a href="tres-aspectos.html#tres-aspectos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Seguindo a formalização clássica <span class="citation">(<a href="#ref-cochran1957experimental">Cochran &amp; Cox, 1957</a>; <a href="#ref-fisher1935design">Fisher, 1935b</a>)</span>, todo desenho
+experimental resolve simultaneamente três problemas, correspondentes a três famílias de decisões:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Desenho de tratamentos</strong> — <em>o quê</em> comparar: quais fatores, quantos níveis, se são
+cruzados ou aninhados.</li>
+<li><strong>Desenho para controle do erro</strong> — <em>como</em> atribuir tratamentos às unidades para que a
+comparação seja justa: aleatorização, blocagem, uso de covariáveis.</li>
+<li><strong>Desenho amostral</strong> — <em>quantas</em> unidades e <em>como</em> medir a resposta: número de réplicas,
+submuestragem, esquema de medição repetida.</li>
+</ol>
+<p>Os três princípios abaixo pertencem sobretudo ao segundo aspecto, mas condicionam os outros dois.</p>
+<div id="repetição-replicação" class="section level3 hasAnchor" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Repetição (replicação)<a href="tres-aspectos.html#repetição-replicação" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Repetir um tratamento em várias unidades experimentais <strong>independentes</strong> permite estimar a
+variabilidade do erro experimental e, com isso, testar se a diferença observada entre
+tratamentos é maior do que se esperaria só por acaso. Sem repetição genuína (não confundir com
+submuestreo — Seção <a href="unidades.html#unidades">1.2</a>), não há como estimar o erro e, portanto, não há inferência
+válida.</p>
+</div>
+<div id="aleatorização" class="section level3 hasAnchor" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Aleatorização<a href="tres-aspectos.html#aleatorização" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Atribuir tratamentos às unidades experimentais por sorteio — e não por conveniência, ordem de
+chegada ou julgamento do pesquisador — garante que, <em>em expectativa</em>, os grupos de tratamento
+sejam comparáveis em todas as variáveis, observadas ou não. É a aleatorização que permite
+interpretar uma diferença entre médias de grupo como <em>efeito causal</em> do tratamento, e não como
+reflexo de alguma variável de confusão. Sem aleatorização, o grupo controle deixa de ser um
+substituto crível do contrafactual do grupo tratado.</p>
+</div>
+<div id="neyman-rubin" class="section level3 hasAnchor" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Por que a aleatorização funciona: o modelo de resultados potenciais<a href="tres-aspectos.html#neyman-rubin" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A afirmação “a aleatorização elimina viés de confusão” costuma ser aceita por apelo intuitivo. Ela
+também admite uma justificativa formal, devida a Neyman <span class="citation">(<a href="#ref-neyman1923application">1990</a>)</span> e depois
+generalizada por Rubin <span class="citation">(<a href="#ref-rubin1974estimating">1974</a>)</span> — o chamado <strong>modelo causal de Neyman-Rubin</strong>, ou
+modelo de resultados potenciais, que usaremos ao longo de todo o curso sempre que compararmos
+tratamentos <span class="citation">(ver <a href="#ref-imbensrubin2015">Imbens &amp; Rubin, 2015</a> para um tratamento completo)</span>.</p>
+<p>Para cada unidade experimental <span class="math inline">\(i = 1, \dots, N\)</span> e cada tratamento <span class="math inline">\(t\)</span> que ela poderia receber,
+postulamos a existência de um <strong>resultado potencial</strong> <span class="math inline">\(Y_i(t)\)</span>: o valor que a resposta assumiria
+<em>se</em> a unidade <span class="math inline">\(i\)</span> recebesse o tratamento <span class="math inline">\(t\)</span>. Com dois tratamentos (<span class="math inline">\(t \in \{0,1\}\)</span>), cada
+unidade tem dois resultados potenciais, <span class="math inline">\(Y_i(0)\)</span> e <span class="math inline">\(Y_i(1)\)</span>, mas o experimento só revela <strong>um</strong>
+deles — o correspondente ao tratamento efetivamente sorteado para <span class="math inline">\(i\)</span>. O outro é, por definição,
+contrafactual: nunca observável. Esse é o <em>problema fundamental da inferência causal</em>.</p>
+<p>A Tabela <a href="tres-aspectos.html#tab:tabela-cientifica">1.5</a> concretiza a definição: é a chamada <strong>tabela científica</strong>
+(<em>science table</em>), um recurso didático padrão na exposição do modelo de Neyman-Rubin. Ela lista os
+dois resultados potenciais de cada unidade lado a lado — algo que <strong>nenhum conjunto de dados real
+exibe</strong>, porque metade da tabela é, por construção, contrafactual. A coluna <span class="math inline">\(Y_i^{\text{obs}}\)</span>
+mostra o que o experimento de fato revela depois que <span class="math inline">\(Z_i\)</span> é sorteado: exatamente uma das duas
+colunas anteriores, nunca as duas.</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tabela-cientifica">Table 1.5: </span><span id="tab:tabela-cientifica">Table 1.6: </span>Tabela científica (science table): apenas seis unidades ilustrativas. Cada linha tem dois resultados potenciais, mas só um é revelado (‘?’ marca o contrafactual). O ATE é uma média sobre uma coluna que nunca existe inteira nos dados observados.
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Unidade
+</th>
+<th style="text-align:center;">
+<span class="math inline">\(Y_i(0)\)</span>
+</th>
+<th style="text-align:center;">
+<span class="math inline">\(Y_i(1)\)</span>
+</th>
+<th style="text-align:center;">
+<span class="math inline">\(Z_i\)</span>
+</th>
+<th style="text-align:center;">
+<span class="math inline">\(Y_i^{\text{obs}}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(i=1\)</span>
+</td>
+<td style="text-align:center;">
+18,2
+</td>
+<td style="text-align:center;">
+?
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+18,2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(i=2\)</span>
+</td>
+<td style="text-align:center;">
+?
+</td>
+<td style="text-align:center;">
+24,7
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+24,7
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(i=3\)</span>
+</td>
+<td style="text-align:center;">
+21,4
+</td>
+<td style="text-align:center;">
+?
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+21,4
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(i=4\)</span>
+</td>
+<td style="text-align:center;">
+?
+</td>
+<td style="text-align:center;">
+27,1
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+27,1
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(i=5\)</span>
+</td>
+<td style="text-align:center;">
+16,9
+</td>
+<td style="text-align:center;">
+?
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+16,9
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(i=6\)</span>
+</td>
+<td style="text-align:center;">
+?
+</td>
+<td style="text-align:center;">
+22,3
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+22,3
+</td>
+</tr>
+</tbody>
+</table>
+<p>Duas suposições tornam o problema tratável:</p>
+<ul>
+<li><strong>SUTVA</strong> (<em>Stable Unit Treatment Value Assumption</em>): o resultado potencial de <span class="math inline">\(i\)</span> depende só do
+tratamento atribuído a <span class="math inline">\(i\)</span>, não do tratamento atribuído a outras unidades (sem interferência
+entre unidades) nem de “versões ocultas” do tratamento.</li>
+<li>O <strong>estimando causal</strong> de interesse é tipicamente o <strong>efeito médio do tratamento</strong>,
+<span class="math display">\[
+\text{ATE} = \frac{1}{N}\sum_{i=1}^N \big[Y_i(1) - Y_i(0)\big] = \bar Y(1) - \bar Y(0),
+\]</span>
+uma média sobre unidades de uma quantidade que, para cada unidade individualmente, nunca podemos
+calcular (porque exigiria observar os dois resultados potenciais da mesma unidade).</li>
+</ul>
+<p>Seja <span class="math inline">\(Z_i \in \{0,1\}\)</span> o indicador de qual tratamento a unidade <span class="math inline">\(i\)</span> recebeu. O que o experimento
+observa é <span class="math inline">\(Y_i = Z_i Y_i(1) + (1-Z_i) Y_i(0)\)</span>. O estimador natural do ATE é a diferença de médias
+observadas entre os grupos,
+<span class="math display">\[
+\widehat{\text{ATE}} = \frac{1}{n_1}\sum_{i:\,Z_i=1} Y_i \;-\; \frac{1}{n_0}\sum_{i:\,Z_i=0} Y_i
+= \bar Y_1^{\,obs} - \bar Y_0^{\,obs}.
+\]</span></p>
+<p><strong>Por que a aleatorização garante <span class="math inline">\(E[\widehat{\text{ATE}}] = \text{ATE}\)</span>?</strong> A chave é que os
+<span class="math inline">\(2N\)</span> valores <span class="math inline">\(\{Y_i(0), Y_i(1)\}_{i=1}^N\)</span> são tratados como <strong>fixos</strong> (características das
+unidades, não variáveis aleatórias) — a única aleatoriedade no experimento é <em>qual</em> subconjunto de
+<span class="math inline">\(n_1\)</span> unidades, entre os <span class="math inline">\(\binom{N}{n_1}\)</span> possíveis, recebe <span class="math inline">\(Z_i=1\)</span>. Sob esse mecanismo de
+aleatorização (cada subconjunto igualmente provável), <span class="math inline">\(Z_i\)</span> é independente dos pares
+<span class="math inline">\((Y_i(0), Y_i(1))\)</span> para todo <span class="math inline">\(i\)</span>, o que dá</p>
+<p><span class="math display">\[
+E\!\left[\bar Y_1^{\,obs}\right] = E\!\left[\frac{1}{n_1}\sum_{i:\,Z_i=1} Y_i(1)\right]
+= \frac{1}{N}\sum_{i=1}^N Y_i(1) = \bar Y(1),
+\]</span></p>
+<p>e, simetricamente, <span class="math inline">\(E[\bar Y_0^{\,obs}] = \bar Y(0)\)</span> — porque, sob aleatorização, o subconjunto
+sorteado para tratamento é uma amostra aleatória simples (sem reposição) do conjunto de todas as
+unidades, e a média amostral de uma AAS é não-viesada para a média da população da qual foi
+extraída, qualquer que seja essa população (aqui, a “população” dos <span class="math inline">\(N\)</span> valores fixos
+<span class="math inline">\(Y_i(1)\)</span>). Logo <span class="math inline">\(E[\widehat{\text{ATE}}] = \bar Y(1) - \bar Y(0) = \text{ATE}\)</span>: a diferença de
+médias observadas é não-viesada para o efeito causal médio, <strong>sem nenhuma suposição sobre a
+distribuição de <span class="math inline">\(Y_i(t)\)</span></strong> — o mesmo espírito, aliás, do teste de aleatorização que
+retomaremos com rigor no Capítulo 3.</p>
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: resultados potenciais de duas variedades de semente</strong><br>
+$N=40$ parcelas de terra têm <strong>fertilidade</strong> heterogênea e fixa. Postulamos, para cada
+parcela $i$, dois resultados potenciais de produtividade: $Y_i(0)$ sob a variedade V1 e $Y_i(1)$
+sob a variedade V2 (com efeito heterogêneo, maior nas parcelas mais férteis). Simulamos os $2N=80$
+valores fixos — nunca observados simultaneamente na prática — só para poder <em>verificar</em> a
+demonstração acima por Monte Carlo.
+</div>
+<div class="caixa-r"><strong>Uso do R</strong> — verificando E[ATE-chapéu] = ATE por simulação</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="tres-aspectos.html#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb2-2"><a href="tres-aspectos.html#cb2-2" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">40</span></span>
+<span id="cb2-3"><a href="tres-aspectos.html#cb2-3" tabindex="-1"></a>fertilidade <span class="ot">&lt;-</span> <span class="fu">runif</span>(N, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb2-4"><a href="tres-aspectos.html#cb2-4" tabindex="-1"></a>Y0 <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> fertilidade <span class="sc">+</span> <span class="fu">rexp</span>(N, <span class="at">rate =</span> <span class="fl">0.3</span>)   <span class="co"># potencial sob V1 — deliberadamente não normal</span></span>
+<span id="cb2-5"><a href="tres-aspectos.html#cb2-5" tabindex="-1"></a>Y1 <span class="ot">&lt;-</span> Y0 <span class="sc">+</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> fertilidade                     <span class="co"># potencial sob V2 — efeito heterogêneo (maior se fértil)</span></span>
+<span id="cb2-6"><a href="tres-aspectos.html#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="tres-aspectos.html#cb2-7" tabindex="-1"></a>ATE_verdadeiro <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y1 <span class="sc">-</span> Y0)</span>
+<span id="cb2-8"><a href="tres-aspectos.html#cb2-8" tabindex="-1"></a>ATE_verdadeiro</span></code></pre></div>
+<pre><code>## [1] 5.12961</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="tres-aspectos.html#cb4-1" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">20</span>        <span class="co"># metade das parcelas recebe V2</span></span>
+<span id="cb4-2"><a href="tres-aspectos.html#cb4-2" tabindex="-1"></a>n_rep <span class="ot">&lt;-</span> <span class="dv">5000</span>   <span class="co"># numero de reamostragens do mecanismo de aleatorizacao</span></span>
+<span id="cb4-3"><a href="tres-aspectos.html#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="tres-aspectos.html#cb4-4" tabindex="-1"></a>ate_hat <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n_rep, {</span>
+<span id="cb4-5"><a href="tres-aspectos.html#cb4-5" tabindex="-1"></a>  idx_trat <span class="ot">&lt;-</span> <span class="fu">sample</span>(N, n1)                                  <span class="co"># sorteio de qual subconjunto recebe V2</span></span>
+<span id="cb4-6"><a href="tres-aspectos.html#cb4-6" tabindex="-1"></a>  <span class="fu">mean</span>(Y1[idx_trat]) <span class="sc">-</span> <span class="fu">mean</span>(Y0[<span class="sc">-</span>idx_trat])                   <span class="co"># so o potencial &quot;revelado&quot; e observado</span></span>
+<span id="cb4-7"><a href="tres-aspectos.html#cb4-7" tabindex="-1"></a>})</span>
+<span id="cb4-8"><a href="tres-aspectos.html#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="tres-aspectos.html#cb4-9" tabindex="-1"></a><span class="fu">c</span>(<span class="at">ATE_verdadeiro =</span> ATE_verdadeiro, <span class="at">media_simulada =</span> <span class="fu">mean</span>(ate_hat),</span>
+<span id="cb4-10"><a href="tres-aspectos.html#cb4-10" tabindex="-1"></a>  <span class="at">diferenca =</span> <span class="fu">mean</span>(ate_hat) <span class="sc">-</span> ATE_verdadeiro)</span></code></pre></div>
+<pre><code>## ATE_verdadeiro media_simulada      diferenca 
+##     5.12961038     5.11388421    -0.01572617</code></pre>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:plot-ate-mc"></span>
+<img src="01-principios_files/figure-html/plot-ate-mc-1.png" alt="Distribuição de Monte Carlo de ATE-chapéu sob 5.000 reamostragens independentes do mecanismo de aleatorização (quais 20 das 40 parcelas recebem a variedade V2), com o ATE verdadeiro (fixo, calculado sobre os 2N resultados potenciais) marcado pela linha tracejada." width="75%" />
+<p class="caption">
+Figure 1.3: Distribuição de Monte Carlo de ATE-chapéu sob 5.000 reamostragens independentes do mecanismo de aleatorização (quais 20 das 40 parcelas recebem a variedade V2), com o ATE verdadeiro (fixo, calculado sobre os 2N resultados potenciais) marcado pela linha tracejada.
+</p>
+</div>
+<p>Cada uma das 5.000 barras do histograma corresponde a um sorteio <em>diferente</em> de quais 20 parcelas
+recebem V2 — os <span class="math inline">\(2N=80\)</span> resultados potenciais nunca mudam entre reamostragens, só a atribuição
+<span class="math inline">\(Z_i\)</span> muda, exatamente como a prova algébrica pressupõe. A distribuição de <span class="math inline">\(\widehat{\text{ATE}}\)</span>
+tem alguma dispersão (não é possível saber o ATE exatamente com uma única reamostragem de 40
+parcelas), mas está <strong>centrada exatamente na linha tracejada</strong> — o ATE verdadeiro e fixo —, e não
+em nenhum outro valor. Essa é a confirmação empírica, por simulação, de que
+<span class="math inline">\(E[\widehat{\text{ATE}}] = \text{ATE}\)</span>: nenhuma suposição de normalidade foi usada para gerar
+<span class="math inline">\(Y_i(0)\)</span> (a distribuição exponencial deslocada foi escolhida de propósito, para deixar claro que o
+resultado não depende de normalidade), e a média do histograma bate com o ATE verdadeiro de
+qualquer forma.</p>
+<p>Sem aleatorização — por exemplo, se as unidades se autosselecionam para o tratamento — <span class="math inline">\(Z_i\)</span> pode
+depender de <span class="math inline">\((Y_i(0), Y_i(1))\)</span> (unidades com <span class="math inline">\(Y_i(1)\)</span> potencialmente maior podem ser justamente as
+que “escolhem” o tratamento), quebrando a igualdade <span class="math inline">\(E[\bar Y_1^{\,obs}] = \bar Y(1)\)</span>: a diferença
+de médias observadas deixa de estimar o ATE e passa a misturar o efeito causal com viés de
+seleção — exatamente o problema levantado na Questão 3 da caixa de discussão a seguir.</p>
+<div id="quão-dispersa-é-widehattextate-a-fórmula-de-variância-de-neyman" class="section level4 hasAnchor" number="1.4.3.1">
+<h4><span class="header-section-number">1.4.3.1</span> Quão dispersa é <span class="math inline">\(\widehat{\text{ATE}}\)</span>? A fórmula de variância de Neyman<a href="tres-aspectos.html#quão-dispersa-é-widehattextate-a-fórmula-de-variância-de-neyman" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Não-viés diz que o histograma da Figura <a href="tres-aspectos.html#fig:plot-ate-mc">1.3</a> está centrado no lugar certo, mas
+nada diz sobre sua largura. Neyman <span class="citation">(<a href="#ref-neyman1923application">1990</a>)</span> derivou a variância exata de
+<span class="math inline">\(\widehat{\text{ATE}}\)</span> sob o mecanismo de aleatorização — tratando, como antes, os <span class="math inline">\(2N\)</span> resultados
+potenciais como constantes fixas e a única fonte de aleatoriedade sendo <em>qual</em> subconjunto de
+tamanho <span class="math inline">\(n_1\)</span> recebe <span class="math inline">\(Z_i=1\)</span> (amostragem sem reposição de um total de <span class="math inline">\(N\)</span> unidades). Sejam
+<span class="math display">\[
+S_1^2 = \frac{1}{N-1}\sum_{i=1}^N \big(Y_i(1) - \bar Y(1)\big)^2, \qquad
+S_0^2 = \frac{1}{N-1}\sum_{i=1}^N \big(Y_i(0) - \bar Y(0)\big)^2
+\]</span>
+as variâncias populacionais (finitas, sobre as <span class="math inline">\(N\)</span> unidades) dos dois resultados potenciais, e
+<span class="math display">\[
+S_{01}^2 = \frac{1}{N-1}\sum_{i=1}^N \Big[\big(Y_i(1)-Y_i(0)\big) - \text{ATE}\Big]^2
+\]</span>
+a variância populacional dos <strong>efeitos individuais de tratamento</strong> <span class="math inline">\(\tau_i = Y_i(1) - Y_i(0)\)</span>.
+O resultado de Neyman é
+<span class="math display">\[
+\text{Var}\big(\widehat{\text{ATE}}\big) = \frac{S_1^2}{n_1} + \frac{S_0^2}{n_0} - \frac{S_{01}^2}{N}.
+\]</span>
+A intuição: os dois primeiros termos são exatamente o que se esperaria de duas médias amostrais
+independentes (como em um teste <span class="math inline">\(t\)</span> de duas amostras usual); o terceiro termo, negativo, é uma
+correção que só existe porque, aqui, as duas “amostras” (<span class="math inline">\(n_1\)</span> e <span class="math inline">\(n_0\)</span>) vêm de <strong>particionar a
+mesma população finita de <span class="math inline">\(N\)</span> unidades</strong> em vez de duas populações infinitas separadas — quanto
+mais heterogêneo o efeito individual <span class="math inline">\(\tau_i\)</span> entre unidades, maior <span class="math inline">\(S_{01}^2\)</span>, e menor a
+penalidade de variância imposta pela aleatorização (o caso extremo, <span class="math inline">\(\tau_i\)</span> constante para toda
+unidade, dá <span class="math inline">\(S_{01}^2 = S_1^2 = S_0^2\)</span> e a fórmula colapsa para <span class="math inline">\(S_1^2(1/n_1 - 1/N) + \dots\)</span>, uma
+redução adicional de variância). Como <span class="math inline">\(Y_i(1)\)</span> e <span class="math inline">\(Y_i(0)\)</span> nunca são observados na mesma unidade,
+<span class="math inline">\(S_{01}^2\)</span> não é identificável a partir dos dados — por isso a prática usual estima a variância de
+forma conservadora, substituindo o termo <span class="math inline">\(-S_{01}^2/N\)</span> por zero (Capítulo 3 retoma essa mesma ideia
+ao tratar da variância do estimador em desenhos completamente aleatorizados).</p>
+<div class="caixa-r"><strong>Uso do R</strong> — verificando a fórmula de Neyman contra a variância empírica de Monte Carlo</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="tres-aspectos.html#cb6-1" tabindex="-1"></a>S1_sq   <span class="ot">&lt;-</span> <span class="fu">var</span>(Y1)          <span class="co"># variância amostral (denominador N-1) de Y_i(1) nas N=40 parcelas</span></span>
+<span id="cb6-2"><a href="tres-aspectos.html#cb6-2" tabindex="-1"></a>S0_sq   <span class="ot">&lt;-</span> <span class="fu">var</span>(Y0)          <span class="co"># idem para Y_i(0)</span></span>
+<span id="cb6-3"><a href="tres-aspectos.html#cb6-3" tabindex="-1"></a>S01_sq  <span class="ot">&lt;-</span> <span class="fu">var</span>(Y1 <span class="sc">-</span> Y0)     <span class="co"># variância dos efeitos individuais tau_i = Y_i(1) - Y_i(0)</span></span>
+<span id="cb6-4"><a href="tres-aspectos.html#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="tres-aspectos.html#cb6-5" tabindex="-1"></a>var_neyman <span class="ot">&lt;-</span> S1_sq <span class="sc">/</span> n1 <span class="sc">+</span> S0_sq <span class="sc">/</span> (N <span class="sc">-</span> n1) <span class="sc">-</span> S01_sq <span class="sc">/</span> N</span>
+<span id="cb6-6"><a href="tres-aspectos.html#cb6-6" tabindex="-1"></a>var_mc     <span class="ot">&lt;-</span> <span class="fu">var</span>(ate_hat)  <span class="co"># variância empírica das 5.000 reamostragens já geradas acima</span></span>
+<span id="cb6-7"><a href="tres-aspectos.html#cb6-7" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="tres-aspectos.html#cb6-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">var_formula_Neyman =</span> var_neyman, <span class="at">var_Monte_Carlo =</span> var_mc,</span>
+<span id="cb6-9"><a href="tres-aspectos.html#cb6-9" tabindex="-1"></a>  <span class="at">razao =</span> var_mc <span class="sc">/</span> var_neyman)</span></code></pre></div>
+<pre><code>## var_formula_Neyman    var_Monte_Carlo              razao 
+##          2.7895207          2.6881325          0.9636539</code></pre>
+<p>A variância empírica das 5000 reamostragens (a dispersão real do histograma) e a fórmula
+fechada de Neyman batem a menos do ruído de simulação esperado — confirmando que a fórmula não é
+só uma aproximação assintótica, mas a variância <strong>exata</strong> do desenho completamente aleatorizado
+para qualquer <span class="math inline">\(N\)</span> finito.</p>
+</div>
+</div>
+<div id="validade-externa" class="section level3 hasAnchor" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> Validade interna e validade externa<a href="tres-aspectos.html#validade-externa" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A demonstração acima garante <strong>validade interna</strong>: dentro da amostra de <span class="math inline">\(N\)</span> unidades efetivamente
+estudadas, a diferença de médias observadas é não-viesada para o ATE <em>dessa amostra</em>. Isso é uma
+afirmação sobre o mecanismo de atribuição do tratamento (a aleatorização), não sobre quem são as
+<span class="math inline">\(N\)</span> unidades. Uma pergunta logicamente separada — e igualmente importante — é a de <strong>validade
+externa</strong> <span class="citation">(<a href="#ref-owen2020experimental">Owen, 2020</a>)</span>: o efeito estimado nessas <span class="math inline">\(N\)</span> unidades se generaliza para outras
+unidades, fora do estudo?</p>
+<p>Validade interna alta não implica validade externa alta. Um experimento pode ter aleatorização
+impecável (validade interna máxima) e ainda assim dizer pouco sobre uma população mais ampla, se a
+amostra estudada não for representativa dela. Voluntários que se inscrevem para um “programa beta”
+de um site (Questão 3 da caixa de discussão da Seção <a href="unidades.html#unidades">1.2</a>) podem diferir sistematicamente
+dos usuários em geral — mais tolerantes a instabilidade, mais engajados, mais jovens — e o efeito
+do novo layout <em>entre eles</em> pode não valer para o público inteiro. Estudantes de graduação em
+psicologia, o pool mais comum de sujeitos de pesquisa em experimentos de laboratório
+<span class="citation">(<a href="#ref-kirk2012experimental">Kirk, 2012</a>)</span>, não são uma amostra aleatória da população humana. Parcelas de uma única
+estação experimental não representam todos os tipos de solo de uma região.</p>
+<p>Não há solução puramente estatística para a validade externa — ela depende de julgamento sobre o
+domínio, não de mais uma fórmula. O que o delineamento experimental pode e deve fazer é <strong>deixar
+explícito o alcance da conclusão</strong>: a que população a amostra estudada pertence, e sob quais
+condições (local, época, instrumentos, tipo de unidade) o resultado foi obtido. Esse cuidado
+reaparecerá em cada capítulo aplicado do livro, sempre que uma recomendação prática for extraída de
+uma análise — e é um dos pontos avaliados nos projetos-desafio do curso (ver a seção final deste
+capítulo).</p>
+</div>
+<div id="amostragem-e-desenho" class="section level3 hasAnchor" number="1.4.5">
+<h3><span class="header-section-number">1.4.5</span> O elo entre amostragem e planejamento de experimentos<a href="tres-aspectos.html#amostragem-e-desenho" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A distinção entre validade interna e externa aponta para um fato que costuma passar despercebido:
+<strong>existem duas aleatorizações logicamente distintas em jogo</strong>, respondendo a duas perguntas
+diferentes, e a <strong>teoria de amostragem</strong> (<em>survey sampling</em>, <span class="citation">(<a href="#ref-kish1965survey">Kish, 1965</a>)</span>) formaliza a
+primeira delas com o mesmo rigor com que o Capítulo 2 em diante formaliza a segunda.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Amostragem aleatória</strong>: <em>quem entra no estudo?</em> Sorteia-se um subconjunto de <span class="math inline">\(n\)</span> unidades a
+partir de uma população maior de <span class="math inline">\(N_{\text{pop}}\)</span> unidades, para que a amostra observada seja
+representativa da população — o problema clássico da amostragem, com sua própria teoria de
+variância (estratificação, alocação ótima, correção para população finita). É essa
+aleatorização, ou a falta dela, que determina a <strong>validade externa</strong> discutida acima: testadores
+beta <em>auto-selecionados</em> não são uma amostragem aleatória da população de usuários.</li>
+<li><strong>Atribuição aleatória (aleatorização)</strong>: <em>quem recebe qual tratamento?</em> Sorteia-se, entre as
+unidades já presentes no estudo, qual recebe qual nível do fator — o problema deste capítulo,
+formalizado na Seção <a href="tres-aspectos.html#neyman-rubin">1.4.3</a>. É essa aleatorização que determina a <strong>validade
+interna</strong>: garante <span class="math inline">\(E[\widehat{\text{ATE}}]=\text{ATE}\)</span> <em>dentro</em> da amostra, qualquer que seja
+essa amostra.</li>
+</ol>
+<p>As duas são independentes: um experimento pode ter atribuição aleatória impecável sobre uma amostra
+de conveniência (validade interna alta, externa baixa — o caso mais comum na prática de laboratório
+e o cenário da Questão 7 de <code>Listas2026/Lista01</code>), ou usar uma amostra probabilística cuidadosamente
+desenhada da população, mas deixar os próprios participantes escolherem seu tratamento (validade
+externa alta, interna baixa — o desenho observacional que o Capítulo 1 vem, desde o início,
+alertando contra). Um levantamento (<em>survey</em>) bem feito e sem nenhum tratamento manipulado tem só a
+primeira aleatorização; um experimento de laboratório com voluntários tem tipicamente só a segunda;
+poucos estudos têm as duas ao mesmo tempo — e são, por isso, os mais caros e mais raros de conduzir
+<span class="citation">(<a href="#ref-kish1965survey">Kish, 1965</a>)</span>.</p>
+<p>O elo entre os dois campos não é só conceitual. A fórmula de variância de Neyman para
+<span class="math inline">\(\widehat{\text{ATE}}\)</span> (acima) tem a mesma anatomia de uma variância de <strong>amostragem sem
+reposição de duas amostras independentes</strong> de uma população finita — divide-se cada <span class="math inline">\(S_t^2\)</span> pelo
+respectivo tamanho de grupo e desconta-se um termo de covariância por causa da restrição de que
+<span class="math inline">\(n_1+n_0=N\)</span> é fixo. Isso não é coincidência: <strong>o mesmo Neyman</strong> que formalizou, em 1923, a
+inferência sob aleatorização de tratamentos em experimentos agrícolas é também um dos fundadores
+da teoria moderna de amostragem em populações finitas <span class="citation">(<a href="#ref-kish1965survey">Kish, 1965</a>; <a href="#ref-neyman1923application">Splawa-Neyman, 1990</a>)</span>, e
+tratou as duas aleatorizações — de amostra e de tratamento — com o mesmo formalismo combinatório de
+“qual subconjunto foi sorteado, entre todos os subconjuntos igualmente prováveis”. O
+<strong>submuestreo</strong>, que o Capítulo 3 formaliza em detalhe (<a href="dca-submuestreo.html#dca-submuestreo">3.3</a>), é o ponto em que
+as duas ideias se encontram dentro de um único experimento: a atribuição do tratamento acontece na
+unidade experimental, mas a <em>amostragem</em> de quantas e quais submuestras medir dentro de cada
+unidade é, literalmente, um problema de desenho amostral aninhado dentro do desenho experimental.</p>
+</div>
+<div id="controle-local-blocagem" class="section level3 hasAnchor" number="1.4.6">
+<h3><span class="header-section-number">1.4.6</span> Controle local (blocagem)<a href="tres-aspectos.html#controle-local-blocagem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Quando se sabe de antemão que as unidades experimentais não são homogêneas (turmas diferentes,
+talhões com fertilidade diferente, dias diferentes de coleta), é possível agrupá-las em
+<strong>blocos</strong> internamente homogêneos e aleatorizar os tratamentos <em>dentro</em> de cada bloco. A
+blocagem não elimina a necessidade de aleatorização — ela a torna mais eficiente, retirando uma
+fonte de variação conhecida do erro experimental antes mesmo da análise. O Capítulo 4 formaliza
+blocagem em delineamentos com uma ou mais fontes de bloqueio.</p>
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>No exemplo das técnicas de estudo, suponha que o professor tivesse deixado os alunos
+escolherem livremente qual técnica usar, em vez de sortear. Quais variáveis de confusão
+plausíveis poderiam contaminar a comparação entre técnicas?</li>
+<li>Em um experimento agrícola em que cada bloco é um dia de plantio diferente (com chuva,
+temperatura e luminosidade distintas), o que a blocagem por dia consegue — e o que ela
+<em>não</em> consegue — controlar?</li>
+<li>Um time de produto testa um novo layout de site apenas com usuários que se voluntariam para
+o "programa beta". Isso é aleatorização? Que population é representada pela conclusão do teste?</li>
+</ol>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-cochran1957experimental" class="csl-entry">
+Cochran, W. G., &amp; Cox, G. M. (1957). <em>Experimental designs</em> (2nd ed.). John Wiley &amp; Sons.
+</div>
+<div id="ref-fisher1935design" class="csl-entry">
+Fisher, R. A. (1935b). <em>The design of experiments</em>. Oliver; Boyd.
+</div>
+<div id="ref-imbensrubin2015" class="csl-entry">
+Imbens, G. W., &amp; Rubin, D. B. (2015). <em>Causal inference for statistics, social, and biomedical sciences: An introduction</em>. Cambridge University Press.
+</div>
+<div id="ref-kirk2012experimental" class="csl-entry">
+Kirk, R. E. (2012). <em>Experimental design: Procedures for the behavioral sciences</em> (4th ed.). Sage Publications.
+</div>
+<div id="ref-kish1965survey" class="csl-entry">
+Kish, L. (1965). <em>Survey sampling</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-owen2020experimental" class="csl-entry">
+Owen, A. B. (2020). <em>A first course in experimental design: Notes from stat 263/363</em>. Stanford University.
+</div>
+<div id="ref-rubin1974estimating" class="csl-entry">
+Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. <em>Journal of Educational Psychology</em>, <em>66</em>(5), 688–701.
+</div>
+<div id="ref-neyman1923application" class="csl-entry">
+Splawa-Neyman, J. (1990). On the application of probability theory to agricultural experiments. Essay on principles. Section 9. <em>Statistical Science</em>, <em>5</em>(4), 465–472.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="fontes-variacao.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="resumo-do-capítulo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

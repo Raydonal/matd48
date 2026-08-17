@@ -1,0 +1,308 @@
+---
+title: "Submuestreo e Modelo de Efeitos Aleatórios"
+subtitle: "Dois níveis de erro no DCA e o que fazer quando os tratamentos são uma amostra"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 05 — Submuestreo e Efeitos Aleatórios
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Submuestreo: dois níveis de erro
+
+Quando uma unidade experimental (UE) é medida $q$ vezes (submuestras), o modelo ganha um segundo
+termo de erro:
+
+$$Y_{ijk} = \mu + \tau_i + \delta_{ij} + \varepsilon_{ijk}$$
+
+- $\delta_{ij}\sim N(0,\sigma_\delta^2)$: erro **experimental** (entre UEs).
+- $\varepsilon_{ijk}\sim N(0,\sigma_\varepsilon^2)$: erro de **amostragem** (entre submuestras).
+- $i=1,\ldots,t$; $j=1,\ldots,r$ UEs por tratamento; $k=1,\ldots,q$ submuestras por UE.
+
+--
+
+Só $\sigma_\delta^2$ importa para comparar tratamentos — mais submuestras **não** criam novas UEs
+(Cochran & Cox, 1957).
+
+---
+
+## Notação matricial: por que $\sigma^2\mathbf{I}$ não basta
+
+Empilhando as $N=trq$ observações em $\mathbf{Y}$ (Capítulo 2), o submuestreo quebra a suposição
+de erros i.i.d.:
+
+$$\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}' + \sigma_\varepsilon^2\mathbf{I}_N$$
+
+- $\mathbf{Z}$: matriz $N\times tr$ de indicadores de UE — $Z_{[ijk],\,i'j'}=\mathbb 1\{i=i',j=j'\}$.
+- $\mathbf{Z}\mathbf{Z}'$ tem blocos de $1$'s do tamanho $q\times q$ (submuestras da mesma UE):
+  observações da mesma UE são correlacionadas, $\mathrm{Cov}(Y_{ijk},Y_{ijk'})=\sigma_\delta^2$.
+- $\mathbf{V}$ tem estrutura de **simetria composta** por bloco — daí porque MQO com
+  $\mathrm{Cov}=\sigma^2\mathbf{I}$ (Cap. 2) não é mais o modelo certo, e a ANOVA precisa agregar
+  por UE antes de testar (Searle, 1971).
+
+---
+
+## ANOVA com submuestreo
+
+```{r tab-anova-sub, echo=FALSE}
+tibble(
+  Fonte = c("Tratamento", "Erro experimental", "Erro de amostragem", "Total"),
+  Gl = c("t - 1", "t(r-1)", "tr(q-1)", "trq - 1"),
+  `E[QM]` = c("σ²_ε + qσ²_δ + qr Στ²/(t-1)", "σ²_ε + qσ²_δ", "σ²_ε", "")
+) %>% kable(format = "html") %>% kable_styling(font_size = 18, full_width = FALSE)
+```
+
+Teste correto: $F = MS_{\text{Trat}}/MS_{\text{erro experimental}}$ — **não** o erro de
+amostragem. Usar o erro de amostragem no denominador é pseudorreplicação (Aula 01/Capítulo 1):
+infla $F$ e a taxa de falso positivo.
+
+---
+
+## Modelo de efeitos aleatórios
+
+Quando os níveis do fator são uma **amostra aleatória** de uma população maior de níveis (não os
+níveis de interesse *per se*):
+
+$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \tau_i\overset{iid}{\sim}N(0,\sigma_\tau^2)$$
+
+- $H_0:\sigma_\tau^2=0$ em vez de "as médias são iguais".
+- $\text{Corr}(Y_{ij},Y_{ij'}) = \sigma_\tau^2/(\sigma_\tau^2+\sigma^2)$ = ICC.
+- Mesma tabela de ANOVA, mas $E[MS_{\text{Entre}}] = \sigma^2+n\sigma_\tau^2$ (não envolve $\tau_i$
+  individuais) $\Rightarrow \hat\sigma_\tau^2 = (MS_{\text{Entre}}-MS_E)/n$, o estimador de
+  momentos clássico para componentes de variância (Montgomery, 2017).
+
+--
+
+Em notação matricial, a mesma estrutura de simetria composta reaparece,
+$\mathbf{V}=\sigma_\tau^2\mathbf{Z}\mathbf{Z}'+\sigma^2\mathbf{I}_N$, agora com $\mathbf{Z}$
+indicando o **nível sorteado** (não a UE): submuestreo e efeitos aleatórios são duas instâncias
+do mesmo fenômeno — observações que compartilham um rótulo aleatório deixam de ser independentes.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Agricultura: probiótico e ganho de peso em tilápia
+
+**Dados reais** (`mojarra.csv`): 4 probióticos, 20 aquários (5 por probiótico), ~5 peixes por
+aquário medidos individualmente.
+
+- **UE = aquário** (o probiótico é misturado à ração de todo o aquário).
+- **Unidade amostral = peixe** (submuestra).
+
+```{r dados-05}
+mojarra <- read_csv("../Livro/data/mojarra.csv", show_col_types = FALSE) %>%
+  rename(probiotico = probiotico, aquario = Acuario,
+         peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %>%
+  drop_na(peso_45) %>%
+  mutate(probiotico = factor(probiotico), aquario = factor(aquario),
+         ganho = peso_45 - peso_inicial)
+nrow(mojarra); n_distinct(mojarra$aquario)
+```
+
+---
+
+## Visualizando a estrutura hierárquica
+
+```{r plot-hierarquia-05, echo=FALSE, fig.width=8.5, fig.height=4.2}
+ggplot(mojarra, aes(x = aquario, y = ganho, color = probiotico)) +
+  geom_jitter(width = 0.08, size = 1.8, alpha = 0.75) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  labs(x = "Aquário", y = "Ganho de peso (g)", color = "Probiótico",
+       title = "Peixes dentro de aquários dentro de probióticos") +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7))
+```
+
+Losango preto = média do aquário. Variação **entre** losangos de uma mesma cor = erro
+experimental ($\sigma_\delta^2$); variação dos pontos **ao redor** do seu losango = erro de
+amostragem ($\sigma_\varepsilon^2$). A ANOVA a seguir compara apenas os 20 losangos — não os
+quase 100 pontos.
+
+---
+
+## ANOVA aninhada
+
+```{r anova-05}
+modelo_sub <- aov(ganho ~ probiotico + Error(probiotico:aquario), data = mojarra)
+summary(modelo_sub)
+```
+
+Teste do probiótico: $MS_{\text{Trat}}/MS_{\text{entre aquários}}$, com 16 g.l. no denominador —
+não os 77 g.l. entre peixes dentro de aquário.
+
+---
+
+## O diagrama de Hasse do submuestreo
+
+Quatro nós em **cadeia**: aquário aninhado dentro de probiótico, peixe (submuestra) aninhado
+dentro de aquário — cada nível de aninhamento é um novo elo, ao contrário dos termos cruzados do
+DBCA (Aula 09).
+
+```{r hasse-sub-05, echo=FALSE, fig.width=3.2, fig.height=4.6, fig.retina=2}
+nos_sub05 <- tibble(
+  termo = c("Média", "Tratamento\n(probiótico)", "UE\n(aquário)", "Submuestra\n(peixe = Erro)"),
+  df    = c(1, 4 - 1, 20 - 4, 97 - 20),
+  x     = c(0, 0, 0, 0),
+  y     = c(4, 3, 2, 1)
+)
+arestas_sub05 <- tibble(
+  de   = c("Média", "Tratamento\n(probiótico)", "UE\n(aquário)"),
+  para = c("Tratamento\n(probiótico)", "UE\n(aquário)", "Submuestra\n(peixe = Erro)")
+)
+
+arestas_xy_sub05 <- arestas_sub05 %>%
+  left_join(nos_sub05 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
+  left_join(nos_sub05 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
+
+ggplot() +
+  geom_segment(data = arestas_xy_sub05, aes(x = x0, y = y0, xend = x1, yend = y1),
+               color = "grey45", linewidth = 0.6) +
+  geom_label(data = nos_sub05, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
+             size = 2.6, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
+  theme_void(base_size = 11) +
+  labs(title = "Submuestreo: t=4, r=5, q≈5 (N=97)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 10.5))
+```
+
+$1+3+16+77=97=N$: os 16 gl de "UE" são exatamente os $t(r-1)$ da tabela simbólica; os 77 gl de
+"Submuestra" são o que sobra depois de já ter explicado probiótico e aquário — a mesma regra de
+subtração do diagrama de Hasse do Cap. 2 do livro-texto.
+
+---
+
+## Efeitos aleatórios: variabilidade entre clipes sonoros
+
+Cinco clipes de som distração sorteados de um banco maior, 8 voluntários por clipe.
+
+```{r dados-clipe-05}
+set.seed(77)
+t_niveis <- 5; n_por_nivel <- 8
+efeito_clipe <- rnorm(t_niveis, 0, sqrt(300))
+dados_clipe <- tibble(
+  clipe = factor(rep(paste("Clipe", 1:t_niveis), each = n_por_nivel)),
+  efeito = rep(efeito_clipe, each = n_por_nivel),
+  tempo_reacao = 520 + efeito + rnorm(t_niveis * n_por_nivel, 0, sqrt(1200))
+)
+modelo_clipe <- aov(tempo_reacao ~ clipe, data = dados_clipe)
+tab_cl <- summary(modelo_clipe)[[1]]
+sigma2_tau_hat <- (tab_cl[["Mean Sq"]][1] - tab_cl[["Mean Sq"]][2]) / n_por_nivel
+c(sigma2_tau = sigma2_tau_hat, sigma2 = tab_cl[["Mean Sq"]][2],
+  ICC = sigma2_tau_hat / (sigma2_tau_hat + tab_cl[["Mean Sq"]][2]))
+```
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. No experimento da tilápia, por que **não** seria correto tratar os ~97 peixes como 97
+   réplicas independentes do probiótico?
+
+2. Se o orçamento permitisse 5 aquários adicionais, seria mais eficiente usá-los para mais
+   aquários por probiótico ou mais peixes por aquário existente? Por quê?
+
+3. No exemplo dos clipes sonoros, por que a pergunta de pesquisa deixou de ser "o clipe 3 é
+   diferente do clipe 1?" para se tornar "quanto os clipes variam entre si?"
+
+4. Em que situação você trataria "tipo de distração" (Aula 04) como efeito fixo, mas "clipe
+   sonoro específico" como efeito aleatório, no mesmo experimento?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Retorno decrescente da submuestragem
+
+```{r retorno-05}
+tab_sub <- summary(modelo_sub)
+MS_exp <- tab_sub[["Error: probiotico:aquario"]][[1]][["Mean Sq"]][2]
+MS_am  <- tab_sub[["Error: Within"]][[1]][["Mean Sq"]][1]
+q_medio <- nrow(mojarra) / n_distinct(mojarra$aquario)
+sigma2_delta <- (MS_exp - MS_am) / q_medio
+
+tibble(q = c(1, 5, 10, 20, 50)) %>%
+  mutate(var_media_UE = round(sigma2_delta + MS_am / q, 2)) %>%
+  kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+O piso $\sigma_\delta^2 \approx `r round(sigma2_delta,1)`$ nunca desaparece — só mais aquários
+reduzem a incerteza sobre o efeito do probiótico sem limite.
+
+---
+
+## Tamanho de amostra no modelo aleatório
+
+```{r amostra-aleatorio-05}
+gamma_alvo <- 300 / 1200
+poder_n <- function(n, t = 5, alpha = 0.05) {
+  Fc <- qf(1 - alpha, t - 1, t * (n - 1))
+  pf(Fc / (1 + n * gamma_alvo), t - 1, t * (n - 1), lower.tail = FALSE)
+}
+tibble(n = c(8, 15, 20, 30)) %>% mutate(poder = round(map_dbl(n, poder_n), 3)) %>%
+  kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
+```
+
+Com 8 réplicas/clipe, poder ≈ 0,49 para detectar $\gamma=0{,}25$; seriam necessárias ~20.
+
+---
+
+## Resumo da aula
+
+- Submuestreo: modelo com $\delta_{ij}$ (experimental) e $\varepsilon_{ijk}$ (amostragem); o
+  teste de tratamento usa o erro experimental, nunca o de amostragem.
+- A variância da média de uma UE tem piso $\sigma_\delta^2$: mais UEs > mais submuestras.
+- Efeitos aleatórios: mesma tabela de ANOVA, $E[QM]$ diferente, foco em $\sigma_\tau^2$ (ICC), e
+  planejamento amostral via $F/(1+n\gamma)$ em vez de $F$ não central.
+- Próxima aula: verificação dos pressupostos (normalidade, homocedasticidade) e transformações
+  que tornam essas ANOVAs confiáveis na prática.
+
+## Referências
+
+- Cochran, W. G. & Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley & Sons.
+- Searle, S. R. (1971). *Linear Models*. John Wiley & Sons.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.

@@ -1,0 +1,188 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 03 --- Modelos Lineares (Parte 2)}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 03}{Gauss-Markov, matriz de projeção, modelo particionado e formas quadráticas (Capítulo 2 / Aula 03)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito03.pdf}.}
+
+\begin{questao}{1} \textbf{(Dedução --- propriedades da matriz de projeção)}
+
+Seja $\mathbf{X}$ uma matriz $n \times p$ de posto coluna completo e $\mathbf{P}_X =
+\mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre algebricamente que $\mathbf{P}_X$ é \textbf{simétrica}, isto é,
+    $\mathbf{P}_X' = \mathbf{P}_X$. (Use o fato de que $(\mathbf{X}'\mathbf{X})^{-1}$ é simétrica.)
+  \item Mostre algebricamente que $\mathbf{P}_X$ é \textbf{idempotente}, isto é,
+    $\mathbf{P}_X\mathbf{P}_X = \mathbf{P}_X$.
+  \item Mostre que $\mathbf{I}_n - \mathbf{P}_X$ também é simétrica e idempotente.
+  \item Use o item (b) para argumentar por que os autovalores de $\mathbf{P}_X$ só podem ser 0 ou
+    1, e conclua que $\mathrm{tr}(\mathbf{P}_X) = \mathrm{posto}(\mathbf{P}_X)$. (Dica: para uma
+    matriz idempotente $\mathbf{A}$, se $\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$ com
+    $\mathbf{v}\neq\mathbf{0}$, então $\mathbf{A}\mathbf{A}\mathbf{v} = \lambda^2\mathbf{v}$, mas
+    também $\mathbf{A}\mathbf{A}\mathbf{v}=\mathbf{A}\mathbf{v}=\lambda \mathbf{v}$.)
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Dedução --- variância de $\hat{\boldsymbol\beta}$)}
+
+Considere $\hat{\boldsymbol\beta} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$, com
+$\mathrm{Cov}(\mathbf{Y}) = \sigma^2\mathbf{I}_n$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Escreva $\hat{\boldsymbol\beta} = \mathbf{A}\mathbf{Y}$, identificando explicitamente a
+    matriz $\mathbf{A}$.
+  \item Usando a propriedade $\mathrm{Cov}(\mathbf{A}\mathbf{Y}) = \mathbf{A}\,\mathrm{Cov}(\mathbf{Y})\,\mathbf{A}'$
+    para qualquer matriz fixa $\mathbf{A}$, derive $\mathrm{Cov}(\hat{\boldsymbol\beta}) =
+    \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$. (Lembre-se de que $(\mathbf{X}'\mathbf{X})^{-1}$ é
+    simétrica.)
+  \item A partir do resultado do item (b), escreva a variância de um único coeficiente
+    $\hat\beta_j$ em termos do elemento $(j,j)$ de $(\mathbf{X}'\mathbf{X})^{-1}$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Psicologia --- matriz de projeção numérica)}
+
+Um pesquisador ajusta o modelo $y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$ a apenas 4
+observações: $x = (1,2,3,4)$, $y = (3,5,6,10)$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Escreva $\mathbf{X}$ ($4\times 2$).
+  \item Calcule $\mathbf{X}'\mathbf{X}$ e, a partir dela, $\mathbf{P}_X =
+    \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$. (Pode usar a fórmula da inversa
+    $2\times2$ da Lista 02, Questão 1.)
+  \item Verifique numericamente que $\mathbf{P}_X\mathbf{P}_X = \mathbf{P}_X$ para pelo menos uma
+    entrada da matriz, e confira que $\mathrm{tr}(\mathbf{P}_X) = 2$.
+  \item Calcule as alavancagens (diagonal de $\mathbf{P}_X$) das quatro observações. Alguma delas
+    se destaca como potencialmente mais influente? Por quê, geometricamente, as observações
+    extremas de $x$ costumam ter alavancagem maior?
+  \item Calcule $\hat{\mathbf{Y}} = \mathbf{P}_X\mathbf{Y}$ e a soma de quadrados do erro
+    $\mathrm{SQE} = \mathbf{Y}'(\mathbf{I}_4-\mathbf{P}_X)\mathbf{Y}$.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Ciência de dados --- soma de quadrados extra)}
+
+Um modelo completo (com $p=3$ parâmetros) e um modelo reduzido, aninhado no completo (com
+$p_1=2$ parâmetros), são ajustados aos mesmos $n=40$ dados, resultando em
+$\mathrm{SQE}(\text{reduzido}) = 5000$ e $\mathrm{SQE}(\text{completo}) = 4200$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule a soma de quadrados extra, $\mathrm{SQE}(\text{reduzido}) -
+    \mathrm{SQE}(\text{completo})$.
+  \item Calcule os graus de liberdade do numerador e do denominador da estatística $F$.
+  \item Calcule a estatística $F$ e compare com o valor crítico aproximado $F_{1,37;\,0{,}05}
+    \approx 4{,}11$. O teste rejeita $H_0: \beta_2 = 0$ ao nível de 5\%?
+  \item Em termos de $\mathbf{P}_X$ e $\mathbf{P}_{X_1}$, qual forma quadrática corresponde à soma
+    de quadrados extra calculada no item (a)?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Distribuição de formas quadráticas)}
+
+Seja $\mathbf{A} = \begin{bmatrix} 0{,}5 & 0{,}5 \\ 0{,}5 & 0{,}5 \end{bmatrix}$ e $\mathbf{Y} \sim
+N(\boldsymbol\mu, \sigma^2\mathbf{I}_2)$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Verifique que $\mathbf{A}$ é idempotente e determine seu posto.
+  \item Se $\boldsymbol\mu = (0,0)'$, qual é a distribuição exata de $\mathbf{Y}'\mathbf{A}\mathbf{Y}/\sigma^2$?
+    Justifique citando o teorema apropriado.
+  \item Se $\boldsymbol\mu = (3,-3)'$, calcule $\mathbf{A}\boldsymbol\mu$. Isso muda sua resposta
+    ao item (b)? Explique por que um vetor de médias $\boldsymbol\mu \neq \mathbf{0}$ pode ainda
+    assim produzir uma forma quadrática \emph{central} qui-quadrado.
+  \item Se $\boldsymbol\mu = (2,2)'$, calcule $\mathbf{A}\boldsymbol\mu$ e $\boldsymbol\mu'\mathbf{A}\boldsymbol\mu$.
+    Que tipo de distribuição resulta agora?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{6} \textbf{(Ciência de dados --- exercício computacional em R)}
+
+O código abaixo reproduz, por álgebra de matrizes, o teste de soma de quadrados extra da Aula 03
+para os dados de tempo de reação, sono e cafeína --- mas duas linhas estão incompletas.
+
+\begin{lstlisting}
+X1 <- model.matrix(~ horas_sono, data = dados_sono)
+X  <- model.matrix(~ horas_sono + cafeina_mg, data = dados_sono)
+Y  <- dados_sono$tempo_reacao
+n  <- nrow(dados_sono)
+
+P1 <- X1 %*% solve(t(X1) %*% X1) %*% t(X1)
+P  <- X  %*% solve(t(X)  %*% X)  %*% t(X)
+
+sqe_reduzido <- as.numeric(t(Y) %*% (diag(n) - P1) %*% Y)
+sqe_completo <- as.numeric(t(Y) %*% (diag(n) - P)  %*% Y)
+
+gl_extra  <- ______________________          # (a)
+gl_residuo <- ______________________         # (b)
+
+F_extra <- ((sqe_reduzido - sqe_completo) / gl_extra) / (sqe_completo / gl_residuo)
+p_valor <- pf(F_extra, gl_extra, gl_residuo, lower.tail = FALSE)
+\end{lstlisting}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete a linha (a): os graus de liberdade do numerador (posto de $\mathbf{X}$ menos
+    posto de $\mathbf{X}_1$).
+  \item Complete a linha (b): os graus de liberdade do denominador (resíduo do modelo completo).
+  \item Explique, em uma frase, o que mudaria no código se quiséssemos testar, em vez da
+    cafeína isoladamente, um modelo completo com \emph{duas} covariáveis extras (por exemplo,
+    cafeína \emph{e} temperatura ambiente da sala).
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{7} \textbf{(Dedução --- Teorema de Frisch-Waugh-Lovell)}
+
+Considere o modelo particionado $\mathbf{Y} = \mathbf{X}_1\boldsymbol\beta_1 +
+\mathbf{X}_2\boldsymbol\beta_2 + \boldsymbol\varepsilon$ e as equações normais em blocos,
+
+$$
+\begin{bmatrix} \mathbf{X}_1'\mathbf{X}_1 & \mathbf{X}_1'\mathbf{X}_2 \\
+\mathbf{X}_2'\mathbf{X}_1 & \mathbf{X}_2'\mathbf{X}_2 \end{bmatrix}
+\begin{bmatrix} \hat{\boldsymbol\beta}_1 \\ \hat{\boldsymbol\beta}_2 \end{bmatrix} =
+\begin{bmatrix} \mathbf{X}_1'\mathbf{Y} \\ \mathbf{X}_2'\mathbf{Y} \end{bmatrix}.
+$$
+
+\begin{enumerate}[label=(\alph*)]
+  \item A partir da primeira linha de blocos, isole $\hat{\boldsymbol\beta}_1$ em função de
+    $\hat{\boldsymbol\beta}_2$ (suponha $\mathbf{X}_1'\mathbf{X}_1$ invertível).
+  \item Substitua o resultado do item (a) na segunda linha de blocos e mostre que, definindo
+    $\mathbf{P}_{X_1} = \mathbf{X}_1(\mathbf{X}_1'\mathbf{X}_1)^{-1}\mathbf{X}_1'$ e
+    $\mathbf{M}_1 = \mathbf{I}_n - \mathbf{P}_{X_1}$, a equação se reduz a
+    $$
+    \mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2\,\hat{\boldsymbol\beta}_2 = \mathbf{X}_2'\mathbf{M}_1\mathbf{Y}.
+    $$
+  \item Usando que $\mathbf{M}_1$ é simétrica e idempotente, mostre que
+    $\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2 = \tilde{\mathbf{X}}_2'\tilde{\mathbf{X}}_2$ e
+    $\mathbf{X}_2'\mathbf{M}_1\mathbf{Y} = \tilde{\mathbf{X}}_2'\tilde{\mathbf{Y}}$, em que
+    $\tilde{\mathbf{X}}_2 = \mathbf{M}_1\mathbf{X}_2$ e $\tilde{\mathbf{Y}} = \mathbf{M}_1\mathbf{Y}$
+    são os resíduos de regredir $\mathbf{X}_2$ e $\mathbf{Y}$, respectivamente, em
+    $\mathbf{X}_1$. Conclua que $\hat{\boldsymbol\beta}_2 =
+    (\tilde{\mathbf{X}}_2'\tilde{\mathbf{X}}_2)^{-1}\tilde{\mathbf{X}}_2'\tilde{\mathbf{Y}}$ --- o
+    coeficiente de mínimos quadrados da regressão simples de $\tilde{\mathbf{Y}}$ em
+    $\tilde{\mathbf{X}}_2$.
+  \item O código abaixo verifica numericamente o resultado dos itens (a)--(c) nos dados de sono e
+    cafeína da Aula 03, mas está incompleto:
+\begin{lstlisting}
+mod_completo <- lm(tempo_reacao ~ horas_sono + cafeina_mg, data = dados_sono)
+
+Y_tilde  <- ______________________     # (i) residuos de tempo_reacao ~ horas_sono
+X2_tilde <- ______________________     # (ii) residuos de cafeina_mg ~ horas_sono
+mod_fwl  <- lm(Y_tilde ~ X2_tilde)
+
+c(beta_completo = unname(coef(mod_completo)["cafeina_mg"]),
+  beta_fwl       = unname(coef(mod_fwl)[2]))
+\end{lstlisting}
+    Complete as linhas (i) e (ii) usando \texttt{resid(lm(...))}, e explique por que os dois
+    valores no vetor final devem ser (numericamente) idênticos.
+  \item Em um experimento aleatorizado em que \texttt{horas\_sono} tivesse sido, por desenho,
+    perfeitamente independente de \texttt{cafeina\_mg} (por exemplo, se a dose de cafeína fosse
+    sorteada, sem relação alguma com o sono de cada participante), o que você esperaria que
+    acontecesse com $\tilde{\mathbf{X}}_2$ em relação a $\mathbf{X}_2$ original? Isso muda a
+    conclusão de que $\hat\beta_2$ da regressão múltipla e da regressão residualizada coincidem?
+\end{enumerate}
+\end{questao}
+
+\end{document}

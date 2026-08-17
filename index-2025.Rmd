@@ -1,0 +1,323 @@
+---
+title: "PLANEJAMENTO DE EXPERIMENTOS A (MATD48)"
+# author: "Professor: Raydonal Ospina Martínez"
+# date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+header-includes:    
+    geometry: margin = 1.0in
+---
+    
+
+
+```{r, echo = FALSE, warning = FALSE}
+# Packages
+suppressPackageStartupMessages(library(tidyverse)) # Data wrangling
+suppressPackageStartupMessages(library(scales)) # Data wrangling
+suppressPackageStartupMessages(library(dplyr)) # Data wrangling
+suppressPackageStartupMessages(library(gridExtra)) # arrange plots of ggplot 
+suppressPackageStartupMessages(library(ggpubr)) # arrange plots of ggplot 
+suppressPackageStartupMessages(library(MASS)) # for shapiro test
+suppressPackageStartupMessages(library(car)) # for ncvTest    
+suppressPackageStartupMessages(library(lmtest)) #  Generic tools for inference in parametric models, Breusch-Pagan Test included
+suppressPackageStartupMessages(library(kableExtra)) # tables
+suppressPackageStartupMessages(library(ggmosaic)) # tables
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(GGally)) # gamlss distributions
+suppressPackageStartupMessages(library(gamlss)) # gamlss fits
+suppressPackageStartupMessages(library(gamlss.dist)) # gamlss distributions
+suppressPackageStartupMessages(library(gamlss.add)) # gamlss - Extra Additive Terms - Decision tree
+# suppressPackageStartupMessages(library(gamlss.util)) # gamlss fits
+suppressPackageStartupMessages(library(broom)) # Convert Statistical Objects into Tidy Tibbles
+suppressPackageStartupMessages(library(ggthemes)) # ggplot themes
+suppressPackageStartupMessages(library(cowplot)) # ggplot arrange
+suppressPackageStartupMessages(library(gtable)) # ggplot table
+suppressPackageStartupMessages(library(RColorBrewer)) # cool colors
+suppressPackageStartupMessages(library(colorspace)) # cool colors
+suppressPackageStartupMessages(library(gvlma)) # Top-level function for Global Validation of Linear Models Assumptions.
+suppressPackageStartupMessages(library(sandwich)) # Robust Covariance Matrix Estimators
+# suppressPackageStartupMessages(library(skedastic)) # Heteroskedasticity Diagnostics for Linear Regression Models
+suppressPackageStartupMessages(library(moments)) # Moments
+suppressPackageStartupMessages(library(latex2exp)) # latex Simbols
+suppressPackageStartupMessages(library(gcookbook)) # Moments
+suppressPackageStartupMessages(library(viridis)) # latex Simbols
+suppressPackageStartupMessages(library(gcookbook)) # Moments
+suppressPackageStartupMessages(library(viridisLite)) # latex Simbols
+# Auxiliar - name of response in linear regression model
+responseName <- function (model, ...) deparse(attr(terms(model), "variables")[[2]])
+```
+
+```{r,  echo = FALSE, fig.width = 8, fig.height=5, fig.align="center", message=FALSE,warning=FALSE}
+# 2. Simular dados para o cenário de desempenho de algoritmos
+set.seed(42) # Para resultados reproduzíveis
+
+# Definir os parâmetros do nosso experimento
+servidores <- c("Servidor Básico (t2.micro)", "Servidor Avançado (m5.large)")
+algoritmos <- c("Padrão (Biblioteca)", "Algoritmo A (Otimizado)", "Algoritmo B (Legado)")
+n_testes <- 20 # Número de testes por combinação
+
+# Criar o dataframe com todas as combinações
+dados_desempenho <- expand.grid(
+  Algoritmo = algoritmos,
+  Servidor = servidores,
+  Replica = 1:n_testes
+)
+
+# Simular o tamanho dos dados de entrada (nosso eixo X)
+dados_desempenho$Tamanho_Dados_MB <- runif(nrow(dados_desempenho), min = 10, max = 500)
+
+# Simular o tempo de execução (nosso eixo Y) com base em regras lógicas
+# - O servidor avançado é mais rápido (reduz o tempo)
+# - O algoritmo otimizado é o mais rápido, o legado é o mais lento
+# - O tempo aumenta com o tamanho dos dados
+
+efeito_servidor <- ifelse(dados_desempenho$Servidor == "Servidor Avançado (m5.large)", -15, 0) # Reduz 15ms
+
+tempo_base <- case_when(
+  dados_desempenho$Algoritmo == "Padrão (Biblioteca)"   ~ 10 + 0.10 * dados_desempenho$Tamanho_Dados_MB,
+  dados_desempenho$Algoritmo == "Algoritmo A (Otimizado)" ~ 5  + 0.05 * dados_desempenho$Tamanho_Dados_MB, # Mais rápido e escala melhor
+  dados_desempenho$Algoritmo == "Algoritmo B (Legado)"    ~ 20 + 0.20 * dados_desempenho$Tamanho_Dados_MB  # Mais lento e escala pior
+)
+
+# Tempo final = tempo base + efeito do servidor + um pouco de ruído aleatório
+dados_desempenho$Tempo_Execucao_ms <- tempo_base + efeito_servidor + rnorm(nrow(dados_desempenho), mean = 0, sd = 8)
+
+# Garantir que não há tempos de execução negativos
+dados_desempenho$Tempo_Execucao_ms <- pmax(0, dados_desempenho$Tempo_Execucao_ms)
+
+
+# 3. Gerar o gráfico com os novos dados e rótulos claros
+grafico_desempenho <- ggplot(
+  data = dados_desempenho, 
+  aes(x = Tamanho_Dados_MB, y = Tempo_Execucao_ms, color = Algoritmo, shape = Algoritmo)
+) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, aes(fill = Algoritmo), alpha = 0.1) +
+  
+  # Dividir o gráfico em painéis, um para cada TIPO DE SERVIDOR (nosso bloco)
+  facet_wrap(~ Servidor, ncol = 2) +
+  
+  # Rótulos e títulos claros e informativos
+  labs(
+    title = "Comparativo de Desempenho de Algoritmos por Tipo de Servidor",
+    # subtitle = "O planejamento em blocos (servidores) permite uma comparação mais justa",
+    x = "Tamanho dos Dados de Entrada (MB)",
+    y = "Tempo de Execução (milissegundos)",
+    color = "Versão do Algoritmo",
+    shape = "Versão do Algoritmo",
+    fill = "Versão do Algoritmo"
+  ) +
+  
+  # Estilo visual limpo
+  theme_bw(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5),
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom"
+  )
+
+# 4. Exibir o gráfico final
+print(grafico_desempenho)
+
+```
+
+<h4>
+# PLANO DE ENSINO - APRENDIZAGEM DO COMPONENTE  CURRICULAR
+
+### Semestre 2025.1	
+</h4>
+
+<!-- * **Carga horaria:** 60 horas/Aula. -->
+* **Professor:** Raydonal Ospina Martínez
+* **Homepage do Curso:** [https://raydonal.github.io/matd48/](https://raydonal.github.io/matd48/)
+* **Contato:** raydonalmartinez@ufba.br
+* **Ementa do curso:** Princípios fundamentais de planejamentos experimentais e os delineamentos básicoa e suas análises. O problema de parcelas perdidas. Análise de covariância. Introdução aos planos fatoriais, efeitos principais e interações. Análise de variância de delineamentos fatoriais simples. 
+* **Local e horário da disciplina:**  2025.2 Local: PAF 1 ((PAF - Pavilhão de Aulas da Federação I - Av. Barão de Geremoabo - s/n - Ondina - Campus de Ondina).) - Sala 208 - Terça Horários 10:40 às 12:30; Lab 140 - IME - Quinta Horários 10:40 às 12:30. 	
+* **Atenção aos estudantes:** Reunião virtual via google-meet ou reunião presencial com prévio agendamento. O local de atendimento presencial será em alguma sala disponível no Departamento de Estatística da UFBA.
+
+* *<font color="red">Nota:</font> O atendimento somente será realizado com agendamento prévio. Caro aluno, eu sou uma pessoa bastante ocupada e meu tempo, assim como o seu, é muito valioso.  Use o tempo que você gastar comigo de forma eficiente. De preferência já traga anotações e perguntas já elaboradas. Seja pontual. Sempre.*
+    
+* **Inicio do curso:** 09 de setembro de 2025.
+
+<!-- * **Último dia das aulas:** 12/07/2024 (Mudanças desta data obedeceram os direcionamentos da adiministração central da UFBA no calendário acadêmico da UFBA) -->
+<!-- * **Período de realização de segunda chamada:** A combinar. -->
+
+* **Pré-requisitos:** ( ( MATD41A ou MATD41 ) e ( MATD43A ou MATD43 ) ) . A disciplina também requer conhecimentos sólidos de algebra e probabilidade.
+
+* **Propósitos da disciplina:** Capacitar o aluno a planejar, conduzir e analisar experimentos de forma estatisticamente rigorosa, permitindo a obtenção de conclusões válidas sobre relações de causa e efeito. A disciplina busca desenvolver o pensamento crítico para controlar fontes de variabilidade, maximizar a precisão das estimativas e garantir a validade interna e externa dos resultados. Prepara o futuro estatístico para atuar em áreas como pesquisa científica, desenvolvimento de produtos, otimização de processos, ensaios clínicos e testes A/B.
+
+* **Objetivos da disciplina:**Diferenciar estudos observacionais de experimentais e dominar os princípios fundamentais da experimentação (repetição, casualização e controle local). Identificar e aplicar os principais delineamentos experimentais: Inteiramente Casualizado (DIC), Blocos Completos Casualizados (DBC) e Quadrado Latino (DQL). Construir o modelo estatístico adequado para cada delineamento e realizar a Análise de Variância (ANOVA) para testar as hipóteses de interesse. Verificar os pressupostos de validade do modelo através da análise de resíduos. Executar e interpretar testes de comparações múltiplas para identificar diferenças entre tratamentos. Analisar experimentos fatoriais, interpretando corretamente os efeitos principais e as interações.
+
+
+***
+<h4>
+## Critério de aprovação
+</h4>
+
+A avaliação tem como objetivo ajudar ao aluno a progredir nas suas aprendizagens e serve também para estabelecer os resultado dos conhecimentos e das competências adquiridas nos diferentes momentos do período acadêmico. A avaliação também contribui para a qualidade do sistema de ensino. Desta forma, os critérios de avaliação para este curso são:
+
+
+| Avaliação | Porcentagem  |	Data da Prova (tentativa) |
+|:-----------:|:-------------:|:-----------------:|
+| Avaliação 1     |    50% 	    |     30/10/2025  |
+| Avaliação 3     |    50% 	    |     05/01/2026  |
+
+
+A avaliação será constituída pela nota das atividades (que podem consistir em provas, Desafios, listas de exercicios e/ou projetos a depender do desempenho e participação da turma). O grau atribuído ao aluno no final do curso será o da sua média global ponderada (média aritmética ponderada) entre as notas, i.e.,
+
+<center>
+<h3>
+    M = (0,5 * A1)+(0,5 * A2)
+</h3>
+</center>
+
+<!-- 1. O aluno que tiver média global M >= 7.5 recebe conceito A. -->
+<!-- 2. O aluno que tiver média global 6.5 = < M < 7.5  recebe conceito B. -->
+<!-- 3. O aluno que tiver média global 5.0 = < M < 6.5  recebe conceito C. -->
+<!-- 4. O aluno que tiver média global M < 5.0  será automaticamente reprovado. -->
+    
+* **Nota:** Não haverá escalonamento de notas. 
+    
+<!-- * **Nota:** A prova de 2a chamada é destinada exclusivamente para aqueles que não apresentarem uma (unicamente uma) prova e para tal será necessária a apresentação de alguma justificativa comprovável, como por exemplo, atestado médico ou de trabalho. A prova de 2a chamada cobrirá todo o conteúdo da disciplina.  -->
+
+***
+
+# Programa da disciplina (Tentativo)
+<center>
+  | Data de Início | Data de Fim | Tópico / Atividade Programada                                        |
+  |:--------------:|:-----------:|:---------------------------------------------------------------------|
+  |  02/09/2025    | 02/09/2025  | Congresso UFBA (Não haverá aula)                                     |
+  |  04/09/2025    | 04/09/2025  | Congresso UFBA (Não haverá aula)                                     |
+  |  09/09/2025    | 09/09/2025  | Princípios da experimentação [[Mat-01]](Aulas/MATD48-01.html).       |
+  |  11/09/2025    | 11/09/2025  | Fatores, níveis e tratamentos. Erro experimental. [[Mat-02]](Aulas/MATD48-02.html)|
+  |  16/09/2025    | 16/09/2025  | Modelos de ANOVA.                                                    |
+  |  18/09/2025    | 18/09/2025  | Unidades experimentais. Caracterização e escolha das unidades. [[Mat-03]](Aulas/MATD48-03.html)|
+  |  23/09/2025    | 23/09/2025  | Técnicas para aumentar a precisão.                                    |
+  |  25/09/2025    | 25/09/2025  | Experimentos Inteiramente Casualizados (DIC).                         |
+  |  30/09/2025    | 30/09/2025  | Modelo matemático para o DIC.       [[Mat-04]](Aulas/MATD48-04.html)  |
+  |  02/10/2025    | 02/10/2025  | Análise de Variância (ANOVA) para o DIC. **Aula prática em R**        |
+  |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.  [[Mat-05]](Aulas/MATD48-05.html) |
+  |  09/10/2025    | 09/10/2025  | Coeficiente de variação. Análise de pressupostos.                     |
+  |  14/10/2025    | 14/10/2025  | Análise de Covariância (ANCOVA).                                      |
+  |  16/10/2025    | 16/10/2025  | Aula de exercícios e **Aula prática em R**   [[Mat-06]](Aulas/MATD48-06.html)|
+  |  21/10/2025    | 21/10/2025  | ANCOVA e revisão.                                                     |
+  |  23/10/2025    | 23/10/2025  |   Comparações de médias. Contrastes                                   |
+  |  28/10/2025    | 28/10/2025  | Contrastes ortogonais. **Aula prática em R**   [[Mat-07]](Aulas/MATD48-07.html)|
+  |  **30/10/2025**    | **30/10/2025**  | **<font color="red">PROVA 1</font>**             |
+  |  04/11/2025    | 04/11/2025  | Procedimentos de Tukey e Scheffé.                                     |
+  |  06/11/2025    | 06/11/2025  | Procedimentos de Bonferroni e Duncan. **Aula prática em R**           |
+  |  11/11/2025    | 11/11/2025  | Aula de exercícios sobre Comparações Múltiplas. [[Mat-08]](Aulas/MATD48-08.html)|
+  |  13/11/2025    | 13/11/2025  | Experimentos em Blocos Completos Casualizados (DBC).                 |
+  |  18/11/2025    | 18/11/2025  | Modelo matemático e ANOVA para DBC. **Aula prática em R**            |
+  |  20/11/2025    | 20/11/2025  | Eficiência do delineamento.                                  [[Mat-09]](Aulas/MATD48-09.html)        |
+  |  25/11/2025    | 25/11/2025  | Experimentos em Quadrados Latinos (DQL).              [[Mat-10]](Aulas/MATD48-10.html)                |
+  |  27/11/2025    | 27/11/2025  | Modelo matemático e ANOVA para DQL. **Aula prática em R**            |
+  |  02/12/2025    | 04/12/2025  |  Réplicas em DQL                                     |
+  |  11/12/2025    | 11/12/2025  | Quadrados Greco-latinos          [[Mat-11]](Aulas/MATD48-11.html)              |
+  |  16/12/2025    | 16/12/2025  | Experimentos Fatoriais: Introdução.                                  |
+  |  18/12/2025    | 18/12/2025  | Fatores aninhados e cruzados. Modelo matemático.                     |
+  |  23/12/2025    | 23/12/2025  | Cálculo dos efeitos principais e interações. **Aula prática em R**     |
+  |  25/12/2025    | 25/12/2025  | Delineamentos para experimentos fatoriais.                           |
+  |  30/12/2025    | 30/12/2025  | ANOVA para experimentos fatoriais.               [[Mat-12]](Aulas/MATD48-12.html)                     |
+  |  **05/01/2026**  | **05/01/2026**  | **<font color="red">PROVA 2</font>**                          |
+  </center>
+***
+#### Dados
+
+ * [[Restaurantes]](Aulas/restaurant_data.csv)
+ * [[Gasto]](Aulas/ad_spend_and_gdp.csv)
+ * [[Peso]](Aulas/average-height-men-OWID.csv)
+ * [[GDP]](Aulas/GDP.csv)
+ * [[EITC]](Aulas/eitc.csv)
+ * [[EITC]](Aulas/eitc.csv)
+ 
+ 
+ 
+
+
+#### Referências bibliográficas (Principal)
+
+1.  Montgomery, D. C. (2017). **Design and analysis of experiments**. John Wiley & Sons. [**(Livro principal)**](Material/Douglas C. Montgomery - Design and Analysis of Experiments-John Wiley & Sons (2017).pdf)
+2.  Box, G. E., Hunter, J. S., & Hunter, W. G. (2005). [**Statistics for experimenters: design, innovation, and discovery**](Material/George E. P. Box, J. Stuart Hunter, William G. Hunter - Statistics for Experimenters_ Design, Innovation, and Discovery, Second Edition (2005).pdf). Wiley-Interscience.
+3.  Kuehl, R. O. (2000). [**Design of experiments: statistical principles of research design and analysis**](Material/Design of experiments _ statistical principles of research_Kueh.pdf). Cengage Learning.
+4.  Ribeiro, J. L. D. (2018). **Análise de Variância e Regressão**. Editora Appris. (Em português)
+
+***
+
+#### Referências bibliográficas 
+  <ul>
+  <li>Casella, G. (2008). <em>Statistical design.</em> Springer.</li>
+  <li>Cox, D. R., & Reid, N. (2000). <em>The theory of the design of experiments.</em> CRC press.</li>
+  <li>Hinkelmann, K., & Kempthorne, O. (2008). <em>Design and analysis of experiments, volume 1: Introduction to experimental design</em>. John Wiley & Sons.</li>
+  </ul>
+
+***
+
+#### Software (Interessados em implementar seus conhecimentos)
+
+1.  [An Introduction to R](http://cran.r-project.org)
+2.  [SAS - Acadêmico](https://www.sas.com/pt_br/learn/academic-programs/software.html)
+3.  [Rstudio](www.rstudio.com)
+4.  [TeXnicCenter](www.texniccenter.org)
+5.  [Python](http://www.python.org/)
+6.  [Julia](https://julialang.org/)
+
+***
+
+## Para refletir
+
+##### Sobrea as aulas
+
+*São reuniões cientificas e profissionais onde são discutidos temas de relevância para a formação pessoal, social e profissional. Portanto é esperado que o aluno chegue sem atraso, não entre na sala abruptamente, não sai da sala durante a discussão, respeite as intervenções do professor e/ou colega(s), não fume (Lei Federal), não use o celular (caso precisar pode se retirar da sala)  e não promova a destruição de bens públicos, entre outros.*
+
+##### Sobre honestidade acadêmica
+
+*Honestidade e confiança são importantes para todos nós como indivíduos. Neste sentido, os membros da comunidade acadêmica tanto como professores e alunos têm a responsabilidade de manter e promover os princípios da verdade e honestidade acadêmica. Assim, a honestidade acadêmica pressupõe que todos os trabalhos, provas e testes sejam frutos do trabalho individual do aluno salvo os casos onde o professor tenha dado permissão expressa e instruções para a realização de atividades em grupo.*
+
+<!-- ##### Sobre o plágio -->
+
+<!-- *Constitui desonestidade acadêmica e constitui uma grave falta acadêmica, pois destrói o princípio fundamental de confiança que deve existir no processo de transmissão de conhecimento em atividades de pesquisa e ensino. Não constitui defesa no caso de detecção de plágio que o ato tenha sido feito por negligência ou sem a intenção do aluno. A ausência de intenção pode diminuir a pena imposta, mas não serve como desculpa para o ato. Alunos devem, portanto, ter muito cuidado para evitar o plágio. Se tiver alguma dúvida sobre plágio, citação de passagens de texto, uso de ideias de terceiros ou colaborações com colegas em suas atividades acadêmicas, recomendo que  o aluno procure orientação de um professor ou coordenador acadêmico. (Fonte: Tomado de http://www.ibmecsp.edu.br/biblioteca).* -->
+
+<!-- ##### Sobre desonestidade acadêmica -->
+
+<!-- *Desonestidade acadêmica inclui colar em provas e testes, plágio e/ou qualquer adulteração no desenvolvimento de um trabalho ou pesquisa acadêmica. O plágio ocorre quando o aluno e/ou professor apresenta o trabalho de outra pessoa como se fosse seu sem citar a fonte de maneira apropriada. A única exceção à regra de citar adequadamente as fontes ocorre quando informações ou ideias são do senso comum. O plágio inclui, mas não se limita a, apresentar um trabalho obtido de um serviço profissional de redação (inclusive da Internet); citar diretamente ou parafrasear uma passagem de texto sem citar a fonte; e utilizar figuras, gráficos e tabelas sem identificar as fontes. Solicitações inapropriadas não serão admissíveis nesse curso, portanto evite-se constrangimentos. O aluno que agir de modo contrário à ética e honestidade acadêmica receberá forte penalização e será reportado oficialmente à coordenação do curso.* -->
+
+##### Sobre profissionalismo
+
+*Aluno, você já não é mais criança ou adolescente, mas adulto. Durante seu tempo na universidade, você formará quem você será pelas próximas décadas. O mercado de trabalho quer apenas os melhores e os mais profissionais. Haja desde já como o profissional que você deseja ser. (Fonte: Política do Curso e Etiqueta em Sala de Aula, Professor Dr. Renato J. Cintra).*
+
+##### Sobre tratamento pessoal
+
+*Lembrem que nós somos respeitados e tratados da mesma forma em que tratamos as demais pessoas. Ao se dirigir a professores e/ou colegas, faça-o respeitosamente.*
+
+
+##### Sobre o aluno
+
+*Finalmente quero lembrá-lo que você constrói seu conhecimento e desenvolve sua capacidade de aprender e criar. Seu instrutor está aqui para orientá-lo. Trabalhe, pesquise, seja crítico construtivo, crie, se dedique, se esforce e não desista, se pensar em desistir se esforce mais. Não se preocupe e melhor se ocupe. Você está aqui porque tem condições de vencer.*
+
+***
+
+### Material de apoio 
+
+O material de apoio será distribuído ao longo do curso. Esse material pode incluir, livros, slides de aula, scripts para reprodução, artigos científicos, artigos dedivulgação, entre outros.
+
+
+***
+### <img src="Configuracoes/hora.gif" width="16" height="16" border="0" align="left">   &nbsp;	<u> <font color="red"> Provas </font> </u>
+
+*   [[<font color="red">  Prova I </font>]](Projetos/Projeto-I.html) 
+
+
+***
+<!-- ###### Este documento foi gerado através de um arquivo [R Markdown](http://rmarkdown.rstudio.com/). Markdown é uma linguagem simples de formatação que permite produzir documentos HTML, PDF e MS Word, de forma eficiente.   -->
+###### Content Copyright &copy; 2025 Raydonal Ospina Martínez. All Rights Reserved.
+
+
+<!-- https://cales.arizona.edu/~anling/STAT574/notes.htm -->
+<!-- https://mathspace.co/textbooks/syllabuses/Syllabus-1057/topics/Topic-20689/subtopics/Subtopic-268600/ -->
+<!-- https://byjus.com/maths/sampling-methods/ -->
+<!-- https://mathspace.co/textbooks/syllabuses/Syllabus-1057/topics/Topic-20689/subtopics/Subtopic-268600/ -->
+

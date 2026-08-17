@@ -1,0 +1,398 @@
+---
+title: "Princípios do Delineamento de Experimentos"
+subtitle: "Unidades, fontes de variação, fatores e os três pilares do controle do erro"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 01 — Princípios do Delineamento de Experimentos
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Por que planejar, e não só analisar?
+
+Um experimento bem desenhado responde a uma pergunta causal antes de qualquer dado existir — a
+análise só formaliza o que o desenho já tornou possível.
+
+> "Fazer uma análise estatística depois que o experimento terminou é, frequentemente, apenas uma
+> tentativa de resgatar o que já foi arruinado." — paráfrase de R. A. Fisher (Fisher, 1935)
+
+Nenhuma técnica de análise, por mais sofisticada, conserta um desenho ruim
+(Fisher, 1935; Box, Hunter & Hunter, 2005).
+
+---
+
+## O método científico: de observação a hipótese testável
+
+```{r fig-ciclo-cientifico, echo=FALSE, out.width="42%"}
+knitr::include_graphics("../Aulas/images/circular_flowchart.png")
+```
+
+Popper (1959): uma hipótese só é cientificamente informativa se for **falseável** —
+se existir algum resultado observável que a contradiga. O delineamento de experimentos entra
+exatamente aqui: é a engenharia de **como coletar dados que de fato podem contradizer a
+hipótese**, caso ela seja falsa.
+
+--
+
+Um desenho fraco (sem repetição, sem aleatorização, com confusão não controlada) produz dados que
+"confirmam" a hipótese do pesquisador quase independentemente dela ser verdadeira — o oposto do
+que Popper pede.
+
+---
+
+## Observação vs. experimentação
+
+- **Estudo observacional:** o pesquisador só registra o que já aconteceria de qualquer forma —
+  não decide quem recebe qual tratamento.
+- **Estudo experimental:** o pesquisador **atribui** o tratamento às unidades, idealmente por
+  sorteio.
+
+--
+
+Em um observacional, qualquer diferença entre grupos pode vir do tratamento *ou* de alguma
+característica que levou aquelas unidades a receber aquele tratamento (auto-seleção, viés de
+indicação, tendência histórica) — "correlação não implica causalidade". Em um experimento bem
+desenhado, é a **aleatorização** — não a unidade, não nenhuma característica dela — que decide o
+tratamento, e é esse fato (formalizado a seguir) que permite a leitura causal.
+
+**Nota histórica:** a formalização de repetição/aleatorização/blocagem como resposta ao problema
+causal nasce de R. A. Fisher em Rothamsted (1919–1933) (Fisher, 1935) — antes dele, ensaios
+agrícolas comparavam parcelas "parecidas" escolhidas por julgamento, vulnerável a exatamente o
+problema de confusão da próxima seção.
+
+---
+
+## Confusão (*confounding*)
+
+Duas variáveis estão **confundidas** quando seus efeitos sobre a resposta não podem ser separados
+a partir dos dados — tipicamente porque uma determinou (ou influenciou fortemente) os valores da
+outra.
+
+--
+
+**Exemplo clássico** (Owen, 2020): todo o grupo tratado é medido de manhã, todo o
+controle à tarde — o efeito do tratamento e o efeito do horário ficam **perfeitamente
+confundidos**; nenhuma análise, por mais sofisticada, os separa a partir desses dados. O mesmo
+ocorre ao comparar um grupo "tratado agora" com um **controle histórico**: qualquer tendência de
+fundo (sazonalidade, aprendizado, mudança de público) se confunde com o tratamento.
+
+--
+
+Confusão por variável **medida** pode, em princípio, entrar no modelo como covariável (ANCOVA,
+Capítulo 3). Confusão por variável **desconhecida** é o caso perigoso — e é exatamente aí que a
+aleatorização mostra sua força: sorteando o tratamento, nenhuma variável, medida ou não, fica
+sistematicamente desbalanceada entre grupos, em expectativa (prova formal a seguir).
+
+---
+
+## Unidade experimental vs. unidade amostral
+
+- **Unidade experimental (UE):** onde o tratamento é sorteado. É o nível da aleatorização.
+- **Unidade amostral:** onde a resposta é efetivamente medida.
+
+Quando várias unidades amostrais vêm da mesma UE, há **submuestreo**. Contá-las como réplicas
+independentes é um erro clássico: infla artificialmente o *n* e reduz o erro-padrão de forma
+ilegítima.
+
+--
+
+.pull-left[
+**UE = pessoa**
+Cada pessoa recebe *um* tratamento.
+]
+.pull-right[
+**Unidade amostral = medição**
+Uma pessoa pode gerar várias medições.
+]
+
+---
+
+## Fontes de variação
+
+Toda resposta varia por três razões simultâneas:
+
+1. **Efeito do tratamento** — o que queremos detectar.
+2. **Variação sistemática entre unidades** — diferenças preexistentes (habilidade, fertilidade
+   do solo, navegador do usuário) que não são o foco, mas afetam a resposta.
+3. **Erro experimental** — o que sobra depois de contabilizar (1) e (2).
+
+O delineamento isola (1), controla (2) e estima honestamente (3).
+
+---
+
+## Fator, nível, tratamento
+
+- **Fator:** variável controlada pelo pesquisador.
+- **Níveis:** valores específicos que o fator assume.
+- **Tratamento:** combinação de níveis atribuída a uma unidade experimental.
+
+```{r tabela-fatores, echo=FALSE}
+tibble(
+  Domínio = c("Psicologia", "Agricultura", "Ciência de dados"),
+  Fator = c("Técnica de estudo", "Dose de fertilizante", "Layout da página"),
+  Níveis = c("Releitura / Flashcards / Teste-prática", "0, 50, 100 kg/ha", "Lista / Grade")
+) %>%
+  kable(format = "html") %>%
+  kable_styling(font_size = 18, full_width = FALSE)
+```
+
+---
+
+## Os três aspectos do delineamento
+
+Seguindo a formalização clássica (Fisher, 1935; Cochran & Cox, 1957):
+
+1. **Desenho de tratamentos** — *o quê* comparar.
+2. **Desenho para controle do erro** — *como* atribuir tratamentos com justiça.
+3. **Desenho amostral** — *quantas* unidades, como medir.
+
+Os três princípios a seguir pertencem sobretudo ao aspecto 2.
+
+---
+
+## Por que a aleatorização funciona: resultados potenciais
+
+Formalização de Neyman (1923) / Rubin (1974)
+(Imbens & Rubin, 2015). Para cada unidade $i$: dois **resultados potenciais**, $Y_i(0)$ e $Y_i(1)$ —
+só um é observável. $Z_i \in \{0,1\}$: tratamento sorteado. Observado: $Y_i = Z_iY_i(1)+(1-Z_i)Y_i(0)$.
+
+$$\text{ATE} = \bar Y(1) - \bar Y(0), \qquad
+\widehat{\text{ATE}} = \bar Y_1^{\,obs} - \bar Y_0^{\,obs}$$
+
+--
+
+Tratando $\{Y_i(0),Y_i(1)\}$ como **fixos** e só $Z_i$ como aleatório (sorteio de qual
+subconjunto de tamanho $n_1$ recebe tratamento):
+
+$$E\!\left[\bar Y_1^{\,obs}\right] = \frac{1}{N}\sum_i Y_i(1) = \bar Y(1)
+\;\;\Longrightarrow\;\; E\!\left[\widehat{\text{ATE}}\right] = \text{ATE}$$
+
+porque a aleatorização faz do grupo tratado uma **amostra aleatória simples** dos $N$ valores
+$Y_i(1)$ — não-viés **sem** suposição distribucional. Sem sorteio, $Z_i$ pode depender de
+$(Y_i(0),Y_i(1))$: a igualdade quebra, e $\widehat{\text{ATE}}$ mistura efeito causal com viés de
+seleção.
+
+---
+
+## Validade interna vs. validade externa
+
+A demonstração acima garante **validade interna**: dentro da amostra de $N$ unidades estudadas, a
+diferença de médias é não-viesada para o ATE *dessa amostra*. É uma afirmação sobre o mecanismo
+de atribuição (a aleatorização), não sobre quem são as $N$ unidades.
+
+--
+
+**Validade externa** (Owen, 2020): o efeito estimado nessas $N$ unidades se generaliza
+para outras unidades, fora do estudo? Validade interna alta **não implica** validade externa
+alta — um experimento com aleatorização impecável ainda pode dizer pouco sobre uma população mais
+ampla, se a amostra não for representativa dela (voluntários de um "programa beta", estudantes de
+graduação como sujeitos de laboratório, parcelas de uma única estação experimental).
+
+Não há solução puramente estatística para validade externa — só o cuidado de deixar explícito
+**a que população** e **sob quais condições** a conclusão se aplica.
+
+---
+
+## Os três pilares
+
+.pull-left[
+### Repetição
+Tratamentos em várias UEs independentes → estima o erro experimental.
+
+### Aleatorização
+Sorteio (não conveniência) → grupos comparáveis em tudo, observado ou não. Sem ela, não há
+interpretação causal legítima.
+]
+.pull-right[
+### Controle local (blocagem)
+Agrupar UEs heterogêneas em blocos homogêneos, aleatorizando *dentro* de cada bloco → reduz o
+erro experimental sem abrir mão da aleatorização.
+]
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Técnicas de estudo e desempenho em prova
+
+**Pergunta:** releitura, flashcards e teste-prática diferem quanto à nota em uma prova de
+vocabulário?
+
+- 30 estudantes, sorteados em 3 grupos de 10 (**UE = estudante**).
+- Cada estudante responde **duas provas paralelas** (A e B) sobre o mesmo material
+  (**unidade amostral = prova**, submuestreo).
+
+--
+
+**Desenho de tratamentos:** 1 fator (técnica), 3 níveis.
+**Controle do erro:** aleatorização simples, sem blocos.
+**Desenho amostral:** 10 UEs por grupo, 2 submuestras por UE.
+
+---
+
+## Os dados simulados
+
+```{r sim-dados}
+set.seed(2026)
+tecnica <- c("Releitura", "Flashcards", "Teste-prática")
+
+dados_estudantes <- tibble(
+  estudante  = 1:30,
+  tecnica    = factor(rep(tecnica, each = 10), levels = tecnica),
+  habilidade = rnorm(30, 0, 6)
+)
+efeito <- c("Releitura" = 0, "Flashcards" = 4, "Teste-prática" = 9)
+
+dados_provas <- dados_estudantes %>%
+  crossing(prova = c("A", "B")) %>%
+  mutate(nota = 65 + efeito[as.character(tecnica)] + habilidade +
+           rnorm(n(), 0, 3))
+```
+
+```{r sim-dados-tab, echo=FALSE}
+dados_provas %>%
+  group_by(tecnica) %>%
+  summarise(n_estudantes = n_distinct(estudante), n_provas = n(),
+            media = round(mean(nota), 1), .groups = "drop") %>%
+  kable(format = "html") %>% kable_styling(font_size = 18, full_width = FALSE)
+```
+
+O *n* relevante para inferência é **10 por grupo** (estudantes), não 20 (provas).
+
+---
+
+## Visualizando: cada ponto é uma prova, cada cor uma técnica, a forma distingue A de B
+
+```{r plot-submuestreo, echo=FALSE, fig.width=8, fig.height=4.2}
+ggplot(dados_provas, aes(x = tecnica, y = nota, group = estudante)) +
+  geom_line(alpha = 0.3) +
+  geom_point(aes(color = tecnica, shape = prova), size = 2.6, alpha = 0.8) +
+  scale_shape_manual(values = c(A = 16, B = 17)) +
+  labs(x = NULL, y = "Nota", shape = "Prova",
+       title = "Duas provas (A/B) por estudante (submuestreo)") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom", legend.title = element_text(size = 11))
+```
+
+As duas notas de um mesmo estudante estão ligadas — são mais parecidas entre si do que notas de
+estudantes diferentes. Isso é exatamente o que a distinção UE/unidade amostral prevê.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Se o professor deixasse os alunos **escolherem** a técnica de estudo, em vez de sortear,
+   quais variáveis de confusão plausíveis contaminariam a comparação?
+
+2. Em um experimento agrícola em que cada bloco é um **dia de plantio** (chuva, temperatura e
+   luz diferentes), o que a blocagem por dia consegue controlar — e o que ela **não** consegue?
+
+3. Uma equipe de produto testa um novo layout de site só com usuários que se voluntariam para o
+   "programa beta". Isso é aleatorização? Qual população a conclusão do teste realmente
+   representa?
+
+4. No exemplo das provas paralelas, o que mudaria na análise se, em vez de reportar a média das
+   duas provas por estudante, alguém rodasse a ANOVA diretamente nas 60 notas?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do desenho ao código: declarando a estrutura
+
+```{r uso-r-1}
+# 1. O fator de tratamento, com os níveis na ordem que queremos exibir
+dados_estudantes$tecnica <- factor(dados_estudantes$tecnica,
+                                    levels = c("Releitura", "Flashcards", "Teste-prática"))
+
+# 2. A unidade experimental precisa de um identificador único e explícito —
+#    é ele que usaremos para agregar o submuestreo antes de qualquer teste.
+media_por_estudante <- dados_provas %>%
+  group_by(estudante, tecnica) %>%
+  summarise(nota_media = mean(nota), .groups = "drop")
+
+nrow(dados_provas)          # 60 unidades amostrais
+nrow(media_por_estudante)   # 30 unidades experimentais — o n correto
+```
+
+---
+
+## Uma prévia do que vem no Capítulo 3
+
+```{r uso-r-2}
+modelo_ingenuo  <- aov(nota ~ tecnica, data = dados_provas)          # errado: usa 60
+modelo_correto  <- aov(nota_media ~ tecnica, data = media_por_estudante)  # certo: usa 30
+
+broom::tidy(modelo_ingenuo)[1, c("term","df","p.value")]
+broom::tidy(modelo_correto)[1, c("term","df","p.value")]
+```
+
+Note a diferença nos graus de liberdade e no p-valor: tratar submuestras como réplicas
+independentes muda a conclusão. Formalizaremos por que isso acontece — e como corrigi-lo — ao
+estudar o **modelo de submuestreo em um DCA**, no Capítulo 3.
+
+---
+
+## Resumo da aula
+
+- UE = onde o tratamento é sorteado; unidade amostral = onde a resposta é medida.
+- Três fontes de variação: tratamento, variação sistemática entre UEs, erro experimental.
+- Fator, nível, tratamento: o vocabulário do desenho de tratamentos.
+- Repetição, aleatorização, controle local: os três pilares do controle do erro.
+- Próxima aula: a maquinaria formal — o **modelo linear** — para expressar tudo isso com precisão.
+
+## Referências
+
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.
+- Box, G. E. P., Hunter, J. S. & Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley & Sons.
+- Popper, K. R. (1959). *The Logic of Scientific Discovery*. Hutchinson & Co.
+- Owen, A. B. (2020). *A First Course in Experimental Design: Notes from Stat 263/363*. Stanford University.
+- Cochran, W. G. & Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley & Sons.
+- Splawa-Neyman, J. (1923). On the Application of Probability Theory to Agricultural Experiments. Essay on Principles. Section 9. *Statistical Science*, 5(4), 465–472.
+- Rubin, D. B. (1974). Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies. *Journal of Educational Psychology*, 66(5), 688–701.
+- Imbens, G. W. & Rubin, D. B. (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*. Cambridge University Press.

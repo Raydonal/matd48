@@ -1,0 +1,272 @@
+---
+title: "Verificação de Pressupostos e Transformações"
+subtitle: "Q-Q plot, testes de normalidade e homogeneidade de variância, Box-Cox"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+  library(car)
+  library(MASS)
+  library(gridExtra)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 06 — Verificação de Pressupostos e Transformações
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Três pressupostos, uma checagem possível
+
+A validade dos testes $F$, ICs e cálculos de tamanho amostral (Aulas 04–05) repousa em:
+
+1. **Independência** — garantida (ou não) pelo desenho; não se verifica nos dados.
+2. **Normalidade** dos erros.
+3. **Variância constante** entre tratamentos (homocedasticidade).
+
+--
+
+Normalidade e homocedasticidade são checáveis a partir dos **resíduos**
+$e_{ij} = Y_{ij}-\bar Y_{i\cdot}$ do modelo ajustado — a checagem de adequação do modelo via
+análise de resíduos (Montgomery, 2017).
+
+---
+
+## Normalidade: gráfico e teste
+
+- **Q-Q plot**: quantis amostrais dos resíduos vs. quantis teóricos da normal. Mostra **onde**
+  (em qual cauda/região) o desvio ocorre — mais informativo que um único número.
+- **Shapiro-Wilk** (Shapiro & Wilk, 1965): teste formal, útil como confirmação, não como árbitro único
+  — baixo poder em $n$ pequeno, rejeita quase sempre em $n$ muito grande por desvios sem
+  relevância prática.
+
+---
+
+## Homogeneidade de variância
+
+- **Teste de Levene** (Levene, 1960): compara desvios absolutos em torno da **mediana** de cada
+  grupo — robusto a não normalidade (preferível ao de Bartlett (1937), sensível a ela).
+- Ausência de rejeição **não** é evidência de que a homocedasticidade vale — sobretudo com poucas
+  observações por grupo. Inspeção gráfica (resíduos vs. ajustados) continua indispensável.
+
+---
+
+## Transformações usuais
+
+- **Log** ($\log Y$): variância $\propto$ média$^2$ (erro multiplicativo) — tempos, contagens
+  grandes, dados positivos assimétricos à direita.
+- **Raiz quadrada** ($\sqrt Y$, ou $\sqrt{Y+1/2}$): variância $\propto$ média — contagens.
+- **Box-Cox** (Box & Cox, 1964): família $Y^{(\lambda)}=(Y^\lambda-1)/\lambda$ ($\log Y$ se
+  $\lambda=0$); $\lambda$ escolhido maximizando a verossimilhança perfilada do modelo ajustado a
+  $Y^{(\lambda)}$ (Box, Hunter & Hunter, 2005).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Tempos de reação heterocedásticos
+
+Tempos de reação: assimétricos à direita, variância cresce com a média (efeito multiplicativo).
+
+```{r dados-06}
+set.seed(1234)
+condicao <- c("Nenhuma", "Sonora", "Visual")
+n <- 15
+media_base <- c(420, 470, 560)
+cv <- 0.28
+dados_het <- tibble(
+  sujeito  = 1:(3 * n),
+  condicao = factor(rep(condicao, each = n), levels = condicao),
+  tempo    = rep(media_base, each = n) * exp(rnorm(3 * n, 0, cv))
+)
+modelo_het <- aov(tempo ~ condicao, data = dados_het)
+```
+
+---
+
+## Q-Q plot e boxplot dos resíduos, lado a lado
+
+```{r qqplot-06, echo=FALSE, fig.width=8.5, fig.height=3.8}
+p_qq_06 <- dados_het %>%
+  mutate(residuo = residuals(modelo_het)) %>%
+  ggplot(aes(sample = residuo)) +
+  stat_qq() + stat_qq_line(color = "firebrick") +
+  labs(title = "Q-Q plot", x = "Quantis teóricos", y = "Quantis amostrais") +
+  theme_minimal(base_size = 12)
+
+p_box_06 <- dados_het %>%
+  mutate(residuo = residuals(modelo_het)) %>%
+  ggplot(aes(condicao, residuo, fill = condicao)) +
+  geom_boxplot(alpha = 0.75, show.legend = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey30") +
+  labs(title = "Boxplot por condição", x = NULL, y = "Resíduo") +
+  theme_minimal(base_size = 12)
+
+gridExtra::grid.arrange(p_qq_06, p_box_06, ncol = 2)
+```
+
+Pontos acima da reta na cauda superior direita do Q-Q: cauda mais pesada que a normal, o padrão
+clássico de assimetria à direita em tempos de reação. O boxplot por condição (à direita) já
+antecipa o próximo pressuposto: a altura das caixas cresce de "Nenhuma" para "Visual" — indício
+visual de heterocedasticidade, antes mesmo do gráfico de resíduos vs. ajustados a seguir.
+
+---
+
+## Resíduos vs. valores ajustados
+
+```{r resid-fitted-06, echo=FALSE, fig.width=6.5, fig.height=4}
+tibble(ajustado = fitted(modelo_het), residuo = residuals(modelo_het),
+       condicao = dados_het$condicao) %>%
+  ggplot(aes(ajustado, residuo, color = condicao)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_point(size = 2, alpha = 0.75) +
+  labs(title = "Resíduos vs. ajustados", x = "Valor ajustado", y = "Resíduo", color = NULL) +
+  theme_minimal(base_size = 13)
+```
+
+O leque se abre da esquerda (ajustado baixo) para a direita (ajustado alto): a dispersão dos
+resíduos cresce com a média — a marca de um erro multiplicativo, não aditivo.
+
+---
+
+## Testes formais
+
+```{r testes-06}
+shapiro.test(residuals(modelo_het))
+car::leveneTest(tempo ~ condicao, data = dados_het)
+```
+
+Shapiro-Wilk rejeita normalidade ($p<0{,}001$); Levene não rejeita — mas com $n=15$/grupo o teste
+tem pouco poder, mesmo havendo heterocedasticidade por construção (como o gráfico anterior já
+deixava claro visualmente).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. O Q-Q plot mostrou desvio nas caudas, mas o teste de Levene não rejeitou homocedasticidade. Os
+   dois diagnósticos se contradizem? Como você reconciliaria essa leitura?
+
+2. Depois de transformar por log, as conclusões devem ser reportadas em qual escala — a
+   original (ms) ou a log? O que muda na interpretação de "diferença entre médias"?
+
+3. Em que ponto um pesquisador deveria abandonar a transformação e considerar uma alternativa não
+   paramétrica (Kruskal-Wallis, tema da próxima seção do curso), em vez de insistir em uma família
+   de potências?
+
+4. Um teste de Shapiro-Wilk com $n=500$ rejeita a normalidade com $p<0{,}001$, mas o Q-Q plot
+   parece quase perfeito. O que fazer?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Box-Cox
+
+```{r boxcox-06, fig.width=6, fig.height=4}
+bc <- MASS::boxcox(modelo_het, plotit = TRUE, lambda = seq(-2, 2, by = 0.01))
+lambda_otimo <- bc$x[which.max(bc$y)]
+lambda_otimo
+```
+
+---
+
+## Depois de transformar (log)
+
+```{r pos-transf-06}
+dados_het <- dados_het %>% mutate(log_tempo = log(tempo))
+modelo_log <- aov(log_tempo ~ condicao, data = dados_het)
+
+shapiro.test(residuals(modelo_log))
+car::leveneTest(log_tempo ~ condicao, data = dados_het)
+```
+
+O IC de verossimilhança de $\lambda$ inclui 0: a transformação log, mais interpretável, é
+compatível com os dados — e resolve a não normalidade detectada antes.
+
+---
+
+## Antes e depois, lado a lado
+
+```{r antes-depois-06, echo=FALSE, fig.width=9, fig.height=4}
+p_antes <- tibble(ajustado = fitted(modelo_het), residuo = residuals(modelo_het)) %>%
+  ggplot(aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_point(color = "#d98324", size = 2, alpha = 0.75) +
+  labs(title = "Antes (original)", x = "Ajustado", y = "Resíduo") + theme_minimal(base_size = 12)
+
+p_depois <- tibble(ajustado = fitted(modelo_log), residuo = residuals(modelo_log)) %>%
+  ggplot(aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_point(color = "#2e8b57", size = 2, alpha = 0.75) +
+  labs(title = "Depois (log)", x = "Ajustado", y = "Resíduo") + theme_minimal(base_size = 12)
+
+gridExtra::grid.arrange(p_antes, p_depois, ncol = 2)
+```
+
+O leque de dispersão que crescia da esquerda para a direita desaparece à direita: na escala log, a
+variabilidade dos resíduos é comparável entre as três condições — sinal visual direto de que a
+transformação estabilizou a variância sem distorcer a estrutura de tratamento.
+
+---
+
+## Resumo da aula
+
+- Normalidade: Q-Q plot (onde o desvio ocorre) + Shapiro-Wilk (confirmação formal).
+- Homocedasticidade: Levene, robusto a não normalidade; ausência de rejeição não é prova de que o
+  pressuposto vale, sobretudo em $n$ pequeno.
+- Log e raiz quadrada são casos especiais da família Box-Cox; $\lambda$ escolhido por
+  verossimilhança perfilada, mas interpretabilidade pode justificar arredondar para 0, 1/2 ou 1.
+- Isso fecha a primeira metade do Capítulo 3 (DCA). A próxima seção trata de contrastes,
+  polinômios ortogonais, comparações múltiplas, ANCOVA e Kruskal-Wallis (Kruskal & Wallis, 1952) —
+  quando nem a transformação basta.
+
+## Referências
+
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.
+- Shapiro, S. S. & Wilk, M. B. (1965). An Analysis of Variance Test for Normality (Complete Samples). *Biometrika*, 52(3/4), 591–611.
+- Levene, H. (1960). Robust Tests for Equality of Variances. Em *Contributions to Probability and Statistics: Essays in Honor of Harold Hotelling* (pp. 278–292). Stanford University Press.
+- Bartlett, M. S. (1937). Properties of Sufficiency and Statistical Tests. *Proceedings of the Royal Society of London. Series A*, 160(901), 268–282.
+- Box, G. E. P. & Cox, D. R. (1964). An Analysis of Transformations. *Journal of the Royal Statistical Society, Series B*, 26(2), 211–252.
+- Box, G. E. P., Hunter, J. S. & Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley & Sons.
+- Kruskal, W. H. & Wallis, W. A. (1952). Use of Ranks in One-Criterion Variance Analysis. *Journal of the American Statistical Association*, 47(260), 583–621.

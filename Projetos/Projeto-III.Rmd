@@ -1,0 +1,173 @@
+---
+documentclass: extarticle
+classoption: landscape
+title:  "Projeto Criativo: PLANEJAMENTO DE EXPERIMENTOS A"
+subtitle:  "Projeto - III — Comparando Modelos de Machine Learning com Rigor Estatístico"
+geometry: margin=0.7in
+fontsize: 14pt
+mainfont: Cambria
+author:
+  - Raydonal Ospina <a href='mailto:raydonal@castlab.org'> `r fontawesome::fa(name = 'envelope-circle-check', fill = 'darkgreen')`</a>
+output:
+  html_document:
+        theme: yeti
+        css:  config/StyleHomework.css
+  pdf_document:
+    keep_tex: yes
+lang: pt
+link-citations: yes
+linkcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+**Regras:** O projeto deve ser realizado de forma individual. Você deverá encaminhar a resolução
+do seu projeto digitalizado em formato PDF para o e-mail raydonal@castlab.org até a data indicada
+no cronograma do curso, até as 12:00hs (GMT-3, Horário de Brasília). Forneça código `R` (e/ou
+`Python`/`Julia`, se usar) e quaisquer fontes complementares. Recomendo fortemente não usar LLMs
+(ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral, Falcon, Gemma, Bloom,
+Magistral, Qwen, Kimi, Nova Phi, Grok, etc.) para resolver o projeto, evite constrangimentos.
+**Quero vocês pensando, não a máquina.**
+
+**Avaliação:** este projeto fecha a **Nota 2** do curso — N2 = 50% Projeto III + 50% média das
+Listas 09–11. É o segundo dos três projetos incrementais: ele retoma diretamente a lição central
+do Projeto II (uma réplica não sustenta inferência — aqui reaparece como "uma única divisão
+treino/teste") e introduz controle local/blocagem no lugar da repetição simples. A fintech
+**CrediScore** e o pipeline de crédito criados aqui são o mesmo cenário que o Projeto IV, ao final
+do curso, vai otimizar via um arranjo fatorial completo.
+
+**Contexto do Projeto:**
+Vocês foram contratados como cientistas de dados pela **CrediScore**, uma fintech que decide,
+automaticamente, se aprova um empréstimo. A equipe de engenharia treinou **quatro algoritmos**
+candidatos para prever inadimplência — regressão logística, árvore de decisão, k-vizinhos mais
+próximos (k-NN) e floresta aleatória — e precisa recomendar **um único algoritmo** para produção.
+
+**O "Experimento" do Estagiário:**
+Um estagiário rodou cada um dos 4 algoritmos **uma única vez**, em uma **única** divisão
+treino/teste, e apresentou uma tabela com 4 números de acurácia. O modelo com a maior acurácia
+"venceu". A diretoria, desconfiada (vocês fizeram MATD48!), pediu a vocês uma segunda opinião.
+
+---
+# **Parte 1: Por que Comparar Modelos de ML é um Problema de Delineamento Experimental**
+
+**Atividades (Parte 1):**
+
+1. **O que está errado?** Uma única divisão treino/teste equivale, no vocabulário do curso, a
+   **uma única réplica por tratamento**. Explique por que isso é estatisticamente idêntico ao
+   erro do estagiário do Projeto II (helicóptero com um voo só) — qual pilar do delineamento
+   está faltando, e o que pode acontecer se a divisão treino/teste "sortuda" favorecer um
+   algoritmo por puro acaso?
+2. **Validação cruzada como delineamento em blocos:** Em vez de uma única divisão, a prática
+   padrão em ciência de dados é a **validação cruzada em $k$ dobras (k-fold)**: os dados são
+   divididos em $k$ partições, e cada modelo é treinado/testado $k$ vezes, uma para cada dobra
+   servindo de teste. Explique por que isso é, precisamente, um **Delineamento em Blocos
+   Completos Aleatorizados (DBCA)**: identifique quem é o **tratamento** (4 algoritmos), quem é o
+   **bloco** (a dobra $k$) e por que tratar cada dobra como um bloco — em vez de agrupar todas as
+   medições de acurácia de todos os algoritmos como se fossem independentes — é exatamente a
+   mesma lógica de "controle local" do Capítulo 4. *Dica: pesquise/cite Demšar (2006), "Statistical
+   Comparisons of Classifiers over Multiple Data Sets", que formaliza essa ideia.*
+3. Escreva o modelo estatístico do DBCA para este problema, identificando $\tau_i$ (efeito do
+   algoritmo $i$) e $\beta_j$ (efeito da dobra $j$).
+
+# **Parte 2: Execute a Validação Cruzada como um DBCA e Analise**
+
+```{r simulacao}
+# Use como semente o mês+dia do seu nascimento + 789
+minha_semente <- 1 + 6 + 789
+set.seed(minha_semente)
+
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(rpart)      # arvore de decisao
+  library(class)      # k-NN
+  library(randomForest)
+})
+
+# 1. Dados: use um dataset real embutido no R (ex.: mlbench::PimaIndiansDiabetes,
+#    ou o seu proprio dataset de interesse -- adapte a variavel resposta binaria)
+# Aqui simulamos um cenario analogo de credito para fins ilustrativos:
+n <- 400
+dados <- tibble(
+  renda      = rnorm(n, 3000, 900),
+  divida_pct = runif(n, 0, 1),
+  idade      = round(rnorm(n, 38, 10)),
+  score_bureau = rnorm(n, 600, 80)
+) %>%
+  mutate(
+    logit = -3 + 0.0009 * renda - 3.2 * divida_pct + 0.01 * idade + 0.004 * score_bureau,
+    prob_pagar = 1 / (1 + exp(-logit)),
+    inadimplente = factor(rbinom(n, 1, 1 - prob_pagar), labels = c("Paga", "Inadimplente"))
+  ) %>%
+  select(-logit, -prob_pagar)
+
+# 2. Estrutura de validacao cruzada em k=10 dobras (blocos)
+k <- 10
+dados$dobra <- sample(rep(1:k, length.out = nrow(dados)))
+
+algoritmos <- c("logistica", "arvore", "knn", "floresta")
+
+resultado <- expand_grid(dobra = 1:k, algoritmo = algoritmos) %>%
+  mutate(acuracia = NA_real_)
+
+for (j in 1:k) {
+  treino <- dados %>% filter(dobra != j)
+  teste  <- dados %>% filter(dobra == j)
+
+  # -- logistica --
+  m_log <- glm(inadimplente ~ renda + divida_pct + idade + score_bureau,
+               data = treino, family = binomial)
+  pred_log <- factor(ifelse(predict(m_log, teste, type = "response") > 0.5,
+                             "Inadimplente", "Paga"), levels = levels(dados$inadimplente))
+  acc_log <- mean(pred_log == teste$inadimplente)
+
+  # -- arvore --
+  m_arv <- rpart(inadimplente ~ renda + divida_pct + idade + score_bureau,
+                  data = treino, method = "class")
+  pred_arv <- predict(m_arv, teste, type = "class")
+  acc_arv <- mean(pred_arv == teste$inadimplente)
+
+  # -- knn (k=5, variaveis padronizadas) --
+  vars <- c("renda", "divida_pct", "idade", "score_bureau")
+  tr_s <- scale(treino[vars]); te_s <- scale(teste[vars],
+            center = attr(tr_s, "scaled:center"), scale = attr(tr_s, "scaled:scale"))
+  pred_knn <- class::knn(tr_s, te_s, cl = treino$inadimplente, k = 5)
+  acc_knn <- mean(pred_knn == teste$inadimplente)
+
+  # -- floresta aleatoria --
+  m_rf <- randomForest(inadimplente ~ renda + divida_pct + idade + score_bureau,
+                        data = treino, ntree = 200)
+  pred_rf <- predict(m_rf, teste)
+  acc_rf <- mean(pred_rf == teste$inadimplente)
+
+  resultado$acuracia[resultado$dobra == j & resultado$algoritmo == "logistica"] <- acc_log
+  resultado$acuracia[resultado$dobra == j & resultado$algoritmo == "arvore"]    <- acc_arv
+  resultado$acuracia[resultado$dobra == j & resultado$algoritmo == "knn"]       <- acc_knn
+  resultado$acuracia[resultado$dobra == j & resultado$algoritmo == "floresta"]  <- acc_rf
+}
+
+resultado  # 4 algoritmos x 10 dobras = 40 linhas: seu DBCA
+```
+
+**Atividades (Parte 2):**
+
+1. **Análise exploratória:** boxplot da acurácia por algoritmo, e um gráfico de perfis (uma linha
+   por dobra, ligando os 4 algoritmos) — este último mostra visualmente se a vantagem de um
+   algoritmo é consistente através das dobras (aditividade tratamento-bloco) ou não.
+2. **ANOVA do DBCA:** ajuste `acuracia ~ algoritmo + factor(dobra)`, apresente a tabela de ANOVA,
+   e teste se há diferença significativa entre algoritmos a $\alpha=0{,}05$. Calcule também a
+   **eficiência relativa** do DBCA frente a ignorar a dobra (tratar as 40 acurácias como um DCA) —
+   quanto se ganhou em precisão ao blocar por dobra?
+3. **Teste de Friedman (Aula 10):** a acurácia por dobra viola facilmente normalidade em amostras
+   pequenas. Rode o teste de Friedman como alternativa não paramétrica e compare a conclusão com
+   a ANOVA — elas concordam?
+4. **Comparações múltiplas:** se a ANOVA (ou Friedman) rejeitar $H_0$, use Tukey HSD (ou o
+   pós-teste de Friedman apropriado) para identificar quais pares de algoritmos diferem entre si.
+5. **Recomendação final:** e-mail para a diretoria da CrediScore recomendando um algoritmo para
+   produção, com a evidência estatística, e uma ressalva sobre o que a comparação **não** captura
+   (ex.: tempo de treinamento, interpretabilidade exigida por regulação de crédito).

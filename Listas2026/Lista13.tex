@@ -1,0 +1,123 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 13 --- Fatoriais $2^k$}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 13}{Fatoriais $2^k$: ortogonalidade, análise sem repetição e confusão (Capítulo 6 / Aula 13)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito13.pdf}.}
+
+\begin{questao}{1} \textbf{(Dedução --- ortogonalidade de um $2^3$ e o estimador de efeito)}
+
+Considere um fatorial $2^3$ completo, uma repetição ($n=2^3=8$ corridas), fatores codificados
+$\pm1$. Seja $\mathbf{x}_j \in \{-1,+1\}^8$ a coluna de sinais de um efeito qualquer (principal ou
+de interação, construída por produto de colunas, Seção 6.1 do livro-texto), e
+$\mathbf{X} = [\mathbf{1}\ |\ \mathbf{x}_A\ |\ \mathbf{x}_B\ |\ \cdots\ |\ \mathbf{x}_{ABC}]$ a
+matriz de delineamento completa (8 colunas).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Liste as 8 combinações de sinais $(x_A,x_B,x_C)$ e mostre, por soma direta, que
+    $\mathbf{x}_A'\mathbf{x}_B = 0$.
+  \item Mostre que $\mathbf{x}_A'\mathbf{x}_{BC} = 0$, onde $x_{BC}=x_Bx_C$. (Dica: escreva o
+    produto $x_A\cdot x_Bx_C$ e observe que ele percorre os valores $\pm1$ em igual proporção.)
+  \item Argumente, generalizando os itens (a)-(b), por que \emph{toda} matriz $\mathbf{X}$ de um
+    $2^k$ completo com uma repetição, codificada em $\pm1$, satisfaz $\mathbf{X}'\mathbf{X} =
+    n\,\mathbf{I}_{2^k}$ ($n\,$ vezes a matriz identidade).
+  \item A partir de $\mathbf{X}'\mathbf{X}=n\mathbf{I}$, mostre que $\hat\beta_j =
+    \mathbf{x}_j'\mathbf{Y}/n$ e que, portanto, o efeito estimado é
+    $$\text{efeito}_j = 2\hat\beta_j = 2^{-(k-1)}\sum_{i=1}^{2^k} (\pm1)\,y_i,$$
+    a fórmula do contraste de Yates. (Dica: $2/n = 2/2^k = 2^{1-k} = 2^{-(k-1)}$.)
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Ciência de dados --- calculando efeitos pela tabela de sinais)}
+
+Um experimento de engenharia mede o tempo de build (min) de um pipeline de CI/CD sob três fatores
+de configuração, cada um em dois níveis: $A$ = cache de dependências (desligado/ligado), $B$ =
+paralelismo de testes (baixo/alto), $C$ = otimização de compilação (desligada/ligada). O fatorial
+$2^3$ completo (uma corrida por combinação) resultou em:
+
+\begin{center}
+\begin{tabular}{c|cccccccc}
+Corrida & $(1)$ & $a$ & $b$ & $ab$ & $c$ & $ac$ & $bc$ & $abc$ \\ \hline
+Tempo (min) & 20 & 24 & 28 & 36 & 16 & 20 & 24 & 32
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Construa a tabela de sinais completa ($A$, $B$, $C$, $AB$, $AC$, $BC$, $ABC$) para as 8
+    corridas, na ordem padrão de Yates dada acima.
+  \item Usando a fórmula do contraste (Questão 1d) com $k=3$ (logo $2^{-(k-1)}=1/4$), calcule os
+    7 efeitos: $A$, $B$, $C$, $AB$, $AC$, $BC$, $ABC$.
+  \item Sem fazer nenhuma conta nova, ordene os 7 efeitos por magnitude absoluta, do maior para o
+    menor.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Ciência de dados --- método de Lenth na mão)}
+
+Usando os 7 efeitos que você calculou na Questão 2 (não há repetição — este pipeline de CI/CD
+só pôde ser executado uma vez por configuração, por custo de infraestrutura):
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule $s_0 = 1{,}5\cdot\text{mediana}_i|c_i|$.
+  \item Calcule o PSE $=1{,}5\cdot\text{mediana}$ dos $|c_i|$ que satisfazem $|c_i| < 2{,}5\,s_0$.
+  \item Com $m=7$ efeitos, $d=m/3$. Usando $t_{0{,}975;\,2{,}33}\approx3{,}76$ (fornecido), calcule
+    a margem de erro $\text{ME} = t_{0{,}975;d}\cdot\text{PSE}$.
+  \item Quais efeitos são declarados "grandes" (i.e., $|c_i|>\text{ME}$)? Isso é consistente com o
+    que você esperaria observando a tabela de efeitos da Questão 2(c)?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Confusão --- designação de blocos e colinearidade)}
+
+O pipeline de CI/CD da Questão 2 precisa, na prática, ser executado em dois lotes de máquinas
+virtuais diferentes (um "bloco" de infraestrutura por lote), 4 corridas por lote.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Sabendo que o efeito $ABC$ foi estimado como (praticamente) nulo na Questão 2, proponha um
+    esquema de confusão que sacrifique $ABC$: calcule o sinal de $ABC$ para cada uma das 8
+    corridas e divida-as em dois blocos de 4.
+  \item Em termos da matriz $\mathbf{X}$, explique por que a coluna de bloco que você construiu no
+    item (a) fica \emph{idêntica} (a menos de sinal) à coluna $\mathbf{x}_{ABC}$, e por que isso
+    torna impossível separar "efeito de bloco" de "interação $ABC$" a partir dos dados.
+  \item Se fosse possível rodar \emph{duas} repetições completas do $2^3$ (16 corridas, em 4
+    lotes de 4), por que usar geradores diferentes em cada repetição --- por exemplo, $ABC$ na
+    repetição 1 e $BC$ na repetição 2 --- é preferível a repetir o mesmo gerador $ABC$ nas duas?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Ciência de dados --- exercício computacional em R)}
+
+O código abaixo automatiza o cálculo de efeitos e do método de Lenth para os dados da Questão 2.
+Está incompleto.
+
+\begin{lstlisting}
+dados <- expand.grid(C = c(-1,1), B = c(-1,1), A = c(-1,1))
+dados$y <- c(20, 16, 28, 24, 24, 20, 36, 32)   # reordene se necessario
+
+# (a) ajuste o modelo saturado e extraia os efeitos (2 * coeficientes, sem o intercepto)
+modelo <- lm(______________________, data = dados)
+efeitos <- 2 * coef(modelo)[-1]
+
+# (b) complete o metodo de Lenth
+s0  <- 1.5 * median(abs(efeitos))
+pse <- 1.5 * median(______________________)
+me  <- qt(0.975, length(efeitos)/3) * pse
+
+# (c) quais efeitos ultrapassam a margem de erro?
+efeitos[______________________]
+\end{lstlisting}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Complete as três linhas indicadas.
+  \item Rodando o código, os valores de \texttt{efeitos} devem coincidir com os da Questão 2(b), e
+    o resultado do item (c) deve coincidir com sua resposta na Questão 3(d). Aponte uma fonte
+    possível de pequena discrepância numérica entre o \texttt{t} exato calculado por
+    \texttt{qt()} e o valor arredondado $3{,}76$ fornecido na Questão 3(c).
+\end{enumerate}
+\end{questao}
+
+\end{document}

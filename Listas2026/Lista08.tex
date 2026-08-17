@@ -1,0 +1,140 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 08 --- ANCOVA e Kruskal-Wallis}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 08}{Análise de covariância e teste de Kruskal-Wallis (Capítulo 3, segunda metade / Aula 08)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas e mostre os cálculos
+intermediários --- nestas listas, a justificativa vale mais que a resposta final. O gabarito
+completo está em \texttt{Gabarito08.pdf}.}
+
+\begin{questao}{1} \textbf{(Psicologia --- médias ajustadas em ANCOVA)}
+
+No experimento de dose de cafeína, a atenção basal (medida antes da dose) é usada como
+covariável. O modelo ajustado forneceu inclinação comum $\hat\beta = 0{,}60$ e média geral da
+covariável $\bar x_{\cdot\cdot} = 60$. Para dois dos cinco grupos de dose:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Dose & $\bar y_{i\cdot}$ (atenção pós-dose) & $\bar x_{i\cdot}$ (basal médio do grupo) \\
+\midrule
+0 mg   & 91{,}0 & 57 \\
+200 mg & 108{,}0 & 64 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Calcule as médias ajustadas $\bar y_{i\cdot(\text{ajustada})} = \bar y_{i\cdot} -
+    \hat\beta(\bar x_{i\cdot} - \bar x_{\cdot\cdot})$ para os dois grupos.
+  \item Compare a diferença bruta $\bar y_{200} - \bar y_0$ com a diferença ajustada. O ajuste
+    aumentou ou diminuiu a diferença estimada entre os grupos? Explique, em termos do
+    desbalanceamento observado na covariável entre os grupos, por que isso aconteceu.
+  \item Por que faz sentido reportar as médias \emph{ajustadas}, e não as médias brutas, como
+    resultado principal de uma ANCOVA?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Ciência de dados --- verificando a homogeneidade das inclinações)}
+
+Uma equipe testa quatro configurações de página quanto ao tempo de carregamento, usando o
+número de imagens na página como covariável. Antes de rodar a ANCOVA, ela ajusta o modelo com a
+interação covariável $\times$ configuração e obtém a seguinte tabela:
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+Fonte & $gl$ & $SQ$ & $QM$ & $F$ & valor-$p$ \\
+\midrule
+n. imagens $\times$ configuração & 3 & 45{,}2 & 15{,}07 & 1{,}35 & 0{,}268 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item O que exatamente está sendo testado por essa linha da tabela? Enuncie a hipótese nula em
+    palavras e em termos do modelo $y_{ij} = \mu+\tau_i+\beta(x_{ij}-\bar x_{\cdot\cdot})+
+    \varepsilon_{ij}$ (ou sua extensão com $\beta_i$ específico por grupo).
+  \item Com base no valor-$p$ reportado, a equipe pode prosseguir com o modelo aditivo padrão de
+    ANCOVA (inclinação única $\beta$)? Justifique.
+  \item Suponha que o valor-$p$ tivesse sido $0{,}004$ em vez de $0{,}268$. O que a equipe deveria
+    fazer de diferente, e por quê o ajuste por uma única inclinação comum deixaria de ser
+    apropriado?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Agricultura --- Kruskal-Wallis, cálculo manual)}
+
+Um agrônomo compara a produtividade (sacos/ha) de três variedades de feijão, com $n=3$ parcelas
+por variedade, mas suspeita de forte assimetria nos dados e prefere não assumir normalidade:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Variedade A & Variedade B & Variedade C \\
+\midrule
+12 & 20 & 10 \\
+18 & 25 & 14 \\
+15 & 22 & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Ordene as $N=9$ observações combinadas e atribua um posto (1 a 9) a cada uma. Calcule a
+    soma dos postos $R_A$, $R_B$, $R_C$ por variedade, e verifique que $R_A+R_B+R_C = N(N+1)/2$.
+  \item Calcule a estatística $H = \dfrac{12}{N(N+1)}\left(\dfrac{R_A^2}{3}+\dfrac{R_B^2}{3}+
+    \dfrac{R_C^2}{3}\right) - 3(N+1)$.
+  \item Compare $H$ com o valor crítico $\chi^2_{0{,}05;\,2} \approx 5{,}99$ e conclua.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Dedução --- não viesamento da média ajustada em ANCOVA)}
+
+Considere o modelo de ANCOVA $y_{ij} = \mu + \tau_i + \beta(x_{ij}-\bar x_{\cdot\cdot}) +
+\varepsilon_{ij}$, com $\varepsilon_{ij}$ de média zero e a covariável $x_{ij}$ tratada como
+fixa (não aleatória, medida sem erro). Seja $\hat\beta$ um estimador não viesado de $\beta$
+(isto é, $E[\hat\beta]=\beta$), obtido de forma independente da média amostral $\bar y_{i\cdot}$
+do grupo $i$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que, sob o modelo, $E[\bar y_{i\cdot}] = \mu_i + \beta(\bar x_{i\cdot} - \bar
+    x_{\cdot\cdot})$, em que $\mu_i = \mu+\tau_i$ é a média populacional (ajustada) do grupo $i$.
+  \item Usando o item (a) e $E[\hat\beta]=\beta$, mostre que a média ajustada
+    $\bar y_{i\cdot(\text{ajustada})} = \bar y_{i\cdot} - \hat\beta(\bar x_{i\cdot}-\bar
+    x_{\cdot\cdot})$ é um estimador não viesado de $\mu_i$, isto é, $E[\bar
+    y_{i\cdot(\text{ajustada})}] = \mu_i$.
+  \item Em que passo da demonstração o item (b) usaria a hipótese de que a covariável não é
+    afetada pelo tratamento? (Não é preciso reescrever a álgebra --- só identifique onde a
+    demonstração deixaria de valer se essa hipótese falhasse.)
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Ciência de dados --- Kruskal-Wallis vs. ANOVA, e o efeito de empates)}
+
+Tempos de carregamento medidos em milissegundos, quando arredondados para o décimo de segundo
+mais próximo (uma prática comum em telemetria de produção), frequentemente produzem
+\textbf{empates} (valores idênticos) entre observações de grupos diferentes.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Explique, em termos gerais, por que o teste de Kruskal-Wallis --- baseado em postos ---
+    é uma escolha mais defensável que a ANOVA quando os tempos de carregamento têm distribuição
+    fortemente assimétrica à direita (cauda longa de conexões lentas), mesmo com um tamanho de
+    amostra razoável.
+  \item Quando há muitos empates, o posto atribuído a cada observação empatada é a \emph{média}
+    dos postos que ocupariam se não houvesse empate. Isso reduz artificialmente a variância dos
+    postos, exigindo uma correção no denominador de $H$ (fator de correção por empates,
+    $1 - \sum_j (\tau_j^3-\tau_j)/(N^3-N)$, em que $\tau_j$ é o número de observações no
+    $j$-ésimo grupo de empate). O que aconteceria com o valor de $H$ calculado \emph{sem} essa
+    correção, na presença de muitos empates: ele tenderia a ficar maior, menor, ou não haveria
+    padrão? Justifique intuitivamente.
+  \item Kruskal-Wallis testa igualdade de distribuições, não apenas de medianas. Dê um exemplo
+    (pode ser qualitativo) de duas distribuições com a mesma mediana, mas que o teste de
+    Kruskal-Wallis ainda assim tenderia a distinguir como diferentes.
+\end{enumerate}
+\end{questao}
+
+\end{document}

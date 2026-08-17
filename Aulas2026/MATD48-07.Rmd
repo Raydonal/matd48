@@ -1,0 +1,505 @@
+---
+title: "Contrastes, Comparações Múltiplas e Polinômios Ortogonais"
+subtitle: "Decompondo a variação entre tratamentos em perguntas específicas"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+  library(emmeans)
+  library(multcomp)
+  library(agricolae)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 07 — Contrastes, Comparações Múltiplas e Polinômios Ortogonais
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Além da pergunta global da ANOVA
+
+A ANOVA de um fator só responde: *existe pelo menos uma diferença entre as $t$ médias?*
+
+Rejeitar $H_0: \mu_1 = \cdots = \mu_t$ não diz **quais** médias diferem, nem **em que direção**.
+
+--
+
+Duas ferramentas para ir além:
+
+- **Contrastes** — perguntas específicas, planejadas a priori.
+- **Comparações múltiplas** — todas as comparações par a par (ou contra um controle), com
+  controle da taxa de erro por família.
+
+---
+
+## Contrastes: definição
+
+Um **contraste** é uma combinação linear das médias de tratamento
+
+$$L = \sum_{i=1}^{t} c_i \mu_i, \qquad \sum_{i=1}^{t} c_i = 0.$$
+
+A restrição $\sum c_i = 0$ garante que $L$ mede uma **diferença**, não um nível geral.
+
+--
+
+Estimado por $\hat L = \sum_i c_i \bar y_{i\cdot}$, com
+
+$$E(\hat L) = L \quad \text{(não viesado)}, \qquad
+\mathrm{Var}(\hat L) = \sigma^2 \sum_{i=1}^t \frac{c_i^2}{n_i}.$$
+
+Balanceado ($n_i = n$): $\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\sum_i c_i^2$.
+
+---
+
+## Leitura causal: contraste = efeito causal
+
+Em resultados potenciais, cada UE tem $t$ resultados potenciais $Y_i(1),\ldots,Y_i(t)$, um por
+braço. $\mu_i = E[Y(i)]$; um contraste par a par $\mu_i-\mu_j$ é literalmente um **ATE** entre
+os braços $i$ e $j$.
+
+--
+
+Com $t>2$ há $\binom{t}{2}$ ATEs possíveis simultaneamente — daí o problema de comparações
+múltiplas: não é um artefato técnico, é consequência direta de estimar **vários efeitos causais
+ao mesmo tempo** sobre o mesmo experimento.
+
+---
+
+## Soma de quadrados de um contraste
+
+$$SQ_L = \frac{\hat L^{\,2}}{\sum_i c_i^2/n_i}, \qquad gl = 1 \text{ sempre.}$$
+
+Sob $H_0: L=0$ e normalidade,
+
+$$F = \frac{SQ_L}{QME} \sim F_{1,\,gl_{\text{erro}}} \qquad \Longleftrightarrow \qquad
+t = \frac{\hat L}{\sqrt{QME\sum_i c_i^2/n_i}},\ \ t^2 = F.$$
+
+--
+
+Um contraste é um teste com **1 gl encaixado** dentro da ANOVA — mais específico e, em geral,
+mais poderoso que o teste F global, desde que definido **antes** de olhar os dados.
+
+---
+
+## Notação matricial (retomando o Cap. 2)
+
+Cell-means: $\mathbf Y=\mathbf X\boldsymbol\mu+\boldsymbol\varepsilon$, $\mathbf X'\mathbf X=\mathrm{diag}(n_1,\ldots,n_t)$.
+
+$$L=\boldsymbol\lambda'\boldsymbol\mu, \quad \mathbf 1'\boldsymbol\lambda=0, \qquad
+\mathrm{Var}(\hat L)=\sigma^2\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda.$$
+
+--
+
+$$SQ_L = (\boldsymbol\lambda'\hat{\boldsymbol\mu})\big[\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda\big]^{-1}(\boldsymbol\lambda'\hat{\boldsymbol\mu}) = \mathbf Y'\mathbf A_{\boldsymbol\lambda}\mathbf Y,$$
+
+forma quadrática idempotente de posto 1 (Cap. 2, formas quadráticas) $\Rightarrow SQ_L/\sigma^2\sim\chi^2_1$.
+
+---
+
+## Contrastes ortogonais
+
+Dois contrastes $\{c_i\}$, $\{d_i\}$ são **ortogonais** se $\sum_i c_i d_i / n_i = 0$.
+
+Para $t$ tratamentos, no máximo $t-1$ contrastes mutuamente ortogonais.
+
+--
+
+**Propriedade-chave:** um conjunto completo de $t-1$ contrastes ortogonais particiona
+exatamente $SQ_{\text{Trat}}$:
+
+$$SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_{L_k}, \qquad gl_{\text{Trat}} = t-1,$$
+
+e, sob normalidade, os $t-1$ testes $F$ resultantes são **independentes** entre si — porque as
+$t-1$ projeções de posto 1 $\mathbf A_{\boldsymbol\lambda_k}$ somam exatamente $\mathbf P_X -
+\mathbf P_{\mathbf 1}$ (teorema de Cochran, Cap. 2).
+
+---
+
+## O problema das comparações múltiplas
+
+Com $t=4$ grupos há $\binom{4}{2}=6$ pares. Mesmo sob $H_0$ em todos:
+
+$$P(\text{≥ 1 falso positivo}) = 1-(1-\alpha)^6 \approx 1 - 0{,}95^6 \approx 0{,}26$$
+
+--
+
+Mais de **5×** o nível nominal de 5%. Testes $t$ repetidos, sem correção, inflam a taxa de erro
+por família (FWER).
+
+---
+
+## O perigo do "data snooping"
+
+Explorar os dados à procura de um padrão "interessante" e só **depois** formular e testar a
+hipótese que ele sugeriu, usando os mesmos dados — inverte a lógica hipótese → coleta → análise.
+
+--
+
+Com $t$ grupos de médias populacionais idênticas, o par mais discrepante por puro ruído amostral
+quase sempre "parece" significativo em um teste $t$ comum sobre ele isolado.
+
+**Analogia:** atirar a flecha na parede e desenhar o alvo ao redor do buraco — você sempre acerta,
+mas isso nada prova sobre pontaria.
+
+Contrastes ortogonais, Tukey, Dunnett e Bonferroni só protegem o conjunto de comparações
+**especificado antes** de olhar os dados. Nenhum deles cobre uma comparação "descoberta" depois.
+
+---
+
+## Seis respostas ao problema
+
+.pull-left[
+**Scheffé** — protege *qualquer* contraste, mesmo definido depois de ver os dados — a resposta
+formal ao data snooping: só declara significativo o que é grande mesmo entre infinitas
+possibilidades. O mais conservador (Scheffé, 1959).
+
+**Bonferroni** (1936) — divide $\alpha$ por $m$ comparações. Simples, geral,
+conservador se $m$ grande.
+
+**Tukey HSD** — todas as comparações par a par, via amplitude estudentizada. Mais poderoso que
+Bonferroni para essa família (Tukey, 1949).
+]
+.pull-right[
+**Dunnett** — cada tratamento vs. um único controle; explora a correlação entre comparações que
+compartilham o controle (Dunnett, 1955).
+
+**Duncan** — valor crítico $R_p$ **cresce com a amplitude** $p$ da comparação; mais liberal que
+Tukey, mas **não controla o FWER** (Duncan, 1955).
+
+**Agrupamento (CLD)** — letras compactas: tratamentos com letra em comum não diferem.
+]
+
+---
+
+## Polinômios ortogonais
+
+Quando os níveis do fator são **quantitativos e igualmente espaçados** (doses, concentrações),
+decompor $SQ_{\text{Trat}}$ em tendência é mais informativo que comparar pares.
+
+--
+
+Coeficientes ortogonais tabulados $\lambda_i$ por grau (linear, quadrático, cúbico, ...):
+
+$$\hat L_k = \sum_i \lambda_i \bar y_{i\cdot}, \qquad
+\mathrm{Var}(\hat L_k) = \frac{\sigma^2}{n}\sum_i \lambda_i^2, \qquad
+SQ_k = \frac{n\,\hat L_k^{\,2}}{\sum_i \lambda_i^2},$$
+
+cada um com 1 gl, e $SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_k$ — o caso particular de contrastes
+ortogonais desenhado para capturar tendência, não diferenças ad hoc.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Ciência de dados: scripts de terceiros e carregamento
+
+**Pergunta:** quatro configurações de página — Nenhum (controle), Analytics, Anúncios, Combo —
+diferem quanto ao tempo de carregamento?
+
+- 40 carregamentos, 10 por configuração (**UE = carregamento medido**).
+- Fator com 4 níveis **categóricos** — cenário natural para contrastes planejados e comparações
+  múltiplas (não para polinômios: configurações não têm ordem métrica).
+
+```{r sim-scripts}
+set.seed(2026)
+config <- c("Nenhum", "Analytics", "Anúncios", "Combo")
+efeito_config <- c(Nenhum = 0, Analytics = 60, Anúncios = 140, Combo = 210)
+
+dados_scripts <- tibble(
+  pagina = 1:40,
+  config = factor(rep(config, each = 10), levels = config),
+  tempo_ms = 900 + efeito_config[as.character(config)] + rnorm(40, 0, 70)
+)
+mod_scripts <- aov(tempo_ms ~ config, data = dados_scripts)
+```
+
+---
+
+## Três contrastes ortogonais planejados
+
+```{r tab-contrastes-coef, echo=FALSE}
+tibble(
+  Contraste = c("L1: Nenhum vs. demais", "L2: Analytics vs. (Anúncios,Combo)", "L3: Anúncios vs. Combo"),
+  Nenhum = c(3, 0, 0), Analytics = c(-1, 2, 0), Anúncios = c(-1, -1, 1), Combo = c(-1, -1, -1)
+) %>% kable(format = "html") %>% kable_styling(font_size = 16, full_width = FALSE)
+```
+
+```{r calc-contrastes}
+medias <- with(dados_scripts, tapply(tempo_ms, config, mean))
+ns <- with(dados_scripts, tapply(tempo_ms, config, length))
+qme <- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
+
+coefs <- list(L1 = c(3, -1, -1, -1), L2 = c(0, 2, -1, -1), L3 = c(0, 0, 1, -1))
+sapply(coefs, function(cc) sum(cc * medias)^2 / sum(cc^2 / ns))  # SQ de cada contraste
+summary(mod_scripts)[[1]]["config", "Sum Sq"]                    # soma = SQ_Trat
+```
+
+---
+
+## A partição visual de $SQ_{\text{Trat}}$
+
+```{r plot-contrastes-sq, echo=FALSE, fig.width=7, fig.height=4}
+sq_contrastes <- sapply(coefs, function(cc) sum(cc * medias)^2 / sum(cc^2 / ns))
+
+tibble(contraste = names(sq_contrastes), SQ = as.numeric(sq_contrastes)) %>%
+  ggplot(aes(x = contraste, y = SQ, fill = contraste)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_text(aes(label = round(SQ, 0)), vjust = -0.5, size = 4) +
+  geom_hline(yintercept = summary(mod_scripts)[[1]]["config", "Sum Sq"],
+             linetype = "dashed", color = "grey40") +
+  annotate("text", x = 0.6, y = summary(mod_scripts)[[1]]["config", "Sum Sq"],
+           label = "SQ_Trat total", vjust = -0.6, hjust = 0, size = 3.5, color = "grey30") +
+  labs(x = NULL, y = "Soma de quadrados") +
+  theme_minimal(base_size = 13)
+```
+
+As três barras somam exatamente a linha tracejada — $t-1=3$ contrastes ortogonais particionam
+$SQ_{\text{Trat}}$ sem sobra nem falta, cada um com 1 gl.
+
+---
+
+## Comparações múltiplas: Tukey vs. Dunnett
+
+```{r comp-mult}
+emm <- emmeans(mod_scripts, ~ config)
+pairs(emm, adjust = "tukey")[1:2]           # todas as pares (Tukey HSD)
+contrast(emm, "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")  # vs. controle
+```
+
+---
+
+## Agrupamento compacto por letras (Tukey vs. Duncan)
+
+```{r cld, echo=FALSE}
+multcomp::cld(emm, Letters = letters, adjust = "tukey")
+agricolae::duncan.test(mod_scripts, "config", console = FALSE)$groups
+```
+
+Aqui os dois coincidem (efeitos grandes o bastante para ambos os critérios) — a diferença de
+Duncan aparece nos pares de fronteira: valores críticos $R_p$ menores por amplitude, mais poder,
+sem controlar o FWER no nível nominal.
+
+```{r plot-scripts, echo=FALSE, fig.width=7.5, fig.height=3.6}
+ggplot(dados_scripts, aes(config, tempo_ms, fill = config)) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  labs(x = NULL, y = "Tempo (ms)") + theme_minimal(base_size = 14)
+```
+
+---
+
+## Todas as comparações par a par, de uma vez
+
+Equivalente em `ggplot2` de `plot(TukeyHSD(...))`: um par difere quando o IC **não cruza zero**.
+
+```{r plot-tukey-ic, echo=FALSE, fig.width=8, fig.height=3.8}
+ic_tukey <- as.data.frame(confint(pairs(emm, adjust = "tukey")))
+
+ggplot(ic_tukey, aes(x = estimate, y = reorder(contrast, estimate))) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_pointrange(aes(xmin = lower.CL, xmax = upper.CL), color = "#0B4F6C", linewidth = 0.8) +
+  labs(x = "Diferença estimada (ms)", y = NULL) + theme_minimal(base_size = 14)
+```
+
+Só "Anúncios − Combo" cruza zero: os demais 5 pares diferem significativamente (Tukey, 95%).
+
+---
+
+## Psicologia: dose de cafeína e atenção sustentada
+
+**Pergunta:** 0, 50, 100, 150, 200 mg de cafeína — como a atenção sustentada responde à dose?
+
+Níveis **quantitativos, igualmente espaçados** — cenário ideal para polinômios ortogonais.
+
+```{r sim-cafeina}
+set.seed(7)
+dose_mg <- c(0, 50, 100, 150, 200)
+dose_f <- factor(rep(dose_mg, each = 8))
+basal <- rnorm(40, 60, 8)
+efeito_dose <- function(d) 20 + 0.35 * d - 0.0013 * d^2  # "U invertido"
+
+cafeina <- tibble(
+  dose = dose_f, basal = basal,
+  atencao_pos = 40 + 0.5 * basal + efeito_dose(as.numeric(as.character(dose_f))) +
+    rnorm(40, 0, 5)
+)
+contrasts(cafeina$dose) <- contr.poly(5)
+```
+
+---
+
+## Os coeficientes ortogonais são colunas de $\mathbf X$
+
+$$\mathbf X_{\text{poly}} = \big[\mathbf 1 \mid \boldsymbol\lambda_L \mid \boldsymbol\lambda_Q \mid \boldsymbol\lambda_C \mid \boldsymbol\lambda_4\big]$$
+
+```{r poly-matriz}
+X_poly <- model.matrix(atencao_pos ~ dose, data = cafeina)
+round(crossprod(X_poly), 1)  # X'X diagonal -- estimativas independentes entre si
+```
+
+Colunas ortogonais $\Rightarrow$ $\mathbf X'\mathbf X$ diagonal $\Rightarrow$ cada $\hat\beta_k$
+(e cada $SQ_k$) se estima sem covariância com os demais — a mesma forma quadrática de posto 1.
+
+---
+
+## Decompondo a tendência: linear, quadrático, ...
+
+```{r poly-anova}
+mod_poly <- aov(atencao_pos ~ dose, data = cafeina)
+summary(mod_poly, split = list(dose = list(Linear = 1, Quadratic = 2,
+                                            Cubic = 3, Quartic = 4)))[[1]][1:3, ]
+```
+
+## Qual grau é necessário? Compare os quatro ajustes
+
+```{r plot-poly, echo=FALSE, fig.width=9, fig.height=5.2}
+cafeina_num <- cafeina %>% mutate(d = as.numeric(as.character(dose)))
+mod_lin_num   <- lm(atencao_pos ~ d, data = cafeina_num)
+mod_quad_num  <- lm(atencao_pos ~ d + I(d^2), data = cafeina_num)
+mod_cub_num   <- lm(atencao_pos ~ d + I(d^2) + I(d^3), data = cafeina_num)
+mod_quart_num <- lm(atencao_pos ~ d + I(d^2) + I(d^3) + I(d^4), data = cafeina_num)
+medias_d <- cafeina_num %>% group_by(d) %>% summarise(media = mean(atencao_pos))
+
+plot_grau <- function(modelo, titulo, cor) {
+  grade <- tibble(d = seq(0, 200, length.out = 200)) %>%
+    mutate(ajuste = predict(modelo, newdata = .))
+  r2 <- round(summary(modelo)$r.squared, 3)
+  ggplot() +
+    geom_jitter(data = cafeina_num, aes(d, atencao_pos), width = 4, alpha = 0.2) +
+    geom_point(data = medias_d, aes(d, media), size = 2.3, color = "black") +
+    geom_line(data = grade, aes(d, ajuste), color = cor, linewidth = 1) +
+    labs(title = paste0(titulo, " (R²=", r2, ")"), x = "Dose", y = "Atenção") +
+    theme_minimal(base_size = 11)
+}
+
+gridExtra::grid.arrange(
+  plot_grau(mod_lin_num,   "Linear",     "#d98324"),
+  plot_grau(mod_quad_num,  "Quadrático", "#0B4F6C"),
+  plot_grau(mod_cub_num,   "Cúbico",     "#2e8b57"),
+  plot_grau(mod_quart_num, "Quártico",   "#8b2e6e"),
+  ncol = 2
+)
+```
+
+A parábola já captura o essencial (salto grande de $R^2$ do linear); cúbico e quártico agregam
+pouco — mesma conclusão da ANOVA particionada, agora visível a olho antes de qualquer p-valor.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que faz sentido usar Dunnett (não Tukey) quando a única pergunta é "cada configuração
+   piora o carregamento em relação a não usar nenhum script?"
+
+2. Um pesquisador olha os dados, nota uma diferença "interessante" que não tinha planejado
+   comparar, e testa com um $t$ comum. Por que isso viola as premissas de todos os procedimentos
+   desta aula, mesmo com p-valor pequeno?
+
+3. No exemplo da cafeína, o que significaria, em termos práticos, um termo **cúbico**
+   significativo além do linear e do quadrático? Isso seria plausível fisiologicamente?
+
+4. Se as cinco doses de cafeína **não** estivessem igualmente espaçadas (por exemplo, 0, 50, 100,
+   200, 400 mg), os coeficientes tabulados de polinômios ortogonais ainda poderiam ser usados
+   diretamente? Por quê?
+
+5. Duncan usa um nível de proteção $\alpha_p$ que cresce com a amplitude $p$, em vez de manter
+   $\alpha$ fixo como Tukey. Isso é vantagem ou desvantagem? Em que tipo de publicação você
+   esperaria ver Duncan preferido a Tukey, apesar de não controlar o FWER?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## O padrão `emmeans` + `multcomp`
+
+```{r uso-r-1}
+# 1. Ajustar o modelo normalmente
+mod <- aov(tempo_ms ~ config, data = dados_scripts)
+
+# 2. Calcular as médias marginais estimadas (emmeans) -- ponto de partida
+#    para QUALQUER contraste, comparação par a par ou vs. controle
+emm <- emmeans(mod, ~ config)
+
+# 3. Escolher o procedimento pelo argumento `adjust` (pairs) ou `method` (contrast)
+#    "tukey", "bonferroni", "scheffe", "trt.vs.ctrl" (Dunnett), ...
+```
+
+---
+
+## Polinômios: `contr.poly()` faz o trabalho pesado
+
+```{r uso-r-2}
+# contr.poly(k) gera os k-1 coeficientes ortogonais para k níveis igualmente
+# espaçados, já normalizados -- não é preciso buscar tabelas manualmente
+round(contr.poly(5), 3)
+
+# split = list(...) no summary.aov nomeia cada 1 gl com o grau do polinômio
+# correspondente, na ordem em que os níveis do fator foram declarados
+```
+
+Atenção: `contr.poly()` assume níveis igualmente espaçados. Se as doses não fossem
+equidistantes, o caminho correto é ajustar `atencao_pos ~ poly(dose_num, 2)` diretamente sobre a
+variável numérica, não sobre o fator.
+
+---
+
+## Resumo da aula
+
+- Contrastes: combinação linear com $\sum c_i = 0$; $SQ_L$ com 1 gl; contrastes ortogonais
+  particionam $SQ_{\text{Trat}}$ e são independentes entre si.
+- "Data snooping": testar como planejada uma hipótese formulada só depois de ver os dados infla
+  o erro tipo I; Scheffé é a resposta formal, protegendo todo o espaço de contrastes possíveis.
+- Comparações múltiplas controlam a taxa de erro por família: Scheffé (mais geral e
+  conservador), Bonferroni (simples, geral), Tukey (pares), Dunnett (vs. controle), Duncan
+  (liberal, não controla FWER), CLD (agrupamento por letras).
+- Polinômios ortogonais: o caso de contrastes ortogonais para níveis quantitativos igualmente
+  espaçados, decompondo a tendência em linear, quadrático, etc.
+- Próxima aula: **ANCOVA** (ajuste por covariável) e o teste de **Kruskal-Wallis** (alternativa
+  não paramétrica).
+
+## Referências
+
+- Scheffé, H. (1959). *The Analysis of Variance*. John Wiley & Sons.
+- Bonferroni, C. E. (1936). Teoria statistica delle classi e calcolo delle probabilità. *Pubblicazioni del R Istituto Superiore di Scienze Economiche e Commerciali di Firenze*, 8, 3–62.
+- Tukey, J. W. (1949). Comparing Individual Means in the Analysis of Variance. *Biometrics*, 5(2), 99–114.
+- Dunnett, C. W. (1955). A Multiple Comparison Procedure for Comparing Several Treatments with a Control. *Journal of the American Statistical Association*, 50(272), 1096–1121.
+- Duncan, D. B. (1955). Multiple Range and Multiple F Tests. *Biometrics*, 11(1), 1–42.

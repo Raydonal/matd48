@@ -6,236 +6,180 @@ output:
   prettydoc::html_pretty:
     theme: cayman
     highlight: github
-header-includes:    
+header-includes:
     geometry: margin = 1.0in
 ---
-    
 
-
-```{r, echo = FALSE, warning = FALSE}
-# Packages
-suppressPackageStartupMessages(library(tidyverse)) # Data wrangling
-suppressPackageStartupMessages(library(scales)) # Data wrangling
-suppressPackageStartupMessages(library(dplyr)) # Data wrangling
-suppressPackageStartupMessages(library(gridExtra)) # arrange plots of ggplot 
-suppressPackageStartupMessages(library(ggpubr)) # arrange plots of ggplot 
-suppressPackageStartupMessages(library(MASS)) # for shapiro test
-suppressPackageStartupMessages(library(car)) # for ncvTest    
-suppressPackageStartupMessages(library(lmtest)) #  Generic tools for inference in parametric models, Breusch-Pagan Test included
-suppressPackageStartupMessages(library(kableExtra)) # tables
-suppressPackageStartupMessages(library(ggmosaic)) # tables
-suppressPackageStartupMessages(library(knitr))
-suppressPackageStartupMessages(library(GGally)) # gamlss distributions
-suppressPackageStartupMessages(library(gamlss)) # gamlss fits
-suppressPackageStartupMessages(library(gamlss.dist)) # gamlss distributions
-suppressPackageStartupMessages(library(gamlss.add)) # gamlss - Extra Additive Terms - Decision tree
-# suppressPackageStartupMessages(library(gamlss.util)) # gamlss fits
-suppressPackageStartupMessages(library(broom)) # Convert Statistical Objects into Tidy Tibbles
-suppressPackageStartupMessages(library(ggthemes)) # ggplot themes
-suppressPackageStartupMessages(library(cowplot)) # ggplot arrange
-suppressPackageStartupMessages(library(gtable)) # ggplot table
-suppressPackageStartupMessages(library(RColorBrewer)) # cool colors
-suppressPackageStartupMessages(library(colorspace)) # cool colors
-suppressPackageStartupMessages(library(gvlma)) # Top-level function for Global Validation of Linear Models Assumptions.
-suppressPackageStartupMessages(library(sandwich)) # Robust Covariance Matrix Estimators
-# suppressPackageStartupMessages(library(skedastic)) # Heteroskedasticity Diagnostics for Linear Regression Models
-suppressPackageStartupMessages(library(moments)) # Moments
-suppressPackageStartupMessages(library(latex2exp)) # latex Simbols
-suppressPackageStartupMessages(library(gcookbook)) # Moments
-suppressPackageStartupMessages(library(viridis)) # latex Simbols
-suppressPackageStartupMessages(library(gcookbook)) # Moments
-suppressPackageStartupMessages(library(viridisLite)) # latex Simbols
-# Auxiliar - name of response in linear regression model
-responseName <- function (model, ...) deparse(attr(terms(model), "variables")[[2]])
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+})
 ```
 
-```{r,  echo = FALSE, fig.width = 8, fig.height=5, fig.align="center", message=FALSE,warning=FALSE}
-# 2. Simular dados para o cenário de desempenho de algoritmos
-set.seed(42) # Para resultados reproduzíveis
+<div style="background:#eef7f1;border-left:5px solid #2e8b57;border-radius:6px;padding:0.9em 1.2em;margin-bottom:1.2em;">
+<strong>Curso renovado para 2026.</strong> O material foi reescrito do zero em três frentes,
+mantendo os mesmos dias e horários de aula do semestre anterior:
 
-# Definir os parâmetros do nosso experimento
-servidores <- c("Servidor Básico (t2.micro)", "Servidor Avançado (m5.large)")
-algoritmos <- c("Padrão (Biblioteca)", "Algoritmo A (Otimizado)", "Algoritmo B (Legado)")
-n_testes <- 20 # Número de testes por combinação
+* 📘 **[Livro-texto](Livro/index.html)** — oito capítulos (sete acompanham o semestre, o oitavo
+  amplia o livro para testes A/B e bandits), com notação matricial ($Y=X\beta+\varepsilon$),
+  formalização causal (modelo de Neyman-Rubin) e exemplos contextualizados em
+  **psicologia, agricultura e ciência de dados**.
+* 🎓 **Slides de aula (`Aulas2026/`)** — cada aula estruturada em Teoria → Aplicação → Discussão → Uso do R.
+* 📝 **Listas semanais (`Listas2026/`)** — exercícios em LaTeX com gabarito à parte, uma por aula.
+* 🚀 **3 projetos-desafio incrementais**, um por período do curso — o aluno planeja, executa (ou
+  simula com rigor) e analisa um experimento de verdade: um experimento físico (helicóptero de
+  papel), depois uma comparação de modelos de machine learning validada estatisticamente que
+  retoma o desenho do projeto anterior, e por fim uma otimização fatorial de um pipeline de ML que
+  fecha o curso. **Cada um dos 3 projetos, somado às listas do seu período, define uma das três
+  notas parciais do curso** (ver [Critério de aprovação](#critério-de-aprovação)).
 
-# Criar o dataframe com todas as combinações
-dados_desempenho <- expand.grid(
-  Algoritmo = algoritmos,
-  Servidor = servidores,
-  Replica = 1:n_testes
-)
-
-# Simular o tamanho dos dados de entrada (nosso eixo X)
-dados_desempenho$Tamanho_Dados_MB <- runif(nrow(dados_desempenho), min = 10, max = 500)
-
-# Simular o tempo de execução (nosso eixo Y) com base em regras lógicas
-# - O servidor avançado é mais rápido (reduz o tempo)
-# - O algoritmo otimizado é o mais rápido, o legado é o mais lento
-# - O tempo aumenta com o tamanho dos dados
-
-efeito_servidor <- ifelse(dados_desempenho$Servidor == "Servidor Avançado (m5.large)", -15, 0) # Reduz 15ms
-
-tempo_base <- case_when(
-  dados_desempenho$Algoritmo == "Padrão (Biblioteca)"   ~ 10 + 0.10 * dados_desempenho$Tamanho_Dados_MB,
-  dados_desempenho$Algoritmo == "Algoritmo A (Otimizado)" ~ 5  + 0.05 * dados_desempenho$Tamanho_Dados_MB, # Mais rápido e escala melhor
-  dados_desempenho$Algoritmo == "Algoritmo B (Legado)"    ~ 20 + 0.20 * dados_desempenho$Tamanho_Dados_MB  # Mais lento e escala pior
-)
-
-# Tempo final = tempo base + efeito do servidor + um pouco de ruído aleatório
-dados_desempenho$Tempo_Execucao_ms <- tempo_base + efeito_servidor + rnorm(nrow(dados_desempenho), mean = 0, sd = 8)
-
-# Garantir que não há tempos de execução negativos
-dados_desempenho$Tempo_Execucao_ms <- pmax(0, dados_desempenho$Tempo_Execucao_ms)
-
-
-# 3. Gerar o gráfico com os novos dados e rótulos claros
-grafico_desempenho <- ggplot(
-  data = dados_desempenho, 
-  aes(x = Tamanho_Dados_MB, y = Tempo_Execucao_ms, color = Algoritmo, shape = Algoritmo)
-) +
-  geom_point(size = 3, alpha = 0.7) +
-  geom_smooth(method = "lm", se = TRUE, aes(fill = Algoritmo), alpha = 0.1) +
-  
-  # Dividir o gráfico em painéis, um para cada TIPO DE SERVIDOR (nosso bloco)
-  facet_wrap(~ Servidor, ncol = 2) +
-  
-  # Rótulos e títulos claros e informativos
-  labs(
-    title = "Comparativo de Desempenho de Algoritmos por Tipo de Servidor",
-    # subtitle = "O planejamento em blocos (servidores) permite uma comparação mais justa",
-    x = "Tamanho dos Dados de Entrada (MB)",
-    y = "Tempo de Execução (milissegundos)",
-    color = "Versão do Algoritmo",
-    shape = "Versão do Algoritmo",
-    fill = "Versão do Algoritmo"
-  ) +
-  
-  # Estilo visual limpo
-  theme_bw(base_size = 14) +
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold"),
-    plot.subtitle = element_text(hjust = 0.5),
-    strip.text = element_text(face = "bold", size = 12),
-    legend.position = "bottom"
-  )
-
-# 4. Exibir o gráfico final
-print(grafico_desempenho)
-
-```
+Tudo listado no [cronograma](#programa-da-disciplina-tentativo) abaixo. O site do semestre
+anterior continua disponível [aqui](index-2025.html), sem alterações.
+</div>
 
 <h4>
 # PLANO DE ENSINO - APRENDIZAGEM DO COMPONENTE  CURRICULAR
 
-### Semestre 2025.1	
+### Semestre 2026.2
 </h4>
 
-<!-- * **Carga horaria:** 60 horas/Aula. -->
 * **Professor:** Raydonal Ospina Martínez
 * **Homepage do Curso:** [https://raydonal.github.io/matd48/](https://raydonal.github.io/matd48/)
 * **Contato:** raydonalmartinez@ufba.br
-* **Ementa do curso:** Princípios fundamentais de planejamentos experimentais e os delineamentos básicoa e suas análises. O problema de parcelas perdidas. Análise de covariância. Introdução aos planos fatoriais, efeitos principais e interações. Análise de variância de delineamentos fatoriais simples. 
-* **Local e horário da disciplina:**  2025.2 Local: PAF 1 ((PAF - Pavilhão de Aulas da Federação I - Av. Barão de Geremoabo - s/n - Ondina - Campus de Ondina).) - Sala 208 - Terça Horários 10:40 às 12:30; Lab 140 - IME - Quinta Horários 10:40 às 12:30. 	
+* **Ementa do curso:** Princípios fundamentais de planejamentos experimentais e os delineamentos básicoa e suas análises. O problema de parcelas perdidas. Análise de covariância. Introdução aos planos fatoriais, efeitos principais e interações. Análise de variância de delineamentos fatoriais simples.
+* **Local e horário da disciplina (mesmos do semestre anterior):** Local: PAF 1 (PAF - Pavilhão de Aulas da Federação I - Av. Barão de Geremoabo - s/n - Ondina - Campus de Ondina) - Sala 208 - **Terça** 10:40 às 12:30; Lab 140 - IME - **Quinta** 10:40 às 12:30.
 * **Atenção aos estudantes:** Reunião virtual via google-meet ou reunião presencial com prévio agendamento. O local de atendimento presencial será em alguma sala disponível no Departamento de Estatística da UFBA.
 
 * *<font color="red">Nota:</font> O atendimento somente será realizado com agendamento prévio. Caro aluno, eu sou uma pessoa bastante ocupada e meu tempo, assim como o seu, é muito valioso.  Use o tempo que você gastar comigo de forma eficiente. De preferência já traga anotações e perguntas já elaboradas. Seja pontual. Sempre.*
-    
-* **Inicio do curso:** 09 de setembro de 2025.
 
-<!-- * **Último dia das aulas:** 12/07/2024 (Mudanças desta data obedeceram os direcionamentos da adiministração central da UFBA no calendário acadêmico da UFBA) -->
-<!-- * **Período de realização de segunda chamada:** A combinar. -->
+* **Início do curso:** 01 de setembro de 2026 *(tentativo — a confirmar no calendário acadêmico oficial da UFBA 2026.2; dias da semana e horários mantidos idênticos ao semestre anterior)*.
 
 * **Pré-requisitos:** ( ( MATD41A ou MATD41 ) e ( MATD43A ou MATD43 ) ) . A disciplina também requer conhecimentos sólidos de algebra e probabilidade.
 
 * **Propósitos da disciplina:** Capacitar o aluno a planejar, conduzir e analisar experimentos de forma estatisticamente rigorosa, permitindo a obtenção de conclusões válidas sobre relações de causa e efeito. A disciplina busca desenvolver o pensamento crítico para controlar fontes de variabilidade, maximizar a precisão das estimativas e garantir a validade interna e externa dos resultados. Prepara o futuro estatístico para atuar em áreas como pesquisa científica, desenvolvimento de produtos, otimização de processos, ensaios clínicos e testes A/B.
 
-* **Objetivos da disciplina:**Diferenciar estudos observacionais de experimentais e dominar os princípios fundamentais da experimentação (repetição, casualização e controle local). Identificar e aplicar os principais delineamentos experimentais: Inteiramente Casualizado (DIC), Blocos Completos Casualizados (DBC) e Quadrado Latino (DQL). Construir o modelo estatístico adequado para cada delineamento e realizar a Análise de Variância (ANOVA) para testar as hipóteses de interesse. Verificar os pressupostos de validade do modelo através da análise de resíduos. Executar e interpretar testes de comparações múltiplas para identificar diferenças entre tratamentos. Analisar experimentos fatoriais, interpretando corretamente os efeitos principais e as interações.
-
+* **Objetivos da disciplina:** Diferenciar estudos observacionais de experimentais e dominar os princípios fundamentais da experimentação (repetição, casualização e controle local — agora formalizados via o modelo causal de Neyman-Rubin). Identificar e aplicar os principais delineamentos experimentais: Inteiramente Casualizado (DIC), Blocos Completos Casualizados (DBC) e Quadrado Latino (DQL). Construir o modelo estatístico adequado para cada delineamento em notação matricial e realizar a Análise de Variância (ANOVA) para testar as hipóteses de interesse. Verificar os pressupostos de validade do modelo através da análise de resíduos. Executar e interpretar testes de comparações múltiplas para identificar diferenças entre tratamentos. Analisar experimentos fatoriais, interpretando corretamente os efeitos principais e as interações.
 
 ***
 <h4>
+
 ## Critério de aprovação
+
 </h4>
 
-A avaliação tem como objetivo ajudar ao aluno a progredir nas suas aprendizagens e serve também para estabelecer os resultado dos conhecimentos e das competências adquiridas nos diferentes momentos do período acadêmico. A avaliação também contribui para a qualidade do sistema de ensino. Desta forma, os critérios de avaliação para este curso são:
+A avaliação tem como objetivo ajudar ao aluno a progredir nas suas aprendizagens e serve também para estabelecer os resultado dos conhecimentos e das competências adquiridas nos diferentes momentos do período acadêmico. A avaliação também contribui para a qualidade do sistema de ensino.
 
+O curso é dividido em **três períodos**, cada um acompanhando um bloco de aulas e capítulos do
+livro-texto e fechado por um dos três projetos-desafio (que são **incrementais**: cada projeto
+retoma explicitamente decisões e resultados do projeto anterior antes de acrescentar o delineamento
+novo do período). A nota de cada período (**N1**, **N2**, **N3**) combina o projeto do período com
+o desempenho nas listas semanais desse mesmo período — não há mais provas escritas separadas:
 
-| Avaliação | Porcentagem  |	Data da Prova (tentativa) |
-|:-----------:|:-------------:|:-----------------:|
-| Avaliação 1     |    50% 	    |     30/10/2025  |
-| Avaliação 3     |    50% 	    |     05/01/2026  |
+```{r criterios, echo=FALSE}
+tibble(
+  Nota = c("N1", "N2", "N3"),
+  Período = c("Aulas 01–08 (Cap. 1–3)", "Aulas 09–11 (Cap. 4)", "Aulas 12–14 (Cap. 5–7)"),
+  Projeto = c("Projeto II — Helicóptero de Papel (DCA)",
+              "Projeto III — Modelos de ML com Rigor (DBCA/Friedman)",
+              "Projeto IV — Otimização Fatorial de ML (capstone)"),
+  Listas = c("Listas 01–08", "Listas 09–11", "Listas 12–14"),
+  `Composição` = c("50% projeto + 50% listas", "50% projeto + 50% listas", "50% projeto + 50% listas"),
+  `Entrega (tentativa)` = c("22/10/2026", "19/11/2026", "17/12/2026")
+) %>%
+  kable(align = "c") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
 
-
-A avaliação será constituída pela nota das atividades (que podem consistir em provas, Desafios, listas de exercicios e/ou projetos a depender do desempenho e participação da turma). O grau atribuído ao aluno no final do curso será o da sua média global ponderada (média aritmética ponderada) entre as notas, i.e.,
+Ou seja, $N_k = 0{,}5 \times \text{Projeto}_k + 0{,}5 \times \overline{\text{Listas}_k}$ para
+$k=1,2,3$, em que $\overline{\text{Listas}_k}$ é a média das listas do período $k$. O grau
+atribuído ao aluno no final do curso será a média aritmética simples entre as três notas parciais,
+i.e.,
 
 <center>
 <h3>
-    M = (0,5 * A1)+(0,5 * A2)
+    M = (N1 + N2 + N3) / 3
 </h3>
 </center>
 
-<!-- 1. O aluno que tiver média global M >= 7.5 recebe conceito A. -->
-<!-- 2. O aluno que tiver média global 6.5 = < M < 7.5  recebe conceito B. -->
-<!-- 3. O aluno que tiver média global 5.0 = < M < 6.5  recebe conceito C. -->
-<!-- 4. O aluno que tiver média global M < 5.0  será automaticamente reprovado. -->
-    
-* **Nota:** Não haverá escalonamento de notas. 
-    
-<!-- * **Nota:** A prova de 2a chamada é destinada exclusivamente para aqueles que não apresentarem uma (unicamente uma) prova e para tal será necessária a apresentação de alguma justificativa comprovável, como por exemplo, atestado médico ou de trabalho. A prova de 2a chamada cobrirá todo o conteúdo da disciplina.  -->
+* **Nota:** Não haverá escalonamento de notas.
 
 ***
 
 # Programa da disciplina (Tentativo)
-<center>
-  | Data de Início | Data de Fim | Tópico / Atividade Programada                                        |
-  |:--------------:|:-----------:|:---------------------------------------------------------------------|
-  |  02/09/2025    | 02/09/2025  | Congresso UFBA (Não haverá aula)                                     |
-  |  04/09/2025    | 04/09/2025  | Congresso UFBA (Não haverá aula)                                     |
-  |  09/09/2025    | 09/09/2025  | Princípios da experimentação [[Mat-01]](Aulas/MATD48-01.html).       |
-  |  11/09/2025    | 11/09/2025  | Fatores, níveis e tratamentos. Erro experimental. [[Mat-02]](Aulas/MATD48-02.html)|
-  |  16/09/2025    | 16/09/2025  | Modelos de ANOVA.                                                    |
-  |  18/09/2025    | 18/09/2025  | Unidades experimentais. Caracterização e escolha das unidades. [[Mat-03]](Aulas/MATD48-03.html)|
-  |  23/09/2025    | 23/09/2025  | Técnicas para aumentar a precisão.                                    |
-  |  25/09/2025    | 25/09/2025  | Experimentos Inteiramente Casualizados (DIC).                         |
-  |  30/09/2025    | 30/09/2025  | Modelo matemático para o DIC.       [[Mat-04]](Aulas/MATD48-04.html)  |
-  |  02/10/2025    | 02/10/2025  | Análise de Variância (ANOVA) para o DIC. **Aula prática em R**        |
-  |  07/10/2025    | 07/10/2025  | Teste F para médias de tratamentos.  [[Mat-05]](Aulas/MATD48-05.html) |
-  |  09/10/2025    | 09/10/2025  | Coeficiente de variação. Análise de pressupostos.                     |
-  |  14/10/2025    | 14/10/2025  | Análise de Covariância (ANCOVA).                                      |
-  |  16/10/2025    | 16/10/2025  | Aula de exercícios e **Aula prática em R**   [[Mat-06]](Aulas/MATD48-06.html)|
-  |  21/10/2025    | 21/10/2025  | ANCOVA e revisão.                                                     |
-  |  23/10/2025    | 23/10/2025  |   Comparações de médias. Contrastes                                   |
-  |  28/10/2025    | 28/10/2025  | Contrastes ortogonais. **Aula prática em R**   [[Mat-07]](Aulas/MATD48-07.html)|
-  |  **30/10/2025**    | **30/10/2025**  | **<font color="red">PROVA 1</font>**             |
-  |  04/11/2025    | 04/11/2025  | Procedimentos de Tukey e Scheffé.                                     |
-  |  06/11/2025    | 06/11/2025  | Procedimentos de Bonferroni e Duncan. **Aula prática em R**           |
-  |  11/11/2025    | 11/11/2025  | Aula de exercícios sobre Comparações Múltiplas. [[Mat-08]](Aulas/MATD48-08.html)|
-  |  13/11/2025    | 13/11/2025  | Experimentos em Blocos Completos Casualizados (DBC).                 |
-  |  18/11/2025    | 18/11/2025  | Modelo matemático e ANOVA para DBC. **Aula prática em R**            |
-  |  20/11/2025    | 20/11/2025  | Eficiência do delineamento.                                  [[Mat-09]](Aulas/MATD48-09.html)        |
-  |  25/11/2025    | 25/11/2025  | Experimentos em Quadrados Latinos (DQL).              [[Mat-10]](Aulas/MATD48-10.html)                |
-  |  27/11/2025    | 27/11/2025  | Modelo matemático e ANOVA para DQL. **Aula prática em R**            |
-  |  02/12/2025    | 04/12/2025  |  Réplicas em DQL                                     |
-  |  11/12/2025    | 11/12/2025  | Quadrados Greco-latinos          [[Mat-11]](Aulas/MATD48-11.html)              |
-  |  16/12/2025    | 16/12/2025  | Experimentos Fatoriais: Introdução.                                  |
-  |  18/12/2025    | 18/12/2025  | Fatores aninhados e cruzados. Modelo matemático.                     |
-  |  23/12/2025    | 23/12/2025  | Cálculo dos efeitos principais e interações. **Aula prática em R**     |
-  |  25/12/2025    | 25/12/2025  | Delineamentos para experimentos fatoriais.                           |
-  |  30/12/2025    | 30/12/2025  | ANOVA para experimentos fatoriais.               [[Mat-12]](Aulas/MATD48-12.html)                     |
-  |  **05/01/2026**  | **05/01/2026**  | **<font color="red">PROVA 2</font>**                          |
-  </center>
+
+Cronograma alinhado 1:1 às 14 aulas de `Aulas2026/`, aos 7 capítulos do livro-texto ligados ao
+semestre (o 8º capítulo do livro vai além do programa) e às 14 listas semanais com gabarito. Datas
+tentativas — confirmar no calendário acadêmico oficial.
+
+```{r cronograma, echo=FALSE}
+cronograma <- tribble(
+  ~Datas, ~Aula, ~Tópico, ~Material,
+  "01 e 03/09/2026", "01", "Princípios do delineamento de experimentos",
+    "[Aula](Aulas2026/MATD48-01.html) · [Cap. 1](Livro/principios.html) · [Lista](Listas2026/Lista01.pdf)/[Gab.](Listas2026/Gabarito01.pdf)",
+  "08 e 10/09/2026", "02", "Modelos lineares (Parte 1): Y=Xβ+ε, mínimos quadrados",
+    "[Aula](Aulas2026/MATD48-02.html) · [Cap. 2](Livro/modelos-lineares.html) · [Lista](Listas2026/Lista02.pdf)/[Gab.](Listas2026/Gabarito02.pdf)",
+  "15 e 17/09/2026", "03", "Modelos lineares (Parte 2): Gauss-Markov, matriz de projeção",
+    "[Aula](Aulas2026/MATD48-03.html) · [Cap. 2](Livro/modelos-lineares.html) · [Lista](Listas2026/Lista03.pdf)/[Gab.](Listas2026/Gabarito03.pdf)",
+  "22 e 24/09/2026", "04", "Delineamento Completamente Aleatorizado (DCA)",
+    "[Aula](Aulas2026/MATD48-04.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista04.pdf)/[Gab.](Listas2026/Gabarito04.pdf)",
+  "29/09 e 01/10/2026", "05", "Submuestreo e modelo de efeitos aleatórios",
+    "[Aula](Aulas2026/MATD48-05.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista05.pdf)/[Gab.](Listas2026/Gabarito05.pdf)",
+  "06 e 08/10/2026", "06", "Verificação de pressupostos e transformações",
+    "[Aula](Aulas2026/MATD48-06.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista06.pdf)/[Gab.](Listas2026/Gabarito06.pdf)",
+  "13 e 15/10/2026", "07", "Contrastes, comparações múltiplas, polinômios ortogonais",
+    "[Aula](Aulas2026/MATD48-07.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista07.pdf)/[Gab.](Listas2026/Gabarito07.pdf)",
+  "20 e 22/10/2026", "08", "Análise de covariância (ANCOVA) e teste de Kruskal-Wallis",
+    "[Aula](Aulas2026/MATD48-08.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista08.pdf)/[Gab.](Listas2026/Gabarito08.pdf)",
+  "Entrega 22/10/2026", "—", "🚀 **Desafio — Projeto II**: planejamento de experimento físico (DCA)",
+    "[Projeto II — Helicóptero de Papel](Projetos/Projeto-II.html)",
+  "**22/10/2026**", "—", "**<span style='color:red'>Fechamento N1</span>** = 50% Projeto II + 50% Listas 01–08", "—",
+  "29/10 e 03/11/2026", "09", "Delineamento em Blocos Completos Aleatorizados (DBCA)",
+    "[Aula](Aulas2026/MATD48-09.html) · [Cap. 4](Livro/blocos.html) · [Lista](Listas2026/Lista09.pdf)/[Gab.](Listas2026/Gabarito09.pdf)",
+  "05 e 10/11/2026", "10", "Teste de Friedman e blocos incompletos balanceados",
+    "[Aula](Aulas2026/MATD48-10.html) · [Cap. 4](Livro/blocos.html) · [Lista](Listas2026/Lista10.pdf)/[Gab.](Listas2026/Gabarito10.pdf)",
+  "12 e 17/11/2026", "11", "Quadrado latino e quadrado greco-latino",
+    "[Aula](Aulas2026/MATD48-11.html) · [Cap. 4](Livro/blocos.html) · [Lista](Listas2026/Lista11.pdf)/[Gab.](Listas2026/Gabarito11.pdf)",
+  "Entrega 19/11/2026", "—", "🚀 **Desafio — Projeto III**: comparando modelos de ML (DBCA + Friedman)",
+    "[Projeto III — Modelos de ML com Rigor](Projetos/Projeto-III.html)",
+  "**19/11/2026**", "—", "**<span style='color:red'>Fechamento N2</span>** = 50% Projeto III + 50% Listas 09–11", "—",
+  "19 e 24/11/2026", "12", "Fatoriais A×B e A×B×C",
+    "[Aula](Aulas2026/MATD48-12.html) · [Cap. 5](Livro/fatoriais.html) · [Lista](Listas2026/Lista12.pdf)/[Gab.](Listas2026/Gabarito12.pdf)",
+  "26/11 e 01/12/2026", "13", "Fatoriais 2ᵏ: ortogonalidade, análise sem repetição, confusão",
+    "[Aula](Aulas2026/MATD48-13.html) · [Cap. 6](Livro/fatoriais-avancado.html) · [Lista](Listas2026/Lista13.pdf)/[Gab.](Listas2026/Gabarito13.pdf)",
+  "03 e 08/12/2026", "14", "Fatoriais 3ᵏ, fracionamento e superfície de resposta",
+    "[Aula](Aulas2026/MATD48-14.html) · [Cap. 6](Livro/fatoriais-avancado.html) e [Cap. 7](Livro/superficie-resposta-cap.html) · [Lista](Listas2026/Lista14.pdf)/[Gab.](Listas2026/Gabarito14.pdf)",
+  "10/12/2026", "—", "Revisão geral e dúvidas", "—",
+  "Entrega 17/12/2026", "—", "🚀 **Desafio — Projeto IV (capstone)**: otimização fatorial de pipeline de ML",
+    "[Projeto IV — Otimização Fatorial de ML](Projetos/Projeto-IV.html)",
+  "**17/12/2026**", "—", "**<span style='color:red'>Fechamento N3</span>** = 50% Projeto IV + 50% Listas 12–14", "—"
+)
+
+cronograma %>%
+  kable(escape = FALSE, align = c("l", "c", "l", "l")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 14) %>%
+  column_spec(1, width = "12%") %>%
+  column_spec(4, width = "30%")
+```
+
 ***
 #### Dados
 
+Bases reais usadas no livro-texto (extraídas de `ApoioLuz/BasesDatosDE.xlsx`, ver `Livro/data/`):
+
+ * [[Mojarra — aquicultura, submuestreo]](Livro/data/mojarra.csv)
+ * [[Pepino — irrigação × silício em blocos]](Livro/data/pepino.csv)
+ * [[Acuosas — recuperação de compostos voláteis, fatorial]](Livro/data/acuosas.csv)
+ * [[Biodiesel — fatorial 2⁴]](Livro/data/biodiesel.csv)
+ * [[Energia — superfície de resposta]](Livro/data/energia.csv)
+
+Bases adicionais do material de apoio:
+
  * [[Restaurantes]](Aulas/restaurant_data.csv)
  * [[Gasto]](Aulas/ad_spend_and_gdp.csv)
- * [[Peso]](Aulas/average-height-men-OWID.csv)
+ * [[Altura]](Aulas/average-height-men-OWID.csv)
  * [[GDP]](Aulas/GDP.csv)
  * [[EITC]](Aulas/eitc.csv)
- * [[EITC]](Aulas/eitc.csv)
- 
- 
- 
 
 
 #### Referências bibliográficas (Principal)
@@ -247,11 +191,13 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
 
 ***
 
-#### Referências bibliográficas 
+#### Referências bibliográficas
   <ul>
   <li>Casella, G. (2008). <em>Statistical design.</em> Springer.</li>
   <li>Cox, D. R., & Reid, N. (2000). <em>The theory of the design of experiments.</em> CRC press.</li>
   <li>Hinkelmann, K., & Kempthorne, O. (2008). <em>Design and analysis of experiments, volume 1: Introduction to experimental design</em>. John Wiley & Sons.</li>
+  <li>Imbens, G. W., & Rubin, D. B. (2015). <em>Causal Inference for Statistics, Social, and Biomedical Sciences</em>. Cambridge University Press. — base da camada causal (Neyman-Rubin) usada no livro-texto 2026.</li>
+  <li>Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. <em>Journal of Educational Psychology, 66</em>(5), 688–701.</li>
   </ul>
 
 ***
@@ -269,21 +215,13 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
 
 ## Para refletir
 
-##### Sobrea as aulas
+##### Sobre as aulas
 
 *São reuniões cientificas e profissionais onde são discutidos temas de relevância para a formação pessoal, social e profissional. Portanto é esperado que o aluno chegue sem atraso, não entre na sala abruptamente, não sai da sala durante a discussão, respeite as intervenções do professor e/ou colega(s), não fume (Lei Federal), não use o celular (caso precisar pode se retirar da sala)  e não promova a destruição de bens públicos, entre outros.*
 
 ##### Sobre honestidade acadêmica
 
 *Honestidade e confiança são importantes para todos nós como indivíduos. Neste sentido, os membros da comunidade acadêmica tanto como professores e alunos têm a responsabilidade de manter e promover os princípios da verdade e honestidade acadêmica. Assim, a honestidade acadêmica pressupõe que todos os trabalhos, provas e testes sejam frutos do trabalho individual do aluno salvo os casos onde o professor tenha dado permissão expressa e instruções para a realização de atividades em grupo.*
-
-<!-- ##### Sobre o plágio -->
-
-<!-- *Constitui desonestidade acadêmica e constitui uma grave falta acadêmica, pois destrói o princípio fundamental de confiança que deve existir no processo de transmissão de conhecimento em atividades de pesquisa e ensino. Não constitui defesa no caso de detecção de plágio que o ato tenha sido feito por negligência ou sem a intenção do aluno. A ausência de intenção pode diminuir a pena imposta, mas não serve como desculpa para o ato. Alunos devem, portanto, ter muito cuidado para evitar o plágio. Se tiver alguma dúvida sobre plágio, citação de passagens de texto, uso de ideias de terceiros ou colaborações com colegas em suas atividades acadêmicas, recomendo que  o aluno procure orientação de um professor ou coordenador acadêmico. (Fonte: Tomado de http://www.ibmecsp.edu.br/biblioteca).* -->
-
-<!-- ##### Sobre desonestidade acadêmica -->
-
-<!-- *Desonestidade acadêmica inclui colar em provas e testes, plágio e/ou qualquer adulteração no desenvolvimento de um trabalho ou pesquisa acadêmica. O plágio ocorre quando o aluno e/ou professor apresenta o trabalho de outra pessoa como se fosse seu sem citar a fonte de maneira apropriada. A única exceção à regra de citar adequadamente as fontes ocorre quando informações ou ideias são do senso comum. O plágio inclui, mas não se limita a, apresentar um trabalho obtido de um serviço profissional de redação (inclusive da Internet); citar diretamente ou parafrasear uma passagem de texto sem citar a fonte; e utilizar figuras, gráficos e tabelas sem identificar as fontes. Solicitações inapropriadas não serão admissíveis nesse curso, portanto evite-se constrangimentos. O aluno que agir de modo contrário à ética e honestidade acadêmica receberá forte penalização e será reportado oficialmente à coordenação do curso.* -->
 
 ##### Sobre profissionalismo
 
@@ -293,31 +231,25 @@ A avaliação será constituída pela nota das atividades (que podem consistir e
 
 *Lembrem que nós somos respeitados e tratados da mesma forma em que tratamos as demais pessoas. Ao se dirigir a professores e/ou colegas, faça-o respeitosamente.*
 
-
 ##### Sobre o aluno
 
 *Finalmente quero lembrá-lo que você constrói seu conhecimento e desenvolve sua capacidade de aprender e criar. Seu instrutor está aqui para orientá-lo. Trabalhe, pesquise, seja crítico construtivo, crie, se dedique, se esforce e não desista, se pensar em desistir se esforce mais. Não se preocupe e melhor se ocupe. Você está aqui porque tem condições de vencer.*
 
 ***
 
-### Material de apoio 
+### Material de apoio
 
-O material de apoio será distribuído ao longo do curso. Esse material pode incluir, livros, slides de aula, scripts para reprodução, artigos científicos, artigos dedivulgação, entre outros.
-
-
-***
-### <img src="Configuracoes/hora.gif" width="16" height="16" border="0" align="left">   &nbsp;	<u> <font color="red"> Provas </font> </u>
-
-*   [[<font color="red">  Prova I </font>]](Projetos/Projeto-I.html) 
-
+O material de apoio principal de 2026 é o [livro-texto](Livro/index.html), os slides em `Aulas2026/`
+e as listas em `Listas2026/`, todos listados no cronograma acima. Material complementar (artigos,
+scripts extra) pode ser distribuído ao longo do curso.
 
 ***
-<!-- ###### Este documento foi gerado através de um arquivo [R Markdown](http://rmarkdown.rstudio.com/). Markdown é uma linguagem simples de formatação que permite produzir documentos HTML, PDF e MS Word, de forma eficiente.   -->
-###### Content Copyright &copy; 2025 Raydonal Ospina Martínez. All Rights Reserved.
+### <img src="Configuracoes/hora.gif" width="16" height="16" border="0" align="left">   &nbsp;	<u> <font color="red"> Provas e Projetos </font> </u>
 
+*   [[<font color="red">  Prova I (2025, referência) </font>]](Projetos/Projeto-I.html)
+*   [[Projeto II — Desafio do Helicóptero de Papel]](Projetos/Projeto-II.html) *(entrega 22/10/2026)*
+*   [[Projeto III — Comparando Modelos de ML com Rigor Estatístico]](Projetos/Projeto-III.html) *(entrega 19/11/2026)*
+*   [[Projeto IV — Otimização Fatorial de um Pipeline de ML]](Projetos/Projeto-IV.html) *(entrega 17/12/2026, capstone)*
 
-<!-- https://cales.arizona.edu/~anling/STAT574/notes.htm -->
-<!-- https://mathspace.co/textbooks/syllabuses/Syllabus-1057/topics/Topic-20689/subtopics/Subtopic-268600/ -->
-<!-- https://byjus.com/maths/sampling-methods/ -->
-<!-- https://mathspace.co/textbooks/syllabuses/Syllabus-1057/topics/Topic-20689/subtopics/Subtopic-268600/ -->
-
+***
+###### Content Copyright &copy; 2026 Raydonal Ospina Martínez. All Rights Reserved.

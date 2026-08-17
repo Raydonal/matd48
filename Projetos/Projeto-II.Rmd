@@ -1,0 +1,129 @@
+---
+documentclass: extarticle
+classoption: landscape
+title:  "Projeto Criativo: PLANEJAMENTO DE EXPERIMENTOS A"
+subtitle:  "Projeto - II — Desafio do Helicóptero de Papel"
+geometry: margin=0.7in
+fontsize: 14pt
+mainfont: Cambria
+author:
+  - Raydonal Ospina <a href='mailto:raydonal@castlab.org'> `r fontawesome::fa(name = 'envelope-circle-check', fill = 'darkgreen')`</a>
+output:
+  html_document:
+        theme: yeti
+        css:  config/StyleHomework.css
+  pdf_document:
+    keep_tex: yes
+lang: pt
+link-citations: yes
+linkcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+**Regras:** O projeto deve ser realizado de forma individual. Você deverá encaminhar a resolução
+do seu projeto digitalizado em formato PDF para o e-mail raydonal@castlab.org até a data indicada
+no cronograma do curso, até as 12:00hs (GMT-3, Horário de Brasília). Forneça código `R` (e/ou
+`Python`/`Julia`, se usar) e quaisquer fontes complementares. Recomendo fortemente não usar LLMs
+(ChatGPT, Gemini, Claude, DeepSeek, BERT, Manus, Llama, Cohere, Mistral, Falcon, Gemma, Bloom,
+Magistral, Qwen, Kimi, Nova Phi, Grok, etc.) para resolver o projeto, evite constrangimentos.
+**Quero vocês pensando, não a máquina.**
+
+**Avaliação:** este projeto fecha a **Nota 1** do curso — N1 = 50% Projeto II + 50% média das
+Listas 01–08 (ver critério de aprovação na home do curso). É o primeiro dos **três projetos
+incrementais** do curso: o desenho de base que você constrói aqui (unidade experimental, repetição
+genuína, aleatorização da ordem dos voos) é exatamente o que os Projetos III e IV vão retomar,
+empilhando sobre ele controle local/blocagem (Projeto III) e arranjos fatoriais (Projeto IV).
+
+**Contexto do Projeto:**
+Vocês foram contratados como cientistas de dados júnior pela **AeroSemente**, uma startup de
+reflorestamento que lança "helicópteros de papel" biodegradáveis carregados com sementes a partir
+de drones sobre áreas degradadas — o giro da asa reduz a velocidade de queda o suficiente para a
+semente chegar intacta ao solo. A variável crítica é o **tempo de queda** (segundos): tempo
+demais e o vento carrega a semente para fora da área-alvo; tempo de menos e o impacto pode
+danificar a semente. A engenharia quer saber se o **comprimento da asa** do helicóptero afeta o
+tempo de queda, e por quanto.
+
+**O Desafio Experimental:**
+Um estagiário já testou informalmente: fez 3 helicópteros com asas de tamanhos diferentes,
+soltou cada um **uma única vez** do mesmo prédio, e apresentou os 3 tempos como "a resposta".
+A diretoria quer uma segunda opinião — de vocês.
+
+---
+# **Parte 1: Análise Crítica do "Experimento" do Estagiário**
+
+**Atividades (Parte 1):**
+
+1. **O que está errado?** Sem nenhuma repetição, o estagiário não tem como distinguir efeito do
+   comprimento da asa de puro acaso (correntes de ar, jeito de soltar, imprecisão do cronômetro).
+   Explique, em termos do vocabulário do Capítulo 1 (unidade experimental, fontes de variação,
+   erro experimental), exatamente por que **um único voo por tamanho de asa não permite nenhuma
+   inferência estatística** — o que falta é qual dos três pilares (repetição, aleatorização,
+   controle local)?
+2. **Delineamento proposto por vocês:** Descreva como você desenharia o experimento com **4
+   comprimentos de asa** (sugestão: 4 cm, 6 cm, 8 cm, 10 cm, mesma largura/peso de clipe) e **8
+   repetições por comprimento** (32 voos ao todo). Especifique: a unidade experimental, o
+   mecanismo de aleatorização da *ordem* dos 32 voos (por que a ordem importa aqui — pense em
+   fadiga do lançador, mudança de vento ao longo da tarde, etc.), e o modelo estatístico
+   ($Y_{ij} = \mu + \tau_i + \varepsilon_{ij}$) que você vai ajustar.
+
+# **Parte 2: Execute (ou simule) o Experimento e Analise**
+
+**Duas opções — escolha uma e declare qual escolheu:**
+
+* **Opção A (recomendada): experimento físico de verdade.** Construa helicópteros de papel nos 4
+  comprimentos de asa (molde simples: retângulo de papel com duas abas cortadas e dobradas em
+  direções opostas, um clipe na base). Solte cada um do mesmo ponto (ex.: topo de uma escada, uma
+  janela do 2º andar), cronometrando com o celular, seguindo a ordem aleatorizada que você definiu
+  na Parte 1. Registre os 32 tempos reais.
+* **Opção B: simulação calibrada**, caso não seja possível construir e cronometrar fisicamente.
+
+```{r simulacao}
+# Use como semente o mês+dia do seu nascimento + 456
+# exemplo aluno X, mes = 1, dia = 6
+minha_semente <- 1 + 6 + 456
+set.seed(minha_semente)
+
+comprimentos <- c(4, 6, 8, 10)  # cm
+n_por_grupo <- 8
+
+# Relação física aproximada: asas maiores giram mais devagar e caem mais devagar,
+# até um ponto -- asas grandes demais ficam instáveis (leve queda no tempo no extremo).
+tempo_base <- c(`4` = 1.8, `6` = 2.6, `8` = 3.1, `10` = 2.9)
+
+dados_heli <- tibble(
+  comprimento = factor(rep(comprimentos, each = n_por_grupo)),
+  voo = 1:(4 * n_por_grupo)
+) %>%
+  mutate(
+    tempo_queda = tempo_base[as.character(comprimento)] +
+      rnorm(n(), mean = 0, sd = 0.3)
+  ) %>%
+  slice_sample(prop = 1)  # embaralha a ordem dos voos, simulando aleatorização
+
+head(dados_heli)
+```
+
+**Atividades (Parte 2):**
+
+1. **Análise exploratória:** boxplot do tempo de queda por comprimento de asa. O que ele sugere
+   sobre a forma da relação (linear? crescente e depois decrescente?)?
+2. **ANOVA do DCA:** ajuste o modelo, apresente a tabela de ANOVA completa, e teste
+   $H_0: \tau_1=\tau_2=\tau_3=\tau_4=0$ a $\alpha=0{,}05$.
+3. **Verificação de pressupostos** (Capítulo 3 / Aula 06): Q-Q plot e teste de normalidade dos
+   resíduos; teste de homogeneidade de variância (Levene ou Bartlett). Se os pressupostos falharem,
+   proponha e aplique uma transformação, e refaça a ANOVA com os dados transformados.
+4. **Como o comprimento da asa se comporta como fator quantitativo?** Já que os 4 níveis são
+   igualmente espaçados (4, 6, 8, 10 cm), ajuste **polinômios ortogonais** (linear, quadrático,
+   cúbico) e determine qual grau captura a relação — isto responde diretamente "quanto tempo de
+   queda ganho a cada cm de asa a mais, e esse ganho é constante?".
+5. **Recomendação final:** escreva um parágrafo (e-mail para a diretoria da AeroSemente) indicando
+   o comprimento de asa recomendado para maximizar o tempo de queda controlado, com a evidência
+   estatística que sustenta a recomendação, e uma ressalva sobre os limites do experimento (ex.:
+   só testamos até 10 cm — extrapolar além disso é seguro?).

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Análise de Covariância e o Teste de Kruskal-Wallis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Raydonal Ospina" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Análise de Covariância e o Teste de Kruskal-Wallis
+]
+.subtitle[
+## Ajustando por uma covariável e testando sem pressupor normalidade
+]
+.author[
+### Raydonal Ospina
+]
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Aula 08 — Análise de Covariância e o Teste de Kruskal-Wallis
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Duas situações, duas soluções
+
+Esta aula fecha o Capítulo 3 com duas ferramentas que resolvem problemas diferentes:
+
+- **ANCOVA** — os grupos foram aleatorizados, mas diferem por acaso em uma variável medida
+  *antes* do tratamento. Como ajustar por isso e ganhar precisão?
+
+- **Kruskal-Wallis** — os pressupostos de normalidade/homocedasticidade da ANOVA não se
+  sustentam. Como comparar grupos sem depender deles?
+
+---
+
+## ANCOVA: o modelo
+
+`$$y_{ij} = \mu + \tau_i + \beta\,(x_{ij} - \bar x_{\cdot\cdot}) + \varepsilon_{ij}, \qquad
+\varepsilon_{ij} \sim N(0,\sigma^2)\ \text{i.i.d.}$$`
+
+- `\(x_{ij}\)`: a **covariável**, medida antes do tratamento (não pode ser afetada por ele).
+- `\(\beta\)`: inclinação **comum** a todos os grupos — pressuposto de *homogeneidade das
+  inclinações*, verificado testando a interação `\(\tau_i \times x_{ij}\)`.
+
+--
+
+Médias de tratamento **ajustadas** para o valor médio geral da covariável:
+
+`$$\bar y_{i\cdot(\text{ajustada})} = \bar y_{i\cdot} - \hat\beta\,(\bar x_{i\cdot} - \bar x_{\cdot\cdot}).$$`
+
+A ideia de combinar regressão e ANOVA para ajustar por uma covariável remonta a Fisher
+(1935).
+
+---
+
+## ANCOVA em notação matricial
+
+Nenhuma teoria nova: a covariável é só **mais uma coluna** de `\(\mathbf X\)` (Cap. 2).
+
+`$$\mathbf Y = \mathbf X\boldsymbol\beta+\boldsymbol\varepsilon, \qquad
+\mathbf X=\big[\mathbf X_{\text{trat}} \mid \mathbf z\big], \qquad
+\boldsymbol\beta=\begin{bmatrix}\boldsymbol\tau\\\beta\end{bmatrix}.$$`
+
+--
+
+`\(\mathbf P_X\)` projeta sobre um espaço-coluna **maior** (uma dimensão a mais que só
+`\(\mathbf X_{\text{trat}}\)`). O teste de tratamento ajustado é, de novo, soma de quadrados extra:
+
+`$$SQ_{\text{Trat(ajustado)}} = \mathbf Y'\big(\mathbf P_X - \mathbf P_{[\mathbf 1\mid\mathbf z]}\big)\mathbf Y$$`
+
+Ajustar por covariável = **projetar a direção de `\(\mathbf z\)` para fora antes** de testar tratamento.
+
+---
+
+## Por que incorporar a covariável?
+
+Dois ganhos simultâneos:
+
+1. **Ajuste**: corrige diferenças de linha de base entre grupos que a aleatorização não
+   eliminou por completo (ela garante comparabilidade *em expectativa*, não em cada amostra).
+
+2. **Precisão**: remove do erro experimental a variação explicada pela covariável — o mesmo
+   espírito da blocagem (Capítulo 4), mas com uma variável contínua em vez de um agrupamento
+   categórico (Montgomery, 2017).
+
+--
+
+A tabela de ANOVA ajustada usa **soma de quadrados sequencial**: a covariável entra
+**primeiro** no modelo, e só então o efeito de tratamento é avaliado sobre o que restou.
+
+---
+
+## Kruskal-Wallis: motivação
+
+ANOVA e os procedimentos da Aula 07 assumem erros normais e variância homogênea.
+
+Quando isso falha de forma severa (assimetria, outliers influentes, amostras pequenas) e
+transformações não resolvem, o teste de **Kruskal-Wallis** (Kruskal &amp; Wallis, 1952) testa se `\(t\)`
+populações têm a mesma distribuição, sem assumir normalidade.
+
+---
+
+## Kruskal-Wallis: a estatística
+
+Substitui os valores pelos seus **postos** (ranks) na amostra combinada de `\(N=\sum n_i\)`
+observações. Com `\(R_i\)` = soma dos postos no grupo `\(i\)`:
+
+`$$H = \frac{12}{N(N+1)} \sum_{i=1}^t \frac{R_i^2}{n_i} - 3(N+1) \ \overset{\cdot}{\sim}\ \chi^2_{t-1}
+\quad \text{sob } H_0.$$`
+
+--
+
+Um "ANOVA sobre os postos": robusto a outliers e assimetria, ao custo de menor poder quando a
+normalidade de fato se sustenta.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## ANCOVA: cafeína ajustada pela atenção basal
+
+Retomamos o experimento de dose de cafeína (Aula 07), agora usando a covariável **basal**
+(atenção medida antes da dose).
+
+
+``` r
+set.seed(7)
+dose_mg &lt;- c(0, 50, 100, 150, 200)
+dose_f &lt;- factor(rep(dose_mg, each = 8))
+basal &lt;- rnorm(40, 60, 8)
+efeito_dose &lt;- function(d) 20 + 0.35 * d - 0.0013 * d^2
+
+cafeina &lt;- tibble(
+  dose = dose_f, basal = basal,
+  atencao_pos = 40 + 0.5 * basal + efeito_dose(as.numeric(as.character(dose_f))) +
+    rnorm(40, 0, 5)
+)
+```
+
+---
+
+## Passo 1: homogeneidade das inclinações
+
+
+``` r
+mod_inclinacoes &lt;- lm(atencao_pos ~ basal * dose, data = cafeina)
+anova(mod_inclinacoes)[3, ]   # interação basal:dose -- não significativa?
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: atencao_pos
+##            Df Sum Sq Mean Sq F value Pr(&gt;F)
+## basal:dose  4   99.5  24.875  1.3333 0.2804
+```
+
+&lt;img src="MATD48-08_files/figure-html/plot-homog-incl-1.png" alt="" width="540" /&gt;
+
+Interação não significativa → prossegue com o modelo aditivo (ANCOVA). As cinco retas ajustadas
+separadamente já são visualmente quase paralelas — o teste apenas formaliza o que o olho já
+sugere aqui.
+
+---
+
+## Passo 2: ANCOVA e médias ajustadas
+
+
+``` r
+mod_ancova &lt;- lm(atencao_pos ~ basal + dose, data = cafeina)
+anova(mod_ancova)                 # SQ sequencial: covariável entra primeiro
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: atencao_pos
+##           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## basal      1 1478.46 1478.46  76.257 3.327e-10 ***
+## dose       4 3022.36  755.59  38.973 2.988e-12 ***
+## Residuals 34  659.18   19.39                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+``` r
+emmeans(mod_ancova, ~ dose)       # médias de dose já ajustadas para o basal médio
+```
+
+```
+##  dose emmean   SE df lower.CL upper.CL
+##  0      91.6 1.59 34     88.3     94.8
+##  50    106.8 1.75 34    103.3    110.4
+##  100   112.9 1.56 34    109.7    116.1
+##  150   117.4 1.56 34    114.3    120.6
+##  200   107.3 1.59 34    104.0    110.5
+## 
+## Confidence level used: 0.95
+```
+
+`basal` é altamente significativo, e o `QME` (Residuals) cai em relação à ANOVA sem covariável
+da Aula 07 — a comparação entre doses ficou mais precisa.
+
+---
+
+## A visualização canônica da ANCOVA
+
+Resposta vs. covariável, colorida por grupo, com retas **paralelas** (inclinação comum `\(\hat\beta\)`):
+
+&lt;img src="MATD48-08_files/figure-html/plot-ancova-1.png" alt="" width="576" /&gt;
+
+A separação **vertical** entre as retas (não a inclinação, que é comum) é o efeito ajustado da
+dose: comparando participantes com o mesmo basal, a dose de 150 mg fica acima das demais.
+
+---
+
+## Ciência de dados: carregamento com conexões lentas
+
+Retomamos o experimento de scripts de terceiros (Aula 07), agora com alguns carregamentos
+medidos em conexões congestionadas — tempos muito acima do resto da amostra.
+
+
+``` r
+set.seed(2026)
+config &lt;- c("Nenhum", "Analytics", "Anúncios", "Combo")
+efeito_config &lt;- c(Nenhum = 0, Analytics = 60, Anúncios = 140, Combo = 210)
+dados_scripts &lt;- tibble(
+  config = factor(rep(config, each = 10), levels = config),
+  tempo_ms = 900 + efeito_config[as.character(config)] + rnorm(40, 0, 70)
+)
+
+set.seed(3)
+idx_lentos &lt;- sample(1:40, 4)
+dados_scripts$tempo_ms[idx_lentos] &lt;- dados_scripts$tempo_ms[idx_lentos] +
+  rexp(4, rate = 1 / 2000)   # cauda pesada: conexões lentas
+```
+
+---
+
+## Kruskal-Wallis vs. ANOVA sob outliers
+
+&lt;img src="MATD48-08_files/figure-html/plot-out-1.png" alt="" width="504" /&gt;
+
+
+``` r
+shapiro.test(residuals(aov(tempo_ms ~ config, data = dados_scripts)))$p.value
+```
+
+```
+## [1] 8.584251e-06
+```
+
+``` r
+kruskal.test(tempo_ms ~ config, data = dados_scripts)
+```
+
+```
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  tempo_ms by config
+## Kruskal-Wallis chi-squared = 22.026, df = 3, p-value = 6.443e-05
+```
+
+---
+
+## Comparações par a par não paramétricas
+
+
+``` r
+pairwise.wilcox.test(dados_scripts$tempo_ms, dados_scripts$config,
+                      p.adjust.method = "bonferroni")
+```
+
+```
+## 
+## 	Pairwise comparisons using Wilcoxon rank sum exact test 
+## 
+## data:  dados_scripts$tempo_ms and dados_scripts$config 
+## 
+##           Nenhum  Analytics Anúncios
+## Analytics 0.21278 -         -       
+## Anúncios  0.00903 0.01254   -       
+## Combo     0.00903 0.00026   1.00000 
+## 
+## P value adjustment method: bonferroni
+```
+
+O padrão geral de conclusões da Aula 07 se mantém, mesmo sem supor normalidade — com um pouco
+menos de nitidez nas diferenças mais sutis, o custo esperado de um teste mais robusto.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que é essencial que a covariável da ANCOVA seja medida **antes** do tratamento? O que dá
+   errado se o "basal" fosse medido depois de alguns participantes já terem tomado cafeína?
+
+2. Compare ANCOVA com blocagem por uma variável categórica: em que situação prática uma
+   covariável contínua está disponível, mas uma blocagem categórica não seria possível?
+
+3. O teste de Shapiro-Wilk sobre os resíduos rejeitou normalidade no exemplo de scripts. Isso
+   por si só já justifica abandonar a ANOVA em favor do Kruskal-Wallis? Que outros fatores
+   (tamanho de amostra, magnitude do desvio) você consideraria antes de decidir?
+
+4. Kruskal-Wallis testa igualdade de **distribuições** (não só de médias). O que isso implica
+   sobre a interpretação de uma rejeição de `\(H_0\)`, quando os grupos podem diferir em variância
+   e não só em posição central?
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## ANCOVA: verificar antes de ajustar
+
+
+``` r
+# 1. SEMPRE testar homogeneidade de inclinações antes de interpretar a ANCOVA
+lm(atencao_pos ~ basal * dose, data = cafeina) %&gt;% anova() %&gt;%
+  broom::tidy() %&gt;% filter(term == "basal:dose")
+```
+
+```
+## # A tibble: 1 × 6
+##   term          df sumsq meansq statistic p.value
+##   &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 basal:dose     4  99.5   24.9      1.33   0.280
+```
+
+``` r
+# 2. Se a interação não for significativa, remova-a e ajuste o modelo aditivo
+mod_ancova &lt;- lm(atencao_pos ~ basal + dose, data = cafeina)
+
+# 3. car::Anova(type = 2) para soma de quadrados tipo II (ordem não importa
+#    entre termos de mesmo "nível" quando não há interação no modelo)
+car::Anova(mod_ancova, type = 2)
+```
+
+```
+## Anova Table (Type II tests)
+## 
+## Response: atencao_pos
+##            Sum Sq Df F value    Pr(&gt;F)    
+## basal      784.07  1  40.441 2.952e-07 ***
+## dose      3022.36  4  38.973 2.988e-12 ***
+## Residuals  659.18 34                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+## Kruskal-Wallis: do teste global ao post-hoc
+
+
+``` r
+# kruskal.test() aceita a mesma sintaxe de formula que aov()
+kruskal.test(tempo_ms ~ config, data = dados_scripts)
+```
+
+```
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  tempo_ms by config
+## Kruskal-Wallis chi-squared = 22.026, df = 3, p-value = 6.443e-05
+```
+
+``` r
+# post-hoc: Wilcoxon par a par, SEMPRE com correção -- nunca sem ajuste
+pairwise.wilcox.test(dados_scripts$tempo_ms, dados_scripts$config,
+                      p.adjust.method = "bonferroni")$p.value[1, 1]
+```
+
+```
+## [1] 0.2127779
+```
+
+Assim como na ANOVA, um Kruskal-Wallis significativo não localiza a diferença — o post-hoc por
+postos é o análogo não paramétrico das comparações múltiplas da Aula 07.
+
+---
+
+## Resumo da aula
+
+- ANCOVA incorpora uma covariável contínua medida antes do tratamento, ajustando as médias e
+  reduzindo o erro experimental — sempre checando primeiro a homogeneidade das inclinações.
+- A tabela de ANCOVA usa soma de quadrados sequencial: covariável primeiro, tratamento depois.
+- Kruskal-Wallis testa igualdade de distribuições usando postos, sem supor normalidade — a
+  alternativa quando os pressupostos da ANOVA falham e transformações não bastam.
+- Com isso, encerramos o Capítulo 3 (DCA). Próximo bloco de aulas: delineamentos com **blocos**.
+
+## Referências
+
+- Fisher, R. A. (1935). *Statistical Methods for Research Workers* (5ª ed.). Oliver and Boyd.
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
+- Kruskal, W. H. &amp; Wallis, W. A. (1952). Use of Ranks in One-Criterion Variance Analysis. *Journal of the American Statistical Association*, 47(260), 583–621.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

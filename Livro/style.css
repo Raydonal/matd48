@@ -1,0 +1,47 @@
+/* Estilo do livro-texto MATD48, alinhado à paleta do site do curso (tons de azul/verde-água
+   usados em Aulas/custom-styles.css e no tema xaringan "metropolis"). */
+
+body {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: #1a1a1a;
+}
+
+.book .book-header h1 {
+  font-weight: 600;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Fira Sans", "Helvetica Neue", Arial, sans-serif;
+  color: #0b4f6c;
+}
+
+h1 { border-bottom: 3px solid #01baef; padding-bottom: 0.2em; }
+h2 { border-bottom: 1px solid #cfe8ef; padding-bottom: 0.15em; }
+
+.book .book-body .page-wrapper .page-inner section.normal {
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+blockquote {
+  border-left: 4px solid #01baef;
+  background: #f4fbfd;
+  padding: 0.6em 1em;
+}
+
+div.caixa-aplicacao, div.caixa-discussao, div.caixa-r {
+  border-radius: 6px;
+  padding: 0.8em 1.1em;
+  margin: 1.2em 0;
+}
+div.caixa-aplicacao { background: #eef7f1; border-left: 5px solid #2e8b57; }
+div.caixa-discussao { background: #fdf3e7; border-left: 5px solid #d98324; }
+div.caixa-r         { background: #eef3fb; border-left: 5px solid #3b5bdb; }
+
+code, pre {
+  font-family: "Fira Code", "Consolas", monospace;
+}
+
+table {
+  font-size: 15px;
+}

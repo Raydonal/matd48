@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Gabarito --- Lista 13}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Gabarito --- Lista de Exercícios 13}{Fatoriais $2^k$: ortogonalidade, análise sem repetição e confusão (Capítulo 6 / Aula 13)}
+
+\begin{questao}{1} \textbf{(Dedução --- ortogonalidade de um $2^3$ e o estimador de efeito)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item As 8 combinações $(x_A,x_B,x_C)$ são todas as ternas de $\pm1$. Fixando a coluna
+    $x_Ax_B$: para cada valor de $x_A$ ($+1$ ou $-1$), $x_B$ assume $+1$ e $-1$ exatamente uma
+    vez para cada valor de $x_C$ --- logo os produtos $x_Ax_B$ valem $+1$ em 4 combinações e
+    $-1$ nas outras 4, e
+    $$\mathbf{x}_A'\mathbf{x}_B = \sum_{i=1}^{8} x_{A,i}x_{B,i} = 4(+1)+4(-1) = 0.$$
+  \item $x_A\cdot(x_Bx_C) = x_A x_B x_C$. Esse produto triplo também assume $+1$ em exatamente 4
+    das 8 combinações e $-1$ nas outras 4 (por um argumento de contagem idêntico ao do item (a),
+    aplicado ao produto de três sinais independentes), logo
+    $\mathbf{x}_A'\mathbf{x}_{BC} = \sum x_Ax_Bx_C = 4(+1)+4(-1)=0$.
+  \item Qualquer produto de duas colunas distintas de $\mathbf{X}$ (incluindo a coluna de 1's) é,
+    ele mesmo, ou uma coluna constante de 1's (quando as duas colunas são iguais) ou um produto de
+    sinais $\pm1$ que envolve pelo menos um fator "a mais" de um lado que do outro --- e esse
+    fator remanescente assume $+1$ e $-1$ em proporções iguais nas $2^k$ combinações, pelo mesmo
+    argumento de contagem dos itens (a)-(b). Logo toda entrada fora da diagonal de
+    $\mathbf{X}'\mathbf{X}$ é zero, e cada entrada da diagonal é
+    $\mathbf{x}_j'\mathbf{x}_j = \sum(\pm1)^2 = n$. Portanto $\mathbf{X}'\mathbf{X} =
+    n\mathbf{I}_{2^k}$.
+  \item Com $\mathbf{X}'\mathbf{X}=n\mathbf{I}$, a inversa é $(1/n)\mathbf{I}$, e
+    $\hat{\boldsymbol\beta} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y} =
+    (1/n)\mathbf{X}'\mathbf{Y}$, ou seja, $\hat\beta_j = \mathbf{x}_j'\mathbf{Y}/n$ para cada $j$
+    individualmente (as equações normais desacoplam). Logo
+    $$\text{efeito}_j = 2\hat\beta_j = \frac{2}{n}\mathbf{x}_j'\mathbf{Y} =
+    \frac{2}{2^k}\sum_{i=1}^{2^k}(\pm1)y_i = 2^{1-k}\sum_i(\pm1)y_i = 2^{-(k-1)}\sum_i(\pm1)y_i,$$
+    exatamente o contraste de Yates.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{2} \textbf{(Ciência de dados --- calculando efeitos pela tabela de sinais)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item
+  \begin{center}
+  \begin{tabular}{c|cccccccc}
+  Corrida & $A$ & $B$ & $C$ & $AB$ & $AC$ & $BC$ & $ABC$ & Tempo \\ \hline
+  $(1)$ & $-$ & $-$ & $-$ & $+$ & $+$ & $+$ & $-$ & 20 \\
+  $a$   & $+$ & $-$ & $-$ & $-$ & $-$ & $+$ & $+$ & 24 \\
+  $b$   & $-$ & $+$ & $-$ & $-$ & $+$ & $-$ & $+$ & 28 \\
+  $ab$  & $+$ & $+$ & $-$ & $+$ & $-$ & $-$ & $-$ & 36 \\
+  $c$   & $-$ & $-$ & $+$ & $+$ & $-$ & $-$ & $+$ & 16 \\
+  $ac$  & $+$ & $-$ & $+$ & $-$ & $+$ & $-$ & $-$ & 20 \\
+  $bc$  & $-$ & $+$ & $+$ & $-$ & $-$ & $+$ & $-$ & 24 \\
+  $abc$ & $+$ & $+$ & $+$ & $+$ & $+$ & $+$ & $+$ & 32 \\
+  \end{tabular}
+  \end{center}
+  \item Aplicando efeito $=\frac14\sum(\pm1)y$ com os sinais de cada coluna:
+  \begin{align*}
+  A &= \tfrac14(-20+24-28+36-16+20-24+32) = \tfrac14(24) = \mathbf{6} \\
+  B &= \tfrac14(-20-24+28+36-16-20+24+32) = \tfrac14(40) = \mathbf{10} \\
+  C &= \tfrac14(-20-24-28-36+16+20+24+32) = \tfrac14(-16) = \mathbf{-4} \\
+  AB &= \tfrac14(20-24-28+36+16-20-24+32) = \tfrac14(8) = \mathbf{2} \\
+  AC &= \tfrac14(20-24+28-36-16+20-24+32) = \tfrac14(0) = \mathbf{0} \\
+  BC &= \tfrac14(20+24-28-36-16-20+24+32) = \tfrac14(0) = \mathbf{0} \\
+  ABC &= \tfrac14(-20+24+28-36+16-20-24+32) = \tfrac14(0) = \mathbf{0}
+  \end{align*}
+  \item Por magnitude absoluta: $B(10) > A(6) > C(4) > AB(2) > AC(0)=BC(0)=ABC(0)$.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{3} \textbf{(Ciência de dados --- método de Lenth na mão)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Os 7 $|c_i|$ ordenados: $0,0,0,2,4,6,10$. Mediana (4º valor) $=2$.
+    $s_0 = 1{,}5\times2 = \mathbf{3}$.
+  \item $2{,}5\,s_0 = 7{,}5$. Efeitos com $|c_i|<7{,}5$: $\{0,0,0,2,4,6\}$ (exclui $B=10$).
+    Mediana desses 6 valores $=(0+2)/2=1$. $\text{PSE}=1{,}5\times1=\mathbf{1{,}5}$.
+  \item $\text{ME} = 3{,}76 \times 1{,}5 \approx \mathbf{5{,}64}$.
+  \item Apenas $A(6)$ e $B(10)$ ultrapassam $\text{ME}\approx5{,}64$; $C(4)$, embora o terceiro
+    maior em magnitude, fica abaixo do limiar. Isso é consistente com a Questão 2(c): o método é
+    conservador --- confirma os dois efeitos maiores, mas não sinaliza $C$, que é real (foi
+    construído com magnitude 4 no processo gerador dos dados) porém pequeno demais para cruzar a
+    margem formal com apenas $m=7$ efeitos e nenhuma repetição.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{4} \textbf{(Confusão --- designação de blocos e colinearidade)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item Da tabela de sinais da Questão 2(a), a coluna $ABC$ vale $-,+,+,-,+,-,-,+$ para
+    $(1),a,b,ab,c,ac,bc,abc$. Logo:
+    \textbf{Bloco 1} ($ABC=+1$): $a$ (24), $b$ (28), $c$ (16), $abc$ (32).
+    \textbf{Bloco 2} ($ABC=-1$): $(1)$ (20), $ab$ (36), $ac$ (20), $bc$ (24).
+  \item A coluna indicadora de bloco que construímos (por exemplo, $+1$ para Bloco 1 e $-1$ para
+    Bloco 2) é, por construção, exatamente a coluna $\mathbf{x}_{ABC}$ --- assumimos $+1$
+    precisamente nas corridas em que $x_{ABC}=+1$, e $-1$ nas demais. As duas colunas de
+    $\mathbf{X}$ (bloco e $ABC$) apontam na mesma direção do espaço-coluna; ao incluir as duas no
+    modelo, $\mathbf{X}$ perde posto coluna completo, e não há como o ajuste de mínimos quadrados
+    atribuir a variação observada entre blocos a "bloco" e a "$ABC$" separadamente --- as duas
+    explicações são algebricamente indistinguíveis a partir destes dados (a mesma situação
+    verificada numericamente no Capítulo 6, Seção "Confusão como colinearidade em $\mathbf{X}$").
+  \item Usar geradores diferentes ($ABC$ na repetição 1, $BC$ na repetição 2) é a essência da
+    \textbf{confusão parcial}: cada efeito confundido (seja $ABC$, seja $BC$) perde informação
+    apenas na repetição em que foi sacrificado, permanecendo estimável a partir das comparações
+    intra-bloco da \emph{outra} repetição. Repetir o mesmo gerador ($ABC$) nas duas repetições
+    seria confusão \textbf{total}: $ABC$ ficaria perdido por completo, em ambas as repetições,
+    sem nenhuma chance de recuperação --- um desperdício de informação quando o orçamento permite
+    mais de uma repetição.
+\end{enumerate}
+\end{solucao}
+
+\begin{questao}{5} \textbf{(Ciência de dados --- exercício computacional em R)}
+\end{questao}
+\begin{solucao}
+\begin{enumerate}[label=(\alph*)]
+  \item
+  \begin{lstlisting}
+modelo <- lm(y ~ A * B * C, data = dados)
+efeitos <- 2 * coef(modelo)[-1]
+
+s0  <- 1.5 * median(abs(efeitos))
+pse <- 1.5 * median(abs(efeitos)[abs(efeitos) < 2.5 * s0])
+me  <- qt(0.975, length(efeitos)/3) * pse
+
+efeitos[abs(efeitos) > me]
+  \end{lstlisting}
+  \item O valor $3{,}76$ fornecido no enunciado é um \textbf{arredondamento} de
+    \texttt{qt(0.975, 7/3)}, que o R calcula com muito mais casas decimais
+    ($\approx3{,}7639\ldots$); qualquer pequena diferença entre o ME calculado "na mão" com
+    $3{,}76$ e o ME calculado pelo R decorre exclusivamente dessa truncagem de casas decimais, não
+    de um erro conceitual --- a conclusão sobre quais efeitos cruzam a margem não muda.
+\end{enumerate}
+\end{solucao}
+
+\end{document}

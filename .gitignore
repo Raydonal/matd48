@@ -1,0 +1,5 @@
+# Bookdown gitbook dependency cache — regenerated on every render_book() call.
+# Left uncontrolled, output_dir: "." combined with in-place rendering causes this
+# directory to occasionally copy itself into itself across repeated renders,
+# ballooning to hundreds of MB. Never commit it.
+Livro/_bookdown_files/

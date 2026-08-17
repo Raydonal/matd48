@@ -1,0 +1,270 @@
+---
+title: "Fatoriais 3ᵏ, fracionamento e superfície de resposta"
+subtitle: "Ideia geral de 3ᵏ, resolução em fracionados e otimização de processos"
+author: "Raydonal Ospina"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: ../Aulas/refs.bib
+csl: ../Aulas/apa.csl
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+options(html.tag.transform.rmarkdown = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.retina = 2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+  library(broom)
+})
+```
+
+class: inverse, center, middle
+
+# Aula 14 — Fatoriais $3^k$, fracionamento e superfície de resposta
+
+### Teoria · Aplicação · Discussão · Uso do R
+
+### Última aula do curso
+
+---
+
+class: inverse, center, middle
+
+# Bloco 1 — Teoria
+
+---
+
+## Fatoriais $3^k$: a ideia geral
+
+Fatores com **três** níveis igualmente espaçados (permite estimar curvatura). Cada fator tem
+$3-1=2$ graus de liberdade; uma interação $A{\times}B$ em um $3^2$ tem $2\times2=4$ graus de
+liberdade (Montgomery, 2017).
+
+--
+
+**Confusão em $3^k$:** usa contrastes de grau único, $AB^2$: $L = i + 2j \pmod 3$. Valores
+$L=0,1,2$ definem três blocos de tamanho $3^{k-1}$.
+
+```{r ab2-demo, echo=FALSE}
+crossing(A = 0:2, B = 0:2) %>%
+  mutate(L = (A + 2*B) %% 3, Bloco = paste("Bloco", L+1)) %>%
+  arrange(Bloco) %>%
+  kable(format = "html") %>% kable_styling(font_size = 16, full_width = FALSE)
+```
+
+---
+
+## Fracionados $2^{k-p}$: a ideia geral
+
+Quando $k$ é grande, roda-se só uma fração $1/2^p$, escolhida por $p$ **relações geradoras**.
+Alguns efeitos ficam **aliasados** — indistinguíveis entre si.
+
+--
+
+Exemplo: gerador $D=ABC$ ($I=ABCD$) em um $2^{4-1}$ de 8 corridas. Multiplicando por $A$
+(usando $A^2=I$): $A\cdot I = A\cdot ABCD = A^2BCD = BCD$, logo **$A$ e $BCD$ são aliasados**.
+
+--
+
+**Resolução:**
+
+- **III** — efeitos principais aliasados com interações duplas (2fi).
+- **IV** — principais limpos de 2fi; mas 2fi aliasadas entre si.
+- **V** — principais e 2fi todos limpos entre si.
+
+O sistema de resolução como resumo do custo de fracionar é tratado em detalhe por
+(Montgomery, 2017) e (Box, Hunter & Hunter, 2005).
+
+---
+
+## Superfície de resposta: da pergunta "o que importa" para "qual é o ótimo"
+
+$$
+y = \beta_0 + \sum_i \beta_i x_i + \sum_i \beta_{ii} x_i^2 + \sum_{i<j}\beta_{ij}x_ix_j + \varepsilon
+$$
+
+Os termos $\beta_{ii}$ (quadráticos) são o que um $2^k$ nunca estima — um desenho de 2 níveis é
+algebricamente **cego a curvatura**.
+
+--
+
+**Ponto estacionário:** resolvendo $\partial y/\partial x_i = 0$ para todo $i$. Sua natureza
+(máximo, mínimo, sela) vem dos autovalores da matriz Hessiana das segundas derivadas — a
+metodologia de superfície de resposta como ferramenta de otimização sequencial de processos
+(Box, Hunter & Hunter, 2005).
+
+---
+
+class: inverse, center, middle
+
+# Bloco 2 — Aplicação
+
+---
+
+## Energia de corte: velocidade × ângulo (3²)
+
+```{r energia-load}
+energia <- read_csv("../Livro/data/energia.csv", show_col_types = FALSE)
+modelo_rsm <- lm(energia ~ Velocidad + angulo + I(Velocidad^2) + I(angulo^2) +
+                    Velocidad:angulo, data = energia)
+round(summary(modelo_rsm)$coefficients[, c("Estimate", "Pr(>|t|)")], 4)
+```
+
+O termo $\hat\beta_{\text{ângulo}^2}$ é altamente significativo — evidência real de curvatura.
+
+---
+
+## A superfície ajustada em 3D
+
+```{r superficie-3d, echo=FALSE, fig.width=7, fig.height=6}
+grade <- expand_grid(
+  Velocidad = seq(min(energia$Velocidad), max(energia$Velocidad), length.out = 40),
+  angulo    = seq(min(energia$angulo), max(energia$angulo), length.out = 40)
+)
+grade$pred <- predict(modelo_rsm, newdata = grade)
+Z <- matrix(grade$pred, nrow = 40, ncol = 40)
+
+persp(x = seq(min(energia$Velocidad), max(energia$Velocidad), length.out = 40),
+      y = seq(min(energia$angulo), max(energia$angulo), length.out = 40),
+      z = Z, theta = -35, phi = 20, expand = 0.6, col = "#cfe8ef",
+      xlab = "Velocidade", ylab = "Ângulo", zlab = "Energia predita",
+      ticktype = "detailed", main = "Superfície de resposta: energia de corte")
+```
+
+---
+
+## Curvas de nível e o ponto estacionário
+
+```{r contorno-otimo, echo=FALSE, fig.width=7, fig.height=5.5}
+b <- coef(modelo_rsm)
+A_hess <- matrix(c(2*b["I(Velocidad^2)"], b["Velocidad:angulo"],
+                    b["Velocidad:angulo"], 2*b["I(angulo^2)"]), 2, 2)
+rhs <- c(-b["Velocidad"], -b["angulo"])
+estacionario <- solve(A_hess, rhs)
+minimo_grade <- grade[which.min(grade$pred), ]
+
+ggplot(grade, aes(Velocidad, angulo, z = pred)) +
+  geom_contour_filled(alpha = 0.85) +
+  geom_point(data = energia, color = "white", size = 1.3, inherit.aes = FALSE,
+             aes(Velocidad, angulo)) +
+  geom_point(aes(x = estacionario[1], y = estacionario[2]), color = "red", size = 4,
+             shape = 4, stroke = 1.5, inherit.aes = FALSE) +
+  geom_point(data = minimo_grade, aes(Velocidad, angulo), color = "blue", size = 4,
+             shape = 1, stroke = 1.5, inherit.aes = FALSE) +
+  labs(x = "Velocidade", y = "Ângulo", fill = "Energia\npredita",
+       title = "X vermelho = ponto estacionário | círculo azul = mínimo na região") +
+  theme_minimal(base_size = 12)
+```
+
+---
+
+## Interpretando: um ponto de sela, não um mínimo
+
+```{r classifica-estacionario}
+eigen(A_hess / 2)$values   # sinais opostos => ponto de sela
+```
+
+O ponto estacionário ($V\approx3{,}28$, ângulo$\approx56{,}4°$) é uma **sela**: a superfície sobe
+em uma direção e desce em outra. O mínimo de energia **na região estudada** fica no canto
+($V=4{,}5$, ângulo$\approx59{,}0°$, energia $\approx0{,}027$) — a busca pelo ótimo prático deve
+seguir para a **fronteira** da região experimental, não parar no ponto estacionário interior.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 3 — Discussão
+
+---
+
+## Perguntas para a turma
+
+1. Por que um fatorial $2^2$ nos mesmos dois fatores (velocidade, ângulo) jamais revelaria essa
+   curvatura, não importa quantas repetições fossem usadas?
+
+2. Encontrar um ponto de sela, e não um mínimo, muda a estratégia de otimização. O que um
+   engenheiro faria a seguir — ampliar a região experimental, ou buscar na fronteira da região
+   atual? Que informação decide isso?
+
+3. Em um fracionado de resolução III, um efeito principal pode estar aliasado com uma interação
+   dupla. Que tipo de conhecimento prévio do processo tornaria essa perda aceitável?
+
+4. Retrospectiva do curso: cite uma decisão de desenho (repetição, aleatorização, blocagem,
+   fatorial, resolução) que você tomaria diferente hoje, comparado ao que faria na Aula 01.
+
+---
+
+class: inverse, center, middle
+
+# Bloco 4 — Uso do R
+
+---
+
+## Do gradiente ao ponto estacionário, na mão
+
+```{r uso-r-1}
+b <- coef(modelo_rsm)
+A_hess <- matrix(c(2*b["I(Velocidad^2)"], b["Velocidad:angulo"],
+                    b["Velocidad:angulo"], 2*b["I(angulo^2)"]), 2, 2)
+rhs     <- c(-b["Velocidad"], -b["angulo"])
+solve(A_hess, rhs)          # ponto estacionário (V, ângulo)
+```
+
+---
+
+## Varrendo a grade para achar o mínimo prático
+
+```{r uso-r-2}
+grade_fina <- expand_grid(
+  Velocidad = seq(2.3, 4.5, length.out = 100),
+  angulo    = seq(20, 60, length.out = 100)
+)
+grade_fina$pred <- predict(modelo_rsm, newdata = grade_fina)
+grade_fina %>% slice_min(pred, n = 1)
+```
+
+O mesmo raciocínio de varrer uma grade fina e tomar o mínimo/máximo é a base de algoritmos mais
+sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso introdutório.
+
+---
+
+## Encerramento: retrospectiva dos 14 encontros
+
+.pull-left[
+**Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+
+\varepsilon$ como linguagem comum.
+
+**Cap. 3:** DCA, submuestreo, transformações, comparações múltiplas.
+]
+.pull-right[
+**Cap. 4:** blocos, quadrados latinos e greco-latinos.
+
+**Cap. 5–6:** fatoriais A×B/A×B×C, $2^k$, confusão, fracionamento, superfície de resposta.
+]
+
+--
+
+O fio condutor: **a pergunta de pesquisa determina o desenho**, e o desenho — não a sofisticação
+da análise posterior — determina se essa pergunta pode ser respondida com confiança.
+
+---
+
+## Resumo da aula
+
+- $3^k$ generaliza $2^k$ para fatores de 3 níveis; confusão via contrastes $AB^2$ de grau único.
+- Fracionados $2^{k-p}$ trocam corridas por aliasamento controlado; a resolução resume o custo.
+- Superfície de resposta estima curvatura via termos quadráticos; o ponto estacionário pode ser
+  máximo, mínimo **ou sela** — só os autovalores da Hessiana decidem.
+- Fim do curso: desenhar bem é o que torna a análise posterior quase dispensável.
+
+## Referências
+
+- Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley & Sons.
+- Box, G. E. P., Hunter, J. S. & Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley & Sons.

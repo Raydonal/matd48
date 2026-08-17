@@ -1,0 +1,122 @@
+\documentclass[11pt]{article}
+\newcommand{\ListaTitulo}{Lista 01 --- Princípios do Delineamento}
+\input{preamble}
+
+\begin{document}
+
+\cabecalho{Lista de Exercícios 01}{Princípios do delineamento de experimentos (Capítulo 1 / Aula 01)}
+
+\noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas — nestas listas, a
+justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito01.pdf}.}
+
+\begin{questao}{1} \textbf{(Psicologia --- identificação de unidades)}
+
+Um pesquisador estuda o efeito de três programas de meditação guiada (10, 20 e 30 minutos
+diários) sobre o nível de ansiedade autorreportado. Ele recruta 24 participantes, sorteia 8 para
+cada programa e, ao final de quatro semanas, aplica o mesmo questionário de ansiedade \emph{três
+vezes} a cada participante, em dias diferentes da mesma semana.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Identifique a unidade experimental e a unidade amostral deste estudo.
+  \item Quantas réplicas legítimas existem para comparar os três programas? Justifique.
+  \item Se o pesquisador rodar uma ANOVA usando as $24 \times 3 = 72$ respostas diretamente,
+    que problema estatístico ele comete?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{2} \textbf{(Agricultura --- fator, nível, tratamento)}
+
+Uma equipe agronômica testa o efeito de duas variáveis sobre a produtividade do feijão: a
+variedade da semente (V1, V2, V3) e a densidade de plantio (baixa, alta). Todas as combinações
+de variedade e densidade são usadas.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Quantos fatores existem neste estudo? Liste os níveis de cada um.
+  \item Quantos tratamentos distintos resultam do cruzamento dos fatores?
+  \item Esse é um desenho de tratamentos fatorial ou de um único fator? Explique a diferença.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{3} \textbf{(Ciência de dados --- os três pilares)}
+
+Uma equipe de produto quer saber se um novo algoritmo de recomendação aumenta o tempo de sessão
+dos usuários em um aplicativo de música. Eles implementam o algoritmo novo apenas para usuários
+que atualizaram o aplicativo na última semana, e comparam o tempo de sessão desse grupo com o de
+usuários que não atualizaram.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Este desenho usa aleatorização? Justifique.
+  \item Aponte pelo menos duas variáveis de confusão plausíveis que podem explicar uma diferença
+    observada, mesmo que o algoritmo não tenha efeito real.
+  \item Reformule o desenho do experimento para que ele permita uma conclusão causal válida,
+    especificando fator, níveis, unidade experimental e o mecanismo de aleatorização.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{4} \textbf{(Fontes de variação)}
+
+Para cada cenário abaixo, classifique a fonte de variação descrita como (i) efeito do
+tratamento, (ii) variação sistemática entre unidades experimentais, ou (iii) erro experimental.
+
+\begin{enumerate}[label=(\alph*)]
+  \item A diferença de peso ganho entre dois grupos de frangos que receberam rações diferentes.
+  \item A diferença de peso inicial entre os frangos, antes de qualquer ração ser oferecida.
+  \item A variação no peso final entre frangos do \emph{mesmo} grupo, alimentados com a mesma
+    ração, nascidos da mesma ninhada.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{5} \textbf{(Controle local / blocagem --- dissertativa curta)}
+
+Um professor quer comparar dois métodos de ensino (expositivo vs. baseado em projetos) e sabe,
+de antemão, que suas quatro turmas do semestre têm desempenhos historicamente muito diferentes
+entre si.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Proponha um desenho que use blocagem por turma. Descreva como a aleatorização
+    aconteceria \emph{dentro} de cada bloco.
+  \item Explique, em suas palavras, por que blocar por turma tende a tornar a comparação entre
+    métodos mais precisa do que sortear os métodos ignorando a turma.
+  \item A blocagem substitui a necessidade de aleatorização? Justifique.
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{6} \textbf{(Dedução --- resultados potenciais)}
+
+Considere $N$ unidades experimentais com resultados potenciais fixos $Y_1(0),\dots,Y_N(0)$ e
+$Y_1(1),\dots,Y_N(1)$ (SUTVA vale). Um mecanismo de aleatorização sorteia, com probabilidade
+uniforme entre todos os subconjuntos de tamanho $n_1$, quais $n_1$ unidades recebem $Z_i=1$; as
+$n_0=N-n_1$ restantes recebem $Z_i=0$. Define-se
+$\widehat{\text{ATE}} = \bar Y_1^{\,obs} - \bar Y_0^{\,obs}$, com
+$\bar Y_1^{\,obs} = \tfrac{1}{n_1}\sum_{i:Z_i=1} Y_i(1)$ e analogamente para $\bar Y_0^{\,obs}$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Mostre que $\bar Y_1^{\,obs}$ é a média de uma amostra aleatória simples sem reposição, de
+    tamanho $n_1$, retirada do conjunto fixo $\{Y_1(1),\dots,Y_N(1)\}$.
+  \item Usando o fato de que a média de uma AAS sem reposição é um estimador não-viesado da média
+    populacional, mostre que $E\big[\widehat{\text{ATE}}\big] = \text{ATE} = \bar Y(1) - \bar Y(0)$.
+  \item Explique, em uma frase, por que essa demonstração \emph{não} usa nenhuma suposição sobre a
+    distribuição de $Y_i(0)$ ou $Y_i(1)$ (por exemplo, não exige normalidade).
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{7} \textbf{(Método científico --- falseabilidade e validade externa)}
+
+Uma startup de e-commerce testa um novo algoritmo de recomendação apenas com os usuários que se
+inscreveram voluntariamente em seu "programa de testadores beta" (um grupo pequeno, engajado, que
+recebe recompensas por participar). Dentro desse grupo, os usuários são corretamente sorteados
+entre "recomendação antiga" e "recomendação nova" — a aleatorização é impecável.
+
+\begin{enumerate}[label=(\alph*)]
+  \item No vocabulário do Capítulo 1, essa aleatorização impecável garante \emph{validade
+    interna}, \emph{validade externa}, ou as duas? Justifique.
+  \item Reformule a alegação de resultado da empresa ("a recomendação nova aumenta as vendas em
+    12\%") como uma hipótese \emph{falseável}, no sentido de Popper — isto é, descreva que
+    resultado observável, se encontrado, contradiria a alegação.
+  \item A diretoria quer generalizar a conclusão do teste beta para \emph{todos} os usuários do
+    site, não só os testadores voluntários. Que suposição adicional (não garantida só pela
+    aleatorização dentro do grupo beta) essa generalização exige?
+\end{enumerate}
+\end{questao}
+
+\end{document}

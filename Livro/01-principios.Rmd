@@ -1,0 +1,656 @@
+# Princípios do delineamento de experimentos {#principios}
+
+```{r setup-cap1, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                       fig.align = "center", out.width = "75%")
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(kableExtra)
+})
+```
+
+Um experimento bem desenhado responde a uma pergunta causal antes mesmo de qualquer dado ser
+coletado — a análise estatística só formaliza uma conclusão que o desenho já tornou possível. Um
+experimento mal desenhado, por outro lado, não é salvo por nenhuma técnica de análise, por mais
+sofisticada que seja [@fisher1935design; @boxhunterhunter2005]. Este capítulo estabelece o
+vocabulário e os três princípios estruturais — **repetição**, **aleatorização** e
+**controle local (blocagem)** — que sustentam todo o resto do curso.
+
+## O método científico e o papel do delineamento experimental {#metodo-cientifico}
+
+Antes de qualquer definição técnica, vale situar a pergunta que motiva a disciplina inteira: *por
+que planejar um experimento é, em si, um problema estatístico?* A resposta passa pelo que se
+entende por **método científico** — e por como a estatística, historicamente, deixou de ser só a
+ferramenta que resume dados já coletados para se tornar parte do próprio desenho da investigação.
+
+### O ciclo empírico: de observação a hipótese testável
+
+Uma forma padrão de descrever a investigação científica é como um ciclo: observação de um
+fenômeno $\rightarrow$ formulação de uma hipótese que o explica $\rightarrow$ dedução de uma
+**predição testável** a partir dessa hipótese $\rightarrow$ coleta de dados desenhada para
+confrontar a predição $\rightarrow$ confronto (a hipótese sobrevive, é refinada ou é descartada).
+Popper [-@popper1959logic] insistiu num ponto que orienta todo o curso: uma hipótese só é
+cientificamente informativa se for **falseável** — se existir, em princípio, algum resultado
+observável que a contradiga. Uma alegação causal que "explica" qualquer padrão de dados possível
+não é uma hipótese científica, é uma hipótese vazia.
+
+```{r fig-ciclo-empirico, echo=FALSE, out.width="46%", fig.cap="O ciclo empírico: observação, hipótese, predição testável, coleta de dados desenhada para confrontar a predição, e confronto (a hipótese sobrevive, é refinada ou é descartada). O delineamento de experimentos atua na terceira e na quarta etapas."}
+knitr::include_graphics("../Aulas/images/circular_flowchart.png")
+```
+
+O delineamento de experimentos entra exatamente nesse ponto do ciclo: ele é a engenharia de **como
+coletar dados que de fato têm o poder de contradizer a hipótese**, caso ela seja falsa. Um
+delineamento fraco (sem repetição, sem aleatorização, com fontes de confusão não controladas)
+produz dados que "confirmam" a hipótese do pesquisador quase independentemente de ela ser
+verdadeira — o oposto do que Popper pede. Um delineamento forte é desenhado precisamente para dar
+à hipótese uma chance real de falhar o teste. Voltaremos a essa ideia de forma operacional na
+Seção \@ref(tres-aspectos), onde repetição, aleatorização e controle local aparecem como as três
+famílias de decisões que tornam um experimento capaz de refutar (ou não) a hipótese que o motivou.
+
+### Observação vs. experimentação: por que "controlado" importa
+
+Nem todo estudo empírico é um experimento. Um **estudo observacional** registra o que já aconteceu
+ou aconteceria de qualquer forma — o pesquisador não decide quem recebe qual tratamento, só
+observa e mede. Um **estudo experimental** é aquele em que o próprio pesquisador **atribui** o
+tratamento às unidades, idealmente por sorteio. A diferença parece pequena, mas tem consequências
+lógicas enormes: em um estudo observacional, qualquer diferença encontrada entre grupos pode ser
+devida ao tratamento *ou* a alguma outra característica que levou aquelas unidades a receber
+aquele tratamento (auto-seleção, viés de indicação clínica, tendência histórica). "Correlação não
+implica causalidade" é o resumo popular desse problema. Em um estudo experimental bem desenhado, a
+atribuição do tratamento é decidida pelo pesquisador (por sorteio), não pela unidade nem por
+nenhuma característica dela — e é esse fato, formalizado com rigor na Seção \@ref(neyman-rubin),
+que permite interpretar uma diferença observada como efeito causal.
+
+### Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno
+
+A formalização estatística de repetição, aleatorização e blocagem como resposta metodológica ao
+problema da causalidade nasce do trabalho de Ronald A. Fisher na estação agrícola experimental de
+Rothamsted (Inglaterra), entre 1919 e 1933, sistematizado em @fisher1935design. Antes de Fisher, os
+ensaios agrícolas comparavam parcelas de terra "parecidas" escolhidas por julgamento do
+pesquisador — um procedimento vulnerável exatamente ao problema de confusão discutido acima: solo
+mais fértil, mais exposto ao sol ou mais próximo de uma fonte de água não é escolhido ao acaso, e
+qualquer diferença de produtividade entre parcelas "tratadas" e "controle" fica misturada com essas
+diferenças pré-existentes. A contribuição de Fisher foi perceber que a *aleatorização deliberada*
+resolve o problema de confusão de forma que nenhuma quantidade de julgamento cuidadoso do
+pesquisador consegue igualar — porque neutraliza inclusive fontes de confusão que o pesquisador
+nem sabe que existem (formalizaremos isso na Seção \@ref(neyman-rubin)). Dessa origem agrícola, o
+delineamento experimental se espalhou para a indústria (Box, a partir dos anos 1960, com fatoriais
+$2^{k-p}$ — Capítulo 6), para ensaios clínicos, e mais recentemente para testes A/B em produtos
+digitais [@owen2020experimental] — o mesmo arcabouço lógico, aplicado a domínios muito diferentes,
+é o fio que conecta os exemplos de psicologia, agricultura e ciência de dados usados ao longo deste
+livro.
+
+### Confusão (*confounding*): o problema que a aleatorização resolve
+
+Já que a palavra vai reaparecer com frequência, vale uma definição precisa. Duas variáveis estão
+**confundidas** quando seus efeitos sobre a resposta não podem ser separados a partir dos dados
+observados — tipicamente porque uma delas determinou (ou influenciou fortemente) os valores da
+outra. O exemplo clássico [@owen2020experimental]: se todas as unidades do grupo tratado são
+medidas de manhã e todas as do grupo controle à tarde, qualquer diferença encontrada mistura o
+efeito do tratamento com o efeito do horário do dia — os dois são **perfeitamente confundidos**, e
+nenhuma análise estatística, por mais sofisticada, consegue desembaraçá-los a partir desses dados.
+O mesmo acontece se tratamento e controle são medidos por instrumentos diferentes, em laboratórios
+diferentes, ou — o caso mais comum em ciência de dados — quando se compara um grupo "tratado
+agora" com um **controle histórico** ("como era antes"): qualquer tendência de fundo ao longo do
+tempo (sazonalidade, aprendizado, mudança de público) fica confundida com o efeito do tratamento.
+
+Confusão pode envolver uma variável **conhecida e medida** (nesse caso, ao menos em princípio, ela
+poderia ser incluída no modelo como covariável — Seção \@ref(ancova) do Capítulo 3) ou uma variável
+**desconhecida ou não medida** — o caso mais perigoso, porque não há como incluí-la em nenhum
+modelo. É exatamente aqui que a aleatorização mostra sua força: ao sortear a atribuição do
+tratamento, o pesquisador garante que *nenhuma* variável — medida ou não, conhecida ou não —
+fica sistematicamente desbalanceada entre os grupos, em expectativa. A prova formal desse fato, via
+o modelo de resultados potenciais, é o conteúdo da Seção \@ref(neyman-rubin) a seguir.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>Uma empresa de tecnologia observa que usuários que ativam uma nova funcionalidade têm
+maior retenção do que os que não ativam, e conclui que a funcionalidade "causa" retenção. Que
+variável não medida poderia estar confundida com a decisão de ativar a funcionalidade?</li>
+<li>Em que sentido o critério de falseabilidade de Popper ajuda a distinguir um bom desenho
+experimental (que arrisca refutar a hipótese do pesquisador) de um desenho "confirmatório" (que
+tende a produzir evidência favorável à hipótese independentemente dela ser verdadeira)?</li>
+</ol>
+</div>
+```
+
+## Unidades experimentais e unidades amostrais {#unidades}
+
+Duas ideias que se confundem com frequência, mas que têm papéis estatísticos muito diferentes:
+
+- **Unidade experimental (UE):** a menor entidade a que um tratamento é atribuído de forma
+  independente. É o nível em que a *aleatorização* acontece.
+- **Unidade amostral (ou unidade de observação):** a entidade em que a variável resposta é
+  efetivamente medida. Pode coincidir com a unidade experimental ou não.
+
+Quando várias unidades amostrais vêm da mesma unidade experimental, dizemos que há
+**submuestreo** (ou pseudorreplicação, se isso for ignorado na análise). Tratar submuestras como
+se fossem repetições independentes do tratamento é um dos erros mais comuns — e mais graves — em
+análise de experimentos, porque infla artificialmente o tamanho amostral e reduz erros-padrão de
+forma não legítima.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: técnicas de estudo e desempenho em prova</strong><br>
+Um professor quer comparar três técnicas de estudo — <em>releitura</em>, <em>flashcards</em> e
+<em>teste-prática</em> — quanto ao desempenho em uma prova de vocabulário. Ele recruta 30
+estudantes e atribui aleatoriamente cada um a uma das três técnicas (10 por grupo). Cada
+estudante estuda uma lista de 40 palavras e depois responde a <strong>duas provas paralelas</strong>
+(versões A e B, aplicadas em sequência) sobre o mesmo material.
+</div>
+```
+
+Aqui, a **unidade experimental é o estudante** — é nele que a técnica de estudo (o tratamento) é
+aplicada, e é impossível "sortear de novo" a técnica para uma prova sem sortear de novo o
+estudante. A **unidade amostral é cada prova respondida**: há duas medições (submuestras) por
+estudante. Se o pesquisador tratasse as 60 provas como 60 réplicas independentes do experimento,
+estaria contando cada estudante duas vezes, ignorando que as duas notas de uma mesma pessoa são
+correlacionadas — um erro clássico de pseudorreplicação (voltaremos a isso formalmente com
+submuestreo no Capítulo 3, ao tratar do DCA).
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — simulando a distinção UE vs. unidade amostral</div>
+```
+
+```{r sim-ue-ua}
+set.seed(2026)
+
+tecnica <- c("Releitura", "Flashcards", "Teste-prática")
+n_estudantes_por_grupo <- 10
+
+# Nível 1: a unidade experimental (o estudante) recebe um efeito de tratamento + um
+# desvio individual fixo (habilidade do estudante) que persiste nas duas provas.
+dados_estudantes <- tibble(
+  estudante  = 1:(3 * n_estudantes_por_grupo),
+  tecnica    = factor(rep(tecnica, each = n_estudantes_por_grupo), levels = tecnica),
+  habilidade = rnorm(3 * n_estudantes_por_grupo, mean = 0, sd = 6)
+)
+
+efeito_tecnica <- c("Releitura" = 0, "Flashcards" = 4, "Teste-prática" = 9)
+
+# Nível 2: a unidade amostral (cada prova) soma um ruído de medição próprio.
+dados_provas <- dados_estudantes %>%
+  crossing(prova = c("A", "B")) %>%
+  mutate(
+    nota = 65 + efeito_tecnica[as.character(tecnica)] + habilidade +
+      rnorm(n(), mean = 0, sd = 3)
+  )
+
+dados_provas %>%
+  group_by(tecnica) %>%
+  summarise(
+    n_estudantes = n_distinct(estudante),
+    n_provas     = n(),
+    media_nota   = mean(nota),
+    .groups = "drop"
+  ) %>%
+  kable(digits = 1, caption = "Estudantes (UE) vs. provas (unidade amostral) por técnica") %>%
+  kable_styling(full_width = FALSE)
+```
+
+O número de réplicas legítimo para inferência sobre o efeito da técnica é **10 por grupo** (o
+número de estudantes), não 20 (o número de provas) — este é exatamente o ponto que retomaremos
+com rigor ao estudar o desenho completamente aleatorizado com submuestreo.
+
+```{r plot-submuestreo, echo=FALSE, fig.width=7.5, fig.height=4.3, fig.cap="Duas notas (provas A e B) por estudante, uma linha ligando as duas submuestras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B."}
+ggplot(dados_provas, aes(x = tecnica, y = nota, group = estudante)) +
+  geom_line(alpha = 0.35, color = "gray50") +
+  geom_point(aes(color = tecnica, shape = prova), size = 2.6, alpha = 0.85) +
+  scale_shape_manual(values = c(A = 16, B = 17)) +
+  labs(x = NULL, y = "Nota na prova", color = "Técnica", shape = "Prova") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+```
+
+O gráfico deixa visível, e não só conceitual, o que a distinção UE/unidade amostral significa: as
+duas notas ligadas pela mesma linha (mesmo estudante) ficam sistematicamente mais próximas entre
+si do que notas de estudantes diferentes dentro da mesma técnica — a variação *entre* linhas
+(entre estudantes) é maior do que a variação *dentro* de cada linha (entre as duas provas do mesmo
+estudante). É exatamente essa correlação dentro da unidade experimental que torna as 60 notas não
+independentes entre si, e que a análise do Capítulo 3 (DCA com submuestreo) precisa levar em conta
+para não superestimar o tamanho amostral efetivo.
+
+## Fontes de variação {#fontes-variacao}
+
+Toda variável resposta varia por múltiplas razões simultâneas. Organizar essas razões é o
+primeiro passo do delineamento:
+
+1. **Variação devida ao tratamento** — a diferença que o pesquisador quer detectar (efeito da
+   técnica de estudo, da dose de fertilizante, do layout da página).
+2. **Variação sistemática de unidades experimentais** — diferenças pré-existentes entre unidades
+   (habilidade prévia do estudante, fertilidade do talhão, navegador do usuário) que não são o
+   foco da pergunta, mas afetam a resposta.
+3. **Erro experimental** — variação residual não explicada por (1) nem (2): tudo aquilo que
+   permanece depois de contabilizarmos tratamento e fontes conhecidas de variação sistemática.
+
+O delineamento experimental é, em essência, uma estratégia para **isolar (1)**, **remover ou
+controlar (2)** e **estimar honestamente (3)**.
+
+### Por que essa decomposição força a forma aditiva do modelo {#aditividade-aleatorizacao}
+
+Vale insistir num ponto que costuma passar despercebido: a separação em três fontes acima **não**
+é uma conveniência notacional escolhida porque "soma é mais fácil que produto" — é uma consequência
+direta de o tratamento ter sido *aleatorizado*, e o Capítulo 2 vai construir toda a sua maquinaria
+(matriz $\mathbf{X}$, modelo $\mathbf{Y}=\mathbf{X}\boldsymbol{\beta}+\boldsymbol{\varepsilon}$) em
+cima exatamente dessa consequência, não de uma escolha de conveniência.
+
+Comece pela observação puramente algébrica, sem nenhuma suposição estatística: para cada unidade
+$i$ e cada tratamento $t$ que ela poderia receber, o resultado potencial $Y_i(t)$ (Seção
+\@ref(neyman-rubin), adiante) pode **sempre** ser reescrito como
+
+$$
+Y_i(t) = \underbrace{\mu}_{\text{média geral}} + \underbrace{\tau_t}_{\text{desvio médio do tratamento } t}
++ \underbrace{\delta_i(t)}_{\text{o que sobra}},
+$$
+
+definindo $\mu$ como a média de $Y_i(t)$ sobre todas as unidades e todos os tratamentos, $\tau_t$
+como o quanto a média do tratamento $t$ se afasta de $\mu$, e $\delta_i(t)$ como o resíduo que
+sobra depois de subtrair os dois primeiros termos. Até aqui isso é uma tautologia — vale para
+*qualquer* função $Y_i(t)$, sem nenhuma suposição sobre o mundo — e $\delta_i(t)$ pode, em
+princípio, depender tanto da unidade $i$ quanto do tratamento $t$ de forma completamente livre
+(inclusive carregando interações unidade$\times$tratamento arbitrárias). Nada nisso ainda parece o
+modelo $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ do Capítulo 3 (Seção \@ref(modelo-dca)), em que o erro
+$\varepsilon_{ij}$ não depende de $t$ e se comporta como ruído aleatório de média zero.
+
+A ponte entre as duas coisas é exatamente a aleatorização. O experimento não observa $\delta_i(t)$
+para todo $t$ — só observa $\delta_i(T_i)$, o resíduo do tratamento $T_i$ efetivamente sorteado
+para $i$. Se a atribuição $T_i$ fosse decidida por alguma característica da própria unidade
+(autosseleção, julgamento do pesquisador, conveniência — o problema de confusão já discutido
+acima), $\delta_i(T_i)$ carregaria, sistematicamente, um pedaço da **variação sistemática de
+unidades experimentais** (fonte 2): unidades com $\delta_i(t)$ tipicamente maior para um certo $t$
+tenderiam a ser justamente as que "escolhem" ou "recebem" aquele tratamento, e a fonte 2 vazaria
+para dentro da fonte 1 — a diferença de médias entre grupos deixaria de isolar o efeito do
+tratamento. É precisamente esse vazamento que a Seção \@ref(neyman-rubin) prova, com rigor, que a
+aleatorização impede: como o mecanismo de sorteio decide $T_i$ *independentemente* dos valores
+$\{Y_i(t)\}_t$ (e portanto de $\{\delta_i(t)\}_t$), o resíduo observado $\delta_i(T_i)$, olhado
+através do subconjunto aleatoriamente sorteado para cada grupo, não difere sistematicamente de um
+grupo para outro — ele se comporta, em relação ao rótulo de tratamento, como uma variável
+**exógena**, exatamente o papel que $\varepsilon_{ij}$ desempenha no modelo linear. É só *depois*
+dessa garantia que faz sentido escrever $\delta_i(T_i)$ simplesmente como $\varepsilon_{ij}$ — sem
+o argumento $t$, tratado como ruído aleatório de média zero, não correlacionado com o tratamento
+recebido.
+
+Em suma: a fonte 1 (tratamento) e a fonte 3 (erro) só permanecem **separáveis** — a fonte 2 só
+permanece **fora** da fonte 1 — porque a aleatorização garante que a atribuição de tratamento e a
+heterogeneidade pré-existente das unidades são estatisticamente independentes. Um delineamento sem
+aleatorização não invalida a *álgebra* da decomposição $Y_i(t)=\mu+\tau_t+\delta_i(t)$ (que, como
+visto, vale sempre) — invalida a leitura de $\delta_i(T_i)$ como ruído aditivo e não correlacionado
+com o tratamento, que é exatamente o que torna $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ um *modelo*
+estatístico útil, e não apenas uma reparametrização vazia dos dados. O Capítulo 2 (Seção
+\@ref(modelo-geral)) retoma esse argumento em notação matricial, ao explicar por que
+$\mathbf{Y}=\mathbf{X}\boldsymbol\beta+\boldsymbol\varepsilon$ — com $\mathbf{X}$ fixo pelo desenho
+e $\boldsymbol\varepsilon$ não correlacionado com $\mathbf{X}$ — é a representação natural, não
+arbitrária, de "efeito sistemático mais erro aleatório" sob aleatorização
+[@fisher1935design; @cochran1957experimental; @kirk2012experimental].
+
+### Fatores e níveis {#fatores-niveis}
+
+- **Fator:** uma variável controlada (ou pelo menos categorizada) pelo pesquisador, que se
+  hipotetiza afetar a resposta.
+- **Níveis:** os valores específicos que um fator assume no experimento.
+- **Tratamento:** uma combinação específica de níveis de um ou mais fatores, atribuída a uma
+  unidade experimental.
+
+Esse vocabulário — fator, nível, tratamento — é comum aos principais textos-base da disciplina
+[@dean2017design; @montgomery2017design] e será usado sem redefinição nos capítulos seguintes.
+
+```{r tabela-fatores, echo=FALSE}
+tibble(
+  Domínio = c("Psicologia", "Agricultura", "Ciência de dados"),
+  Fator = c("Técnica de estudo", "Dose de fertilizante", "Layout da página"),
+  Níveis = c("Releitura / Flashcards / Teste-prática",
+             "0, 50, 100 kg/ha", "Lista / Grade"),
+  `Unidade experimental` = c("Estudante", "Parcela de terra", "Usuário do site")
+) %>%
+  kable(caption = "Fator, níveis e unidade experimental em três domínios") %>%
+  kable_styling(full_width = FALSE)
+```
+
+Quando dois ou mais fatores são cruzados (todas as combinações de níveis aparecem no
+experimento), temos um **arranjo fatorial** — assunto dos Capítulos 5 e 6. Por ora, tratamos do
+caso de um único fator.
+
+## Os três aspectos do delineamento experimental {#tres-aspectos}
+
+Seguindo a formalização clássica [@fisher1935design; @cochran1957experimental], todo desenho
+experimental resolve simultaneamente três problemas, correspondentes a três famílias de decisões:
+
+1. **Desenho de tratamentos** — *o quê* comparar: quais fatores, quantos níveis, se são
+   cruzados ou aninhados.
+2. **Desenho para controle do erro** — *como* atribuir tratamentos às unidades para que a
+   comparação seja justa: aleatorização, blocagem, uso de covariáveis.
+3. **Desenho amostral** — *quantas* unidades e *como* medir a resposta: número de réplicas,
+   submuestragem, esquema de medição repetida.
+
+Os três princípios abaixo pertencem sobretudo ao segundo aspecto, mas condicionam os outros dois.
+
+### Repetição (replicação)
+
+Repetir um tratamento em várias unidades experimentais **independentes** permite estimar a
+variabilidade do erro experimental e, com isso, testar se a diferença observada entre
+tratamentos é maior do que se esperaria só por acaso. Sem repetição genuína (não confundir com
+submuestreo — Seção \@ref(unidades)), não há como estimar o erro e, portanto, não há inferência
+válida.
+
+### Aleatorização
+
+Atribuir tratamentos às unidades experimentais por sorteio — e não por conveniência, ordem de
+chegada ou julgamento do pesquisador — garante que, *em expectativa*, os grupos de tratamento
+sejam comparáveis em todas as variáveis, observadas ou não. É a aleatorização que permite
+interpretar uma diferença entre médias de grupo como *efeito causal* do tratamento, e não como
+reflexo de alguma variável de confusão. Sem aleatorização, o grupo controle deixa de ser um
+substituto crível do contrafactual do grupo tratado.
+
+### Por que a aleatorização funciona: o modelo de resultados potenciais {#neyman-rubin}
+
+A afirmação "a aleatorização elimina viés de confusão" costuma ser aceita por apelo intuitivo. Ela
+também admite uma justificativa formal, devida a Neyman [-@neyman1923application] e depois
+generalizada por Rubin [-@rubin1974estimating] — o chamado **modelo causal de Neyman-Rubin**, ou
+modelo de resultados potenciais, que usaremos ao longo de todo o curso sempre que compararmos
+tratamentos [ver @imbensrubin2015 para um tratamento completo].
+
+Para cada unidade experimental $i = 1, \dots, N$ e cada tratamento $t$ que ela poderia receber,
+postulamos a existência de um **resultado potencial** $Y_i(t)$: o valor que a resposta assumiria
+*se* a unidade $i$ recebesse o tratamento $t$. Com dois tratamentos ($t \in \{0,1\}$), cada
+unidade tem dois resultados potenciais, $Y_i(0)$ e $Y_i(1)$, mas o experimento só revela **um**
+deles — o correspondente ao tratamento efetivamente sorteado para $i$. O outro é, por definição,
+contrafactual: nunca observável. Esse é o *problema fundamental da inferência causal*.
+
+A Tabela \@ref(tab:tabela-cientifica) concretiza a definição: é a chamada **tabela científica**
+(*science table*), um recurso didático padrão na exposição do modelo de Neyman-Rubin. Ela lista os
+dois resultados potenciais de cada unidade lado a lado — algo que **nenhum conjunto de dados real
+exibe**, porque metade da tabela é, por construção, contrafactual. A coluna $Y_i^{\text{obs}}$
+mostra o que o experimento de fato revela depois que $Z_i$ é sorteado: exatamente uma das duas
+colunas anteriores, nunca as duas.
+
+```{r tabela-cientifica, echo=FALSE}
+tibble(
+  Unidade = paste0("$i=", 1:6, "$"),
+  `$Y_i(0)$` = c("18,2", "?", "21,4", "?", "16,9", "?"),
+  `$Y_i(1)$` = c("?", "24,7", "?", "27,1", "?", "22,3"),
+  `$Z_i$`    = c(0, 1, 0, 1, 0, 1),
+  `$Y_i^{\\text{obs}}$` = c("18,2", "24,7", "21,4", "27,1", "16,9", "22,3")
+) %>%
+  kable(caption = "Tabela científica (science table): apenas seis unidades ilustrativas. Cada linha tem dois resultados potenciais, mas só um é revelado ('?' marca o contrafactual). O ATE é uma média sobre uma coluna que nunca existe inteira nos dados observados.",
+        escape = FALSE, align = "c") %>%
+  kable_styling(full_width = FALSE)
+```
+
+Duas suposições tornam o problema tratável:
+
+- **SUTVA** (*Stable Unit Treatment Value Assumption*): o resultado potencial de $i$ depende só do
+  tratamento atribuído a $i$, não do tratamento atribuído a outras unidades (sem interferência
+  entre unidades) nem de "versões ocultas" do tratamento.
+- O **estimando causal** de interesse é tipicamente o **efeito médio do tratamento**,
+  $$
+  \text{ATE} = \frac{1}{N}\sum_{i=1}^N \big[Y_i(1) - Y_i(0)\big] = \bar Y(1) - \bar Y(0),
+  $$
+  uma média sobre unidades de uma quantidade que, para cada unidade individualmente, nunca podemos
+  calcular (porque exigiria observar os dois resultados potenciais da mesma unidade).
+
+Seja $Z_i \in \{0,1\}$ o indicador de qual tratamento a unidade $i$ recebeu. O que o experimento
+observa é $Y_i = Z_i Y_i(1) + (1-Z_i) Y_i(0)$. O estimador natural do ATE é a diferença de médias
+observadas entre os grupos,
+$$
+\widehat{\text{ATE}} = \frac{1}{n_1}\sum_{i:\,Z_i=1} Y_i \;-\; \frac{1}{n_0}\sum_{i:\,Z_i=0} Y_i
+= \bar Y_1^{\,obs} - \bar Y_0^{\,obs}.
+$$
+
+**Por que a aleatorização garante $E[\widehat{\text{ATE}}] = \text{ATE}$?** A chave é que os
+$2N$ valores $\{Y_i(0), Y_i(1)\}_{i=1}^N$ são tratados como **fixos** (características das
+unidades, não variáveis aleatórias) — a única aleatoriedade no experimento é *qual* subconjunto de
+$n_1$ unidades, entre os $\binom{N}{n_1}$ possíveis, recebe $Z_i=1$. Sob esse mecanismo de
+aleatorização (cada subconjunto igualmente provável), $Z_i$ é independente dos pares
+$(Y_i(0), Y_i(1))$ para todo $i$, o que dá
+
+$$
+E\!\left[\bar Y_1^{\,obs}\right] = E\!\left[\frac{1}{n_1}\sum_{i:\,Z_i=1} Y_i(1)\right]
+= \frac{1}{N}\sum_{i=1}^N Y_i(1) = \bar Y(1),
+$$
+
+e, simetricamente, $E[\bar Y_0^{\,obs}] = \bar Y(0)$ — porque, sob aleatorização, o subconjunto
+sorteado para tratamento é uma amostra aleatória simples (sem reposição) do conjunto de todas as
+unidades, e a média amostral de uma AAS é não-viesada para a média da população da qual foi
+extraída, qualquer que seja essa população (aqui, a "população" dos $N$ valores fixos
+$Y_i(1)$). Logo $E[\widehat{\text{ATE}}] = \bar Y(1) - \bar Y(0) = \text{ATE}$: a diferença de
+médias observadas é não-viesada para o efeito causal médio, **sem nenhuma suposição sobre a
+distribuição de $Y_i(t)$** — o mesmo espírito, aliás, do teste de aleatorização que
+retomaremos com rigor no Capítulo 3.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: resultados potenciais de duas variedades de semente</strong><br>
+$N=40$ parcelas de terra têm <strong>fertilidade</strong> heterogênea e fixa. Postulamos, para cada
+parcela $i$, dois resultados potenciais de produtividade: $Y_i(0)$ sob a variedade V1 e $Y_i(1)$
+sob a variedade V2 (com efeito heterogêneo, maior nas parcelas mais férteis). Simulamos os $2N=80$
+valores fixos — nunca observados simultaneamente na prática — só para poder <em>verificar</em> a
+demonstração acima por Monte Carlo.
+</div>
+```
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — verificando E[ATE-chapéu] = ATE por simulação</div>
+```
+
+```{r sim-potenciais}
+set.seed(2026)
+N <- 40
+fertilidade <- runif(N, 0, 10)
+Y0 <- 20 + 1.5 * fertilidade + rexp(N, rate = 0.3)   # potencial sob V1 — deliberadamente não normal
+Y1 <- Y0 + 4 + 0.3 * fertilidade                     # potencial sob V2 — efeito heterogêneo (maior se fértil)
+
+ATE_verdadeiro <- mean(Y1 - Y0)
+ATE_verdadeiro
+```
+
+```{r sim-randomizacao}
+n1 <- 20        # metade das parcelas recebe V2
+n_rep <- 5000   # numero de reamostragens do mecanismo de aleatorizacao
+
+ate_hat <- replicate(n_rep, {
+  idx_trat <- sample(N, n1)                                  # sorteio de qual subconjunto recebe V2
+  mean(Y1[idx_trat]) - mean(Y0[-idx_trat])                   # so o potencial "revelado" e observado
+})
+
+c(ATE_verdadeiro = ATE_verdadeiro, media_simulada = mean(ate_hat),
+  diferenca = mean(ate_hat) - ATE_verdadeiro)
+```
+
+```{r plot-ate-mc, echo=FALSE, fig.width=7, fig.height=4.2, fig.cap="Distribuição de Monte Carlo de ATE-chapéu sob 5.000 reamostragens independentes do mecanismo de aleatorização (quais 20 das 40 parcelas recebem a variedade V2), com o ATE verdadeiro (fixo, calculado sobre os 2N resultados potenciais) marcado pela linha tracejada."}
+tibble(ate_hat = ate_hat) %>%
+  ggplot(aes(x = ate_hat)) +
+  geom_histogram(bins = 40, fill = "#3b5bdb", alpha = 0.65) +
+  geom_vline(xintercept = ATE_verdadeiro, color = "#d98324", linewidth = 1, linetype = "dashed") +
+  labs(x = expression(widehat(ATE)), y = "Frequência") +
+  theme_minimal(base_size = 13)
+```
+
+Cada uma das 5.000 barras do histograma corresponde a um sorteio *diferente* de quais 20 parcelas
+recebem V2 — os $2N=80$ resultados potenciais nunca mudam entre reamostragens, só a atribuição
+$Z_i$ muda, exatamente como a prova algébrica pressupõe. A distribuição de $\widehat{\text{ATE}}$
+tem alguma dispersão (não é possível saber o ATE exatamente com uma única reamostragem de 40
+parcelas), mas está **centrada exatamente na linha tracejada** — o ATE verdadeiro e fixo —, e não
+em nenhum outro valor. Essa é a confirmação empírica, por simulação, de que
+$E[\widehat{\text{ATE}}] = \text{ATE}$: nenhuma suposição de normalidade foi usada para gerar
+$Y_i(0)$ (a distribuição exponencial deslocada foi escolhida de propósito, para deixar claro que o
+resultado não depende de normalidade), e a média do histograma bate com o ATE verdadeiro de
+qualquer forma.
+
+Sem aleatorização — por exemplo, se as unidades se autosselecionam para o tratamento — $Z_i$ pode
+depender de $(Y_i(0), Y_i(1))$ (unidades com $Y_i(1)$ potencialmente maior podem ser justamente as
+que "escolhem" o tratamento), quebrando a igualdade $E[\bar Y_1^{\,obs}] = \bar Y(1)$: a diferença
+de médias observadas deixa de estimar o ATE e passa a misturar o efeito causal com viés de
+seleção — exatamente o problema levantado na Questão 3 da caixa de discussão a seguir.
+
+#### Quão dispersa é $\widehat{\text{ATE}}$? A fórmula de variância de Neyman
+
+Não-viés diz que o histograma da Figura \@ref(fig:plot-ate-mc) está centrado no lugar certo, mas
+nada diz sobre sua largura. Neyman [-@neyman1923application] derivou a variância exata de
+$\widehat{\text{ATE}}$ sob o mecanismo de aleatorização — tratando, como antes, os $2N$ resultados
+potenciais como constantes fixas e a única fonte de aleatoriedade sendo *qual* subconjunto de
+tamanho $n_1$ recebe $Z_i=1$ (amostragem sem reposição de um total de $N$ unidades). Sejam
+$$
+S_1^2 = \frac{1}{N-1}\sum_{i=1}^N \big(Y_i(1) - \bar Y(1)\big)^2, \qquad
+S_0^2 = \frac{1}{N-1}\sum_{i=1}^N \big(Y_i(0) - \bar Y(0)\big)^2
+$$
+as variâncias populacionais (finitas, sobre as $N$ unidades) dos dois resultados potenciais, e
+$$
+S_{01}^2 = \frac{1}{N-1}\sum_{i=1}^N \Big[\big(Y_i(1)-Y_i(0)\big) - \text{ATE}\Big]^2
+$$
+a variância populacional dos **efeitos individuais de tratamento** $\tau_i = Y_i(1) - Y_i(0)$.
+O resultado de Neyman é
+$$
+\text{Var}\big(\widehat{\text{ATE}}\big) = \frac{S_1^2}{n_1} + \frac{S_0^2}{n_0} - \frac{S_{01}^2}{N}.
+$$
+A intuição: os dois primeiros termos são exatamente o que se esperaria de duas médias amostrais
+independentes (como em um teste $t$ de duas amostras usual); o terceiro termo, negativo, é uma
+correção que só existe porque, aqui, as duas "amostras" ($n_1$ e $n_0$) vêm de **particionar a
+mesma população finita de $N$ unidades** em vez de duas populações infinitas separadas — quanto
+mais heterogêneo o efeito individual $\tau_i$ entre unidades, maior $S_{01}^2$, e menor a
+penalidade de variância imposta pela aleatorização (o caso extremo, $\tau_i$ constante para toda
+unidade, dá $S_{01}^2 = S_1^2 = S_0^2$ e a fórmula colapsa para $S_1^2(1/n_1 - 1/N) + \dots$, uma
+redução adicional de variância). Como $Y_i(1)$ e $Y_i(0)$ nunca são observados na mesma unidade,
+$S_{01}^2$ não é identificável a partir dos dados — por isso a prática usual estima a variância de
+forma conservadora, substituindo o termo $-S_{01}^2/N$ por zero (Capítulo 3 retoma essa mesma ideia
+ao tratar da variância do estimador em desenhos completamente aleatorizados).
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — verificando a fórmula de Neyman contra a variância empírica de Monte Carlo</div>
+```
+
+```{r verifica-neyman}
+S1_sq   <- var(Y1)          # variância amostral (denominador N-1) de Y_i(1) nas N=40 parcelas
+S0_sq   <- var(Y0)          # idem para Y_i(0)
+S01_sq  <- var(Y1 - Y0)     # variância dos efeitos individuais tau_i = Y_i(1) - Y_i(0)
+
+var_neyman <- S1_sq / n1 + S0_sq / (N - n1) - S01_sq / N
+var_mc     <- var(ate_hat)  # variância empírica das 5.000 reamostragens já geradas acima
+
+c(var_formula_Neyman = var_neyman, var_Monte_Carlo = var_mc,
+  razao = var_mc / var_neyman)
+```
+
+A variância empírica das `r n_rep` reamostragens (a dispersão real do histograma) e a fórmula
+fechada de Neyman batem a menos do ruído de simulação esperado — confirmando que a fórmula não é
+só uma aproximação assintótica, mas a variância **exata** do desenho completamente aleatorizado
+para qualquer $N$ finito.
+
+### Validade interna e validade externa {#validade-externa}
+
+A demonstração acima garante **validade interna**: dentro da amostra de $N$ unidades efetivamente
+estudadas, a diferença de médias observadas é não-viesada para o ATE *dessa amostra*. Isso é uma
+afirmação sobre o mecanismo de atribuição do tratamento (a aleatorização), não sobre quem são as
+$N$ unidades. Uma pergunta logicamente separada — e igualmente importante — é a de **validade
+externa** [@owen2020experimental]: o efeito estimado nessas $N$ unidades se generaliza para outras
+unidades, fora do estudo?
+
+Validade interna alta não implica validade externa alta. Um experimento pode ter aleatorização
+impecável (validade interna máxima) e ainda assim dizer pouco sobre uma população mais ampla, se a
+amostra estudada não for representativa dela. Voluntários que se inscrevem para um "programa beta"
+de um site (Questão 3 da caixa de discussão da Seção \@ref(unidades)) podem diferir sistematicamente
+dos usuários em geral — mais tolerantes a instabilidade, mais engajados, mais jovens — e o efeito
+do novo layout *entre eles* pode não valer para o público inteiro. Estudantes de graduação em
+psicologia, o pool mais comum de sujeitos de pesquisa em experimentos de laboratório
+[@kirk2012experimental], não são uma amostra aleatória da população humana. Parcelas de uma única
+estação experimental não representam todos os tipos de solo de uma região.
+
+Não há solução puramente estatística para a validade externa — ela depende de julgamento sobre o
+domínio, não de mais uma fórmula. O que o delineamento experimental pode e deve fazer é **deixar
+explícito o alcance da conclusão**: a que população a amostra estudada pertence, e sob quais
+condições (local, época, instrumentos, tipo de unidade) o resultado foi obtido. Esse cuidado
+reaparecerá em cada capítulo aplicado do livro, sempre que uma recomendação prática for extraída de
+uma análise — e é um dos pontos avaliados nos projetos-desafio do curso (ver a seção final deste
+capítulo).
+
+### O elo entre amostragem e planejamento de experimentos {#amostragem-e-desenho}
+
+A distinção entre validade interna e externa aponta para um fato que costuma passar despercebido:
+**existem duas aleatorizações logicamente distintas em jogo**, respondendo a duas perguntas
+diferentes, e a **teoria de amostragem** (*survey sampling*, [@kish1965survey]) formaliza a
+primeira delas com o mesmo rigor com que o Capítulo 2 em diante formaliza a segunda.
+
+1. **Amostragem aleatória**: *quem entra no estudo?* Sorteia-se um subconjunto de $n$ unidades a
+   partir de uma população maior de $N_{\text{pop}}$ unidades, para que a amostra observada seja
+   representativa da população — o problema clássico da amostragem, com sua própria teoria de
+   variância (estratificação, alocação ótima, correção para população finita). É essa
+   aleatorização, ou a falta dela, que determina a **validade externa** discutida acima: testadores
+   beta *auto-selecionados* não são uma amostragem aleatória da população de usuários.
+2. **Atribuição aleatória (aleatorização)**: *quem recebe qual tratamento?* Sorteia-se, entre as
+   unidades já presentes no estudo, qual recebe qual nível do fator — o problema deste capítulo,
+   formalizado na Seção \@ref(neyman-rubin). É essa aleatorização que determina a **validade
+   interna**: garante $E[\widehat{\text{ATE}}]=\text{ATE}$ *dentro* da amostra, qualquer que seja
+   essa amostra.
+
+As duas são independentes: um experimento pode ter atribuição aleatória impecável sobre uma amostra
+de conveniência (validade interna alta, externa baixa — o caso mais comum na prática de laboratório
+e o cenário da Questão 7 de `Listas2026/Lista01`), ou usar uma amostra probabilística cuidadosamente
+desenhada da população, mas deixar os próprios participantes escolherem seu tratamento (validade
+externa alta, interna baixa — o desenho observacional que o Capítulo 1 vem, desde o início,
+alertando contra). Um levantamento (*survey*) bem feito e sem nenhum tratamento manipulado tem só a
+primeira aleatorização; um experimento de laboratório com voluntários tem tipicamente só a segunda;
+poucos estudos têm as duas ao mesmo tempo — e são, por isso, os mais caros e mais raros de conduzir
+[@kish1965survey].
+
+O elo entre os dois campos não é só conceitual. A fórmula de variância de Neyman para
+$\widehat{\text{ATE}}$ (acima) tem a mesma anatomia de uma variância de **amostragem sem
+reposição de duas amostras independentes** de uma população finita — divide-se cada $S_t^2$ pelo
+respectivo tamanho de grupo e desconta-se um termo de covariância por causa da restrição de que
+$n_1+n_0=N$ é fixo. Isso não é coincidência: **o mesmo Neyman** que formalizou, em 1923, a
+inferência sob aleatorização de tratamentos em experimentos agrícolas é também um dos fundadores
+da teoria moderna de amostragem em populações finitas [@neyman1923application; @kish1965survey], e
+tratou as duas aleatorizações — de amostra e de tratamento — com o mesmo formalismo combinatório de
+"qual subconjunto foi sorteado, entre todos os subconjuntos igualmente prováveis". O
+**submuestreo**, que o Capítulo 3 formaliza em detalhe (\@ref(dca-submuestreo)), é o ponto em que
+as duas ideias se encontram dentro de um único experimento: a atribuição do tratamento acontece na
+unidade experimental, mas a *amostragem* de quantas e quais submuestras medir dentro de cada
+unidade é, literalmente, um problema de desenho amostral aninhado dentro do desenho experimental.
+
+### Controle local (blocagem)
+
+Quando se sabe de antemão que as unidades experimentais não são homogêneas (turmas diferentes,
+talhões com fertilidade diferente, dias diferentes de coleta), é possível agrupá-las em
+**blocos** internamente homogêneos e aleatorizar os tratamentos *dentro* de cada bloco. A
+blocagem não elimina a necessidade de aleatorização — ela a torna mais eficiente, retirando uma
+fonte de variação conhecida do erro experimental antes mesmo da análise. O Capítulo 4 formaliza
+blocagem em delineamentos com uma ou mais fontes de bloqueio.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>No exemplo das técnicas de estudo, suponha que o professor tivesse deixado os alunos
+escolherem livremente qual técnica usar, em vez de sortear. Quais variáveis de confusão
+plausíveis poderiam contaminar a comparação entre técnicas?</li>
+<li>Em um experimento agrícola em que cada bloco é um dia de plantio diferente (com chuva,
+temperatura e luminosidade distintas), o que a blocagem por dia consegue — e o que ela
+<em>não</em> consegue — controlar?</li>
+<li>Um time de produto testa um novo layout de site apenas com usuários que se voluntariam para
+o "programa beta". Isso é aleatorização? Que population é representada pela conclusão do teste?</li>
+</ol>
+</div>
+```
+
+## Resumo do capítulo
+
+- O delineamento experimental é a tradução operacional do método científico: desenhar a coleta de
+  dados para que uma hipótese causal tenha, de fato, chance de ser refutada (Popper), em vez de
+  ser "confirmada" por um estudo incapaz de contradizê-la.
+- Confusão (*confounding*) é o problema central que separa estudo observacional de experimental —
+  variáveis medidas ou não podem se misturar ao efeito do tratamento; a aleatorização, formalizada
+  por Fisher e generalizada pelo modelo de Neyman-Rubin, é a única ferramenta que neutraliza
+  confusão de fontes conhecidas *e* desconhecidas simultaneamente.
+- Validade interna (a estimativa é não-viesada para o ATE da amostra estudada) e validade externa
+  (o resultado generaliza para outras unidades/populações) são perguntas logicamente separadas —
+  boa aleatorização garante a primeira, não a segunda.
+- Unidade experimental é onde o tratamento é sorteado; unidade amostral é onde a resposta é
+  medida — quando diferem, há submuestreo, e o tamanho amostral relevante para inferência é o
+  número de unidades experimentais, não o de observações.
+- Toda resposta varia por efeito do tratamento, por diferenças sistemáticas entre unidades e por
+  erro experimental — o delineamento organiza essas três fontes.
+- Fator, nível e tratamento formam o vocabulário do desenho de tratamentos; os princípios de
+  repetição, aleatorização e controle local formam o desenho para controle do erro.
+
+O Capítulo 2 introduz a maquinaria formal — o modelo linear — que usaremos para expressar
+precisamente essas ideias e estimar seus parâmetros a partir de dados.
