@@ -421,3 +421,31 @@ Ver memória de sessão `matd48-rigor-padrao` para o texto completo desta diretr
         para a raiz (footgun #2 documentado em `CLAUDE.md`) — 70/70 imagens resolvendo (63→70,
         todos os gráficos novos desta rodada incluídos), 0 `\@ref` quebrados, exit 0. Nada
         commitado ainda.
+
+- **2026-08-24 — Calendário 2026.2 confirmado pelo professor, mudança de sistema de avaliação,
+  gabaritos retirados do repositório.**
+  - **Calendário:** aulas passam a começar **25/08/2026** (terça, confirmado pelo professor —
+    substitui a data tentativa de 01/09), **sem aula em 10/09/2026** (a Aula 03 passa a ocupar
+    08/09 e 15/09), e o curso encerra em **18/12/2026** (últimas aulas/reserva em 15 e 17/12).
+    Sala unificada para as duas aulas semanais: **Sala 121, PAF I**, terça e quinta, 10:40–12:30
+    (antes: Sala 208/PAF1 na terça, Lab 140/IME na quinta). O cronograma completo em `index.Rmd`
+    foi recalculado sessão a sessão para acomodar essas três restrições mantendo a ordem e o
+    conteúdo das 14 aulas.
+  - **Sistema de avaliação mudou de novo**: cada nota parcial $N_k$ ($k=1,2,3$) volta a ter uma
+    prova escrita, agora **$N_k = 0{,}4\times\text{Projeto}_k + 0{,}6\times\text{Prova escrita}_k$**
+    (antes: 50% projeto + 50% média das listas do período). As listas semanais continuam existindo
+    e alinhadas 1:1 às aulas, mas passam a ser **material de prática, sem valer nota** — deixaram de
+    entrar na composição de qualquer nota parcial. Datas de prova escrita/fechamento de cada
+    período (mesma data da entrega do projeto): N1 22/10/2026, N2 17/11/2026 (antes 19/11), N3
+    10/12/2026 (antes 17/12).
+  - **Gabaritos (`Listas2026/Gabarito*.pdf`/`.tex`) removidos do repositório** e movidos para
+    `/home/raydonal/Github/Cursos/matd48-gabaritos-privados/` (pasta irmã, fora do repositório git
+    — nunca chega ao GitHub Pages). Removidos via `git rm`/`mv`, não apenas gitignorados, porque já
+    estavam commitados (commit `e55ed69`). `index.Rmd` não linka mais gabarito nenhum na coluna
+    "Material" do cronograma. `Lista*.pdf`/`.tex` permanecem em `Listas2026/` normalmente.
+  - **Verificação pós-mudança**: `index.Rmd` re-renderizado (`rmarkdown::render`, exit 0); checagem
+    de links locais do `index.html` (0 quebrados de 76); `Livro/` (0 imagens quebradas de 70, 0
+    `\@ref` crus) e `Aulas2026/` (0 citações cruas) conferidos sem re-render — nenhum dos dois teve
+    conteúdo alterado nesta rodada, só `index.Rmd` e a pasta `Listas2026/`. Também corrigido um bug
+    pequeno pré-existente em `index.Rmd`: os links de Rstudio/TeXnicCenter na seção "Software"
+    estavam sem `https://`, resolvendo como link local quebrado em vez de link externo.
