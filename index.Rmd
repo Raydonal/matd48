@@ -134,7 +134,7 @@ cronograma <- tribble(
     "[Aula](Aulas2026/MATD48-08.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista08.pdf)",
   "Entrega 22/10/2026", "—", "🚀 **Desafio — Projeto II**: planejamento de experimento físico (DCA)",
     "[Projeto II — Helicóptero de Papel](Projetos/Projeto-II.html)",
-  "**22/10/2026**", "—", "**<span style='color:red'>Prova escrita 1 + Fechamento N1</span>** = 40% Projeto II + 60% Prova escrita", "—",
+  "**22/10/2026**", "—", "**Prova escrita 1 + Fechamento N1** = 40% Projeto II + 60% Prova escrita", "—",
   "27 e 29/10/2026", "09", "Delineamento em Blocos Completos Aleatorizados (DBCA)",
     "[Aula](Aulas2026/MATD48-09.html) · [Cap. 4](Livro/blocos.html) · [Lista](Listas2026/Lista09.pdf)",
   "03 e 05/11/2026", "10", "Teste de Friedman e blocos incompletos balanceados",
@@ -143,7 +143,7 @@ cronograma <- tribble(
     "[Aula](Aulas2026/MATD48-11.html) · [Cap. 4](Livro/blocos.html) · [Lista](Listas2026/Lista11.pdf)",
   "Entrega 17/11/2026", "—", "🚀 **Desafio — Projeto III**: comparando modelos de ML (DBCA + Friedman)",
     "[Projeto III — Modelos de ML com Rigor](Projetos/Projeto-III.html)",
-  "**17/11/2026**", "—", "**<span style='color:red'>Prova escrita 2 + Fechamento N2</span>** = 40% Projeto III + 60% Prova escrita", "—",
+  "**17/11/2026**", "—", "**Prova escrita 2 + Fechamento N2** = 40% Projeto III + 60% Prova escrita", "—",
   "19 e 24/11/2026", "12", "Fatoriais A×B e A×B×C",
     "[Aula](Aulas2026/MATD48-12.html) · [Cap. 5](Livro/fatoriais.html) · [Lista](Listas2026/Lista12.pdf)",
   "26/11 e 01/12/2026", "13", "Fatoriais 2ᵏ: ortogonalidade, análise sem repetição, confusão",
@@ -152,7 +152,7 @@ cronograma <- tribble(
     "[Aula](Aulas2026/MATD48-14.html) · [Cap. 6](Livro/fatoriais-avancado.html) e [Cap. 7](Livro/superficie-resposta-cap.html) · [Lista](Listas2026/Lista14.pdf)",
   "Entrega 10/12/2026", "—", "🚀 **Desafio — Projeto IV (capstone)**: otimização fatorial de pipeline de ML",
     "[Projeto IV — Otimização Fatorial de ML](Projetos/Projeto-IV.html)",
-  "**10/12/2026**", "—", "**<span style='color:red'>Prova escrita 3 + Fechamento N3</span>** = 40% Projeto IV + 60% Prova escrita", "—",
+  "**10/12/2026**", "—", "**Prova escrita 3 + Fechamento N3** = 40% Projeto IV + 60% Prova escrita", "—",
   "15 e 17/12/2026", "—", "Revisão geral, dúvidas e reserva", "—",
   "**18/12/2026**", "—", "**Encerramento do curso**", "—"
 )
@@ -161,7 +161,8 @@ cronograma %>%
   kable(escape = FALSE, align = c("l", "c", "l", "l")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 14) %>%
   column_spec(1, width = "12%") %>%
-  column_spec(4, width = "30%")
+  column_spec(4, width = "30%") %>%
+  row_spec(c(10, 15, 20), color = "red")
 ```
 
 ***
