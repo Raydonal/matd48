@@ -449,3 +449,388 @@ Ver memória de sessão `matd48-rigor-padrao` para o texto completo desta diretr
     conteúdo alterado nesta rodada, só `index.Rmd` e a pasta `Listas2026/`. Também corrigido um bug
     pequeno pré-existente em `index.Rmd`: os links de Rstudio/TeXnicCenter na seção "Software"
     estavam sem `https://`, resolvendo como link local quebrado em vez de link externo.
+
+- **2026-09-19 — 8ª rodada (piloto), após nova correção do professor**: "slides deste ano ainda
+  superficiais frente a 2025 e ao material de Cristiano (MES935), aula de 1h40 recebendo slide de
+  50 min, livro com equações/gráficos com problema, exemplos sem solução clara — corrigir tudo de
+  novo, com rigor, incluindo Listas2026 e Projetos". Escopo grande demais para uma passada só;
+  segui o padrão da Rodada 1 (piloto define o padrão antes de replicar) e parei ao fim deste módulo
+  para o professor revisar antes de continuar aos 4 módulos restantes.
+  - **Achado mecânico, corrigido antes de qualquer conteúdo**: o HTML do livro já commitado tinha
+    **53 de 71 imagens quebradas** (footgun #2 do `CLAUDE.md` recorrendo — `render_book()` rodado
+    sem o passo de copiar `_bookdown_files/*_files` para a raiz). Corrigido com rebuild limpo +
+    cópia; sozinho, resolve boa parte da queixa "figura não aparece".
+  - **Fontes novas mineradas**: `cristiano/` (curso de pós MES935, nunca usado antes neste
+    projeto) — datasets reais (`feijao.txt`, DCA de fertilizante em feijão) e código de
+    half-normal plot para efeitos fatoriais, reservados para os módulos DCA e Fatoriais (Fase 2,
+    ainda não feita); `Aulas/MATD48-01.Rmd` (2025) re-minerado slide a slide contra
+    `Aulas2026/MATD48-01.Rmd`.
+  - **Aula 01** (27→49 slides, verificado sem transbordo por `scripts/verificar_slides.R`,
+    0 imagens quebradas, 0 citações cruas): adicionadas vinhetas históricas de van Helmont
+    (quantificação) e Priestley (controle) como degraus antes de Fisher/tabela-de-chá — reaproveita
+    `Aulas/images/Van_Helmont_Experiment.jpg` e `priestly.jpg`, já existentes; slide de ponte QPDAC
+    entre Bloco 1 e 2; segundo exemplo completo (Question→Plan→Data→Analysis→Conclusion) num
+    terceiro domínio — teste A/B de layout/conversão em ciência de dados, com resultados
+    potenciais binários, `prop.test()`, gráfico de barras com IC, e interpretação em linguagem
+    simples — mais uma tabela final comparando os dois exemplos lado a lado (mesmos ingredientes,
+    domínios diferentes).
+  - **Cap. 1**: nota histórica de Fisher/Rothamsted expandida com van Helmont/Priestley (mesma
+    dupla da aula, prosa em vez de slides); nova seção "Um terceiro domínio: resultados potenciais
+    binários em um teste A/B" (mesmo exemplo A/B da aula, com o mesmo dataset simulado) logo após a
+    fórmula de variância de Neyman — o capítulo tinha os domínios psicologia e agricultura mas
+    nenhum de ciência de dados apesar de ser um dos três eixos do curso.
+  - **Bug real pego por verificação visual do HTML** (não só exit 0, lição das Rodadas 6-7): a
+    string condicional do p-valor produzia `p < 0{,}001` como texto cru fora de modo matemático
+    (chaves LaTeX aparecendo literalmente na página) — corrigido envolvendo em `$...$`; mais dois
+    números inline fora de modo matemático usando ponto decimal em prosa PT-BR (`1.4 pontos
+    percentuais`) — corrigidos com o mesmo padrão já usado no resto do livro (números computados
+    dentro de `$...$`, mesmo com ponto decimal, é o padrão estabelecido nos Caps. 3-4).
+  - **Verificação final**: rebuild limpo do livro (`rm -rf _bookdown_files` + `render_book()`) —
+    72/72 imagens resolvendo, 0 `\@ref` quebrados; deck 01 renderiza exit 0, 0 transbordo, 0
+    citação crua. Nada commitado ainda (sem `.git` nesta cópia de trabalho — ver `CLAUDE.md`).
+  - **Pendente** (Fase 2 do plano, aguardando aprovação do professor neste piloto): módulos
+    Modelos Lineares (Cap.2, Aulas 02-03), DCA (Cap.3, Aulas 04-08, com `feijao.txt` de Cristiano),
+    Blocos (Cap.4, Aulas 09-11), Fatoriais (Cap.5-6, Aulas 12-14, com half-normal de Cristiano);
+    depois `Listas2026/` e `Projetos/`.
+
+- **2026-09-19 (cont.) — correções pontuais reportadas pelo professor + 1ª mineração real de
+  Cristiano**, antes de retomar a Fase 2 módulo a módulo:
+  - **Bug real de layout, `Aulas2026/MATD48-03.Rmd` (Hasse)**: a equação de exibição
+    `$$gl(v)=\dots$$` dentro de `.pull-left[` estourava a largura da coluna e invadia
+    `.pull-right[`; e o `.footnote[...]` (absolutamente posicionado por padrão do remark.js,
+    portanto invisível ao script `verificar_slides.R`, que ignora `position:absolute`) colidia com
+    a legenda do diagrama. Causa-raiz identificada por screenshot real (Chrome headless via
+    `chromote`, não só a métrica de transbordo) — MathJax renderiza o somatório com limites bem
+    mais alto/largo que o texto ao redor. Corrigido: equação movida para fora das colunas (largura
+    plena), SVG reduzido (`tamanho` 3.0×3.3in → 2.2×2.4in), footnote convertido em texto comum no
+    fluxo (não `.footnote[]`). Verificado: 0 transbordo, 0 sobreposição, screenshot conferido
+    visualmente após cada tentativa (3 iterações até fechar).
+  - **Imagem em inglês esquecida em `Aulas2026/MATD48-04.Rmd`**: `there_is_only_one_test.png`
+    (Allen Downey) — a Rodada 7 já tinha trocado essa mesma imagem no livro (`03-dca.Rmd`) por um
+    diagrama `ggplot` nativo em português, mas nunca atualizou o slide correspondente, que ainda
+    linkava a imagem antiga. Corrigido reaproveitando o código `ggplot` exato do livro (4 caixas:
+    dados→estatística T*→mecanismo H0→reembaralhamentos→distribuição de referência). Confirmado:
+    nenhuma outra referência a essa imagem resta no repositório.
+  - **Varredura de equações `$$...$$`**: auditados todos os blocos de exibição em MATD48-02/03/04
+    (screenshot de cada slide com equação complexa — `\begin{cases}`, `\underbrace{}`, somatórios)
+    após o fix do Hasse; nenhum outro erro de renderização encontrado nesses três decks.
+  - **1ª mineração real de `cristiano/` (MES935)**: extraído texto de `mes935-parte2.pdf` via
+    `pdftotext` — confirma o conceito de **população conceitual de respostas** (mesma estrutura dos
+    resultados potenciais/tabela científica do Cap.1, vocabulário clássico de Kempthorne em vez do
+    vocabulário causal de Neyman-Rubin) e que diagramas de Hasse remontam a Throckmorton (1961),
+    tese de Iowa State, sistematizada depois por Bailey (2008) — citação verificada via busca web
+    antes de adicionar (nunca fabricada). Adicionado: nova Seção 2.1 em `02-modelos-lineares.Rmd`
+    ("Da população conceitual de respostas ao modelo linear", citando @kempthorne1952design e
+    @hinkelmann2008design, ligada por `\@ref` à tabela científica e à Seção Neyman-Rubin do Cap.1);
+    citação de Throckmorton adicionada ao lado de Bailey na abertura da Seção de Hasse; espelhado
+    nos slides — `Aulas2026/MATD48-02.Rmd` ganhou slide novo (mesma ponte terminológica) e
+    `Aulas2026/MATD48-03.Rmd` ganhou a citação inline na sua própria slide de Hasse; `refs.bib`
+    (Livro e Aulas) e as duas listas de Referências dos decks atualizadas. `feijao.txt` e o
+    half-normal de Cristiano ainda não usados — ficam para os módulos DCA/Fatoriais na Fase 2.
+  - **Verificação**: rebuild completo do livro (72/72 imagens, 0 `\@ref` quebrados, citações novas
+    resolvendo corretamente — conferido no HTML gerado); `verificar_slides.R` limpo (0 transbordo)
+    em MATD48-02/03/04; 0 citações cruas `[@chave]` nos 3 decks. Nada commitado ainda.
+
+- **2026-09-19 (cont. 2) — módulo DCA (Cap.3, Aulas 04-08, Listas 04-08)**, a pedido do professor
+  ("sim pode continuar"):
+  - **Varredura mecânica dos 10 decks restantes** (MATD48-05 a 14): render individual + 
+    `verificar_slides.R` em todos — 0 transbordo em qualquer um; checagem de `.footnote[]`
+    (risco de colisão, o mesmo bug da Rodada anterior) nos decks que usam — MATD48-07 (2×) e
+    MATD48-09 (1×) — todos com folga suficiente, confirmado por screenshot; 0 citações cruas
+    `[@chave]`, 0 imagens locais quebradas em nenhum dos 14 decks. Conferido também que só 4
+    imagens de `Aulas/images/` seguem reaproveitadas no total (`circular_flowchart.png`,
+    `priestly.jpg`, `quadro5Blocos.png`, `Van_Helmont_Experiment.jpg`) — nenhuma em inglês restante.
+  - **2ª mineração real de `cristiano/`**: `feijao.txt` (DCA real, 4 fertilizantes × 5 parcelas,
+    produção de feijão) — dataset genuinamente novo, nunca usado no projeto. Convertido para
+    `Livro/data/feijao.csv` (mesma convenção dos outros dados reais do capítulo, ex. `mojarra.csv`).
+    Adicionado como fechamento da Seção \@ref(dca-uma-via) do Cap.3 ("Um segundo exemplo, com dado
+    real"): mesma máquina do exemplo simulado (distração/tempo de reação) aplicada a um dado real,
+    sem efeito verdadeiro conhecido — ANOVA real ($F=9{,}21$, $p<0{,}001$), gráfico de médias com
+    IC, e uma nota de "honestidade estatística" sinalizando que Shapiro-Wilk nos resíduos dá
+    $p\approx0{,}046$ (normalidade no limiar), encaminhando para a Seção de pressupostos —
+    verificado numericamente (rodado em R antes de escrever o texto, não estimado). Espelhado em
+    `Aulas2026/MATD48-04.Rmd` (2 slides novos, mesma análise, mesmo gráfico). Confirmado: `mojarra`
+    já era dado real (de `ApoioLuz/BasesDatosDE.xlsx`, ao contrário do que a rodada anterior
+    presumiu) — o gap real era especificamente agricultura com desenho a uma via simples.
+  - **Listas 04-08 verificadas**: as 5 compilam limpo via `latexmk`; todas já têm pelo menos uma
+    questão de dedução/prova e cobertura dos 3 domínios (psicologia/agricultura/ciência de dados) —
+    nenhuma mudança necessária.
+  - **Achado a decidir com o professor, não implementado**: `cristiano/mes935-parte6.pdf` dedica
+    uma seção inteira a **parcelas subdivididas (split-plot)** — tópico ausente do livro e dos
+    slides atuais. É um desenho genuinamente novo (dois erros experimentais, dois tamanhos de
+    parcela), não uma reformulação de algo já coberto. Seguindo o precedente da Rodada 4 (Cap.7/8
+    tratados como "além do semestre" em vez de forçados nas 14 aulas), não adicionei nada — fica
+    para decisão do professor: vira seção nova no Cap.4 (dentro do semestre, exigiria reorganizar
+    Aulas 09-11) ou conteúdo "além do semestre" como o Cap.7/8.
+  - **Verificação final**: rebuild completo do livro (`rm -rf _bookdown_files` + `render_book()`) —
+    73/73 imagens (nova: `feijao-plot`), 0 `\@ref` quebrados; MATD48-04 renderiza exit 0, 0
+    transbordo (39 slides, era 37). Nada commitado ainda.
+
+- **2026-09-19 (cont. 3) — Split-plot adicionado ao Cap.4** (professor: "pode continuar e adiciona
+  sim o split-plot"), mais varredura mecânica final:
+  - **Varredura dos 6 decks restantes** (MATD48-09 a 14): render + `verificar_slides.R` — 0
+    transbordo em todos; `.footnote[]` de MATD48-07 (2×) e MATD48-09 (1×) conferidos por
+    screenshot, sem colisão (folga suficiente); 0 citações cruas, 0 imagens locais quebradas. Os 14
+    decks de `Aulas2026/` estão mecanicamente limpos.
+  - **Nova Seção 4.6 "Parcelas subdivididas (*split-plot*)"** em `04-blocos.Rmd`, marcada
+    explicitamente como *"Além do programa do semestre"* (mesma convenção do Cap.7/8) — não
+    corresponde a nenhuma das Aulas 09–11, não exigiu reorganizar o cronograma nem criar slide
+    novo (Cap.7/8 também não têm deck correspondente, confirmado antes de decidir). Conteúdo:
+    motivação (por que um fator só pode ser aleatorizado a parcelas grandes e outro a pequenas,
+    origem em Rothamsted, Yates 1937), exemplo real de domínio agricultura (irrigação × variedade
+    de sorgo, inspirado na estrutura do curso do Cristiano mas com prosa 100% original — nenhum
+    texto-fonte copiado), modelo com dois erros experimentais, diagrama de Hasse de 7 nós (dois
+    nós de Erro, um por estrato de aleatorização — verifiquei a álgebra de gl à mão antes de
+    escrever o código: $1+3+2+3+6+6+27=48=N$, depois confirmado batendo exatamente com o SVG
+    gerado, sem precisar corrigir nada), $\mathbb E[QM]$ mostrando por que o teste do fator de
+    parcela principal *precisa* usar o erro da parcela principal (nunca o da subparcela, o erro
+    clássico que um código sem `Error()` explícito cometeria), simulação em R com
+    `aov(..., Error(bloco/irrigacao))` cujos graus de liberdade batem exatamente com o diagrama.
+    Citações novas: `@yates1937design` (já existia no `refs.bib`) e `@montgomery2017design` (já
+    existia) — nenhuma fabricada. Bullet novo no resumo do capítulo, marcado "além do programa".
+  - **Bug pego na primeira verificação numérica (não exit code)**: o parágrafo de interpretação
+    tinha $F$ e $p$ **hard-coded** como texto (copiados de uma simulação de teste em terminal) —
+    exatamente o padrão de erro que rodadas anteriores já flagraram como recorrente neste projeto.
+    Corrigido antes de fechar: reescrito para extrair os valores de `summary(mod_sp)` via `r
+    round(...)` inline, então os números impressos são sempre os do objeto `mod_sp` realmente
+    ajustado no capítulo, não um valor digitado à mão.
+  - **Verificação final**: rebuild completo do livro — 75/75 imagens, 0 `\@ref` quebrados, 0
+    legenda de tabela duplicada (footgun #8). SVG do Hasse (`figuras/hasse/split-plot.svg`)
+    conferido nó a nó: 7 nós, gl exatos batendo com a derivação manual. Gráfico de interação
+    (retas por variedade, uma por irrigação) conferido visualmente: quase paralelas, consistente
+    com o texto (interação não significativa). Nada commitado ainda.
+  - **Módulo Fatoriais (Cap.5-6) já conferido, sem gap de tópico**: `mes935-parte8.pdf`
+    (confusão de fatoriais $2^k$ em blocos) e `parte9/9a.pdf` (fracionados) cobrem exatamente o que
+    já existe em `confusao-2k.html`/`fatoriais-blocos.html`/`fracionados.html` — nenhum tópico
+    ausente, ao contrário do split-plot. `half_normal_example.R` de Cristiano é estritamente mais
+    simples que o método de Lenth já implementado (sem margem de erro formal); não incorporado.
+  - **Achado a decidir com o professor (não implementado)**: `mes935-parte7a.pdf` usa o exemplo
+    clássico do wafer de silício (Montgomery) para introduzir o problema de **projeto robusto**
+    ("nominal-the-best": minimizar variância *e* acertar uma média-alvo simultaneamente,
+    modelando $\bar y$ e $\ln(s^2)$ separadamente a partir das réplicas). O Cap.7 já **aponta**
+    Taguchi/projeto robusto como tópico "sem desenvolver" (decisão deliberada de uma rodada
+    anterior) — antes de desenvolver essa seção agora, prefiro confirmar com o professor, já que
+    foi uma escolha consciente de escopo, não um esquecimento. Professor respondeu "continue" sem
+    confirmar este item — permanece pendente, não implementado.
+
+- **2026-09-19 (cont. 4) — Listas 09-14 e os 4 Projetos verificados**, fechando a varredura
+  completa pedida na mensagem original ("listas de exercícios devem ser verificadas, os projetos
+  também"):
+  - **Listas 09-14**: todas compilam via `latexmk` (2-3 páginas cada); todas têm pelo menos uma
+    questão de dedução/prova. Cobertura de domínio boa mas não perfeitamente 3/3 em toda lista
+    (Listas 10 e 11, focadas em Friedman/BIB/quadrado latino, não têm questão explicitamente
+    rotulada "ciência de dados") — não corrigido, é uma variação de ênfase por tópico, não uma
+    lacuna de rigor (dedução presente, 2 de 3 domínios presentes). Confirmado: nenhuma lista
+    menciona split-plot (correto — é conteúdo "além do semestre", `Listas2026/` segue estritamente
+    o cronograma das 14 aulas, não deveria mesmo aparecer lá).
+  - **`Projeto-I` investigado antes de mexer**: data de entrega "01/11/2023" parecia bug à
+    primeira vista, mas `index.Rmd` linka esse arquivo como "Prova I (2025, referência)" — é
+    intencionalmente uma prova antiga preservada como exemplo de estilo/formato, não um artefato
+    do curso atual. Não alterado (alterar destruiria o propósito do arquivo).
+  - **Bug real encontrado nos Projetos II, III e IV**: os três ainda diziam "N_k = 50% Projeto +
+    50% média das Listas" — a fórmula de avaliação **antiga**, substituída em 2026-08-24 por
+    "N_k = 40% Projeto + 60% Prova escrita" quando as listas deixaram de valer nota (registrado no
+    próprio `PLANO_CONTEUDO.md`, mas nunca propagado aos 3 arquivos de projeto — exatamente o tipo
+    de inconsistência entre arquivos que a auditoria original deveria pegar). Corrigido nos três;
+    confirmado contra a fórmula/datas atuais em `index.Rmd` antes de escrever. Verificado: os 3
+    renderizam limpo em HTML *e* PDF (PDF/artefatos `.tex` gerados só para teste, não commitados —
+    a convenção do diretório é manter só `.html`).
+  - **Verificação final**: com isso, a varredura completa (14 decks + livro completo Cap.1-8 +
+    28 listas + 4 projetos) pedida na mensagem original está concluída. Nada commitado ainda (sem
+    `.git` nesta cópia de trabalho).
+
+- **2026-09-19 (cont. 5) — Taguchi/projeto robusto desenvolvido** (professor: "desenvolva e
+  continue"):
+  - **Nova Seção 7.5 "Desenho robusto: otimizando a média e a variância ao mesmo tempo"** em
+    `07-superficie-resposta.Rmd`, marcada "além do programa do semestre" (mesmo padrão do
+    split-plot). Conteúdo: motivação do problema de Taguchi (média-alvo *e* baixa sensibilidade a
+    ruído de produção) citando @taguchi1986; a crítica estatística ao método original (arranjos
+    cruzados caros, razão sinal-ruído mistura informação) citando @viningmyers1990 (Vining &
+    Myers, 1990, *Journal of Quality Technology* — verificado por busca antes de citar, nunca
+    citado antes neste projeto); a alternativa moderna de **duas superfícies de resposta** (média
+    e log-variância) a partir de um único CCD replicado — reaproveita a mesma maquinaria de CCD já
+    construída na Seção \@ref(ccd), sem inventar ferramenta nova. Exemplo simulado (engenharia:
+    espessura de revestimento por deposição, temperatura×pressão, alvo 15µm) com 8 réplicas por
+    ponto do CCD, ajuste dos dois modelos, mapa de calor da variância com contornos da média
+    sobrepostos, e otimização por busca em grade restrita (mesmo estilo computacional já usado na
+    Seção de desejabilidade). Atualizado também o ponteiro em `08-ab-testing-bandits.Rmd`, que
+    antes dizia "fora do escopo" — agora aponta para a Seção 7.5 como desenvolvida.
+  - **Bug real e sistêmico encontrado ao verificar visualmente o próprio gráfico novo**: o título
+    do meu gráfico saiu cortado na imagem. Ao investigar se era só o meu, achei que **já existia
+    antes**, em pelo menos 3 gráficos publicados do livro (`ccd-desejabilidade` neste mesmo
+    capítulo, `cubo-base` no Cap.5 — título *e* subtítulo cortados —, e `energia-ridge` neste
+    capítulo) — `ggplot2` não quebra título automaticamente, e qualquer título/subtítulo longo
+    encostava na legenda e saía da imagem sem aviso. Corrigido nos 5 gráficos (2 novos + 3
+    pré-existentes) inserindo quebra de linha manual (`\n`) nos títulos/subtítulos longos;
+    verifiquei cada um abrindo o PNG gerado, não só rodando o chunk.
+  - **Verificação final**: rebuild completo do livro — 76/76 imagens, 0 `\@ref` quebrados,
+    citações novas resolvendo. Nada commitado ainda.
+  - **Estado do projeto**: com Fatoriais já conferido (rodada anterior) e Taguchi agora
+    desenvolvido, todos os itens abertos da varredura original estão fechados. Trabalho restante é
+    só aprofundamento incremental por módulo, se o professor pedir.
+
+- **2026-09-19 (cont. 6) — Somas de quadrados Tipo I/II/III** (professor: "isso pode continuar";
+  achado ao minerar `Aulas/MATD48-07.Rmd` de 2025 procurando material para aprofundar a Aula 06):
+  - **Gap real encontrado**: o livro só tinha uma menção de passagem ao "problema das somas de
+    quadrados Tipo I vs. Tipo III" (Cap.6, ao discutir ortogonalidade do $2^k$) — nunca
+    desenvolvida. `Aulas/MATD48-07.Rmd` (2025) tinha um tratamento extenso do tema (com diagramas
+    de Venn em R base) logo depois de contrastes, mas usando um exemplo confuso (mistura
+    ilustração de contraste-se-quebra-com-desbalanceamento, que é um problema de fator único, com
+    Tipo I/II/III, que só faz sentido genuíno com ≥2 fatores). Diferente do split-plot e do
+    Taguchi, este tópico **é** do escopo do semestre — pertence ao fatorial A×B do Capítulo 5
+    (Aula 12), exatamente onde a tabela de ANOVA já assumia balanceamento sem dizer.
+  - **Nova Seção 5.3.1** em `05-fatoriais.Rmd`: por que perder o balanceamento quebra a
+    ortogonalidade de $\mathbf X$; definição dos três tipos; exemplo novo e verificado numericamente
+    (teste A/B com tráfego desigual, ciência de dados: layout×desconto, 30-70 sessões por célula) —
+    Tipo I muda com a ordem, Tipo II não, Tipo III muda de novo (ajusta pela interação); recomendação
+    prática citando @langsrud2003 (Tipo II > III quando interação é fraca). Citações novas,
+    verificadas por busca antes de adicionar: @speedhockinghackney1978 (JASA, a referência clássica
+    do tema) e @langsrud2003. Espelhado em `Aulas2026/MATD48-12.Rmd` (2 slides novos, mesmo
+    exemplo, mesmos números).
+  - **Bug real pego no primeiro render, não depois**: usei `options(contrasts=c("contr.sum",...))`
+    (exigido para o Tipo III fazer sentido) sem restaurar o valor original — como `new_session:
+    yes` roda o capítulo inteiro numa única sessão R, a mudança **vazou** para um chunk
+    completamente não relacionado mais adiante no mesmo capítulo (`pepino-model-matrix`), que
+    quebrou com "subscript out of bounds" porque os nomes de coluna do `model.matrix()` mudam de
+    convenção conforme o tipo de contraste ativo. Pego porque *rodei* o render completo em vez de
+    testar o chunk isolado; corrigido salvando e restaurando `options("contrasts")` no mesmo chunk,
+    imediatamente após o uso.
+  - **Verificação final**: rebuild completo do livro (76/76 imagens, 0 `\@ref` quebrados, 0 legenda
+    duplicada) e do deck MATD48-12 (43 slides, 0 transbordo, 0 citação crua, 0 imagem quebrada).
+    Nada commitado ainda.
+  - **Pendente**: os decks ainda mais curtos que a média (05, 06, 08, 10, 13, 14, entre 25-31
+    slides) não passaram pelo mesmo tipo de expansão de conteúdo que a Aula 01 e o início do
+    módulo DCA já receberam — ficou só a varredura mecânica (bugs) e, para 12, este acréscimo de
+    conteúdo. Aprofundar a densidade desses 6 decks para uma aula de 100 min é o próximo item
+    natural, se o professor quiser continuar nessa direção.
+
+- **2026-09-19 (cont. 7) — Aula 06 aprofundada** (professor: "sim, continuar"):
+  - **Duas adições concretas**, sem precisar de novo dado externo: (a) resíduos estudentizados
+    $r_i$ como régua para "resíduo grande" (o item 4 da teoria de resíduos nunca tinha uma régua
+    numérica) — exemplo com um ponto discrepante deliberado, detectado via `rstudent()`; (b)
+    fechamento do gancho deixado em aberto na Aula 04 (Shapiro-Wilk do feijão, $p\approx0{,}046$,
+    "no limiar de 0,05"): Box-Cox no mesmo dado real dá $\lambda$ ótimo $\approx1{,}71$ com IC de
+    verossimilhança de 95% incluindo 1 — Box-Cox discorda do veredito pontual do Shapiro-Wilk, e a
+    decisão defensável é **não transformar**. Lição explícita: com $n$ pequeno, olhar o IC de
+    $\lambda$ em vez de reagir a um único $p$ perto de 0,05.
+  - **Verificação**: 25→31 slides, 0 transbordo (1 slide dividido em dois após detectado por
+    `verificar_slides.R`), 0 citação crua, 0 imagem quebrada. Nada commitado ainda.
+  - Restam 05, 08, 10, 13, 14 no mesmo estado (varredura mecânica só, sem aprofundamento de
+    conteúdo).
+
+- **2026-09-19 (cont. 8) — Aula 05 aprofundada + espelhado no livro** (professor: "sim,
+  continuar"):
+  - **Fechei um gancho que a própria Aula 05 já tinha aberto**: o texto dizia "a estimação correta
+    passa por GLS / lme4, nlme" mas nunca mostrava — nem o motivo de precisar, na prática. Testei
+    em R antes de escrever: `aov(y ~ trat + Error(trat:ue))` num desenho de submuestreo
+    desbalanceado (uma UE com 2 submuestras em vez de 4) **emite o aviso real**
+    `"Error() model is singular"` — não é hipotético, é o comportamento verdadeiro do R. Dois
+    slides novos: o aviso do `aov()` (com `warning=TRUE` no chunk para o aviso aparecer
+    renderizado, não só no console), depois `lme4::lmer()` resolvendo sem aviso, com
+    `VarCorr()`/`anova()` reais (não inventados).
+  - **Erro pego antes de publicar, não depois**: escrevi de cabeça "Aula 09 volta a isso com
+    Kenward-Roger" — busquei no repositório inteiro antes de deixar passar e confirmei que
+    **nenhum outro arquivo menciona Kenward-Roger** — teria sido uma referência cruzada fabricada,
+    exatamente o tipo de erro que a Rodada 7 já tinha corrigido uma vez (referência a conteúdo que
+    não existe). Reescrito para descrever o fato (exige aproximação de gl) sem apontar para um
+    lugar que não existe.
+  - **Espelhado no livro** (`03-dca.Rmd`, seção `#modelo-submuestreo`): mesma demonstração,
+    citando a Seção Zyskind já existente do capítulo (precisei dar um `{#zyskind-dca}` a essa
+    subseção, que não tinha label ainda, para poder referenciá-la corretamente em vez de inventar
+    um label).
+  - **Verificação**: Aula 05, 28→31 slides, 0 transbordo, 0 citação crua, 0 imagem quebrada;
+    livro, 76/76 imagens, 0 `\@ref` quebrado (incluindo o novo `\@ref(zyskind-dca)`, conferido
+    resolvendo). Nada commitado ainda.
+  - Restam 08, 10, 13, 14 no mesmo estado.
+
+- **2026-09-19 (cont. 9) — Aulas 08, 10, 13, 14 aprofundadas, fechando a lista de decks curtos**
+  (professor: "sim, profundidade"):
+  - **Aula 08** (28→34 slides): (a) resíduos estudentizados $r_i$ como régua numérica; (b)
+    demonstração de **viés de mediador em ANCOVA** — simulei um cenário em que a "covariável"
+    (ansiedade) é na verdade afetada pelo tratamento (dose de cafeína), e "ajustar" por ela faz o
+    efeito real da dose desaparecer/quase inverter de sinal. Responde concretamente a própria
+    Pergunta 1 de Discussão da aula, que antes só existia em abstrato; (c) correção de empates
+    (ties) para Kruskal-Wallis, verificada numericamente contra `kruskal.test()` — fecha um gap
+    real: a **Lista 08, Questão 5** já cobrava esse exato tópico (mesma notação, $\tau_j$) e o
+    deck nunca tinha ensinado.
+  - **Aula 10** (31→33 slides): pós-teste de Nemenyi (1963) para Friedman, com a diferença crítica
+    $q_\alpha/\sqrt2 \cdot \sqrt{t(t+1)/(6b)}$ — mas **sem** forçar um exemplo numérico, porque
+    testei contra o próprio exemplo da aula e descobri que Nemenyi e o Friedman global
+    **discordam** nesses dados (achado real, não hipotético): documentei isso como o próprio
+    ponto pedagógico (cuidado ao interpretar pós-teste sem confirmar o omnibus primeiro) em vez de
+    esconder a inconsistência atrás de um exemplo fabricado para "dar certo".
+  - **Aula 13** (29→31 slides): demonstração de confusão de um efeito principal (Temperatura) em
+    vez de $ABCD$, reaproveitando os dados reais do biodiesel.
+    - **Bug real pego antes de publicar**: minha primeira versão afirmava que o `NA` apareceria em
+      "Temperatura" — rodei o código antes de aceitar essa frase e descobri que é o termo
+      **recém-adicionado** que vira `NA` (`lm()` descarta a coluna redundante mais nova, não a
+      mais importante), o oposto do que eu tinha escrito de cabeça. Reescrevi a demonstração
+      inteira em torno do que é **verdadeiramente correto** — comparar valores ajustados de dois
+      modelos (com Temperatura vs. com "dia") e mostrar que são **idênticos**, ponto a ponto —
+      independente de qual rótulo o R decide marcar como `NA`. Corrigi também uma comparação
+      inicial por $R^2$ que era trivialmente 1 nos dois casos (modelo saturado) e não provava
+      nada — substituída por diferença de valores ajustados.
+  - **Aula 14** (28→30 slides): demonstração numérica de que "aliasado" significa que o
+    coeficiente é a **soma** dos dois efeitos verdadeiros sobrepostos (A+BD), não um erro de
+    arredondamento — verificada contra os geradores já definidos no próprio deck.
+  - **Verificação final**: as 4 decks renderizam limpo (0 transbordo, 0 citação crua, 0 imagem
+    quebrada, conferido depois de cada correção, não antes). Nada commitado ainda.
+  - **Estado final**: os 14 decks de `Aulas2026/` passaram por aprofundamento de conteúdo (não só
+    varredura mecânica). Trabalho de "expandir para 100 min" da mensagem original está concluído
+    para todos os decks identificados como curtos.
+
+- **2026-09-19 (cont. 10) — Investigação de "erros de fórmula" + mineração de gráficos de 2025**
+  (professor: "ainda há erros na renderização de fórmulas... aproveitar mais os gráficos das aulas
+  do ano passado"):
+  - **Verificação rigorosa de fórmulas, não encontrei erro real**: escrevi um script que abre cada
+    um dos 14 decks e das 73 páginas do livro num Chrome headless de verdade, espera o MathJax
+    terminar de tipografar, e procura nós `mjx-merror` (falha real de parsing) — **zero em
+    qualquer arquivo**. Também re-conferi visualmente, por screenshot, todo `$$...$$` dentro de
+    `.pull-left`/`.pull-right` em todos os 14 decks (o padrão exato que causou o bug do Hasse
+    numa rodada anterior) — todos renderizam limpos. Não consegui reproduzir o problema relatado;
+    fica registrado para o professor apontar um slide/página específico se o erro persistir (pode
+    ser cache de navegador de uma versão anterior a esta sessão).
+  - **Mineração de gráficos de `Aulas/images/`**: inventariei as 108 imagens da pasta — só 8
+    estavam reaproveitadas antes desta sessão (+ as 2 que adicionei nas Aulas 01/04 hoje). Duas
+    tabelas clássicas do algoritmo de Yates (`dadosyates.png`, `yatesout.png`) já usadas no livro
+    (Cap.6) mas nunca nos slides — adicionadas a `Aulas2026/MATD48-13.Rmd` ("O algoritmo tabular,
+    antes de existir pacote estatístico" + "A tabela de sinais: todos os sete efeitos de uma
+    vez"). Também conferi que a visualização de "faces opostas do cubo" que o professor lembra de
+    2025 (`EfeitoTK.png`, cubo com faces coloridas por nível +/-) **já está** em
+    `Aulas2026/MATD48-12.Rmd` ("Efeitos principais: faces opostas do cubo") — reimplementada com
+    dado real do biodiesel, não só reaproveitada; não é um gap, já foi minerada em rodada anterior.
+  - **Verificação**: MATD48-13 renderiza limpo (33 slides, 0 transbordo depois de ajustar a
+    largura da primeira imagem, 0 citação crua, 0 imagem quebrada). Nada commitado ainda.
+  - **Pendente**: as ~96 imagens restantes de `Aulas/images/` (analytics/dashboards de ferramentas,
+    material de outras aulas — Stevens, sketchplanations, distribuições) não foram revisadas uma a
+    uma; se o professor tiver em mente um gráfico específico de uma aula específica, apontar ajuda
+    a não garimpar às cegas.
+
+- **2026-09-19 (cont. 11) — achado real: `sit3.png` faltando completava uma sequência pedagógica, e
+  um erro de texto pré-existente no livro** (continuando a mineração de gráficos, sem pedido novo
+  do professor):
+  - **Descoberta**: rastreei a origem de `experimento1.png`/`sit2.png`/`sit4.png` (já usados) até
+    `Aulas/www/test.R` — na verdade um arquivo de **outro curso** (MATC65, Estatística em
+    Psicologia, co-lecionado com André Leite), não MATD48; a maior parte das ~96 imagens restantes
+    (Stevens, Location, Dispersion, TypesStats etc.) pertence a esse outro curso e não deveria ser
+    minerada aqui. Mas as 4 imagens "Situação Experimental 1-4" (adaptadas de Hinkelmann &
+    Kempthorne, 1994) são genuinamente do material de planejamento de experimentos — 3 das 4 já
+    reaproveitadas (Cap.3 e Cap.4), faltava só `sit3.png`.
+  - **`sit3.png` é o elo que faltava**: comparei as 4 imagens lado a lado — Situação 1 (1
+    caixa/tratamento, submuestreo, **fatal**: só 3 UEs no experimento todo), Situação 2 (12 vasos
+    individuais, sem submuestreo), Situação 3 (2 caixas/tratamento, submuestreo com replicação —
+    **exatamente** a estrutura do exemplo real da tilápia que a Aula 05/Cap.3 já usa, só que sem
+    diagrama esquemático), Situação 4 (mesma coisa que 3, mas em blocos). Adicionada ao Cap.3
+    (`03-dca.Rmd`, junto das 2 já existentes) e à Aula 05, como ponte visual explícita para o
+    exemplo da tilápia.
+  - **Bug de texto real encontrado ao verificar as imagens com cuidado**: o texto pré-existente do
+    livro (rodada anterior, não desta sessão) dizia "apenas 3 UEs **por tratamento**" para a
+    Situação 1 — mas a imagem mostra **uma única caixa por tratamento**, ou seja, 3 UEs **no
+    total**, uma por tratamento, não três. É uma diferença que muda a gravidade do problema: com 1
+    UE/tratamento não sobra grau de liberdade nenhum para estimar erro experimental — bem mais
+    grave do que "3 por tratamento" sugeria. Corrigido, com os graus de liberdade de cada situação
+    agora explícitos (0, 9 e 3 gl de erro, respectivamente).
+  - **Verificação**: rebuild completo do livro — 77/77 imagens, 0 `\@ref` quebrados. Aula 05
+    (25→33 slides): 1 bug de layout achado e corrigido (3 imagens em `include_graphics()` sem
+    `fig.show="hold"` empilham verticalmente em vez de lado a lado — 1521px de transbordo antes do
+    fix), 0 transbordo depois, 0 citação crua, 0 imagem quebrada. Nada commitado ainda.

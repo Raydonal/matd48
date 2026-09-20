@@ -3,3 +3,16 @@
 # directory to occasionally copy itself into itself across repeated renders,
 # ballooning to hundreds of MB. Never commit it.
 Livro/_bookdown_files/
+
+# Kept on disk for whoever edits the course locally, never published: this file
+# documents Claude Code's own working conventions, and the professor does not
+# want any trace of AI-assistant tooling reachable on the published site.
+CLAUDE.md
+
+# Reference material outside the course's own output — not this repo's to
+# publish (copyright, or another course's material) or not ready for
+# publication. Full copies are kept privately outside this repo.
+cristiano/
+TERMINEI.txt
+porfavorFechar o claude dessa maquina.md
+scripts/out/

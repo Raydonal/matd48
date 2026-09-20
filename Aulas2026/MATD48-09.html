@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -317,7 +317,7 @@ sentido perguntar "o bloco 2 é significativo?"; ele só existe para ser neutral
 
 ## A população conceitual de respostas de um DBCA
 
-&lt;img src="../Aulas/images/quadro5Blocos.png" alt="" width="55%" /&gt;
+&lt;img src="assets/images/quadro5Blocos.png" alt="" width="55%" /&gt;
 
 `\(Y_{ijk}\)` = resultado (potencial) do tratamento `\(k\)` na `\(j\)`-ésima UE do bloco `\(i\)`: uma tabela
 bloco `\(\times\)` tratamento, não um vetor solto de 24 números — é essa estrutura que o
@@ -387,7 +387,7 @@ neste conjunto de dados (`\(p=0{,}89\)`).
 Tratamento e Bloco aparecem no **mesmo nível** — nenhum refina o outro, a assinatura de fatores
 **cruzados** — e só se reencontram no Erro, que sobra depois de descontar ambos.
 
-&lt;img src="MATD48-09_files/figure-html/hasse-dbca-09-1.png" alt="" width="331.2" /&gt;
+![](../Livro/figuras/hasse/slide-dbca.svg)&lt;!-- --&gt;
 
 `\(1+7+2+14=24=N\)` — os 14 gl de Erro batem com `dim(X)` do slide anterior: `\(24-1-7-2=14\)`, a mesma
 regra de subtração do Cap. 2/4 do livro-texto, agora aplicada a dois fatores cruzados em vez de
@@ -515,9 +515,58 @@ all.equal(anova(mod_a)["tratamento", "F value"], anova(mod_b)["tratamento", "F v
 
 --
 
-As linhas **cruzam-se** em vários pontos — a aditividade tratamento-bloco é só aproximada aqui.
-Sem repetição por célula, não há como testar formalmente a interação: qualquer desvio de
-aditividade é absorvido pelo erro. O gráfico de perfis é o diagnóstico informal disponível.
+As linhas **cruzam-se** em vários pontos. Isso é sinal de não aditividade, ou é ruído? O gráfico levanta a suspeita — mas não responde.
+
+---
+
+## Dá para testar aditividade com uma observação por casela?
+
+A interação **completa**, de `\((t-1)(b-1)\)` gl, realmente não se separa do erro: ocupa o mesmo espaço. Mas daí **não** segue que aditividade seja intestável.
+
+--
+
+**Teste de Tukey (1949).** Abra mão de estimar `\((t-1)(b-1)\)` parâmetros e postule a forma **multiplicativa**, com um único parâmetro: `\((\tau\beta)_{ij}=\eta\,\tau_i\beta_j\)`. Sobra **1 gl** — e 1 gl cabe folgado dentro do erro.
+
+`$$SQ_N=\frac{\Big[\sum_i\sum_j y_{ij}(\bar y_{i\cdot}-\bar y_{\cdot\cdot})(\bar y_{\cdot j}-\bar y_{\cdot\cdot})\Big]^2}{\sum_i(\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2 \;\sum_j(\bar y_{\cdot j}-\bar y_{\cdot\cdot})^2}, \qquad 1\text{ gl}$$`
+
+`$$F_0=\frac{SQ_N}{\big(SQ_{Erro}-SQ_N\big)/[(t-1)(b-1)-1]} \;\sim\; F_{1,\,(t-1)(b-1)-1}$$`
+
+Em palavras: parte-se o erro em **não aditividade (1 gl)** e **resto**, e pergunta-se se a primeira é grande demais para ser ruído.
+
+---
+
+## O teste de Tukey nos dados do pepino
+
+
+``` r
+mu_g &lt;- mean(pepino$altura)
+ef_t &lt;- tapply(pepino$altura, pepino$tratamento, mean) - mu_g
+ef_b &lt;- tapply(pepino$altura, pepino$bloco,      mean) - mu_g
+
+num  &lt;- sum(pepino$altura * ef_t[as.character(pepino$tratamento)] *
+                            ef_b[as.character(pepino$bloco)])
+SQ_N &lt;- num^2 / (sum(ef_t^2) * sum(ef_b^2))
+
+tab  &lt;- summary(mod_dbca)[[1]]
+SQ_E &lt;- tab["Residuals", "Sum Sq"]; gl_E &lt;- tab["Residuals", "Df"]
+F_0  &lt;- SQ_N / ((SQ_E - SQ_N) / (gl_E - 1))
+c(SQ_N = SQ_N, F = F_0, p = pf(F_0, 1, gl_E - 1, lower.tail = FALSE))
+```
+
+```
+##        SQ_N           F           p 
+## 0.001820434 0.030572294 0.863891823
+```
+
+--
+
+`\(F_{1,13}\)` praticamente zero, `\(p\approx0{,}86\)`: **nenhuma evidência de não aditividade**. O cruzamento das linhas era ruído — coerente com o bloco explicar pouquíssima variação neste experimento.
+
+**O gráfico levantou a suspeita; o teste a descartou.** É essa a divisão de trabalho, e é por isso que o diagnóstico visual nunca dispensa o formal.
+
+--
+
+.footnote[Ressalva: o teste só tem poder contra a forma **multiplicativa**. Em compensação, quando `\(\eta\)` é significativo, isso costuma indicar que uma **transformação** da resposta restauraria a aditividade — diagnóstico construtivo, não só veredito.]
 
 ---
 
@@ -530,6 +579,8 @@ aditividade é absorvido pelo erro. O gráfico de perfis é o diagnóstico infor
 - Valor perdido: fórmula de Yates, com ajuste em `\(gl_{Erro}\)` e em `\(SQ_{Trat}\)`.
 - Eficiência relativa quantifica se blocar valeu a pena — não é automático.
 - Próxima aula: teste de Friedman (alternativa não paramétrica) e blocos incompletos balanceados.
+
+---
 
 ## Referências
 

@@ -134,7 +134,7 @@ $$
 algo da ordem de **centenas de milhares** de usuários por grupo — perfeitamente viável para uma
 plataforma grande, impossível para a maioria dos experimentos de laboratório do resto deste livro.
 Métricas de receita são ainda piores: distribuições fortemente assimétricas, com uma minoria de
-usuários de alto gasto dominando a variância, de modo que o denominador $p_1(1-p_1)$ acima
+usuários de alto gasto dominando a variância, de modo que o fator $p_1(1-p_1)$ no numerador acima
 subestima muito a dificuldade real de detectar efeitos em métricas monetárias.
 
 **Múltiplas métricas e múltiplos testes simultâneos.** Um teste A/B raramente monitora uma única
@@ -187,7 +187,7 @@ poder_ab$n
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ab-poder-tabela)(\#tab:ab-poder-tabela)Tamanho amostral necessário por grupo para detectar diferentes lifts, partindo de p0 = 10%, alpha = 0,05, poder = 80%</caption>
+<caption>(\#tab:ab-poder-tabela)Tamanho amostral necessário por grupo para detectar diferentes lifts, partindo de p0 = 10%, alpha = 0,05, poder = 80%</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Cenário </th>
@@ -306,7 +306,7 @@ tibble(
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ab-peeking-sim)(\#tab:ab-peeking-sim)Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira</caption>
+<caption>(\#tab:ab-peeking-sim)Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Procedimento </th>
@@ -396,7 +396,7 @@ tibble(
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ab-winners-curse-sim)(\#tab:ab-winners-curse-sim)Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas</caption>
+<caption>(\#tab:ab-winners-curse-sim)Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Quantidade </th>
@@ -632,7 +632,7 @@ regret_medio <- tibble(
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:bandit-tabela-final)(\#tab:bandit-tabela-final)Regret acumulado médio ao final de 3.000 rodadas, 300 réplicas Monte Carlo</caption>
+<caption>(\#tab:bandit-tabela-final)Regret acumulado médio ao final de 3.000 rodadas, 300 réplicas Monte Carlo</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Política </th>
@@ -730,13 +730,12 @@ Um segundo ponteiro: os **métodos de Taguchi** [@taguchi1986] para desenho robu
 pergunta ligeiramente diferente da deste livro — não "qual combinação de fatores maximiza a
 resposta média?" (a pergunta do Capítulo 7), mas "qual combinação de fatores de controle torna a
 resposta **menos sensível** a fatores de ruído que o pesquisador não consegue controlar em
-produção?" (temperatura ambiente, variação de matéria-prima, desgaste de equipamento). A proposta
-de Taguchi — arranjos ortogonais cruzando fatores de controle com fatores de ruído, e uma métrica
-de "razão sinal-ruído" como resposta a otimizar — teve influência industrial enorme, ainda que
-parte de seu ferramental estatístico original tenha sido revisado e criticado por estatísticos
-posteriores por ineficiência estatística em relação a alternativas baseadas em superfície de
-resposta. Fica como direção de leitura para quem quiser ir além mesmo deste capítulo — fora do
-escopo que podemos desenvolver aqui com o rigor que o resto do livro exige.
+produção?" (temperatura ambiente, variação de matéria-prima, desgaste de equipamento). Diferente do
+ponteiro anterior, este **é** desenvolvido neste livro — a Seção \@ref(desenho-robusto) do
+Capítulo 7 mostra a proposta original de Taguchi (arranjos cruzados de controle e ruído, razão
+sinal-ruído) e a alternativa de Vining e Myers [-@viningmyers1990], que resolve o mesmo problema
+com duas superfícies de resposta (média e log-variância) a partir de um único delineamento
+replicado — estatisticamente mais eficiente e mais interpretável.
 
 ## Resumo do capítulo
 

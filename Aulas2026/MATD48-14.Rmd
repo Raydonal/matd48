@@ -4,14 +4,14 @@ subtitle: "Ideia geral de 3ᵏ, resolução em fracionados e otimização de pro
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -47,16 +47,22 @@ Fatores com **três** níveis igualmente espaçados (permite estimar curvatura).
 $3-1=2$ graus de liberdade; uma interação $A{\times}B$ em um $3^2$ tem $2\times2=4$ graus de
 liberdade (Montgomery, 2017).
 
---
+---
 
-**Confusão em $3^k$:** usa contrastes de grau único, $AB^2$: $L = i + 2j \pmod 3$. Valores
-$L=0,1,2$ definem três blocos de tamanho $3^{k-1}$.
+## Confusão em $3^k$: os componentes $AB$ e $AB^2$
+
+Os $4$ graus de liberdade de $A{\times}B$ num $3^2$ se repartem em **dois componentes ortogonais
+de 2 gl cada**, $AB$ e $AB^2$ — e não em contrastes de 1 gl, como no $2^k$.
+
+Confunde-se **um** deles com o bloco. O componente $AB^2$ corresponde ao contraste
+$L = i + 2j \pmod 3$; os valores $L=0,1,2$ definem três blocos de tamanho $3^{k-1}$, gastando os
+$3-1=2$ graus de liberdade do bloco.
 
 ```{r ab2-demo, echo=FALSE}
 crossing(A = 0:2, B = 0:2) %>%
   mutate(L = (A + 2*B) %% 3, Bloco = paste("Bloco", L+1)) %>%
   arrange(Bloco) %>%
-  kable(format = "html") %>% kable_styling(font_size = 16, full_width = FALSE)
+  kable(format = "html") %>% kable_styling(font_size = 11, full_width = FALSE)
 ```
 
 ---
@@ -73,14 +79,79 @@ Exemplo: gerador $D=ABC$ ($I=ABCD$) em um $2^{4-1}$ de 8 corridas. Multiplicando
 
 --
 
-**Resolução:**
+**Definição (resolução).** A resolução de um fracionado é o **comprimento da menor palavra** da relação definidora. Não é uma convenção: é o que determina quem fica confundido com quem.
 
-- **III** — efeitos principais aliasados com interações duplas (2fi).
-- **IV** — principais limpos de 2fi; mas 2fi aliasadas entre si.
-- **V** — principais e 2fi todos limpos entre si.
+.pull-left[
+- **III** — principais aliasados com duplas (2fi).
+- **IV** — principais limpos de 2fi; 2fi aliasadas entre si.
+- **V** — principais e 2fi todos limpos.
+]
+.pull-right[
+No exemplo, $I=ABCD$ tem uma palavra de comprimento **4** — logo o $2^{4-1}$ com $D=ABC$ é de **resolução IV**, e é por isso que $A$ apareceu aliasado com uma **tripla** ($BCD$), não com uma dupla.
+]
 
-O sistema de resolução como resumo do custo de fracionar é tratado em detalhe por
-(Montgomery, 2017) e (Box, Hunter & Hunter, 2005).
+---
+
+## Com $p \geq 2$: a interação generalizada
+
+Com $p$ geradores, a relação definidora **não** tem $p$ palavras: tem $2^p-1$. As que faltam são as **interações generalizadas** — produtos dos geradores.
+
+--
+
+Exemplo: $2^{5-2}$ em 8 corridas, geradores $D=AB$ e $E=AC$, isto é $I=ABD$ e $I=ACE$. O produto dá a terceira palavra:
+
+$$(ABD)(ACE)=A^2BCDE=BCDE \qquad\Longrightarrow\qquad I=ABD=ACE=BCDE$$
+
+Menor palavra: comprimento **3** → **resolução III**. Esquecer a interação generalizada faz o experimentador acreditar que tem resolução IV quando tem III.
+
+---
+
+## A estrutura de alias, calculada
+
+```{r alias-2_5_2}
+base <- expand_grid(A = c(-1,1), B = c(-1,1), C = c(-1,1)) %>%
+  mutate(D = A * B, E = A * C)                      # os dois geradores
+
+cols  <- c("A","B","C","D","E"); todos <- list(I = rep(1, nrow(base)))
+for (m in 1:5) for (cb in combn(cols, m, simplify = FALSE))
+  todos[[paste(cb, collapse = "")]] <- Reduce(`*`, base[cb])
+chave  <- map_chr(todos, ~ paste(.x[1] * .x, collapse = ""))  # mesma coluna de sinais
+grupos <- split(names(todos), chave)
+
+tibble(grupo = map_chr(grupos, ~ paste(sort(.x), collapse = " = "))) %>%
+  kable() %>% kable_styling(font_size = 11, full_width = FALSE)
+```
+
+--
+
+Oito grupos para oito corridas, 1 gl cada. **Fracionar não cria informação: redistribui.**
+
+---
+
+## O que "aliasado" significa para o número que você vê
+
+A tabela anterior mostrou $A=BD=CE$ (mesma coluna de sinais). Isso não é só uma curiosidade
+algébrica — é uma afirmação sobre **o que o coeficiente rotulado "A" está de fato estimando**.
+
+```{r alias-numerico-14}
+set.seed(2026)
+base <- expand_grid(A = c(-1,1), B = c(-1,1), C = c(-1,1)) %>%
+  mutate(D = A * B, E = A * C)             # mesmos geradores de antes: I = ABD = ACE = BCDE
+
+efeito_A_real <- 5; efeito_BD_real <- 3    # dois efeitos VERDADEIROS, diferentes, sobrepostos por design
+base$y <- 20 + (efeito_A_real/2)*base$A + (efeito_BD_real/2)*(base$B*base$D) + rnorm(8, 0, 0.3)
+
+contraste_rotulado_A <- 2 * mean(base$y * base$A)
+c(estimado = round(contraste_rotulado_A, 2), soma_dos_dois_efeitos = efeito_A_real + efeito_BD_real)
+```
+
+--
+
+O contraste rotulado "$A$" recupera a **soma** $A+BD$ (`r round(efeito_A_real + efeito_BD_real,1)`),
+não o efeito de $A$ isolado ($5$): o experimento, por construção, não guarda informação para
+separá-los. Rodar este fracionado e reportar "$A$ tem efeito 5" seria simplesmente **falso** aqui
+— o número certo a reportar é "a soma de $A$ com $BD$ é 8", exatamente o que a coluna de alias já
+avisava antes de qualquer dado existir.
 
 ---
 
@@ -238,8 +309,7 @@ sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso
 ## Encerramento: retrospectiva dos 14 encontros
 
 .pull-left[
-**Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+
-\varepsilon$ como linguagem comum.
+**Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+ \varepsilon$ como linguagem comum.
 
 **Cap. 3:** DCA, submuestreo, transformações, comparações múltiplas.
 ]
@@ -263,6 +333,8 @@ da análise posterior — determina se essa pergunta pode ser respondida com con
 - Superfície de resposta estima curvatura via termos quadráticos; o ponto estacionário pode ser
   máximo, mínimo **ou sela** — só os autovalores da Hessiana decidem.
 - Fim do curso: desenhar bem é o que torna a análise posterior quase dispensável.
+
+---
 
 ## Referências
 

@@ -46,14 +46,14 @@ summary(modelo_rsm)$coefficients %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:energia-rsm)(\#tab:energia-rsm)Modelo de segunda ordem para energia de corte</caption>
+<caption>(\#tab:energia-rsm)Modelo de segunda ordem para energia de corte</caption>
  <thead>
   <tr>
-   <th style="text-align:left;">  </th>
+   <th style="text-align:left;">   </th>
    <th style="text-align:right;"> Estimate </th>
    <th style="text-align:right;"> Std. Error </th>
    <th style="text-align:right;"> t value </th>
-   <th style="text-align:right;"> Pr(&gt;&amp;#124;t&amp;#124;) </th>
+   <th style="text-align:right;"> Pr(&gt;|t|) </th>
   </tr>
  </thead>
 <tbody>
@@ -130,14 +130,19 @@ $$
 $$
 
 em que $\mathbf{b} = (\hat\beta_{\text{Velocidad}}, \hat\beta_{\text{ângulo}})'$ é o vetor de
-coeficientes lineares e $\mathbf{B}$ é a matriz **Hessiana** (simétrica) dos termos quadráticos e
-de interação,
+coeficientes lineares e $\mathbf{B}$ é a matriz **simétrica dos coeficientes de segunda ordem**
+(quadráticos na diagonal, de interação fora dela),
 
 $$
 \mathbf{B} = \begin{pmatrix} \hat\beta_{\text{Velocidad}^2} & \hat\beta_{\text{Velocidad}\cdot
 \text{ângulo}}/2 \\ \hat\beta_{\text{Velocidad}\cdot\text{ângulo}}/2 & \hat\beta_{\text{ângulo}^2}
 \end{pmatrix}.
 $$
+
+Note que $\mathbf{B}$ **não** é a Hessiana: do gradiente $\nabla \hat y = \mathbf{b} + 2\mathbf{B}\mathbf{x}$
+segue $\nabla^2 \hat y = 2\mathbf{B}$. As duas matrizes têm os mesmos sinais de autovalores — por
+isso a classificação do ponto estacionário é a mesma —, mas são os autovalores de $\mathbf{B}$, e
+não os da Hessiana, que aparecem como as **taxas** $\lambda_i$ da forma canônica adiante.
 
 A **natureza** do ponto estacionário — máximo, mínimo ou sela — é decidida pelos autovalores de
 $\mathbf{B}$: ambos negativos indicam máximo, ambos positivos indicam mínimo, e **sinais opostos
@@ -151,7 +156,8 @@ B_hess <- matrix(
   c(2 * b_rsm["I(Velocidad^2)"],     b_rsm["Velocidad:angulo"],
     b_rsm["Velocidad:angulo"],       2 * b_rsm["I(angulo^2)"]),
   nrow = 2
-) / 2   # ver definição de B acima: os termos da diagonal do modelo já vêm com o "2"
+) / 2   # B tem beta_ii na diagonal e beta_ij/2 fora: o 2*.../2 da diagonal devolve
+    # o proprio beta_ii, e o termo de interacao fica dividido por 2
 
 ponto_estacionario <- -0.5 * solve(B_hess) %*% c(b_rsm["Velocidad"], b_rsm["angulo"])
 rownames(ponto_estacionario) <- c("Velocidade", "Ângulo")
@@ -228,33 +234,62 @@ list(y0 = unname(y0_chapeu), lambda = lambda_canonico, eixos_w = V_rot)
 
 Os eixos canônicos $w_1,w_2$ são combinações lineares (rotacionadas) de velocidade e ângulo — não
 correspondem a nenhum dos dois fatores originais isoladamente. O sinal oposto de
-$\lambda_1\approx$ 0 e $\lambda_2\approx$
--0.006 é a mesma informação da Seção \@ref(ponto-estacionario) (sela),
-mas agora quantificada: a superfície cai com taxa $|\lambda_1|$ ao longo de $w_1$ e sobe com taxa
-$|\lambda_2|$ ao longo de $w_2$ — a direção $w_1$ (maior $|\lambda|$) é onde a superfície muda mais
-rápido, a informação que a análise canônica acrescenta à classificação simples do ponto
-estacionário [@myersmontgomery2016].
+$\lambda_1\approx$ 4.16\times 10^{-5} e $\lambda_2\approx$
+-0.00551 é a mesma informação da Seção \@ref(ponto-estacionario) (sela),
+mas agora quantificada. A leitura dos sinais é direta: ao longo de $w_i$ a superfície **sobe** se
+$\lambda_i>0$ e **desce** se $\lambda_i<0$, a uma taxa dada por $|\lambda_i|$. Aqui
+$\lambda_1>0$ e $\lambda_2<0$: a superfície sobe ao longo de $w_1$ e cai ao longo de $w_2$.
+
+O que a análise canônica acrescenta à simples classificação do ponto estacionário é a **escala
+relativa** das duas curvaturas. Como
+$|\lambda_2|/|\lambda_1| \approx$ 133,
+a sela é fortemente **alongada**: ao longo de $w_1$ a superfície é quase plana, enquanto ao longo
+de $w_2$ ela muda duas ordens de grandeza mais rápido. É $w_2$ — a direção de **maior**
+$|\lambda|$ — que domina o comportamento local da resposta, e é nela que vale a pena mover o
+processo. Uma crista quase plana como a de $w_1$ é, na prática, uma faixa de combinações
+velocidade/ângulo praticamente equivalentes em energia: liberdade para otimizar *outro* critério
+(custo, desgaste de ferramenta) sem perda mensurável nesta resposta [@myersmontgomery2016].
 
 ### Análise de ridge: otimizando dentro de um raio fixo da região experimental {#ridge-analysis}
 
-Quando o ponto estacionário é uma sela (como aqui) ou cai fora da região onde os dados foram
-coletados, extrapolar até $\mathbf{x}_0$ é injustificado — o modelo de segunda ordem só é confiável
-*dentro* da nuvem de pontos observados. A **análise de ridge** [@myersmontgomery2016] resolve isso
-perguntando uma pergunta mais modesta: para cada raio fixo $\rho$ (distância ao centro do desenho),
-qual é o melhor ponto sobre o círculo (ou esfera, em mais dimensões) de raio $\rho$? Isso é
-otimização restrita — maximizar $\hat y(\mathbf{x})$ sujeito a $\mathbf{x}'\mathbf{x}=\rho^2$ —, cuja
-condição de estacionariedade de Lagrange é
+Dois problemas distintos tornam o ponto estacionário um alvo insuficiente. O primeiro é ele cair
+**fora** da região onde os dados foram coletados: aí segui-lo é extrapolar, e o modelo de segunda
+ordem só é confiável *dentro* da nuvem de pontos observados. O segundo — o caso **deste** exemplo,
+em que $\mathbf{x}_0=(3.28\text{ m/s};\ 56.4^\circ)$
+está confortavelmente dentro dos dados — é o ponto estacionário ser uma **sela**: ele não é nem
+máximo nem mínimo, de modo que "ir até $\mathbf{x}_0$" simplesmente não responde à pergunta de
+otimização.
+
+A **análise de ridge** [@myersmontgomery2016] contorna os dois casos com uma pergunta mais modesta:
+para cada raio fixo $\rho$ (distância ao centro do desenho), qual é o melhor ponto sobre o círculo
+(ou esfera, em mais dimensões) de raio $\rho$? Isso é otimização restrita — otimizar
+$\hat y(\mathbf{x})$ sujeito a $\mathbf{x}'\mathbf{x}=\rho^2$ —, cuja condição de
+estacionariedade de Lagrange é
 $$
 \mathbf{b} + 2\mathbf{B}\mathbf{x} = 2\mu\,\mathbf{x}
 \quad\Longleftrightarrow\quad
 \mathbf{x}(\mu) = \tfrac{1}{2}(\mu\mathbf{I}-\mathbf{B})^{-1}\mathbf{b},
 $$
 em que o multiplicador de Lagrange $\mu$ é ajustado até que $\lVert\mathbf{x}(\mu)\rVert=\rho$.
-Variando $\rho$ de $0$ até a borda da região experimental, obtém-se o **caminho de ridge**: a
-sequência de pontos ótimos restritos, um para cada raio.
 
-Velocidade e ângulo estão em escalas e unidades muito diferentes ($2$–$5\text{ m/s}$ contra
-$20$–$60°$) — um "raio" euclidiano só faz sentido depois de **codificar** as duas variáveis para
+A condição de estacionariedade sozinha **não basta**: para um mesmo $\rho$ ela admite várias
+raízes $\mu$, e cada uma corresponde a um ponto crítico diferente sobre o círculo. A escolha do
+ramo é o que decide qual delas é a resposta procurada [@myersmontgomery2016; @draper1963ridge]:
+
+$$
+\mu > \lambda_{\max}(\mathbf{B}) \;\Rightarrow\; \textbf{máximo restrito},
+\qquad
+\mu < \lambda_{\min}(\mathbf{B}) \;\Rightarrow\; \textbf{mínimo restrito},
+$$
+
+e dentro de cada ramo $\lVert\mathbf{x}(\mu)\rVert$ é monótona em $\mu$, o que torna o ajuste de
+$\mu$ a um $\rho$ desejado um problema unidimensional bem posto. Fora desses dois ramos obtêm-se
+pontos de sela da função restrita — críticos, mas nem máximo nem mínimo. Varrendo $\rho$ de $0$ até
+a borda da região experimental, obtém-se o **caminho de ridge**: a sequência de pontos
+ótimos-restritos, um para cada raio.
+
+Velocidade e ângulo estão em escalas e unidades muito diferentes ($2{,}3$–$4{,}5\text{ m/s}$ contra
+$20°$–$60°$) — um "raio" euclidiano só faz sentido depois de **codificar** as duas variáveis para
 uma escala comum, a mesma convenção de $\pm1$ já usada em todo o livro para fatoriais.
 
 
@@ -277,7 +312,14 @@ y0_cod <- coef(modelo_rsm_cod)["(Intercept)"]
 
 
 ``` r
-raios <- seq(0.2, 2.2, by = 0.1)
+# Ate onde o raio pode ir sem extrapolar? A regiao experimental e a CAIXA
+# [-1,1]^2 (grade 3x3 em unidades codificadas). O circulo de raio rho so fica
+# inteiramente dentro da caixa ate rho = 1 (circulo INSCRITO); a partir dai ele
+# escapa pelos lados, tocando o desenho apenas nos quatro vertices, que estao a
+# raio sqrt(2). Paramos em 1: e o maior raio para o qual NENHUMA direcao theta
+# leva para fora dos dados.
+raio_max <- 1
+raios <- seq(0.2, raio_max, by = 0.1)
 
 y_no_circulo <- function(theta, rho) {
   z_theta <- rho * c(cos(theta), sin(theta))
@@ -297,24 +339,47 @@ caminho_ridge <- map_dfr(raios, function(rho) {
          y_predito = opt$objective)
 })
 
-ggplot(caminho_ridge, aes(Velocidad, angulo, color = y_predito)) +
-  geom_path(linewidth = 1) + geom_point(size = 2) +
+# Fronteira da regiao experimental, para deixar visivel que o caminho fica dentro dela.
+fronteira <- tibble(theta = seq(0, 2 * pi, length.out = 361)) %>%
+  mutate(Velocidade = c_vel + s_vel * raio_max * cos(theta),
+         `Ângulo`   = c_ang + s_ang * raio_max * sin(theta))
+
+caminho_ridge %>%
+  rename(Velocidade = Velocidad, `Ângulo` = angulo) %>%
+  ggplot(aes(Velocidade, `Ângulo`)) +
+  geom_path(data = fronteira, linetype = "dashed", color = "grey55") +
+  geom_path(aes(color = y_predito), linewidth = 1) +
+  geom_point(aes(color = y_predito), size = 2) +
   scale_color_viridis_c(name = "Energia\npredita") +
-  labs(title = "Caminho de ridge: melhor ponto para cada raio codificado ao centro do desenho",
-       subtitle = "Raio em unidades codificadas (±1 = amplitude do desenho original)") +
+  labs(title = "Caminho de ridge: melhor ponto para cada\nraio ao centro do desenho",
+       subtitle = paste0("Tracejado: maior circulo inteiramente contido na regiao\nexperimental ",
+                         "(raio codificado ", round(raio_max, 2), "). O caminho nao o ultrapassa."),
+       x = "Velocidade de corte (m/s)", y = "Ângulo de saída (graus)") +
   theme_minimal(base_size = 12)
 ```
 
 <img src="07-superficie-resposta_files/figure-html/energia-ridge-1.png" alt="" width="80%" style="display: block; margin: auto;" />
 
 O caminho de ridge sai do centro do desenho e se afasta em direção à combinação de
-velocidade/ângulo que **minimiza** a energia predita a cada raio, agora com um raio bem definido
-porque as duas variáveis foram trazidas à mesma escala (a análise pode ser invertida trivialmente
-para buscar o máximo, bastando trocar o sinal do problema de otimização) — uma alternativa
-disciplinada a simplesmente relatar "o mínimo fica na fronteira" como fizemos antes: em
-vez de um único ponto de fronteira, o caminho de ridge mostra *toda a trajetória* de pontos
-ótimos-restritos, permitindo escolher um raio que equilibre otimização e distância seguro do
-extrapolar além dos dados observados.
+velocidade/ângulo que **minimiza** a energia predita a cada raio — aqui o objetivo é minimizar,
+porque energia de corte é custo; o problema de máximo é o mesmo com o sinal trocado, e corresponde
+ao ramo $\mu > \lambda_{\max}(\mathbf{B})$ da condição de Lagrange. O raio só é bem definido
+porque as duas variáveis foram trazidas à mesma escala.
+
+Duas observações sobre o que a figura mostra. Primeira: o caminho **para no círculo tracejado**.
+Vale explicitar por que o limite é $\rho=1$ e não $\rho=\sqrt2$. A região experimental aqui é a
+*caixa* $[-1,1]^2$ — uma grade $3\times3$ —, enquanto o caminho de ridge percorre *círculos*. O
+maior círculo inteiramente contido na caixa é o **inscrito**, de raio $1$; o círculo de raio
+$\sqrt2\approx1{,}41$ toca o desenho apenas nos quatro vértices e, em todas as demais direções,
+já está fora dos dados. Como a direção ótima $\theta$ é escolhida pelo próprio procedimento, e não
+por nós, só $\rho\le1$ garante que *nenhuma* direção escolhida seja extrapolação — que é a
+disciplina que esta seção prega e precisa praticar. (Em desenhos cuja região é esférica por
+construção, como o CCD rotacionável da próxima seção, essa distinção desaparece: lá a região *é* um
+círculo, e o raio axial $\alpha$ é o limite natural.) Segunda: em vez de relatar apenas "o mínimo
+fica na fronteira", como fizemos antes, o caminho mostra *toda a trajetória* de pontos
+ótimos-restritos, permitindo ao engenheiro escolher conscientemente um raio que equilibre ganho na
+resposta e proximidade da região onde o modelo foi de fato estimado — quanto maior o raio, maior o
+ganho predito e maior a incerteza sobre ele.
 
 ## O caminho de máxima inclinação: de um fatorial inicial até a região do ótimo {#steepest-ascent}
 
@@ -380,7 +445,7 @@ caminho_subida %>% select(passo, temperatura, tempo, retencao_verdadeira) %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:steepest-ascent-passos)(\#tab:steepest-ascent-passos)Caminho de máxima inclinação: um novo experimento a cada passo</caption>
+<caption>(\#tab:steepest-ascent-passos)Caminho de máxima inclinação: um novo experimento a cada passo</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> passo </th>
@@ -565,7 +630,7 @@ ggplot(grade_ccd, aes(x1, x2, fill = D)) +
   geom_point(data = melhor_ponto, aes(x1, x2), color = "red", size = 3) +
   scale_fill_viridis_c(name = "Desejabilidade\nglobal D") +
   coord_equal() +
-  labs(title = "Desejabilidade global: retenção de vitamina C (max) e atividade de água (min)",
+  labs(title = "Desejabilidade global: retenção de vitamina C (max)\ne atividade de água (min)",
        x = expression(x[1]), y = expression(x[2])) +
   theme_minimal(base_size = 12)
 ```
@@ -578,6 +643,203 @@ das duas desejabilidades encontra, exatamente o problema que motivou a técnica.
 esse ponto corresponde a temperatura $\approx$ 62.4°C e
 tempo $\approx$ 5.5 h, com desejabilidade global
 $D\approx$ 0.81.
+
+## Desenho robusto: otimizando a média e a variância ao mesmo tempo {#desenho-robusto}
+
+Toda a metodologia deste capítulo, até aqui, otimiza uma **média** — o ponto estacionário, a
+análise de ridge, a desejabilidade combinam previsões de $E[y\mid\mathbf{x}]$. Genichi Taguchi
+[-@taguchi1986] levantou, na engenharia da qualidade japonesa dos anos 1980, uma pergunta
+diferente: além de acertar um alvo, um processo de manufatura precisa ser **robusto** — pouco
+sensível a fatores de ruído (variação de matéria-prima, desgaste de equipamento, condições
+ambientais) que o engenheiro não controla em produção, mesmo que os controle perfeitamente durante
+o experimento. Dois processos podem ter a mesma média e diferir enormemente em quão essa média se
+mantém estável quando o ruído de produção entra em cena — e MSR clássica, focada só na média, não
+enxerga essa diferença.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Engenharia: espessura de um revestimento por deposição</strong><br>
+Um processo de deposição controla dois fatores — <strong>temperatura</strong> e
+<strong>pressão</strong> da câmara — para produzir um revestimento de espessura alvo
+15&nbsp;&micro;m. Além de acertar a média, a fábrica quer <strong>variância mínima</strong> em
+torno do alvo: um lote com espessura média 15 mas desvio-padrão alto tem mais peças fora da
+tolerância do que um lote com a mesma média e desvio-padrão baixo.
+</div>
+```
+
+### A proposta original de Taguchi, e por que ela foi revista
+
+Taguchi propôs cruzar um **arranjo interno** de fatores de controle com um **arranjo externo** de
+fatores de ruído (simulados deliberadamente no experimento, por exemplo variando a matéria-prima
+entre lotes conhecidos de qualidade diferente), calculando para cada combinação de controle uma
+**razão sinal-ruído** agregada sobre todas as réplicas de ruído, e escolhendo os níveis de controle
+que maximizam essa razão. A ideia — otimizar robustez, não só média — foi influente e
+genuinamente nova; o **método** teve, porém, duas críticas estatísticas que se consolidaram nas
+décadas seguintes [@viningmyers1990]: (i) arranjos internos $\times$ externos cruzados exigem
+muito mais corridas do que uma única superfície de resposta bem desenhada; e (ii) a razão
+sinal-ruído comprime média e variância numa única estatística, perdendo informação sobre como cada
+uma responde separadamente aos fatores de controle — informação que a própria maquinaria deste
+capítulo (modelo de segunda ordem, ponto estacionário, análise canônica) já sabe extrair.
+
+### A alternativa: duas superfícies de resposta, uma única maquinaria
+
+Vining e Myers [-@viningmyers1990] propuseram tratar o problema de Taguchi com as ferramentas já
+construídas neste capítulo: em vez de um arranjo externo separado, usa-se um único delineamento com
+**réplicas genuínas** em cada ponto (o CCD da Seção \@ref(ccd) serve para isso sem alteração
+nenhuma) e ajustam-se **duas** superfícies de segunda ordem a partir dos mesmos dados — uma para a
+média $\hat y(\mathbf{x})$ em cada ponto, outra para o logaritmo da variância
+$\ln\widehat{\sigma^2}(\mathbf{x})$ (o log estabiliza a variância da própria estimativa de
+variância, pela mesma razão da transformação de Box-Cox da Seção \@ref(transformacoes-dca)). O
+problema de otimização vira: minimizar $\widehat{\sigma^2}(\mathbf{x})$ sujeito a
+$\hat y(\mathbf{x})$ ficar dentro de uma faixa aceitável ao redor do alvo — exatamente o tipo de
+otimização restrita que a Seção \@ref(desejabilidade) já resolveu por busca em grade, agora com uma
+restrição em vez de uma segunda desejabilidade.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — duas superfícies de resposta (média e log-variância) a partir de um único CCD replicado</div>
+```
+
+
+``` r
+set.seed(2026)
+pontos_robusto <- bind_rows(
+  expand_grid(x1 = c(-1, 1), x2 = c(-1, 1)),
+  tibble(x1 = c(-alpha_rot, alpha_rot, 0, 0), x2 = c(0, 0, -alpha_rot, alpha_rot)),
+  tibble(x1 = 0, x2 = 0)
+)
+r_robusto <- 8   # replicas genuinas por ponto do desenho -- e o que permite estimar variancia local
+
+dados_robusto <- pontos_robusto %>%
+  slice(rep(1:n(), each = r_robusto)) %>%
+  mutate(
+    temperatura = 180 + 10 * x1,
+    pressao     = 40 + 5 * x2,
+    mu_true    = 15 + 0.3*x1 - 0.2*x2 - 0.15*x1^2 - 0.1*x2^2 + 0.05*x1*x2,
+    sigma_true = exp(0.35 + 0.30*x1 + 0.25*x2^2),   # variancia sobe com temperatura, e com |pressao| fora do centro
+    espessura  = rnorm(n(), mu_true, sigma_true)
+  )
+
+resumo_robusto <- dados_robusto %>%
+  group_by(x1, x2) %>%
+  summarise(media = mean(espessura), variancia = var(espessura), .groups = "drop")
+
+resumo_robusto %>%
+  kable(digits = 2, caption = "Média e variância amostrais (8 réplicas) em cada um dos 9 pontos do CCD") %>%
+  kable_styling(full_width = FALSE)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:robusto-dados)Média e variância amostrais (8 réplicas) em cada um dos 9 pontos do CCD</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> x1 </th>
+   <th style="text-align:right;"> x2 </th>
+   <th style="text-align:right;"> media </th>
+   <th style="text-align:right;"> variancia </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> -1.41 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 14.38 </td>
+   <td style="text-align:right;"> 0.45 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> -1.00 </td>
+   <td style="text-align:right;"> -1.00 </td>
+   <td style="text-align:right;"> 13.78 </td>
+   <td style="text-align:right;"> 1.59 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> -1.00 </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 13.67 </td>
+   <td style="text-align:right;"> 2.11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> -1.41 </td>
+   <td style="text-align:right;"> 14.64 </td>
+   <td style="text-align:right;"> 2.73 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 14.47 </td>
+   <td style="text-align:right;"> 2.25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 1.41 </td>
+   <td style="text-align:right;"> 13.49 </td>
+   <td style="text-align:right;"> 1.63 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> -1.00 </td>
+   <td style="text-align:right;"> 15.29 </td>
+   <td style="text-align:right;"> 4.98 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 16.67 </td>
+   <td style="text-align:right;"> 5.36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1.41 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 15.02 </td>
+   <td style="text-align:right;"> 4.60 </td>
+  </tr>
+</tbody>
+</table>
+
+
+``` r
+modelo_media_r  <- lm(media ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2, data = resumo_robusto)
+modelo_logvar_r <- lm(log(variancia) ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2, data = resumo_robusto)
+```
+
+
+``` r
+grade_robusto <- expand_grid(x1 = seq(-alpha_rot, alpha_rot, length.out = 80),
+                              x2 = seq(-alpha_rot, alpha_rot, length.out = 80)) %>%
+  mutate(
+    media_pred = predict(modelo_media_r, newdata = .),
+    var_pred   = exp(predict(modelo_logvar_r, newdata = .)),
+    viavel     = abs(media_pred - 15) < 0.5   # faixa aceitavel ao redor do alvo de 15 um
+  )
+
+ponto_robusto <- grade_robusto %>% filter(viavel) %>% slice_min(var_pred, n = 1)
+
+ggplot(grade_robusto, aes(x1, x2)) +
+  geom_raster(aes(fill = var_pred)) +
+  geom_contour(aes(z = media_pred), breaks = c(14.5, 15, 15.5), color = "white", linewidth = 0.6) +
+  geom_point(data = ponto_robusto, aes(x1, x2), color = "red", size = 3) +
+  scale_fill_viridis_c(name = expression(hat(sigma)^2), option = "magma") +
+  coord_equal() +
+  labs(title = "Variância prevista (cor) e média prevista\n(contornos brancos, 14,5/15/15,5 µm)",
+       x = expression(x[1]~"(temperatura codificada)"), y = expression(x[2]~"(pressão codificada)")) +
+  theme_minimal(base_size = 12)
+```
+
+<img src="07-superficie-resposta_files/figure-html/robusto-plot-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+
+O contorno branco central marca onde a média prevista cruza exatamente o alvo de 15 µm; a cor de
+fundo mostra que a variância prevista **cresce com a temperatura** ($x_1$ alto) e **cresce nas duas
+direções conforme a pressão se afasta do centro** ($x_2^2$) — duas conclusões que a razão
+sinal-ruído de Taguchi, agregada num único número, jamais teria separado uma da outra. O ponto
+vermelho — o de menor variância prevista dentre os que ficam a $\pm0{,}5$ µm do alvo — fica em
+temperatura $\approx$ 165.9°C (baixa) e pressão $\approx$
+34.5 (próxima do centro), com variância prevista
+$\hat\sigma^2\approx$ 0.82 — bem abaixo da variância observada em
+qualquer ponto de temperatura alta da Tabela acima. A recomendação final para a fábrica: **não** é
+o ponto de temperatura mais alta (ainda que ele também passe perto do alvo), porque ali a variância
+prevista é ordens de grandeza maior — o mesmo tipo de compromisso média-variância que motivou
+Taguchi, resolvido aqui com duas superfícies de resposta interpretáveis separadamente, em vez de
+uma razão sinal-ruído que as mistura.
 
 ## Resumo do capítulo
 
@@ -602,6 +864,11 @@ $D\approx$ 0.81.
 - Quando há mais de uma resposta em jogo, funções de desejabilidade combinam metas individuais
   (maximizar, minimizar ou mirar um alvo) numa única escala $[0,1]$ via média geométrica, que
   penaliza qualquer resposta inaceitável isoladamente.
+- *(Além do programa do semestre)* Desenho robusto pergunta não só "qual ponto acerta o alvo?" mas
+  "qual ponto é **insensível** a ruído de produção?": réplicas genuínas num único CCD alimentam
+  **duas** superfícies de segunda ordem — uma para a média, outra para a log-variância —, que
+  Vining e Myers mostraram serem estatisticamente mais eficientes e mais interpretáveis do que a
+  razão sinal-ruído original de Taguchi.
 
 ## Fim do programa do semestre
 

@@ -11,15 +11,38 @@ teoria de análise de variância (ANOVA) que vem a seguir. Dominar a álgebra de
 permite, no Capítulo 3, *deduzir* por que a ANOVA funciona, em vez de apenas aplicá-la
 mecanicamente [@searle1971linear; @rao1973linear].
 
+## Da população conceitual de respostas ao modelo linear {#populacao-conceitual}
+
+Antes de escrever qualquer símbolo, vale nomear explicitamente o objeto que a tabela científica do
+Capítulo 1 (Tabela \@ref(tab:tabela-cientifica)) já descreveu informalmente. A literatura clássica
+de planejamento de experimentos [@kempthorne1952design; @hinkelmann2008design] chama esse objeto de
+**população conceitual de respostas**: para cada unidade experimental $u$ da população (ou amostra)
+sob estudo e cada um dos $t$ tratamentos, existe um valor de resposta hipotético — o que se
+observaria *se* $u$ recebesse aquele tratamento. Só um desses valores por unidade é de fato
+observado (o do tratamento que ela efetivamente recebeu); os demais existem apenas
+**conceitualmente**, nunca revelados pelos dados. É exatamente a mesma estrutura que o Capítulo 1
+formalizou como resultados potenciais $Y_i(t)$ — duas literaturas, a da inferência causal
+(Neyman-Rubin) e a clássica de planejamento de experimentos (Kempthorne), descrevendo o mesmo
+objeto matemático com vocabulários diferentes. Vale reter os dois nomes: este livro seguirá usando
+"resultados potenciais" por sua ligação direta com a Seção \@ref(neyman-rubin), mas "população
+conceitual de respostas" é como o mesmo objeto aparece na tradição de Kempthorne e Federer, e o
+leitor deve reconhecê-lo em qualquer um dos dois vocabulários.
+
+O modelo linear deste capítulo — e, com ele, toda a álgebra de somas de quadrados dos Capítulos
+3–6 — é a maquinaria que permite resumir essa população conceitual (inteiramente hipotética, nunca
+observada por completo) através de um número finito de parâmetros estimáveis a partir da amostra
+efetivamente observada.
+
 ## Diagramas de Hasse: a estrutura do delineamento antes da álgebra {#hasse}
 
 Antes de escrever qualquer modelo em símbolos, vale formalizar uma pergunta que o Capítulo 1 já
 levantou de forma informal (Seção \@ref(fontes-variacao)) e que voltará em todo capítulo aplicado
 deste livro: *que fontes de variação o desenho do experimento gera, e quantos graus de liberdade
 cada uma consome?* Responder isso **antes** de rodar `aov()`/`lm()` — e não depois, como
-confirmação — é o padrão de rigor que este livro segue desde o início; o **diagrama de Hasse**
-[@bailey2008design] é a ferramenta gráfica padrão para fazer essa pergunta de forma sistemática,
-útil sobretudo quando o delineamento tem múltiplos fatores cruzados e/ou aninhados (Capítulos 4–6).
+confirmação — é o padrão de rigor que este livro segue desde o início; o **diagrama de Hasse**,
+introduzido por @throckmorton1961structures e sistematizado depois por @bailey2008design na forma
+usada hoje, é a ferramenta gráfica padrão para fazer essa pergunta de forma sistemática, útil
+sobretudo quando o delineamento tem múltiplos fatores cruzados e/ou aninhados (Capítulos 4–6).
 
 ### O diagrama como um retrato da estrutura do dado
 
@@ -54,19 +77,23 @@ contrapartida geométrica, expressa como uma figura em vez de uma matriz.
 
 
 ``` r
+# Informa-se o numero de CLASSES de cada termo; os graus de liberdade saem da
+# estrutura do diagrama (ver hasse_helpers.R), nao de conta digitada a mao.
 nos_dca <- tibble(
-  termo = c("Média", "Tratamento", "Erro"),
-  df    = c(1, 4 - 1, 24 - 4),
-  x     = c(0, 0, 0),
-  y     = c(3, 2, 1)
+  termo   = c("Média", "Tratamento", "Erro"),
+  classes = c(1, 4, 24)            # 1 media geral; t=4 tratamentos; N=24 unidades
 )
 arestas_dca <- tibble(de = c("Média", "Tratamento"), para = c("Tratamento", "Erro"))
 
-plot_hasse(nos_dca, arestas_dca, titulo = "DCA: t=4, n=6 (N=24)")
+knitr::include_graphics(
+  hasse_svg(nos_dca, arestas_dca,
+            arquivo = "figuras/hasse/dca.svg",
+            titulo  = "DCA: t=4, n=6 (N=24)")
+)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="02-modelos-lineares_files/figure-html/hasse-dca-1.png" alt="Diagrama de Hasse de um DCA com t=4 tratamentos e n=6 réplicas por tratamento (N=24). Uma cadeia simples: cada termo refina exatamente o termo anterior, sem ramificação — a assinatura de um delineamento de um único fator, sem estrutura de bloqueio." width="75%" />
+<img src="figuras/hasse/dca.svg" alt="Diagrama de Hasse de um DCA com t=4 tratamentos e n=6 réplicas por tratamento (N=24). Uma cadeia simples: cada termo refina exatamente o termo anterior, sem ramificação — a assinatura de um delineamento de um único fator, sem estrutura de bloqueio." width="42%" />
 <p class="caption">(\#fig:hasse-dca)Diagrama de Hasse de um DCA com t=4 tratamentos e n=6 réplicas por tratamento (N=24). Uma cadeia simples: cada termo refina exatamente o termo anterior, sem ramificação — a assinatura de um delineamento de um único fator, sem estrutura de bloqueio.</p>
 </div>
 
@@ -82,21 +109,23 @@ mesmo nível — nenhum refina o outro — e só se reencontram na interação:
 
 ``` r
 nos_axb <- tibble(
-  termo = c("Média", "A", "B", "A×B", "Erro"),
-  df    = c(1, 3 - 1, 4 - 1, (3 - 1) * (4 - 1), 3 * 4 * (2 - 1)),
-  x     = c(0, -1, 1, 0, 0),
-  y     = c(4, 3, 3, 2, 1)
+  termo   = c("Média", "A", "B", "A×B", "Erro"),
+  classes = c(1, 3, 4, 3 * 4, 24)  # a=3; b=4; ab=12 caselas; N=24 unidades
 )
 arestas_axb <- tibble(
   de   = c("Média", "Média", "A", "B", "A×B"),
   para = c("A", "B", "A×B", "A×B", "Erro")
 )
 
-plot_hasse(nos_axb, arestas_axb, titulo = "Fatorial A×B: a=3, b=4, n=2 (N=24)")
+knitr::include_graphics(
+  hasse_svg(nos_axb, arestas_axb,
+            arquivo = "figuras/hasse/axb.svg",
+            titulo  = "Fatorial A&#215;B: a=3, b=4, n=2 (N=24)")
+)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="02-modelos-lineares_files/figure-html/hasse-axb-1.png" alt="Diagrama de Hasse de um fatorial A×B cruzado, a=3 níveis de A, b=4 níveis de B, n=2 réplicas por casela (N=24). A e B aparecem no mesmo nível (cruzados, sem relação de refinamento entre si) e se reencontram na interação A×B, que os refina a ambos." width="75%" />
+<img src="figuras/hasse/axb.svg" alt="Diagrama de Hasse de um fatorial A×B cruzado, a=3 níveis de A, b=4 níveis de B, n=2 réplicas por casela (N=24). A e B aparecem no mesmo nível (cruzados, sem relação de refinamento entre si) e se reencontram na interação A×B, que os refina a ambos." width="62%" />
 <p class="caption">(\#fig:hasse-axb)Diagrama de Hasse de um fatorial A×B cruzado, a=3 níveis de A, b=4 níveis de B, n=2 réplicas por casela (N=24). A e B aparecem no mesmo nível (cruzados, sem relação de refinamento entre si) e se reencontram na interação A×B, que os refina a ambos.</p>
 </div>
 
@@ -108,7 +137,7 @@ interação, aqui obtida por contagem geométrica em vez de memorizada como fór
 Capítulos 4 (bloqueio, onde bloco e tratamento tipicamente aparecem cruzados, como $A$ e $B$
 acima) e 5–6 (fatoriais com três ou mais fatores, e confusão, em que o diagrama ajuda a visualizar
 com qual termo um bloco foi deliberadamente confundido) reaproveitam este mesmo diagrama e a mesma
-função `plot_hasse()` a cada novo delineamento.
+função `hasse_svg()` a cada novo delineamento.
 
 ## O modelo linear geral {#modelo-geral}
 
@@ -211,7 +240,7 @@ dados_api %>% slice_head(n = 6) %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:sim-api)(\#tab:sim-api)Seis primeiras observações do conjunto de dados da API</caption>
+<caption>(\#tab:sim-api)Seis primeiras observações do conjunto de dados da API</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> id </th>
@@ -297,10 +326,10 @@ covariável fixa que vale 1 para todas as unidades. Concretamente, para as quatr
 observações simuladas, $\mathbf{X}$ e $\mathbf{Y}$ são
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:X-explicito)(\#tab:X-explicito)As quatro primeiras linhas da matriz de delineamento X (modelo simples)</caption>
+<caption>(\#tab:X-explicito)As quatro primeiras linhas da matriz de delineamento X (modelo simples)</caption>
  <thead>
   <tr>
-   <th style="text-align:left;">  </th>
+   <th style="text-align:left;">   </th>
    <th style="text-align:right;"> (Intercept) </th>
    <th style="text-align:right;"> requisicoes </th>
   </tr>
@@ -519,7 +548,7 @@ X_sobre[1:4, ] %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:estimabilidade-r)(\#tab:estimabilidade-r)Primeiras linhas de X na codificação sobreparametrizada do fator servidor</caption>
+<caption>(\#tab:estimabilidade-r)Primeiras linhas de X na codificação sobreparametrizada do fator servidor</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> Intercepto </th>
@@ -599,7 +628,7 @@ tibble(funcao = names(lambdas), estimavel = estimavel) %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:estimabilidade-criterio)(\#tab:estimabilidade-criterio)Verificação algébrica de estimabilidade via inversa generalizada</caption>
+<caption>(\#tab:estimabilidade-criterio)Verificação algébrica de estimabilidade via inversa generalizada</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> funcao </th>
@@ -968,9 +997,19 @@ $$
 $$
 
 Quando $\mathbf{X}$ inclui uma coluna de intercepto (o caso usual), o espaço-coluna de
-$\mathbf{X}$ contém $\mathbf{1}$, e daí $\mathbf{P}_X\mathbf{M} = \mathbf{M}\mathbf{P}_X =
-\mathbf{M}$ — o que implica que $\mathbf{P}_X - \tfrac{1}{n}\mathbf{J}$ também é simétrica e
-idempotente, com posto $\mathrm{posto}(\mathbf{X}) - 1$. Isso permite decompor:
+$\mathbf{X}$ contém $\mathbf{1}$, e portanto $\mathbf{P}_X\mathbf{1}=\mathbf{1}$, donde
+$\mathbf{P}_X\mathbf{J}=\mathbf{J}\mathbf{P}_X=\mathbf{J}$. Daí
+
+$$
+\mathbf{P}_X\mathbf{M}=\mathbf{M}\mathbf{P}_X=\mathbf{P}_X-\tfrac{1}{n}\mathbf{J},
+$$
+
+e como $\mathbf{J}\mathbf{J}=n\mathbf{J}$, segue
+$\big(\mathbf{P}_X-\tfrac1n\mathbf{J}\big)^2=\mathbf{P}_X-\tfrac1n\mathbf{J}$: a matriz
+$\mathbf{P}_X-\tfrac1n\mathbf{J}$ é simétrica e idempotente, com posto
+$\mathrm{posto}(\mathbf{X}) - 1$. (Note que $\mathbf{P}_X\mathbf{M}$ **não** é igual a
+$\mathbf{M}$ — isso só valeria se $\mathbf{P}_X=\mathbf{I}$, ou seja, se o modelo ajustasse
+perfeitamente todos os pontos.) Isso permite decompor:
 
 $$
 \underbrace{\mathbf{Y}'\mathbf{M}\mathbf{Y}}_{\mathrm{SQ}_{\text{Total}}} =
@@ -1230,9 +1269,8 @@ $$
 \hat{\boldsymbol{\beta}}_2 = (\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2)^{-1}\mathbf{X}_2'\mathbf{M}_1\mathbf{Y}.
 $$
 
-Como $\mathbf{M}_1$ é simétrica e idempotente (Seção \@ref(matriz-projecao)), $\mathbf{X}_2'\mathbf{M}_1
-= (\mathbf{M}_1\mathbf{X}_2)'\mathbf{M}_1 = (\mathbf{M}_1\mathbf{X}_2)'(\mathbf{M}_1\mathbf{X}_2)(\mathbf{M}_1\mathbf{X}_2)^{-1}\cdots$
-— mais diretamente, basta notar que $\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2 =
+Como $\mathbf{M}_1$ é simétrica e idempotente (Seção \@ref(matriz-projecao)), vale
+$\mathbf{M}_1 = \mathbf{M}_1'\mathbf{M}_1$, e basta notar que $\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2 =
 (\mathbf{M}_1\mathbf{X}_2)'(\mathbf{M}_1\mathbf{X}_2) = \tilde{\mathbf{X}}_2'\tilde{\mathbf{X}}_2$ e
 $\mathbf{X}_2'\mathbf{M}_1\mathbf{Y} = \tilde{\mathbf{X}}_2'\tilde{\mathbf{Y}}$ (usando $\mathbf{M}_1 =
 \mathbf{M}_1'\mathbf{M}_1$), logo

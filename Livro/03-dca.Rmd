@@ -1,6 +1,9 @@
 # Delineamento completamente aleatorizado {#dca}
 
 ```{r setup-cap3, include=FALSE}
+# Sem isto, `kable(...) %>% kable_styling(...)` faz o bookdown numerar a legenda DUAS
+# vezes ("Table 4.1: Table 4.2: ..."). Ver CLAUDE.md, footgun #8.
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                        fig.align = "center", out.width = "75%")
 suppressPackageStartupMessages({
@@ -214,6 +217,217 @@ liberdade $(t-1,\,N-t)$ como propriedade do desenho, geometricamente visível no
 criar a validade da inferência, que já vem da aleatorização, mas para trocar reembaralhamento
 computacional por uma fórmula fechada, a $F_{t-1,N-t}$.
 
+### O modelo linear deduzido da aleatorização {#modelo-deduzido}
+
+Até aqui usamos o modelo $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ como ponto de partida, justificando-o
+informalmente. Vale agora fazer melhor: **deduzi-lo** do ato físico de sortear, sem postulá-lo. É
+esta derivação — devida a @cornfield1944samples e sistematizada por @kempthorne1952design — que
+separa um curso de planejamento de experimentos de um curso de regressão. No fim dela teremos algo
+inesperado: o erro que emerge do sorteio é **correlacionado**, e ainda assim mínimos quadrados
+ordinários continuam ótimos.
+
+#### A população conceitual de respostas
+
+Considere $N$ unidades experimentais e $t$ tratamentos, e defina
+
+$$
+Y_{ij} \;=\; \text{resposta que a unidade } j \text{ apresentaria sob o tratamento } i,
+\qquad i=1,\dots,t,\quad j=1,\dots,N .
+$$
+
+O quadro $t\times N$ dos $Y_{ij}$ é a **população conceitual de respostas**. Ela não é observável:
+de cada unidade $j$ veremos **uma** linha apenas, a do tratamento que o sorteio lhe deu. São
+exatamente os **resultados potenciais** de Neyman-Rubin da Seção \@ref(potencial-causal), agora
+organizados como uma tabela — e é essa tabela que torna a derivação possível.
+
+Escreva as médias marginais $\bar Y_{i\cdot}$ (sobre unidades, para o tratamento $i$),
+$\bar Y_{\cdot j}$ (sobre tratamentos, para a unidade $j$) e $\bar Y_{\cdot\cdot}$ (geral). A
+identidade algébrica exata de qualquer tabela de dupla entrada é
+
+$$
+Y_{ij}=\bar Y_{\cdot\cdot}
++\underbrace{(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})}_{\text{efeito do tratamento}}
++\underbrace{(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})}_{\text{efeito da unidade}}
++\underbrace{(Y_{ij}-\bar Y_{i\cdot}-\bar Y_{\cdot j}+\bar Y_{\cdot\cdot})}_{\text{interação tratamento}\times\text{unidade}} .
+$$
+
+O último termo é uma **interação entre tratamento e unidade**: o tratamento $i$ favorecendo
+especialmente a unidade $j$. A **aditividade no sentido estrito** consiste em supor esse termo
+nulo — e convém ser franco sobre o que se está supondo: que o efeito de trocar o tratamento $i$
+pelo $k$ é o mesmo em toda unidade. É uma suposição, não uma conveniência de notação, e é
+precisamente a que o Capítulo 4 voltará a interrogar ao discutir aditividade em blocos.
+
+#### A variável de seleção de Cornfield
+
+Falta a peça que liga a população conceitual ao dado observado: uma representação matemática do
+**sorteio**. Seja $y_{ir}$ a resposta da $r$-ésima réplica do tratamento $i$ e defina
+
+$$
+\delta_{ir}^{\,j}=
+\begin{cases}
+1, & \text{se a } r\text{-ésima réplica do tratamento } i \text{ foi aplicada à unidade } j,\\
+0, & \text{caso contrário.}
+\end{cases}
+$$
+
+Os índices têm papéis distintos, e confundi-los é o erro comum aqui: $ir$ designa uma **posição no
+plano experimental** (a 2ª réplica do tratamento A), enquanto $j$ designa uma **unidade física**
+(o voluntário nº 5). A aleatoriedade de $\delta$ não vem de natureza alguma: vem do papelzinho
+sorteado pelo pesquisador. Sob aleatorização completa,
+
+$$
+P(\delta_{ir}^{\,j}=1)=\frac1N,
+\qquad
+P\big(\delta_{ir}^{\,j}=1 \,\big|\, \delta_{i'r'}^{\,j'}=1\big)=\frac{1}{N-1}
+\;\; (ir\neq i'r',\; j\neq j'),
+\qquad
+\sum_{j=1}^{N}\delta_{ir}^{\,j}=1 .
+$$
+
+A última identidade diz apenas que toda posição do plano é preenchida por exatamente uma unidade.
+Com ela, a **relação de seleção** que conecta o observável ao conceitual é uma soma que "filtra" a
+população:
+
+$$
+y_{ir}=\sum_{j=1}^{N}\delta_{ir}^{\,j}\,Y_{ij}.
+$$
+
+#### A dedução
+
+Substituindo a identidade algébrica já simplificada pela aditividade estrita,
+$Y_{ij}\approx\bar Y_{\cdot\cdot}+(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})+(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})$,
+na relação de seleção, e usando $\sum_j\delta_{ir}^{\,j}=1$ para eliminar os termos que não dependem
+de $j$:
+
+$$
+y_{ir}
+=\underbrace{\bar Y_{\cdot\cdot}}_{\mu}
++\underbrace{(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})}_{\tau_i}
++\underbrace{\sum_{j=1}^{N}\delta_{ir}^{\,j}\,(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})}_{\omega_{ir}}
+\qquad\Longrightarrow\qquad
+\boxed{\;y_{ir}=\mu+\tau_i+\omega_{ir}\;}
+$$
+
+O modelo linear **não foi suposto: foi obtido**. E note o que $\omega_{ir}$ é — não um "ruído"
+abstrato, mas o efeito da unidade específica que o sorteio colocou naquela posição. Daí o nome
+**erro de aleatorização**, e daí a diferença decisiva em relação ao $\varepsilon_{ij}$ de
+Gauss-Markov: as propriedades de $\varepsilon$ são *assumidas*; as de $\omega$ são *deduzidas* da
+distribuição do sorteio, que o próprio pesquisador escolheu.
+
+#### As propriedades de $\omega$ — e uma surpresa
+
+Escreva $u_j=\bar Y_{\cdot j}-\bar Y_{\cdot\cdot}$ para o efeito da unidade $j$, de modo que
+$\sum_j u_j=0$, e defina $\sigma_u^2=\frac{1}{N-1}\sum_j u_j^2$. Tomando esperanças sobre a
+distribuição de aleatorização (indicada por $\mathbb E_R$):
+
+$$
+\mathbb E_R(\omega_{ir})=\sum_{j}\frac1N\,u_j=0,
+\qquad
+\mathrm{Var}_R(\omega_{ir})=\sum_j \frac1N u_j^2=\Big(1-\frac1N\Big)\sigma_u^2 ,
+$$
+
+e, para duas posições distintas $ir\neq i'r'$,
+
+$$
+\mathrm{Cov}_R(\omega_{ir},\omega_{i'r'})
+=\frac{1}{N(N-1)}\Big[\Big(\sum_j u_j\Big)^2-\sum_j u_j^2\Big]
+=-\frac{\sigma_u^2}{N} \;<\;0 .
+$$
+
+A covariância é **negativa**, e a razão é puramente combinatória: as unidades são sorteadas **sem
+reposição**, então a unidade que foi parar numa posição não pode estar em outra. Em forma
+matricial, empilhando as $N$ observações,
+
+$$
+\mathrm{Var}_R(\boldsymbol\omega)=\mathbf V=\sigma_u^2\Big(\mathbf I_N-\tfrac1N\mathbf J_N\Big),
+$$
+
+que **não é diagonal**. Ou seja: a aleatorização, que é o que garante a validade da inferência,
+produz por construção erros correlacionados — exatamente a hipótese que o teorema de Gauss-Markov
+(Seção \@ref(gauss-markov) do Capítulo 2) exige que *não* seja violada.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — verificando as três identidades por enumeração exaustiva</div>
+```
+
+As identidades acima não são aproximações assintóticas: valem exatamente. Com $N$ pequeno dá para
+conferir isso enumerando **todas** as aleatorizações possíveis, em vez de simular.
+
+```{r omega-enumeracao}
+N <- 7
+set.seed(7)
+u <- rnorm(N, 0, 3); u <- u - mean(u)          # efeitos de unidade (somam zero)
+sigma2_u <- sum(u^2) / (N - 1)
+
+# todas as N! atribuicoes possiveis de unidades a posicoes
+permutacoes <- function(v) {
+  if (length(v) == 1) return(matrix(v))
+  do.call(rbind, lapply(seq_along(v),
+                        function(i) cbind(v[i], permutacoes(v[-i]))))
+}
+omega <- matrix(u[permutacoes(seq_len(N))], ncol = N)   # uma linha por aleatorizacao
+
+tibble(
+  Quantidade = c("E(ω)", "Var(ω)", "Cov(ω, ω′)"),
+  Enumerado  = c(mean(omega[, 1]),
+                 mean(omega[, 1]^2),
+                 mean(omega[, 1] * omega[, 2])),
+  Fórmula    = c(0,
+                 (1 - 1 / N) * sigma2_u,
+                 -sigma2_u / N)
+) %>%
+  kable(digits = 10, caption = "Propriedades do erro de aleatorização, sobre todas as N! atribuições") %>%
+  kable_styling(full_width = FALSE)
+```
+
+#### Zyskind: por que ainda assim usamos mínimos quadrados ordinários {#zyskind-dca}
+
+Se $\mathrm{Var}(\boldsymbol\omega)=\mathbf V\neq\sigma^2\mathbf I$, o teorema de Gauss-Markov não
+se aplica, e o estimador de variância mínima passa a ser o de **mínimos quadrados generalizados**
+de @aitken1936least, $\hat{\boldsymbol\beta}_{GLS}=(\mathbf X'\mathbf V^{-1}\mathbf X)^{-}
+\mathbf X'\mathbf V^{-1}\mathbf Y$. Seria desconfortável: todo o curso usa MQO.
+
+O resultado que resolve a questão é de @zyskind1967canonical. Sob o modelo de Aitken, o estimador
+de **mínimos quadrados ordinários** permanece BLUE se e somente se existe uma matriz $\mathbf Q$
+tal que
+
+$$
+\mathbf V\mathbf X=\mathbf X\mathbf Q,
+$$
+
+isto é, se e somente se o espaço-coluna de $\mathbf V\mathbf X$ está contido no de $\mathbf X$ —
+$\mathcal C(\mathbf V\mathbf X)\subseteq\mathcal C(\mathbf X)$.
+
+Verifiquemos a condição no nosso caso. Como o DCA tem intercepto, $\mathbf 1\in\mathcal C(\mathbf X)$,
+e portanto $\mathbf J\mathbf X=\mathbf 1(\mathbf 1'\mathbf X)$ tem todas as colunas proporcionais a
+$\mathbf 1$, logo em $\mathcal C(\mathbf X)$. Daí
+
+$$
+\mathbf V\mathbf X=\sigma_u^2\Big(\mathbf X-\tfrac1N\mathbf J\mathbf X\Big)\in\mathcal C(\mathbf X),
+$$
+
+e a condição de Zyskind **é satisfeita**.
+
+```{r zyskind-verificacao}
+trat <- factor(rep(1:3, each = 3))       # t=3 tratamentos, 3 replicas, N=9
+X <- model.matrix(~ trat)
+V <- diag(9) - matrix(1 / 9, 9, 9)       # sigma_u^2 fatorado (nao altera a condicao)
+
+Q <- qr.solve(X, V %*% X)                # resolve V X = X Q em Q
+max(abs(V %*% X - X %*% Q))              # zero numerico => condicao satisfeita
+```
+
+A conclusão é a que faltava para fechar o argumento, e merece ser dita sem rodeios: **embora os
+erros de aleatorização sejam correlacionados, podemos proceder como se não fossem**. Não porque a
+correlação seja pequena ou desprezível, mas porque a estrutura particular que o sorteio induz —
+simetria composta com covariância negativa constante — é exatamente uma para a qual MQO continua
+sendo o melhor estimador linear não viesado. A licença é formal, não uma concessão prática.
+
+Vale reter o desenho completo do argumento, porque ele reaparece no Capítulo 4 para blocos
+[@hinkelmann2008design]: a aleatorização **gera** o modelo linear (não o supõe), **gera** um erro
+correlacionado (não i.i.d.), e **gera**, pela condição de Zyskind, a permissão de analisá-lo com a
+ferramenta mais simples. As três coisas vêm do mesmo sorteio.
+
 ## O delineamento completamente aleatorizado a uma via de classificação {#dca-uma-via}
 
 ```{=html}
@@ -377,9 +591,13 @@ exatamente às somas indexadas $\sum_i n_i(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})^
 (Y_{ij}-\bar Y_{i\cdot})^2$ da Seção \@ref(anova-dca) — a tabela de ANOVA não é maquinaria nova,
 é o Teorema de formas quadráticas idempotentes do Capítulo 2 (Seção \@ref(formas-quadraticas))
 aplicado às matrizes $\mathbf{P}_X-\tfrac1N\mathbf{J}$ (idempotente, posto $t-1$) e
-$\mathbf{I}_N-\mathbf{P}_X$ (idempotente, posto $N-t$), que são independentes pelo Teorema de
-Cochran. Daí decorre diretamente a distribuição $F_{t-1,N-t}$ sob $H_0$ e a não centralidade
-$\phi^2$ sob $H_1$ da Seção \@ref(anova-dca): nenhuma suposição adicional além das já feitas no
+$\mathbf{I}_N-\mathbf{P}_X$ (idempotente, posto $N-t$). As duas **formas quadráticas** correspondentes são independentes — as
+matrizes, sendo determinísticas, não têm do que ser independentes; o que o resultado de Craig
+garante é que $\mathbf A_1\mathbf A_2=\mathbf 0$ implica independência das formas
+$\mathbf Y'\mathbf A_1\mathbf Y$ e $\mathbf Y'\mathbf A_2\mathbf Y$ sob normalidade, e aqui
+$(\mathbf P_X-\tfrac1N\mathbf J)(\mathbf I_N-\mathbf P_X)=\mathbf 0$. Daí decorre diretamente a
+distribuição $F_{t-1,N-t}$ sob $H_0$ e a não centralidade $\lambda$ sob $H_1$ da Seção
+\@ref(anova-dca): nenhuma suposição adicional além das já feitas no
 Capítulo 2.
 
 ### Resultados potenciais e o estimando causal {#potencial-causal}
@@ -509,16 +727,18 @@ genérico do capítulo anterior:
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA de distração</div>
 ```
 
-```{r hasse-dca-distracao, fig.width=3, fig.height=5, fig.cap="Diagrama de Hasse do DCA de distração e tempo de reação: t=3 condições, n=12 voluntários por condição (N=36). A mesma cadeia de três nós do exemplo genérico do Capítulo 2 (Seção sobre diagramas de Hasse), agora com os graus de liberdade deste experimento."}
+```{r hasse-dca-distracao, out.width="42%", fig.cap="Diagrama de Hasse do DCA de distração e tempo de reação: t=3 condições, n=12 voluntários por condição (N=36). A mesma cadeia de três nós do exemplo genérico do Capítulo 2 (Seção sobre diagramas de Hasse), agora com os graus de liberdade deste experimento."}
 nos_tr <- tibble(
-  termo = c("Média", "Condição", "Erro"),
-  df    = c(1, 3 - 1, 36 - 3),
-  x     = c(0, 0, 0),
-  y     = c(3, 2, 1)
+  termo   = c("Média", "Condição", "Erro"),
+  classes = c(1, 3, 36)            # t=3 condicoes; N=36 voluntarios
 )
 arestas_tr <- tibble(de = c("Média", "Condição"), para = c("Condição", "Erro"))
 
-plot_hasse(nos_tr, arestas_tr, titulo = "DCA de distração: t=3, n=12 (N=36)")
+knitr::include_graphics(
+  hasse_svg(nos_tr, arestas_tr,
+            arquivo = "figuras/hasse/dca-distracao.svg",
+            titulo  = "DCA de distração: t=3, n=12 (N=36)")
+)
 ```
 
 Os três nós somam $1+2+33=36=N$, confirmando a leitura da tabela: nenhuma outra fonte de variação
@@ -528,15 +748,30 @@ são o mesmo delineamento (um único fator, sem blocagem nem aninhamento).
 
 Sob $H_0: \tau_1 = \cdots = \tau_t = 0$ (nenhum efeito de tratamento), $F = MS_{\text{Trat}}/MS_E
 \sim F_{t-1,\,N-t}$; rejeita-se $H_0$ para valores grandes de $F$. Quando $H_0$ é falsa, $F$ segue
-uma distribuição $F$ **não central**, com parâmetro de não centralidade
+uma distribuição $F$ **não central**, cujo parâmetro de não centralidade é
 
 $$
-\phi^2 = \frac{\sum_i n_i \tau_i^2}{t\,\sigma^2}
+\lambda = \frac{\sum_i n_i \tau_i^2}{\sigma^2}
+\;\overset{\text{balanceado}}{=}\; N f^2 ,
 $$
 
-(no caso balanceado, $n_i \equiv n$) — quanto maiores os efeitos de tratamento em relação ao
-erro, maior $\phi^2$ e maior o poder do teste. Esse parâmetro é a chave da Seção
-\@ref(numero-replicas-dca).
+em que $f$ é o tamanho de efeito de Cohen. Quanto maiores os efeitos de tratamento em relação ao
+erro, maior $\lambda$ e maior o poder do teste.
+
+Convém distinguir $\lambda$ de uma segunda quantidade que aparece na literatura clássica e é
+fácil de confundir com ele:
+
+$$
+\Phi^2 = \frac{\lambda}{t} = \frac{\sum_i n_i \tau_i^2}{t\,\sigma^2}
+\;\overset{\text{balanceado}}{=}\; n f^2 .
+$$
+
+$\Phi^2$ é a grandeza auxiliar usada nas **curvas características de operação** (curvas OC) de
+@montgomery2017design, tabuladas para leitura gráfica do poder; **não** é o parâmetro de não
+centralidade de distribuição alguma. A distinção é prática, não pedante: funções como
+`pwr::pwr.anova.test()` e `stats::pf(..., ncp = )` esperam $\lambda = Nf^2$, de modo que usar
+$\Phi^2$ no lugar de $\lambda$ subestima o poder por um fator $t$. É $\lambda$ que será a chave
+da Seção \@ref(numero-replicas-dca).
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — ajustando o DCA e obtendo IC's</div>
@@ -607,8 +842,8 @@ $$
 
 isto é, o desvio-padrão das médias populacionais dividido pelo desvio-padrão comum dentro dos
 grupos — quanto mais as médias se afastam entre si em relação ao ruído, maior $f$. A relação com
-o parâmetro de não centralidade da Seção \@ref(anova-dca) é direta: $\phi^2 = n\, t\, f^2/t = n
-f^2$ no caso balanceado. Dado $f$, $\alpha$ e o poder desejado, o número de réplicas $n$ por
+o parâmetro de não centralidade da Seção \@ref(anova-dca) é direta: $\lambda = N f^2 = n\,t\,f^2$
+no caso balanceado (e a grandeza das curvas OC é $\Phi^2=\lambda/t=n f^2$). Dado $f$, $\alpha$ e o poder desejado, o número de réplicas $n$ por
 grupo é obtido numericamente (não há fórmula fechada, pois a distribuição $F$ não central não se
 inverte analiticamente).
 
@@ -633,6 +868,58 @@ coleta de dados, com $f$ estimado a partir de um piloto, da literatura, ou de um
 mínima de interesse prático especificada pelo próprio pesquisador (por exemplo, "uma diferença de
 40 ms ou mais entre condições é relevante clinicamente").
 
+### Um segundo exemplo, com dado real: fertilizante em feijão {#dca-feijao}
+
+O exemplo de distração e tempo de reação, acima, foi simulado deliberadamente — controlar o
+"efeito verdadeiro" permite verificar cada passo da álgebra contra um valor conhecido. Fecha-se a
+seção com a mesma maquinaria aplicada a um dado genuinamente real, sem efeito verdadeiro
+conhecido de antemão.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: dose de fertilizante na produção de feijão</strong><br>
+Um agrônomo compara quatro fertilizantes (F1–F4) quanto à produção de feijão. Vinte parcelas de
+terra, previamente homogeneizadas quanto a exposição solar e tipo de solo, são sorteadas em quatro
+grupos de cinco (<strong>UE = parcela</strong>), cada grupo recebendo um dos quatro fertilizantes.
+Produção (kg) é medida ao final da colheita.
+</div>
+```
+
+```{r feijao-import}
+feijao <- read_csv("data/feijao.csv", show_col_types = FALSE) %>%
+  mutate(Fertilizante = factor(Fertilizante, labels = paste0("F", 1:4)))
+glimpse(feijao)
+```
+
+```{r feijao-anova}
+mod_feijao <- aov(Producao ~ Fertilizante, data = feijao)
+summary(mod_feijao)
+```
+
+```{r feijao-plot, echo=FALSE, fig.width=6, fig.height=3.8, fig.cap="Produção de feijão por fertilizante: pontos individuais (parcelas) e média por grupo com intervalo de confiança de 95%, construído a partir do QME comum."}
+emm_feijao <- emmeans::emmeans(mod_feijao, "Fertilizante") %>% as_tibble()
+ggplot(feijao, aes(Fertilizante, Producao)) +
+  geom_jitter(width = 0.08, alpha = 0.45, size = 2) +
+  geom_pointrange(data = emm_feijao,
+                   aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
+                   color = "#0B4F6C", linewidth = 0.9, size = 0.7) +
+  labs(x = "Fertilizante", y = "Produção (kg)") +
+  theme_minimal(base_size = 13)
+```
+
+O teste $F$ rejeita $H_0$ ($p<0{,}001$): há diferença real entre fertilizantes. F4 (média
+`r round(emm_feijao$emmean[emm_feijao$Fertilizante=="F4"], 1)` kg) supera claramente F1 (média
+`r round(emm_feijao$emmean[emm_feijao$Fertilizante=="F1"], 1)` kg), com F2 e F3 numa faixa
+intermediária — leitura visual confirmada pelos intervalos de confiança do gráfico, que já
+antecipa o que uma comparação múltipla (Seção \@ref(comparacoes-multiplas)) formalizaria.
+
+Honestidade estatística: ao contrário do exemplo simulado, aqui não há garantia de que os
+pressupostos do modelo se sustentam — e de fato não se sustentam perfeitamente. O teste de
+Shapiro-Wilk nos resíduos dá $p\approx `r round(shapiro.test(residuals(mod_feijao))$p.value, 3)`$
+— no limiar de $0{,}05$, uma normalidade duvidosa com só 20 observações. É exatamente o tipo de
+situação real que a Seção \@ref(dca-pressupostos), a seguir, ensina a diagnosticar e tratar (em
+vez de ignorar).
+
 ## Submuestreo em um DCA {#dca-submuestreo}
 
 Retomamos aqui, com rigor, a distinção entre unidade experimental (UE) e unidade amostral
@@ -642,20 +929,29 @@ lote — dizemos que há **submuestreo**. As submuestras não são réplicas do 
 réplicas da *medição* dentro de uma única aplicação do tratamento, e carregam uma fonte de
 variação a mais, que precisa ser modelada separadamente.
 
-```{r fig-ue-uo-submuestreo, echo=FALSE, out.width="95%", fig.cap="Duas formas de organizar o mesmo experimento com três tratamentos (cores/rótulos Trat. 1-3). Situação Experimental 1 (esquerda): cada caixa de 4 vasos recebe um sorteio de tratamento -- a caixa é a UE e cada vaso individual dentro dela é uma unidade amostral (submuestra), gerando submuestreo. Situação Experimental 2 (direita): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, sem submuestreo."}
-knitr::include_graphics(c("../Aulas/images/experimento1.png", "../Aulas/images/sit2.png"))
+```{r fig-ue-uo-submuestreo, echo=FALSE, out.width="95%", fig.cap="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1."}
+knitr::include_graphics(c("../Aulas2026/assets/images/experimento1.png", "../Aulas2026/assets/images/sit2.png",
+                           "../Aulas2026/assets/images/sit3.png"))
 ```
 
-Os dois diagramas mostram o mesmo número de plantas (12 no total, três tratamentos) organizadas de
+Os três diagramas mostram o mesmo número de plantas (12 no total, três tratamentos) organizadas de
 formas distintas. Na Situação 1, o sorteio de tratamento ocorre **caixa a caixa**: uma vez que uma
 caixa recebe, digamos, o Tratamento 1, todos os quatro vasos dentro dela recebem necessariamente o
-mesmo tratamento — a caixa é a UE, e as quatro plantas dentro dela são submuestras da mesma UE, com
-apenas 3 UEs por tratamento efetivamente sorteadas de forma independente. Na Situação 2, cada vaso
-é sorteado **individualmente**: a moeda do desenho aleatorizado é lançada 12 vezes, uma por vaso, e
-UE e unidade amostral coincidem — não há submuestreo, e as 12 observações são, de fato, 12
-réplicas independentes do sorteio de tratamento. A diferença entre as duas situações não aparece em
-nenhuma estatística descritiva calculada ingenuamente sobre os 12 valores brutos — só se torna
-visível quando se pergunta, explicitamente, "quantas vezes o mecanismo de aleatorização foi
+mesmo tratamento — a caixa é a UE, e as quatro plantas dentro dela são submuestras da mesma UE.
+Como só existe **uma** caixa por tratamento, há apenas **3 UEs em todo o experimento** — uma por
+tratamento, não três por tratamento —, e isso é fatal: com uma única UE por tratamento, não sobra
+nenhum grau de liberdade para estimar o erro experimental *entre* UEs, e o efeito do tratamento
+fica completamente confundido com qualquer peculiaridade daquela caixa específica (Capítulo 1,
+Seção \@ref(fontes-variacao)). Na Situação 2, cada vaso é sorteado **individualmente**: a moeda do
+desenho aleatorizado é lançada 12 vezes, uma por vaso, e UE e unidade amostral coincidem — não há
+submuestreo, e as 12 observações são, de fato, 12 réplicas independentes do sorteio de tratamento,
+com $12-3=9$ graus de liberdade de erro. A Situação 3 corrige o problema fatal da Situação 1 sem
+abrir mão do submuestreo: **duas** caixas por tratamento (não uma) dão 2 UEs por tratamento — poucas,
+mas suficientes para estimar o erro experimental entre caixas, com $2\times3-3=3$ graus de
+liberdade — a mesma estrutura, em miniatura, do exemplo real da tilápia a seguir (4 probióticos,
+5 aquários cada). A diferença entre as três situações não aparece em nenhuma estatística
+descritiva calculada ingenuamente sobre os 12 valores brutos — só se torna visível quando se
+pergunta, explicitamente, "quantas vezes o mecanismo de aleatorização foi
 acionado?" — e é exatamente essa pergunta que a distinção UE/unidade amostral formaliza.
 
 ```{=html}
@@ -704,6 +1000,33 @@ com submuestreo um caso particular de **modelo linear misto**, ajustável de for
 sob desbalanceamento) por `nlme::lme()` ou `lme4::lmer()`, embora a ANOVA clássica com `Error()`
 usada adiante já recupere o teste correto no caso balanceado.
 
+O que acontece se o número de submuestras por UE **não** for o mesmo em toda UE — um aquário
+perdeu um peixe, por exemplo? A condição de Zyskind (Seção \@ref(zyskind-dca)) deixa de se
+verificar, e a ANOVA clássica com `Error()` deixa de ter uma base algébrica sólida — o R, nesse
+caso, geralmente avisa:
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — o sintoma de perder o balanceamento: <code>aov()</code> quebra, <code>lmer()</code> não</div>
+```
+
+```{r submuestreo-desbalanceado, warning=TRUE}
+set.seed(77)
+q_desigual <- c(4, 4, 4, 4, 4, 2)   # uma UE com 2 submuestras em vez de 4
+delta_ue   <- rnorm(6, 0, 1.7)
+dados_desbal <- map_dfr(1:6, function(j) {
+  tibble(ue = factor(j), trat = factor(rep(1:3, each = 2)[j]),
+         y  = 10 + 2 * rep(1:3, each = 2)[j] + delta_ue[j] + rnorm(q_desigual[j], 0, 0.9))
+})
+aov(y ~ trat + Error(trat:ue), data = dados_desbal)   # emite o aviso abaixo
+```
+
+O aviso **"Error() model is singular"** não é cosmético: é o `aov()` avisando que a separação em
+estratos experimental/amostral, que a condição de Zyskind garante no caso balanceado, não fecha
+aqui. `lme4::lmer(y ~ trat + (1 | ue), data = dados_desbal)` estima os dois componentes de
+variância por máxima verossimilhança restrita sem exigir essa condição — o preço é que os graus de
+liberdade do teste $F$ deixam de ter fórmula fechada, exigindo uma aproximação (Satterthwaite ou
+Kenward-Roger) fora do escopo deste livro.
+
 ### O diagrama de Hasse do submuestreo: aninhamento em duas camadas
 
 A estrutura de dois erros descrita acima tem um retrato imediato no diagrama de Hasse introduzido
@@ -717,19 +1040,21 @@ unidade amostral (peixe) dentro dela — exatamente o padrão de **aninhamento**
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA com submuestreo</div>
 ```
 
-```{r hasse-submuestreo, fig.width=3.4, fig.height=6.8, fig.cap="Diagrama de Hasse do DCA com submuestreo, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): o submuestreo insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico."}
+```{r hasse-submuestreo, out.width="46%", fig.cap="Diagrama de Hasse do DCA com submuestreo, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): o submuestreo insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico."}
 nos_sub <- tibble(
-  termo = c("Média", "Tratamento", "UE (aquário)", "Unidade amostral (peixe)"),
-  df    = c(1, 4 - 1, 4 * (5 - 1), 4 * 5 * (5 - 1)),
-  x     = c(0, 0, 0, 0),
-  y     = c(4, 3, 2, 1)
+  termo   = c("Média", "Tratamento", "UE (aquário)", "Unidade amostral (peixe)"),
+  classes = c(1, 4, 4 * 5, 4 * 5 * 5)  # t=4; 20 aquarios; N=100 peixes
 )
 arestas_sub <- tibble(
   de   = c("Média", "Tratamento", "UE (aquário)"),
   para = c("Tratamento", "UE (aquário)", "Unidade amostral (peixe)")
 )
 
-plot_hasse(nos_sub, arestas_sub, titulo = "DCA com submuestreo: t=4, r=5, q=5 (N=100)")
+knitr::include_graphics(
+  hasse_svg(nos_sub, arestas_sub,
+            arquivo = "figuras/hasse/dca-submuestreo.svg",
+            titulo  = "DCA com submuestreo: t=4, r=5, q=5 (N=100)")
+)
 ```
 
 Os graus de liberdade dos quatro nós somam exatamente $N=trq=4\times5\times5=100$: $1$ (Média) $+\,
@@ -1452,8 +1777,11 @@ $$\sum_{k=1}^{t-1} \mathbf A_{\boldsymbol\lambda_k} \;=\; \mathbf P_X - \mathbf 
 a mesma diferença de projeções do princípio da soma de quadrados extra (Capítulo 2, Seção
 \@ref(modelo-particionado)), com $\mathbf X_1 = \mathbf 1$ (só o intercepto). É essa identidade —
 uma soma de $t-1$ projeções ortogonais de posto 1 reconstruindo a projeção de posto $t-1$ — que,
-pelo teorema de Cochran citado no Capítulo 2, garante a independência estatística entre os $t-1$
-testes $F$ de contrastes ortogonais, formalizada a seguir.
+pelo teorema de Cochran citado no Capítulo 2, garante que as $t-1$ **somas de quadrados**
+$SQ_{L_1},\dots,SQ_{L_{t-1}}$ são mutuamente independentes, e independentes de $SQ_E$. Note com
+cuidado o que isso **não** diz: as estatísticas $F_k = SQ_{L_k}/QM_E$ compartilham o mesmo
+denominador aleatório $QM_E$ e, por isso, **não** são independentes entre si, ainda que seus
+numeradores sejam. A distinção é formalizada a seguir.
 
 ### Contrastes ortogonais
 

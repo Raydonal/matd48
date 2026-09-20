@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -207,6 +207,23 @@ mantêm a mesma ordenação relativa entre técnicas, coerente com o `\(p\)`-val
 
 ---
 
+## E se Friedman rejeitasse `\(H_0\)`? O pós-teste de Nemenyi
+
+Friedman diz *que* há diferença, não *onde* — o mesmo problema do teste `\(F\)` da ANOVA (Aula 07). O
+pós-teste padrão para postos em blocos é o de **Nemenyi (1963)**: dois tratamentos diferem se
+
+`$$|R_i - R_j| &gt; \underbrace{\frac{q_\alpha}{\sqrt2}}_{\text{amplitude studentizada}} \sqrt{\frac{t(t+1)}{6b}}.$$`
+
+--
+
+**Cuidado, não é automático**: a distância crítica de Nemenyi vem de uma aproximação diferente da
+usada no próprio teste de Friedman — em amostras pequenas, os dois podem **discordar**
+(Nemenyi aponta uma diferença de par que o omnibus não confirmou, ou vice-versa). Por isso, na
+dúvida, prefira reportar o pós-teste só quando o Friedman global já rejeitou `\(H_0\)`, e trate
+divergências como sinal de que `\(b\)` é pequeno demais para conclusões firmes por par.
+
+---
+
 ## Agricultura: painel sensorial (BIB)
 
 Quatro variedades de café (`\(t=4\)`), mas cada degustador avalia só 3 xícaras por sessão (`\(k=3\)`):
@@ -250,6 +267,79 @@ Quatro variedades de café (`\(t=4\)`), mas cada degustador avalia só 3 xícara
 
 Cada linha tem `\(k=3\)` células azuis, cada coluna `\(r=3\)`, e todo par de colunas compartilha azul em
 `\(\lambda=2\)` linhas — o balanceamento é visível de imediato.
+
+---
+
+## Analisando um BIB: totais **ajustados**
+
+Num BIB cada tratamento aparece em blocos **diferentes**, então o total bruto `\(T_i\)` carrega o efeito dos blocos em que ele calhou de estar. A correção é o **total ajustado**:
+
+`$$Q_i = T_{i\cdot} - \frac{1}{k}\sum_{j:\,i\,\in\,\text{bloco}\,j} B_{\cdot j}, \qquad \sum_i Q_i = 0$$`
+
+isto é, de `\(T_i\)` subtrai-se a **soma** dos totais dos blocos em que `\(i\)` apareceu, dividida pelo tamanho do bloco `\(k\)`. Daí
+
+`$$SQ_{\text{Trat(aj)}}=\frac{k\sum_i Q_i^2}{\lambda t}, \quad t-1 \text{ gl}; \qquad gl_{\text{Erro}}=N-t-b+1$$`
+
+---
+
+## O total ajustado, calculado
+
+
+
+
+``` r
+Ti &lt;- tapply(cafe$nota, cafe$trat, sum); Bj &lt;- tapply(cafe$nota, cafe$bloco, sum)
+Q  &lt;- sapply(levels(cafe$trat), function(i) {
+  bls &lt;- cafe$bloco[cafe$trat == i]
+  Ti[i] - sum(Bj[as.character(bls)]) / k
+})
+SQ_aj &lt;- k * sum(Q^2) / (lambda * t_)
+c(soma_Q = sum(Q), SQ_ajustada = SQ_aj,
+  SQ_do_aov = anova(aov(nota ~ bloco + trat, data = cafe))["trat", "Sum Sq"])
+```
+
+```
+##      soma_Q SQ_ajustada   SQ_do_aov 
+##    0.000000    2.363858    2.363858
+```
+
+A fórmula de papel e lápis e a soma de quadrados **sequencial** do `aov()` (bloco primeiro, tratamento depois) dão o mesmo número — não por acaso: é exatamente a mesma projeção.
+
+---
+
+## O preço do bloco incompleto
+
+Duas quantidades fecham a análise e não costumam aparecer em tutorial nenhum:
+
+.pull-left[
+**Variância de um contraste**
+
+`$$\mathrm{Var}(\hat\tau_i-\hat\tau_j)=\frac{2k\,QM_{Res}}{\lambda t}$$`
+
+Note que quem entra é `\(\lambda\)`, não `\(r\)`: o que dá precisão à comparação é **quantas vezes os dois tratamentos apareceram juntos**.
+]
+.pull-right[
+**Eficiência frente ao bloco completo**
+
+`$$E=\frac{\lambda t}{r k}$$`
+
+
+``` r
+QME &lt;- anova(aov(nota ~ bloco + trat,
+                 data = cafe))["Residuals", "Mean Sq"]
+c(var_contraste = 2 * k * QME / (lambda * t_),
+  eficiencia    = lambda * t_ / (r * k))
+```
+
+```
+## var_contraste    eficiencia 
+##    0.08285125    0.88888889
+```
+]
+
+--
+
+`\(E=0.889\)`: o BIB entrega cerca de **89%** da informação que um DBCA completo daria. É o preço explícito de não conseguir pôr os 4 cafés na mesma sessão — e saber o número transforma "não deu para completar o bloco" em decisão de projeto.
 
 ---
 
@@ -362,9 +452,12 @@ c(lambda_t1 = lambda * (t - 1), r_k1 = r * (k - 1))  # devem ser iguais
   frequência total.
 - Próxima aula: duas e três fontes de bloqueio cruzadas — quadrado latino e greco-latino.
 
+---
+
 ## Referências
 
 - Friedman, M. (1937). The use of ranks to avoid the assumption of normality implicit in the analysis of variance. *Journal of the American Statistical Association*, 32(200), 675–701.
+- Nemenyi, P. B. (1963). *Distribution-Free Multiple Comparisons* (Tese de doutorado). Princeton University.
 - Yates, F. (1936). Incomplete randomized blocks. *Annals of Eugenics*, 7(2), 121–140.
 - Cochran, W. G. &amp; Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley &amp; Sons.
 - Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.

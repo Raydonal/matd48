@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -53,12 +53,18 @@ Fatores com **três** níveis igualmente espaçados (permite estimar curvatura).
 `\(3-1=2\)` graus de liberdade; uma interação `\(A{\times}B\)` em um `\(3^2\)` tem `\(2\times2=4\)` graus de
 liberdade (Montgomery, 2017).
 
---
+---
 
-**Confusão em `\(3^k\)`:** usa contrastes de grau único, `\(AB^2\)`: `\(L = i + 2j \pmod 3\)`. Valores
-`\(L=0,1,2\)` definem três blocos de tamanho `\(3^{k-1}\)`.
+## Confusão em `\(3^k\)`: os componentes `\(AB\)` e `\(AB^2\)`
 
-&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+Os `\(4\)` graus de liberdade de `\(A{\times}B\)` num `\(3^2\)` se repartem em **dois componentes ortogonais
+de 2 gl cada**, `\(AB\)` e `\(AB^2\)` — e não em contrastes de 1 gl, como no `\(2^k\)`.
+
+Confunde-se **um** deles com o bloco. O componente `\(AB^2\)` corresponde ao contraste
+`\(L = i + 2j \pmod 3\)`; os valores `\(L=0,1,2\)` definem três blocos de tamanho `\(3^{k-1}\)`, gastando os
+`\(3-1=2\)` graus de liberdade do bloco.
+
+&lt;table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:right;"&gt; A &lt;/th&gt;
@@ -139,14 +145,120 @@ Exemplo: gerador `\(D=ABC\)` (`\(I=ABCD\)`) em um `\(2^{4-1}\)` de 8 corridas. M
 
 --
 
-**Resolução:**
+**Definição (resolução).** A resolução de um fracionado é o **comprimento da menor palavra** da relação definidora. Não é uma convenção: é o que determina quem fica confundido com quem.
 
-- **III** — efeitos principais aliasados com interações duplas (2fi).
-- **IV** — principais limpos de 2fi; mas 2fi aliasadas entre si.
-- **V** — principais e 2fi todos limpos entre si.
+.pull-left[
+- **III** — principais aliasados com duplas (2fi).
+- **IV** — principais limpos de 2fi; 2fi aliasadas entre si.
+- **V** — principais e 2fi todos limpos.
+]
+.pull-right[
+No exemplo, `\(I=ABCD\)` tem uma palavra de comprimento **4** — logo o `\(2^{4-1}\)` com `\(D=ABC\)` é de **resolução IV**, e é por isso que `\(A\)` apareceu aliasado com uma **tripla** (`\(BCD\)`), não com uma dupla.
+]
 
-O sistema de resolução como resumo do custo de fracionar é tratado em detalhe por
-(Montgomery, 2017) e (Box, Hunter &amp; Hunter, 2005).
+---
+
+## Com `\(p \geq 2\)`: a interação generalizada
+
+Com `\(p\)` geradores, a relação definidora **não** tem `\(p\)` palavras: tem `\(2^p-1\)`. As que faltam são as **interações generalizadas** — produtos dos geradores.
+
+--
+
+Exemplo: `\(2^{5-2}\)` em 8 corridas, geradores `\(D=AB\)` e `\(E=AC\)`, isto é `\(I=ABD\)` e `\(I=ACE\)`. O produto dá a terceira palavra:
+
+`$$(ABD)(ACE)=A^2BCDE=BCDE \qquad\Longrightarrow\qquad I=ABD=ACE=BCDE$$`
+
+Menor palavra: comprimento **3** → **resolução III**. Esquecer a interação generalizada faz o experimentador acreditar que tem resolução IV quando tem III.
+
+---
+
+## A estrutura de alias, calculada
+
+
+``` r
+base &lt;- expand_grid(A = c(-1,1), B = c(-1,1), C = c(-1,1)) %&gt;%
+  mutate(D = A * B, E = A * C)                      # os dois geradores
+
+cols  &lt;- c("A","B","C","D","E"); todos &lt;- list(I = rep(1, nrow(base)))
+for (m in 1:5) for (cb in combn(cols, m, simplify = FALSE))
+  todos[[paste(cb, collapse = "")]] &lt;- Reduce(`*`, base[cb])
+chave  &lt;- map_chr(todos, ~ paste(.x[1] * .x, collapse = ""))  # mesma coluna de sinais
+grupos &lt;- split(names(todos), chave)
+
+tibble(grupo = map_chr(grupos, ~ paste(sort(.x), collapse = " = "))) %&gt;%
+  kable() %&gt;% kable_styling(font_size = 11, full_width = FALSE)
+```
+
+&lt;table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; grupo &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ABC = ADE = BE = CD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ABE = ACD = BC = DE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ABDE = AC = BCD = E &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ABCD = AE = BDE = C &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; AB = ACDE = BCE = D &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ABCE = AD = B = CDE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; A = ABCDE = BD = CE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ABD = ACE = BCDE = I &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+Oito grupos para oito corridas, 1 gl cada. **Fracionar não cria informação: redistribui.**
+
+---
+
+## O que "aliasado" significa para o número que você vê
+
+A tabela anterior mostrou `\(A=BD=CE\)` (mesma coluna de sinais). Isso não é só uma curiosidade
+algébrica — é uma afirmação sobre **o que o coeficiente rotulado "A" está de fato estimando**.
+
+
+``` r
+set.seed(2026)
+base &lt;- expand_grid(A = c(-1,1), B = c(-1,1), C = c(-1,1)) %&gt;%
+  mutate(D = A * B, E = A * C)             # mesmos geradores de antes: I = ABD = ACE = BCDE
+
+efeito_A_real &lt;- 5; efeito_BD_real &lt;- 3    # dois efeitos VERDADEIROS, diferentes, sobrepostos por design
+base$y &lt;- 20 + (efeito_A_real/2)*base$A + (efeito_BD_real/2)*(base$B*base$D) + rnorm(8, 0, 0.3)
+
+contraste_rotulado_A &lt;- 2 * mean(base$y * base$A)
+c(estimado = round(contraste_rotulado_A, 2), soma_dos_dois_efeitos = efeito_A_real + efeito_BD_real)
+```
+
+```
+##              estimado soma_dos_dois_efeitos 
+##                  7.67                  8.00
+```
+
+--
+
+O contraste rotulado "$A$" recupera a **soma** `\(A+BD\)` (8),
+não o efeito de `\(A\)` isolado (`\(5\)`): o experimento, por construção, não guarda informação para
+separá-los. Rodar este fracionado e reportar "$A$ tem efeito 5" seria simplesmente **falso** aqui
+— o número certo a reportar é "a soma de `\(A\)` com `\(BD\)` é 8", exatamente o que a coluna de alias já
+avisava antes de qualquer dado existir.
 
 ---
 
@@ -301,8 +413,7 @@ sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso
 ## Encerramento: retrospectiva dos 14 encontros
 
 .pull-left[
-**Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+
-\varepsilon$ como linguagem comum.
+**Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear `\(\mathbf{Y}=\mathbf{X}\beta+ \varepsilon\)` como linguagem comum.
 
 **Cap. 3:** DCA, submuestreo, transformações, comparações múltiplas.
 ]
@@ -326,6 +437,8 @@ da análise posterior — determina se essa pergunta pode ser respondida com con
 - Superfície de resposta estima curvatura via termos quadráticos; o ponto estacionário pode ser
   máximo, mínimo **ou sela** — só os autovalores da Hessiana decidem.
 - Fim do curso: desenhar bem é o que torna a análise posterior quase dispensável.
+
+---
 
 ## Referências
 

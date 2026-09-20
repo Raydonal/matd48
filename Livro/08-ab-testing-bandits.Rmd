@@ -1,6 +1,9 @@
 # Experimentação em produtos digitais: testes A/B e bandits {#ab-bandits}
 
 ```{r setup-cap8, include=FALSE}
+# Sem isto, `kable(...) %>% kable_styling(...)` faz o bookdown numerar a legenda DUAS
+# vezes ("Table 4.1: Table 4.2: ..."). Ver CLAUDE.md, footgun #8.
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(
   echo = TRUE, warning = FALSE, message = FALSE,
   fig.align = "center", out.width = "80%"
@@ -144,7 +147,7 @@ $$
 algo da ordem de **centenas de milhares** de usuários por grupo — perfeitamente viável para uma
 plataforma grande, impossível para a maioria dos experimentos de laboratório do resto deste livro.
 Métricas de receita são ainda piores: distribuições fortemente assimétricas, com uma minoria de
-usuários de alto gasto dominando a variância, de modo que o denominador $p_1(1-p_1)$ acima
+usuários de alto gasto dominando a variância, de modo que o fator $p_1(1-p_1)$ no numerador acima
 subestima muito a dificuldade real de detectar efeitos em métricas monetárias.
 
 **Múltiplas métricas e múltiplos testes simultâneos.** Um teste A/B raramente monitora uma única
@@ -672,13 +675,12 @@ Um segundo ponteiro: os **métodos de Taguchi** [@taguchi1986] para desenho robu
 pergunta ligeiramente diferente da deste livro — não "qual combinação de fatores maximiza a
 resposta média?" (a pergunta do Capítulo 7), mas "qual combinação de fatores de controle torna a
 resposta **menos sensível** a fatores de ruído que o pesquisador não consegue controlar em
-produção?" (temperatura ambiente, variação de matéria-prima, desgaste de equipamento). A proposta
-de Taguchi — arranjos ortogonais cruzando fatores de controle com fatores de ruído, e uma métrica
-de "razão sinal-ruído" como resposta a otimizar — teve influência industrial enorme, ainda que
-parte de seu ferramental estatístico original tenha sido revisado e criticado por estatísticos
-posteriores por ineficiência estatística em relação a alternativas baseadas em superfície de
-resposta. Fica como direção de leitura para quem quiser ir além mesmo deste capítulo — fora do
-escopo que podemos desenvolver aqui com o rigor que o resto do livro exige.
+produção?" (temperatura ambiente, variação de matéria-prima, desgaste de equipamento). Diferente do
+ponteiro anterior, este **é** desenvolvido neste livro — a Seção \@ref(desenho-robusto) do
+Capítulo 7 mostra a proposta original de Taguchi (arranjos cruzados de controle e ruído, razão
+sinal-ruído) e a alternativa de Vining e Myers [-@viningmyers1990], que resolve o mesmo problema
+com duas superfícies de resposta (média e log-variância) a partir de um único delineamento
+replicado — estatisticamente mais eficiente e mais interpretável.
 
 ## Resumo do capítulo
 

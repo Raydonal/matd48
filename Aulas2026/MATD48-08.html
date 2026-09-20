@@ -8,7 +8,7 @@
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -241,6 +241,53 @@ dose: comparando participantes com o mesmo basal, a dose de 150 mg fica acima da
 
 ---
 
+## O erro que a Pergunta 1 da Discussão antecipa: covariável pós-tratamento
+
+`basal` é seguro porque é medido **antes** da dose. O que dá errado se a "covariável" for medida
+**depois**, e for afetada pelo próprio tratamento?
+
+**Cenário:** a dose de cafeína afeta a atenção **através de** um mediador — ansiedade pós-dose
+(dose alta → mais ansiedade → menos atenção). Ansiedade não é um confundidor a ajustar; é parte
+do **mecanismo** pelo qual a dose age.
+
+---
+
+## O mediador simulado, e o que acontece se "ajustarmos" por ele
+
+
+``` r
+set.seed(42)
+n &lt;- 15; dose_num &lt;- as.numeric(as.character(factor(rep(c(0, 50, 100), each = n))))
+ansiedade_pos &lt;- 20 + 0.08 * dose_num + rnorm(n * 3, 0, 4)     # afetada pela dose!
+atencao_med   &lt;- 70 - 0.75 * ansiedade_pos + rnorm(n * 3, 0, 5) # dose so afeta via ansiedade
+
+coef(lm(atencao_med ~ dose_num))                       # efeito TOTAL (correto)
+```
+
+```
+## (Intercept)    dose_num 
+## 54.62095236 -0.03232853
+```
+
+``` r
+coef(lm(atencao_med ~ dose_num + ansiedade_pos))        # "ajustado" pelo mediador (ERRADO)
+```
+
+```
+##   (Intercept)      dose_num ansiedade_pos 
+##  72.456446296   0.006837382  -0.834237056
+```
+
+--
+
+O efeito de `dose_num` **desaparece** (e quase inverte de sinal) no segundo modelo — não porque a
+dose deixou de importar, mas porque ansiedade **é** o canal pelo qual ela age: condicionar num
+mediador bloqueia justamente o caminho causal que queremos medir. A régua simples da Aula 1
+continua valendo: **covariável de ANCOVA tem que vir de antes do sorteio do tratamento**, sem
+exceção.
+
+---
+
 ## Ciência de dados: carregamento com conexões lentas
 
 Retomamos o experimento de scripts de terceiros (Aula 07), agora com alguns carregamentos
@@ -418,6 +465,53 @@ postos é o análogo não paramétrico das comparações múltiplas da Aula 07.
 
 ---
 
+## O detalhe que a Lista 08 cobra: empates nos postos
+
+Resposta discreta ou pouco precisa (escala 1–5, tempos arredondados) produz **empates**: valores
+iguais recebem o **posto médio**. Empates achatam a variância dos postos, e `\(H\)` sem correção fica
+pequeno demais — a estatística de Kruskal-Wallis usa um **fator de correção**:
+
+`$$H_{\text{corrigido}} = \dfrac{H}{1-\dfrac{\sum_g (t_g^3-t_g)}{N^3-N}}, \qquad t_g = \text{tamanho do } g\text{-ésimo grupo de valores empatados}.$$`
+
+---
+
+## Empates na prática: a correção em ação
+
+
+``` r
+set.seed(11)
+grupo &lt;- factor(rep(c("A","B","C"), each = 10))
+y &lt;- c(sample(2:4, 10, TRUE, c(.3,.4,.3)), sample(3:5, 10, TRUE, c(.2,.4,.4)),
+       sample(1:3, 10, TRUE, c(.4,.4,.2)))     # escala 1-5: muitos empates
+table(y)                                        # varios valores repetidos
+```
+
+```
+## y
+##  1  2  3  4  5 
+##  2 10  9  4  5
+```
+
+``` r
+postos &lt;- rank(y); R_i &lt;- tapply(postos, grupo, sum); n_i &lt;- tapply(postos, grupo, length)
+N &lt;- length(y)
+H_sem_correcao &lt;- 12/(N*(N+1)) * sum(R_i^2/n_i) - 3*(N+1)
+kruskal.test(y ~ grupo)$statistic   # kruskal.test() ja aplica a correcao sozinho
+```
+
+```
+## Kruskal-Wallis chi-squared 
+##                   22.87315
+```
+
+--
+
+`H` sem correção (21.265) e `H` corrigido, do `kruskal.test()`, diferem —
+`kruskal.test()` já faz a correção automaticamente, mas **saber que ela existe** é o que a Lista 08
+pede: com respostas discretas, ignorar empates entrega um teste conservador demais.
+
+---
+
 ## Resumo da aula
 
 - ANCOVA incorpora uma covariável contínua medida antes do tratamento, ajustando as médias e
@@ -426,6 +520,8 @@ postos é o análogo não paramétrico das comparações múltiplas da Aula 07.
 - Kruskal-Wallis testa igualdade de distribuições usando postos, sem supor normalidade — a
   alternativa quando os pressupostos da ANOVA falham e transformações não bastam.
 - Com isso, encerramos o Capítulo 3 (DCA). Próximo bloco de aulas: delineamentos com **blocos**.
+
+---
 
 ## Referências
 

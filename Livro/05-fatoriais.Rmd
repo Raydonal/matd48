@@ -1,6 +1,9 @@
 # Delineamentos com arranjos fatoriais {#fatoriais}
 
 ```{r setup-cap5, include=FALSE}
+# Sem isto, `kable(...) %>% kable_styling(...)` faz o bookdown numerar a legenda DUAS
+# vezes ("Table 4.1: Table 4.2: ..."). Ver CLAUDE.md, footgun #8.
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(
   echo = TRUE, warning = FALSE, message = FALSE,
   fig.align = "center", out.width = "80%"
@@ -90,10 +93,19 @@ para todo $j$, e $\sum_j (\alpha\beta)_{ij} = 0$ para todo $i$. Os termos têm i
   zero significa que **o efeito de $A$ muda conforme o nível de $B$** (e vice-versa): as retas que
   ligam as médias de $A$ dentro de cada nível de $B$ deixam de ser paralelas.
 
-**Uma leitura causal.** Sob a estrutura potencial-outcomes [@imbensrubin2015], $\alpha_i$ é o
-**efeito causal médio** (ATE, *average treatment effect*) do nível $i$ de $A$, *marginalizado*
-sobre a distribuição de níveis de $B$ presente no experimento: uma média do efeito de $A$ que
-"soma sobre" todas as condições de $B$ observadas. A interação $(\alpha\beta)_{ij}$, por sua vez,
+**Uma leitura causal.** Sob a estrutura potencial-outcomes [@imbensrubin2015], e sob a restrição
+soma-zero $\sum_i \alpha_i = 0$, o parâmetro $\alpha_i$ é o **desvio** do nível $i$ de $A$ em
+relação à média sobre os níveis de $A$ — não, por si só, um efeito causal. O objeto causal é o
+**contraste** entre dois níveis:
+$$
+\text{ATE}(i,i') \;=\; E\!\left[Y_u(i) - Y_u(i')\right] \;=\; \alpha_i - \alpha_{i'},
+$$
+o efeito causal médio de receber o nível $i$ em vez do nível $i'$, *marginalizado* sobre a
+distribuição de níveis de $B$ presente no experimento — uma média do efeito de $A$ que "soma
+sobre" todas as condições de $B$ observadas. A distinção importa: $\alpha_i$ depende de qual
+restrição de identificação se adotou (com casela de referência, $\alpha_i$ já *seria* um contraste
+contra o nível de referência), ao passo que $\alpha_i - \alpha_{i'}$ é invariante — é estimável no
+sentido da Seção \@ref(estimabilidade), e é por isso que o objeto causal é ele. A interação $(\alpha\beta)_{ij}$, por sua vez,
 é exatamente o objeto que a literatura de inferência causal moderna chama de **heterogeneidade de
 efeito de tratamento** (*treatment effect heterogeneity*, ou interação trata-tratamento quando
 ambos $A$ e $B$ são manipuláveis): ela mede o quanto o efeito causal de $A$ *difere* conforme o
@@ -210,14 +222,110 @@ eficiência estatística mencionada na Seção \@ref(por-que-fatorial). Na prát
 examinar primeiro a interação: se ela for relevante, interpretar os efeitos principais isolados
 pode ser enganoso, e a análise deve reportar as médias de célula (combinação $i,j$) diretamente.
 
+### Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III {#tipos-sq}
+
+A decomposição exata $SQ_{Total} = SQ_A+SQ_B+SQ_{AB}+SQ_E$ da seção anterior depende de uma
+suposição que ficou implícita: **o mesmo número $r$ de réplicas em toda casela** $(i,j)$. Sob
+balanceamento, as colunas de $\mathbf{X}$ associadas a $A$, a $B$ e à interação são ortogonais
+entre si (a mesma ideia da Seção \@ref(matriz-axb) do fatorial $2^k$, agora para um A×B geral) —
+$SQ_A$ mede exatamente a mesma coisa, seja $A$ ajustado sozinho ou na presença de $B$. Quando as
+caselas têm tamanhos diferentes — a norma, não a exceção, em dados que não vêm de um experimento
+de campo cuidadosamente balanceado (tráfego real de um teste A/B, perda de observações,
+inscrição voluntária) —, essa ortogonalidade se perde: as colunas de $A$ e de $B$ passam a ser
+correlacionadas, e "o quanto $A$ explica" passa a depender de **o que mais já está no modelo**
+[@speedhockinghackney1978]. Três convenções resolvem essa ambiguidade de formas diferentes:
+
+- **Tipo I (sequencial):** cada termo é testado ajustado só pelos termos que entraram **antes**
+  dele no modelo, na ordem em que foram escritos. $SQ_A$ ignora $B$; $SQ_B$ já ajusta para $A$;
+  $SQ_{AB}$ ajusta para ambos. Consequência direta: **a ordem em que os fatores são escritos na
+  fórmula muda o resultado** — `aov(y ~ A*B)` e `aov(y ~ B*A)` dão $SQ_A$ e $SQ_B$ diferentes
+  (a soma dos quatro termos continua igual a $SQ_{Total}$ em qualquer ordem, só a divisão entre
+  $A$ e $B$ muda). É o padrão de `aov()`/`anova()` no R.
+- **Tipo II:** cada efeito principal é ajustado pelo **outro** efeito principal, mas não pela
+  interação — simétrico em $A$ e $B$ (não depende de ordem), sob a suposição de que a interação
+  é desprezível o bastante para não "roubar" variação dos efeitos principais.
+- **Tipo III (marginal):** cada termo é ajustado por **todos** os outros, incluindo a interação —
+  a mais conservadora e a única que testa exatamente as mesmas hipóteses
+  $H_0: \alpha_i=0\ \forall i$ etc. do caso balanceado, mesmo com interação presente. Exige
+  **contrastes de soma zero** (`options(contrasts = c("contr.sum", "contr.poly"))` no R) — com a
+  parametrização padrão do R (`contr.treatment`), o teste Tipo III do "efeito principal" testa uma
+  combinação que depende de qual nível é a referência, não o que o pesquisador normalmente quer
+  dizer por "efeito de $A$".
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: teste A/B/n com tráfego desigual</strong><br>
+Uma loja testa <strong>layout</strong> (Lista/Grade) × <strong>desconto exibido</strong>
+(Sim/Não) sobre o tempo de permanência na página (s). Diferente de um experimento de campo, o
+tráfego real não se divide em partes iguais entre as quatro combinações — a tabela abaixo mostra
+tamanhos de casela desiguais (30 a 70 sessões), a situação típica de um teste A/B em produção.
+</div>
+```
+
+```{r desbalanceado-dados}
+set.seed(2026)
+n_celula <- c(Lista_Nao = 40, Lista_Sim = 55, Grade_Nao = 30, Grade_Sim = 70)
+media_celula <- c(Lista_Nao = 42, Lista_Sim = 47, Grade_Nao = 44, Grade_Sim = 53)
+
+dados_desbal <- map2_dfr(n_celula, media_celula, ~ tibble(tempo = rnorm(.x, .y, 8)),
+                         .id = "celula") %>%
+  separate(celula, into = c("layout", "desconto"), sep = "_") %>%
+  mutate(layout = factor(layout, labels = c("Grade", "Lista")),
+         desconto = factor(desconto, labels = c("Nao", "Sim")))
+
+table(dados_desbal$layout, dados_desbal$desconto)
+```
+
+```{r desbalanceado-tipo1}
+summary(aov(tempo ~ layout * desconto, data = dados_desbal))   # layout primeiro
+summary(aov(tempo ~ desconto * layout, data = dados_desbal))   # desconto primeiro
+```
+
+$SQ_{\text{layout}}$ e $SQ_{\text{desconto}}$ mudam de fato conforme a ordem — exatamente o
+sintoma da falta de ortogonalidade. Nos dois casos, $SQ_{AB}$ (a interação) é idêntico, porque a
+interação é sempre o último termo a entrar, ajustado por tudo o resto em qualquer ordem.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — Tipo II e Tipo III com <code>car::Anova()</code></div>
+```
+
+```{r desbalanceado-tipo23}
+contrastes_originais <- options("contrasts")           # preserva o default do capitulo
+options(contrasts = c("contr.sum", "contr.poly"))      # exigido para Tipo III fazer sentido
+modelo_desbal <- lm(tempo ~ layout * desconto, data = dados_desbal)
+
+car::Anova(modelo_desbal, type = "II")
+car::Anova(modelo_desbal, type = "III")
+
+options(contrastes_originais)   # restaura imediatamente -- nao deve vazar para as secoes seguintes
+```
+
+O Tipo II dá exatamente $SQ_{\text{layout}}=$ `r round(anova(lm(tempo ~ desconto * layout, data = dados_desbal))["layout","Sum Sq"], 1)`
+(o mesmo valor de quando `layout` entra **depois** de `desconto` no Tipo I) e
+$SQ_{\text{desconto}}=$ `r round(anova(lm(tempo ~ layout * desconto, data = dados_desbal))["desconto","Sum Sq"], 1)`
+— cada um ajustado pelo outro, nenhum pela interação, e por isso independente da ordem de escrita.
+O Tipo III muda de novo (ajusta também pela interação), e é o único dos três cuja soma de
+quadrados de `layout`/`desconto` não bate com nenhuma das duas linhas de Tipo I acima.
+
+Recomendação prática, seguindo a literatura sobre o tema [@langsrud2003]: olhar a interação
+primeiro; se ela for desprezível, o Tipo II é preferível ao III (mais poder, mesma interpretação
+de "efeito principal médio"); se a interação for relevante, nenhum teste de efeito principal —
+de nenhum tipo — costuma responder a pergunta certa, e a análise deve reportar as médias de
+célula diretamente (a mesma recomendação da seção anterior, agora reforçada pelo caso
+desbalanceado). Delineamentos de campo bem balanceados evitam esse problema por construção — mais
+uma razão prática para preferir balanceamento sempre que o custo do experimento permitir.
+
 ## Notação matricial do fatorial A×B {#matriz-axb}
 
 O Capítulo 2 escreveu todo modelo linear como $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} +
 \boldsymbol{\varepsilon}$ e definiu a matriz de projeção $\mathbf{P}_X =
 \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ (Seção \@ref(matriz-projecao)). O fatorial A×B
 é um caso particular dessa estrutura geral, e vale a pena tornar explícito **como** a matriz
-$\mathbf{X}$ se monta a partir dos dois fatores. Usando codificação de efeito (colunas indicadoras
-de cada fator, com um nível de referência omitido), sejam $\mathbf{X}_A$ (dimensão $n \times
+$\mathbf{X}$ se monta a partir dos dois fatores. Usando **codificação de casela de referência**
+(`contr.treatment`, o padrão do R: colunas indicadoras de cada fator com um nível omitido, que
+passa a ser a referência — não confundir com a **codificação de efeito**, `contr.sum`, o esquema
+$\pm1$ soma-zero que corresponde às restrições de identificação da Seção \@ref(modelo-axb)),
+sejam $\mathbf{X}_A$ (dimensão $n \times
 (a-1)$) e $\mathbf{X}_B$ (dimensão $n \times (b-1)$) as submatrizes que codificam os efeitos
 principais de $A$ e $B$. A matriz completa do fatorial A×B é o bloco
 
@@ -361,8 +469,8 @@ ggplot(cubo_geo) +
   annotate("text", x = c(.5, -.55, 1.35 + .5*cos(angulo_cubo)), y = c(-.4, .5, .12),
            label = c("A (Relação)", "C (Temperatura)", "B (Catalisador)"),
            size = 3.5, fontface = "italic") +
-  labs(title = "O 2³ como um cubo: rendimento médio de biodiesel em cada vértice",
-       subtitle = "Sub-desenho real do 2⁴ do Capítulo 6, com o agente de purificação fixo no nível baixo")
+  labs(title = "O 2³ como um cubo: rendimento médio de biodiesel\nem cada vértice",
+       subtitle = "Sub-desenho real do 2⁴ do Capítulo 6, com o agente de\npurificação fixo no nível baixo")
 ```
 
 Cada vértice mostra o tratamento (notação de Yates [@yates1937design]) e o rendimento médio
@@ -492,7 +600,7 @@ represente sozinha, só a alternância entre os dois tetraedros.
 teste A/B/n de três fatores</strong><br>
 Uma equipe de laboratório trata a otimização de um processo de recuperação de um composto
 volátil exatamente como uma equipe de produto trataria um teste A/B/n multivariado (também
-chamado teste fatorial online) [@kohavi2020trustworthy]: em vez de dois braços
+chamado teste fatorial online; Kohavi, Tang &amp; Xu, 2020): em vez de dois braços
 (A vs. B), há <strong>três fatores de configuração</strong> cruzados, cada um com três níveis —
 viscosidade do solvente (<code>baixa</code>/<code>média</code>/<code>alta</code>), salinidade da
 solução (<code>baixa</code>/<code>média</code>/<code>alta</code>) e tempo de exposição
@@ -590,20 +698,15 @@ para os fatoriais $2^k$ do Capítulo 6, em que diagramas com quatro e mais fator
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do fatorial 3×3×3 de extração</div>
 ```
 
-```{r hasse-axbxc, fig.width=8, fig.height=7.5, fig.cap="Diagrama de Hasse do fatorial 3x3x3 de extração (viscosidade, salinidade, tempo, r=2 injeções, N=54). Os três fatores ocupam o mesmo nível (cruzados entre si); as três interações duplas refinam exatamente o par de fatores que as compõe; a interação tripla refina as três duplas simultaneamente; o Erro, na base, recebe o que sobra depois de toda a estrutura de tratamento."}
+```{r hasse-axbxc, out.width="92%", fig.cap="Diagrama de Hasse do fatorial 3x3x3 de extração (viscosidade, salinidade, tempo, r=2 injeções, N=54). Os três fatores ocupam o mesmo nível (cruzados entre si); as três interações duplas refinam exatamente o par de fatores que as compõe; a interação tripla refina as três duplas simultaneamente; o Erro, na base, recebe o que sobra depois de toda a estrutura de tratamento."}
 nos_axbxc <- tibble(
-  termo = c("Média", "Viscosidade", "Salinidade", "Tempo",
-            "Visc.×Sal.", "Visc.×Tempo", "Sal.×Tempo",
-            "Visc.×Sal.×Tempo", "Erro"),
-  df    = c(1, 3 - 1, 3 - 1, 3 - 1,
-            (3 - 1) * (3 - 1), (3 - 1) * (3 - 1), (3 - 1) * (3 - 1),
-            (3 - 1) * (3 - 1) * (3 - 1), 3 * 3 * 3 * (2 - 1)),
-  x     = c(0, -3, 0, 3,
-            -3, 0, 3,
-             0, 0),
-  y     = c(5, 4, 4, 4,
-            3, 3, 3,
-            2, 1)
+  termo   = c("Média", "Viscosidade", "Salinidade", "Tempo",
+              "Visc.×Sal.", "Visc.×Tempo", "Sal.×Tempo",
+              "Visc.×Sal.×Tempo", "Erro"),
+  # classes = numero de combinacoes distintas que o termo distingue
+  classes = c(1, 3, 3, 3,
+              3 * 3, 3 * 3, 3 * 3,
+              3 * 3 * 3, 54)
 )
 
 arestas_axbxc <- tibble(
@@ -621,8 +724,11 @@ arestas_axbxc <- tibble(
            "Erro")
 )
 
-plot_hasse(nos_axbxc, arestas_axbxc,
-           titulo = "Fatorial 3×3×3: viscosidade, salinidade, tempo, r=2 (N=54)")
+knitr::include_graphics(
+  hasse_svg(nos_axbxc, arestas_axbxc,
+            arquivo = "figuras/hasse/axbxc.svg",
+            titulo  = "Fatorial 3&#215;3&#215;3: viscosidade, salinidade, tempo, r=2 (N=54)")
+)
 ```
 
 Os três fatores (Viscosidade, Salinidade, Tempo) aparecem lado a lado no mesmo nível do diagrama,

@@ -42,6 +42,18 @@ code, pre {
   font-family: "Fira Code", "Consolas", monospace;
 }
 
+/* O gitbook poe white-space: pre-wrap no <pre>, mas o <code> de dentro herda
+   white-space: pre, que SOBREPOE e impede a quebra de linha -- resultado: toda
+   linha de codigo mais longa que a largura da coluna (~110 colunas) era cortada
+   no meio da palavra, sem barra de rolagem visivel. Ver CLAUDE.md, footgun #9. */
+/* Especificidade tem de igualar a do gitbook, que usa o seletor de 5 niveis
+   ".book .book-body .page-wrapper .page-inner section.normal pre>code". Uma
+   regra curta "pre code {...}" perde e nao tem efeito nenhum. */
+.book .book-body .page-wrapper .page-inner section.normal pre > code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 table {
   font-size: 15px;
 }

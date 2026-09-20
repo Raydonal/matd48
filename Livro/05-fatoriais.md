@@ -79,10 +79,19 @@ para todo $j$, e $\sum_j (\alpha\beta)_{ij} = 0$ para todo $i$. Os termos têm i
   zero significa que **o efeito de $A$ muda conforme o nível de $B$** (e vice-versa): as retas que
   ligam as médias de $A$ dentro de cada nível de $B$ deixam de ser paralelas.
 
-**Uma leitura causal.** Sob a estrutura potencial-outcomes [@imbensrubin2015], $\alpha_i$ é o
-**efeito causal médio** (ATE, *average treatment effect*) do nível $i$ de $A$, *marginalizado*
-sobre a distribuição de níveis de $B$ presente no experimento: uma média do efeito de $A$ que
-"soma sobre" todas as condições de $B$ observadas. A interação $(\alpha\beta)_{ij}$, por sua vez,
+**Uma leitura causal.** Sob a estrutura potencial-outcomes [@imbensrubin2015], e sob a restrição
+soma-zero $\sum_i \alpha_i = 0$, o parâmetro $\alpha_i$ é o **desvio** do nível $i$ de $A$ em
+relação à média sobre os níveis de $A$ — não, por si só, um efeito causal. O objeto causal é o
+**contraste** entre dois níveis:
+$$
+\text{ATE}(i,i') \;=\; E\!\left[Y_u(i) - Y_u(i')\right] \;=\; \alpha_i - \alpha_{i'},
+$$
+o efeito causal médio de receber o nível $i$ em vez do nível $i'$, *marginalizado* sobre a
+distribuição de níveis de $B$ presente no experimento — uma média do efeito de $A$ que "soma
+sobre" todas as condições de $B$ observadas. A distinção importa: $\alpha_i$ depende de qual
+restrição de identificação se adotou (com casela de referência, $\alpha_i$ já *seria* um contraste
+contra o nível de referência), ao passo que $\alpha_i - \alpha_{i'}$ é invariante — é estimável no
+sentido da Seção \@ref(estimabilidade), e é por isso que o objeto causal é ele. A interação $(\alpha\beta)_{ij}$, por sua vez,
 é exatamente o objeto que a literatura de inferência causal moderna chama de **heterogeneidade de
 efeito de tratamento** (*treatment effect heterogeneity*, ou interação trata-tratamento quando
 ambos $A$ e $B$ são manipuláveis): ela mede o quanto o efeito causal de $A$ *difere* conforme o
@@ -145,7 +154,7 @@ SQ_E = \sum_{i,j,k} (y_{ijk} - \bar{y}_{ij.})^2.
 $$
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-axb)(\#tab:tabela-anova-axb)ANOVA do fatorial A×B balanceado</caption>
+<caption>(\#tab:tabela-anova-axb)ANOVA do fatorial A×B balanceado</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -205,7 +214,7 @@ projeta sobre a direção dos efeitos de $A$ dentro do espaço-coluna de $\mathb
 nenhuma simulação:
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-eqm-axb)(\#tab:tabela-eqm-axb)Esperança dos quadrados médios do fatorial A×B (efeitos fixos)</caption>
+<caption>(\#tab:tabela-eqm-axb)Esperança dos quadrados médios do fatorial A×B (efeitos fixos)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Quadrado médio </th>
@@ -250,14 +259,175 @@ eficiência estatística mencionada na Seção \@ref(por-que-fatorial). Na prát
 examinar primeiro a interação: se ela for relevante, interpretar os efeitos principais isolados
 pode ser enganoso, e a análise deve reportar as médias de célula (combinação $i,j$) diretamente.
 
+### Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III {#tipos-sq}
+
+A decomposição exata $SQ_{Total} = SQ_A+SQ_B+SQ_{AB}+SQ_E$ da seção anterior depende de uma
+suposição que ficou implícita: **o mesmo número $r$ de réplicas em toda casela** $(i,j)$. Sob
+balanceamento, as colunas de $\mathbf{X}$ associadas a $A$, a $B$ e à interação são ortogonais
+entre si (a mesma ideia da Seção \@ref(matriz-axb) do fatorial $2^k$, agora para um A×B geral) —
+$SQ_A$ mede exatamente a mesma coisa, seja $A$ ajustado sozinho ou na presença de $B$. Quando as
+caselas têm tamanhos diferentes — a norma, não a exceção, em dados que não vêm de um experimento
+de campo cuidadosamente balanceado (tráfego real de um teste A/B, perda de observações,
+inscrição voluntária) —, essa ortogonalidade se perde: as colunas de $A$ e de $B$ passam a ser
+correlacionadas, e "o quanto $A$ explica" passa a depender de **o que mais já está no modelo**
+[@speedhockinghackney1978]. Três convenções resolvem essa ambiguidade de formas diferentes:
+
+- **Tipo I (sequencial):** cada termo é testado ajustado só pelos termos que entraram **antes**
+  dele no modelo, na ordem em que foram escritos. $SQ_A$ ignora $B$; $SQ_B$ já ajusta para $A$;
+  $SQ_{AB}$ ajusta para ambos. Consequência direta: **a ordem em que os fatores são escritos na
+  fórmula muda o resultado** — `aov(y ~ A*B)` e `aov(y ~ B*A)` dão $SQ_A$ e $SQ_B$ diferentes
+  (a soma dos quatro termos continua igual a $SQ_{Total}$ em qualquer ordem, só a divisão entre
+  $A$ e $B$ muda). É o padrão de `aov()`/`anova()` no R.
+- **Tipo II:** cada efeito principal é ajustado pelo **outro** efeito principal, mas não pela
+  interação — simétrico em $A$ e $B$ (não depende de ordem), sob a suposição de que a interação
+  é desprezível o bastante para não "roubar" variação dos efeitos principais.
+- **Tipo III (marginal):** cada termo é ajustado por **todos** os outros, incluindo a interação —
+  a mais conservadora e a única que testa exatamente as mesmas hipóteses
+  $H_0: \alpha_i=0\ \forall i$ etc. do caso balanceado, mesmo com interação presente. Exige
+  **contrastes de soma zero** (`options(contrasts = c("contr.sum", "contr.poly"))` no R) — com a
+  parametrização padrão do R (`contr.treatment`), o teste Tipo III do "efeito principal" testa uma
+  combinação que depende de qual nível é a referência, não o que o pesquisador normalmente quer
+  dizer por "efeito de $A$".
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: teste A/B/n com tráfego desigual</strong><br>
+Uma loja testa <strong>layout</strong> (Lista/Grade) × <strong>desconto exibido</strong>
+(Sim/Não) sobre o tempo de permanência na página (s). Diferente de um experimento de campo, o
+tráfego real não se divide em partes iguais entre as quatro combinações — a tabela abaixo mostra
+tamanhos de casela desiguais (30 a 70 sessões), a situação típica de um teste A/B em produção.
+</div>
+```
+
+
+``` r
+set.seed(2026)
+n_celula <- c(Lista_Nao = 40, Lista_Sim = 55, Grade_Nao = 30, Grade_Sim = 70)
+media_celula <- c(Lista_Nao = 42, Lista_Sim = 47, Grade_Nao = 44, Grade_Sim = 53)
+
+dados_desbal <- map2_dfr(n_celula, media_celula, ~ tibble(tempo = rnorm(.x, .y, 8)),
+                         .id = "celula") %>%
+  separate(celula, into = c("layout", "desconto"), sep = "_") %>%
+  mutate(layout = factor(layout, labels = c("Grade", "Lista")),
+         desconto = factor(desconto, labels = c("Nao", "Sim")))
+
+table(dados_desbal$layout, dados_desbal$desconto)
+```
+
+```
+##        
+##         Nao Sim
+##   Grade  30  70
+##   Lista  40  55
+```
+
+
+``` r
+summary(aov(tempo ~ layout * desconto, data = dados_desbal))   # layout primeiro
+```
+
+```
+##                  Df Sum Sq Mean Sq F value   Pr(>F)    
+## layout            1   2332  2332.0  37.974 4.16e-09 ***
+## desconto          1   2511  2510.8  40.886 1.21e-09 ***
+## layout:desconto   1    451   450.9   7.342  0.00735 ** 
+## Residuals       191  11729    61.4                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+``` r
+summary(aov(tempo ~ desconto * layout, data = dados_desbal))   # desconto primeiro
+```
+
+```
+##                  Df Sum Sq Mean Sq F value   Pr(>F)    
+## desconto          1   3114  3113.5  50.700 2.13e-11 ***
+## layout            1   1729  1729.3  28.159 3.08e-07 ***
+## desconto:layout   1    451   450.9   7.342  0.00735 ** 
+## Residuals       191  11729    61.4                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+$SQ_{\text{layout}}$ e $SQ_{\text{desconto}}$ mudam de fato conforme a ordem — exatamente o
+sintoma da falta de ortogonalidade. Nos dois casos, $SQ_{AB}$ (a interação) é idêntico, porque a
+interação é sempre o último termo a entrar, ajustado por tudo o resto em qualquer ordem.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — Tipo II e Tipo III com <code>car::Anova()</code></div>
+```
+
+
+``` r
+contrastes_originais <- options("contrasts")           # preserva o default do capitulo
+options(contrasts = c("contr.sum", "contr.poly"))      # exigido para Tipo III fazer sentido
+modelo_desbal <- lm(tempo ~ layout * desconto, data = dados_desbal)
+
+car::Anova(modelo_desbal, type = "II")
+```
+
+```
+## Anova Table (Type II tests)
+## 
+## Response: tempo
+##                  Sum Sq  Df F value    Pr(>F)    
+## layout           1729.3   1 28.1595 3.079e-07 ***
+## desconto         2510.8   1 40.8856 1.210e-09 ***
+## layout:desconto   450.9   1  7.3418   0.00735 ** 
+## Residuals       11729.4 191                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+``` r
+car::Anova(modelo_desbal, type = "III")
+```
+
+```
+## Anova Table (Type III tests)
+## 
+## Response: tempo
+##                 Sum Sq  Df   F value    Pr(>F)    
+## (Intercept)     380434   1 6194.9229 < 2.2e-16 ***
+## layout            1143   1   18.6178 2.560e-05 ***
+## desconto          2610   1   42.4968 6.153e-10 ***
+## layout:desconto    451   1    7.3418   0.00735 ** 
+## Residuals        11729 191                        
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+``` r
+options(contrastes_originais)   # restaura imediatamente -- nao deve vazar para as secoes seguintes
+```
+
+O Tipo II dá exatamente $SQ_{\text{layout}}=$ 1729.3
+(o mesmo valor de quando `layout` entra **depois** de `desconto` no Tipo I) e
+$SQ_{\text{desconto}}=$ 2510.8
+— cada um ajustado pelo outro, nenhum pela interação, e por isso independente da ordem de escrita.
+O Tipo III muda de novo (ajusta também pela interação), e é o único dos três cuja soma de
+quadrados de `layout`/`desconto` não bate com nenhuma das duas linhas de Tipo I acima.
+
+Recomendação prática, seguindo a literatura sobre o tema [@langsrud2003]: olhar a interação
+primeiro; se ela for desprezível, o Tipo II é preferível ao III (mais poder, mesma interpretação
+de "efeito principal médio"); se a interação for relevante, nenhum teste de efeito principal —
+de nenhum tipo — costuma responder a pergunta certa, e a análise deve reportar as médias de
+célula diretamente (a mesma recomendação da seção anterior, agora reforçada pelo caso
+desbalanceado). Delineamentos de campo bem balanceados evitam esse problema por construção — mais
+uma razão prática para preferir balanceamento sempre que o custo do experimento permitir.
+
 ## Notação matricial do fatorial A×B {#matriz-axb}
 
 O Capítulo 2 escreveu todo modelo linear como $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} +
 \boldsymbol{\varepsilon}$ e definiu a matriz de projeção $\mathbf{P}_X =
 \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ (Seção \@ref(matriz-projecao)). O fatorial A×B
 é um caso particular dessa estrutura geral, e vale a pena tornar explícito **como** a matriz
-$\mathbf{X}$ se monta a partir dos dois fatores. Usando codificação de efeito (colunas indicadoras
-de cada fator, com um nível de referência omitido), sejam $\mathbf{X}_A$ (dimensão $n \times
+$\mathbf{X}$ se monta a partir dos dois fatores. Usando **codificação de casela de referência**
+(`contr.treatment`, o padrão do R: colunas indicadoras de cada fator com um nível omitido, que
+passa a ser a referência — não confundir com a **codificação de efeito**, `contr.sum`, o esquema
+$\pm1$ soma-zero que corresponde às restrições de identificação da Seção \@ref(modelo-axb)),
+sejam $\mathbf{X}_A$ (dimensão $n \times
 (a-1)$) e $\mathbf{X}_B$ (dimensão $n \times (b-1)$) as submatrizes que codificam os efeitos
 principais de $A$ e $B$. A matriz completa do fatorial A×B é o bloco
 
@@ -398,7 +568,7 @@ represente sozinha, só a alternância entre os dois tetraedros.
 teste A/B/n de três fatores</strong><br>
 Uma equipe de laboratório trata a otimização de um processo de recuperação de um composto
 volátil exatamente como uma equipe de produto trataria um teste A/B/n multivariado (também
-chamado teste fatorial online) [@kohavi2020trustworthy]: em vez de dois braços
+chamado teste fatorial online; Kohavi, Tang &amp; Xu, 2020): em vez de dois braços
 (A vs. B), há <strong>três fatores de configuração</strong> cruzados, cada um com três níveis —
 viscosidade do solvente (<code>baixa</code>/<code>média</code>/<code>alta</code>), salinidade da
 solução (<code>baixa</code>/<code>média</code>/<code>alta</code>) e tempo de exposição
@@ -450,7 +620,7 @@ neste caso específico, a uma conclusão muito parecida com a do fatorial comple
 podemos afirmar com confiança *depois* de testar a interação, nunca antes.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:acuosas-medias)(\#tab:acuosas-medias)Médias marginais por fator (fatorial 3×3×3 do processo de extração)</caption>
+<caption>(\#tab:acuosas-medias)Médias marginais por fator (fatorial 3×3×3 do processo de extração)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> fator </th>
@@ -539,18 +709,13 @@ para os fatoriais $2^k$ do Capítulo 6, em que diagramas com quatro e mais fator
 
 ``` r
 nos_axbxc <- tibble(
-  termo = c("Média", "Viscosidade", "Salinidade", "Tempo",
-            "Visc.×Sal.", "Visc.×Tempo", "Sal.×Tempo",
-            "Visc.×Sal.×Tempo", "Erro"),
-  df    = c(1, 3 - 1, 3 - 1, 3 - 1,
-            (3 - 1) * (3 - 1), (3 - 1) * (3 - 1), (3 - 1) * (3 - 1),
-            (3 - 1) * (3 - 1) * (3 - 1), 3 * 3 * 3 * (2 - 1)),
-  x     = c(0, -3, 0, 3,
-            -3, 0, 3,
-             0, 0),
-  y     = c(5, 4, 4, 4,
-            3, 3, 3,
-            2, 1)
+  termo   = c("Média", "Viscosidade", "Salinidade", "Tempo",
+              "Visc.×Sal.", "Visc.×Tempo", "Sal.×Tempo",
+              "Visc.×Sal.×Tempo", "Erro"),
+  # classes = numero de combinacoes distintas que o termo distingue
+  classes = c(1, 3, 3, 3,
+              3 * 3, 3 * 3, 3 * 3,
+              3 * 3 * 3, 54)
 )
 
 arestas_axbxc <- tibble(
@@ -568,12 +733,15 @@ arestas_axbxc <- tibble(
            "Erro")
 )
 
-plot_hasse(nos_axbxc, arestas_axbxc,
-           titulo = "Fatorial 3×3×3: viscosidade, salinidade, tempo, r=2 (N=54)")
+knitr::include_graphics(
+  hasse_svg(nos_axbxc, arestas_axbxc,
+            arquivo = "figuras/hasse/axbxc.svg",
+            titulo  = "Fatorial 3&#215;3&#215;3: viscosidade, salinidade, tempo, r=2 (N=54)")
+)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-fatoriais_files/figure-html/hasse-axbxc-1.png" alt="Diagrama de Hasse do fatorial 3x3x3 de extração (viscosidade, salinidade, tempo, r=2 injeções, N=54). Os três fatores ocupam o mesmo nível (cruzados entre si); as três interações duplas refinam exatamente o par de fatores que as compõe; a interação tripla refina as três duplas simultaneamente; o Erro, na base, recebe o que sobra depois de toda a estrutura de tratamento." width="80%" />
+<img src="figuras/hasse/axbxc.svg" alt="Diagrama de Hasse do fatorial 3x3x3 de extração (viscosidade, salinidade, tempo, r=2 injeções, N=54). Os três fatores ocupam o mesmo nível (cruzados entre si); as três interações duplas refinam exatamente o par de fatores que as compõe; a interação tripla refina as três duplas simultaneamente; o Erro, na base, recebe o que sobra depois de toda a estrutura de tratamento." width="92%" />
 <p class="caption">(\#fig:hasse-axbxc)Diagrama de Hasse do fatorial 3x3x3 de extração (viscosidade, salinidade, tempo, r=2 injeções, N=54). Os três fatores ocupam o mesmo nível (cruzados entre si); as três interações duplas refinam exatamente o par de fatores que as compõe; a interação tripla refina as três duplas simultaneamente; o Erro, na base, recebe o que sobra depois de toda a estrutura de tratamento.</p>
 </div>
 
@@ -656,7 +824,7 @@ summary(modelo_blocos)
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:comparacao-qme)(\#tab:comparacao-qme)Efeito de incluir o bloco sobre o quadrado médio do erro</caption>
+<caption>(\#tab:comparacao-qme)Efeito de incluir o bloco sobre o quadrado médio do erro</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Modelo </th>

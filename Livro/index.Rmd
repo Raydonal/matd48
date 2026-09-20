@@ -6,13 +6,16 @@ date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: refs.bib
-csl: ../Aulas/apa.csl
+csl: ../Aulas2026/assets/apa.csl
 link-citations: true
 biblio-style: apalike
 description: "Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA."
 ---
 
 ```{r setup-index, include=FALSE}
+# Sem isto, `kable(...) %>% kable_styling(...)` faz o bookdown numerar a legenda DUAS
+# vezes ("Table 4.1: Table 4.2: ..."). Ver CLAUDE.md, footgun #8.
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(
   echo = TRUE, warning = FALSE, message = FALSE,
   fig.align = "center", out.width = "80%"

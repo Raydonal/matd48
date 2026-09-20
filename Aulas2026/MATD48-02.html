@@ -8,7 +8,7 @@
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -63,6 +63,25 @@ apenas aplicá-la mecanicamente (Searle, 1971; Rao, 1973).
 
 ---
 
+## De onde vem esse modelo? A população conceitual de respostas
+
+Na Aula 01, cada unidade `\(u\)` e cada tratamento `\(t\)` tinham um **resultado potencial** `\(Y_u(t)\)` — só
+um observado, os demais contrafactuais. A literatura clássica de planejamento de experimentos
+(Kempthorne, 1952; Hinkelmann &amp; Kempthorne, 2008) chama esse mesmo conjunto de **população
+conceitual de respostas**: existe, hipoteticamente, para toda combinação unidade×tratamento — nunca
+observado por completo, só uma "fatia" por unidade.
+
+--
+
+`\(\mathbf{Y}=\mathbf{X}\boldsymbol\beta+\boldsymbol\varepsilon\)` é a maquinaria que resume essa
+população conceitual, inteiramente hipotética, em `\(p\)` parâmetros estimáveis a partir da amostra
+observada.
+
+Dois nomes, um objeto: "resultados potenciais" (Neyman-Rubin, causal) e "população conceitual de
+respostas" (Kempthorne, DOE clássico) — reconheça os dois.
+
+---
+
 ## Mínimos quadrados
 
 Escolhemos `\(\hat{\boldsymbol{\beta}}\)` que minimiza
@@ -99,8 +118,7 @@ permanecem invariantes à escolha da inversa generalizada.
 
 ## Uma propriedade geométrica
 
-Nas equações normais, `\(\mathbf{X}'\mathbf{e} = \mathbf{0}\)`, com $\mathbf{e} = \mathbf{Y} -
-\mathbf{X}\hat{\boldsymbol{\beta}}$: os **resíduos são ortogonais** a cada coluna de `\(\mathbf{X}\)`.
+Nas equações normais, `\(\mathbf{X}'\mathbf{e} = \mathbf{0}\)`, com `\(\mathbf{e} = \mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}\)`: os **resíduos são ortogonais** a cada coluna de `\(\mathbf{X}\)`.
 
 - Com intercepto, `\(\sum_i e_i = 0\)` sempre.
 - `\(\hat{\boldsymbol{\beta}}\)` é o ponto do espaço-coluna de `\(\mathbf{X}\)` mais próximo de
@@ -185,8 +203,7 @@ dados_api &lt;- tibble(
 &lt;img src="MATD48-02_files/figure-html/plot-api-1.png" alt="" width="576" /&gt;
 
 Inclinações parecidas entre servidores (efeito da carga é similar), mas retas deslocadas
-verticalmente — a diferença de intercepto que vamos tratar como função estimável $\alpha_B -
-\alpha_A$.
+verticalmente — a diferença de intercepto que vamos tratar como função estimável `\(\alpha_B - \alpha_A\)`.
 
 ---
 
@@ -376,6 +393,76 @@ exatamente a média do grupo — a definição de estimabilidade em ação.
 
 ---
 
+## Uma inversa generalizada em quatro passos (sem SVD)
+
+A via SVD dá a inversa de Moore-Penrose — a "mais natural". Mas qualquer `\(\mathbf{G}\)` com `\(\mathbf{A}\mathbf{G}\mathbf{A}=\mathbf{A}\)` serve, e há um algoritmo de papel e lápis:
+
+.pull-left[
+1. achar uma submatriz `\(r\times r\)` de **posto completo** (`\(r=\mathrm{posto}(\mathbf A)\)`);
+2. invertê-la;
+3. transpor;
+4. devolver ao lugar original, **zeros** no resto.
+]
+.pull-right[
+
+``` r
+A &lt;- matrix(c(4,2,2, 2,2,0, 2,0,2), 3, 3, byrow = TRUE)
+qr(A)$rank                       # posto 2 &lt; 3
+```
+
+```
+## [1] 2
+```
+
+``` r
+g_inv &lt;- function(A, idx) {
+  G &lt;- matrix(0, nrow(A), ncol(A))
+  G[idx, idx] &lt;- t(solve(A[idx, idx]))
+  G
+}
+G1 &lt;- g_inv(A, c(2, 3))          # escolha 1
+G2 &lt;- g_inv(A, c(1, 2))          # escolha 2
+c(G1_valida = all.equal(A %*% G1 %*% A, A),
+  G2_valida = all.equal(A %*% G2 %*% A, A))
+```
+
+```
+## G1_valida G2_valida 
+##      TRUE      TRUE
+```
+]
+
+--
+
+**As duas são válidas e são diferentes.** A inversa generalizada não é única — e isso não é defeito: é o reflexo algébrico de que `\(\boldsymbol\beta\)` não é identificável num modelo sobreparametrizado.
+
+---
+
+## O que **não** depende da escolha
+
+Se `\(\boldsymbol\lambda'\)` está no espaço-linha de `\(\mathbf{A}\)` — isto é, se `\(\boldsymbol\lambda'\boldsymbol\beta\)` é **estimável** — o resultado não muda:
+
+
+``` r
+lam &lt;- A[2, ]                     # combinacao das linhas de A =&gt; estimavel
+rbind(`λ'G₁A` = lam %*% G1 %*% A,
+      `λ'G₂A` = lam %*% G2 %*% A,
+      `λ'`    = lam)
+```
+
+```
+##    [,1] [,2] [,3]
+##       2    2    0
+##       2    2    0
+## λ'    2    2    0
+```
+
+--
+
+Duas inversas diferentes, **o mesmo** `\(\boldsymbol\lambda'\)`. É a invariância que sustenta todo o Capítulo 3: a ANOVA nunca reporta `\(\hat\tau_i\)` isolado, e sim contrastes `\(\tau_i-\tau_k\)` — que são estimáveis, e portanto não dependem de qual parametrização o R escolheu.
+
+---
+
 ## Construindo `\(\mathbf{A}^+\)` à mão via `svd()`
 
 
@@ -423,8 +510,12 @@ estimabilidade já vinha usando por trás de `MASS::ginv()`.
 - Próxima aula: Gauss-Markov/BLUE, matriz de projeção, modelo particionado e a distribuição das
   formas lineares e quadráticas — a base algébrica da ANOVA do Capítulo 3.
 
+---
+
 ## Referências
 
+- Kempthorne, O. (1952). *The Design and Analysis of Experiments*. John Wiley &amp; Sons.
+- Hinkelmann, K. &amp; Kempthorne, O. (2008). *Design and Analysis of Experiments, Volume 1* (2ª ed.). John Wiley &amp; Sons.
 - Searle, S. R. (1971). *Linear Models*. John Wiley &amp; Sons.
 - Rao, C. R. (1973). *Linear Statistical Inference and Its Applications* (2ª ed.). John Wiley &amp; Sons.
 - Penrose, R. (1955). A Generalized Inverse for Matrices. *Mathematical Proceedings of the Cambridge Philosophical Society*, 51(3), 406–413.

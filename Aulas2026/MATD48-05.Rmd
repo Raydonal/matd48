@@ -4,14 +4,14 @@ subtitle: "Dois níveis de erro no DCA e o que fazer quando os tratamentos são 
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -67,9 +67,97 @@ $$\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}'
 - $\mathbf{Z}$: matriz $N\times tr$ de indicadores de UE — $Z_{[ijk],\,i'j'}=\mathbb 1\{i=i',j=j'\}$.
 - $\mathbf{Z}\mathbf{Z}'$ tem blocos de $1$'s do tamanho $q\times q$ (submuestras da mesma UE):
   observações da mesma UE são correlacionadas, $\mathrm{Cov}(Y_{ijk},Y_{ijk'})=\sigma_\delta^2$.
-- $\mathbf{V}$ tem estrutura de **simetria composta** por bloco — daí porque MQO com
-  $\mathrm{Cov}=\sigma^2\mathbf{I}$ (Cap. 2) não é mais o modelo certo, e a ANOVA precisa agregar
-  por UE antes de testar (Searle, 1971).
+- $\mathbf{V}$ tem estrutura de **simetria composta** por bloco — logo a suposição
+  $\mathrm{Cov}=\sigma^2\mathbf{I}$ do teorema de Gauss-Markov (Cap. 2) **está violada**.
+
+--
+
+Violada a hipótese, o teorema não se aplica. Mas isso significa que precisamos de GLS aqui?
+
+---
+
+## Zyskind outra vez: e o balanceamento deixa de ser detalhe
+
+Da Aula 03: com $\mathrm{Cov}(\boldsymbol\varepsilon)=\mathbf V$, o MQO continua BLUE **se e somente se** existe $\mathbf Q$ com $\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q}$. Vamos testar.
+
+```{r zyskind-submuestreo}
+t_ <- 3; r <- 2; q <- 4                      # desenho BALANCEADO
+ue   <- factor(rep(1:(t_ * r), each = q))
+trat <- factor(rep(rep(1:t_, each = r), each = q))
+X <- model.matrix(~ trat);  Z <- model.matrix(~ ue - 1)
+
+s_d <- 1.7; s_e <- 0.9
+V <- s_d^2 * Z %*% t(Z) + s_e^2 * diag(nrow(Z))
+Q <- qr.solve(X, V %*% X)
+
+c(max_erro = max(abs(V %*% X - X %*% Q)),
+  constante = Q[1, 1], q_sd2_mais_se2 = q * s_d^2 + s_e^2)
+```
+
+--
+
+A condição **se verifica**, e com $\mathbf{Q}=(q\sigma_\delta^2+\sigma_\varepsilon^2)\mathbf{I}$. Apesar da correlação dentro de UE, **MQO continua ótimo** — é por isso que a ANOVA agregada funciona, e não por aproximação.
+
+---
+
+## O que acontece se o desenho desbalancear
+
+```{r zyskind-desbalanceado}
+q2   <- c(4, 4, 4, 4, 4, 2)                  # uma UE com 2 submostras em vez de 4
+ue2   <- factor(rep(1:6, times = q2))
+trat2 <- factor(rep(rep(1:3, each = 2), times = q2))
+X2 <- model.matrix(~ trat2); Z2 <- model.matrix(~ ue2 - 1)
+V2 <- s_d^2 * Z2 %*% t(Z2) + s_e^2 * diag(nrow(Z2))
+
+max(abs(V2 %*% X2 - X2 %*% qr.solve(X2, V2 %*% X2)))
+```
+
+--
+
+A condição **falha**. Com submuestragem desigual, MQO deixa de ser BLUE e a estimação correta passa por GLS / máxima verossimilhança restrita (`lme4`, `nlme`).
+
+--
+
+Guarde isto: **o balanceamento não é preferência estética nem comodidade de cálculo.** É o que compra o direito de analisar um desenho hierárquico com a ferramenta mais simples. Perder o balanceamento custa um teorema.
+
+---
+
+## O sintoma na prática: `aov()` quebra, `lmer()` não
+
+```{r desbalanceado-sim-05}
+set.seed(77)
+delta2 <- rnorm(6, 0, s_d)
+dados_desbal <- map_dfr(1:6, function(i) {
+  tibble(ue = factor(i), trat = factor(rep(1:3, each = 2)[i]),
+         y = 10 + 2 * rep(1:3, each = 2)[i] + delta2[i] + rnorm(q2[i], 0, s_e))
+})
+```
+
+```{r aov-quebra-05, warning=TRUE}
+m_aov <- aov(y ~ trat + Error(trat:ue), data = dados_desbal)
+```
+
+--
+
+O aviso **"Error() model is singular"** não é cosmético — é o R avisando que a separação em
+estratos (a mesma conta do Zyskind, por baixo dos panos) não fecha sem balanceamento. Continuar e
+ler o `summary()` mesmo assim seria confiar num teste que a própria função avisa não ser válido.
+
+---
+
+## A ferramenta certa: `lme4::lmer()`
+
+```{r lmer-05}
+m_lmer <- lme4::lmer(y ~ trat + (1 | ue), data = dados_desbal)
+lme4::VarCorr(m_lmer)   # sigma_delta^2 e sigma_epsilon^2 estimados por REML, sem exigir balanceamento
+anova(m_lmer)           # teste F de tratamento -- sem p-valor aqui: exige aproximar os gl do denominador
+```
+
+Nenhum aviso, nenhuma singularidade: `lmer()` estima os dois componentes de variância por máxima
+verossimilhança restrita, que não depende da decomposição algébrica em estratos ortogonais que
+`aov()` exige. O preço é interpretativo, não computacional — os graus de liberdade do teste $F$
+deixam de ter uma fórmula fechada simples e exigem uma aproximação (Satterthwaite ou
+Kenward-Roger, fora do escopo deste curso) em vez do $F_{t(r-1)}$ exato da tabela balanceada.
 
 ---
 
@@ -114,6 +202,24 @@ do mesmo fenômeno — observações que compartilham um rótulo aleatório deix
 class: inverse, center, middle
 
 # Bloco 2 — Aplicação
+
+---
+
+## Três formas de organizar o mesmo experimento
+
+Mesmas 12 plantas, 3 tratamentos, adaptado de Hinkelmann & Kempthorne (1994):
+
+```{r tres-situacoes-05, echo=FALSE, out.width="31%", fig.show="hold"}
+knitr::include_graphics(c("assets/images/experimento1.png", "assets/images/sit2.png",
+                           "assets/images/sit3.png"))
+```
+
+--
+
+**Situação 1**: 1 caixa/tratamento — só **3 UEs no total**, zero gl de erro entre UEs. Fatal.
+**Situação 2**: 12 vasos individuais — sem submuestreo, 9 gl de erro. **Situação 3**: 2
+caixas/tratamento — submuestreo, mas com 2 UEs/tratamento (3 gl de erro) em vez de 1. É a mesma
+estrutura, em miniatura, do exemplo da tilápia a seguir.
 
 ---
 
@@ -174,30 +280,21 @@ Quatro nós em **cadeia**: aquário aninhado dentro de probiótico, peixe (submu
 dentro de aquário — cada nível de aninhamento é um novo elo, ao contrário dos termos cruzados do
 DBCA (Aula 09).
 
-```{r hasse-sub-05, echo=FALSE, fig.width=3.2, fig.height=4.6, fig.retina=2}
-nos_sub05 <- tibble(
-  termo = c("Média", "Tratamento\n(probiótico)", "UE\n(aquário)", "Submuestra\n(peixe = Erro)"),
-  df    = c(1, 4 - 1, 20 - 4, 97 - 20),
-  x     = c(0, 0, 0, 0),
-  y     = c(4, 3, 2, 1)
-)
-arestas_sub05 <- tibble(
-  de   = c("Média", "Tratamento\n(probiótico)", "UE\n(aquário)"),
-  para = c("Tratamento\n(probiótico)", "UE\n(aquário)", "Submuestra\n(peixe = Erro)")
-)
+```{r hasse-sub-05, echo=FALSE}
+source("../Livro/hasse_helpers.R")
 
-arestas_xy_sub05 <- arestas_sub05 %>%
-  left_join(nos_sub05 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
-  left_join(nos_sub05 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
-
-ggplot() +
-  geom_segment(data = arestas_xy_sub05, aes(x = x0, y = y0, xend = x1, yend = y1),
-               color = "grey45", linewidth = 0.6) +
-  geom_label(data = nos_sub05, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
-             size = 2.6, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
-  theme_void(base_size = 11) +
-  labs(title = "Submuestreo: t=4, r=5, q≈5 (N=97)") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 10.5))
+knitr::include_graphics(
+  hasse_svg(
+    tibble(termo   = c("Média", "Tratamento\n(probiótico)", "UE\n(aquário)",
+                       "Submuestra\n(peixe = Erro)"),
+           classes = c(1, 4, 20, 97)),
+    tibble(de   = c("Média", "Tratamento\n(probiótico)", "UE\n(aquário)"),
+           para = c("Tratamento\n(probiótico)", "UE\n(aquário)",
+                    "Submuestra\n(peixe = Erro)")),
+    arquivo = "../Livro/figuras/hasse/slide-submuestreo.svg",
+    titulo  = "Submuestreo: t=4, r=5, q&#8776;5 (N=97)",
+    tamanho = c(3.4, 3.1), compacto = TRUE)
+)
 ```
 
 $1+3+16+77=97=N$: os 16 gl de "UE" são exatamente os $t(r-1)$ da tabela simbólica; os 77 gl de
@@ -300,6 +397,8 @@ Com 8 réplicas/clipe, poder ≈ 0,49 para detectar $\gamma=0{,}25$; seriam nece
   planejamento amostral via $F/(1+n\gamma)$ em vez de $F$ não central.
 - Próxima aula: verificação dos pressupostos (normalidade, homocedasticidade) e transformações
   que tornam essas ANOVAs confiáveis na prática.
+
+---
 
 ## Referências
 

@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -57,8 +57,7 @@ Todos os fatores em **dois níveis** (`\(-1\)`/$+1$). Popular porque:
 
 ## Ortogonalidade: a propriedade central do `\(2^k\)`
 
-No fatorial A×B (Aula 12), $\mathbf{X} = [\mathbf{1}\,|\,\mathbf{X}_A\,|\,\mathbf{X}_B\,|\,
-\mathbf{X}_A\odot\mathbf{X}_B]$. No `\(2^k\)` codificado `\(\pm1\)`, **todas** essas colunas — de
+No fatorial A×B (Aula 12), `\(\mathbf{X} = [\mathbf{1}\,|\,\mathbf{X}_A\,|\,\mathbf{X}_B\,|\, \mathbf{X}_A\odot\mathbf{X}_B]\)`. No `\(2^k\)` codificado `\(\pm1\)`, **todas** essas colunas — de
 qualquer ordem — são mutuamente ortogonais: `\(\mathbf{X}'\mathbf{X}\)` é **diagonal**.
 
 
@@ -118,6 +117,89 @@ y  &lt;- biodiesel$Rendimiento
 
 Mesmo número, duas contas: o "contraste de Yates" (Yates, 1937) **é** mínimos quadrados com
 `\(\mathbf{X}'\mathbf{X}\)` diagonal, não uma regra à parte.
+
+---
+
+## O algoritmo tabular, antes de existir pacote estatístico
+
+Um `\(2^3\)` clássico (fatores `\(T\)`, `\(C\)`, `\(K\)`, duas réplicas) — a mesma conta acima, feita à mão:
+
+&lt;img src="assets/images/dadosyates.png" alt="" width="42%" /&gt;
+
+---
+
+## A tabela de sinais: todos os sete efeitos de uma vez
+
+&lt;img src="assets/images/yatesout.png" alt="" width="88%" /&gt;
+
+Cada coluna (T, C, K, T×C, ..., T×C×K) é uma coluna `\(\mathbf{x}_j\)` de sinais `\(\pm1\)` diferente,
+multiplicada pela produção média e somada — a mesma conta do slide anterior, repetida sete vezes
+em paralelo, uma por efeito.
+
+---
+
+## Com repetição: o erro puro sai das próprias duplicatas
+
+Com `\(r=2\)` repetições por casela existe estimativa honesta de `\(\sigma^2\)`, e nenhuma suposição de esparsidade é necessária. Cada casela dá `\(S_i^2=d_i^2/2\)` com 1 gl. Combinando as `\(g=2^k\)` caselas:
+
+`$$S^2=\frac{\sum_{i=1}^{g}\nu_i S_i^2}{\sum_i \nu_i}=\frac{\sum_{i=1}^{g} d_i^2}{2g}, \qquad g \text{ graus de liberdade}$$`
+
+--
+
+
+``` r
+pares &lt;- biodiesel %&gt;%
+  group_by(Relacion, Catalizador, Temperatura, Agente) %&gt;%
+  summarise(d = diff(range(Rendimiento)), .groups = "drop")
+
+g  &lt;- nrow(pares)
+S2 &lt;- sum(pares$d^2) / (2 * g)
+c(g = g, S2 = S2, QM_residual_saturado = 20.6797)
+```
+
+```
+##                    g                   S2 QM_residual_saturado 
+##             16.00000             20.67969             20.67970
+```
+
+O mesmo número que o `\(QM_{Res}\)` do modelo saturado — não é coincidência: **é** a mesma soma de quadrados, organizada de outro jeito.
+
+---
+
+## Erro-padrão de um efeito e distribuição de referência
+
+Um efeito é a diferença de duas médias, cada uma sobre `\(2^{k-1}r\)` observações:
+
+`$$\mathrm{Var}(\text{efeito})=\mathrm{Var}\big[\bar z(T_+)-\bar z(T_-)\big]=\sigma^2\left(\frac{1}{2^{k-1}r}+\frac{1}{2^{k-1}r}\right)=\frac{\sigma^2}{2^{k-2}r}$$`
+
+--
+
+.pull-left[
+
+``` r
+k &lt;- 4; r &lt;- 2
+var_ef &lt;- S2 * (2 / (2^(k-1) * r))
+EP     &lt;- sqrt(var_ef)
+lim    &lt;- qt(0.975, g) * EP
+c(EP = EP, t_crit = qt(0.975, g), limite = lim)
+```
+
+```
+##       EP   t_crit   limite 
+## 1.607781 2.119905 3.408344
+```
+]
+.pull-right[
+Cada razão `\(\text{efeito}/\widehat{EP}\)` segue `\(t_{g}\)` sob `\(H_0\)`. Com `\(g=16\)` gl:
+
+`$$|\text{efeito}| &gt; t_{0{,}975;\,16}\cdot \widehat{EP} \approx 3{,}4$$`
+
+é o critério — direto, sem esparsidade, sem mediana de efeitos.
+]
+
+--
+
+**Regra de interpretação:** efeitos principais só se interpretam isoladamente **se não houver evidência de interação**. Aqui há — e é por isso que o slide seguinte lê temperatura *dentro* de cada catalisador, não em média.
 
 ---
 
@@ -311,6 +393,40 @@ O `NA` na interação de 4ª ordem é o R relatando que as duas colunas de `\(\m
 
 ---
 
+## E se tivéssemos escolhido mal o gerador?
+
+`\(\mathbf{X}'\mathbf{X}\)` não sabe distinguir "efeito sem importância" de "efeito crucial" — só a
+escolha do gerador decide qual é qual. Suponha que, por acidente de logística, todas as corridas
+de temperatura alta tivessem sido feitas numa segunda-feira e as de temperatura baixa numa
+terça — ou seja, **dia** e **Temperatura** viram a mesma coluna, tão idêntica quanto `\(ABCD\)` e
+bloco eram antes:
+
+
+``` r
+comb_ruim &lt;- rep1 %&gt;% mutate(dia = factor(if_else(Temperatura &gt; 0, "Segunda", "Terca")))
+
+mod_so_temp &lt;- lm(Rendimiento ~ Relacion*Catalizador*Temperatura*Agente, data = comb_ruim)
+mod_so_dia  &lt;- lm(Rendimiento ~ Relacion*Catalizador*Agente*dia, data = comb_ruim)
+
+max(abs(fitted(mod_so_temp) - fitted(mod_so_dia)))   # zero: previsoes identicas, ponto a ponto
+```
+
+```
+## [1] 0
+```
+
+--
+
+Os dois modelos preveem **exatamente o mesmo valor** em cada corrida — porque "dia" e
+"Temperatura" são, nos dados,
+literalmente a mesma partição em dois grupos. Diferente de confundir `\(ABCD\)` (que ninguém
+esperava ser grande), aqui não há como saber, **nem em princípio**, se o ganho de rendimento veio
+da temperatura ou de algo que mudou de um dia para o outro (calibração do equipamento, umidade do
+ar) — a pergunta de pesquisa original fica permanentemente sem resposta, não por falta de dados,
+mas porque o próprio desenho apagou a distinção.
+
+---
+
 class: inverse, center, middle
 
 # Bloco 3 — Discussão
@@ -398,6 +514,8 @@ efeitos é perdido em **todas** as réplicas — a essência da confusão parcia
 - Confundir é fazer duas colunas de `\(\mathbf{X}\)` colidirem — escolha efeitos de ordem alta para
   sacrificar; use confusão parcial quando há mais de uma repetição.
 - Próxima aula: `\(3^k\)`, fracionamento e a metodologia de superfície de resposta.
+
+---
 
 ## Referências
 

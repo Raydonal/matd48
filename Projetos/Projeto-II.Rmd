@@ -35,8 +35,8 @@ no cronograma do curso, até as 12:00hs (GMT-3, Horário de Brasília). Forneça
 Magistral, Qwen, Kimi, Nova Phi, Grok, etc.) para resolver o projeto, evite constrangimentos.
 **Quero vocês pensando, não a máquina.**
 
-**Avaliação:** este projeto fecha a **Nota 1** do curso — N1 = 50% Projeto II + 50% média das
-Listas 01–08 (ver critério de aprovação na home do curso). É o primeiro dos **três projetos
+**Avaliação:** este projeto fecha a **Nota 1** do curso — N1 = 40% Projeto II + 60% Prova escrita 1
+(ver critério de aprovação na home do curso). É o primeiro dos **três projetos
 incrementais** do curso: o desenho de base que você constrói aqui (unidade experimental, repetição
 genuína, aleatorização da ordem dos voos) é exatamente o que os Projetos III e IV vão retomar,
 empilhando sobre ele controle local/blocagem (Projeto III) e arranjos fatoriais (Projeto IV).

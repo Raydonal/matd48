@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -60,18 +60,22 @@ Nenhuma técnica de análise, por mais sofisticada, conserta um desenho ruim
 
 ## O método científico: de observação a hipótese testável
 
-&lt;img src="../Aulas/images/circular_flowchart.png" alt="" width="42%" /&gt;
+.pull-left[
+&lt;img src="assets/images/circular_flowchart.png" alt="" width="96%" /&gt;
+]
+.pull-right[
+Popper (1959): uma hipótese só é cientificamente informativa se for **falseável** — se existir
+algum resultado observável que a contradiga.
 
-Popper (1959): uma hipótese só é cientificamente informativa se for **falseável** —
-se existir algum resultado observável que a contradiga. O delineamento de experimentos entra
-exatamente aqui: é a engenharia de **como coletar dados que de fato podem contradizer a
-hipótese**, caso ela seja falsa.
+O delineamento de experimentos entra exatamente aqui: é a engenharia de **como coletar dados que
+de fato podem contradizer a hipótese**, caso ela seja falsa.
 
 --
 
 Um desenho fraco (sem repetição, sem aleatorização, com confusão não controlada) produz dados que
-"confirmam" a hipótese do pesquisador quase independentemente dela ser verdadeira — o oposto do
+"confirmam" a hipótese do pesquisador quase independentemente de ela ser verdadeira — o oposto do
 que Popper pede.
+]
 
 ---
 
@@ -245,7 +249,85 @@ Não há solução puramente estatística para validade externa — só o cuidad
 
 ---
 
+## Antes de formalizar: dois ingredientes, dois pioneiros
+
+Os três pilares que vamos formalizar não nasceram juntos — cada um resolve um problema distinto,
+visível separadamente **antes** de Fisher os combinar num só desenho.
+
+.pull-left[
+&lt;img src="assets/images/Van_Helmont_Experiment.jpg" alt="" width="85%" /&gt;
+]
+.pull-right[
+**Jan Baptist van Helmont, séc. XVII — o poder da quantificação.**
+
+Pergunta: de onde vem a massa de uma planta que cresce? Em vez de especular, ele **mediu**: pesou
+90 kg de solo seco, plantou um salgueiro de 2,25 kg, regou-o só com água por 5 anos.
+
+
+``` r
+peso_inicial_arvore &lt;- 2.25; peso_inicial_solo &lt;- 90.0
+peso_final_arvore   &lt;- 76.1; peso_final_solo   &lt;- 89.9
+ganho_arvore &lt;- peso_final_arvore - peso_inicial_arvore
+perda_solo   &lt;- peso_inicial_solo - peso_final_solo
+c(ganho_arvore_kg = ganho_arvore, perda_solo_kg = perda_solo)
+```
+
+```
+## ganho_arvore_kg   perda_solo_kg 
+##           73.85            0.10
+```
+]
+
+---
+
+## Van Helmont — o que os números dizem
+
+O solo quase não mudou (**0.1 kg** perdidos em 5 anos) enquanto a árvore ganhou
+**73.8 kg**. Conclusão de van Helmont: a massa da árvore veio majoritariamente
+da água, não do solo (hoje sabemos que vem também do CO₂ do ar — o método é o que importa aqui, não
+a conclusão final).
+
+--
+
+**Sem quantificar, a comparação sequer existiria** — "a árvore cresceu" não é uma afirmação
+testável; "a árvore ganhou 73,85 kg enquanto o solo perdeu 0,1 kg" é.
+
+---
+
+## O segundo ingrediente: comparar com o que não recebeu o tratamento
+
+.pull-left[
+&lt;img src="assets/images/priestly.jpg" alt="" width="92%" /&gt;
+]
+.pull-right[
+**Joseph Priestley, séc. XVIII — o poder do controle.**
+
+Uma vela sob uma redoma de vidro apaga o ar "de dentro". A pergunta: uma planta consegue
+restaurá-lo?
+
+- **Sem planta (controle):** o ar continua "danificado" — uma vela nova não queima.
+- **Com planta (tratamento):** dias depois, uma vela nova volta a queimar na mesma redoma.
+]
+
+---
+
+## Priestley — por que o controle é indispensável
+
+Só comparando os dois cenários — não observando *apenas* o cenário com planta — Priestley pôde
+atribuir a restauração à planta, e não a alguma outra mudança (temperatura, tempo, luz) que
+aconteceria de qualquer forma.
+
+--
+
+**Sem grupo controle, "funcionou" não quer dizer nada** — funcionou *em relação a quê*?
+
+---
+
 ## Os três pilares
+
+Van Helmont deu o primeiro ingrediente (medir com precisão); Priestley, o segundo (comparar contra
+um controle). Nenhum dos dois basta sozinho — falta ainda **repetir** e **sortear**, não só
+comparar uma vez. Fisher, a seguir, combina os quatro numa só receita.
 
 .pull-left[
 ### Repetição
@@ -260,6 +342,79 @@ interpretação causal legítima.
 Agrupar UEs heterogêneas em blocos homogêneos, aleatorizando *dentro* de cada bloco → reduz o
 erro experimental sem abrir mão da aleatorização.
 ]
+
+---
+
+## Os três pilares, num só experimento: a senhora que toma chá
+
+.pull-left[
+**Cambridge, anos 1920.** Muriel Bristol afirma distinguir se o leite foi posto antes ou depois do chá. Fisher (1935) propõe testá-la.
+
+**O desenho:** 8 xícaras, 4 de cada tipo, apresentadas em **ordem aleatória**. Ela deve separá-las em dois grupos de 4.
+]
+.pull-right[
+Os três pilares, visíveis de uma vez:
+
+- **Repetição** — 8 xícaras, não uma. Com uma só, acertar por sorte tem chance `\(1/2\)`.
+- **Aleatorização** — a ordem sorteada é o que **cria** a distribuição de referência e protege de viés inconsciente.
+- **Controle local** — mesma xícara, mesma temperatura, mesmo açúcar: a única diferença deliberada é a ordem do leite.
+]
+
+--
+
+**A pergunta de Fisher não é "ela acertou?", e sim:** se ela estivesse apenas adivinhando, com que frequência acertaria tudo?
+
+---
+
+## O teste exato: a distribuição vem do próprio sorteio
+
+Sob `\(H_0\)` (ela adivinha), escolher 4 xícaras entre 8 é escolher **uma** das `\(\binom{8}{4}=70\)` partições, todas igualmente prováveis. Logo
+
+`$$P(\text{acertar as 4} \mid H_0)=\frac{1}{\binom{8}{4}}=\frac{1}{70}\approx 0{,}0143$$`
+
+--
+
+.pull-left[
+&lt;img src="MATD48-01_files/figure-html/cha-dist-1.png" alt="" width="360" /&gt;
+]
+.pull-right[
+
+``` r
+cha &lt;- matrix(c(4, 0, 0, 4), nrow = 2,
+  dimnames = list(Palpite = c("leite 1º", "chá 1º"),
+                  Real    = c("leite 1º", "chá 1º")))
+fisher.test(cha, alternative = "greater")$p.value
+```
+
+```
+## [1] 0.01428571
+```
+
+Não há aproximação, nem normalidade, nem `\(n\)` grande: a distribuição de referência **é** o conjunto das 70 aleatorizações.
+]
+
+--
+
+É o mesmo argumento do teste de aleatorização da Aula 04 — e a origem histórica dele.
+
+---
+
+## Do princípio ao processo: o ciclo QPDAC
+
+Tudo que vimos neste bloco — quantificar, controlar, os três pilares, resultados potenciais — se
+organiza, na prática, num roteiro de cinco passos (Question, Plan, Data, Analysis, Conclusion):
+
+1. **Question** — qual pergunta causal, precisa e mensurável? (não "o tratamento funciona?", mas
+   "qual o ATE do tratamento X sobre a resposta Y, na população Z?")
+2. **Plan** — desenho de tratamentos, desenho para controle do erro (os três pilares), desenho
+   amostral: quantas UEs, submuestragem, blocagem.
+3. **Data** — coleta seguindo exatamente o plano (nenhum desvio ad-hoc do sorteio).
+4. **Analysis** — a ferramenta estatística certa para a estrutura de dados que o plano gerou (não
+   o inverso).
+5. **Conclusion** — interpretação em linguagem simples, com validade interna **e** externa
+   explicitadas.
+
+Os dois exemplos do próximo bloco seguem esse roteiro passo a passo, em domínios diferentes.
 
 ---
 
@@ -347,6 +502,169 @@ O *n* relevante para inferência é **10 por grupo** (estudantes), não 20 (prov
 
 As duas notas de um mesmo estudante estão ligadas — são mais parecidas entre si do que notas de
 estudantes diferentes. Isso é exatamente o que a distinção UE/unidade amostral prevê.
+
+---
+
+## Um segundo domínio: teste A/B em produto digital
+
+**Question:** uma loja *online* testa dois layouts da página de produto — **A** (lista) e **B**
+(grade) — quanto à taxa de conversão em checkout. Layout B causa mudança na taxa?
+
+**Plan (os mesmos ingredientes, unidade diferente):**
+- **UE = sessão de usuário** (o tratamento — qual layout ver — é sorteado por sessão).
+- **Resultados potenciais:** `\(Y_i(0)\in\{0,1\}\)` = converteria sob A; `\(Y_i(1)\in\{0,1\}\)` = converteria
+  sob B. `\(\text{ATE} = p_B - p_A\)`, exatamente a definição da Seção anterior — só que aqui a
+  resposta é binária, não contínua.
+- **Repetição:** milhares de sessões por braço. **Aleatorização:** sorteio por sessão, não por
+  dia/horário (evita confundir layout com hora do dia — a lição da Seção "Confusão").
+
+---
+
+## Data: os dados simulados (taxa real conhecida, porque é simulação)
+
+
+``` r
+set.seed(2026)
+n_por_grupo &lt;- 8000
+taxa_A &lt;- 0.052   # taxa de conversao real sob o layout A (Lista)
+taxa_B &lt;- 0.061   # taxa de conversao real sob o layout B (Grade)
+
+dados_ab &lt;- tibble(
+  layout    = factor(rep(c("A (lista)", "B (grade)"), each = n_por_grupo)),
+  converteu = c(rbinom(n_por_grupo, 1, taxa_A), rbinom(n_por_grupo, 1, taxa_B))
+)
+
+resumo_ab &lt;- dados_ab %&gt;%
+  group_by(layout) %&gt;%
+  summarise(sessoes = n(), conversoes = sum(converteu),
+            taxa = mean(converteu), .groups = "drop")
+resumo_ab %&gt;% kable(digits = 4, format = "html") %&gt;%
+  kable_styling(font_size = 18, full_width = FALSE)
+```
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; layout &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sessoes &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; conversoes &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; taxa &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; A (lista) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 406 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0508 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; B (grade) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 517 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0646 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Analysis: o teste de proporções
+
+
+``` r
+teste_ab &lt;- prop.test(x = resumo_ab$conversoes, n = resumo_ab$sessoes)
+broom::tidy(teste_ab) %&gt;% select(estimate1, estimate2, p.value, conf.low, conf.high) %&gt;%
+  kable(digits = 4, format = "html") %&gt;% kable_styling(font_size = 17, full_width = FALSE)
+```
+
+&lt;table class="table" style="font-size: 17px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; estimate1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; conf.low &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; conf.high &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.0508 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0646 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2e-04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0212 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0065 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Analysis e Conclusion: efeito, intervalo e interpretação
+
+.pull-left[
+&lt;img src="MATD48-01_files/figure-html/ab-plot-1.png" alt="" width="331.2" /&gt;
+]
+.pull-right[
+`\(\widehat{\text{ATE}} = \hat p_B-\hat p_A =\)` 0.0139, IC 95%
+não inclui zero (p &lt; 0,001).
+
+**Conclusion (linguagem simples):** o layout em grade aumentou a conversão em
+`\(1.4\)` pontos percentuais nesta amostra de usuários do site — efeito
+pequeno, mas real e estatisticamente detectável com `\(n=\)` 16.000
+sessões. Validade interna: alta (aleatorização por sessão). Validade externa: limitada aos
+usuários deste site, neste período — não implica o mesmo ganho em outro produto.
+]
+
+---
+
+## Os dois exemplos, lado a lado
+
+&lt;table class="table" style="font-size: 16px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Ingrediente &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Técnicas de estudo &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Teste A/B &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Domínio &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Psicologia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ciência de dados &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; UE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Estudante &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Sessão de usuário &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Técnica (3 níveis) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Layout (2 níveis) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Resposta &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Nota (contínua) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Converteu (binária) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Resultados potenciais &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(Y_i(t)\)`, `\(t\in\{1,2,3\}\)` &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(Y_i(0), Y_i(1)\in\{0,1\}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ATE estimado &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; diferenças de médias, Cap. 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1.4 p.p. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Mesmos ingredientes (UE, tratamento, resposta, resultados potenciais), domínios diferentes — é
+esse o padrão que o curso repete em agricultura, psicologia e ciência de dados até o Capítulo 6.
 
 ---
 
@@ -451,6 +769,8 @@ estudar o **modelo de submuestreo em um DCA**, no Capítulo 3.
 - Fator, nível, tratamento: o vocabulário do desenho de tratamentos.
 - Repetição, aleatorização, controle local: os três pilares do controle do erro.
 - Próxima aula: a maquinaria formal — o **modelo linear** — para expressar tudo isso com precisão.
+
+---
 
 ## Referências
 

@@ -4,14 +4,14 @@ subtitle: "Q-Q plot, testes de normalidade e homogeneidade de variância, Box-Co
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -39,6 +39,58 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # Bloco 1 — Teoria
+
+---
+
+## Resíduos: verificação, mas também **descoberta**
+
+Analisar resíduos não é só carimbar pressupostos. É a única parte da análise capaz de revelar que **o delineamento esqueceu um fator**. Quatro coisas se procura (Kempthorne, 1952):
+
+.pull-left[
+1. **Evidência contra aditividade** — padrão em funil sugere que a interação ignorada importa.
+2. **Evidência contra homocedasticidade** — a variância do erro muda entre tratamentos.
+]
+.pull-right[
+3. **Fontes de variação não controladas** — padrão contra a **ordem de execução** ou contra covariáveis externas (tempo, temperatura, operador) denuncia fator omitido.
+4. **Pontos discrepantes** — resíduos grandes que merecem investigação, não descarte automático.
+]
+
+--
+
+Os itens 1, 2 e 4 são *verificação*. O **item 3 é descoberta** — e é o mais valioso, porque aponta o que mudar no **próximo** experimento.
+
+---
+
+## O gráfico que 90% das análises esquece: resíduo × ordem de execução
+
+```{r residuo-ordem, echo=FALSE, fig.width=9.4, fig.height=3.4}
+set.seed(21)
+n <- 40
+ordem <- 1:n
+deriva <- 0.28 * ordem                       # o equipamento aquece ao longo do dia
+trat   <- factor(rep(c("A","B","C","D"), each = 10))
+y      <- 50 + as.numeric(trat) * 2 + deriva + rnorm(n, 0, 2)
+res    <- residuals(aov(y ~ trat))
+
+bind_rows(
+  tibble(ordem, res = residuals(aov(y ~ trat)), cenario = "Modelo SEM a ordem"),
+  tibble(ordem, res = residuals(aov(y ~ trat + ordem)), cenario = "Modelo COM a ordem")
+) %>%
+  mutate(cenario = factor(cenario, levels = c("Modelo SEM a ordem", "Modelo COM a ordem"))) %>%
+  ggplot(aes(ordem, res)) +
+  geom_hline(yintercept = 0, color = "grey60") +
+  geom_point(size = 2, alpha = 0.8, color = "#2a78d6") +
+  geom_smooth(method = "loess", se = FALSE, color = "#b3392b", linewidth = 0.8) +
+  facet_wrap(~ cenario) +
+  labs(x = "ordem de execução", y = "resíduo") +
+  theme_minimal(base_size = 12)
+```
+
+--
+
+À esquerda, a tendência ascendente grita: existe algo **ligado ao tempo** que o modelo não tem — aqui, o equipamento aquecendo ao longo do dia. Nenhum teste de normalidade ou de Levene detectaria isso; o Q-Q plot ficaria bonito.
+
+À direita, com a ordem no modelo, o padrão desaparece. **A aleatorização protege a validade; o gráfico de ordem revela o que bloquear da próxima vez.**
 
 ---
 
@@ -85,6 +137,38 @@ análise de resíduos (Montgomery, 2017).
 - **Box-Cox** (Box & Cox, 1964): família $Y^{(\lambda)}=(Y^\lambda-1)/\lambda$ ($\log Y$ se
   $\lambda=0$); $\lambda$ escolhido maximizando a verossimilhança perfilada do modelo ajustado a
   $Y^{(\lambda)}$ (Box, Hunter & Hunter, 2005).
+
+---
+
+## Pontos discrepantes: quando investigar, não descartar
+
+O item 4 da primeira teoria — "resíduos grandes merecem investigação" — precisa de uma régua.
+**Resíduo estudentizado** $r_i = e_i / \big(s\sqrt{1-h_{ii}}\big)$, com $h_{ii}$ a alavancagem
+(diagonal da matriz de projeção $\mathbf{P}_X$, Capítulo 2): divide o resíduo bruto pelo seu
+próprio desvio-padrão, o que o torna comparável entre observações com alavancagens diferentes —
+um resíduo bruto grande numa observação de alta alavancagem pode ser menos extremo, em termos
+relativos, que um resíduo bruto menor numa observação comum.
+
+--
+
+**Regra prática** (não um teste formal): $|r_i|>2$ merece uma olhada; $|r_i|>3$ merece
+investigação séria — de onde veio aquela observação, houve erro de registro, é uma unidade
+experimental genuinamente atípica? **Descartar automaticamente** um ponto só porque $|r_i|>3$
+inverte a lógica: o objetivo é entender a causa, não maquiar o ajuste.
+
+---
+
+## Detectando o ponto discrepante em R
+
+```{r studentized-06}
+dados_ord <- tibble(ordem = 1:40,
+                     trat = factor(rep(c("A","B","C","D"), each = 10)),
+                     y = 50 + as.numeric(trat)*2 + rnorm(40, 0, 2))
+dados_ord$y[7] <- dados_ord$y[7] + 12   # um ponto discrepante deliberado
+mod_ord <- lm(y ~ trat, data = dados_ord)
+r_estud <- rstudent(mod_ord)
+which(abs(r_estud) > 2)
+```
 
 ---
 
@@ -250,6 +334,40 @@ transformação estabilizou a variância sem distorcer a estrutura de tratamento
 
 ---
 
+## Um resultado limítrofe: revisitando o feijão da Aula 04
+
+Na Aula 04, o Shapiro-Wilk nos resíduos do experimento de fertilizante deu $p\approx0{,}046$ —
+"no limiar de $0,05$", prometemos resolver aqui. Um único teste pontual não é o veredito final.
+
+```{r feijao-06}
+feijao <- read_csv("../Livro/data/feijao.csv", show_col_types = FALSE) %>%
+  mutate(Fertilizante = factor(Fertilizante, labels = paste0("F", 1:4)))
+mod_feijao_06 <- aov(Producao ~ Fertilizante, data = feijao)
+
+bc_feijao <- MASS::boxcox(mod_feijao_06, plotit = FALSE, lambda = seq(-2, 2, by = 0.01))
+lambda_feijao <- bc_feijao$x[which.max(bc_feijao$y)]
+lambda_feijao
+```
+
+--
+
+$\lambda$ ótimo $\approx$ `r round(lambda_feijao, 2)` — perto de 1 (nenhuma transformação). O
+intervalo de verossimilhança de 95% para $\lambda$ **inclui** 1: Box-Cox, que olha o modelo
+inteiro, discorda do veredito pontual do Shapiro-Wilk.
+
+---
+
+## A lição: olhe o intervalo, não só o p-valor pontual
+
+Com $n=20$ (5 por fertilizante), o Shapiro-Wilk tem pouco poder — um $p$ perto de $0,05$ é fácil
+de obter por acaso mesmo sob normalidade aproximada. O IC de $\lambda$ responde a uma pergunta
+melhor: "existe uma transformação claramente melhor que a escala original?" — aqui, não. **Não
+transformar** é a decisão defensável: a ANOVA em Producao já é a análise certa, e complicar a
+interpretação com uma transformação desnecessária teria custo (a discussão da Aula 04 sobre
+médias por fertilizante fica mais direta na escala original).
+
+---
+
 ## Resumo da aula
 
 - Normalidade: Q-Q plot (onde o desvio ocorre) + Shapiro-Wilk (confirmação formal).
@@ -257,9 +375,15 @@ transformação estabilizou a variância sem distorcer a estrutura de tratamento
   pressuposto vale, sobretudo em $n$ pequeno.
 - Log e raiz quadrada são casos especiais da família Box-Cox; $\lambda$ escolhido por
   verossimilhança perfilada, mas interpretabilidade pode justificar arredondar para 0, 1/2 ou 1.
+- Resíduos estudentizados $r_i$ dão uma régua comparável para "resíduo grande" — $|r_i|>3$ pede
+  investigação, não descarte automático.
+- Um único teste com $p$ perto de $0,05$ não é veredito final, sobretudo em $n$ pequeno: o IC de
+  $\lambda$ de Box-Cox pode discordar do Shapiro-Wilk pontual — o feijão da Aula 04 ilustrou isso.
 - Isso fecha a primeira metade do Capítulo 3 (DCA). A próxima seção trata de contrastes,
   polinômios ortogonais, comparações múltiplas, ANCOVA e Kruskal-Wallis (Kruskal & Wallis, 1952) —
   quando nem a transformação basta.
+
+---
 
 ## Referências
 

@@ -66,7 +66,7 @@ broom::tidy(modelo_2k) %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:biodiesel-anova)(\#tab:biodiesel-anova)Termos com p &lt; 0,10 na ANOVA completa do fatorial 2⁴ (rendimento de biodiesel)</caption>
+<caption>(\#tab:biodiesel-anova)Termos com p &lt; 0,10 na ANOVA completa do fatorial 2⁴ (rendimento de biodiesel)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -265,17 +265,17 @@ de aula do curso e ilustra esse procedimento numericamente, antes de o formaliza
 algoritmo mais rápido e o reproduzirmos em R sobre os próprios dados do biodiesel.
 
 <div class="figure" style="text-align: center">
-<img src="../Aulas/images/dadosyates.png" alt="Um 2³ clássico com fatores T, C e K (duas réplicas cada, I e II). As colunas de sinais (-/+) definem os oito tratamentos em ordem-padrão; as colunas à direita resumem média, amplitude e variância de cada tratamento." width="70%" />
+<img src="../Aulas2026/assets/images/dadosyates.png" alt="Um 2³ clássico com fatores T, C e K (duas réplicas cada, I e II). As colunas de sinais (-/+) definem os oito tratamentos em ordem-padrão; as colunas à direita resumem média, amplitude e variância de cada tratamento." width="70%" />
 <p class="caption">(\#fig:yates-dados-classicos)Um 2³ clássico com fatores T, C e K (duas réplicas cada, I e II). As colunas de sinais (-/+) definem os oito tratamentos em ordem-padrão; as colunas à direita resumem média, amplitude e variância de cada tratamento.</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="../Aulas/images/yatesout.png" alt="A tabela de sinais e contrastes para o 2³ acima: cada coluna (T, C, K, T x C, T x K, C x K, T x C x K) é a coluna de sinais ±1 daquele efeito, multiplicada pela Produção Média de cada tratamento (última coluna) e somada; o resultado, dividido pelo divisor do rodapé, é o efeito estimado -- exatamente o produto interno da Seção 6.1.1." width="65%" />
+<img src="../Aulas2026/assets/images/yatesout.png" alt="A tabela de sinais e contrastes para o 2³ acima: cada coluna (T, C, K, T x C, T x K, C x K, T x C x K) é a coluna de sinais ±1 daquele efeito, multiplicada pela Produção Média de cada tratamento (última coluna) e somada; o resultado, dividido pelo divisor do rodapé, é o efeito estimado -- exatamente o produto interno da Seção 6.1.1." width="65%" />
 <p class="caption">(\#fig:yates-tabela-classica)A tabela de sinais e contrastes para o 2³ acima: cada coluna (T, C, K, T x C, T x K, C x K, T x C x K) é a coluna de sinais ±1 daquele efeito, multiplicada pela Produção Média de cada tratamento (última coluna) e somada; o resultado, dividido pelo divisor do rodapé, é o efeito estimado -- exatamente o produto interno da Seção 6.1.1.</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="../Aulas/images/Efeito_TK_yates.svg" alt="Cálculo manual do efeito de interação dupla T x C (temperatura x catalisador) no mesmo exemplo 2^3: as quatro combinações com sinal '+' (diagonal do cubo) contra as quatro com sinal '-' produzem a mesma conta que a coluna 'T x C' da tabela de sinais -- a leitura geométrica (planos diagonais do cubo, seção sobre o cubo do 2 ao cubo do Capítulo 5) e a leitura tabular (produto de colunas de sinais) chegam ao mesmo número." width="55%" />
+<img src="../Aulas2026/assets/images/Efeito_TK_yates.svg" alt="Cálculo manual do efeito de interação dupla T x C (temperatura x catalisador) no mesmo exemplo 2^3: as quatro combinações com sinal '+' (diagonal do cubo) contra as quatro com sinal '-' produzem a mesma conta que a coluna 'T x C' da tabela de sinais -- a leitura geométrica (planos diagonais do cubo, seção sobre o cubo do 2 ao cubo do Capítulo 5) e a leitura tabular (produto de colunas de sinais) chegam ao mesmo número." width="55%" />
 <p class="caption">(\#fig:yates-efeito-tk)Cálculo manual do efeito de interação dupla T x C (temperatura x catalisador) no mesmo exemplo 2^3: as quatro combinações com sinal '+' (diagonal do cubo) contra as quatro com sinal '-' produzem a mesma conta que a coluna 'T x C' da tabela de sinais -- a leitura geométrica (planos diagonais do cubo, seção sobre o cubo do 2 ao cubo do Capítulo 5) e a leitura tabular (produto de colunas de sinais) chegam ao mesmo número.</p>
 </div>
 
@@ -625,8 +625,11 @@ com ABCD</div>
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-fatoriais-avancado_files/figure-html/hasse-confusao-1.png" alt="Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo." width="80%" />
-<p class="caption">(\#fig:hasse-confusao)Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo.</p>
+<img src="figuras/hasse/confusao-sem-bloco.svg" alt="Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo." width="96%" />
+<p class="caption">(\#fig:hasse-confusao-1)Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo.</p>
+</div><div class="figure" style="text-align: center">
+<img src="figuras/hasse/confusao-com-bloco.svg" alt="Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo." width="96%" />
+<p class="caption">(\#fig:hasse-confusao-2)Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo.</p>
 </div>
 
 O painel esquerdo é o retrato do problema: com réplica única, todo grau de liberdade do desenho já
@@ -661,19 +664,21 @@ dupla $A{\times}B$ em um $3^2$.
 Um experimento de usinagem mede a energia de corte consumida em função da <strong>velocidade de
 corte</strong> (três níveis: 2,3, 3,4 e 4,5 m/s) e do <strong>ângulo de saída da ferramenta</strong>
 (três níveis: 20°, 40° e 60°) — um $3^2$ completo, com quatro repetições por combinação (36
-corridas). Retomaremos este mesmo conjunto de dados na seção sobre superfície de resposta, adiante neste capítulo.
+corridas). Retomaremos este mesmo conjunto de dados no capítulo sobre superfície de resposta.
 </div>
 ```
 
 Assim como no $2^k$, dividir um $3^k$ em blocos exige confundir algum efeito com o bloco. A
-construção usa **contrastes de graus de liberdade únicos** da forma $AB^2$ (ou $A^2B$), em vez de
-simplesmente $AB$: como cada efeito de interação em um $3^k$ tem múltiplos graus de liberdade, é
+construção decompõe a interação em **componentes ortogonais de dois graus de liberdade cada**,
+$AB$ e $AB^2$ (ou, equivalentemente, $A^2B$), em vez de tratar $A{\times}B$ como um bloco único:
+a interação dupla de um $3^2$ tem $2\times2=4$ graus de liberdade, que se repartem exatamente
+nesses dois componentes ($2+2=4$). Como o bloco consome $3-1=2$ graus de liberdade, é
 preciso escolher *um* componente específico para confundir, e a notação $AB^2$ indica o contraste
 $L = i + 2j \pmod 3$, onde $i$ e $j$ são os níveis (codificados $0,1,2$) de $A$ e $B$. Valores de
 $L$ iguais a $0$, $1$ e $2$ definem três blocos de tamanho $3^{k-1}$:
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-ab2)(\#tab:tabela-ab2)Designação de blocos por AB² em um 3² (ilustração conceitual)</caption>
+<caption>(\#tab:tabela-ab2)Designação de blocos por AB² em um 3² (ilustração conceitual)</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> A </th>
@@ -777,7 +782,8 @@ A **resolução** de um fracionado resume a "qualidade" desse aliasamento:
   aparece em interações de ordem 3 ou mais.
 
 Quanto maior a resolução, mais informação útil o fracionado preserva — ao custo de exigir mais
-corridas (menor fração) para o mesmo $k$. Na prática, escolher a fração certa é uma decisão de
+corridas (isto é, uma fração *maior*: $1/2$ exige mais corridas que $1/4$, que exige mais que
+$1/8$) para o mesmo $k$. Na prática, escolher a fração certa é uma decisão de
 compromisso entre orçamento experimental e quais interações o pesquisador está disposto a assumir,
 a priori, como desprezíveis — a mesma lógica de custo-benefício da confusão, aplicada aos próprios
 efeitos de tratamento em vez de ao bloco. O leitor interessado em construir geradores para $k$

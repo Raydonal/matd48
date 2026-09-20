@@ -4,14 +4,14 @@ subtitle: "Duas e três fontes de bloqueio cruzadas, e quadrados replicados"
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -146,7 +146,7 @@ poder_ql_replicado <- function(n, p, alpha = 0.05, f = 0.4) {
 tab_poder <- tibble(p = 1:6) %>% mutate(poder = poder_ql_replicado(4, p))
 ```
 
-```{r poder-ql-plot, echo=FALSE, fig.width=6, fig.height=3.6}
+```{r poder-ql-plot, echo=FALSE, fig.width=6, fig.height=2.9}
 ggplot(tab_poder, aes(p, poder)) +
   geom_line(color = "#2a78d6", linewidth = 1) + geom_point(size = 2.4, color = "#2a78d6") +
   geom_hline(yintercept = 0.8, linetype = "dashed", color = "grey40") +
@@ -156,9 +156,7 @@ ggplot(tab_poder, aes(p, poder)) +
 
 --
 
-Com $p=1$: poder $=$ `r scales::percent(tab_poder$poder[1], accuracy=1)`. São necessárias
-`r tab_poder$p[which(tab_poder$poder >= 0.8)[1]]` réplicas para poder $\ge0{,}80$ — replicar tem
-custo, e a análise de poder converte "quantas réplicas?" em conta explícita.
+Com $p=1$: poder $=$ `r scales::percent(tab_poder$poder[1], accuracy=1)`. São necessárias `r tab_poder$p[which(tab_poder$poder >= 0.8)[1]]` réplicas para poder $\ge0{,}80$ — replicar tem custo, e a análise de poder converte "quantas réplicas?" em conta explícita.
 
 ---
 
@@ -235,10 +233,59 @@ identidade do tratamento legível mesmo sem depender só da cor.
 Usar sempre o mesmo quadrado fixo reintroduz confusão (ex.: se A está sempre na diagonal, e a
 diagonal coincidir com algo não modelado). Procedimento em 4 passos:
 
-1. Quadrado latino **reduzido** (construção cíclica).
+1. **Sortear** um quadrado latino **reduzido** de ordem $n$.
 2. Permutar **linhas** aleatoriamente.
 3. Permutar **colunas** aleatoriamente.
 4. Sortear quais **tratamentos reais** correspondem a cada símbolo.
+
+--
+
+O passo 1 costuma ser mal-entendido: partir **sempre** do mesmo quadrado (por exemplo, o cíclico) reintroduz pela porta dos fundos a confusão que os passos 2–4 tentam evitar.
+
+---
+
+## Quadrados reduzidos: de onde se sorteia no passo 1
+
+**Definição.** **Reduzido** = primeira linha *e* primeira coluna em ordem alfabética.
+
+.pull-left[
+$R_n$ cresce explosivamente:
+
+```{r Rn-tabela, echo=FALSE}
+tibble(n = c(2, 3, 4, 5, 6, 7),
+       `R_n` = c(1, 1, 4, 56, 9408, 16942080)) %>%
+  kable(format.args = list(big.mark = "."), align = "cr") %>%
+  kable_styling(font_size = 13, full_width = FALSE)
+```
+
+]
+.pull-right[
+```{r reduzidos-4, echo=FALSE}
+perms <- function(v) { if (length(v) == 1) return(matrix(v))
+  do.call(rbind, lapply(seq_along(v), function(i) cbind(v[i], perms(v[-i])))) }
+P <- perms(1:4); L <- c("A","B","C","D"); red <- list()
+for (a in 1:nrow(P)) for (b in 1:nrow(P)) for (cc in 1:nrow(P)) {
+  M <- rbind(1:4, P[a,], P[b,], P[cc,])
+  if (all(M[, 1] == 1:4) && all(apply(M, 2, function(x) length(unique(x)) == 4)))
+    red[[length(red) + 1]] <- M
+}
+map_dfr(seq_along(red), function(k)
+  tibble(quadrado = paste("Q", k), linha = 1:4,
+         conteudo = apply(matrix(L[red[[k]]], 4, 4), 1, paste, collapse = " "))) %>%
+  pivot_wider(names_from = quadrado, values_from = conteudo) %>%
+  select(-linha) %>%
+  kable(align = "cccc") %>% kable_styling(font_size = 12, full_width = FALSE)
+```
+Os **4** reduzidos de ordem 4 — enumerados, não digitados.
+]
+
+--
+
+**Conjunto de transformação:** quadrados obtidos de um mesmo reduzido por permutação de letras, linhas e colunas. Os 4 acima formam **dois** conjuntos.
+
+---
+
+## Aleatorização de Yates: implementação
 
 ```{r yates-aleatorizacao}
 aleatorizar_quadrado_latino <- function(n, tratamentos, seed = NULL) {
@@ -308,30 +355,19 @@ X_ql[1:4, ]
 Linha, Coluna e Tratamento aparecem **três a três no mesmo nível** — cruzados dois a dois, sem
 aresta entre si — e só se reencontram no Erro.
 
-```{r hasse-ql-11, echo=FALSE, fig.width=5.4, fig.height=4.4, fig.retina=2}
-nos_ql11 <- tibble(
-  termo = c("Média", "Linha", "Coluna", "Tratamento", "Erro"),
-  df    = c(1, 4 - 1, 4 - 1, 4 - 1, (4 - 1) * (4 - 2)),
-  x     = c(0, -1.4, 0, 1.4, 0),
-  y     = c(3, 2, 2, 2, 1)
-)
-arestas_ql11 <- tibble(
-  de   = c("Média", "Média", "Média", "Linha", "Coluna", "Tratamento"),
-  para = c("Linha", "Coluna", "Tratamento", "Erro", "Erro", "Erro")
-)
+```{r hasse-ql-11, echo=FALSE}
+source("../Livro/hasse_helpers.R")
 
-arestas_xy_ql11 <- arestas_ql11 %>%
-  left_join(nos_ql11 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
-  left_join(nos_ql11 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
-
-ggplot() +
-  geom_segment(data = arestas_xy_ql11, aes(x = x0, y = y0, xend = x1, yend = y1),
-               color = "grey45", linewidth = 0.6) +
-  geom_label(data = nos_ql11, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
-             size = 3, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
-  theme_void(base_size = 11) +
-  labs(title = "Quadrado latino: n=4 (N=16)") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11))
+knitr::include_graphics(
+  hasse_svg(
+    tibble(termo   = c("Média", "Linha", "Coluna", "Tratamento", "Erro"),
+           classes = c(1, 4, 4, 4, 16)),
+    tibble(de   = c("Média", "Média", "Média", "Linha", "Coluna", "Tratamento"),
+           para = c("Linha", "Coluna", "Tratamento", "Erro", "Erro", "Erro")),
+    arquivo = "../Livro/figuras/hasse/slide-quadrado-latino.svg",
+    titulo  = "Quadrado latino: n=4 (N=16)",
+    tamanho = c(5.0, 2.8))
+)
 ```
 
 $1+3+3+3+6=16=N=n^2$ — o preço de controlar duas fontes de bloqueio com um só fator cruzado a
@@ -359,6 +395,10 @@ dados_rep <- dados_rep %>%
 mod_rep <- aov(resposta ~ replica + linha_id + coluna_id + tratamento, data = dados_rep)
 anova(mod_rep)["Residuals", "Df"]  # confira: (n-1)[p(n-1)-1] = 3*(2*3-1) = 15
 ```
+
+---
+
+## O que a réplica compra: graus de liberdade de erro
 
 ```{r plot-gl-rep, echo=FALSE, fig.width=5.5, fig.height=3.4}
 tibble(quadrados = factor(c("p=1", "p=2"), levels = c("p=1", "p=2")),
@@ -479,6 +519,8 @@ length(unique(pares)) == length(pares)  # TRUE => construção válida
   para todo $n\ge3$ exceto $n=6$.
 - Encerra o Capítulo 4. Próxima aula: arranjos fatoriais — dois ou mais fatores de tratamento
   cruzados deliberadamente no mesmo experimento.
+
+---
 
 ## Referências
 

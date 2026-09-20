@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -73,9 +73,131 @@ de erros i.i.d.:
 - `\(\mathbf{Z}\)`: matriz `\(N\times tr\)` de indicadores de UE — `\(Z_{[ijk],\,i'j'}=\mathbb 1\{i=i',j=j'\}\)`.
 - `\(\mathbf{Z}\mathbf{Z}'\)` tem blocos de `\(1\)`'s do tamanho `\(q\times q\)` (submuestras da mesma UE):
   observações da mesma UE são correlacionadas, `\(\mathrm{Cov}(Y_{ijk},Y_{ijk'})=\sigma_\delta^2\)`.
-- `\(\mathbf{V}\)` tem estrutura de **simetria composta** por bloco — daí porque MQO com
-  `\(\mathrm{Cov}=\sigma^2\mathbf{I}\)` (Cap. 2) não é mais o modelo certo, e a ANOVA precisa agregar
-  por UE antes de testar (Searle, 1971).
+- `\(\mathbf{V}\)` tem estrutura de **simetria composta** por bloco — logo a suposição
+  `\(\mathrm{Cov}=\sigma^2\mathbf{I}\)` do teorema de Gauss-Markov (Cap. 2) **está violada**.
+
+--
+
+Violada a hipótese, o teorema não se aplica. Mas isso significa que precisamos de GLS aqui?
+
+---
+
+## Zyskind outra vez: e o balanceamento deixa de ser detalhe
+
+Da Aula 03: com `\(\mathrm{Cov}(\boldsymbol\varepsilon)=\mathbf V\)`, o MQO continua BLUE **se e somente se** existe `\(\mathbf Q\)` com `\(\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q}\)`. Vamos testar.
+
+
+``` r
+t_ &lt;- 3; r &lt;- 2; q &lt;- 4                      # desenho BALANCEADO
+ue   &lt;- factor(rep(1:(t_ * r), each = q))
+trat &lt;- factor(rep(rep(1:t_, each = r), each = q))
+X &lt;- model.matrix(~ trat);  Z &lt;- model.matrix(~ ue - 1)
+
+s_d &lt;- 1.7; s_e &lt;- 0.9
+V &lt;- s_d^2 * Z %*% t(Z) + s_e^2 * diag(nrow(Z))
+Q &lt;- qr.solve(X, V %*% X)
+
+c(max_erro = max(abs(V %*% X - X %*% Q)),
+  constante = Q[1, 1], q_sd2_mais_se2 = q * s_d^2 + s_e^2)
+```
+
+```
+##       max_erro      constante q_sd2_mais_se2 
+##   1.065814e-14   1.237000e+01   1.237000e+01
+```
+
+--
+
+A condição **se verifica**, e com `\(\mathbf{Q}=(q\sigma_\delta^2+\sigma_\varepsilon^2)\mathbf{I}\)`. Apesar da correlação dentro de UE, **MQO continua ótimo** — é por isso que a ANOVA agregada funciona, e não por aproximação.
+
+---
+
+## O que acontece se o desenho desbalancear
+
+
+``` r
+q2   &lt;- c(4, 4, 4, 4, 4, 2)                  # uma UE com 2 submostras em vez de 4
+ue2   &lt;- factor(rep(1:6, times = q2))
+trat2 &lt;- factor(rep(rep(1:3, each = 2), times = q2))
+X2 &lt;- model.matrix(~ trat2); Z2 &lt;- model.matrix(~ ue2 - 1)
+V2 &lt;- s_d^2 * Z2 %*% t(Z2) + s_e^2 * diag(nrow(Z2))
+
+max(abs(V2 %*% X2 - X2 %*% qr.solve(X2, V2 %*% X2)))
+```
+
+```
+## [1] 3.853333
+```
+
+--
+
+A condição **falha**. Com submuestragem desigual, MQO deixa de ser BLUE e a estimação correta passa por GLS / máxima verossimilhança restrita (`lme4`, `nlme`).
+
+--
+
+Guarde isto: **o balanceamento não é preferência estética nem comodidade de cálculo.** É o que compra o direito de analisar um desenho hierárquico com a ferramenta mais simples. Perder o balanceamento custa um teorema.
+
+---
+
+## O sintoma na prática: `aov()` quebra, `lmer()` não
+
+
+``` r
+set.seed(77)
+delta2 &lt;- rnorm(6, 0, s_d)
+dados_desbal &lt;- map_dfr(1:6, function(i) {
+  tibble(ue = factor(i), trat = factor(rep(1:3, each = 2)[i]),
+         y = 10 + 2 * rep(1:3, each = 2)[i] + delta2[i] + rnorm(q2[i], 0, s_e))
+})
+```
+
+
+``` r
+m_aov &lt;- aov(y ~ trat + Error(trat:ue), data = dados_desbal)
+```
+
+```
+## Warning in aov(y ~ trat + Error(trat:ue), data = dados_desbal): Error() model
+## is singular
+```
+
+--
+
+O aviso **"Error() model is singular"** não é cosmético — é o R avisando que a separação em
+estratos (a mesma conta do Zyskind, por baixo dos panos) não fecha sem balanceamento. Continuar e
+ler o `summary()` mesmo assim seria confiar num teste que a própria função avisa não ser válido.
+
+---
+
+## A ferramenta certa: `lme4::lmer()`
+
+
+``` r
+m_lmer &lt;- lme4::lmer(y ~ trat + (1 | ue), data = dados_desbal)
+lme4::VarCorr(m_lmer)   # sigma_delta^2 e sigma_epsilon^2 estimados por REML, sem exigir balanceamento
+```
+
+```
+##  Groups   Name        Std.Dev.
+##  ue       (Intercept) 0.71141 
+##  Residual             0.98280
+```
+
+``` r
+anova(m_lmer)           # teste F de tratamento -- sem p-valor aqui: exige aproximar os gl do denominador
+```
+
+```
+## Analysis of Variance Table
+##      npar Sum Sq Mean Sq F value
+## trat    2 29.689  14.845  15.369
+```
+
+Nenhum aviso, nenhuma singularidade: `lmer()` estima os dois componentes de variância por máxima
+verossimilhança restrita, que não depende da decomposição algébrica em estratos ortogonais que
+`aov()` exige. O preço é interpretativo, não computacional — os graus de liberdade do teste `\(F\)`
+deixam de ter uma fórmula fechada simples e exigem uma aproximação (Satterthwaite ou
+Kenward-Roger, fora do escopo deste curso) em vez do `\(F_{t(r-1)}\)` exato da tabela balanceada.
 
 ---
 
@@ -144,6 +266,21 @@ do mesmo fenômeno — observações que compartilham um rótulo aleatório deix
 class: inverse, center, middle
 
 # Bloco 2 — Aplicação
+
+---
+
+## Três formas de organizar o mesmo experimento
+
+Mesmas 12 plantas, 3 tratamentos, adaptado de Hinkelmann &amp; Kempthorne (1994):
+
+&lt;img src="assets/images/experimento1.png" alt="" width="31%" /&gt;&lt;img src="assets/images/sit2.png" alt="" width="31%" /&gt;&lt;img src="assets/images/sit3.png" alt="" width="31%" /&gt;
+
+--
+
+**Situação 1**: 1 caixa/tratamento — só **3 UEs no total**, zero gl de erro entre UEs. Fatal.
+**Situação 2**: 12 vasos individuais — sem submuestreo, 9 gl de erro. **Situação 3**: 2
+caixas/tratamento — submuestreo, mas com 2 UEs/tratamento (3 gl de erro) em vez de 1. É a mesma
+estrutura, em miniatura, do exemplo da tilápia a seguir.
 
 ---
 
@@ -220,7 +357,7 @@ Quatro nós em **cadeia**: aquário aninhado dentro de probiótico, peixe (submu
 dentro de aquário — cada nível de aninhamento é um novo elo, ao contrário dos termos cruzados do
 DBCA (Aula 09).
 
-&lt;img src="MATD48-05_files/figure-html/hasse-sub-05-1.png" alt="" width="230.4" /&gt;
+![](../Livro/figuras/hasse/slide-submuestreo.svg)&lt;!-- --&gt;
 
 `\(1+3+16+77=97=N\)`: os 16 gl de "UE" são exatamente os `\(t(r-1)\)` da tabela simbólica; os 77 gl de
 "Submuestra" são o que sobra depois de já ter explicado probiótico e aquário — a mesma regra de
@@ -388,6 +525,8 @@ Com 8 réplicas/clipe, poder ≈ 0,49 para detectar `\(\gamma=0{,}25\)`; seriam 
   planejamento amostral via `\(F/(1+n\gamma)\)` em vez de `\(F\)` não central.
 - Próxima aula: verificação dos pressupostos (normalidade, homocedasticidade) e transformações
   que tornam essas ANOVAs confiáveis na prática.
+
+---
 
 ## Referências
 

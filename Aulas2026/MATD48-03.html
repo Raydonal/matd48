@@ -8,7 +8,7 @@
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -45,8 +45,7 @@ class: inverse, center, middle
 
 ## O teorema de Gauss-Markov
 
-Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
-\sigma^2\mathbf{I}_n$ (sem exigir normalidade):
+Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, `\(\mathrm{Cov}(\boldsymbol{\varepsilon}) = \sigma^2\mathbf{I}_n\)` (sem exigir normalidade):
 
 &gt; Se `\(\boldsymbol{\lambda}'\boldsymbol{\beta}\)` é estimável, `\(\boldsymbol{\lambda}'\hat{\boldsymbol{\beta}}\)`
 &gt; é o **BLUE** — o estimador linear não viesado de menor variância (Plackett, 1950; Searle, 1971).
@@ -61,6 +60,58 @@ Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, $\mathrm{Cov}(\bold
 
 ---
 
+## E quando `\(\mathrm{Cov}(\boldsymbol{\varepsilon}) \neq \sigma^2\mathbf{I}\)`?
+
+Gauss-Markov **exige** `\(\mathrm{Cov}(\boldsymbol{\varepsilon})=\sigma^2\mathbf{I}\)`. Sem isso, o teorema simplesmente não se aplica.
+
+--
+
+**Modelo de Aitken (1936).** `\(\mathrm{Cov}(\boldsymbol{\varepsilon})=\sigma^2\mathbf{H}\)`, com `\(\mathbf{H}\)` conhecida, simétrica, positiva definida, `\(\mathbf{H}\neq\mathbf{I}\)`.
+
+**Teorema (Aitken).** O BLUE passa a ser o de **mínimos quadrados generalizados**:
+
+`$$\hat{\boldsymbol{\beta}}_{GLS}=(\mathbf{X}'\mathbf{H}^{-1}\mathbf{X})^{-}\mathbf{X}'\mathbf{H}^{-1}\mathbf{Y}$$`
+
+--
+
+Isso deveria ser um problema para nós: veremos na Aula 04 que **a própria aleatorização induz erros correlacionados**. Se fosse preciso trocar MQO por GLS a cada delineamento, o curso inteiro mudaria de figura.
+
+---
+
+## Zyskind (1967): quando MQO continua ótimo
+
+**Teorema (Zyskind).** Sob o modelo de Aitken com `\(\mathbf{V}=\sigma^2\mathbf{H}\)`, o estimador de **mínimos quadrados ordinários** é BLUE **se e somente se** existe `\(\mathbf{Q}\)` tal que
+
+`$$\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q} \qquad\Longleftrightarrow\qquad \mathcal{C}(\mathbf{V}\mathbf{X})\subseteq\mathcal{C}(\mathbf{X})$$`
+
+--
+
+.pull-left[
+A condição é **geométrica**: `\(\mathbf{V}\)` não pode tirar nenhuma coluna de `\(\mathbf{X}\)` do espaço-coluna de `\(\mathbf{X}\)`.
+
+Se `\(\mathbf{V}=\sigma^2\mathbf{I}\)` ela vale trivialmente (`\(\mathbf{Q}=\sigma^2\mathbf{I}\)`) — Gauss-Markov é o caso particular.
+]
+.pull-right[
+
+``` r
+trat &lt;- factor(rep(1:3, each = 3))
+X &lt;- model.matrix(~ trat)
+V &lt;- diag(9) - matrix(1/9, 9, 9)   # a que o sorteio induz
+Q &lt;- qr.solve(X, V %*% X)
+max(abs(V %*% X - X %*% Q))        # ~0 =&gt; MQO é BLUE
+```
+
+```
+## [1] 3.885781e-16
+```
+]
+
+--
+
+É a licença formal para usar MQO no DCA mesmo com erro correlacionado — desenvolvida na Aula 04 e na seção "O modelo linear deduzido da aleatorização" do livro.
+
+---
+
 ## A matriz de projeção
 
 `$$\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{P}_X\mathbf{Y}, \qquad
@@ -70,11 +121,8 @@ Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, $\mathrm{Cov}(\bold
 
 `\(\mathbf{P}_X\)` projeta `\(\mathbf{Y}\)` ortogonalmente sobre o espaço-coluna de `\(\mathbf{X}\)`:
 
-- **Simétrica:** $\mathbf{P}_X' = \mathbf{X}\big((\mathbf{X}'\mathbf{X})^{-1}\big)'\mathbf{X}' =
-  \mathbf{P}_X$, pois `\((\mathbf{X}'\mathbf{X})^{-1}\)` é simétrica.
-- **Idempotente:** $\mathbf{P}_X\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}
-  \underbrace{(\mathbf{X}'\mathbf{X})(\mathbf{X}'\mathbf{X})^{-1}}_{=\,\mathbf{I}_p}\mathbf{X}' =
-  \mathbf{P}_X$.
+- **Simétrica:** `\(\mathbf{P}_X' = \mathbf{X}\big((\mathbf{X}'\mathbf{X})^{-1}\big)'\mathbf{X}' = \mathbf{P}_X\)`, pois `\((\mathbf{X}'\mathbf{X})^{-1}\)` é simétrica.
+- **Idempotente:** `\(\mathbf{P}_X\mathbf{P}_X = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1} \underbrace{(\mathbf{X}'\mathbf{X})(\mathbf{X}'\mathbf{X})^{-1}}_{=\,\mathbf{I}_p}\mathbf{X}' = \mathbf{P}_X\)`.
 - **Autovalores só 0 ou 1** `\(\Rightarrow\)` **posto = traço** = `\(\mathrm{posto}(\mathbf{X})\)`.
 
 --
@@ -83,6 +131,25 @@ Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, $\mathrm{Cov}(\bold
 por que `\(\hat{\mathbf{Y}}\)` e `\(\mathbf{e}\)` são ortogonais. A diagonal de `\(\mathbf{P}_X\)` dá as
 **alavancagens** `\(h_{ii}\)`.
 
+
+---
+
+## A geometria: mínimos quadrados **é** uma projeção
+
+.pull-left[
+&lt;img src="MATD48-03_files/figure-html/geo-projecao-1.png" alt="" width="388.8" /&gt;
+]
+.pull-right[
+Toda a álgebra anterior é **uma figura**: `\(\hat{\mathbf{Y}}\)` é o ponto de `\(\mathcal{C}(\mathbf{X})\)` mais próximo de `\(\mathbf{Y}\)`.
+
+- minimizar `\(\lVert\mathbf{Y}-\mathbf{X}\boldsymbol{\beta}\rVert^2\)` = **baixar uma perpendicular**;
+- o ângulo reto **é** a equação normal `\(\mathbf{X}'\mathbf{e}=\mathbf{0}\)`;
+- Pitágoras dá a ANOVA: `\(\lVert\mathbf{Y}\rVert^2=\lVert\hat{\mathbf{Y}}\rVert^2+\lVert\mathbf{e}\rVert^2\)`.
+]
+
+--
+
+Por que isso importa para **planejamento**: `\(\mathbf{P}_X\)` depende só de `\(\mathbf{X}\)` — do desenho —, nunca de `\(\mathbf{Y}\)`. A precisão do experimento fica decidida **antes** de coletar o primeiro dado.
 ---
 
 ## O modelo particionado
@@ -109,8 +176,7 @@ Capítulo 3.
 
 ## O teorema de Frisch-Waugh-Lovell (FWL)
 
-**Pergunta:** dá para *calcular* `\(\hat{\boldsymbol{\beta}}_2\)` (não só testar $H_0:
-\boldsymbol{\beta}_2=\mathbf{0}$) sem ajustar a regressão múltipla completa de uma vez?
+**Pergunta:** dá para *calcular* `\(\hat{\boldsymbol{\beta}}_2\)` (não só testar `\(H_0: \boldsymbol{\beta}_2=\mathbf{0}\)`) sem ajustar a regressão múltipla completa de uma vez?
 
 --
 
@@ -123,8 +189,7 @@ Capítulo 3.
 
 --
 
-**Prova (esboço):** das equações normais em blocos, $\hat{\boldsymbol{\beta}}_1 =
-(\mathbf{X}_1'\mathbf{X}_1)^{-1}(\mathbf{X}_1'\mathbf{Y}-\mathbf{X}_1'\mathbf{X}_2\hat{\boldsymbol{\beta}}_2)$;
+**Prova (esboço):** das equações normais em blocos, `\(\hat{\boldsymbol{\beta}}_1 = (\mathbf{X}_1'\mathbf{X}_1)^{-1}(\mathbf{X}_1'\mathbf{Y}-\mathbf{X}_1'\mathbf{X}_2\hat{\boldsymbol{\beta}}_2)\)`;
 substituindo na segunda linha de blocos e usando `\(\mathbf{P}_{X_1} = \mathbf{X}_1(\mathbf{X}_1'\mathbf{X}_1)^{-1}\mathbf{X}_1'\)`:
 
 `$$\mathbf{X}_2'\mathbf{M}_1\mathbf{X}_2\,\hat{\boldsymbol{\beta}}_2 = \mathbf{X}_2'\mathbf{M}_1\mathbf{Y}
@@ -143,8 +208,7 @@ covariável pré-tratamento `\(\mathbf{X}_2\)` — residualizar uma na outra qua
 
 1. **Sem viés, com ou sem covariável:** aleatorização já garante isso; a covariável não é
    necessária para identificar o efeito causal.
-2. **Com precisão maior:** se `\(\mathbf{X}_2\)` explica parte de `\(\mathbf{Y}\)`, $\tilde{\mathbf{Y}} =
-   \mathbf{M}_1\mathbf{Y}$ tem variância menor `\(\Rightarrow\)` erro-padrão menor de
+2. **Com precisão maior:** se `\(\mathbf{X}_2\)` explica parte de `\(\mathbf{Y}\)`, `\(\tilde{\mathbf{Y}} = \mathbf{M}_1\mathbf{Y}\)` tem variância menor `\(\Rightarrow\)` erro-padrão menor de
    `\(\hat{\boldsymbol{\beta}}_2\)` (o coeficiente de interesse) `\(\Rightarrow\)` mais poder no teste `\(F\)`
    da seção anterior.
 
@@ -157,19 +221,16 @@ enviesam, mas "limpam" `\(\mathbf{Y}\)` e aumentam a precisão.
 
 ## Formas lineares e quadráticas
 
-Sob normalidade, $\mathbf{L} = \mathbf{a}'\mathbf{Y} \sim N(\mathbf{a}'\mathbf{X}\boldsymbol{\beta},
-\ \sigma^2\mathbf{a}'\mathbf{a})$ — exato, não assintótico.
+Sob normalidade, `\(\mathbf{L} = \mathbf{a}'\mathbf{Y} \sim N(\mathbf{a}'\mathbf{X}\boldsymbol{\beta}, \ \sigma^2\mathbf{a}'\mathbf{a})\)` — exato, não assintótico.
 
 --
 
-**Teorema.** Se `\(\mathbf{A}\)` é idempotente com posto `\(r\)` e $\mathbf{Y} \sim N(\boldsymbol{\mu},
-\sigma^2\mathbf{I}_n)$, então `\(\mathbf{Y}'\mathbf{A}\mathbf{Y}/\sigma^2 \sim \chi^2_r\)` (não central,
+**Teorema.** Se `\(\mathbf{A}\)` é idempotente com posto `\(r\)` e `\(\mathbf{Y} \sim N(\boldsymbol{\mu}, \sigma^2\mathbf{I}_n)\)`, então `\(\mathbf{Y}'\mathbf{A}\mathbf{Y}/\sigma^2 \sim \chi^2_r\)` (não central,
 a menos que `\(\mathbf{A}\boldsymbol{\mu} = \mathbf{0}\)`).
 
 --
 
-Como `\(\mathbf{I}_n - \mathbf{P}_X\)` é idempotente e $(\mathbf{I}_n - \mathbf{P}_X)\mathbf{X}\boldsymbol{\beta}
-= \mathbf{0}$:
+Como `\(\mathbf{I}_n - \mathbf{P}_X\)` é idempotente e `\((\mathbf{I}_n - \mathbf{P}_X)\mathbf{X}\boldsymbol{\beta} = \mathbf{0}\)`:
 
 `$$\frac{\mathrm{SQE}}{\sigma^2} \sim \chi^2_{\,n-\mathrm{posto}(\mathbf{X})} \quad \text{(central)}$$`
 
@@ -180,17 +241,21 @@ A base algébrica exata de toda tabela de ANOVA do Capítulo 3.
 ## Diagramas de Hasse: retrato da estrutura antes da álgebra
 
 `\(n-\mathrm{posto}(\mathbf{X})\)` acima é uma contagem algébrica de graus de liberdade — o
-**diagrama de Hasse** é a mesma contagem, em figura. Cada termo do delineamento (média, fatores,
-erro) é um **nó** com seu `\(gl\)`; uma aresta liga `\(u\to v\)` quando `\(v\)` refina `\(u\)` sem termo
-intermediário. Termos **cruzados** ficam lado a lado, sem aresta entre si; termos **aninhados**
-formam uma cadeia.
+**diagrama de Hasse** (Throckmorton, 1961; Bailey, 2008) é a mesma contagem, em figura. O `\(gl\)` de
+cada nó **não se digita**, sai da estrutura do poset por subtração:
+`\(gl(v) = \text{classes}(v) - \sum_{u \prec v} gl(u)\)`.
 
-&lt;img src="MATD48-03_files/figure-html/hasse-intro-1.png" alt="" width="230.4" /&gt;
+.pull-left[
+Cada termo (média, fatores, erro) é um **nó**, rotulado com o número de **classes** que distingue
+e com seu `\(gl\)`. Uma aresta liga `\(u \to v\)` quando `\(v\)` refina `\(u\)` sem termo intermediário: termos
+**cruzados** ficam lado a lado, sem aresta; **aninhados** formam cadeia. (O Cap. 2 do livro-texto
+desenvolve a ferramenta em profundidade, inclusive para fatoriais cruzados e aninhados.)
+]
+.pull-right[
+![](../Livro/figuras/hasse/slide-dca.svg)&lt;!-- --&gt;
 
-`\(1+3+20=24=N\)`: os `\(gl\)` de todos os nós sempre somam `\(N\)`. O Cap. 2 do livro-texto (Seção
-"Diagramas de Hasse") desenvolve essa ferramenta em profundidade, inclusive para fatoriais
-cruzados e aninhados — usaremos o mesmo diagrama já na próxima aula (DCA) e de novo nos
-Capítulos 4–6 (blocos, quadrados latinos, fatoriais).
+`\(1+3+20=24=N\)`: os `\(gl\)` de todos os nós sempre somam `\(N\)`.
+]
 
 ---
 
@@ -297,6 +362,10 @@ class: inverse, center, middle
 2. Se, em vez de cafeína, tivéssemos adicionado ao modelo completo uma variável irrelevante
    sorteada aleatoriamente (por exemplo, o dia da semana do teste), o que aconteceria com a soma
    de quadrados extra em expectativa? O teste `\(F\)` continuaria válido sob `\(H_0\)`?
+
+---
+
+## Perguntas para a turma (cont.)
 
 3. A matriz `\(\mathbf{P}_X\)` depende só de `\(\mathbf{X}\)`, nunca de `\(\mathbf{Y}\)`. Que consequência
    prática isso tem para planejar, *antes* de coletar dados, quão precisas serão as estimativas
@@ -453,8 +522,12 @@ O histograma de 3.000 réplicas de Monte Carlo acompanha de perto a densidade qu
   da ANOVA.
 - Próximo capítulo: aplicamos tudo isso ao delineamento completamente aleatorizado (DCA).
 
+---
+
 ## Referências
 
+- Throckmorton, T. (1961). *Structures of classification data* (Tese de doutorado). Iowa State University.
+- Bailey, R. A. (2008). *Design of Comparative Experiments*. Cambridge University Press.
 - Plackett, R. L. (1950). Some Theorems in Least Squares. *Biometrika*, 37(1/2), 149–157.
 - Searle, S. R. (1971). *Linear Models*. John Wiley &amp; Sons.
 - Frisch, R. &amp; Waugh, F. V. (1933). Partial Time Regressions as Compared with Individual Trends. *Econometrica*, 1(4), 387–401.

@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -139,8 +139,7 @@ exatamente `\(SQ_{\text{Trat}}\)`:
 `$$SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_{L_k}, \qquad gl_{\text{Trat}} = t-1,$$`
 
 e, sob normalidade, os `\(t-1\)` testes `\(F\)` resultantes são **independentes** entre si — porque as
-`\(t-1\)` projeções de posto 1 `\(\mathbf A_{\boldsymbol\lambda_k}\)` somam exatamente $\mathbf P_X -
-\mathbf P_{\mathbf 1}$ (teorema de Cochran, Cap. 2).
+`\(t-1\)` projeções de posto 1 `\(\mathbf A_{\boldsymbol\lambda_k}\)` somam exatamente `\(\mathbf P_X - \mathbf P_{\mathbf 1}\)` (teorema de Cochran, Cap. 2).
 
 ---
 
@@ -197,6 +196,64 @@ Tukey, mas **não controla o FWER** (Duncan, 1955).
 
 **Agrupamento (CLD)** — letras compactas: tratamentos com letra em comum não diferem.
 ]
+
+---
+
+## Por que Bonferroni funciona: desigualdade de Boole
+
+Bonferroni não é uma receita — é um teorema de duas linhas. Seja `\(A_i\)` o evento "cometer erro
+tipo I na `\(i\)`-ésima das `\(m\)` comparações". A **desigualdade de Boole** (ou subaditividade da
+probabilidade) diz que
+
+$$
+P\!\left(\bigcup_{i=1}^{m} A_i\right) \;\le\; \sum_{i=1}^{m} P(A_i).
+$$
+
+--
+
+O FWER é justamente `\(P(\bigcup_i A_i)\)`: a probabilidade de errar **em pelo menos uma**
+comparação. Se conduzirmos cada teste ao nível `\(\alpha/m\)`, então `\(P(A_i) = \alpha/m\)` e
+
+$$
+\text{FWER} \;\le\; \sum_{i=1}^{m} \frac{\alpha}{m} \;=\; \alpha .
+$$
+
+--
+
+E daí sai também **por que é conservador**: a desigualdade de Boole é *estrita* sempre que os
+`\(A_i\)` se intersectam com probabilidade positiva — isto é, sempre que as comparações não são
+disjuntas, que é o caso normal (elas compartilham médias e o mesmo `\(QM_{\text{Res}}\)`). Quanto
+maior a dependência entre as comparações, mais folga se perde.
+
+---
+
+## Por que Duncan é liberal: o nível de proteção `\(\alpha_p\)`
+
+Duncan não usa `\(\alpha\)` fixo: para comparar duas médias separadas por **amplitude** `\(p\)` (isto é,
+com `\(p-2\)` médias entre elas na ordenação), ele adota o *nível de proteção*
+
+$$
+\alpha_p \;=\; 1 - (1-\alpha)^{\,p-1},
+$$
+
+que é a taxa de erro de um conjunto de `\(p-1\)` comparações independentes ao nível `\(\alpha\)`.
+
+--
+
+.pull-left[
+O efeito é imediato:
+
+- `\(p=2\)`: `\(\alpha_2 = \alpha\)` — igual aos demais;
+- `\(p=t\)`: `\(\alpha_t = 1-(1-\alpha)^{t-1}\)`, que **cresce** com `\(t\)`.
+
+Com `\(\alpha=0{,}05\)` e `\(t=5\)`: `\(\alpha_5 = 1-0{,}95^{4} \approx 0{,}185\)`.
+]
+.pull-right[
+&lt;img src="MATD48-07_files/figure-html/duncan-alpha-p-1.png" alt="" width="331.2" /&gt;
+]
+
+É esta equação que explica a afirmação "Duncan não controla o FWER": o procedimento **abre mão**
+disso por construção, em troca de poder nas amplitudes maiores.
 
 ---
 
@@ -353,36 +410,167 @@ contrast(emm, "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")  # vs. control
 
 ## Agrupamento compacto por letras (Tukey vs. Duncan)
 
+&lt;table class="table" style="font-size: 17px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Configuração &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média (ms) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; IC95 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Tukey &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Duncan &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 859.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; [805; 914] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; a &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; c &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 945.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; [891; 1000] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; b &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; b &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1079.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; [1025; 1135] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; c &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; a &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1113.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; [1059; 1168] &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; c &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; a &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
-```
-##  config    emmean   SE df lower.CL upper.CL .group
-##  Nenhum       859 20.8 36      805      914  a    
-##  Analytics    946 20.8 36      891     1000   b   
-##  Anúncios    1080 20.8 36     1025     1135    c  
-##  Combo       1114 20.8 36     1059     1168    c  
-## 
-## Confidence level used: 0.95 
-## Conf-level adjustment: sidak method for 4 estimates 
-## P value adjustment: tukey method for comparing a family of 4 estimates 
-## significance level used: alpha = 0.05 
-## NOTE: If two or more means share the same grouping symbol,
-##       then we cannot show them to be different.
-##       But we also did not show them to be the same.
+.footnote[Médias que **compartilham letra** não se distinguem pelo critério correspondente.]
+
+---
+
+## O problema das letras que se sobrepõem
+
+O agrupamento por letras (CLD) tem um defeito conhecido: um tratamento pode receber **duas** letras, ficando "igual" a dois grupos que são diferentes entre si. Isso não é ambiguidade do dado — é do procedimento, que testa pares e depois tenta resumir em grupos.
+
+--
+
+**Scott &amp; Knott (1974)** atacam o problema de outro jeito: em vez de testar pares, **particionam** o conjunto de médias em grupos **não sobrepostos**, por um critério de máxima verossimilhança.
+
+.pull-left[
+O algoritmo, recursivo:
+
+1. ordenar as `\(k\)` médias;
+2. entre as `\(k-1\)` bipartições possíveis, achar a que **maximiza** a soma de quadrados entre grupos, `\(B_0\)`;
+3. testar se esse `\(B_0\)` é grande demais para ser acaso;
+4. se for, dividir e **repetir** em cada parte.
+]
+.pull-right[
+A estatística e sua distribuição sob `\(H_0\)`:
+
+`$$\lambda=\frac{\pi}{2(\pi-2)}\cdot\frac{B_0}{\hat\sigma_0^2} \;\dot\sim\; \chi^2_{\,k/(\pi-2)}$$`
+
+`$$\hat\sigma_0^2=\frac{\sum_i n_i(\bar y_i-\bar y)^2+\nu\,QM_{Res}}{k+\nu}$$`
+]
+
+---
+
+## Scott-Knott: o algoritmo em 15 linhas
+
+
+``` r
+sk &lt;- function(med, n_i, QME, gl, alpha = 0.05) {
+  grupo &lt;- rep(1L, length(med)); prox &lt;- 2L
+  parte &lt;- function(idx) {
+    if (length(idx) &lt; 2) return(invisible(NULL))
+    m_ &lt;- med[idx]; n_ &lt;- n_i[idx]; k &lt;- length(idx)
+    B0 &lt;- sapply(1:(k - 1), function(j) {
+      T1 &lt;- sum(n_[1:j] * m_[1:j]); T2 &lt;- sum(n_[(j+1):k] * m_[(j+1):k])
+      T1^2 / sum(n_[1:j]) + T2^2 / sum(n_[(j+1):k]) - (T1 + T2)^2 / sum(n_)
+    })
+    j &lt;- which.max(B0)
+    s2_0   &lt;- (sum(n_ * (m_ - mean(m_))^2) + gl * QME) / (k + gl)
+    lambda &lt;- (pi / (2 * (pi - 2))) * max(B0) / s2_0
+    if (lambda &gt; qchisq(1 - alpha, k / (pi - 2))) {      # divide e recorre
+      novos &lt;- idx[(j+1):k]; grupo[novos] &lt;&lt;- prox; prox &lt;&lt;- prox + 1L
+      parte(idx[1:j]); parte(novos)
+    }
+  }
+  parte(seq_along(med)); grupo
+}
 ```
 
-```
-##            tempo_ms groups
-## Combo     1113.6160      a
-## Anúncios  1079.8775      a
-## Analytics  945.5325      b
-## Nenhum     859.3801      c
+---
+
+## Scott-Knott no mesmo experimento
+
+
+``` r
+QME &lt;- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
+gl  &lt;- summary(mod_scripts)[[1]]["Residuals", "Df"]
+med &lt;- sort(tapply(dados_scripts$tempo_ms, dados_scripts$config, mean))
+n_i &lt;- table(dados_scripts$config)[names(med)]
+
+tibble(Configuração = names(med), `Média (ms)` = round(as.numeric(med), 1),
+       `Scott-Knott` = LETTERS[sk(med, n_i, QME, gl)]) %&gt;%
+  kable(align = "lrc") %&gt;% kable_styling(font_size = 15, full_width = FALSE)
 ```
 
-Aqui os dois coincidem (efeitos grandes o bastante para ambos os critérios) — a diferença de
-Duncan aparece nos pares de fronteira: valores críticos `\(R_p\)` menores por amplitude, mais poder,
-sem controlar o FWER no nível nominal.
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Configuração &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média (ms) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Scott-Knott &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 859.4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; A &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 945.5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1079.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1113.6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
-&lt;img src="MATD48-07_files/figure-html/plot-scripts-1.png" alt="" width="540" /&gt;
+--
+
+Três grupos **disjuntos** — nenhum tratamento em dois grupos ao mesmo tempo. É por isso que o procedimento domina a literatura agronômica brasileira.
+
+.footnote[Há o pacote `ScottKnott` (função `SK()`), que devolve exatamente este resultado. Implementar à mão aqui é deliberado: o algoritmo cabe em 15 linhas e a lógica de partição fica visível.]
+
+---
+
+## Tukey vs. Duncan: onde os dois divergem
+
+&lt;img src="MATD48-07_files/figure-html/plot-scripts-1.png" alt="" width="576" /&gt;
+
+Aqui os dois coincidem — os efeitos são grandes o bastante para ambos os critérios. A diferença de
+Duncan aparece nos **pares de fronteira**: seus valores críticos `\(R_p\)` são menores para amplitudes
+pequenas, o que dá mais poder ao custo de **não** controlar o FWER no nível nominal (ver o slide
+sobre `\(\alpha_p = 1-(1-\alpha)^{p-1}\)`).
 
 ---
 
@@ -461,6 +649,8 @@ summary(mod_poly, split = list(dose = list(Linear = 1, Quadratic = 2,
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
+
+---
 
 ## Qual grau é necessário? Compare os quatro ajustes
 
@@ -564,6 +754,8 @@ variável numérica, não sobre o fator.
   espaçados, decompondo a tendência em linear, quadrático, etc.
 - Próxima aula: **ANCOVA** (ajuste por covariável) e o teste de **Kruskal-Wallis** (alternativa
   não paramétrica).
+
+---
 
 ## Referências
 

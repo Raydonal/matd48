@@ -4,14 +4,14 @@ subtitle: "Modelo, ANOVA, dados faltantes e eficiência relativa"
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -83,7 +83,7 @@ O DBCA é o oposto desse erro: ele **agrupa** unidades por uma variável de ruí
 **sorteia** os tratamentos dentro de cada bloco — todo tratamento aparece em todo nível de ruído.
 
 ```{r confundido-mapa, echo=FALSE, fig.width=6, fig.height=4.6}
-recife <- st_read("../Aulas/Bairros_Recife/bairros-polygon.shp", quiet = TRUE)
+recife <- st_read("assets/Bairros_Recife/bairros-polygon.shp", quiet = TRUE)
 ggplot(recife) +
   geom_sf(aes(fill = factor(rpa)), color = "white", linewidth = 0.15) +
   scale_fill_brewer(palette = "Set2", name = "RPA (bloco)") +
@@ -277,7 +277,7 @@ sentido perguntar "o bloco 2 é significativo?"; ele só existe para ser neutral
 ## A população conceitual de respostas de um DBCA
 
 ```{r fig-quadro-blocos-09, echo=FALSE, out.width="55%"}
-knitr::include_graphics("../Aulas/images/quadro5Blocos.png")
+knitr::include_graphics("assets/images/quadro5Blocos.png")
 ```
 
 $Y_{ijk}$ = resultado (potencial) do tratamento $k$ na $j$-ésima UE do bloco $i$: uma tabela
@@ -309,30 +309,19 @@ neste conjunto de dados ($p=0{,}89$).
 Tratamento e Bloco aparecem no **mesmo nível** — nenhum refina o outro, a assinatura de fatores
 **cruzados** — e só se reencontram no Erro, que sobra depois de descontar ambos.
 
-```{r hasse-dbca-09, echo=FALSE, fig.width=4.6, fig.height=4.4, fig.retina=2}
-nos_dbca09 <- tibble(
-  termo = c("Média", "Tratamento", "Bloco", "Erro"),
-  df    = c(1, 8 - 1, 3 - 1, (8 - 1) * (3 - 1)),
-  x     = c(0, -1, 1, 0),
-  y     = c(3, 2, 2, 1)
-)
-arestas_dbca09 <- tibble(
-  de   = c("Média", "Média", "Tratamento", "Bloco"),
-  para = c("Tratamento", "Bloco", "Erro", "Erro")
-)
+```{r hasse-dbca-09, echo=FALSE}
+source("../Livro/hasse_helpers.R")
 
-arestas_xy_dbca09 <- arestas_dbca09 %>%
-  left_join(nos_dbca09 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
-  left_join(nos_dbca09 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
-
-ggplot() +
-  geom_segment(data = arestas_xy_dbca09, aes(x = x0, y = y0, xend = x1, yend = y1),
-               color = "grey45", linewidth = 0.6) +
-  geom_label(data = nos_dbca09, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
-             size = 3, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
-  theme_void(base_size = 11) +
-  labs(title = "DBCA pepino: t=8, b=3 (N=24)") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11))
+knitr::include_graphics(
+  hasse_svg(
+    tibble(termo   = c("Média", "Tratamento", "Bloco", "Erro"),
+           classes = c(1, 8, 3, 24)),
+    tibble(de   = c("Média", "Média", "Tratamento", "Bloco"),
+           para = c("Tratamento", "Bloco", "Erro", "Erro")),
+    arquivo = "../Livro/figuras/hasse/slide-dbca.svg",
+    titulo  = "DBCA pepino: t=8, b=3 (N=24)",
+    tamanho = c(4.2, 2.9))
+)
 ```
 
 $1+7+2+14=24=N$ — os 14 gl de Erro batem com `dim(X)` do slide anterior: $24-1-7-2=14$, a mesma
@@ -472,9 +461,52 @@ ggplot(pepino, aes(x = tratamento, y = altura, group = bloco, color = bloco)) +
 
 --
 
-As linhas **cruzam-se** em vários pontos — a aditividade tratamento-bloco é só aproximada aqui.
-Sem repetição por célula, não há como testar formalmente a interação: qualquer desvio de
-aditividade é absorvido pelo erro. O gráfico de perfis é o diagnóstico informal disponível.
+As linhas **cruzam-se** em vários pontos. Isso é sinal de não aditividade, ou é ruído? O gráfico levanta a suspeita — mas não responde.
+
+---
+
+## Dá para testar aditividade com uma observação por casela?
+
+A interação **completa**, de $(t-1)(b-1)$ gl, realmente não se separa do erro: ocupa o mesmo espaço. Mas daí **não** segue que aditividade seja intestável.
+
+--
+
+**Teste de Tukey (1949).** Abra mão de estimar $(t-1)(b-1)$ parâmetros e postule a forma **multiplicativa**, com um único parâmetro: $(\tau\beta)_{ij}=\eta\,\tau_i\beta_j$. Sobra **1 gl** — e 1 gl cabe folgado dentro do erro.
+
+$$SQ_N=\frac{\Big[\sum_i\sum_j y_{ij}(\bar y_{i\cdot}-\bar y_{\cdot\cdot})(\bar y_{\cdot j}-\bar y_{\cdot\cdot})\Big]^2}{\sum_i(\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2 \;\sum_j(\bar y_{\cdot j}-\bar y_{\cdot\cdot})^2}, \qquad 1\text{ gl}$$
+
+$$F_0=\frac{SQ_N}{\big(SQ_{Erro}-SQ_N\big)/[(t-1)(b-1)-1]} \;\sim\; F_{1,\,(t-1)(b-1)-1}$$
+
+Em palavras: parte-se o erro em **não aditividade (1 gl)** e **resto**, e pergunta-se se a primeira é grande demais para ser ruído.
+
+---
+
+## O teste de Tukey nos dados do pepino
+
+```{r tukey-nonadd}
+mu_g <- mean(pepino$altura)
+ef_t <- tapply(pepino$altura, pepino$tratamento, mean) - mu_g
+ef_b <- tapply(pepino$altura, pepino$bloco,      mean) - mu_g
+
+num  <- sum(pepino$altura * ef_t[as.character(pepino$tratamento)] *
+                            ef_b[as.character(pepino$bloco)])
+SQ_N <- num^2 / (sum(ef_t^2) * sum(ef_b^2))
+
+tab  <- summary(mod_dbca)[[1]]
+SQ_E <- tab["Residuals", "Sum Sq"]; gl_E <- tab["Residuals", "Df"]
+F_0  <- SQ_N / ((SQ_E - SQ_N) / (gl_E - 1))
+c(SQ_N = SQ_N, F = F_0, p = pf(F_0, 1, gl_E - 1, lower.tail = FALSE))
+```
+
+--
+
+$F_{1,13}$ praticamente zero, $p\approx0{,}86$: **nenhuma evidência de não aditividade**. O cruzamento das linhas era ruído — coerente com o bloco explicar pouquíssima variação neste experimento.
+
+**O gráfico levantou a suspeita; o teste a descartou.** É essa a divisão de trabalho, e é por isso que o diagnóstico visual nunca dispensa o formal.
+
+--
+
+.footnote[Ressalva: o teste só tem poder contra a forma **multiplicativa**. Em compensação, quando $\eta$ é significativo, isso costuma indicar que uma **transformação** da resposta restauraria a aditividade — diagnóstico construtivo, não só veredito.]
 
 ---
 
@@ -487,6 +519,8 @@ aditividade é absorvido pelo erro. O gráfico de perfis é o diagnóstico infor
 - Valor perdido: fórmula de Yates, com ajuste em $gl_{Erro}$ e em $SQ_{Trat}$.
 - Eficiência relativa quantifica se blocar valeu a pena — não é automático.
 - Próxima aula: teste de Friedman (alternativa não paramétrica) e blocos incompletos balanceados.
+
+---
 
 ## Referências
 

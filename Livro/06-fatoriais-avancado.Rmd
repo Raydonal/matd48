@@ -1,6 +1,9 @@
 # Fatoriais avançados: confusão, fracionamento e superfície de resposta {#fatoriais-avancado}
 
 ```{r setup-cap6, include=FALSE}
+# Sem isto, `kable(...) %>% kable_styling(...)` faz o bookdown numerar a legenda DUAS
+# vezes ("Table 4.1: Table 4.2: ..."). Ver CLAUDE.md, footgun #8.
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(
   echo = TRUE, warning = FALSE, message = FALSE,
   fig.align = "center", out.width = "80%"
@@ -197,15 +200,15 @@ de aula do curso e ilustra esse procedimento numericamente, antes de o formaliza
 algoritmo mais rápido e o reproduzirmos em R sobre os próprios dados do biodiesel.
 
 ```{r yates-dados-classicos, echo=FALSE, out.width="70%", fig.cap="Um 2³ clássico com fatores T, C e K (duas réplicas cada, I e II). As colunas de sinais (-/+) definem os oito tratamentos em ordem-padrão; as colunas à direita resumem média, amplitude e variância de cada tratamento."}
-knitr::include_graphics("../Aulas/images/dadosyates.png")
+knitr::include_graphics("../Aulas2026/assets/images/dadosyates.png")
 ```
 
 ```{r yates-tabela-classica, echo=FALSE, out.width="65%", fig.cap="A tabela de sinais e contrastes para o 2³ acima: cada coluna (T, C, K, T x C, T x K, C x K, T x C x K) é a coluna de sinais ±1 daquele efeito, multiplicada pela Produção Média de cada tratamento (última coluna) e somada; o resultado, dividido pelo divisor do rodapé, é o efeito estimado -- exatamente o produto interno da Seção 6.1.1."}
-knitr::include_graphics("../Aulas/images/yatesout.png")
+knitr::include_graphics("../Aulas2026/assets/images/yatesout.png")
 ```
 
 ```{r yates-efeito-tk, echo=FALSE, out.width="55%", fig.cap="Cálculo manual do efeito de interação dupla T x C (temperatura x catalisador) no mesmo exemplo 2^3: as quatro combinações com sinal '+' (diagonal do cubo) contra as quatro com sinal '-' produzem a mesma conta que a coluna 'T x C' da tabela de sinais -- a leitura geométrica (planos diagonais do cubo, seção sobre o cubo do 2 ao cubo do Capítulo 5) e a leitura tabular (produto de colunas de sinais) chegam ao mesmo número."}
-knitr::include_graphics("../Aulas/images/Efeito_TK_yates.svg")
+knitr::include_graphics("../Aulas2026/assets/images/Efeito_TK_yates.svg")
 ```
 
 Essa tabela é a versão numérica, célula a célula, da fórmula algébrica $\text{efeito}_j =
@@ -547,13 +550,14 @@ $ABCD$ em destaque, o termo que a próxima figura vai confundir) tem exatamente 
 com ABCD</div>
 ```
 
-```{r hasse-confusao, echo=FALSE, fig.width=10, fig.height=6.5, fig.cap="Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo."}
+```{r hasse-confusao, echo=FALSE, out.width="96%", fig.cap="Esquerda: diagrama de Hasse do 2^4 de réplica única (N=16), saturado -- todos os 16 graus de liberdade já estão ocupados por Média, efeitos principais, duplas, triplas e ABCD, sem sobra para Erro nem para Bloco. Direita: para incluir um termo de Bloco (2 blocos de 8 corridas), a confusão faz Bloco e ABCD ocuparem a mesma posição relativa na estrutura -- o mesmo único grau de liberdade, com dois rótulos possíveis, em vez de um grau de liberdade roubado de outro termo."}
+# Diagrama ESQUEMATICO: cada no agrega varios termos de mesma ordem, entao o gl
+# e informado direto (ver a saida documentada em hasse_helpers.R) em vez de sair
+# da contagem de classes.
 nos_sem_bloco <- tibble(
   termo = c("Média", "Efeitos principais\n(A,B,C,D)", "Interações duplas\n(6 termos)",
             "Interações triplas\n(4 termos)", "ABCD"),
-  df    = c(1, 4, 6, 4, 1),
-  x     = c(0, 0, 0, 0, 0),
-  y     = c(5, 4, 3, 2, 1)
+  gl    = c(1, 4, 6, 4, 1)
 )
 arestas_sem_bloco <- tibble(
   de   = c("Média", "Efeitos principais\n(A,B,C,D)", "Interações duplas\n(6 termos)",
@@ -562,27 +566,30 @@ arestas_sem_bloco <- tibble(
            "Interações triplas\n(4 termos)", "ABCD")
 )
 
+# Confundimento se representa por um UNICO no com os dois rotulos: Bloco e ABCD
+# ocupam a mesma posicao na estrutura e disputam o mesmo grau de liberdade. Por
+# isso os gl continuam somando 16 = N, exatamente como no diagrama da esquerda.
 nos_com_bloco <- tibble(
   termo = c("Média", "Efeitos principais\n(A,B,C,D)", "Interações duplas\n(6 termos)",
-            "Interações triplas\n(4 termos)", "Bloco", "ABCD"),
-  df    = c(1, 4, 6, 4, 1, 1),
-  x     = c(0, 0, 0, 0, -0.7, 0.7),
-  y     = c(5, 4, 3, 2, 1, 1)
+            "Interações triplas\n(4 termos)", "Bloco &#8801; ABCD\n(confundidos)"),
+  gl    = c(1, 4, 6, 4, 1)
 )
 arestas_com_bloco <- tibble(
   de   = c("Média", "Efeitos principais\n(A,B,C,D)", "Interações duplas\n(6 termos)",
-           "Interações triplas\n(4 termos)", "Interações triplas\n(4 termos)"),
+           "Interações triplas\n(4 termos)"),
   para = c("Efeitos principais\n(A,B,C,D)", "Interações duplas\n(6 termos)",
-           "Interações triplas\n(4 termos)", "Bloco", "ABCD")
+           "Interações triplas\n(4 termos)", "Bloco &#8801; ABCD\n(confundidos)")
 )
 
-cowplot::plot_grid(
-  plot_hasse(nos_sem_bloco, arestas_sem_bloco,
-             titulo = "Sem bloco: 2⁴ saturado (N=16)"),
-  plot_hasse(nos_com_bloco, arestas_com_bloco,
-             titulo = "Com bloco confundido com ABCD (N=16)"),
-  nrow = 1
-)
+knitr::include_graphics(c(
+  hasse_svg(nos_sem_bloco, arestas_sem_bloco,
+            arquivo = "figuras/hasse/confusao-sem-bloco.svg",
+            titulo  = "Sem bloco: 2&#8308; saturado (N=16)"),
+  hasse_svg(nos_com_bloco, arestas_com_bloco,
+            arquivo = "figuras/hasse/confusao-com-bloco.svg",
+            titulo  = "Com bloco confundido com ABCD (N=16)",
+            destacar = "Bloco &#8801; ABCD\n(confundidos)")
+))
 ```
 
 O painel esquerdo é o retrato do problema: com réplica única, todo grau de liberdade do desenho já
@@ -617,13 +624,15 @@ dupla $A{\times}B$ em um $3^2$.
 Um experimento de usinagem mede a energia de corte consumida em função da <strong>velocidade de
 corte</strong> (três níveis: 2,3, 3,4 e 4,5 m/s) e do <strong>ângulo de saída da ferramenta</strong>
 (três níveis: 20°, 40° e 60°) — um $3^2$ completo, com quatro repetições por combinação (36
-corridas). Retomaremos este mesmo conjunto de dados na seção sobre superfície de resposta, adiante neste capítulo.
+corridas). Retomaremos este mesmo conjunto de dados no capítulo sobre superfície de resposta.
 </div>
 ```
 
 Assim como no $2^k$, dividir um $3^k$ em blocos exige confundir algum efeito com o bloco. A
-construção usa **contrastes de graus de liberdade únicos** da forma $AB^2$ (ou $A^2B$), em vez de
-simplesmente $AB$: como cada efeito de interação em um $3^k$ tem múltiplos graus de liberdade, é
+construção decompõe a interação em **componentes ortogonais de dois graus de liberdade cada**,
+$AB$ e $AB^2$ (ou, equivalentemente, $A^2B$), em vez de tratar $A{\times}B$ como um bloco único:
+a interação dupla de um $3^2$ tem $2\times2=4$ graus de liberdade, que se repartem exatamente
+nesses dois componentes ($2+2=4$). Como o bloco consome $3-1=2$ graus de liberdade, é
 preciso escolher *um* componente específico para confundir, e a notação $AB^2$ indica o contraste
 $L = i + 2j \pmod 3$, onde $i$ e $j$ são os níveis (codificados $0,1,2$) de $A$ e $B$. Valores de
 $L$ iguais a $0$, $1$ e $2$ definem três blocos de tamanho $3^{k-1}$:
@@ -673,7 +682,8 @@ A **resolução** de um fracionado resume a "qualidade" desse aliasamento:
   aparece em interações de ordem 3 ou mais.
 
 Quanto maior a resolução, mais informação útil o fracionado preserva — ao custo de exigir mais
-corridas (menor fração) para o mesmo $k$. Na prática, escolher a fração certa é uma decisão de
+corridas (isto é, uma fração *maior*: $1/2$ exige mais corridas que $1/4$, que exige mais que
+$1/8$) para o mesmo $k$. Na prática, escolher a fração certa é uma decisão de
 compromisso entre orçamento experimental e quais interações o pesquisador está disposto a assumir,
 a priori, como desprezíveis — a mesma lógica de custo-benefício da confusão, aplicada aos próprios
 efeitos de tratamento em vez de ao bloco. O leitor interessado em construir geradores para $k$

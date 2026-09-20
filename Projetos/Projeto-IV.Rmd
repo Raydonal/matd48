@@ -35,8 +35,8 @@ no cronograma do curso, até as 12:00hs (GMT-3, Horário de Brasília). Forneça
 Magistral, Qwen, Kimi, Nova Phi, Grok, etc.) para resolver o projeto, evite constrangimentos.
 **Quero vocês pensando, não a máquina.**
 
-**Avaliação:** este projeto fecha a **Nota 3** do curso (capstone) — N3 = 50% Projeto IV + 50%
-média das Listas 12–14. É o terceiro e último dos três projetos incrementais: ele dá continuidade
+**Avaliação:** este projeto fecha a **Nota 3** do curso (capstone) — N3 = 40% Projeto IV + 60%
+Prova escrita 3. É o terceiro e último dos três projetos incrementais: ele dá continuidade
 direta ao Projeto III (mesma fintech, mesmo pipeline de crédito) e reaproveita, num único
 delineamento fatorial $2^4$, tudo que os Projetos II e III trabalharam separadamente — repetição
 genuína (Projeto II) e comparação controlada por blocos (Projeto III) — para responder a uma

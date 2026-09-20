@@ -4,14 +4,14 @@ subtitle: "Modelo, tabela de ANOVA, intervalos de confiança e número de répli
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -77,15 +77,32 @@ por Neyman — mas distribuições exatas ($t$, $F$) em amostra finita para ICs 
 
 ---
 
-## O esquema geral (Allen Downey)
+## O esquema geral por trás de um teste baseado em simulação
 
-```{r fig-only-one-test-04, echo=FALSE, out.width="78%"}
-knitr::include_graphics("../Aulas/images/there_is_only_one_test.png")
+```{r fig-esquema-teste-aleatorizacao-04, echo=FALSE, fig.width=7, fig.height=3.2}
+caixas <- tibble(
+  passo  = 1:4,
+  rotulo = c("Dados observados\n→ estatística T*", "Mecanismo de\naleatorização (H0)",
+             "Reembaralhamentos:\nT recalculado", "Distribuição de\nreferência → valor-p"),
+  x = c(1, 1, 2, 3),
+  y = c(2, 1, 1, 1)
+)
+setas <- tibble(
+  x = c(1, 1, 2), y = c(2, 1, 1),
+  xend = c(1, 2, 3), yend = c(1.25, 1, 1)
+)
+ggplot() +
+  geom_segment(data = setas, aes(x = x, y = y, xend = xend, yend = yend),
+               color = "grey40", arrow = arrow(length = unit(0.2, "cm"), type = "closed")) +
+  geom_label(data = caixas, aes(x = x, y = y, label = rotulo), size = 3.6,
+             label.padding = unit(0.4, "lines")) +
+  xlim(0.5, 3.5) + ylim(0.5, 2.5) +
+  theme_void(base_size = 13)
 ```
 
 Dados → estatística observada; modelo de $H_0$ → dados simulados → distribuição de referência →
 valor-$p$. O reembaralhamento de rótulos **é** esse esquema, com o "modelo de $H_0$" sendo o
-próprio mecanismo de aleatorização do delineamento.
+próprio mecanismo de aleatorização do delineamento (mesmo diagrama do Cap. 3 do livro-texto).
 
 ---
 
@@ -101,6 +118,123 @@ $$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij}\overset{iid}
 
 Estimadores de mínimos quadrados: $\hat\mu_i=\bar Y_{i\cdot}$,
 $\hat\sigma^2=MS_E=\dfrac{1}{N-t}\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2$.
+
+---
+
+## Mas de onde **vem** esse modelo?
+
+O slide anterior **postulou** $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$. Num curso de regressão isso basta. Aqui não: nós **sorteamos** as unidades, e o sorteio é nosso. Então o modelo pode ser **deduzido** (Cornfield, 1944; Kempthorne, 1952).
+
+--
+
+Comece pela **população conceitual de respostas**: $Y_{ij}$ = resposta que a unidade $j$ apresentaria sob o tratamento $i$.
+
+```{r pop-conceitual, echo=FALSE, fig.width=9.6, fig.height=2.5}
+set.seed(4)
+t_ <- 3; N <- 9
+obs <- sample(rep(1:t_, length.out = N))
+expand_grid(unidade = 1:N, trat = 1:t_) %>%
+  mutate(observado = trat == obs[unidade],
+         rot = paste0("Y[", trat, "*',", unidade, "']")) %>%
+  ggplot(aes(unidade, trat)) +
+  geom_tile(aes(fill = observado), color = "white", linewidth = 1.1) +
+  geom_text(aes(label = rot, color = observado), parse = TRUE, size = 3.3) +
+  scale_fill_manual(values = c(`FALSE` = "#eef1f5", `TRUE` = "#2e6b4f"), guide = "none") +
+  scale_color_manual(values = c(`FALSE` = "grey55", `TRUE` = "white"), guide = "none") +
+  scale_y_continuous(breaks = 1:t_, labels = c("A","B","C"), expand = c(0,0)) +
+  scale_x_continuous(breaks = 1:N, expand = c(0,0)) +
+  labs(x = "unidade experimental  j", y = "tratamento  i") +
+  theme_minimal(base_size = 11) + theme(panel.grid = element_blank())
+```
+
+Verde = o que o sorteio deixou observar. **Uma célula por coluna** — são os resultados potenciais da Aula 01.
+
+---
+
+## A variável de seleção de Cornfield
+
+Falta representar matematicamente **o sorteio**. Seja $y_{ir}$ a resposta da $r$-ésima réplica do tratamento $i$, e
+
+$$\delta_{ir}^{\,j}=\begin{cases}1,&\text{se a réplica } ir \text{ foi aplicada à unidade } j\\ 0,&\text{caso contrário}\end{cases}$$
+
+--
+
+.pull-left[
+Os índices têm papéis diferentes:
+
+- $ir$ = **posição no plano** (2ª réplica de A);
+- $j$ = **unidade física** (voluntário nº 5).
+
+A aleatoriedade de $\delta$ não vem da natureza: vem do papelzinho que **nós** sorteamos.
+]
+.pull-right[
+Sob aleatorização completa:
+
+$$P(\delta_{ir}^{\,j}=1)=\frac1N, \qquad \sum_{j=1}^{N}\delta_{ir}^{\,j}=1$$
+
+$$P(\delta_{ir}^{\,j}=1 \mid \delta_{i'r'}^{\,j'}=1)=\frac{1}{N-1}$$
+]
+
+--
+
+**Relação de seleção** — liga o observável ao conceitual: $y_{ir}=\sum_{j=1}^{N}\delta_{ir}^{\,j}\,Y_{ij}$.
+
+---
+
+## O modelo **deduzido**, não suposto
+
+Identidade algébrica exata da tabela $t\times N$:
+
+$$Y_{ij}=\bar Y_{\cdot\cdot}+(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})+(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})+\underbrace{(Y_{ij}-\bar Y_{i\cdot}-\bar Y_{\cdot j}+\bar Y_{\cdot\cdot})}_{\text{interação tratamento}\times\text{unidade}}$$
+
+--
+
+**Aditividade no sentido estrito:** supor o último termo nulo — o efeito de trocar $i$ por $k$ é o mesmo em toda unidade. É uma **suposição**, e é a única aqui.
+
+--
+
+Substituindo na relação de seleção e usando $\sum_j\delta_{ir}^{\,j}=1$:
+
+$$y_{ir}=\underbrace{\bar Y_{\cdot\cdot}}_{\mu}+\underbrace{(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})}_{\tau_i}+\underbrace{\sum_j \delta_{ir}^{\,j}(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})}_{\omega_{ir}} \;=\; \mu+\tau_i+\omega_{ir}$$
+
+O modelo do slide anterior **não foi suposto: foi obtido**.
+
+---
+
+## O erro de aleatorização é correlacionado
+
+$\omega_{ir}$ não é ruído abstrato: é o efeito da unidade que o sorteio pôs naquela posição. Com $u_j=\bar Y_{\cdot j}-\bar Y_{\cdot\cdot}$ e $\sigma_u^2=\frac{1}{N-1}\sum_j u_j^2$:
+
+$$\mathbb{E}_R(\omega_{ir})=0, \qquad \mathrm{Var}_R(\omega_{ir})=\Big(1-\tfrac1N\Big)\sigma_u^2, \qquad \mathrm{Cov}_R(\omega_{ir},\omega_{i'r'})=-\frac{\sigma_u^2}{N}$$
+
+--
+
+.pull-left[
+A covariância é **negativa** — e por um motivo puramente combinatório: sorteio **sem reposição**. A unidade que caiu numa posição não pode cair em outra.
+
+$$\mathrm{Var}_R(\boldsymbol\omega)=\mathbf V=\sigma_u^2\Big(\mathbf I_N-\tfrac1N\mathbf J_N\Big)$$
+
+**não é diagonal** — a hipótese de Gauss-Markov está violada.
+]
+.pull-right[
+```{r omega-enum, echo=FALSE}
+N <- 6; set.seed(7)
+u <- rnorm(N, 0, 3); u <- u - mean(u)
+s2u <- sum(u^2) / (N - 1)
+perms <- function(v) { if (length(v) == 1) return(matrix(v))
+  do.call(rbind, lapply(seq_along(v), function(i) cbind(v[i], perms(v[-i])))) }
+om <- matrix(u[perms(seq_len(N))], ncol = N)
+tibble(` ` = c("E(ω)", "Var(ω)", "Cov(ω,ω′)"),
+       Enumerado = c(mean(om[,1]), mean(om[,1]^2), mean(om[,1]*om[,2])),
+       Fórmula   = c(0, (1 - 1/N) * s2u, -s2u / N)) %>%
+  kable(digits = 6) %>% kable_styling(font_size = 15, full_width = FALSE)
+```
+Todas as $N!$ atribuições, não simulação.
+]
+
+--
+
+E, no entanto, **MQO continua BLUE** — a condição de Zyskind da Aula 03 se verifica aqui. Correlacionados, sim; mas podemos proceder como se não fossem.
 
 ---
 
@@ -140,27 +274,18 @@ $\phi^2 = \dfrac{\sum_i n_i\tau_i^2}{t\sigma^2}$ — a chave do número de répl
 Uma cadeia simples — Média $\prec$ Tratamento $\prec$ Erro —, com os $gl$ do nosso próprio
 exemplo (Bloco 2, adiante): $t=3$ condições, $n=12$ voluntários por condição, $N=36$.
 
-```{r hasse-dca-04, echo=FALSE, fig.width=3.2, fig.height=4, fig.retina=2}
-nos_dca04 <- tibble(
-  termo = c("Média", "Tratamento", "Erro"),
-  df    = c(1, 3 - 1, 36 - 3),
-  x     = c(0, 0, 0),
-  y     = c(3, 2, 1)
+```{r hasse-dca-04, echo=FALSE}
+source("../Livro/hasse_helpers.R")
+
+knitr::include_graphics(
+  hasse_svg(
+    tibble(termo   = c("Média", "Condição", "Erro"),
+           classes = c(1, 3, 36)),
+    tibble(de = c("Média", "Condição"), para = c("Condição", "Erro")),
+    arquivo = "../Livro/figuras/hasse/slide-dca-distracao.svg",
+    titulo  = "DCA: t=3, n=12 (N=36)",
+    tamanho = c(2.9, 3.0))
 )
-arestas_dca04 <- tibble(de = c("Média", "Tratamento"), para = c("Tratamento", "Erro"))
-
-arestas_xy_dca04 <- arestas_dca04 %>%
-  left_join(nos_dca04 %>% select(termo, x0 = x, y0 = y), by = c("de" = "termo")) %>%
-  left_join(nos_dca04 %>% select(termo, x1 = x, y1 = y), by = c("para" = "termo"))
-
-ggplot() +
-  geom_segment(data = arestas_xy_dca04, aes(x = x0, y = y0, xend = x1, yend = y1),
-               color = "grey45", linewidth = 0.6) +
-  geom_label(data = nos_dca04, aes(x = x, y = y, label = paste0(termo, "\n(", df, " gl)")),
-             size = 3, label.padding = unit(0.25, "lines"), fill = "white", color = "grey15") +
-  theme_void(base_size = 11) +
-  labs(title = "DCA: t=3, n=12 (N=36)") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11))
 ```
 
 $1+2+33=36=N$ — sem nenhuma outra fonte estrutural de variação além do tratamento, exatamente
@@ -177,8 +302,7 @@ restrição $\sum_i n_i\tau_i=0$ que a parametrização $\mu+\tau_i$ exige.
 
 --
 
-Como as colunas de $\mathbf X$ são indicadoras de grupos disjuntos, $\mathbf X'\mathbf X=
-\mathrm{diag}(n_1,\ldots,n_t)$ — diagonal, posto completo $t$ — logo **todo** $\mu_i$ é trivialmente
+Como as colunas de $\mathbf X$ são indicadoras de grupos disjuntos, $\mathbf X'\mathbf X= \mathrm{diag}(n_1,\ldots,n_t)$ — diagonal, posto completo $t$ — logo **todo** $\mu_i$ é trivialmente
 estimável (sem contrastes especiais, ao contrário do caso geral do Cap. 2), e
 
 $$\hat{\boldsymbol\beta}=(\mathbf X'\mathbf X)^{-1}\mathbf X'\mathbf Y=(\bar Y_{1\cdot},\ldots,\bar Y_{t\cdot})',
@@ -311,6 +435,49 @@ usadas já garantem poder pouco acima disso.
 
 ---
 
+## Um segundo exemplo, com dado real: fertilizante em feijão
+
+O exemplo de distração foi simulado (efeito verdadeiro conhecido, controlado de propósito).
+Fechamos com a mesma máquina rodando num dado real, sem efeito verdadeiro conhecido de antemão.
+
+**Aplicação — Agricultura:** 4 fertilizantes (F1–F4), 20 parcelas homogêneas sorteadas em 4 grupos
+de 5 (**UE = parcela**), produção de feijão (kg) medida na colheita.
+
+```{r feijao-04}
+feijao <- read_csv("../Livro/data/feijao.csv", show_col_types = FALSE) %>%
+  mutate(Fertilizante = factor(Fertilizante, labels = paste0("F", 1:4)))
+mod_feijao <- aov(Producao ~ Fertilizante, data = feijao)
+summary(mod_feijao)
+```
+
+---
+
+## Feijão: gráfico e honestidade estatística
+
+.pull-left[
+```{r feijao-plot-04, echo=FALSE, fig.width=4.6, fig.height=3.8}
+emm_feijao <- emmeans::emmeans(mod_feijao, "Fertilizante") %>% as_tibble()
+ggplot(feijao, aes(Fertilizante, Producao)) +
+  geom_jitter(width = 0.08, alpha = 0.45, size = 2) +
+  geom_pointrange(data = emm_feijao,
+                   aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
+                   color = "#0B4F6C", linewidth = 0.9, size = 0.7) +
+  labs(x = "Fertilizante", y = "Produção (kg)") +
+  theme_minimal(base_size = 12)
+```
+]
+.pull-right[
+$F$ rejeita $H_0$ ($p<0{,}001$): F4 supera F1 claramente, F2/F3 intermediários — a comparação
+múltipla da Aula 07 formaliza isso.
+
+Ao contrário do exemplo simulado, aqui os pressupostos **não** se sustentam perfeitamente:
+Shapiro-Wilk nos resíduos dá
+$p\approx `r round(shapiro.test(residuals(mod_feijao))$p.value, 3)`$ — no limiar de $0,05$. Dado
+real, sem garantia — o assunto da Aula 06.
+]
+
+---
+
 ## Resumo da aula
 
 - O teste $F$ da ANOVA aproxima um teste de aleatorização exato, sem exigir reembaralhamento.
@@ -320,6 +487,8 @@ usadas já garantem poder pouco acima disso.
   `pwr::pwr.anova.test()`), não há fórmula fechada.
 - Próxima aula: o que muda quando há **submuestreo** (mais de uma medição por unidade
   experimental) e quando os "tratamentos" são uma **amostra aleatória** de uma população maior.
+
+---
 
 ## Referências
 

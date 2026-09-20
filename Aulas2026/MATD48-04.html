@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -82,13 +82,13 @@ por Neyman — mas distribuições exatas (`\(t\)`, `\(F\)`) em amostra finita p
 
 ---
 
-## O esquema geral (Allen Downey)
+## O esquema geral por trás de um teste baseado em simulação
 
-&lt;img src="../Aulas/images/there_is_only_one_test.png" alt="" width="78%" /&gt;
+&lt;img src="MATD48-04_files/figure-html/fig-esquema-teste-aleatorizacao-04-1.png" alt="" width="504" /&gt;
 
 Dados → estatística observada; modelo de `\(H_0\)` → dados simulados → distribuição de referência →
 valor-$p$. O reembaralhamento de rótulos **é** esse esquema, com o "modelo de `\(H_0\)`" sendo o
-próprio mecanismo de aleatorização do delineamento.
+próprio mecanismo de aleatorização do delineamento (mesmo diagrama do Cap. 3 do livro-texto).
 
 ---
 
@@ -104,6 +104,121 @@ próprio mecanismo de aleatorização do delineamento.
 
 Estimadores de mínimos quadrados: `\(\hat\mu_i=\bar Y_{i\cdot}\)`,
 `\(\hat\sigma^2=MS_E=\dfrac{1}{N-t}\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2\)`.
+
+---
+
+## Mas de onde **vem** esse modelo?
+
+O slide anterior **postulou** `\(Y_{ij}=\mu+\tau_i+\varepsilon_{ij}\)`. Num curso de regressão isso basta. Aqui não: nós **sorteamos** as unidades, e o sorteio é nosso. Então o modelo pode ser **deduzido** (Cornfield, 1944; Kempthorne, 1952).
+
+--
+
+Comece pela **população conceitual de respostas**: `\(Y_{ij}\)` = resposta que a unidade `\(j\)` apresentaria sob o tratamento `\(i\)`.
+
+&lt;img src="MATD48-04_files/figure-html/pop-conceitual-1.png" alt="" width="691.2" /&gt;
+
+Verde = o que o sorteio deixou observar. **Uma célula por coluna** — são os resultados potenciais da Aula 01.
+
+---
+
+## A variável de seleção de Cornfield
+
+Falta representar matematicamente **o sorteio**. Seja `\(y_{ir}\)` a resposta da `\(r\)`-ésima réplica do tratamento `\(i\)`, e
+
+`$$\delta_{ir}^{\,j}=\begin{cases}1,&amp;\text{se a réplica } ir \text{ foi aplicada à unidade } j\\ 0,&amp;\text{caso contrário}\end{cases}$$`
+
+--
+
+.pull-left[
+Os índices têm papéis diferentes:
+
+- `\(ir\)` = **posição no plano** (2ª réplica de A);
+- `\(j\)` = **unidade física** (voluntário nº 5).
+
+A aleatoriedade de `\(\delta\)` não vem da natureza: vem do papelzinho que **nós** sorteamos.
+]
+.pull-right[
+Sob aleatorização completa:
+
+`$$P(\delta_{ir}^{\,j}=1)=\frac1N, \qquad \sum_{j=1}^{N}\delta_{ir}^{\,j}=1$$`
+
+`$$P(\delta_{ir}^{\,j}=1 \mid \delta_{i'r'}^{\,j'}=1)=\frac{1}{N-1}$$`
+]
+
+--
+
+**Relação de seleção** — liga o observável ao conceitual: `\(y_{ir}=\sum_{j=1}^{N}\delta_{ir}^{\,j}\,Y_{ij}\)`.
+
+---
+
+## O modelo **deduzido**, não suposto
+
+Identidade algébrica exata da tabela `\(t\times N\)`:
+
+`$$Y_{ij}=\bar Y_{\cdot\cdot}+(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})+(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})+\underbrace{(Y_{ij}-\bar Y_{i\cdot}-\bar Y_{\cdot j}+\bar Y_{\cdot\cdot})}_{\text{interação tratamento}\times\text{unidade}}$$`
+
+--
+
+**Aditividade no sentido estrito:** supor o último termo nulo — o efeito de trocar `\(i\)` por `\(k\)` é o mesmo em toda unidade. É uma **suposição**, e é a única aqui.
+
+--
+
+Substituindo na relação de seleção e usando `\(\sum_j\delta_{ir}^{\,j}=1\)`:
+
+`$$y_{ir}=\underbrace{\bar Y_{\cdot\cdot}}_{\mu}+\underbrace{(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})}_{\tau_i}+\underbrace{\sum_j \delta_{ir}^{\,j}(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})}_{\omega_{ir}} \;=\; \mu+\tau_i+\omega_{ir}$$`
+
+O modelo do slide anterior **não foi suposto: foi obtido**.
+
+---
+
+## O erro de aleatorização é correlacionado
+
+`\(\omega_{ir}\)` não é ruído abstrato: é o efeito da unidade que o sorteio pôs naquela posição. Com `\(u_j=\bar Y_{\cdot j}-\bar Y_{\cdot\cdot}\)` e `\(\sigma_u^2=\frac{1}{N-1}\sum_j u_j^2\)`:
+
+`$$\mathbb{E}_R(\omega_{ir})=0, \qquad \mathrm{Var}_R(\omega_{ir})=\Big(1-\tfrac1N\Big)\sigma_u^2, \qquad \mathrm{Cov}_R(\omega_{ir},\omega_{i'r'})=-\frac{\sigma_u^2}{N}$$`
+
+--
+
+.pull-left[
+A covariância é **negativa** — e por um motivo puramente combinatório: sorteio **sem reposição**. A unidade que caiu numa posição não pode cair em outra.
+
+`$$\mathrm{Var}_R(\boldsymbol\omega)=\mathbf V=\sigma_u^2\Big(\mathbf I_N-\tfrac1N\mathbf J_N\Big)$$`
+
+**não é diagonal** — a hipótese de Gauss-Markov está violada.
+]
+.pull-right[
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;  &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Enumerado &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Fórmula &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; E(ω) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Var(ω) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.797853 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.797853 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Cov(ω,ω′) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.559571 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.559571 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+Todas as `\(N!\)` atribuições, não simulação.
+]
+
+--
+
+E, no entanto, **MQO continua BLUE** — a condição de Zyskind da Aula 03 se verifica aqui. Correlacionados, sim; mas podemos proceder como se não fossem.
 
 ---
 
@@ -165,7 +280,7 @@ Os dois usam o **mesmo** `\(MS_E\)` — a ANOVA combina (*pools*) a variabilidad
 Uma cadeia simples — Média `\(\prec\)` Tratamento `\(\prec\)` Erro —, com os `\(gl\)` do nosso próprio
 exemplo (Bloco 2, adiante): `\(t=3\)` condições, `\(n=12\)` voluntários por condição, `\(N=36\)`.
 
-&lt;img src="MATD48-04_files/figure-html/hasse-dca-04-1.png" alt="" width="230.4" /&gt;
+![](../Livro/figuras/hasse/slide-dca-distracao.svg)&lt;!-- --&gt;
 
 `\(1+2+33=36=N\)` — sem nenhuma outra fonte estrutural de variação além do tratamento, exatamente
 como a tabela de ANOVA acima já dizia em símbolos.
@@ -181,8 +296,7 @@ restrição `\(\sum_i n_i\tau_i=0\)` que a parametrização `\(\mu+\tau_i\)` exi
 
 --
 
-Como as colunas de `\(\mathbf X\)` são indicadoras de grupos disjuntos, $\mathbf X'\mathbf X=
-\mathrm{diag}(n_1,\ldots,n_t)$ — diagonal, posto completo `\(t\)` — logo **todo** `\(\mu_i\)` é trivialmente
+Como as colunas de `\(\mathbf X\)` são indicadoras de grupos disjuntos, `\(\mathbf X'\mathbf X= \mathrm{diag}(n_1,\ldots,n_t)\)` — diagonal, posto completo `\(t\)` — logo **todo** `\(\mu_i\)` é trivialmente
 estimável (sem contrastes especiais, ao contrário do caso geral do Cap. 2), e
 
 `$$\hat{\boldsymbol\beta}=(\mathbf X'\mathbf X)^{-1}\mathbf X'\mathbf Y=(\bar Y_{1\cdot},\ldots,\bar Y_{t\cdot})',
@@ -371,6 +485,49 @@ usadas já garantem poder pouco acima disso.
 
 ---
 
+## Um segundo exemplo, com dado real: fertilizante em feijão
+
+O exemplo de distração foi simulado (efeito verdadeiro conhecido, controlado de propósito).
+Fechamos com a mesma máquina rodando num dado real, sem efeito verdadeiro conhecido de antemão.
+
+**Aplicação — Agricultura:** 4 fertilizantes (F1–F4), 20 parcelas homogêneas sorteadas em 4 grupos
+de 5 (**UE = parcela**), produção de feijão (kg) medida na colheita.
+
+
+``` r
+feijao &lt;- read_csv("../Livro/data/feijao.csv", show_col_types = FALSE) %&gt;%
+  mutate(Fertilizante = factor(Fertilizante, labels = paste0("F", 1:4)))
+mod_feijao &lt;- aov(Producao ~ Fertilizante, data = feijao)
+summary(mod_feijao)
+```
+
+```
+##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## Fertilizante  3  54.74  18.248   9.209 0.000897 ***
+## Residuals    16  31.70   1.982                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+## Feijão: gráfico e honestidade estatística
+
+.pull-left[
+&lt;img src="MATD48-04_files/figure-html/feijao-plot-04-1.png" alt="" width="331.2" /&gt;
+]
+.pull-right[
+`\(F\)` rejeita `\(H_0\)` (`\(p&lt;0{,}001\)`): F4 supera F1 claramente, F2/F3 intermediários — a comparação
+múltipla da Aula 07 formaliza isso.
+
+Ao contrário do exemplo simulado, aqui os pressupostos **não** se sustentam perfeitamente:
+Shapiro-Wilk nos resíduos dá
+`\(p\approx 0.046\)` — no limiar de `\(0,05\)`. Dado
+real, sem garantia — o assunto da Aula 06.
+]
+
+---
+
 ## Resumo da aula
 
 - O teste `\(F\)` da ANOVA aproxima um teste de aleatorização exato, sem exigir reembaralhamento.
@@ -380,6 +537,8 @@ usadas já garantem poder pouco acima disso.
   `pwr::pwr.anova.test()`), não há fórmula fechada.
 - Próxima aula: o que muda quando há **submuestreo** (mais de uma medição por unidade
   experimental) e quando os "tratamentos" são uma **amostra aleatória** de uma população maior.
+
+---
 
 ## Referências
 

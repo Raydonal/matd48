@@ -10,7 +10,7 @@
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../Aulas/custom-styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -66,8 +66,7 @@ y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}, \qq
 i=1,\dots,a;\ j=1,\dots,b;\ k=1,\dots,r
 $$
 
-com `\(\sum_i \alpha_i = \sum_j \beta_j = 0\)` e $\sum_i(\alpha\beta)_{ij} = \sum_j(\alpha\beta)_{ij}
-= 0$.
+com `\(\sum_i \alpha_i = \sum_j \beta_j = 0\)` e `\(\sum_i(\alpha\beta)_{ij} = \sum_j(\alpha\beta)_{ij} = 0\)`.
 
 --
 
@@ -149,6 +148,85 @@ Mesma lógica do F-teste geral do Capítulo 2 — só que aplicada ao bloco de c
 
 ---
 
+## Médias parciais admissíveis
+
+Antes de escrever qualquer soma de quadrados, uma pergunta de **estrutura**: quais médias parciais fazem sentido calcular?
+
+**Definição.** Uma média parcial é **admissível** quando, estando presente o índice de um fator, todos os índices dos fatores que o **embutem** também estão presentes.
+
+--
+
+.pull-left[
+**Fatores cruzados** (`\(A\times B\)`): todas fazem sentido —
+`\(\bar y_{ij\cdot}\)`, `\(\bar y_{i\cdot\cdot}\)`, `\(\bar y_{\cdot j\cdot}\)`, `\(\bar y_{\cdot\cdot\cdot}\)`.
+]
+.pull-right[
+**Turma aninhada em Escola:** `\(\bar y_{ij\cdot}\)` e `\(\bar y_{i\cdot\cdot}\)` são admissíveis, mas `\(\bar y_{\cdot j\cdot}\)` — a "média da Turma 1 sobre todas as escolas" — é **inadmissível**: não existe uma Turma 1 comum às escolas.
+]
+
+--
+
+É o mesmo que a média da renda da "Rua A" de Boa Viagem com a "Rua A" da Várzea. O R calcula sem reclamar; o número não quer dizer nada. **A regra de admissibilidade é a estrutura do experimento impondo limite à aritmética.**
+
+---
+
+## Da estrutura à tabela de ANOVA, mecanicamente
+
+**Algoritmo (4 passos).** Dado o diagrama de Hasse do delineamento:
+
+1. listar todas as médias parciais **admissíveis**, da média geral até a observação;
+2. em cada uma, localizar os índices de fatores **sem** fatores embutidos;
+3. para cada média, somar termos formados pela **eliminação** desses índices — sinal **negativo** se o número de índices eliminados for **ímpar**;
+4. somar as parcelas.
+
+--
+
+Aplicado ao fatorial `\(A\times B\)` com `\(r\)` réplicas, sai a identidade — e cada termo **já é** uma linha da ANOVA:
+
+`$$y_{ijk}=\bar y_{\cdot\cdot\cdot}+\underbrace{(\bar y_{i\cdot\cdot}-\bar y_{\cdot\cdot\cdot})}_{SQ_A}+\underbrace{(\bar y_{\cdot j\cdot}-\bar y_{\cdot\cdot\cdot})}_{SQ_B}+\underbrace{(\bar y_{ij\cdot}-\bar y_{i\cdot\cdot}-\bar y_{\cdot j\cdot}+\bar y_{\cdot\cdot\cdot})}_{SQ_{AB}}+\underbrace{(y_{ijk}-\bar y_{ij\cdot})}_{SQ_{Erro}}$$`
+
+---
+
+## A identidade, conferida nos dados
+
+
+``` r
+d &lt;- pepino %&gt;%
+  group_by(riego, silicio) %&gt;% mutate(m_ij = mean(altura)) %&gt;%
+  group_by(riego)   %&gt;% mutate(m_i = mean(altura)) %&gt;%
+  group_by(silicio) %&gt;% mutate(m_j = mean(altura)) %&gt;%
+  ungroup() %&gt;% mutate(m = mean(altura))
+
+comp &lt;- d %&gt;% transmute(
+  A     = m_i - m,
+  B     = m_j - m,
+  AB    = m_ij - m_i - m_j + m,
+  Erro  = altura - m_ij,
+  recomposto = m + A + B + AB + Erro)
+
+c(max_diferenca = max(abs(comp$recomposto - d$altura)))   # a identidade fecha?
+```
+
+```
+## max_diferenca 
+##             0
+```
+
+``` r
+colSums(comp[, c("A","B","AB","Erro")]^2)                 # = somas de quadrados
+```
+
+```
+##         A         B        AB      Erro 
+## 0.2604167 1.3872167 0.3882833 0.7887333
+```
+
+--
+
+Os quatro números da segunda linha são **exatamente** as somas de quadrados que `anova()` devolve. Papel e lápis e a função do R chegam ao mesmo lugar — mas o caminho pelo diagrama funciona para delineamentos que nenhuma função pronta cobre.
+
+---
+
 ## ANOVA do fatorial A×B balanceado
 
 &lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
@@ -193,6 +271,58 @@ enganar — reporte as médias de célula.
 
 ---
 
+## E se as células não tiverem o mesmo tamanho?
+
+A decomposição `\(SQ_{Total}=SQ_A+SQ_B+SQ_{AB}+SQ_E\)` da tabela anterior exige `\(r\)` **igual** em toda
+célula — daí colunas de `\(A\)`, `\(B\)` e interação ortogonais entre si. Tráfego real de um teste A/B
+nunca se divide em partes iguais; perda de dados também desbalanceia. Sem ortogonalidade, "o
+quanto `\(A\)` explica" passa a depender do que mais já está no modelo (Speed, Hocking &amp; Hackney,
+1978):
+
+- **Tipo I (sequencial):** ajusta só pelo que entrou **antes** — `aov(y~A*B)` ≠ `aov(y~B*A)`.
+- **Tipo II:** cada principal ajustado pelo outro, não pela interação — simétrico em ordem.
+- **Tipo III (marginal):** ajusta por tudo, inclusive interação — exige `contr.sum` no R.
+
+---
+
+## Teste A/B com tráfego desigual: os três tipos na prática
+
+**Ciência de dados:** layout (Lista/Grade) × desconto (Sim/Não), tempo na página — células de
+30 a 70 sessões, tráfego real.
+
+
+``` r
+set.seed(2026)
+n_celula &lt;- c(Lista_Nao = 40, Lista_Sim = 55, Grade_Nao = 30, Grade_Sim = 70)
+media_celula &lt;- c(Lista_Nao = 42, Lista_Sim = 47, Grade_Nao = 44, Grade_Sim = 53)
+dados_ab12 &lt;- map2_dfr(n_celula, media_celula, ~ tibble(tempo = rnorm(.x, .y, 8)), .id = "celula") %&gt;%
+  separate(celula, into = c("layout", "desconto"), sep = "_")
+
+summary(aov(tempo ~ layout * desconto, data = dados_ab12))[[1]][1:2, "Sum Sq"]   # layout, desconto: Tipo I
+```
+
+```
+## [1] 2331.995 2510.805
+```
+
+``` r
+summary(aov(tempo ~ desconto * layout, data = dados_ab12))[[1]][1:2, "Sum Sq"]   # ordem trocada
+```
+
+```
+## [1] 3113.51 1729.29
+```
+
+--
+
+`\(SQ_{\text{layout}}\)` muda de fato com a ordem — o sintoma exato da falta de ortogonalidade. O
+Tipo II dá o mesmo valor não importa a ordem (é o segundo número de cada linha acima); o Tipo III
+(`car::Anova(modelo, type="III")` com `contr.sum`) muda de novo, ajustando também pela interação.
+Se a interação for desprezível, Tipo II &gt; Tipo III (Langsrud, 2003) — mais poder, mesma
+interpretação de efeito principal médio.
+
+---
+
 ## Fatoriais A×B×C
 
 $$
@@ -221,8 +351,7 @@ sub-desenho do `\(2^4\)` de biodiesel (Aula 13), fixando o agente de purificaç�
 
 &lt;img src="MATD48-12_files/figure-html/cubo-principais-1.png" alt="" width="720" /&gt;
 
-Face vermelha (nível alto) menos face azul (nível baixo) — literalmente $\bar y(x_j{=}{+}1) -
-\bar y(x_j{=}{-}1)$.
+Face vermelha (nível alto) menos face azul (nível baixo) — literalmente `\(\bar y(x_j{=}{+}1) - \bar y(x_j{=}{-}1)\)`.
 
 ---
 
@@ -278,7 +407,7 @@ summary(modelo_axb)
 `riego` e `silicio` aparecem no **mesmo nível** — cruzados, sem relação de refinamento entre si —
 e se reencontram na interação, que os refina a ambos.
 
-&lt;img src="MATD48-12_files/figure-html/hasse-axb-12-1.png" alt="" width="360" /&gt;
+![](../Livro/figuras/hasse/slide-axb.svg)&lt;!-- --&gt;
 
 `\(1+1+3+3+16=24=N\)` — os 3 gl de `riego×silicio` são `\(12-1-1-3=(a-1)(b-1)\)`, a mesma contagem
 geométrica do exemplo A×B do Cap. 2 do livro-texto, aqui com os números reais do pepino.
@@ -306,10 +435,10 @@ acuosas &lt;- read_csv("../Livro/data/acuosas.csv", show_col_types = FALSE) %&gt
 mod3 &lt;- aov(recuperacao ~ viscosidade * salinidade * tempo, data = acuosas)
 broom::tidy(mod3) %&gt;% select(term, df, p.value) %&gt;%
   mutate(p.value = round(p.value, 3)) %&gt;%
-  kable(format = "html") %&gt;% kable_styling(font_size = 16, full_width = FALSE)
+  kable(format = "html") %&gt;% kable_styling(font_size = 13, full_width = FALSE)
 ```
 
-&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+&lt;table class="table" style="font-size: 13px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
@@ -483,11 +612,15 @@ particionado.
 - Próxima aula: o caso especial `\(2^k\)` — ortogonalidade exata, análise sem repetição e confusão em
   blocos.
 
+---
+
 ## Referências
 
 - Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley &amp; Sons.
 - Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
 - Imbens, G. W. &amp; Rubin, D. B. (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*. Cambridge University Press.
+- Speed, F. M., Hocking, R. R. &amp; Hackney, O. P. (1978). Methods of Analysis of Linear Models with Unbalanced Data. *Journal of the American Statistical Association*, 73(361), 105–112.
+- Langsrud, Ø. (2003). ANOVA for Unbalanced Data: Use Type II Instead of Type III Sums of Squares. *Statistics and Computing*, 13(2), 163–167.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

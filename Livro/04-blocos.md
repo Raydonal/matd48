@@ -90,7 +90,7 @@ presumivelmente mais parecidas entre si, dentro das quais os tratamentos seriam 
 
 
 ``` r
-recife <- st_read("../Aulas/Bairros_Recife/bairros-polygon.shp", quiet = TRUE)
+recife <- st_read("../Aulas2026/assets/Bairros_Recife/bairros-polygon.shp", quiet = TRUE)
 
 ggplot(recife) +
   geom_sf(aes(fill = factor(rpa)), color = "white", linewidth = 0.15) +
@@ -130,7 +130,7 @@ menos de erro aleatório, em todos os blocos (**aditividade** tratamento-bloco) 
 suposição ao final da seção.
 
 <div class="figure" style="text-align: center">
-<img src="../Aulas/images/sit4.png" alt="Situação Experimental 4: a mesma lógica de unidade experimental (UE) e unidade amostral da Seção 3.5, agora cruzada com blocos. Dentro de cada Bloco, os três tratamentos são sorteados independentemente entre as UEs daquele bloco; cada UE contém, por sua vez, duas unidades amostrais (vasos) medidas individualmente." width="55%" />
+<img src="../Aulas2026/assets/images/sit4.png" alt="Situação Experimental 4: a mesma lógica de unidade experimental (UE) e unidade amostral da Seção 3.5, agora cruzada com blocos. Dentro de cada Bloco, os três tratamentos são sorteados independentemente entre as UEs daquele bloco; cada UE contém, por sua vez, duas unidades amostrais (vasos) medidas individualmente." width="55%" />
 <p class="caption">(\#fig:fig-ue-uo-blocos)Situação Experimental 4: a mesma lógica de unidade experimental (UE) e unidade amostral da Seção 3.5, agora cruzada com blocos. Dentro de cada Bloco, os três tratamentos são sorteados independentemente entre as UEs daquele bloco; cada UE contém, por sua vez, duas unidades amostrais (vasos) medidas individualmente.</p>
 </div>
 
@@ -241,7 +241,7 @@ $$
 $$
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-dbca)(\#tab:tabela-anova-dbca)Tabela de ANOVA do DBCA</caption>
+<caption>(\#tab:tabela-anova-dbca)Tabela de ANOVA do DBCA</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -369,7 +369,7 @@ anova(mod_dbca) %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:dbca-pepino-mod)(\#tab:dbca-pepino-mod)ANOVA do DBCA — altura de pepineiros</caption>
+<caption>(\#tab:dbca-pepino-mod)ANOVA do DBCA — altura de pepineiros</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -440,15 +440,130 @@ ggplot(pepino, aes(x = tratamento, y = altura, group = bloco, color = bloco)) +
 
 <img src="04-blocos_files/figure-html/dbca-perfis-1.png" alt="" width="75%" style="display: block; margin: auto;" />
 
-As três linhas **não** são paralelas: cruzam-se em vários pontos (por exemplo, em torno de
-`riego1_0 ml`, o bloco 3 despenca abaixo dos blocos 1 e 2, invertendo a ordem que tinham no
-tratamento anterior). Isso sugere que a suposição de aditividade é, na melhor das hipóteses,
-aproximada — mas, com uma única observação por célula tratamento$\times$bloco (sem repetição
-dentro da célula), **não há graus de liberdade sobráveis para testar formalmente** uma interação
-tratamento$\times$bloco: qualquer desvio da aditividade fica automaticamente absorvido no termo de
-erro do DBCA, inflando-o. O gráfico de perfis não substitui esse teste (que exigiria repetição
-dentro de cada combinação tratamento-bloco), mas é o diagnóstico informal mais direto disponível, e
-vale examiná-lo sempre antes de confiar cegamente na tabela de ANOVA.
+As três linhas não são exatamente paralelas: cruzam-se em vários pontos (por exemplo, em torno de
+`riego1_0 ml`, o bloco 3 cai abaixo dos blocos 1 e 2, invertendo a ordem que tinham no tratamento
+anterior). A pergunta é se esse cruzamento é sinal de não aditividade ou apenas ruído — e o
+gráfico sozinho não responde.
+
+Com uma única observação por casela tratamento$\times$bloco, a interação **completa**, de
+$(t-1)(b-1)$ graus de liberdade, de fato não é separável do erro: ela ocupa exatamente o mesmo
+espaço. Mas daí **não** se segue que a aditividade seja intestável. O que não se pode testar é a
+interação irrestrita; uma **forma restrita** dela, sim.
+
+### O teste de não aditividade de Tukey {#tukey-nao-aditividade}
+
+A ideia de @tukey1949nonadditivity é abrir mão de estimar $(t-1)(b-1)$ parâmetros de interação e
+postular que a não aditividade, se existir, tem a forma **multiplicativa** de um único parâmetro:
+
+$$
+(\tau\beta)_{ij} \;=\; \eta\,\tau_i\,\beta_j ,
+$$
+
+isto é, o desvio da aditividade na casela $(i,j)$ é proporcional ao produto dos dois efeitos
+principais. Sob essa restrição sobra **um** grau de liberdade a estimar — $\eta$ —, e um grau de
+liberdade cabe folgadamente nos $(t-1)(b-1)$ do erro. A soma de quadrados de não aditividade é
+
+$$
+SQ_N=\frac{\Big[\sum_{i}\sum_{j} y_{ij}\,(\bar y_{i\cdot}-\bar y_{\cdot\cdot})\,
+(\bar y_{\cdot j}-\bar y_{\cdot\cdot})\Big]^2}
+{\sum_i(\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2\;\sum_j(\bar y_{\cdot j}-\bar y_{\cdot\cdot})^2},
+\qquad 1 \text{ gl},
+$$
+
+e, sob a hipótese de aditividade estrita,
+
+$$
+F_0=\frac{SQ_N}{\big(SQ_{Erro}-SQ_N\big)\big/\big[(t-1)(b-1)-1\big]}
+\;\sim\; F_{1,\;(t-1)(b-1)-1}.
+$$
+
+Em palavras: parte-se o termo de erro do DBCA em duas linhas — *não aditividade* (1 gl) e *resto*
+— e pergunta-se se a primeira é grande demais para ser ruído.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — teste de Tukey de não aditividade, à mão e por pacote</div>
+```
+
+
+``` r
+mu_g  <- mean(pepino$altura)
+ef_t  <- tapply(pepino$altura, pepino$tratamento, mean) - mu_g  # efeitos de tratamento
+ef_b  <- tapply(pepino$altura, pepino$bloco,      mean) - mu_g  # efeitos de bloco
+
+num <- sum(pepino$altura *
+           ef_t[as.character(pepino$tratamento)] *
+           ef_b[as.character(pepino$bloco)])
+SQ_N <- num^2 / (sum(ef_t^2) * sum(ef_b^2))
+
+tab   <- summary(mod_dbca)[[1]]
+SQ_E  <- tab["Residuals", "Sum Sq"]
+gl_E  <- tab["Residuals", "Df"]
+F_0   <- SQ_N / ((SQ_E - SQ_N) / (gl_E - 1))
+
+tibble(Fonte = c("Não aditividade", "Resto", "Erro do DBCA (total)"),
+       gl    = c(1, gl_E - 1, gl_E),
+       SQ    = c(SQ_N, SQ_E - SQ_N, SQ_E)) %>%
+  mutate(QM = SQ / gl,
+         F  = c(F_0, NA, NA),
+         `valor-p` = c(pf(F_0, 1, gl_E - 1, lower.tail = FALSE), NA, NA)) %>%
+  kable(digits = 4, caption = "Partição do erro do DBCA pelo teste de Tukey") %>%
+  kable_styling(full_width = FALSE)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:tukey-nonadd-pepino)Partição do erro do DBCA pelo teste de Tukey</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Fonte </th>
+   <th style="text-align:right;"> gl </th>
+   <th style="text-align:right;"> SQ </th>
+   <th style="text-align:right;"> QM </th>
+   <th style="text-align:right;"> F </th>
+   <th style="text-align:right;"> valor-p </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Não aditividade </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.0018 </td>
+   <td style="text-align:right;"> 0.0018 </td>
+   <td style="text-align:right;"> 0.0306 </td>
+   <td style="text-align:right;"> 0.8639 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Resto </td>
+   <td style="text-align:right;"> 13 </td>
+   <td style="text-align:right;"> 0.7741 </td>
+   <td style="text-align:right;"> 0.0595 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Erro do DBCA (total) </td>
+   <td style="text-align:right;"> 14 </td>
+   <td style="text-align:right;"> 0.7759 </td>
+   <td style="text-align:right;"> 0.0554 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+</tbody>
+</table>
+
+O resultado é inequívoco: $F_{1,13}$ próximo de zero,
+com valor-$p$ muito alto. **Não há evidência alguma de não aditividade** — o cruzamento das linhas
+no gráfico de perfis é ruído, exatamente o que se esperaria de um experimento em que o bloco
+explica pouquíssima variação (o próprio teste $F$ de blocos, na tabela de ANOVA acima, não chega
+perto da significância). O gráfico levantou a suspeita; o teste a descartou. É essa a divisão de
+trabalho entre diagnóstico visual e teste formal, e é por isso que o primeiro nunca dispensa o
+segundo.
+
+Duas ressalvas sobre o alcance do teste. A primeira: ele só tem poder contra a forma
+**multiplicativa** de não aditividade; uma interação de outro feitio pode passar despercebida. A
+segunda, que é a face positiva da mesma moeda: quando $\eta$ é significativo, a forma
+multiplicativa costuma indicar que uma **transformação** da resposta (tipicamente na família
+potência — Seção \@ref(dca-pressupostos) do Capítulo 3) restauraria a aditividade, o que torna o
+teste também um diagnóstico construtivo, e não apenas um veredito.
 
 
 ``` r
@@ -495,21 +610,23 @@ esse nó intermediário:
 
 ``` r
 nos_dbca <- tibble(
-  termo = c("Média", "Tratamento", "Bloco", "Erro"),
-  df    = c(1, 8 - 1, 3 - 1, (8 - 1) * (3 - 1)),
-  x     = c(0, -1, 1, 0),
-  y     = c(4, 3, 3, 2)
+  termo   = c("Média", "Tratamento", "Bloco", "Erro"),
+  classes = c(1, 8, 3, 24)         # t=8 tratamentos; b=3 blocos; N=24 parcelas
 )
 arestas_dbca <- tibble(
   de   = c("Média", "Média", "Tratamento", "Bloco"),
   para = c("Tratamento", "Bloco", "Erro", "Erro")
 )
 
-plot_hasse(nos_dbca, arestas_dbca, titulo = "DBCA (pepino): t=8, b=3 (N=24)")
+knitr::include_graphics(
+  hasse_svg(nos_dbca, arestas_dbca,
+            arquivo = "figuras/hasse/dbca.svg",
+            titulo  = "DBCA (pepino): t=8, b=3 (N=24)")
+)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="04-blocos_files/figure-html/hasse-dbca-1.png" alt="Diagrama de Hasse do DBCA, exemplo pepino: t=8 combinações irrigação-silício (tratamento), b=3 blocos, N=24. Tratamento e Bloco aparecem no mesmo nível (cruzados), mas -- ao contrário do fatorial A x B do Capítulo 2 (seção sobre diagramas de Hasse) -- não há nó de interação entre eles: com uma única observação por casela tratamento x bloco, os dois convergem direto no Erro." width="75%" />
+<img src="figuras/hasse/dbca.svg" alt="Diagrama de Hasse do DBCA, exemplo pepino: t=8 combinações irrigação-silício (tratamento), b=3 blocos, N=24. Tratamento e Bloco aparecem no mesmo nível (cruzados), mas -- ao contrário do fatorial A x B do Capítulo 2 (seção sobre diagramas de Hasse) -- não há nó de interação entre eles: com uma única observação por casela tratamento x bloco, os dois convergem direto no Erro." width="58%" />
 <p class="caption">(\#fig:hasse-dbca)Diagrama de Hasse do DBCA, exemplo pepino: t=8 combinações irrigação-silício (tratamento), b=3 blocos, N=24. Tratamento e Bloco aparecem no mesmo nível (cruzados), mas -- ao contrário do fatorial A x B do Capítulo 2 (seção sobre diagramas de Hasse) -- não há nó de interação entre eles: com uma única observação por casela tratamento x bloco, os dois convergem direto no Erro.</p>
 </div>
 
@@ -522,9 +639,11 @@ delineamento, ao não replicar dentro de casela, não deixa **nenhum** grau de l
 para separar os dois — a formalização de $\mathbb E[QM_{Erro}]=\sigma^2$ da Seção anterior já
 assume essa ausência, e o diagrama simplesmente torna visível, como contagem de nós e arestas, o
 motivo pelo qual $\mathbb E[QM_{Erro}]$ não tem outro termo a mais somado a $\sigma^2$: não há
-onde ele seria estimado. É por isso que o gráfico de perfis logo acima é o único diagnóstico
-disponível para uma possível não aditividade — nenhum teste $F$ formal pode substituí-lo neste
-delineamento.
+onde ele seria estimado. O que a seção sobre o teste de Tukey mostrou é que essa impossibilidade
+vale para a interação **irrestrita**: ao postular a forma multiplicativa $\eta\,\tau_i\beta_j$,
+reduz-se a interação a um único parâmetro, e esse grau de liberdade pode ser tomado emprestado do
+erro. O diagrama continua explicando por que $\mathbb E[QM_{Erro}]=\sigma^2$ não tem termo
+adicional; o teste de Tukey apenas mostra que uma fatia de 1 gl desse erro pode ser interrogada.
 
 ### Dados faltantes: estimação do valor perdido
 
@@ -614,19 +733,29 @@ de Yates permanece valiosa por seu valor didático e por dispensar software espe
 
 Ter reduzido o erro experimental valeu a pena? A **eficiência relativa (ER)** do DBCA em relação a
 um DCA hipotético (que teria usado as mesmas $tb$ unidades, mas ignorado os blocos) responde essa
-pergunta comparando as variâncias por unidade experimental que os dois desenhos produziriam. Uma
-aproximação amplamente usada [@montgomery2017design; @cochran1957experimental], que leva em conta
-a perda de graus de liberdade do erro ao se estimar $QM_{Bloco}$ a mais, é
+pergunta comparando as variâncias por unidade experimental que os dois desenhos produziriam. A quantidade tem duas partes. A primeira é a razão entre a variância por unidade que um DCA teria
+e a que o DBCA obteve. Como não se rodou o DCA, sua variância é **estimada** a partir da própria
+ANOVA do DBCA, agrupando de volta o que a blocagem separou:
 
 $$
-ER(DBCA, DCA) = \frac{(gl_B+1)(gl_{E,DCA}+3)\, QM_{Bloco} + gl_{E,DCA}(gl_B+3)\, QM_{Erro}}
-                     {(gl_{E,DCA}+1)(gl_B+3)\, QM_{Erro}},
+\hat\sigma^2_{DCA}=\frac{(b-1)\,QM_{Bloco}+\big[(t-1)+(t-1)(b-1)\big]\,QM_{Erro}}{tb-1}.
 $$
 
-em que $gl_B = b-1$ e $gl_{E,DCA} = gl_{Erro} + gl_B = t(b-1)$ são os graus de liberdade do erro
-que um DCA teria tido com o mesmo número de observações. $ER>1$ indica que o DBCA foi mais
-eficiente: seria necessário aumentar o número de repetições do DCA por um fator $ER$ para igualar
-a precisão do DBCA.
+A segunda parte é um **fator de correção de graus de liberdade**: $\hat\sigma^2_{DCA}$ e
+$QM_{Erro}$ são estimativas com números diferentes de graus de liberdade, e comparar variâncias
+estimadas com poucos graus de liberdade favorece artificialmente a que tem mais. Com
+$\nu_b=(t-1)(b-1)$ (erro do DBCA) e $\nu_c=t(b-1)$ (erro que o DCA teria),
+
+$$
+\widehat{ER}(DBCA, DCA)=\underbrace{\frac{(\nu_b+1)(\nu_c+3)}{(\nu_b+3)(\nu_c+1)}}_{\text{correção de gl}}
+\;\cdot\;\frac{\hat\sigma^2_{DCA}}{QM_{Erro}} .
+$$
+
+$ER>1$ indica que o DBCA foi mais eficiente: seria preciso aumentar as repetições do DCA por um
+fator $ER$ para igualar a precisão do DBCA. Note que o fator de correção é **sempre menor que 1**
+quando $\nu_b<\nu_c$ — ele penaliza o DBCA, que é o desenho com menos graus de liberdade de erro,
+e nunca o promove. Há ainda um critério exato, devido a Lentner, Arnold e Hinkelmann, que dispensa
+a fórmula: $ER>1$ se e somente se $H=QM_{Bloco}/QM_{Erro}>1$.
 
 
 ``` r
@@ -635,22 +764,40 @@ MSB <- tab["bloco", "Mean Sq"];      MSE      <- tab["Residuals", "Mean Sq"]
 gl_b <- tab["bloco", "Df"];          gl_e_dbca <- tab["Residuals", "Df"]
 gl_e_dca <- gl_e_dbca + gl_b
 
-ER <- ((gl_b + 1) * (gl_e_dca + 3) * MSB + gl_e_dca * (gl_b + 3) * MSE) /
-      ((gl_e_dca + 1) * (gl_b + 3) * MSE)
-ER
+t_niv <- nlevels(pepino$tratamento); b_niv <- nlevels(pepino$bloco)
+
+sigma2_dca <- ((b_niv - 1) * MSB +
+               ((t_niv - 1) + (t_niv - 1) * (b_niv - 1)) * MSE) / (t_niv * b_niv - 1)
+
+correcao <- ((gl_e_dbca + 1) * (gl_e_dca + 3)) / ((gl_e_dbca + 3) * (gl_e_dca + 1))
+ER <- correcao * sigma2_dca / MSE
+
+c(sigma2_DCA = sigma2_dca, correcao_gl = correcao, ER = ER,
+  H = MSB / MSE)   # criterio exato: ER > 1 se e so se H > 1
 ```
 
 ```
-## [1] 1.018766
+##  sigma2_DCA correcao_gl          ER           H 
+##  0.05116033  0.98615917  0.91032808  0.11570310
 ```
 
-$ER \approx 1{,}02$: a blocagem por área do viveiro trouxe um ganho de eficiência muito modesto
-neste experimento — coerente com o quadrado médio de blocos ser menor que o quadrado médio do
-erro na Tabela acima. Isso não é falha do delineamento: **a blocagem só compensa quando os blocos
-capturam uma fonte real de heterogeneidade**; quando as unidades já eram homogêneas, o DBCA "gasta"
-$b-1$ graus de liberdade do erro sem retorno proporcional. Antes de blocar, vale perguntar se há
-motivo concreto (agronômico, temporal, logístico) para esperar heterogeneidade entre as unidades
-que vão compor cada bloco.
+$ER \approx 0.91, isto é, **menor que 1**: neste experimento a blocagem por área do
+viveiro não só deixou de ajudar como **piorou** a precisão. O critério exato confirma, sem
+depender da fórmula: $H=QM_{Bloco}/QM_{Erro}\approx0{,}12\ll1$.
+
+O diagnóstico é coerente com tudo o mais que já vimos sobre estes dados: o quadrado médio de
+blocos é bem **menor** que o do erro, e o teste $F$ de blocos não chega perto da significância.
+Os blocos não capturaram heterogeneidade nenhuma — as unidades do viveiro já eram homogêneas
+quanto ao que importa para a altura das plantas — e o DBCA gastou $b-1=2$ graus de liberdade do
+erro sem retorno.
+
+Isso **não** significa que blocar tenha sido um erro de julgamento. A decisão de blocar é tomada
+*antes* de coletar os dados, sob incerteza sobre a heterogeneidade do material experimental, e o
+custo de blocar à toa (perder alguns graus de liberdade) é tipicamente muito menor que o custo de
+não blocar quando havia heterogeneidade real (inflar o erro e perder poder para sempre). O que o
+cálculo de eficiência oferece é uma **avaliação a posteriori**, útil para planejar o *próximo*
+experimento no mesmo viveiro: se a homogeneidade se confirmar em novas rodadas, um DCA com as
+mesmas $tb$ unidades entregaria mais graus de liberdade de erro e, portanto, mais poder.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — comparando o quadrado médio do erro dos dois desenhos</div>
@@ -678,17 +825,22 @@ ggplot(df_re, aes(x = Delineamento, y = QM_Erro, fill = Delineamento)) +
 
 <img src="04-blocos_files/figure-html/dbca-re-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" />
 
-Este gráfico expõe uma armadilha comum: comparado ingenuamente, o $QM_{Erro}$ do DCA hipotético
-($0{,}0493$) é, na verdade, **menor** que o do DBCA ($0{,}0554$) — o que, à primeira vista,
-sugeriria que o DCA teria sido a escolha melhor! Isso acontece porque agrupar $SQ_{Bloco}$ (muito
-pequena) de volta ao erro, dividido por mais graus de liberdade ($16$ em vez de $14$), reduz
-ligeiramente a média. Mas comparar apenas os quadrados médios ignora que uma estimativa de
-variância com **mais** graus de liberdade é, por si só, mais confiável (produz intervalos de
-confiança e testes mais precisos) do que uma com menos graus — é exatamente essa troca entre
-"quadrado médio menor" e "menos graus de liberdade" que a fórmula de $ER$ pondera formalmente
-através dos termos $(gl_{E,DCA}+3)$ e $(gl_B+3)$. Ao aplicá-la, o resultado ($ER\approx1{,}02$)
-ainda favorece — por pouco — o DBCA, mostrando que a comparação direta e ingênua das barras acima
-pode enganar: **eficiência relativa não é o mesmo que "quadrado médio do erro menor"**.
+O gráfico conta a mesma história que o cálculo de eficiência: o $QM_{Erro}$ do DCA hipotético
+($0{,}0493$) é **menor** que o do DBCA ($0{,}0554$). Isso acontece porque agrupar $SQ_{Bloco}$
+(muito pequena) de volta ao erro, dividida por mais graus de liberdade ($16$ em vez de $14$),
+baixa a média. Os dois diagnósticos — a razão de quadrados médios e o $ER$ corrigido — apontam na
+mesma direção aqui, e é bom que apontem: quando $QM_{Bloco}<QM_{Erro}$, blocar não ajudou.
+
+Vale, ainda assim, entender o que a correção de graus de liberdade faz, porque ela é a parte não
+óbvia da fórmula. Uma estimativa de variância com **mais** graus de liberdade é, por si só, mais
+confiável — produz intervalos e testes mais precisos — do que uma com menos. Como é o DCA
+hipotético que teria mais graus de liberdade de erro ($16$ contra $14$), a correção
+$\frac{(\nu_b+1)(\nu_c+3)}{(\nu_b+3)(\nu_c+1)}=0.9862$ **penaliza o DBCA**, e não
+o contrário. Ela nunca converte um desenho pior num melhor: com $\nu_b<\nu_c$ o fator é sempre
+menor que 1. É por isso que o critério exato de Lentner, Arnold e Hinkelmann pode ser enunciado de
+forma tão simples — $ER>1 \iff QM_{Bloco}>QM_{Erro}$ —, e é uma boa verificação de sanidade para
+qualquer conta de eficiência relativa: **se o quadrado médio de blocos é menor que o do erro,
+nenhuma fórmula de $ER$ pode concluir que a blocagem ajudou**.
 
 ```{=html}
 <div class="caixa-discussao">
@@ -766,7 +918,7 @@ friedman.test(mat) %>% broom::tidy() %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:friedman-sim)(\#tab:friedman-sim)Teste de Friedman — redução de sintomas por técnica</caption>
+<caption>(\#tab:friedman-sim)Teste de Friedman — redução de sintomas por técnica</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> statistic </th>
@@ -786,7 +938,7 @@ friedman.test(mat) %>% broom::tidy() %>%
 </table>
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:friedman-ranks)(\#tab:friedman-ranks)Soma de postos por técnica (12 blocos, postos de 1 a 3)</caption>
+<caption>(\#tab:friedman-ranks)Soma de postos por técnica (12 blocos, postos de 1 a 3)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Técnica </th>
@@ -874,7 +1026,7 @@ sessão ($k=3$) antes de o paladar saturar.
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:bibd-tabela)(\#tab:bibd-tabela)Um BIB com t=4, b=4, k=3, r=3, λ=2</caption>
+<caption>(\#tab:bibd-tabela)Um BIB com t=4, b=4, k=3, r=3, λ=2</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> Bloco </th>
@@ -1038,7 +1190,7 @@ determinado pelo arranjo do quadrado latino, não varia livremente. Há apenas $
 $n^3$.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-ql)(\#tab:tabela-anova-ql)Tabela de ANOVA do quadrado latino</caption>
+<caption>(\#tab:tabela-anova-ql)Tabela de ANOVA do quadrado latino</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -1144,21 +1296,23 @@ nenhuma interação entre eles.
 
 ``` r
 nos_ql <- tibble(
-  termo = c("Média", "Linha", "Coluna", "Tratamento", "Erro"),
-  df    = c(1, 4 - 1, 4 - 1, 4 - 1, (4 - 1) * (4 - 2)),
-  x     = c(0, -1.6, 0, 1.6, 0),
-  y     = c(4, 3, 3, 3, 2)
+  termo   = c("Média", "Linha", "Coluna", "Tratamento", "Erro"),
+  classes = c(1, 4, 4, 4, 16)      # n=4 linhas, colunas e tratamentos; N=16 parcelas
 )
 arestas_ql <- tibble(
   de   = c("Média", "Média", "Média", "Linha", "Coluna", "Tratamento"),
   para = c("Linha", "Coluna", "Tratamento", "Erro", "Erro", "Erro")
 )
 
-plot_hasse(nos_ql, arestas_ql, titulo = "Quadrado latino: n=4 (N=16)")
+knitr::include_graphics(
+  hasse_svg(nos_ql, arestas_ql,
+            arquivo = "figuras/hasse/quadrado-latino.svg",
+            titulo  = "Quadrado latino: n=4 (N=16)")
+)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="04-blocos_files/figure-html/hasse-ql-1.png" alt="Diagrama de Hasse do quadrado latino 4x4 (exemplo dos quatro adubos): n=4 linhas, n=4 colunas, n=4 tratamentos, N=n^2=16. Linha, Coluna e Tratamento aparecem no mesmo nível -- cruzados dois a dois -- e convergem direto no Erro, sem nó de interação, pela mesma razão do DBCA (seção anterior)." width="75%" />
+<img src="figuras/hasse/quadrado-latino.svg" alt="Diagrama de Hasse do quadrado latino 4x4 (exemplo dos quatro adubos): n=4 linhas, n=4 colunas, n=4 tratamentos, N=n^2=16. Linha, Coluna e Tratamento aparecem no mesmo nível -- cruzados dois a dois -- e convergem direto no Erro, sem nó de interação, pela mesma razão do DBCA (seção anterior)." width="70%" />
 <p class="caption">(\#fig:hasse-ql)Diagrama de Hasse do quadrado latino 4x4 (exemplo dos quatro adubos): n=4 linhas, n=4 colunas, n=4 tratamentos, N=n^2=16. Linha, Coluna e Tratamento aparecem no mesmo nível -- cruzados dois a dois -- e convergem direto no Erro, sem nó de interação, pela mesma razão do DBCA (seção anterior).</p>
 </div>
 
@@ -1269,7 +1423,7 @@ anova(mod_ql) %>% broom::tidy() %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ql-sim)(\#tab:ql-sim)ANOVA do quadrado latino 4x4 (dados simulados)</caption>
+<caption>(\#tab:ql-sim)ANOVA do quadrado latino 4x4 (dados simulados)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -1366,7 +1520,7 @@ do erro sem aumentar $n$. Quando cada réplica tem suas próprias linhas e colun
 comum, em que os blocos de linha/coluna não são os mesmos de uma réplica para outra):
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-ql-rep)(\#tab:tabela-anova-ql-rep)Tabela de ANOVA do quadrado latino replicado (p réplicas independentes)</caption>
+<caption>(\#tab:tabela-anova-ql-rep)Tabela de ANOVA do quadrado latino replicado (p réplicas independentes)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -1434,7 +1588,7 @@ anova(mod_rep) %>% broom::tidy() %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ql-replicado)(\#tab:ql-replicado)ANOVA de duas réplicas do quadrado latino 4x4</caption>
+<caption>(\#tab:ql-replicado)ANOVA de duas réplicas do quadrado latino 4x4</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -1528,7 +1682,7 @@ tab_poder %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:poder-ql-func)(\#tab:poder-ql-func)Poder do teste de tratamento vs. número de réplicas (n=4, f=0,4)</caption>
+<caption>(\#tab:poder-ql-func)Poder do teste de tratamento vs. número de réplicas (n=4, f=0,4)</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> p </th>
@@ -1660,7 +1814,7 @@ tibble(
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ql-eficiencia)(\#tab:ql-eficiencia)Eficiência relativa do quadrado latino 4x4 das quatro adubações</caption>
+<caption>(\#tab:ql-eficiencia)Eficiência relativa do quadrado latino 4x4 das quatro adubações</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Comparação </th>
@@ -1756,7 +1910,7 @@ anova(mod_ec) %>% broom::tidy() %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:ql-ex2-construcao)(\#tab:ql-ex2-construcao)ANOVA do quadrado latino 5x5 (variantes de checkout)</caption>
+<caption>(\#tab:ql-ex2-construcao)ANOVA do quadrado latino 5x5 (variantes de checkout)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -1907,7 +2061,7 @@ SQ_{\text{Trat(ajustada)}} = \frac{r\sum_{i=1}^v Q_i^2}{\lambda v}.
 $$
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-youden)(\#tab:tabela-anova-youden)Tabela de ANOVA do quadrado de Youden</caption>
+<caption>(\#tab:tabela-anova-youden)Tabela de ANOVA do quadrado de Youden</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -2022,7 +2176,7 @@ anova(mod_youden) %>% broom::tidy() %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:youden-analise)(\#tab:youden-analise)ANOVA do quadrado de Youden (7,3): altura de plântulas de soja</caption>
+<caption>(\#tab:youden-analise)ANOVA do quadrado de Youden (7,3): altura de plântulas de soja</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -2199,7 +2353,7 @@ grego), $i,j,k,l=1,\dots,n$, novamente com apenas $n^2$ observações — cada u
 consome $n-1$ graus de liberdade, restando $(n-1)(n-3)$ para o erro.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-glq)(\#tab:tabela-anova-glq)Tabela de ANOVA do quadrado greco-latino</caption>
+<caption>(\#tab:tabela-anova-glq)Tabela de ANOVA do quadrado greco-latino</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -2302,7 +2456,7 @@ anova(mod_glq) %>% broom::tidy() %>%
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:glq-anova)(\#tab:glq-anova)ANOVA do quadrado greco-latino 4x4 (dados simulados)</caption>
+<caption>(\#tab:glq-anova)ANOVA do quadrado greco-latino 4x4 (dados simulados)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> term </th>
@@ -2381,6 +2535,184 @@ precisão?</li>
 </div>
 ```
 
+## Parcelas subdivididas (*split-plot*) {#split-plot}
+
+```{=html}
+<div class="caixa-discussao"><strong>Além do programa do semestre</strong> — esta seção não
+corresponde a nenhuma das Aulas 09–11: é material extra, na mesma linha do Capítulo 8, que estende
+o Capítulo 4 além do que cabe em três aulas.</div>
+```
+
+Todas as seções anteriores deste capítulo assumem que **um único** mecanismo de aleatorização
+atribui tratamentos a unidades experimentais. Em muitos experimentos de campo — a origem histórica
+deste delineamento, em Rothamsted, nos anos 1920 e 1930 [@yates1937design] —, isso é
+logisticamente inviável: certos fatores só podem ser aplicados a **parcelas grandes** (um sistema
+de irrigação cobre uma faixa inteira de terreno; não há como irrigar diferentemente cada metro
+quadrado), enquanto outros fatores variam livremente em **parcelas pequenas** dentro de cada
+parcela grande (a variedade plantada pode mudar a cada poucos metros). O delineamento em
+**parcelas subdivididas** (*split-plot*) formaliza exatamente essa restrição prática — não é uma
+escolha de conveniência estatística, é a estrutura que o próprio processo físico de aleatorização
+impõe [@montgomery2017design].
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: irrigação e variedade na produção de sorgo</strong><br>
+Um experimento compara 3 métodos de irrigação e 4 variedades de sorgo. O terreno é dividido em
+4 blocos (homogêneos internamente); dentro de cada bloco, o método de irrigação é sorteado a
+<strong>3 parcelas principais</strong> — faixas grandes de terra, porque cada sistema de irrigação
+exige uma faixa contígua. Cada parcela principal é então subdividida em <strong>4 subparcelas</strong>,
+e a variedade é sorteada às subparcelas dentro de cada parcela principal. Produção (kg/parcela) é
+medida em cada subparcela.
+</div>
+```
+
+### Dois erros experimentais, não um
+
+A restrição prática acima tem uma consequência estatística direta: **há dois processos de
+aleatorização independentes**, um em cada nível (aleatorizar irrigação às parcelas principais
+dentro de cada bloco; aleatorizar variedade às subparcelas dentro de cada parcela principal) — e
+cada aleatorização gera seu próprio erro experimental. O modelo precisa de **dois** termos de erro
+distintos, não um:
+
+$$
+Y_{ijk} = \mu + \rho_i + \alpha_j + \underbrace{\delta_{ij}}_{\text{erro da parcela principal}}
++ \beta_k + (\alpha\beta)_{jk} + \underbrace{\varepsilon_{ijk}}_{\text{erro da subparcela}},
+$$
+
+com $i=1,\ldots,r$ blocos, $j=1,\ldots,a$ níveis do fator de parcela principal (irrigação),
+$k=1,\ldots,b$ níveis do fator de subparcela (variedade), $\delta_{ij}\overset{iid}\sim
+N(0,\sigma^2_\delta)$ o erro da parcela principal (a variação entre parcelas principais dentro do
+mesmo bloco, não explicada por irrigação) e $\varepsilon_{ijk}\overset{iid}\sim N(0,\sigma^2_\varepsilon)$
+o erro da subparcela (a variação entre subparcelas dentro da mesma parcela principal), independente
+de $\delta_{ij}$. $\rho_i$ (bloco) e $\alpha_j$ (irrigação) são efeitos fixos sujeitos às
+restrições usuais de soma zero, assim como $\beta_k$ (variedade) e $(\alpha\beta)_{jk}$
+(interação).
+
+
+``` r
+nos_sp <- tibble(
+  termo   = c("Média", "Bloco", "Irrigação", "Variedade", "Erro(a)\n(parcela principal)",
+              "Irrigação\n×Variedade", "Erro(b)\n(subparcela)"),
+  classes = c(1, 4, 3, 4, 4*3, 3*4, 4*3*4)
+)
+arestas_sp <- tibble(
+  de   = c("Média", "Média", "Média", "Bloco", "Irrigação", "Irrigação", "Variedade",
+           "Erro(a)\n(parcela principal)", "Irrigação\n×Variedade"),
+  para = c("Bloco", "Irrigação", "Variedade", "Erro(a)\n(parcela principal)",
+           "Erro(a)\n(parcela principal)", "Irrigação\n×Variedade",
+           "Irrigação\n×Variedade", "Erro(b)\n(subparcela)", "Erro(b)\n(subparcela)")
+)
+
+knitr::include_graphics(
+  hasse_svg(nos_sp, arestas_sp,
+            arquivo = "figuras/hasse/split-plot.svg",
+            titulo  = "Split-plot: r=4, a=3, b=4 (N=48)",
+            tamanho = c(5.5, 4))
+)
+```
+
+<div class="figure" style="text-align: center">
+<img src="figuras/hasse/split-plot.svg" alt="Diagrama de Hasse do split-plot: r=4 blocos, a=3 métodos de irrigação (parcela principal), b=4 variedades (subparcela), N=48. Note os DOIS nós de erro -- Erro(a), que fecha o estrato da parcela principal, e Erro(b), que fecha o estrato da subparcela -- em vez do único nó de Erro do DBCA (Figura anterior)." width="85%" />
+<p class="caption">(\#fig:hasse-split-plot)Diagrama de Hasse do split-plot: r=4 blocos, a=3 métodos de irrigação (parcela principal), b=4 variedades (subparcela), N=48. Note os DOIS nós de erro -- Erro(a), que fecha o estrato da parcela principal, e Erro(b), que fecha o estrato da subparcela -- em vez do único nó de Erro do DBCA (Figura anterior).</p>
+</div>
+
+A soma de todos os $gl$ é $1+3+2+3+6+6+27=48=N$ — dois nós de erro em vez de um, exatamente porque
+há dois estratos de aleatorização, cada um com sua própria variação residual. $gl(\text{Erro(a)}) =
+ra - 1 - gl(\text{Bloco}) - gl(\text{Irrigação}) = 12-1-3-2=6=(r-1)(a-1)$; $gl(\text{Erro(b)}) =
+rab - [\text{soma dos } gl \text{ de todos os outros seis nós}] = 48-21=27=a(r-1)(b-1)$.
+
+### Por que o teste de irrigação usa um erro diferente do teste de variedade
+
+A esperança dos quadrados médios torna explícito por que dois erros são necessários, e não apenas
+uma curiosidade algébrica do diagrama:
+
+$$
+\mathbb E[QM_{\text{Erro(a)}}] = \sigma^2_\varepsilon + b\,\sigma^2_\delta, \qquad
+\mathbb E[QM_{\text{Irrigação}}] = \sigma^2_\varepsilon + b\,\sigma^2_\delta +
+\frac{rb}{a-1}\sum_j \alpha_j^2,
+$$
+$$
+\mathbb E[QM_{\text{Erro(b)}}] = \sigma^2_\varepsilon, \qquad
+\mathbb E[QM_{\text{Variedade}}] = \sigma^2_\varepsilon + \frac{ra}{b-1}\sum_k \beta_k^2.
+$$
+
+O termo $b\,\sigma^2_\delta$ aparece em $QM_{\text{Irrigação}}$ **e** em $QM_{\text{Erro(a)}}$, mas
+**não** em $QM_{\text{Erro(b)}}$: por isso o teste de irrigação precisa usar
+$F=QM_{\text{Irrigação}}/QM_{\text{Erro(a)}}$, nunca $QM_{\text{Erro(b)}}$ — usar o erro errado no
+denominador (um engano comum, fácil de cometer se o código não especificar a estrutura de erro)
+infla artificialmente a estatística $F$ do fator de parcela principal, porque $QM_{\text{Erro(b)}}$
+não contém a variação entre parcelas principais que também afeta $QM_{\text{Irrigação}}$. O teste
+de variedade (e da interação) usa corretamente $QM_{\text{Erro(b)}}$, sem $\sigma^2_\delta$ em
+nenhum dos dois lados da razão.
+
+Consequência prática, não só teórica: como $\sigma^2_\delta$ tipicamente excede $\sigma^2_\varepsilon$
+(parcelas principais variam mais entre si do que subparcelas dentro da mesma parcela principal), o
+fator de parcela principal é estimado com **menos** precisão que o fator de subparcela — mesmo
+com o mesmo número de observações. É um trade-off deliberado do delineamento: ganha-se viabilidade
+logística ao custo de precisão no fator que a logística obrigou a ficar na parcela principal.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — split-plot com <code>aov(..., Error(bloco/irrigacao))</code></div>
+```
+
+
+``` r
+set.seed(48)
+r <- 4; a <- 3; b <- 4
+dados_sp <- expand_grid(variedade = factor(1:b), irrigacao = factor(1:a), bloco = factor(1:r))
+
+efeito_irrig <- c(0, 3, 6)[dados_sp$irrigacao]
+efeito_var   <- c(0, 1, 2, 4)[dados_sp$variedade]
+erro_a <- rnorm(r * a, 0, 2)[interaction(dados_sp$bloco, dados_sp$irrigacao, drop = TRUE) %>% as.integer()]
+
+dados_sp$producao <- 20 + efeito_irrig + efeito_var + erro_a + rnorm(nrow(dados_sp), 0, 1)
+
+mod_sp <- aov(producao ~ irrigacao * variedade + Error(bloco/irrigacao), data = dados_sp)
+summary(mod_sp)
+```
+
+```
+## 
+## Error: bloco
+##           Df Sum Sq Mean Sq F value Pr(>F)
+## Residuals  3  121.5   40.49               
+## 
+## Error: bloco:irrigacao
+##           Df Sum Sq Mean Sq F value  Pr(>F)   
+## irrigacao  2  545.4  272.68   13.26 0.00628 **
+## Residuals  6  123.4   20.57                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Error: Within
+##                     Df Sum Sq Mean Sq F value  Pr(>F)    
+## variedade            3  94.19  31.398  31.329 6.1e-09 ***
+## irrigacao:variedade  6   1.25   0.208   0.208   0.971    
+## Residuals           27  27.06   1.002                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+Os graus de liberdade batem exatamente com o diagrama de Hasse acima: 3 (bloco), 2 e 6
+(irrigação e seu erro, no estrato `bloco:irrigacao`), e 3, 6, 27 (variedade, interação e o erro de
+subparcela, no estrato `Within`) — o `Error(bloco/irrigacao)` do R **é** a declaração explícita dos
+dois estratos de aleatorização do diagrama, não uma opção de sintaxe arbitrária.
+
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/split-plot-plot-1.png" alt="Produção de sorgo por variedade, separada por método de irrigação. Retas quase paralelas entre os três painéis indicam ausência de interação irrigação-variedade -- consistente com o p-valor não significativo da interação na tabela acima." width="75%" />
+<p class="caption">(\#fig:split-plot-plot)Produção de sorgo por variedade, separada por método de irrigação. Retas quase paralelas entre os três painéis indicam ausência de interação irrigação-variedade -- consistente com o p-valor não significativo da interação na tabela acima.</p>
+</div>
+
+
+
+Neste conjunto de dados simulado, irrigação é significativa
+($F_{2,6}=13.3$, $p=0.006$) mas testada com apenas 6 gl de erro;
+variedade é fortemente significativa ($F_{3,27}=31.3$,
+$p<0{,}001$), testada com 27 gl de erro —
+precisão bem maior, exatamente o padrão que a análise de $\mathbb E[QM]$ previu. A interação não é
+significativa ($p=0.97$), visível no gráfico como retas aproximadamente paralelas
+entre os três níveis de irrigação.
+
 ## Resumo do capítulo
 
 - Sem controle algum, um fator de ruído pode ficar **completamente confundido** com o tratamento
@@ -2413,6 +2745,12 @@ precisão?</li>
   $n\ge3$ exceto a célebre exceção de Euler, $n=6$ (o problema dos 36 oficiais, $N(6)=1$) — ao
   custo de graus de liberdade do erro, recuperáveis por replicação; a análise de poder converte
   "quantas réplicas?" em uma conta explícita a partir do menor efeito relevante a detectar.
+- *(Além do programa do semestre)* Quando um fator só pode ser aleatorizado a **parcelas
+  grandes** e outro a **parcelas pequenas** dentro delas, o delineamento em **parcelas
+  subdivididas** (*split-plot*) exige **dois** erros experimentais distintos — um por estrato de
+  aleatorização —, e não um só: o diagrama de Hasse ganha um segundo nó de erro, e a esperança dos
+  quadrados médios mostra por que o fator de parcela principal precisa do seu próprio erro no
+  denominador do teste $F$, nunca o erro (mais preciso) da subparcela.
 
 Até aqui, cada capítulo tratou de **um único fator de tratamento** (ainda que controlado por uma
 ou mais fontes de bloqueio). O Capítulo 5 introduz o caso em que **dois ou mais fatores de

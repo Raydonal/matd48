@@ -1,6 +1,9 @@
 # Princípios do delineamento de experimentos {#principios}
 
 ```{r setup-cap1, include=FALSE}
+# Sem isto, `kable(...) %>% kable_styling(...)` faz o bookdown numerar a legenda DUAS
+# vezes ("Table 4.1: Table 4.2: ..."). Ver CLAUDE.md, footgun #8.
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                        fig.align = "center", out.width = "75%")
 suppressPackageStartupMessages({
@@ -35,7 +38,7 @@ observável que a contradiga. Uma alegação causal que "explica" qualquer padr�
 não é uma hipótese científica, é uma hipótese vazia.
 
 ```{r fig-ciclo-empirico, echo=FALSE, out.width="46%", fig.cap="O ciclo empírico: observação, hipótese, predição testável, coleta de dados desenhada para confrontar a predição, e confronto (a hipótese sobrevive, é refinada ou é descartada). O delineamento de experimentos atua na terceira e na quarta etapas."}
-knitr::include_graphics("../Aulas/images/circular_flowchart.png")
+knitr::include_graphics("../Aulas2026/assets/images/circular_flowchart.png")
 ```
 
 O delineamento de experimentos entra exatamente nesse ponto do ciclo: ele é a engenharia de **como
@@ -61,7 +64,21 @@ atribuição do tratamento é decidida pelo pesquisador (por sorteio), não pela
 nenhuma característica dela — e é esse fato, formalizado com rigor na Seção \@ref(neyman-rubin),
 que permite interpretar uma diferença observada como efeito causal.
 
-### Uma nota histórica: Fisher, Rothamsted e a origem do delineamento moderno
+### Uma nota histórica: quantificar, controlar, e só depois formalizar
+
+Os ingredientes que compõem o delineamento experimental não nasceram juntos. Jan Baptist van
+Helmont, no século XVII, pesou 90 kg de solo seco, plantou nele um salgueiro de 2,25 kg e o regou
+apenas com água por cinco anos: ao final, o solo havia perdido pouco mais de 0,1 kg enquanto a
+árvore ganhara quase 74 kg — evidência de que a massa da planta vinha majoritariamente da água, não
+do solo (hoje sabemos que vem também do CO₂ do ar; o método de van Helmont, medir em vez de
+especular, é o que importa reter). Um século depois, Joseph Priestley perguntou se uma planta
+conseguiria "restaurar" o ar de uma câmara fechada em que uma vela já havia se apagado: sem planta,
+uma vela nova não voltava a queimar; com planta, dias depois, voltava. A comparação entre os dois
+cenários — não a simples observação de que "com planta funcionou" — é o que permitiu atribuir o
+efeito à planta e não a alguma outra mudança concomitante (temperatura, tempo, luz). Van Helmont
+contribuiu o primeiro ingrediente do delineamento moderno (quantificação precisa); Priestley, o
+segundo (comparação contra um controle). Faltavam ainda repetição e aleatorização — e é exatamente
+aí que entra Fisher.
 
 A formalização estatística de repetição, aleatorização e blocagem como resposta metodológica ao
 problema da causalidade nasce do trabalho de Ronald A. Fisher na estação agrícola experimental de
@@ -508,10 +525,19 @@ A intuição: os dois primeiros termos são exatamente o que se esperaria de dua
 independentes (como em um teste $t$ de duas amostras usual); o terceiro termo, negativo, é uma
 correção que só existe porque, aqui, as duas "amostras" ($n_1$ e $n_0$) vêm de **particionar a
 mesma população finita de $N$ unidades** em vez de duas populações infinitas separadas — quanto
-mais heterogêneo o efeito individual $\tau_i$ entre unidades, maior $S_{01}^2$, e menor a
-penalidade de variância imposta pela aleatorização (o caso extremo, $\tau_i$ constante para toda
-unidade, dá $S_{01}^2 = S_1^2 = S_0^2$ e a fórmula colapsa para $S_1^2(1/n_1 - 1/N) + \dots$, uma
-redução adicional de variância). Como $Y_i(1)$ e $Y_i(0)$ nunca são observados na mesma unidade,
+mais heterogêneo o efeito individual $\tau_i$ entre unidades, maior $S_{01}^2$ e menor a variância
+do estimador.
+
+O caso extremo é instrutivo e vale explicitar, porque a intuição costuma errar o sinal. Se o
+efeito for **constante**, $\tau_i \equiv \tau$ para toda unidade, então $S_{01}^2$ — que é a
+variância dos $\tau_i$ — vale **zero**, não $S_1^2$; e, como $Y_i(1)=Y_i(0)+\tau$, tem-se
+$S_1^2=S_0^2=S^2$. A fórmula então **não** se reduz, ela atinge seu valor **máximo**:
+
+$$
+\mathrm{Var}(\widehat{\text{ATE}}) \;=\; S^2\left(\frac{1}{n_1}+\frac{1}{n_0}\right).
+$$
+
+Efeito homogêneo é, portanto, o pior caso para a precisão — e não o melhor. Como $Y_i(1)$ e $Y_i(0)$ nunca são observados na mesma unidade,
 $S_{01}^2$ não é identificável a partir dos dados — por isso a prática usual estima a variância de
 forma conservadora, substituindo o termo $-S_{01}^2/N$ por zero (Capítulo 3 retoma essa mesma ideia
 ao tratar da variância do estimador em desenhos completamente aleatorizados).
@@ -536,6 +562,79 @@ A variância empírica das `r n_rep` reamostragens (a dispersão real do histogr
 fechada de Neyman batem a menos do ruído de simulação esperado — confirmando que a fórmula não é
 só uma aproximação assintótica, mas a variância **exata** do desenho completamente aleatorizado
 para qualquer $N$ finito.
+
+### Um terceiro domínio: resultados potenciais binários em um teste A/B {#ate-binario}
+
+Os dois exemplos anteriores (técnicas de estudo, variedades de semente) têm resposta contínua. O
+mesmo arcabouço de resultados potenciais vale, sem alteração nenhuma, quando a resposta é
+**binária** — o caso mais comum em experimentação de produtos digitais.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: teste A/B de layout de página</strong><br>
+Uma loja <em>online</em> testa dois layouts da página de produto — <strong>A</strong> (lista) e
+<strong>B</strong> (grade) — quanto à conversão em checkout. A unidade experimental é a
+<strong>sessão de usuário</strong>: cada sessão é sorteada para ver o layout A ou o B, nunca os
+dois. Para cada sessão $i$, os resultados potenciais são indicadores binários
+$Y_i(0), Y_i(1) \in \{0,1\}$ — converteria (1) ou não (0) sob cada layout — e o estimando de
+interesse é $\text{ATE} = p_B - p_A$, a mesma definição já usada nos exemplos anteriores, agora
+com uma diferença de proporções em vez de uma diferença de médias contínuas.
+</div>
+```
+
+```{r sim-ab-binario}
+set.seed(2026)
+n_por_grupo <- 8000
+taxa_A <- 0.052   # taxa de conversao real sob o layout A (Lista) -- desconhecida na pratica
+taxa_B <- 0.061   # taxa de conversao real sob o layout B (Grade) -- desconhecida na pratica
+
+dados_ab <- tibble(
+  layout    = factor(rep(c("A (lista)", "B (grade)"), each = n_por_grupo)),
+  converteu = c(rbinom(n_por_grupo, 1, taxa_A), rbinom(n_por_grupo, 1, taxa_B))
+)
+
+resumo_ab <- dados_ab %>%
+  group_by(layout) %>%
+  summarise(sessoes = n(), conversoes = sum(converteu),
+            taxa = mean(converteu), .groups = "drop")
+
+teste_ab <- prop.test(x = resumo_ab$conversoes, n = resumo_ab$sessoes)
+
+resumo_ab %>%
+  kable(digits = 4, caption = "Sessões, conversões e taxa observada por layout") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r plot-ab-binario, echo=FALSE, fig.width=6.5, fig.height=3.8, fig.cap="Taxa de conversão observada por layout, com intervalo de confiança de 95% (teste de duas proporções). O intervalo de B não sobrepõe o de A, consistente com o p-valor da diferença."}
+ic_layout <- resumo_ab %>%
+  rowwise() %>%
+  mutate(low = prop.test(conversoes, sessoes)$conf.int[1],
+         high = prop.test(conversoes, sessoes)$conf.int[2]) %>%
+  ungroup()
+
+ggplot(ic_layout, aes(layout, taxa, fill = layout)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_errorbar(aes(ymin = low, ymax = high), width = 0.15) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(values = c("A (lista)" = "#b9c4d0", "B (grade)" = "#2f9e78")) +
+  labs(x = NULL, y = "Taxa de conversão") +
+  theme_minimal(base_size = 13)
+```
+
+O estimador do ATE é a diferença de proporções observadas,
+$\widehat{\text{ATE}} = \hat p_B - \hat p_A \approx `r round(diff(resumo_ab$taxa), 4)`$, com IC de
+95% que **não inclui zero** ($`r round(teste_ab$conf.int[1], 4)`$, $`r round(teste_ab$conf.int[2], 4)`$)
+e `r if (teste_ab$p.value < 0.001) "$p < 0{,}001$" else paste0("$p = ", round(teste_ab$p.value, 4), "$")`.
+Em linguagem simples: o layout em grade aumentou a conversão em
+$`r round(100 * diff(resumo_ab$taxa), 1)`$ pontos percentuais nesta amostra de sessões — efeito
+pequeno em magnitude absoluta, mas real e estatisticamente detectável com $n=$
+`r scales::comma(2 * n_por_grupo, big.mark = ".", decimal.mark = ",")` sessões, exatamente porque a
+variância de uma proporção com $n$ na casa dos milhares é pequena. Validade interna: alta, pela
+mesma aleatorização por sessão que garante $E[\widehat{\text{ATE}}]=\text{ATE}$ na demonstração
+geral acima. Validade externa: restrita aos usuários deste site, neste período — a Seção
+\@ref(validade-externa), a seguir, formaliza exatamente essa distinção. O Capítulo 8 retoma este
+mesmo tipo de experimento (conversão binária em produto digital) para tratar dos riscos de checar
+o resultado repetidamente antes do fim planejado do experimento (*peeking*).
 
 ### Validade interna e validade externa {#validade-externa}
 

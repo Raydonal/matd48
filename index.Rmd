@@ -34,8 +34,7 @@ suppressPackageStartupMessages({
   fecha o curso. **Cada um dos 3 projetos, combinado com uma prova escrita do mesmo período, define
   uma das três notas parciais do curso** (ver [Critério de aprovação](#critério-de-aprovação)).
 
-Tudo listado no [cronograma](#programa-da-disciplina) abaixo. O site do semestre
-anterior continua disponível [aqui](index-2025.html), sem alterações.
+Tudo listado no [cronograma](#programa-da-disciplina) abaixo.
 </div>
 
 <h4>
@@ -178,18 +177,18 @@ Bases reais usadas no livro-texto (extraídas de `ApoioLuz/BasesDatosDE.xlsx`, v
 
 Bases adicionais do material de apoio:
 
- * [[Restaurantes]](Aulas/restaurant_data.csv)
- * [[Gasto]](Aulas/ad_spend_and_gdp.csv)
- * [[Altura]](Aulas/average-height-men-OWID.csv)
- * [[GDP]](Aulas/GDP.csv)
- * [[EITC]](Aulas/eitc.csv)
+ * [[Restaurantes]](Aulas2026/assets/data/restaurant_data.csv)
+ * [[Gasto]](Aulas2026/assets/data/ad_spend_and_gdp.csv)
+ * [[Altura]](Aulas2026/assets/data/average-height-men-OWID.csv)
+ * [[GDP]](Aulas2026/assets/data/GDP.csv)
+ * [[EITC]](Aulas2026/assets/data/eitc.csv)
 
 
 #### Referências bibliográficas (Principal)
 
-1.  Montgomery, D. C. (2017). **Design and analysis of experiments**. John Wiley & Sons. [**(Livro principal)**](Material/Douglas C. Montgomery - Design and Analysis of Experiments-John Wiley & Sons (2017).pdf)
-2.  Box, G. E., Hunter, J. S., & Hunter, W. G. (2005). [**Statistics for experimenters: design, innovation, and discovery**](Material/George E. P. Box, J. Stuart Hunter, William G. Hunter - Statistics for Experimenters_ Design, Innovation, and Discovery, Second Edition (2005).pdf). Wiley-Interscience.
-3.  Kuehl, R. O. (2000). [**Design of experiments: statistical principles of research design and analysis**](Material/Design of experiments _ statistical principles of research_Kueh.pdf). Cengage Learning.
+1.  Montgomery, D. C. (2017). **Design and analysis of experiments**. John Wiley & Sons. **(Livro principal — disponível na biblioteca da UFBA)**
+2.  Box, G. E., Hunter, J. S., & Hunter, W. G. (2005). **Statistics for experimenters: design, innovation, and discovery**. Wiley-Interscience.
+3.  Kuehl, R. O. (2000). **Design of experiments: statistical principles of research design and analysis**. Cengage Learning.
 4.  Ribeiro, J. L. D. (2018). **Análise de Variância e Regressão**. Editora Appris. (Em português)
 
 ***

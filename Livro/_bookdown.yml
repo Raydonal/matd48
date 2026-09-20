@@ -14,5 +14,8 @@ rmd_files: [
   "08-ab-testing-bandits.Rmd"
 ]
 language:
+  label:
+    fig: "Figura "
+    tab: "Tabela "
   ui:
     chapter_name: "Capítulo "

@@ -35,8 +35,8 @@ no cronograma do curso, até as 12:00hs (GMT-3, Horário de Brasília). Forneça
 Magistral, Qwen, Kimi, Nova Phi, Grok, etc.) para resolver o projeto, evite constrangimentos.
 **Quero vocês pensando, não a máquina.**
 
-**Avaliação:** este projeto fecha a **Nota 2** do curso — N2 = 50% Projeto III + 50% média das
-Listas 09–11. É o segundo dos três projetos incrementais: ele retoma diretamente a lição central
+**Avaliação:** este projeto fecha a **Nota 2** do curso — N2 = 40% Projeto III + 60% Prova escrita
+2. É o segundo dos três projetos incrementais: ele retoma diretamente a lição central
 do Projeto II (uma réplica não sustenta inferência — aqui reaparece como "uma única divisão
 treino/teste") e introduz controle local/blocagem no lugar da repetição simples. A fintech
 **CrediScore** e o pipeline de crédito criados aqui são o mesmo cenário que o Projeto IV, ao final

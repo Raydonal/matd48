@@ -2,11 +2,11 @@
 title: "Planejamento e Análise de Experimentos"
 subtitle: "Notas de curso — MATD48"
 author: "Raydonal Ospina Martínez"
-date: "13 de August de 2026"
+date: "19 de September de 2026"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: refs.bib
-csl: ../Aulas/apa.csl
+csl: ../Aulas2026/assets/apa.csl
 link-citations: true
 biblio-style: apalike
 description: "Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA."

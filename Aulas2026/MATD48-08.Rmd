@@ -4,14 +4,14 @@ subtitle: "Ajustando por uma covariável e testando sem pressupor normalidade"
 author: "Raydonal Ospina"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "metropolis-fonts", "../Aulas/custom-styles.css"]
+    css: ["default", "metropolis", "metropolis-fonts", "assets/custom-styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-bibliography: ../Aulas/refs.bib
-csl: ../Aulas/apa.csl
+bibliography: assets/refs.bib
+csl: assets/apa.csl
 link-citations: true
 ---
 
@@ -169,7 +169,7 @@ mod_inclinacoes <- lm(atencao_pos ~ basal * dose, data = cafeina)
 anova(mod_inclinacoes)[3, ]   # interação basal:dose -- não significativa?
 ```
 
-```{r plot-homog-incl, echo=FALSE, fig.width=7.5, fig.height=3.8}
+```{r plot-homog-incl, echo=FALSE, fig.width=7.5, fig.height=3.1}
 ggplot(cafeina, aes(basal, atencao_pos, color = dose)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
@@ -222,6 +222,39 @@ ggplot() +
 
 A separação **vertical** entre as retas (não a inclinação, que é comum) é o efeito ajustado da
 dose: comparando participantes com o mesmo basal, a dose de 150 mg fica acima das demais.
+
+---
+
+## O erro que a Pergunta 1 da Discussão antecipa: covariável pós-tratamento
+
+`basal` é seguro porque é medido **antes** da dose. O que dá errado se a "covariável" for medida
+**depois**, e for afetada pelo próprio tratamento?
+
+**Cenário:** a dose de cafeína afeta a atenção **através de** um mediador — ansiedade pós-dose
+(dose alta → mais ansiedade → menos atenção). Ansiedade não é um confundidor a ajustar; é parte
+do **mecanismo** pelo qual a dose age.
+
+---
+
+## O mediador simulado, e o que acontece se "ajustarmos" por ele
+
+```{r mediador-08}
+set.seed(42)
+n <- 15; dose_num <- as.numeric(as.character(factor(rep(c(0, 50, 100), each = n))))
+ansiedade_pos <- 20 + 0.08 * dose_num + rnorm(n * 3, 0, 4)     # afetada pela dose!
+atencao_med   <- 70 - 0.75 * ansiedade_pos + rnorm(n * 3, 0, 5) # dose so afeta via ansiedade
+
+coef(lm(atencao_med ~ dose_num))                       # efeito TOTAL (correto)
+coef(lm(atencao_med ~ dose_num + ansiedade_pos))        # "ajustado" pelo mediador (ERRADO)
+```
+
+--
+
+O efeito de `dose_num` **desaparece** (e quase inverte de sinal) no segundo modelo — não porque a
+dose deixou de importar, mas porque ansiedade **é** o canal pelo qual ela age: condicionar num
+mediador bloqueia justamente o caminho causal que queremos medir. A régua simples da Aula 1
+continua valendo: **covariável de ANCOVA tem que vir de antes do sorteio do tratamento**, sem
+exceção.
 
 ---
 
@@ -338,6 +371,39 @@ postos é o análogo não paramétrico das comparações múltiplas da Aula 07.
 
 ---
 
+## O detalhe que a Lista 08 cobra: empates nos postos
+
+Resposta discreta ou pouco precisa (escala 1–5, tempos arredondados) produz **empates**: valores
+iguais recebem o **posto médio**. Empates achatam a variância dos postos, e $H$ sem correção fica
+pequeno demais — a estatística de Kruskal-Wallis usa um **fator de correção**:
+
+$$H_{\text{corrigido}} = \dfrac{H}{1-\dfrac{\sum_g (t_g^3-t_g)}{N^3-N}}, \qquad t_g = \text{tamanho do } g\text{-ésimo grupo de valores empatados}.$$
+
+---
+
+## Empates na prática: a correção em ação
+
+```{r empates-08}
+set.seed(11)
+grupo <- factor(rep(c("A","B","C"), each = 10))
+y <- c(sample(2:4, 10, TRUE, c(.3,.4,.3)), sample(3:5, 10, TRUE, c(.2,.4,.4)),
+       sample(1:3, 10, TRUE, c(.4,.4,.2)))     # escala 1-5: muitos empates
+table(y)                                        # varios valores repetidos
+
+postos <- rank(y); R_i <- tapply(postos, grupo, sum); n_i <- tapply(postos, grupo, length)
+N <- length(y)
+H_sem_correcao <- 12/(N*(N+1)) * sum(R_i^2/n_i) - 3*(N+1)
+kruskal.test(y ~ grupo)$statistic   # kruskal.test() ja aplica a correcao sozinho
+```
+
+--
+
+`H` sem correção (`r round(H_sem_correcao, 3)`) e `H` corrigido, do `kruskal.test()`, diferem —
+`kruskal.test()` já faz a correção automaticamente, mas **saber que ela existe** é o que a Lista 08
+pede: com respostas discretas, ignorar empates entrega um teste conservador demais.
+
+---
+
 ## Resumo da aula
 
 - ANCOVA incorpora uma covariável contínua medida antes do tratamento, ajustando as médias e
@@ -346,6 +412,8 @@ postos é o análogo não paramétrico das comparações múltiplas da Aula 07.
 - Kruskal-Wallis testa igualdade de distribuições usando postos, sem supor normalidade — a
   alternativa quando os pressupostos da ANOVA falham e transformações não bastam.
 - Com isso, encerramos o Capítulo 3 (DCA). Próximo bloco de aulas: delineamentos com **blocos**.
+
+---
 
 ## Referências
 
