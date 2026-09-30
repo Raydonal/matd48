@@ -1,0 +1,493 @@
+---
+title: "📚 Meta-análise do Experimento da Biblioteca"
+subtitle: "O que vocês devem fazer — passo a passo"
+author: "Planejamento de Experimentos — UFBA"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(knitr)
+library(metafor)
+```
+
+class: center, middle, inverse
+
+# 🎯 Da coleta à meta-análise
+
+### Combinando a evidência de todos os grupos
+
+---
+
+## 🗺️ Roteiro de hoje
+
+1. **O que vocês já fizeram** (DIC na biblioteca)
+2. **O que é meta-análise** (conceito)
+3. **O que é η²** (o coração da análise)
+4. **Como calcular η² à mão** (exemplo)
+5. **O passo a passo que vocês vão seguir**
+6. **Como interpretar o resultado**
+
+⏱️ Tempo: ~90 minutos
+
+---
+
+class: center, middle, inverse
+
+# Parte 1
+
+## O que vocês já fizeram
+
+---
+
+## ✅ Lembrete do experimento
+
+Cada grupo foi à **Biblioteca Omar Catunda** e:
+
+- Escolheu **3 prateleiras** de Estatística (P1, P2, P3)
+- Sorteou **8 livros** por prateleira
+- Mediu o **número de páginas** de cada livro
+- Rodou uma **ANOVA** para ver se as prateleiras diferem
+
+**Resultado**: cada grupo tem **uma estimativa própria** do efeito.
+
+---
+
+## 🤔 O problema
+
+.pull-left[
+### Cada grupo sozinho
+- n = 8 livros por prateleira
+- Poder estatístico **baixo**
+- Pode não detectar diferença real
+- Pode detectar diferença por acaso
+
+]
+
+.pull-right[
+### E se juntarmos tudo?
+- 5 grupos × 8 livros = **40 livros por prateleira**
+- Poder estatístico **alto**
+- Estimativa **mais precisa**
+- Podemos ver se os grupos **concordam**
+
+]
+
+---
+
+class: center, middle, inverse
+
+# Parte 2
+
+## O que é meta-análise?
+
+---
+
+## 📖 Definição
+
+> **Meta-análise** é o método estatístico que combina os resultados de **vários estudos independentes** sobre a mesma pergunta, produzindo:
+
+1. Uma **estimativa global** do efeito
+2. Uma medida de **heterogeneidade** (os grupos concordam?)
+3. Um **forest plot** (visualização)
+
+---
+
+## ❓ O que queremos descobrir
+
+.pull-left[
+### Pergunta principal
+> Qual é o **efeito médio** das prateleiras de Estatística sobre o número de páginas, combinando a evidência de **todos** os grupos?
+
+]
+
+.pull-right[
+### Pergunta secundária
+> Os grupos **concordam** entre si? Se não, **por quê**?
+
+]
+
+---
+
+## 🧩 Por que é importante?
+
+| Situação | Interpretação |
+|----------|--------------|
+| Todos os grupos concordam | Ganhamos confiança no resultado |
+| Grupos discordam | Aprendemos algo: há **moderadores** (livros diferentes, erro de medição) |
+| Efeito global significativo | A prateleira **realmente** importa para o número de páginas |
+
+> Meta-análise é a ferramenta padrão em **medicina, psicologia, educação** — sempre que vários estudos pequenos precisam ser combinados.
+
+---
+
+class: center, middle, inverse
+
+# Parte 3
+
+## O que é η² (eta-quadrado)?
+
+---
+
+## ❓ O que significa η²
+
+> **η² responde**: *"Quanto da variação no número de páginas é explicada pela prateleira?"*
+
+É uma **proporção entre 0 e 1**:
+
+- **η² = 0** → a prateleira não explica nada
+- **η² = 1** → toda a variação é explicada pela prateleira
+- **η² = 0,15** → 15% da variação vem da prateleira
+
+É o **análogo do R²** para ANOVA de um fator.
+
+---
+
+## 🧮 De onde vem o η²?
+
+A ANOVA decompõe a variação total dos dados:
+
+$$SS_{\text{total}} = SS_{\text{entre}} + SS_{\text{dentro}}$$
+
+.pull-left[
+**SS_entre**  
+Quanto as médias das prateleiras se afastam da média geral
+
+**SS_dentro**  
+Quanto os livros se afastam da média da própria prateleira
+
+]
+
+.pull-right[
+### Fórmula
+$$\eta^2 = \frac{SS_{\text{entre}}}{SS_{\text{total}}}$$
+
+$$\eta^2 = \frac{SS_{\text{entre}}}{SS_{\text{entre}} + SS_{\text{dentro}}}$$
+
+]
+
+---
+
+## ✏️ Exemplo numérico — 3 livros por prateleira
+
+| Prateleira | Páginas | Média |
+|:----------:|:-------:|:-----:|
+| P1 | 200, 220, 240 | **220** |
+| P2 | 300, 320, 340 | **320** |
+| P3 | 400, 420, 440 | **420** |
+
+**Média geral** = (220 + 320 + 420) / 3 = **320**
+
+---
+
+## ✏️ Calculando SS_entre
+
+$$SS_{\text{entre}} = n \sum_{j} (\bar{y}_j - \bar{y})^2$$
+
+$$= 3 \times [(220 - 320)^2 + (320 - 320)^2 + (420 - 320)^2]$$
+
+$$= 3 \times [10000 + 0 + 10000] = 60.000$$
+
+---
+
+## ✏️ Calculando SS_dentro
+
+$$SS_{\text{dentro}} = \sum_{ij} (y_{ij} - \bar{y}_j)^2$$
+
+**P1**: (200−220)² + (220−220)² + (240−220)² = 400 + 0 + 400 = **800**
+
+**P2**: (300−320)² + (320−320)² + (340−320)² = 400 + 0 + 400 = **800**
+
+**P3**: (400−420)² + (420−420)² + (440−420)² = 400 + 0 + 400 = **800**
+
+$$SS_{\text{dentro}} = 800 + 800 + 800 = 2.400$$
+
+---
+
+## ✏️ Calculando η²
+
+$$SS_{\text{total}} = 60.000 + 2.400 = 62.400$$
+
+$$\eta^2 = \frac{60.000}{62.400} = 0{,}96$$
+
+### 🎉 Interpretação
+
+**96% da variação** no número de páginas é explicada pela prateleira.
+
+Efeito **enorme** (η² > 0,14 já é considerado grande).
+
+---
+
+## 📊 Como interpretar η²
+
+| η² | Interpretação (Cohen) |
+|:---:|:----------------------|
+| 0,01 | Efeito **pequeno** |
+| 0,06 | Efeito **médio** |
+| 0,14 | Efeito **grande** |
+| > 0,50 | Efeito **muito grande** |
+
+> ⚠️ η² **sempre aumenta** com mais grupos. Use com cuidado em comparações.
+
+---
+
+## 💻 Como obter η² no R (visão geral)
+
+```{r exemplo-et2}
+# Exemplo didático — NÃO usem estes dados, é só demonstração
+exemplo <- tibble(
+  prateleira = rep(c("P1", "P2", "P3"), each = 3),
+  paginas = c(200, 220, 240, 300, 320, 340, 400, 420, 440)
+)
+
+modelo <- aov(paginas ~ prateleira, data = exemplo)
+tabela <- summary(modelo)[[1]]
+tabela
+```
+
+---
+
+## 💻 Extraindo o η² da ANOVA
+
+```{r}
+ss_entre <- tabela[["Sum Sq"]][1]
+ss_total <- sum(tabela[["Sum Sq"]])
+eta2 <- ss_entre / ss_total
+
+cat("SS entre =", ss_entre, "\n")
+cat("SS total =", ss_total, "\n")
+cat("η²       =", round(eta2, 4), "\n")
+```
+
+**η² = `r round(eta2, 4)`** — confere com o cálculo à mão! ✅
+
+> **Vocês vão fazer exatamente isso, mas com os dados de cada grupo.**
+
+---
+
+## 🔄 Conversão para *d* de Cohen
+
+Para a meta-análise, convertemos η² em **d**:
+
+$$d = 2\sqrt{\frac{\eta^2}{1 - \eta^2}}$$
+
+E a variância aproximada de *d*:
+
+$$\text{Var}(d) \approx \frac{4}{n}\left(1 + \frac{d^2}{8}\right)$$
+
+Onde *n* = número **total** de livros medidos pelo grupo (24, se foram 8 por prateleira).
+
+---
+
+class: center, middle, inverse
+
+# Parte 4
+
+## O passo a passo que vocês vão seguir
+
+---
+
+## 📋 Passo 1 — Organizar os dados
+
+Cada grupo entrega **um CSV** com este formato:
+
+| grupo | prateleira | paginas |
+|:-----:|:----------:|:-------:|
+| G1 | P1 | 320 |
+| G1 | P1 | 410 |
+| G1 | P2 | 180 |
+| … | … | … |
+
+**Salvem como** `dados/G1.csv`, `dados/G2.csv`, etc.
+
+> ⚠️ Sem a coluna `grupo`, a meta-análise não funciona. Cada arquivo deve ter **as 3 colunas**.
+
+---
+
+## 📋 Passo 2 — Rodar a ANOVA de cada grupo
+
+Para cada grupo, calculem:
+
+```r
+modelo <- aov(paginas ~ prateleira, data = dados_do_grupo)
+summary(modelo)
+```
+
+**Extraiam**:
+
+- `SS_entre` e `SS_total` → **η²**
+- `p-valor` → significância
+
+---
+
+## 📋 Passo 3 — Calcular *d* e Var(*d*)
+
+Para cada grupo:
+
+```r
+d     <- 2 * sqrt(eta2 / (1 - eta2))
+var_d <- (4 / n) * (1 + d^2 / 8)
+```
+
+**Resultado esperado**: uma tabela assim
+
+| grupo | n | η² | p | d | Var(d) |
+|:-----:|:-:|:--:|:-:|:-:|:------:|
+| G1 | 24 | 0,42 | 0,003 | 1,70 | 0,32 |
+| G2 | 24 | 0,31 | 0,021 | 1,34 | 0,24 |
+| G3 | 24 | 0,18 | 0,190 | 0,94 | 0,16 |
+| … | … | … | … | … | … |
+
+---
+
+## 📋 Passo 4 — Rodar a meta-análise
+
+Com a tabela pronta, usem o pacote `metafor`:
+
+```r
+library(metafor)
+
+meta <- rma(yi = d, vi = var_d, data = tabela, method = "REML")
+summary(meta)
+```
+
+**Modelo de efeitos aleatórios** (REML) — porque cada grupo tem seu próprio efeito verdadeiro.
+
+---
+
+## 📋 Passo 5 — Gerar o forest plot
+
+```r
+forest(meta,
+       slab = tabela$grupo,
+       xlab = "Tamanho de efeito (d de Cohen)",
+       main = "Efeito da prateleira no número de páginas")
+```
+
+Salvem como **PNG** para o relatório.
+
+---
+
+## 📋 Passo 6 — Avaliar heterogeneidade
+
+```r
+meta$QE    # Q de Cochran
+meta$QEp   # p-valor de Q
+meta$I2    # I² em %
+meta$tau2  # variância entre grupos
+```
+
+**Interpretem** com a tabela do próximo slide.
+
+---
+
+## 📊 Como interpretar I²
+
+| I² | Heterogeneidade | Significado |
+|:---:|:---------------:|-------------|
+| 0–25% | Baixa | Grupos concordam |
+| 25–50% | Moderada | Há variação, mas efeito médio faz sentido |
+| 50–75% | Alta | Grupos discordam; investigar |
+| > 75% | Muito alta | Efeito médio pode não representar |
+
+---
+
+class: center, middle, inverse
+
+# Parte 5
+
+## Como interpretar o resultado
+
+---
+
+## 🧠 Perguntas que vocês devem responder
+
+### 1. Resultado global
+- O efeito combinado foi significativo (p < 0,05)?
+- Qual o valor de *d*? Pequeno, médio ou grande?
+- O IC 95% cruza zero?
+
+### 2. Consistência
+- Qual o valor de I²? Os grupos concordam?
+- Algum grupo ficou "fora da linha" no forest plot?
+
+---
+
+## 🧠 Perguntas (continuação)
+
+### 3. Conexão com o delineamento
+- Como todos foram no **mesmo horário**, a variação entre grupos reflete apenas:
+  - **Livros sorteados diferentes** (esperado!)
+  - **Erro de medição** (leitura do número de páginas)
+- O tamanho de amostra por grupo (n = 8) foi suficiente?
+- Os η² individuais são parecidos?
+
+### 4. Limitações
+- Poucos grupos → estimativa de τ² instável
+- Conversão η² → d tem aproximações
+- Número de páginas é proxy para "tipo de livro"
+
+---
+
+class: center, middle, inverse
+
+# Parte 6
+
+## O que entregar
+
+---
+
+## 📤 Relatório em HTML
+
+Cada grupo entrega **1 relatório** contendo:
+
+1. **Tabela** com η², p, d, Var(d) de cada grupo
+2. **Forest plot** gerado pelo R
+3. **Valores de Q, I² e τ²** + interpretação
+4. **Discussão** (mínimo 3 parágrafos) respondendo às perguntas
+5. **Conclusão**: "A evidência combinada sugere que…"
+
+**Formato**: RMarkdown → HTML  
+**Prazo**: próxima aula
+
+---
+
+## ✅ Checklist final
+
+- [ ] Cada grupo salvou seu CSV em `dados/`
+- [ ] A tabela de tamanhos de efeito está completa
+- [ ] O forest plot foi gerado
+- [ ] I² foi interpretado
+- [ ] A discussão responde às 4 perguntas
+- [ ] O relatório compila sem erro
+
+---
+
+class: center, middle, inverse
+
+# 🎉 Boa análise!
+
+### Dúvidas? Perguntem agora ou por e-mail.
+
+**Próxima aula**: meta-regressão (moderadores)
+
+---
+
+## 📚 Referências
+
+- Borenstein et al. (2021). *Introduction to Meta-Analysis*. Wiley.
+- Cohen (1988). *Statistical Power Analysis*. Erlbaum.
+- Higgins & Thompson (2002). *Statistics in Medicine*, 21, 1539–1558.
+- Viechtbauer (2010). *J. Stat. Soft.*, 36(3), 1–48.
+````
+

@@ -1,0 +1,759 @@
+---
+title: "Dedução Rigorosa da Qui-Quadrado Não-Central, Erro de Aleatorização via Variáveis de Cornfield e Complexidade Dimensional"
+subtitle: "Notação unificada com os slides da Aula 04 (DCA)"
+author: "Raydonal Ospina"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    toc: true
+    toc_depth: 3
+    number_sections: true
+header-includes:
+   - \usepackage{amsmath}
+   - \usepackage{amssymb}
+   - \usepackage{amsfonts}
+   - \usepackage{unicode-math}
+   - \setmathfont{Latin Modern Math}
+   - \renewcommand{\contentsname}{Conteúdo}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.retina = 2,
+  fig.align  = "center",
+  out.width  = "90%"
+)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(patchwork)
+  library(pwr)
+  library(effectsize)
+})
+```
+
+
+
+# Notação adotada (consistente com a Aula 04)
+
+| Símbolo | Significado |
+|---|---|
+| $t$ | número de tratamentos (níveis do fator) |
+| $n_i$ | número de repetições do tratamento $i$; $N=\sum_{i=1}^{t} n_i$ |
+| $i=1,\dots,t$ | índice de tratamento |
+| $r=1,\dots,n_i$ | índice de réplica **dentro** do tratamento $i$ (posição no plano) |
+| $j=1,\dots,N$ | índice de **unidade experimental física** |
+| $Y_{ij}$ | resposta **potencial** da unidade $j$ sob o tratamento $i$ (fixa, não aleatória) |
+| $y_{ir}$ | resposta **observada** na posição $(i,r)$ (aleatória, via sorteio) |
+| $\delta_{ir}^{\,j}\in\{0,1\}$ | variável de seleção de Cornfield: $1$ se a posição $ir$ recebeu a unidade $j$ |
+| $\tau_i$ | efeito fixo do tratamento $i$; $\sum_i n_i\tau_i=0$ |
+| $\mu_i=\mu+\tau_i$ | média do tratamento $i$ |
+| $\omega_{ir}$ | erro de aleatorização na posição $(i,r)$ |
+| $u_j=\bar Y_{\cdot j}-\bar Y_{\cdot\cdot}$ | efeito da unidade $j$ |
+| $\bar Y_{i\cdot},\ \bar Y_{\cdot\cdot}$ | médias amostrais (tratamento $i$, geral) |
+| $\lambda$ | parâmetro de não-centralidade da $\chi^2$ |
+| $\phi^2$ | parâmetro de não-centralidade da $F$ (escala de Cohen) |
+| $p$ | número total de parâmetros estimados no modelo |
+| $f$ | tamanho de efeito de Cohen para ANOVA |
+| $d$ | diferença padronizada de Cohen (dois grupos) |
+| $\eta^2$ | proporção de variância explicada |
+
+
+
+# Parte 1: Dedução Rigorosa da Distribuição Qui-Quadrado Não-Central
+
+A distribuição qui-quadrado não-central surge naturalmente no Planejamento de Experimentos (DOE) sob a hipótese alternativa ($H_1$). Vamos deduzi-la formalmente a partir das Funções Geradoras de Momentos (FGM).
+
+## 1.1 Definição e FGM de uma Normal Não-Centrada Quadrada
+
+Seja $X \sim N(\mu, 1)$ uma variável aleatória normal com média $\mu \neq 0$ e variância unitária. Queremos encontrar a FGM da transformação $Z = X^2$.
+
+Por definição, a FGM de $Z$ é dada por:
+$$M_Z(s) = E\left[ e^{sZ} \right] = E\left[ e^{sX^2} \right]$$
+
+Sabendo que a função de densidade de probabilidade (f.d.p.) de $X$ é:
+$$f_X(x) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2}(x - \mu)^2 \right)$$
+
+Substituindo na integral da esperança:
+$$M_Z(s) = \int_{-\infty}^{\infty} e^{sx^2} \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2}(x - \mu)^2 \right) dx$$
+
+Expandindo o termo quadrático no expoente:
+$$-\frac{1}{2}(x - \mu)^2 = -\frac{1}{2}(x^2 - 2\mu x + \mu^2)$$
+
+O argumento total da exponencial dentro da integral torna-se:
+$$sx^2 - \frac{1}{2}x^2 + \mu x - \frac{1}{2}\mu^2 = -\frac{1}{2}(1 - 2s)x^2 + \mu x - \frac{1}{2}\mu^2$$
+
+Para que a integral convirja, assumimos que $s < \frac{1}{2}$, permitindo-nos definir o termo $(1-2s) > 0$. Completando o quadrado em relação a $x$:
+$$-\frac{1}{2}(1 - 2s)\left[ x^2 - \frac{2\mu}{1 - 2s}x \right] - \frac{1}{2}\mu^2$$
+$$= -\frac{1}{2}(1 - 2s)\left[ \left( x - \frac{\mu}{1 - 2s} \right)^2 - \frac{\mu^2}{(1 - 2s)^2} \right] - \frac{1}{2}\mu^2$$
+$$= -\frac{1}{2}(1 - 2s)\left( x - \frac{\mu}{1 - 2s} \right)^2 + \frac{\mu^2}{2(1 - 2s)} - \frac{\mu^2}{2}$$
+
+Simplificando a constante fora de $x$:
+$$\frac{\mu^2 - \mu^2(1 - 2s)}{2(1 - 2s)} = \frac{2\mu^2 s}{2(1 - 2s)} = \frac{\mu^2 s}{1 - 2s}$$
+
+Substituindo este resultado de volta na integral:
+$$M_Z(s) = \exp\left( \frac{\mu^2 s}{1 - 2s} \right) \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2}(1 - 2s)\left( x - \frac{\mu}{1 - 2s} \right)^2 \right) dx$$
+
+A integral acima descreve o núcleo de uma distribuição normal com média $\frac{\mu}{1 - 2s}$ e variância $(1 - 2s)^{-1}$. Portanto, o valor da integral é o inverso da constante de normalização:
+$$\int_{-\infty}^{\infty} \exp\left( -\frac{1}{2}\frac{\left( x - \frac{\mu}{1 - 2s} \right)^2}{(1 - 2s)^{-1}} \right) dx = \sqrt{2\pi} (1 - 2s)^{-1/2}$$
+
+Cancelando com o termo $\frac{1}{\sqrt{2\pi}}$, obtemos a FGM de uma única variável qui-quadrado não-central com 1 grau de liberdade:
+$$M_Z(s) = (1 - 2s)^{-1/2} \exp\left( \frac{\mu^2 s}{1 - 2s} \right)$$
+
+## 1.2 Soma de Variáveis Independentes e Identificação de $\lambda$
+
+Sejam $X_1, X_2, \dots, X_\nu$ variáveis aleatórias independentes tais que $X_k \sim N(\mu_k, 1)$. Definimos a variável:
+$$W = \sum_{k=1}^{\nu} X_k^2$$
+
+Como as variáveis são mutuamente independentes, a FGM da soma é o produto das FGMs individuais:
+$$M_W(s) = \prod_{k=1}^{\nu} M_{X_k^2}(s) = \prod_{k=1}^{\nu} \left[ (1 - 2s)^{-1/2} \exp\left( \frac{\mu_k^2 s}{1 - 2s} \right) \right]$$
+$$M_W(s) = (1 - 2s)^{-\nu/2} \exp\left( \frac{\sum_{k=1}^{\nu} \mu_k^2 s}{1 - 2s} \right)$$
+
+Definimos rigorosamente o **parâmetro de não-centralidade ($\lambda$)** como:
+$$\lambda = \sum_{k=1}^{\nu} \mu_k^2$$
+
+A expressão final da FGM da distribuição Qui-Quadrado Não-Central com $\nu$ graus de liberdade e parâmetro de não-centralidade $\lambda$ é:
+$$M_W(s) = (1 - 2s)^{-\nu/2} \exp\left( \frac{\lambda s}{1 - 2s} \right)$$
+
+Geometricamente, se pensarmos nas variáveis normais originais como componentes de um vetor de médias $\symbf{\mu} = (\mu_1, \dots, \mu_\nu)^T$ em um espaço euclidiano $\mathbb{R}^\nu$, o parâmetro $\lambda$ representa exatamente a **norma quadrada** deste vetor ($\lambda = \|\symbf{\mu}\|^2$). Sob a hipótese nula $H_0$, todos os $\mu_k = 0$, reduzindo a expressão para $\lambda = 0$, a FGM exata de uma qui-quadrado central clássica.
+
+
+
+# Parte 2: O Modelo de Análise de Variância (ANOVA) sob $H_1$
+
+No Delineamento Completamente Aleatorizado (DCA), avaliamos a Soma de Quadrados dos Tratamentos ($SQ_{\text{Trat}}$), dada por:
+$$SQ_{\text{Trat}} = \sum_{i=1}^{t} n_i (\bar Y_{i\cdot} - \bar Y_{\cdot\cdot})^2$$
+
+Onde $t$ é o número de tratamentos e $n_i$ é o número de repetições por grupo. Sob a modelagem clássica Gauss-Markov com efeitos fixos e restrição identitária $\sum_{i=1}^{t} n_i \tau_i = 0$:
+$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \quad \varepsilon_{ij} \sim N(0, \sigma^2)$$
+
+As médias amostrais possuem distribuições amostrais dadas por:
+$$\bar Y_{i\cdot} \sim N\left( \mu + \tau_i, \frac{\sigma^2}{n_i} \right) \quad \text{e} \quad \bar Y_{\cdot\cdot} \sim N\left( \mu, \frac{\sigma^2}{N} \right)$$
+
+Ao aplicar uma transformação ortogonal para projetar o vetor de observações no subespaço de contrastes de tratamentos com $\nu = t - 1$ graus de liberdade, normalizando os termos dividindo por $\sigma^2$, a estatística reduz-se à soma de $t-1$ variáveis normais independentes de variância unitária, cujas médias são proporcionais aos desvios dos efeitos estruturais ($\tau_i$).
+
+Portanto, a variável padronizada segue rigorosamente uma qui-quadrado não-central:
+$$\frac{SQ_{\text{Trat}}}{\sigma^2} \sim \chi^2_{t-1, \lambda}$$
+
+Onde o parâmetro de não-centralidade $\lambda$ herda a norma quadrada das médias deslocadas:
+$$\lambda = \frac{\sum_{i=1}^{t} n_i \tau_i^2}{\sigma^2}$$
+
+Sob $H_0$, todos os efeitos de tratamento $\tau_i = 0$, implicando $\lambda = 0$.
+
+**Relação com o $\phi^2$ dos slides.** A estatística $F = MS_{\text{Trat}}/MS_E$ sob $H_1$ segue uma $F$ não-central com parâmetros $(t-1,\,N-t)$ e parâmetro de não-centralidade
+$$\phi^2 = \frac{\lambda}{t} = \frac{\sum_{i=1}^{t} n_i \tau_i^2}{t\,\sigma^2},$$
+que é exatamente a quantidade usada em `pwr::pwr.anova.test()` via o $f$ de Cohen, $f^2 = \phi^2/N$ (com $n_i=n$ constante). A coerência entre as duas escalas é imediata.
+
+
+
+# Parte 3: Justificativa da Normalidade via Aleatorização e Variáveis de Cornfield
+
+Muitas vezes assume-se o ruído gaussiano $\varepsilon_{ij}$ como um axioma puramente abstrato. Contudo, em experimentos físicos reais, a validade inferencial e a aproximação à normalidade decorrem essencialmente do mecanismo de **aleatorização**, formalizado rigorosamente através das **variáveis de seleção de Cornfield** (Cornfield, 1944; Kempthorne, 1952).
+
+## 3.1 A Estrutura Conceitual: Unidades Experimentais e Valores Potenciais
+
+Considere um conjunto finito de $N$ unidades experimentais físicas indexadas por $j = 1, 2, \dots, N$. Cada unidade possui uma característica intrínseca, imutável antes da execução do ensaio. Se nenhuma intervenção fosse feita, a resposta mensurada na unidade $j$ seria um valor fixo, denotado por $Y_{\cdot j}$.
+
+Definimos a média global dessas unidades fixas como:
+$$\bar Y_{\cdot\cdot} = \frac{1}{N} \sum_{j=1}^{N} Y_{\cdot j}$$
+
+Desta forma, o efeito específico e real da unidade $j$ isolada da intervenção é dado pelo desvio:
+$$u_j = Y_{\cdot j} - \bar Y_{\cdot\cdot}$$
+
+Note que, por definição matemática direta, a soma desses efeitos em toda a população disponível é rigorosamente nula:
+$$\sum_{j=1}^{N} u_j = 0$$
+
+## 3.2 O Mecanismo Físico: As Variáveis de Seleção de Cornfield
+
+O pesquisador deseja alocar $t$ tratamentos em $N$ unidades experimentais, atribuindo $n_i$ unidades para cada tratamento $i$ (com $\sum_{i=1}^{t} n_i = N$). O processo de sorteio físico é mapeado injetando aleatoriedade por meio das **variáveis indicadoras de alocação de Cornfield**, definidas como:
+
+$$\delta_{ir}^{\,j} = \begin{cases}
+1, & \text{se a posição } (i,r) \text{ recebeu a unidade física } j \\
+0, & \text{caso contrário}
+\end{cases}$$
+
+Como o sorteio obedece a restrições físicas combinatórias estritas, o espaço amostral impõe as seguintes restrições algébricas:
+
+1. $\sum_{j=1}^{N} \delta_{ir}^{\,j} = 1 \quad \forall (i,r)$ (cada posição recebe exatamente uma unidade).
+2. $\sum_{i=1}^{t} \sum_{r=1}^{n_i} \delta_{ir}^{\,j} = 1 \quad \forall j$ (cada unidade é alocada a exatamente uma posição).
+3. $\sum_{r=1}^{n_i} \sum_{j=1}^{N} \delta_{ir}^{\,j} = n_i \quad \forall i$ (o tratamento $i$ é repetido exatamente $n_i$ vezes).
+
+### Propriedades Probabilísticas dos Operadores de Cornfield
+
+Sob o desenho totalmente aleatorizado (DCA), todas as combinações de alocação são equiprováveis. Disso decorre a distribuição de probabilidade exata de $\delta_{ir}^{\,j}$:
+
+* **Esperança de primeira ordem:**
+$$E[\delta_{ir}^{\,j}] = P(\delta_{ir}^{\,j} = 1) = \frac{1}{N}$$
+
+* **Esperança conjunta (mesma posição, unidades diferentes, $j \neq j'$):**
+$$E[\delta_{ir}^{\,j}\delta_{ir}^{\,j'}] = 0$$
+
+* **Esperança conjunta (posições diferentes, mesma unidade, $(i,r) \neq (i',r')$):**
+$$E[\delta_{ir}^{\,j}\delta_{i'r'}^{\,j}] = 0$$
+
+* **Esperança conjunta cruzada ($(i,r) \neq (i',r')$ e $j \neq j'$):**
+$$E[\delta_{ir}^{\,j}\delta_{i'r'}^{\,j'}] = \frac{1}{N(N-1)}$$
+
+* **Probabilidade condicional:**
+$$P(\delta_{ir}^{\,j}=1 \mid \delta_{i'r'}^{\,j'}=1) = \frac{1}{N-1}, \quad (i,r) \neq (i',r'),\ j \neq j'$$
+
+## 3.3 A Construção do Erro de Aleatorização $\omega_{ir}$
+
+Seja $T_i$ o efeito real e intrínseco do tratamento $i$. A resposta física resultante da alocação é dada pela **relação de seleção**:
+
+$$y_{ir} = \sum_{j=1}^{N} \delta_{ir}^{\,j}\, Y_{ij} = \sum_{j=1}^{N} \delta_{ir}^{\,j}\,(\bar Y_{\cdot\cdot} + T_i + u_j) = \bar Y_{\cdot\cdot} + T_i + \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j$$
+
+Definimos formalmente o **erro de aleatorização** na posição $(i,r)$ como:
+$$\omega_{ir} = \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j$$
+
+Note a simetria perfeita com o slide "O modelo deduzido, não suposto" da Aula 04:
+$$y_{ir} = \underbrace{\bar Y_{\cdot\cdot}}_{\mu} + \underbrace{(\bar Y_{i\cdot} - \bar Y_{\cdot\cdot})}_{\tau_i} + \underbrace{\sum_j \delta_{ir}^{\,j} u_j}_{\omega_{ir}} = \mu + \tau_i + \omega_{ir}.$$
+
+### A Grande Diferença Decisiva para o Modelo Clássico (Gauss-Markov)
+
+Observe cuidadosamente a natureza de $\omega_{ir}$:
+
+1. **Origem da Variabilidade:** No modelo abstrato de Gauss-Markov, as propriedades do ruído $\varepsilon_{ij}$ são postuladas/assumidas axiomaticamente. No modelo de aleatorização de Fisher-Cornfield, as propriedades de $\omega_{ir}$ são **deduzidas** de forma puramente matemática a partir do desenho físico do sorteio escolhido pelo pesquisador.
+2. **Definição de $\omega_{ir}$:** Ele **não é um ruído externo ou erro de medição**. Ele representa estritamente o efeito estrutural $u_j$ da unidade experimental física específica que o sorteio colocou naquela posição. Os valores $u_j$ são constantes fixas; a variação de $\omega_{ir}$ surge única e exclusivamente porque $\delta_{ir}^{\,j}$ é uma variável aleatória devido ao sorteio físico.
+
+Dessa forma, calculamos a média teórica do erro induzido pelo sorteio:
+$$E[\omega_{ir}] = E\left[ \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j \right] = \sum_{j=1}^{N} u_j\, E[\delta_{ir}^{\,j}] = \frac{1}{N} \sum_{j=1}^{N} u_j = 0$$
+
+O erro possui média estritamente nula devido ao sorteio, independentemente da forma ou distribuição dos valores populacionais originais $Y_{\cdot j}$.
+
+### Estrutura de covariância (o que os slides chamam de "correlacionado")
+
+Com $\sigma_u^2 = \frac{1}{N-1}\sum_{j=1}^{N} u_j^2$:
+
+$$\mathrm{Var}_R(\omega_{ir}) = \left(1 - \frac{1}{N}\right)\sigma_u^2, \qquad \mathrm{Cov}_R(\omega_{ir}, \omega_{i'r'}) = -\frac{\sigma_u^2}{N}, \quad (i,r) \neq (i',r')$$
+
+Ou, matricialmente, para o vetor $\symbf{\omega}$ de todos os $N$ erros:
+$$\mathrm{Var}_R(\symbf{\omega}) = \symbf{V} = \sigma_u^2\left(\symbf{I}_N - \tfrac{1}{N}\symbf{J}_N\right),$$
+que **não é diagonal** — a hipótese de Gauss-Markov clássica está violada. Ainda assim, MQO continua BLUE pela condição de Zyskind (Aula 03), pois $\symbf{V}$ é da forma $\symbf{I} + \symbf{X} \symbf{A} \symbf{X}'$ com $\symbf{X}$ a matriz de incidência do DCA.
+
+## 3.4 Por que $\omega_{ir}$ é uma soma de indicadores binários dependentes
+
+Antes de invocar qualquer teorema central do limite, é preciso entender **exatamente** qual é a estrutura probabilística de $\omega_{ir}$. Reescrevendo:
+
+$$\omega_{ir} = \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j.$$
+
+Cada $\delta_{ir}^{\,j}$ é uma **variável indicadora binária** (0/1). A soma tem $N$ termos, mas **não** é uma soma de $N$ variáveis independentes: as restrições combinatórias da Seção 3.2 introduzem **dependência forte** entre os $\delta_{ir}^{\,j}$.
+
+Mais especificamente, definindo
+$$S_{ir} = \#\{j : \delta_{ir}^{\,j} = 1\},$$
+as restrições forçam $S_{ir} = 1$ deterministicamente. Ou seja, **dentre os $N$ indicadores, exatamente um é igual a 1** — o índice $j^*$ que o sorteio escolheu para a posição $(i,r)$. Portanto:
+
+$$\omega_{ir} = u_{j^*}, \quad \text{onde } j^* \sim \mathrm{Uniforme}\{1,\dots,N\}.$$
+
+Essa é a **forma elementar** do erro de aleatorização: ele é simplesmente o efeito da unidade sorteada para aquela posição.
+
+### 3.4.1 Distribuição conjunta e a origem hipergeométrica
+
+Considere uma **única posição** $(i,r)$ e defina o indicador $A_j = \delta_{ir}^{\,j}$. A sequência $(A_1,\dots,A_N)$ tem exatamente um 1 e $N-1$ zeros, com todos os $\binom{N}{1}=N$ padrões equiprováveis. Logo, $A_j \sim \mathrm{Bernoulli}(1/N)$ e $\sum_j A_j = 1$.
+
+Agora considere **duas posições distintas** $(i,r)$ e $(i',r')$. As variáveis $A_j = \delta_{ir}^{\,j}$ e $B_j = \delta_{i'r'}^{\,j}$ são dependentes: se $A_j = 1$ para algum $j$, então $B_j = 0$. Isso força uma **correlação negativa** entre $A_j$ e $B_j$ em cada $j$.
+
+O ponto crucial: **se somarmos $\omega_{ir}$ sobre várias posições do mesmo tratamento**, obtemos uma estrutura hipergeométrica. Considere o **total do tratamento $i$**:
+$$S_i = \sum_{r=1}^{n_i} \omega_{ir} = \sum_{r=1}^{n_i} u_{j_r^*},$$
+onde $(j_1^*,\dots,j_{n_i}^*)$ são as unidades sorteadas para as $n_i$ posições do tratamento $i$, **sem reposição**. Esta é precisamente a definição de uma **amostra aleatória simples sem reposição** de tamanho $n_i$ da população finita $\{u_1,\dots,u_N\}$.
+
+### 3.4.2 Por que a distribuição não é binomial
+
+Vale destacar uma confusão comum: como $\delta_{ir}^{\,j}$ é binária, alguém poderia pensar que $\omega_{ir}$ é uma soma de binárias independentes — logo binomial. **Isso está errado.** A soma $\sum_j \delta_{ir}^{\,j}$ é **igual a 1** (constante), não uma variável binomial. E $\omega_{ir} = \sum_j \delta_{ir}^{\,j} u_j$ é uma **média ponderada** dos $u_j$ por indicadores que somam 1, ou seja, é simplesmente um sorteio uniforme de um dos $u_j$.
+
+A estrutura binomial aparece, no máximo, **condicionalmente**: se fixarmos que uma unidade específica $j$ foi sorteada para a posição $(i,r)$, a distribuição dos demais $\delta_{ir}^{\,j'}$ é degenerada. Portanto, não há binomialidade marginal; há **uniformidade marginal** e **dependência combinatória** entre posições.
+
+## 3.5 Teorema Central do Limite para Populações Finitas (Wald–Wolfowitz–Noether)
+
+O resultado que dá rigor à normalidade assintótica do erro de aleatorização é o **Teorema Central do Limite para amostragem sem reposição de populações finitas**, devido a Wald e Wolfowitz (1944) e generalizado por Noether (1949).
+
+### 3.5.1 Enunciado (versão de Noether, 1949)
+
+Seja $\{u_1,\dots,u_N\}$ uma população finita de constantes com média $\bar u = \frac{1}{N}\sum_{j=1}^{N} u_j$ e variância populacional
+$$\sigma_u^2 = \frac{1}{N-1}\sum_{j=1}^{N} (u_j - \bar u)^2.$$
+Considere uma amostra aleatória simples sem reposição de tamanho $n$ dessa população, digamos $u_{J_1},\dots,u_{J_n}$, onde $(J_1,\dots,J_n)$ é uniformemente distribuído sobre todas as $\binom{N}{n}$ combinações. Defina a média amostral
+$$\bar u_{(n)} = \frac{1}{n}\sum_{k=1}^{n} u_{J_k}.$$
+
+**Condição de Noether.** Suponha que
+$$\lim_{N \to \infty} \frac{\max_{1 \leq j \leq N} (u_j - \bar u)^2}{\sum_{j=1}^{N} (u_j - \bar u)^2} = 0,$$
+ou seja, **nenhuma unidade domina a variabilidade total** da população.
+
+**Conclusão.** Se $n \to \infty$ e $N - n \to \infty$, então
+$$\frac{\bar u_{(n)} - \bar u}{\sqrt{\mathrm{Var}(\bar u_{(n)})}} \xrightarrow{d} N(0,1),$$
+onde
+$$\mathrm{Var}(\bar u_{(n)}) = \frac{\sigma_u^2}{n}\left(1 - \frac{n-1}{N-1}\right).$$
+
+O fator $(1 - \frac{n-1}{N-1})$ é a **correção de população finita**: se $n = N$, a variância é zero; se $n \ll N$, recupera-se $\sigma_u^2/n$, o caso i.i.d.
+
+### 3.5.2 Aplicação ao DCA
+
+No nosso contexto, para o tratamento $i$, as unidades sorteadas formam uma amostra sem reposição de tamanho $n_i$ da população $\{u_1,\dots,u_N\}$. Portanto:
+$$\bar \omega_{i\cdot} = \frac{1}{n_i}\sum_{r=1}^{n_i} \omega_{ir} = \frac{1}{n_i}\sum_{r=1}^{n_i} u_{J_r^{(i)}},$$
+que é exatamente a média amostral $\bar u_{(n_i)}$ do teorema.
+
+**Verificação da condição de Noether no DCA.** A condição exige que nenhuma unidade domine a variabilidade. Em um experimento real, isso é uma **suposição sobre a população de unidades** — não sobre o modelo. Ela falha, por exemplo, se uma única unidade tem um $u_j$ gigantesco comparado aos demais (um outlier de unidade). Nesse caso, o TCL não se aplica e a normalidade assintótica não é garantida.
+
+**Conclusão para o DCA.** Sob a condição de Noether e com $n_i \to \infty$ e $N - n_i \to \infty$,
+$$\frac{\bar \omega_{i\cdot}}{\sqrt{\mathrm{Var}_R(\bar \omega_{i\cdot})}} \xrightarrow{d} N(0,1),$$
+com
+$$\mathrm{Var}_R(\bar \omega_{i\cdot}) = \frac{\sigma_u^2}{n_i}\left(1 - \frac{n_i - 1}{N - 1}\right).$$
+
+Combinando com $\bar y_{i\cdot} = \bar Y_{\cdot\cdot} + T_i + \bar \omega_{i\cdot}$, obtemos
+$$\bar y_{i\cdot} \overset{\text{aprox.}}{\sim} N\left(\bar Y_{\cdot\cdot} + T_i, \; \mathrm{Var}_R(\bar \omega_{i\cdot})\right).$$
+
+### 3.5.3 Por que não basta "invocar o TCL clássico"
+
+O TCL clássico (Lindeberg–Lévy) exige **independência** e **variâncias finitas iguais**. No nosso caso:
+- As $\delta_{ir}^{\,j}$ são **dependentes** (restrições combinatórias);
+- As $u_j$ são **constantes fixas**, não variáveis aleatórias;
+- A aleatoriedade vem **do sorteio**, não dos dados.
+
+O TCL clássico não se aplica diretamente. O que se aplica é o **TCL para populações finitas** (Wald–Wolfowitz–Noether), que trata as $u_j$ como fixas, modela a aleatoriedade como amostragem sem reposição, fornece a correção de população finita na variância e exige a condição de Noether para garantir que o máximo não domina a soma.
+
+### 3.5.4 Resumo esquemático da cadeia de raciocínio
+
+| Passo | O que é | Ferramenta |
+|---|---|---|
+| 1 | $\omega_{ir}$ é soma ponderada de indicadores binários | Definição de Cornfield |
+| 2 | As restrições forçam $\sum_j \delta_{ir}^{\,j}=1$ | Combinatória elementar |
+| 3 | Logo $\omega_{ir} = u_{j^*}$ com $j^* \sim \mathrm{Uniforme}\{1,\dots,N\}$ | Sorteio uniforme |
+| 4 | Soma sobre $r$ é amostra sem reposição de tamanho $n_i$ | Teoria de amostragem finita |
+| 5 | Estrutura conjunta é hipergeométrica, não binomial | Dependência combinatória |
+| 6 | TCL para populações finitas (Wald–Wolfowitz–Noether) | Normalidade assintótica |
+| 7 | Condição de Noether: $\max_j u_j^2 / \sum_j u_j^2 \to 0$ | Nenhuma unidade domina |
+| 8 | Correção de população finita: $(1 - \frac{n_i-1}{N-1})$ | Ajuste da variância |
+| 9 | Conclusão: $\bar y_{i\cdot}$ é assintoticamente normal | Inferência válida |
+
+### Conclusão e Impacto na Inferência
+
+Essa convergência distribucional implica que:
+
+1. A distribuição das estatísticas de teste (como o teste F da ANOVA) converge para a distribuição teórica clássica mesmo se a população original de unidades experimentais for altamente não-normal.
+2. A construção de **intervalos de confiança** fundamentados na premissa Gauss-Markov é legítima na prática porque a aleatorização atua como um mecanismo físico simetrizador.
+3. O erro passa a ser controlado e modelado pelas probabilidades do sorteio planejado.
+4. **A condição de Noether é o preço a pagar**: sem ela, nem a normalidade assintótica nem a validade dos testes F estão garantidas.
+
+
+
+# Parte 4: Complementos sobre a Qui-Quadrado Não-Central
+
+## 4.1 Função Densidade da Qui-Quadrado Não-Central
+
+Para $W \sim \chi^2_{\nu, \lambda}$, a f.d.p. é dada por uma mistura infinita de qui-quadrados centrais:
+$$f_W(w) = \sum_{k=0}^{\infty} \frac{e^{-\lambda/2} (\lambda/2)^k}{k!} \cdot \frac{w^{\nu/2 + k - 1} e^{-w/2}}{2^{\nu/2 + k} \Gamma(\nu/2 + k)}, \quad w > 0$$
+
+A média e a variância são:
+$$E[W] = \nu + \lambda, \quad \mathrm{Var}(W) = 2\nu + 4\lambda$$
+
+## 4.2 Relação com a Distribuição F Não-Central
+
+No contexto da ANOVA, a estatística de teste é $F = \frac{SQ_{\text{Trat}}/(t-1)}{SQ_E/(N-t)}$. Sob $H_1$, o numerador é proporcional a uma qui-quadrado não-central e o denominador a uma qui-quadrado central independente. A razão segue uma **distribuição F não-central** com parâmetros $(t-1, N-t, \phi^2)$, onde
+$$\phi^2 = \frac{\lambda}{t} = \frac{\sum_{i=1}^{t} n_i \tau_i^2}{t\,\sigma^2}.$$
+Isso conecta diretamente esta nota à fórmula de `pwr::pwr.anova.test()` usada na Aula 04 (onde $f^2 = \phi^2 / N$).
+
+
+
+# Parte 5: Dimensionalidade, Verossimilhança e Penalização por Complexidade
+
+Esta parte fecha a discussão com um ponto que apareceu em aula e que merece tratamento formal: **o aumento da dimensionalidade do espaço de parâmetros quando o fator tem muitos níveis**. Esse aumento não é apenas um detalhe de notação — ele afeta a verossimilhança, o $f$ de Cohen, a otimização numérica e a escolha de modelo.
+
+## 5.1 O espaço de parâmetros cresce com o modelo
+
+Considere uma única observação $X \sim N(\mu, \sigma^2)$. O espaço de parâmetros é $\Theta \subset \mathbb{R} \times \mathbb{R}_{>0}$ — **bidimensional**. À medida que o modelo cresce, a dimensão de $\Theta$ cresce:
+
+| Modelo | Parâmetros | Dimensão de $\Theta$ |
+|---|---|---|
+| $N(\mu, \sigma^2)$ com $\sigma^2$ conhecido | $\mu$ | $1$ ($\mathbb{R}$) |
+| $N(\mu, \sigma^2)$ com ambos desconhecidos | $(\mu, \sigma^2)$ | $2$ ($\mathbb{R} \times \mathbb{R}_{>0}$) |
+| DCA com $t$ tratamentos, $\sigma^2$ conhecido | $(\mu_1,\dots,\mu_t)$ | $t$ ($\mathbb{R}^t$) |
+| DCA com $t$ tratamentos, $\sigma^2$ desconhecido | $(\mu_1,\dots,\mu_t, \sigma^2)$ | $t+1$ |
+| Modelo com dummies para um fator de $t$ níveis + interações | cresce com $t$ e com o nº de fatores | $O(t \times \text{nº de fatores})$ |
+
+A cada novo nível de um fator, **adicionamos uma dimensão** ao espaço de parâmetros. O gráfico abaixo ilustra o caso mais simples: a superfície de log-verossimilhança em $\mathbb{R}^2$ para uma normal com $\mu$ e $\sigma$ desconhecidos.
+
+```{r fig-5a, fig.width=7, fig.height=5, fig.cap="Superficie de log-verossimilhanca em R2 para uma normal com media e desvio padrao desconhecidos. O x vermelho marca o otimo."}
+set.seed(2024)
+x <- rnorm(30, mean = 2, sd = 1.5)
+
+loglik_norm <- function(mu, sigma, x) {
+  if (sigma <= 0) return(-Inf)
+  n <- length(x)
+  -n/2 * log(2 * pi) - n * log(sigma) - sum((x - mu)^2) / (2 * sigma^2)
+}
+
+grid_mu    <- seq(-1, 5, length.out = 120)
+grid_sigma <- seq(0.5, 3, length.out = 120)
+grid <- expand_grid(mu = grid_mu, sigma = grid_sigma) %>%
+  mutate(ll = map2_dbl(mu, sigma, loglik_norm, x = x))
+
+ggplot(grid, aes(mu, sigma, fill = ll)) +
+  geom_raster(interpolate = TRUE) +
+  geom_contour(aes(z = ll), color = "white", alpha = 0.5, bins = 12) +
+  geom_point(aes(x = mean(x), y = sd(x)), color = "red", size = 3, shape = 4, stroke = 1.5) +
+  scale_fill_viridis_c(option = "magma") +
+  labs(title = "(a) log-verossimilhanca em R2",
+       subtitle = "Normal com media e desvio padrao desconhecidos",
+       x = "media", y = "desvio padrao", fill = "log L") +
+  theme_minimal(base_size = 12)
+```
+
+## 5.2 A verossimilhança fica mais plana e mais difícil de otimizar
+
+A função de verossimilhança $\ell(\theta)$ para um modelo com $p$ parâmetros é uma função $p$-dimensional. À medida que $p$ cresce:
+
+1. **O volume do espaço cresce exponencialmente** (maldição da dimensionalidade): para amostrar o mesmo "espaço de cobertura" em cada dimensão, precisamos de um número de pontos que cresce como $k^p$.
+2. **A superfície de $\ell$ fica mais acidentada**: o número de **mínimos locais** tende a crescer com $p$, especialmente quando há dependência entre parâmetros (como $\mu$ e $\sigma^2$, ou como $\mu_i$ e $\sigma^2$ no DCA desbalanceado).
+3. **Algoritmos de otimização (Newton–Raphson, BFGS, EM) ficam mais sensíveis ao chute inicial**: a bacia de atração do máximo global encolhe relativamente.
+
+O gráfico abaixo ilustra isso de forma esquemática: quanto maior $p$, mais plana a verossimilhança perfilada em torno do ótimo.
+
+```{r fig-5b, fig.width=7, fig.height=5, fig.cap="Verossimilhanca perfilada em funcao da dimensao p. Quanto maior p, mais plana a superficie e mais dificil localizar o otimo com precisao."}
+perfil_ll <- function(theta_norm, p) {
+  -p * log(1 + theta_norm^2 / p) - 0.05 * theta_norm^2 / sqrt(p)
+}
+
+theta <- seq(0, 4, length.out = 200)
+df_b <- map_dfr(c(1, 2, 5, 10, 30, 100), function(p) {
+  tibble(theta = theta, ll = perfil_ll(theta, p), p = factor(p))
+})
+
+ggplot(df_b, aes(theta, ll, color = p)) +
+  geom_line(linewidth = 1.1) +
+  scale_color_viridis_d(option = "plasma") +
+  labs(title = "(b) Verossimilhanca perfilada vs. dimensao p",
+       subtitle = "Quanto maior p, mais plana a superficie",
+       x = "distancia normalizada do otimo",
+       y = "log-verossimilhanca perfilada",
+       color = "p") +
+  theme_minimal(base_size = 12)
+```
+
+## 5.3 O $f$ de Cohen é afetado pelo número de níveis
+
+O $f$ de Cohen, usado em `pwr::pwr.anova.test()`, é definido como
+$$f^2 = \frac{\sum_{i=1}^{t} n_i \tau_i^2 / t}{\sigma^2} = \frac{\phi^2}{N},$$
+onde $\phi^2$ é o parâmetro de não-centralidade da $F$. Note que:
+
+- Para um **número fixo de tratamentos** $t$, aumentar $\tau_i$ aumenta $f$.
+- Para um **efeito total fixo** $\sum_i n_i \tau_i^2$, aumentar $t$ **dilui** o efeito por tratamento, **reduzindo** $f$ — porque o mesmo "orçamento" de variabilidade explicada é dividido entre mais parâmetros.
+- Mais níveis de um fator significa **mais dummies** no modelo linear, o que significa **mais graus de liberdade gastos** e **menos poder por parâmetro estimado**.
+
+Isso é a manifestação estatística da maldição da dimensionalidade: **a mesma quantidade de informação é distribuída em um espaço maior**, e cada parâmetro individual é estimado com menos precisão.
+
+```{r fig-5d, fig.width=10, fig.height=4.5, fig.cap="Efeito do numero de niveis t no f de Cohen e no poder, com efeito total constante. A medida que t cresce, f e diluido e o poder cai."}
+set.seed(7)
+efeito_total <- 5000
+sigma <- 20
+n_por_grupo <- 15
+
+df_d <- map_dfr(c(2, 3, 4, 5, 6, 8, 10, 15), function(t) {
+  tau <- sqrt(efeito_total / (t * n_por_grupo)) * c(-1, 1, rep(0, t - 2))[1:t]
+  tau[is.na(tau)] <- 0
+  tau <- tau - mean(tau)
+  f2 <- sum(n_por_grupo * tau^2) / (t * sigma^2)
+  f  <- sqrt(f2)
+  poder <- pwr.anova.test(k = t, f = f, sig.level = 0.05,
+                           n = n_por_grupo)$power
+  tibble(t = t, f = f, f2 = f2, poder = poder)
+})
+
+p_d1 <- ggplot(df_d, aes(t, f)) +
+  geom_line(color = "#0B4F6C", linewidth = 1.2) +
+  geom_point(color = "#0B4F6C", size = 2.5) +
+  labs(title = "(d1) f de Cohen vs. numero de niveis t",
+       subtitle = "Efeito total constante; t cresce, f dilui",
+       x = "numero de niveis t", y = "f de Cohen") +
+  theme_minimal(base_size = 12)
+
+p_d2 <- ggplot(df_d, aes(t, poder)) +
+  geom_line(color = "#B22222", linewidth = 1.2) +
+  geom_point(color = "#B22222", size = 2.5) +
+  geom_hline(yintercept = 0.80, linetype = "dashed", color = "grey40") +
+  labs(title = "(d2) Poder vs. numero de niveis t",
+       subtitle = "n = 15 por grupo, alpha = 0.05",
+       x = "numero de niveis t", y = "poder") +
+  theme_minimal(base_size = 12)
+
+p_d1 | p_d2
+```
+
+## 5.4 A penalização por complexidade é inevitável
+
+Como o espaço de parâmetros cresce, o **risco de sobreajuste** cresce. A resposta clássica é penalizar a verossimilhança pelo número de parâmetros:
+
+- **AIC:** $\mathrm{AIC} = -2\ell(\hat\theta) + 2p$.
+- **BIC:** $\mathrm{BIC} = -2\ell(\hat\theta) + p \log(N)$.
+- **AICc:** $\mathrm{AICc} = \mathrm{AIC} + \frac{2p(p+1)}{N-p-1}$.
+- **Ridge:** $\ell(\theta) - \lambda \|\theta\|_2^2$.
+- **Lasso:** $\ell(\theta) - \lambda \|\theta\|_1$.
+
+Todas essas penalizações **crescem com $p$** — isto é, tornam-se mais severas à medida que o modelo fica mais complexo. Sem elas, o modelo com mais parâmetros sempre terá verossimilhança maior (em amostra), mesmo que generalize pior.
+
+O gráfico abaixo mostra esse trade-off: enquanto $-2\log L$ sempre decresce com $p$, os critérios penalizados apresentam um mínimo interior.
+
+```{r fig-5c, fig.width=7, fig.height=5, fig.cap="Criterios de informacao vs. numero de parametros. -2 log L sempre decresce com p; AIC, BIC e AICc penalizam a complexidade e apresentam minimo interior."}
+ll_obs <- function(p, n = 100) {
+  n * log(1 + 10 / (p + 1)) + 0.3 * p
+}
+
+df_c <- tibble(p = 1:20) %>%
+  mutate(
+    m2ll = ll_obs(p),
+    AIC  = m2ll + 2 * p,
+    BIC  = m2ll + p * log(100),
+    AICc = AIC + (2 * p * (p + 1)) / (100 - p - 1)
+  ) %>%
+  pivot_longer(c(m2ll, AIC, BIC, AICc), names_to = "criterio", values_to = "valor")
+
+ggplot(df_c, aes(p, valor, color = criterio)) +
+  geom_line(linewidth = 1.1) +
+  scale_color_manual(values = c(m2ll = "grey50", AIC = "#0B4F6C",
+                                 BIC = "#B22222", AICc = "#2E8B57")) +
+  labs(title = "(c) Criterios de informacao vs. numero de parametros p",
+       subtitle = "-2 log L sempre decresce; AIC/BIC penalizam",
+       x = "numero de parametros p", y = "valor do criterio", color = NULL) +
+  theme_minimal(base_size = 12)
+```
+
+**A conexão com o DCA.** Um fator com muitos níveis gera muitas dummies, que por sua vez aumentam $p$. Sem penalização, o modelo saturado (com interações de ordem alta) terá verossimilhança maior do que o modelo aditivo — mas o teste F e o $f$ de Cohen já **internalizam** essa penalização via graus de liberdade residuais. É por isso que o $F$ é sempre uma razão entre variabilidade explicada **por parâmetro** e variabilidade residual.
+
+## 5.5 Mínimos locais e a não-convexidade em alta dimensão
+
+Um ponto que merece destaque: **aumentar a dimensão do espaço de parâmetros não só dificulta a otimização — torna a paisagem de verossimilhança inerentemente mais não-convexa.**
+
+Em modelos lineares gaussianos com matriz de delineamento $\mathbf{X}$ de posto completo, a verossimilhança é **log-côncava** em $\boldsymbol\beta$ (para $\sigma^2$ fixo) e a solução de MQO é única. Mas isso é uma **exceção**, não a regra:
+
+1. **Modelos mistos e hierárquicos:** a verossimilhança marginal envolve integrais que introduzem não-convexidade. Múltiplos máximos locais são comuns.
+2. **Modelos com dummies e interações de ordem alta:** a matriz $\mathbf{X}$ pode ficar **mal-condicionada** (colunas quase colineares), e a superfície de verossimilhança fica achatada em direções específicas — o otimizador "desliza" sem encontrar o ótimo.
+3. **Modelos com $\sigma^2$ desconhecido e $t$ grande:** a dependência entre $\mu_i$ e $\sigma^2$ cria uma **curvatura variável** ao longo da superfície, e métodos de gradiente podem oscilar.
+
+Em todos esses casos, o número de **pontos de sela** e **mínimos locais** cresce com $p$, e a probabilidade de um algoritmo de otimização (mesmo BFGS ou Newton) parar em um ponto sub-ótimo **aumenta com a complexidade do modelo**. É exatamente por isso que:
+
+- **Penalizações** (ridge, lasso) ajudam: suavizam a superfície e reduzem o número de mínimos locais.
+- **Métodos de momento** (como EM) são preferidos em modelos com variáveis latentes.
+- **Validação cruzada** e **critérios de informação** são indispensáveis para escolher entre modelos de dimensões diferentes.
+
+**Conclusão prática.** Quando o fator tem muitos níveis e o modelo tem muitas dummies, não basta "rodar a ANOVA". É preciso (i) verificar condicionamento de $\mathbf{X}$, (ii) usar critérios penalizados para escolher o modelo, (iii) desconfiar de resultados de otimizadores que não convergem ou convergem para pontos diferentes com chutes iniciais diferentes.
+
+
+
+# Parte 6: f de Cohen vs. d de Cohen vs. eta quadrado
+
+Esta seção responde a uma pergunta que surgiu em aula: **o f de Cohen é a mesma coisa que o d de Cohen? E qual é a relação com o eta quadrado ($\eta^2$) usado em meta-análises?** A resposta curta é **não, não são a mesma coisa**, mas são parentes próximos e conversíveis entre si sob condições específicas. Vamos com calma.
+
+## 6.1 Três medidas, três escalas
+
+Existem três medidas de tamanho de efeito que aparecem com frequência em ANOVA e meta-análise:
+
+| Medida | Símbolo | O que mede | Escala |
+|---|---|---|---|
+| d de Cohen | $d$ | Diferença padronizada entre **duas** médias | Desvios-padrão |
+| f de Cohen | $f$ | Tamanho de efeito **global** de um fator com $t$ níveis | Desvios-padrão (mas em escala diferente) |
+| eta quadrado | $\eta^2$ | **Proporção** da variância total explicada pelo fator | Adimensional, entre 0 e 1 |
+
+As três estão relacionadas, mas **não são intercambiáveis sem conversão**.
+
+## 6.2 A ponte entre f e eta quadrado
+
+A relação fundamental é:
+$$f^2 = \frac{\eta^2}{1 - \eta^2} \qquad \Longleftrightarrow \qquad \eta^2 = \frac{f^2}{1 + f^2}$$
+
+Essa relação é **exata** e vale para qualquer medida de proporção de variância explicada. Ela aparece naturalmente na ANOVA: o eta quadrado é a razão entre $SQ_{\text{Trat}}$ e $SQ_{\text{Total}}$, e o f de Cohen é a raiz da razão entre $SQ_{\text{Trat}}$ e $SQ_{\text{Erro}}$, ajustada pelo número de graus de liberdade.
+
+Vamos verificar numericamente no R que essa relação vale para os dados da Aula 04.
+
+```{r eta2-f, fig.width=7, fig.height=4.5, fig.cap="Relacao entre eta quadrado e f de Cohen. A curva mostra a conversao exata; os pontos sao valores tipicos de Cohen."}
+# Grade de valores de eta^2
+eta2_grid <- seq(0.001, 0.5, length.out = 200)
+f_grid <- sqrt(eta2_grid / (1 - eta2_grid))
+
+df_eta <- tibble(eta2 = eta2_grid, f = f_grid)
+
+# Valores de referencia de Cohen (1988)
+cohen_ref <- tibble(
+  rotulo = c("pequeno", "medio", "grande"),
+  eta2   = c(0.01, 0.06, 0.14),
+  f      = sqrt(eta2 / (1 - eta2))
+)
+
+ggplot(df_eta, aes(eta2, f)) +
+  geom_line(color = "#0B4F6C", linewidth = 1.2) +
+  geom_point(data = cohen_ref, aes(eta2, f, color = rotulo), size = 3.5) +
+  geom_text(data = cohen_ref, aes(eta2, f, label = rotulo),
+            vjust = -1, size = 3.5, color = "grey30") +
+  scale_color_manual(values = c(pequeno = "#2E8B57",
+                                 medio  = "#B8860B",
+                                 grande = "#B22222"),
+                     guide = "none") +
+  labs(title = "Conversao exata entre eta quadrado e f de Cohen",
+       subtitle = "f^2 = eta^2 / (1 - eta^2)",
+       x = expression(eta^2), y = "f de Cohen") +
+  theme_minimal(base_size = 12)
+```
+
+## 6.3 Por que a confusão com o d de Cohen é comum
+
+O d de Cohen é **definido apenas para duas médias**:
+$$d = \frac{\bar y_1 - \bar y_2}{s_p},$$
+onde $s_p$ é o desvio-padrão combinado.
+
+Quando um fator tem **exatamente dois níveis** ($t = 2$), o f de Cohen e o d de Cohen são monotonicamente relacionados por uma fórmula simples. Se os grupos são balanceados ($n_1 = n_2$):
+$$f = \frac{d}{2} \qquad \Longleftrightarrow \qquad d = 2f.$$
+
+A derivação usa a relação entre eta quadrado e d para dois grupos:
+$$\eta^2 = \frac{d^2}{d^2 + 4} \quad \Longrightarrow \quad f^2 = \frac{d^2}{4}.$$
+
+Quando o fator tem **três ou mais níveis** ($t \geq 3$), **não existe uma generalização única do d de Cohen**. Cada par de tratamentos tem seu próprio d, mas eles não se combinam em um único número que represente o efeito global do fator. Por isso, em ANOVA com $t \geq 3$, usa-se o f de Cohen.
+
+## 6.4 A relação com meta-análise
+
+Em meta-análise, o que se combina entre estudos é o **tamanho de efeito padronizado**. A escolha depende do design:
+
+- **Estudos com dois grupos (teste t):** usa-se o d de Cohen. É o padrão histórico em psicologia e educação.
+- **Estudos com três ou mais grupos (ANOVA):** usa-se o f de Cohen, ou converte-se para eta quadrado.
+- **Estudos com proporções de variância explicada:** reporta-se eta quadrado ou R quadrado, e converte-se para d ou f conforme necessário.
+
+A tabela de conversão abaixo resume tudo:
+
+| De | Para | Fórmula | Validade |
+|---|---|---|---|
+| $\eta^2$ | $f$ | $f = \sqrt{\eta^2 / (1 - \eta^2)}$ | Sempre |
+| $f$ | $\eta^2$ | $\eta^2 = f^2 / (1 + f^2)$ | Sempre |
+| $d$ | $f$ | $f = d/2$ | Somente $t = 2$, balanceado |
+| $f$ | $d$ | $d = 2f$ | Somente $t = 2$, balanceado |
+| $\eta^2$ | $d$ | $d = 2\sqrt{\eta^2 / (1 - \eta^2)}$ | Somente $t = 2$ |
+
+## 6.5 Código R: calculando tudo no DCA
+
+Vamos usar os dados de tempo de reação da Aula 04 (três condições: Nenhuma, Sonora, Visual) para calcular **f**, **eta quadrado** e **d par-a-par**, mostrando o que faz sentido e o que não faz.
+
+```{r secao-6-5}
+# --- Dados da Aula 04 (replicando o exemplo) -----------------------
+set.seed(48)
+condicao <- c("Nenhuma", "Sonora", "Visual")
+n_por_grupo <- 12
+dados_tr <- tibble(
+  sujeito  = 1:(3 * n_por_grupo),
+  condicao = factor(rep(condicao, each = n_por_grupo), levels = condicao),
+  tempo_reacao = c(rnorm(n_por_grupo, 480, 45),
+                    rnorm(n_por_grupo, 512, 45),
+                    rnorm(n_por_grupo, 555, 45))
+)
+
+# --- ANOVA ----------------------------------------------------------
+modelo_tr <- aov(tempo_reacao ~ condicao, data = dados_tr)
+resumo <- summary(modelo_tr)[[1]]
+
+SS_trat <- resumo[["Sum Sq"]][1]
+SS_erro <- resumo[["Sum Sq"]][2]
+SS_total <- SS_trat + SS_erro
+gl_trat <- resumo[["Df"]][1]
+gl_erro <- resumo[["Df"]][2]
+N <- nrow(dados_tr)
+t <- length(levels(dados_tr$condicao))
+
+# --- eta quadrado ---------------------------------------------------
+eta2 <- SS_trat / SS_total
+
+# --- f de Cohen -----------------------------------------------------
+f2 <- (SS_trat / gl_trat) / (SS_erro / gl_erro)
+f  <- sqrt(f2)
+
+# --- Interpretacao pelos limiares de Cohen -------------------------
+interpretar_eta2 <- function(x) {
+  if (x < 0.01) "trivial"
+  else if (x < 0.06) "pequeno"
+  else if (x < 0.14) "medio"
+  else "grande"
+}
+interpretar_f <- function(x) {
+  if (x < 0.10) "pequeno"
+  else if (x < 0.25) "medio"
+  else if (x < 0.40) "grande"
+  else "muito grande"
+}
+
+cat("=== Resultados da ANOVA (3 grupos) ===\n")
+cat("SS_trat =", round(SS_trat, 1), "\n")
+cat("SS_erro =", round(SS_erro, 1), "\n")
+cat("SS_total =", round(SS_total, 1), "\n\n")
+cat("eta quadrado =", round(eta2, 4), "->", interpretar_eta2(eta2), "\n")
+cat("f de Cohen   =", round(f, 4),    "->", interpretar_f(f), "\n\n")
+
+# --- Verificando a conversao f^2 = eta^2 / (1 - eta^2) -------------
+cat("=== Verificacao da conversao exata ===\n")
+cat("f^2 (direto)         =", round(f2, 6), "\n")
+cat("eta^2 / (1 - eta^2)  =", round(eta2 / (1 - eta2), 6), "\n")
+cat("Diferenca            =", round(abs(f2 - eta2 / (1 - eta2)), 10), "\n\n")
+
+# --- d de Cohen para cada par (com pooled SD) ----------------------
+pares <- combn(levels(dados_tr$condicao), 2, simplify = FALSE)
+
+d_par <- map_dfr(pares, function(par) {
+  y1 <- dados_tr$tempo_reacao[dados_tr$condicao == par[1]]
+  y2 <- dados_tr$tempo_reacao[dados_tr$condicao == par[2]]
+  n1 <- length(y1); n2 <- length(y2)
+  s_pooled <- sqrt(((n1 - 1) * var(y1) + (n2 - 1) * var(y2)) / (n1 + n2 - 2))
+  d <- (mean(y1) - mean(y2)) / s_pooled
+  tibble(
+    comparacao = paste(par[1], "vs", par[2]),
+    media_1 = mean(y1), media_2 = mean(y2),
+    d = d, d_abs = abs(d),
+    interpretacao = case_when(
+      abs(d) < 0.20 ~ "trivial",
+      abs(d) < 0.50 ~ "pequeno",
+      abs(d) < 0.80 ~ "medio",
+      TRUE          ~ "grande"
+    )
+  )
+})
+
+cat("=== d de Cohen para cada par de condicoes ===\n")
+print(d_par, n = Inf)
+
+# --- Se o fator tivesse apenas 2 niveis, d = 2f --------------------
+cat("\n=== Atencao: conversao d <-> f so vale para 2 grupos ===\n")
+cat("Se tivessemos apenas 2 grupos balanceados, d seria aproximadamente:",
+    round(2 * f, 4), "\n")
+cat("Mas com t = 3, esse 'd global' NAO e interpretavel.\n")
+cat("O f de Cohen e a medida correta para o efeito global do fator.\n")
+```
+
+## 6.6 O que este bloco de código ensina
+
+1. **O f de Cohen é calculado a partir das somas de quadrados da ANOVA** — não é uma medida separada, mas uma transformação do teste F.
+2. **O eta quadrado e o f de Cohen são convertíveis exatamente**, via $f^2 = \eta^2 / (1 - \eta^2)$.
+3. **O d de Cohen só faz sentido para comparações par-a-par**. Com três grupos, temos três valores de d (um para cada par), e eles **não se combinam** em um único número.
+4. **Em meta-análise**, a escolha entre d e f depende do design do estudo original:
+   - Estudos com dois grupos reportam d.
+   - Estudos com três ou mais grupos reportam f ou eta quadrado.
+   - Para combinar estudos heterogêneos, é preciso converter tudo para uma medida comum.
+
+## 6.7 Resumo da Parte 6
+
+| Pergunta | Resposta |
+|---|---|
+| f de Cohen é o mesmo que d de Cohen? | **Não.** f é para efeito global de fator com $t$ níveis; d é para diferença entre duas médias. |
+| Eles se relacionam? | **Sim**, mas só quando $t = 2$: $f = d/2$. |
+| Qual usar em ANOVA com $t \geq 3$? | **f de Cohen** (ou eta quadrado). d não tem generalização única. |
+| Qual usar em meta-análise? | Depende do design dos estudos. Converter tudo para uma medida comum (geralmente d ou Hedges' g) antes de combinar. |
+| Como converter f em eta quadrado? | $\eta^2 = f^2 / (1 + f^2)$ (exato). |
+| Como converter d em eta quadrado? | $\eta^2 = d^2 / (d^2 + 4)$ (válido para $t = 2$). |
+
+
+# Referências
+
+- Cohen, J. (1988). *Statistical Power Analysis for the Behavioral Sciences* (2nd ed.). Lawrence Erlbaum.
+- Cornfield, J. (1944). Randomization. *Journal of the American Statistical Association*, 39(228), 455–459.
+- Kempthorne, O. (1952). *The Design and Analysis of Experiments*. Wiley.
+- Wald, A., & Wolfowitz, J. (1944). Confidence limits for continuous distribution functions. *The Annals of Mathematical Statistics*, 15(2), 105–118.
+- Noether, G. E. (1949). On a theorem of Wald and Wolfowitz. *The Annals of Mathematical Statistics*, 20(3), 455–458.
+- Hájek, J. (1960). Limiting distributions in simple random sampling from a finite population. *Publications of the Mathematical Institute of the Hungarian Academy of Sciences*, 5, 361–374.
+- Lehmann, E. L., & Romano, J. P. (2005). *Testing Statistical Hypotheses* (3rd ed.). Springer.
+- Rosenberger, W. F., & Lachin, J. M. (2016). *Randomization in Clinical Trials: Theory and Practice* (2nd ed.). Wiley.
+- Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and Multimodel Inference* (2nd ed.). Springer.
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.

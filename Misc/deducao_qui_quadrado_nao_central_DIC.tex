@@ -1,0 +1,1579 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\renewcommand{\contentsname}{Conteúdo}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Dedução Rigorosa da Qui-Quadrado Não-Central{,} Erro de Aleatorização via Variáveis de Cornfield e Complexidade Dimensional},
+  pdfauthor={Raydonal Ospina},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Dedução Rigorosa da Qui-Quadrado Não-Central, Erro de
+Aleatorização via Variáveis de Cornfield e Complexidade Dimensional}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Notação unificada com os slides da Aula 04 (DCA)}
+\author{Raydonal Ospina}
+\date{2026-09-29}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\section{Notação adotada (consistente com a Aula
+04)}\label{notauxe7uxe3o-adotada-consistente-com-a-aula-04}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Símbolo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Significado
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(t\) & número de tratamentos (níveis do fator) \\
+\(n_i\) & número de repetições do tratamento \(i\);
+\(N=\sum_{i=1}^{t} n_i\) \\
+\(i=1,\dots,t\) & índice de tratamento \\
+\(r=1,\dots,n_i\) & índice de réplica \textbf{dentro} do tratamento
+\(i\) (posição no plano) \\
+\(j=1,\dots,N\) & índice de \textbf{unidade experimental física} \\
+\(Y_{ij}\) & resposta \textbf{potencial} da unidade \(j\) sob o
+tratamento \(i\) (fixa, não aleatória) \\
+\(y_{ir}\) & resposta \textbf{observada} na posição \((i,r)\)
+(aleatória, via sorteio) \\
+\(\delta_{ir}^{\,j}\in\{0,1\}\) & variável de seleção de Cornfield:
+\(1\) se a posição \(ir\) recebeu a unidade \(j\) \\
+\(\tau_i\) & efeito fixo do tratamento \(i\); \(\sum_i n_i\tau_i=0\) \\
+\(\mu_i=\mu+\tau_i\) & média do tratamento \(i\) \\
+\(\omega_{ir}\) & erro de aleatorização na posição \((i,r)\) \\
+\(u_j=\bar Y_{\cdot j}-\bar Y_{\cdot\cdot}\) & efeito da unidade
+\(j\) \\
+\(\bar Y_{i\cdot},\ \bar Y_{\cdot\cdot}\) & médias amostrais (tratamento
+\(i\), geral) \\
+\(\lambda\) & parâmetro de não-centralidade da \(\chi^2\) \\
+\(\phi^2\) & parâmetro de não-centralidade da \(F\) (escala de Cohen) \\
+\(p\) & número total de parâmetros estimados no modelo \\
+\(f\) & tamanho de efeito de Cohen para ANOVA \\
+\(d\) & diferença padronizada de Cohen (dois grupos) \\
+\(\eta^2\) & proporção de variância explicada \\
+\end{longtable}
+}
+
+\section{Parte 1: Dedução Rigorosa da Distribuição Qui-Quadrado
+Não-Central}\label{parte-1-deduuxe7uxe3o-rigorosa-da-distribuiuxe7uxe3o-qui-quadrado-nuxe3o-central}
+
+A distribuição qui-quadrado não-central surge naturalmente no
+Planejamento de Experimentos (DOE) sob a hipótese alternativa (\(H_1\)).
+Vamos deduzi-la formalmente a partir das Funções Geradoras de Momentos
+(FGM).
+
+\subsection{1.1 Definição e FGM de uma Normal Não-Centrada
+Quadrada}\label{definiuxe7uxe3o-e-fgm-de-uma-normal-nuxe3o-centrada-quadrada}
+
+Seja \(X \sim N(\mu, 1)\) uma variável aleatória normal com média
+\(\mu \neq 0\) e variância unitária. Queremos encontrar a FGM da
+transformação \(Z = X^2\).
+
+Por definição, a FGM de \(Z\) é dada por:
+\[M_Z(s) = E\left[ e^{sZ} \right] = E\left[ e^{sX^2} \right]\]
+
+Sabendo que a função de densidade de probabilidade (f.d.p.) de \(X\) é:
+\[f_X(x) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2}(x - \mu)^2 \right)\]
+
+Substituindo na integral da esperança:
+\[M_Z(s) = \int_{-\infty}^{\infty} e^{sx^2} \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2}(x - \mu)^2 \right) dx\]
+
+Expandindo o termo quadrático no expoente:
+\[-\frac{1}{2}(x - \mu)^2 = -\frac{1}{2}(x^2 - 2\mu x + \mu^2)\]
+
+O argumento total da exponencial dentro da integral torna-se:
+\[sx^2 - \frac{1}{2}x^2 + \mu x - \frac{1}{2}\mu^2 = -\frac{1}{2}(1 - 2s)x^2 + \mu x - \frac{1}{2}\mu^2\]
+
+Para que a integral convirja, assumimos que \(s < \frac{1}{2}\),
+permitindo-nos definir o termo \((1-2s) > 0\). Completando o quadrado em
+relação a \(x\):
+\[-\frac{1}{2}(1 - 2s)\left[ x^2 - \frac{2\mu}{1 - 2s}x \right] - \frac{1}{2}\mu^2\]
+\[= -\frac{1}{2}(1 - 2s)\left[ \left( x - \frac{\mu}{1 - 2s} \right)^2 - \frac{\mu^2}{(1 - 2s)^2} \right] - \frac{1}{2}\mu^2\]
+\[= -\frac{1}{2}(1 - 2s)\left( x - \frac{\mu}{1 - 2s} \right)^2 + \frac{\mu^2}{2(1 - 2s)} - \frac{\mu^2}{2}\]
+
+Simplificando a constante fora de \(x\):
+\[\frac{\mu^2 - \mu^2(1 - 2s)}{2(1 - 2s)} = \frac{2\mu^2 s}{2(1 - 2s)} = \frac{\mu^2 s}{1 - 2s}\]
+
+Substituindo este resultado de volta na integral:
+\[M_Z(s) = \exp\left( \frac{\mu^2 s}{1 - 2s} \right) \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2}(1 - 2s)\left( x - \frac{\mu}{1 - 2s} \right)^2 \right) dx\]
+
+A integral acima descreve o núcleo de uma distribuição normal com média
+\(\frac{\mu}{1 - 2s}\) e variância \((1 - 2s)^{-1}\). Portanto, o valor
+da integral é o inverso da constante de normalização:
+\[\int_{-\infty}^{\infty} \exp\left( -\frac{1}{2}\frac{\left( x - \frac{\mu}{1 - 2s} \right)^2}{(1 - 2s)^{-1}} \right) dx = \sqrt{2\pi} (1 - 2s)^{-1/2}\]
+
+Cancelando com o termo \(\frac{1}{\sqrt{2\pi}}\), obtemos a FGM de uma
+única variável qui-quadrado não-central com 1 grau de liberdade:
+\[M_Z(s) = (1 - 2s)^{-1/2} \exp\left( \frac{\mu^2 s}{1 - 2s} \right)\]
+
+\subsection{\texorpdfstring{1.2 Soma de Variáveis Independentes e
+Identificação de
+\(\lambda\)}{1.2 Soma de Variáveis Independentes e Identificação de \textbackslash lambda}}\label{soma-de-variuxe1veis-independentes-e-identificauxe7uxe3o-de-lambda}
+
+Sejam \(X_1, X_2, \dots, X_\nu\) variáveis aleatórias independentes tais
+que \(X_k \sim N(\mu_k, 1)\). Definimos a variável:
+\[W = \sum_{k=1}^{\nu} X_k^2\]
+
+Como as variáveis são mutuamente independentes, a FGM da soma é o
+produto das FGMs individuais:
+\[M_W(s) = \prod_{k=1}^{\nu} M_{X_k^2}(s) = \prod_{k=1}^{\nu} \left[ (1 - 2s)^{-1/2} \exp\left( \frac{\mu_k^2 s}{1 - 2s} \right) \right]\]
+\[M_W(s) = (1 - 2s)^{-\nu/2} \exp\left( \frac{\sum_{k=1}^{\nu} \mu_k^2 s}{1 - 2s} \right)\]
+
+Definimos rigorosamente o \textbf{parâmetro de não-centralidade
+(\(\lambda\))} como: \[\lambda = \sum_{k=1}^{\nu} \mu_k^2\]
+
+A expressão final da FGM da distribuição Qui-Quadrado Não-Central com
+\(\nu\) graus de liberdade e parâmetro de não-centralidade \(\lambda\)
+é:
+\[M_W(s) = (1 - 2s)^{-\nu/2} \exp\left( \frac{\lambda s}{1 - 2s} \right)\]
+
+Geometricamente, se pensarmos nas variáveis normais originais como
+componentes de um vetor de médias
+\(\symbf{\mu} = (\mu_1, \dots, \mu_\nu)^T\) em um espaço euclidiano
+\(\mathbb{R}^\nu\), o parâmetro \(\lambda\) representa exatamente a
+\textbf{norma quadrada} deste vetor (\(\lambda = \|\symbf{\mu}\|^2\)).
+Sob a hipótese nula \(H_0\), todos os \(\mu_k = 0\), reduzindo a
+expressão para \(\lambda = 0\), a FGM exata de uma qui-quadrado central
+clássica.
+
+\section{\texorpdfstring{Parte 2: O Modelo de Análise de Variância
+(ANOVA) sob
+\(H_1\)}{Parte 2: O Modelo de Análise de Variância (ANOVA) sob H\_1}}\label{parte-2-o-modelo-de-anuxe1lise-de-variuxe2ncia-anova-sob-h_1}
+
+No Delineamento Completamente Aleatorizado (DCA), avaliamos a Soma de
+Quadrados dos Tratamentos (\(SQ_{\text{Trat}}\)), dada por:
+\[SQ_{\text{Trat}} = \sum_{i=1}^{t} n_i (\bar Y_{i\cdot} - \bar Y_{\cdot\cdot})^2\]
+
+Onde \(t\) é o número de tratamentos e \(n_i\) é o número de repetições
+por grupo. Sob a modelagem clássica Gauss-Markov com efeitos fixos e
+restrição identitária \(\sum_{i=1}^{t} n_i \tau_i = 0\):
+\[Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \quad \varepsilon_{ij} \sim N(0, \sigma^2)\]
+
+As médias amostrais possuem distribuições amostrais dadas por:
+\[\bar Y_{i\cdot} \sim N\left( \mu + \tau_i, \frac{\sigma^2}{n_i} \right) \quad \text{e} \quad \bar Y_{\cdot\cdot} \sim N\left( \mu, \frac{\sigma^2}{N} \right)\]
+
+Ao aplicar uma transformação ortogonal para projetar o vetor de
+observações no subespaço de contrastes de tratamentos com
+\(\nu = t - 1\) graus de liberdade, normalizando os termos dividindo por
+\(\sigma^2\), a estatística reduz-se à soma de \(t-1\) variáveis normais
+independentes de variância unitária, cujas médias são proporcionais aos
+desvios dos efeitos estruturais (\(\tau_i\)).
+
+Portanto, a variável padronizada segue rigorosamente uma qui-quadrado
+não-central:
+\[\frac{SQ_{\text{Trat}}}{\sigma^2} \sim \chi^2_{t-1, \lambda}\]
+
+Onde o parâmetro de não-centralidade \(\lambda\) herda a norma quadrada
+das médias deslocadas:
+\[\lambda = \frac{\sum_{i=1}^{t} n_i \tau_i^2}{\sigma^2}\]
+
+Sob \(H_0\), todos os efeitos de tratamento \(\tau_i = 0\), implicando
+\(\lambda = 0\).
+
+\textbf{Relação com o \(\phi^2\) dos slides.} A estatística
+\(F = MS_{\text{Trat}}/MS_E\) sob \(H_1\) segue uma \(F\) não-central
+com parâmetros \((t-1,\,N-t)\) e parâmetro de não-centralidade
+\[\phi^2 = \frac{\lambda}{t} = \frac{\sum_{i=1}^{t} n_i \tau_i^2}{t\,\sigma^2},\]
+que é exatamente a quantidade usada em \texttt{pwr::pwr.anova.test()}
+via o \(f\) de Cohen, \(f^2 = \phi^2/N\) (com \(n_i=n\) constante). A
+coerência entre as duas escalas é imediata.
+
+\section{Parte 3: Justificativa da Normalidade via Aleatorização e
+Variáveis de
+Cornfield}\label{parte-3-justificativa-da-normalidade-via-aleatorizauxe7uxe3o-e-variuxe1veis-de-cornfield}
+
+Muitas vezes assume-se o ruído gaussiano \(\varepsilon_{ij}\) como um
+axioma puramente abstrato. Contudo, em experimentos físicos reais, a
+validade inferencial e a aproximação à normalidade decorrem
+essencialmente do mecanismo de \textbf{aleatorização}, formalizado
+rigorosamente através das \textbf{variáveis de seleção de Cornfield}
+(Cornfield, 1944; Kempthorne, 1952).
+
+\subsection{3.1 A Estrutura Conceitual: Unidades Experimentais e Valores
+Potenciais}\label{a-estrutura-conceitual-unidades-experimentais-e-valores-potenciais}
+
+Considere um conjunto finito de \(N\) unidades experimentais físicas
+indexadas por \(j = 1, 2, \dots, N\). Cada unidade possui uma
+característica intrínseca, imutável antes da execução do ensaio. Se
+nenhuma intervenção fosse feita, a resposta mensurada na unidade \(j\)
+seria um valor fixo, denotado por \(Y_{\cdot j}\).
+
+Definimos a média global dessas unidades fixas como:
+\[\bar Y_{\cdot\cdot} = \frac{1}{N} \sum_{j=1}^{N} Y_{\cdot j}\]
+
+Desta forma, o efeito específico e real da unidade \(j\) isolada da
+intervenção é dado pelo desvio:
+\[u_j = Y_{\cdot j} - \bar Y_{\cdot\cdot}\]
+
+Note que, por definição matemática direta, a soma desses efeitos em toda
+a população disponível é rigorosamente nula: \[\sum_{j=1}^{N} u_j = 0\]
+
+\subsection{3.2 O Mecanismo Físico: As Variáveis de Seleção de
+Cornfield}\label{o-mecanismo-fuxedsico-as-variuxe1veis-de-seleuxe7uxe3o-de-cornfield}
+
+O pesquisador deseja alocar \(t\) tratamentos em \(N\) unidades
+experimentais, atribuindo \(n_i\) unidades para cada tratamento \(i\)
+(com \(\sum_{i=1}^{t} n_i = N\)). O processo de sorteio físico é mapeado
+injetando aleatoriedade por meio das \textbf{variáveis indicadoras de
+alocação de Cornfield}, definidas como:
+
+\[\delta_{ir}^{\,j} = \begin{cases}
+1, & \text{se a posição } (i,r) \text{ recebeu a unidade física } j \\
+0, & \text{caso contrário}
+\end{cases}\]
+
+Como o sorteio obedece a restrições físicas combinatórias estritas, o
+espaço amostral impõe as seguintes restrições algébricas:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\sum_{j=1}^{N} \delta_{ir}^{\,j} = 1 \quad \forall (i,r)\) (cada
+  posição recebe exatamente uma unidade).
+\item
+  \(\sum_{i=1}^{t} \sum_{r=1}^{n_i} \delta_{ir}^{\,j} = 1 \quad \forall j\)
+  (cada unidade é alocada a exatamente uma posição).
+\item
+  \(\sum_{r=1}^{n_i} \sum_{j=1}^{N} \delta_{ir}^{\,j} = n_i \quad \forall i\)
+  (o tratamento \(i\) é repetido exatamente \(n_i\) vezes).
+\end{enumerate}
+
+\subsubsection{Propriedades Probabilísticas dos Operadores de
+Cornfield}\label{propriedades-probabiluxedsticas-dos-operadores-de-cornfield}
+
+Sob o desenho totalmente aleatorizado (DCA), todas as combinações de
+alocação são equiprováveis. Disso decorre a distribuição de
+probabilidade exata de \(\delta_{ir}^{\,j}\):
+
+\begin{itemize}
+\item
+  \textbf{Esperança de primeira ordem:}
+  \[E[\delta_{ir}^{\,j}] = P(\delta_{ir}^{\,j} = 1) = \frac{1}{N}\]
+\item
+  \textbf{Esperança conjunta (mesma posição, unidades diferentes,
+  \(j \neq j'\)):} \[E[\delta_{ir}^{\,j}\delta_{ir}^{\,j'}] = 0\]
+\item
+  \textbf{Esperança conjunta (posições diferentes, mesma unidade,
+  \((i,r) \neq (i',r')\)):}
+  \[E[\delta_{ir}^{\,j}\delta_{i'r'}^{\,j}] = 0\]
+\item
+  \textbf{Esperança conjunta cruzada (\((i,r) \neq (i',r')\) e
+  \(j \neq j'\)):}
+  \[E[\delta_{ir}^{\,j}\delta_{i'r'}^{\,j'}] = \frac{1}{N(N-1)}\]
+\item
+  \textbf{Probabilidade condicional:}
+  \[P(\delta_{ir}^{\,j}=1 \mid \delta_{i'r'}^{\,j'}=1) = \frac{1}{N-1}, \quad (i,r) \neq (i',r'),\ j \neq j'\]
+\end{itemize}
+
+\subsection{\texorpdfstring{3.3 A Construção do Erro de Aleatorização
+\(\omega_{ir}\)}{3.3 A Construção do Erro de Aleatorização \textbackslash omega\_\{ir\}}}\label{a-construuxe7uxe3o-do-erro-de-aleatorizauxe7uxe3o-omega_ir}
+
+Seja \(T_i\) o efeito real e intrínseco do tratamento \(i\). A resposta
+física resultante da alocação é dada pela \textbf{relação de seleção}:
+
+\[y_{ir} = \sum_{j=1}^{N} \delta_{ir}^{\,j}\, Y_{ij} = \sum_{j=1}^{N} \delta_{ir}^{\,j}\,(\bar Y_{\cdot\cdot} + T_i + u_j) = \bar Y_{\cdot\cdot} + T_i + \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j\]
+
+Definimos formalmente o \textbf{erro de aleatorização} na posição
+\((i,r)\) como: \[\omega_{ir} = \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j\]
+
+Note a simetria perfeita com o slide ``O modelo deduzido, não suposto''
+da Aula 04:
+\[y_{ir} = \underbrace{\bar Y_{\cdot\cdot}}_{\mu} + \underbrace{(\bar Y_{i\cdot} - \bar Y_{\cdot\cdot})}_{\tau_i} + \underbrace{\sum_j \delta_{ir}^{\,j} u_j}_{\omega_{ir}} = \mu + \tau_i + \omega_{ir}.\]
+
+\subsubsection{A Grande Diferença Decisiva para o Modelo Clássico
+(Gauss-Markov)}\label{a-grande-diferenuxe7a-decisiva-para-o-modelo-cluxe1ssico-gauss-markov}
+
+Observe cuidadosamente a natureza de \(\omega_{ir}\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Origem da Variabilidade:} No modelo abstrato de Gauss-Markov,
+  as propriedades do ruído \(\varepsilon_{ij}\) são postuladas/assumidas
+  axiomaticamente. No modelo de aleatorização de Fisher-Cornfield, as
+  propriedades de \(\omega_{ir}\) são \textbf{deduzidas} de forma
+  puramente matemática a partir do desenho físico do sorteio escolhido
+  pelo pesquisador.
+\item
+  \textbf{Definição de \(\omega_{ir}\):} Ele \textbf{não é um ruído
+  externo ou erro de medição}. Ele representa estritamente o efeito
+  estrutural \(u_j\) da unidade experimental física específica que o
+  sorteio colocou naquela posição. Os valores \(u_j\) são constantes
+  fixas; a variação de \(\omega_{ir}\) surge única e exclusivamente
+  porque \(\delta_{ir}^{\,j}\) é uma variável aleatória devido ao
+  sorteio físico.
+\end{enumerate}
+
+Dessa forma, calculamos a média teórica do erro induzido pelo sorteio:
+\[E[\omega_{ir}] = E\left[ \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j \right] = \sum_{j=1}^{N} u_j\, E[\delta_{ir}^{\,j}] = \frac{1}{N} \sum_{j=1}^{N} u_j = 0\]
+
+O erro possui média estritamente nula devido ao sorteio,
+independentemente da forma ou distribuição dos valores populacionais
+originais \(Y_{\cdot j}\).
+
+\subsubsection{Estrutura de covariância (o que os slides chamam de
+``correlacionado'')}\label{estrutura-de-covariuxe2ncia-o-que-os-slides-chamam-de-correlacionado}
+
+Com \(\sigma_u^2 = \frac{1}{N-1}\sum_{j=1}^{N} u_j^2\):
+
+\[\mathrm{Var}_R(\omega_{ir}) = \left(1 - \frac{1}{N}\right)\sigma_u^2, \qquad \mathrm{Cov}_R(\omega_{ir}, \omega_{i'r'}) = -\frac{\sigma_u^2}{N}, \quad (i,r) \neq (i',r')\]
+
+Ou, matricialmente, para o vetor \(\symbf{\omega}\) de todos os \(N\)
+erros:
+\[\mathrm{Var}_R(\symbf{\omega}) = \symbf{V} = \sigma_u^2\left(\symbf{I}_N - \tfrac{1}{N}\symbf{J}_N\right),\]
+que \textbf{não é diagonal} --- a hipótese de Gauss-Markov clássica está
+violada. Ainda assim, MQO continua BLUE pela condição de Zyskind (Aula
+03), pois \(\symbf{V}\) é da forma
+\(\symbf{I} + \symbf{X} \symbf{A} \symbf{X}'\) com \(\symbf{X}\) a
+matriz de incidência do DCA.
+
+\subsection{\texorpdfstring{3.4 Por que \(\omega_{ir}\) é uma soma de
+indicadores binários
+dependentes}{3.4 Por que \textbackslash omega\_\{ir\} é uma soma de indicadores binários dependentes}}\label{por-que-omega_ir-uxe9-uma-soma-de-indicadores-binuxe1rios-dependentes}
+
+Antes de invocar qualquer teorema central do limite, é preciso entender
+\textbf{exatamente} qual é a estrutura probabilística de
+\(\omega_{ir}\). Reescrevendo:
+
+\[\omega_{ir} = \sum_{j=1}^{N} \delta_{ir}^{\,j} u_j.\]
+
+Cada \(\delta_{ir}^{\,j}\) é uma \textbf{variável indicadora binária}
+(0/1). A soma tem \(N\) termos, mas \textbf{não} é uma soma de \(N\)
+variáveis independentes: as restrições combinatórias da Seção 3.2
+introduzem \textbf{dependência forte} entre os \(\delta_{ir}^{\,j}\).
+
+Mais especificamente, definindo
+\[S_{ir} = \#\{j : \delta_{ir}^{\,j} = 1\},\] as restrições forçam
+\(S_{ir} = 1\) deterministicamente. Ou seja, \textbf{dentre os \(N\)
+indicadores, exatamente um é igual a 1} --- o índice \(j^*\) que o
+sorteio escolheu para a posição \((i,r)\). Portanto:
+
+\[\omega_{ir} = u_{j^*}, \quad \text{onde } j^* \sim \mathrm{Uniforme}\{1,\dots,N\}.\]
+
+Essa é a \textbf{forma elementar} do erro de aleatorização: ele é
+simplesmente o efeito da unidade sorteada para aquela posição.
+
+\subsubsection{3.4.1 Distribuição conjunta e a origem
+hipergeométrica}\label{distribuiuxe7uxe3o-conjunta-e-a-origem-hipergeomuxe9trica}
+
+Considere uma \textbf{única posição} \((i,r)\) e defina o indicador
+\(A_j = \delta_{ir}^{\,j}\). A sequência \((A_1,\dots,A_N)\) tem
+exatamente um 1 e \(N-1\) zeros, com todos os \(\binom{N}{1}=N\) padrões
+equiprováveis. Logo, \(A_j \sim \mathrm{Bernoulli}(1/N)\) e
+\(\sum_j A_j = 1\).
+
+Agora considere \textbf{duas posições distintas} \((i,r)\) e
+\((i',r')\). As variáveis \(A_j = \delta_{ir}^{\,j}\) e
+\(B_j = \delta_{i'r'}^{\,j}\) são dependentes: se \(A_j = 1\) para algum
+\(j\), então \(B_j = 0\). Isso força uma \textbf{correlação negativa}
+entre \(A_j\) e \(B_j\) em cada \(j\).
+
+O ponto crucial: \textbf{se somarmos \(\omega_{ir}\) sobre várias
+posições do mesmo tratamento}, obtemos uma estrutura hipergeométrica.
+Considere o \textbf{total do tratamento \(i\)}:
+\[S_i = \sum_{r=1}^{n_i} \omega_{ir} = \sum_{r=1}^{n_i} u_{j_r^*},\]
+onde \((j_1^*,\dots,j_{n_i}^*)\) são as unidades sorteadas para as
+\(n_i\) posições do tratamento \(i\), \textbf{sem reposição}. Esta é
+precisamente a definição de uma \textbf{amostra aleatória simples sem
+reposição} de tamanho \(n_i\) da população finita \(\{u_1,\dots,u_N\}\).
+
+\subsubsection{3.4.2 Por que a distribuição não é
+binomial}\label{por-que-a-distribuiuxe7uxe3o-nuxe3o-uxe9-binomial}
+
+Vale destacar uma confusão comum: como \(\delta_{ir}^{\,j}\) é binária,
+alguém poderia pensar que \(\omega_{ir}\) é uma soma de binárias
+independentes --- logo binomial. \textbf{Isso está errado.} A soma
+\(\sum_j \delta_{ir}^{\,j}\) é \textbf{igual a 1} (constante), não uma
+variável binomial. E \(\omega_{ir} = \sum_j \delta_{ir}^{\,j} u_j\) é
+uma \textbf{média ponderada} dos \(u_j\) por indicadores que somam 1, ou
+seja, é simplesmente um sorteio uniforme de um dos \(u_j\).
+
+A estrutura binomial aparece, no máximo, \textbf{condicionalmente}: se
+fixarmos que uma unidade específica \(j\) foi sorteada para a posição
+\((i,r)\), a distribuição dos demais \(\delta_{ir}^{\,j'}\) é
+degenerada. Portanto, não há binomialidade marginal; há
+\textbf{uniformidade marginal} e \textbf{dependência combinatória} entre
+posições.
+
+\subsection{3.5 Teorema Central do Limite para Populações Finitas
+(Wald--Wolfowitz--Noether)}\label{teorema-central-do-limite-para-populauxe7uxf5es-finitas-waldwolfowitznoether}
+
+O resultado que dá rigor à normalidade assintótica do erro de
+aleatorização é o \textbf{Teorema Central do Limite para amostragem sem
+reposição de populações finitas}, devido a Wald e Wolfowitz (1944) e
+generalizado por Noether (1949).
+
+\subsubsection{3.5.1 Enunciado (versão de Noether,
+1949)}\label{enunciado-versuxe3o-de-noether-1949}
+
+Seja \(\{u_1,\dots,u_N\}\) uma população finita de constantes com média
+\(\bar u = \frac{1}{N}\sum_{j=1}^{N} u_j\) e variância populacional
+\[\sigma_u^2 = \frac{1}{N-1}\sum_{j=1}^{N} (u_j - \bar u)^2.\] Considere
+uma amostra aleatória simples sem reposição de tamanho \(n\) dessa
+população, digamos \(u_{J_1},\dots,u_{J_n}\), onde \((J_1,\dots,J_n)\) é
+uniformemente distribuído sobre todas as \(\binom{N}{n}\) combinações.
+Defina a média amostral
+\[\bar u_{(n)} = \frac{1}{n}\sum_{k=1}^{n} u_{J_k}.\]
+
+\textbf{Condição de Noether.} Suponha que
+\[\lim_{N \to \infty} \frac{\max_{1 \leq j \leq N} (u_j - \bar u)^2}{\sum_{j=1}^{N} (u_j - \bar u)^2} = 0,\]
+ou seja, \textbf{nenhuma unidade domina a variabilidade total} da
+população.
+
+\textbf{Conclusão.} Se \(n \to \infty\) e \(N - n \to \infty\), então
+\[\frac{\bar u_{(n)} - \bar u}{\sqrt{\mathrm{Var}(\bar u_{(n)})}} \xrightarrow{d} N(0,1),\]
+onde
+\[\mathrm{Var}(\bar u_{(n)}) = \frac{\sigma_u^2}{n}\left(1 - \frac{n-1}{N-1}\right).\]
+
+O fator \((1 - \frac{n-1}{N-1})\) é a \textbf{correção de população
+finita}: se \(n = N\), a variância é zero; se \(n \ll N\), recupera-se
+\(\sigma_u^2/n\), o caso i.i.d.
+
+\subsubsection{3.5.2 Aplicação ao DCA}\label{aplicauxe7uxe3o-ao-dca}
+
+No nosso contexto, para o tratamento \(i\), as unidades sorteadas formam
+uma amostra sem reposição de tamanho \(n_i\) da população
+\(\{u_1,\dots,u_N\}\). Portanto:
+\[\bar \omega_{i\cdot} = \frac{1}{n_i}\sum_{r=1}^{n_i} \omega_{ir} = \frac{1}{n_i}\sum_{r=1}^{n_i} u_{J_r^{(i)}},\]
+que é exatamente a média amostral \(\bar u_{(n_i)}\) do teorema.
+
+\textbf{Verificação da condição de Noether no DCA.} A condição exige que
+nenhuma unidade domine a variabilidade. Em um experimento real, isso é
+uma \textbf{suposição sobre a população de unidades} --- não sobre o
+modelo. Ela falha, por exemplo, se uma única unidade tem um \(u_j\)
+gigantesco comparado aos demais (um outlier de unidade). Nesse caso, o
+TCL não se aplica e a normalidade assintótica não é garantida.
+
+\textbf{Conclusão para o DCA.} Sob a condição de Noether e com
+\(n_i \to \infty\) e \(N - n_i \to \infty\),
+\[\frac{\bar \omega_{i\cdot}}{\sqrt{\mathrm{Var}_R(\bar \omega_{i\cdot})}} \xrightarrow{d} N(0,1),\]
+com
+\[\mathrm{Var}_R(\bar \omega_{i\cdot}) = \frac{\sigma_u^2}{n_i}\left(1 - \frac{n_i - 1}{N - 1}\right).\]
+
+Combinando com
+\(\bar y_{i\cdot} = \bar Y_{\cdot\cdot} + T_i + \bar \omega_{i\cdot}\),
+obtemos
+\[\bar y_{i\cdot} \overset{\text{aprox.}}{\sim} N\left(\bar Y_{\cdot\cdot} + T_i, \; \mathrm{Var}_R(\bar \omega_{i\cdot})\right).\]
+
+\subsubsection{3.5.3 Por que não basta ``invocar o TCL
+clássico''}\label{por-que-nuxe3o-basta-invocar-o-tcl-cluxe1ssico}
+
+O TCL clássico (Lindeberg--Lévy) exige \textbf{independência} e
+\textbf{variâncias finitas iguais}. No nosso caso: - As
+\(\delta_{ir}^{\,j}\) são \textbf{dependentes} (restrições
+combinatórias); - As \(u_j\) são \textbf{constantes fixas}, não
+variáveis aleatórias; - A aleatoriedade vem \textbf{do sorteio}, não dos
+dados.
+
+O TCL clássico não se aplica diretamente. O que se aplica é o
+\textbf{TCL para populações finitas} (Wald--Wolfowitz--Noether), que
+trata as \(u_j\) como fixas, modela a aleatoriedade como amostragem sem
+reposição, fornece a correção de população finita na variância e exige a
+condição de Noether para garantir que o máximo não domina a soma.
+
+\subsubsection{3.5.4 Resumo esquemático da cadeia de
+raciocínio}\label{resumo-esquemuxe1tico-da-cadeia-de-raciocuxednio}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Passo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+O que é
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Ferramenta
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & \(\omega_{ir}\) é soma ponderada de indicadores binários & Definição
+de Cornfield \\
+2 & As restrições forçam \(\sum_j \delta_{ir}^{\,j}=1\) & Combinatória
+elementar \\
+3 & Logo \(\omega_{ir} = u_{j^*}\) com
+\(j^* \sim \mathrm{Uniforme}\{1,\dots,N\}\) & Sorteio uniforme \\
+4 & Soma sobre \(r\) é amostra sem reposição de tamanho \(n_i\) & Teoria
+de amostragem finita \\
+5 & Estrutura conjunta é hipergeométrica, não binomial & Dependência
+combinatória \\
+6 & TCL para populações finitas (Wald--Wolfowitz--Noether) & Normalidade
+assintótica \\
+7 & Condição de Noether: \(\max_j u_j^2 / \sum_j u_j^2 \to 0\) & Nenhuma
+unidade domina \\
+8 & Correção de população finita: \((1 - \frac{n_i-1}{N-1})\) & Ajuste
+da variância \\
+9 & Conclusão: \(\bar y_{i\cdot}\) é assintoticamente normal &
+Inferência válida \\
+\end{longtable}
+}
+
+\subsubsection{Conclusão e Impacto na
+Inferência}\label{conclusuxe3o-e-impacto-na-inferuxeancia}
+
+Essa convergência distribucional implica que:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  A distribuição das estatísticas de teste (como o teste F da ANOVA)
+  converge para a distribuição teórica clássica mesmo se a população
+  original de unidades experimentais for altamente não-normal.
+\item
+  A construção de \textbf{intervalos de confiança} fundamentados na
+  premissa Gauss-Markov é legítima na prática porque a aleatorização
+  atua como um mecanismo físico simetrizador.
+\item
+  O erro passa a ser controlado e modelado pelas probabilidades do
+  sorteio planejado.
+\item
+  \textbf{A condição de Noether é o preço a pagar}: sem ela, nem a
+  normalidade assintótica nem a validade dos testes F estão garantidas.
+\end{enumerate}
+
+\section{Parte 4: Complementos sobre a Qui-Quadrado
+Não-Central}\label{parte-4-complementos-sobre-a-qui-quadrado-nuxe3o-central}
+
+\subsection{4.1 Função Densidade da Qui-Quadrado
+Não-Central}\label{funuxe7uxe3o-densidade-da-qui-quadrado-nuxe3o-central}
+
+Para \(W \sim \chi^2_{\nu, \lambda}\), a f.d.p. é dada por uma mistura
+infinita de qui-quadrados centrais:
+\[f_W(w) = \sum_{k=0}^{\infty} \frac{e^{-\lambda/2} (\lambda/2)^k}{k!} \cdot \frac{w^{\nu/2 + k - 1} e^{-w/2}}{2^{\nu/2 + k} \Gamma(\nu/2 + k)}, \quad w > 0\]
+
+A média e a variância são:
+\[E[W] = \nu + \lambda, \quad \mathrm{Var}(W) = 2\nu + 4\lambda\]
+
+\subsection{4.2 Relação com a Distribuição F
+Não-Central}\label{relauxe7uxe3o-com-a-distribuiuxe7uxe3o-f-nuxe3o-central}
+
+No contexto da ANOVA, a estatística de teste é
+\(F = \frac{SQ_{\text{Trat}}/(t-1)}{SQ_E/(N-t)}\). Sob \(H_1\), o
+numerador é proporcional a uma qui-quadrado não-central e o denominador
+a uma qui-quadrado central independente. A razão segue uma
+\textbf{distribuição F não-central} com parâmetros
+\((t-1, N-t, \phi^2)\), onde
+\[\phi^2 = \frac{\lambda}{t} = \frac{\sum_{i=1}^{t} n_i \tau_i^2}{t\,\sigma^2}.\]
+Isso conecta diretamente esta nota à fórmula de
+\texttt{pwr::pwr.anova.test()} usada na Aula 04 (onde
+\(f^2 = \phi^2 / N\)).
+
+\section{Parte 5: Dimensionalidade, Verossimilhança e Penalização por
+Complexidade}\label{parte-5-dimensionalidade-verossimilhanuxe7a-e-penalizauxe7uxe3o-por-complexidade}
+
+Esta parte fecha a discussão com um ponto que apareceu em aula e que
+merece tratamento formal: \textbf{o aumento da dimensionalidade do
+espaço de parâmetros quando o fator tem muitos níveis}. Esse aumento não
+é apenas um detalhe de notação --- ele afeta a verossimilhança, o \(f\)
+de Cohen, a otimização numérica e a escolha de modelo.
+
+\subsection{5.1 O espaço de parâmetros cresce com o
+modelo}\label{o-espauxe7o-de-paruxe2metros-cresce-com-o-modelo}
+
+Considere uma única observação \(X \sim N(\mu, \sigma^2)\). O espaço de
+parâmetros é \(\Theta \subset \mathbb{R} \times \mathbb{R}_{>0}\) ---
+\textbf{bidimensional}. À medida que o modelo cresce, a dimensão de
+\(\Theta\) cresce:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Parâmetros
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dimensão de \(\Theta\)
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(N(\mu, \sigma^2)\) com \(\sigma^2\) conhecido & \(\mu\) & \(1\)
+(\(\mathbb{R}\)) \\
+\(N(\mu, \sigma^2)\) com ambos desconhecidos & \((\mu, \sigma^2)\) &
+\(2\) (\(\mathbb{R} \times \mathbb{R}_{>0}\)) \\
+DCA com \(t\) tratamentos, \(\sigma^2\) conhecido &
+\((\mu_1,\dots,\mu_t)\) & \(t\) (\(\mathbb{R}^t\)) \\
+DCA com \(t\) tratamentos, \(\sigma^2\) desconhecido &
+\((\mu_1,\dots,\mu_t, \sigma^2)\) & \(t+1\) \\
+Modelo com dummies para um fator de \(t\) níveis + interações & cresce
+com \(t\) e com o nº de fatores &
+\(O(t \times \text{nº de fatores})\) \\
+\end{longtable}
+}
+
+A cada novo nível de um fator, \textbf{adicionamos uma dimensão} ao
+espaço de parâmetros. O gráfico abaixo ilustra o caso mais simples: a
+superfície de log-verossimilhança em \(\mathbb{R}^2\) para uma normal
+com \(\mu\) e \(\sigma\) desconhecidos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2024}\NormalTok{)}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{30}\NormalTok{, }\AttributeTok{mean =} \DecValTok{2}\NormalTok{, }\AttributeTok{sd =} \FloatTok{1.5}\NormalTok{)}
+
+\NormalTok{loglik\_norm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(mu, sigma, x) \{}
+  \ControlFlowTok{if}\NormalTok{ (sigma }\SpecialCharTok{\textless{}=} \DecValTok{0}\NormalTok{) }\FunctionTok{return}\NormalTok{(}\SpecialCharTok{{-}}\ConstantTok{Inf}\NormalTok{)}
+\NormalTok{  n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(x)}
+  \SpecialCharTok{{-}}\NormalTok{n}\SpecialCharTok{/}\DecValTok{2} \SpecialCharTok{*} \FunctionTok{log}\NormalTok{(}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ pi) }\SpecialCharTok{{-}}\NormalTok{ n }\SpecialCharTok{*} \FunctionTok{log}\NormalTok{(sigma) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{((x }\SpecialCharTok{{-}}\NormalTok{ mu)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ sigma}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{grid\_mu    }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{120}\NormalTok{)}
+\NormalTok{grid\_sigma }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{120}\NormalTok{)}
+\NormalTok{grid }\OtherTok{\textless{}{-}} \FunctionTok{expand\_grid}\NormalTok{(}\AttributeTok{mu =}\NormalTok{ grid\_mu, }\AttributeTok{sigma =}\NormalTok{ grid\_sigma) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ll =} \FunctionTok{map2\_dbl}\NormalTok{(mu, sigma, loglik\_norm, }\AttributeTok{x =}\NormalTok{ x))}
+
+\FunctionTok{ggplot}\NormalTok{(grid, }\FunctionTok{aes}\NormalTok{(mu, sigma, }\AttributeTok{fill =}\NormalTok{ ll)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_raster}\NormalTok{(}\AttributeTok{interpolate =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_contour}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{z =}\NormalTok{ ll), }\AttributeTok{color =} \StringTok{"white"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{bins =} \DecValTok{12}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{mean}\NormalTok{(x), }\AttributeTok{y =} \FunctionTok{sd}\NormalTok{(x)), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{size =} \DecValTok{3}\NormalTok{, }\AttributeTok{shape =} \DecValTok{4}\NormalTok{, }\AttributeTok{stroke =} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_viridis\_c}\NormalTok{(}\AttributeTok{option =} \StringTok{"magma"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"(a) log{-}verossimilhanca em R2"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"Normal com media e desvio padrao desconhecidos"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"media"}\NormalTok{, }\AttributeTok{y =} \StringTok{"desvio padrao"}\NormalTok{, }\AttributeTok{fill =} \StringTok{"log L"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{deducao_qui_quadrado_nao_central_DIC_files/figure-latex/fig-5a-1} 
+
+}
+
+\caption{Superficie de log-verossimilhanca em R2 para uma normal com media e desvio padrao desconhecidos. O x vermelho marca o otimo.}\label{fig:fig-5a}
+\end{figure}
+
+\subsection{5.2 A verossimilhança fica mais plana e mais difícil de
+otimizar}\label{a-verossimilhanuxe7a-fica-mais-plana-e-mais-difuxedcil-de-otimizar}
+
+A função de verossimilhança \(\ell(\theta)\) para um modelo com \(p\)
+parâmetros é uma função \(p\)-dimensional. À medida que \(p\) cresce:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{O volume do espaço cresce exponencialmente} (maldição da
+  dimensionalidade): para amostrar o mesmo ``espaço de cobertura'' em
+  cada dimensão, precisamos de um número de pontos que cresce como
+  \(k^p\).
+\item
+  \textbf{A superfície de \(\ell\) fica mais acidentada}: o número de
+  \textbf{mínimos locais} tende a crescer com \(p\), especialmente
+  quando há dependência entre parâmetros (como \(\mu\) e \(\sigma^2\),
+  ou como \(\mu_i\) e \(\sigma^2\) no DCA desbalanceado).
+\item
+  \textbf{Algoritmos de otimização (Newton--Raphson, BFGS, EM) ficam
+  mais sensíveis ao chute inicial}: a bacia de atração do máximo global
+  encolhe relativamente.
+\end{enumerate}
+
+O gráfico abaixo ilustra isso de forma esquemática: quanto maior \(p\),
+mais plana a verossimilhança perfilada em torno do ótimo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{perfil\_ll }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(theta\_norm, p) \{}
+  \SpecialCharTok{{-}}\NormalTok{p }\SpecialCharTok{*} \FunctionTok{log}\NormalTok{(}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ theta\_norm}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ p) }\SpecialCharTok{{-}} \FloatTok{0.05} \SpecialCharTok{*}\NormalTok{ theta\_norm}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(p)}
+\NormalTok{\}}
+
+\NormalTok{theta }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{200}\NormalTok{)}
+\NormalTok{df\_b }\OtherTok{\textless{}{-}} \FunctionTok{map\_dfr}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{100}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(p) \{}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{theta =}\NormalTok{ theta, }\AttributeTok{ll =} \FunctionTok{perfil\_ll}\NormalTok{(theta, p), }\AttributeTok{p =} \FunctionTok{factor}\NormalTok{(p))}
+\NormalTok{\})}
+
+\FunctionTok{ggplot}\NormalTok{(df\_b, }\FunctionTok{aes}\NormalTok{(theta, ll, }\AttributeTok{color =}\NormalTok{ p)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{1.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_viridis\_d}\NormalTok{(}\AttributeTok{option =} \StringTok{"plasma"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"(b) Verossimilhanca perfilada vs. dimensao p"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"Quanto maior p, mais plana a superficie"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"distancia normalizada do otimo"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"log{-}verossimilhanca perfilada"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"p"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{deducao_qui_quadrado_nao_central_DIC_files/figure-latex/fig-5b-1} 
+
+}
+
+\caption{Verossimilhanca perfilada em funcao da dimensao p. Quanto maior p, mais plana a superficie e mais dificil localizar o otimo com precisao.}\label{fig:fig-5b}
+\end{figure}
+
+\subsection{\texorpdfstring{5.3 O \(f\) de Cohen é afetado pelo número
+de
+níveis}{5.3 O f de Cohen é afetado pelo número de níveis}}\label{o-f-de-cohen-uxe9-afetado-pelo-nuxfamero-de-nuxedveis}
+
+O \(f\) de Cohen, usado em \texttt{pwr::pwr.anova.test()}, é definido
+como
+\[f^2 = \frac{\sum_{i=1}^{t} n_i \tau_i^2 / t}{\sigma^2} = \frac{\phi^2}{N},\]
+onde \(\phi^2\) é o parâmetro de não-centralidade da \(F\). Note que:
+
+\begin{itemize}
+\tightlist
+\item
+  Para um \textbf{número fixo de tratamentos} \(t\), aumentar \(\tau_i\)
+  aumenta \(f\).
+\item
+  Para um \textbf{efeito total fixo} \(\sum_i n_i \tau_i^2\), aumentar
+  \(t\) \textbf{dilui} o efeito por tratamento, \textbf{reduzindo} \(f\)
+  --- porque o mesmo ``orçamento'' de variabilidade explicada é dividido
+  entre mais parâmetros.
+\item
+  Mais níveis de um fator significa \textbf{mais dummies} no modelo
+  linear, o que significa \textbf{mais graus de liberdade gastos} e
+  \textbf{menos poder por parâmetro estimado}.
+\end{itemize}
+
+Isso é a manifestação estatística da maldição da dimensionalidade:
+\textbf{a mesma quantidade de informação é distribuída em um espaço
+maior}, e cada parâmetro individual é estimado com menos precisão.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{7}\NormalTok{)}
+\NormalTok{efeito\_total }\OtherTok{\textless{}{-}} \DecValTok{5000}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \DecValTok{20}
+\NormalTok{n\_por\_grupo }\OtherTok{\textless{}{-}} \DecValTok{15}
+
+\NormalTok{df\_d }\OtherTok{\textless{}{-}} \FunctionTok{map\_dfr}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(t) \{}
+\NormalTok{  tau }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(efeito\_total }\SpecialCharTok{/}\NormalTok{ (t }\SpecialCharTok{*}\NormalTok{ n\_por\_grupo)) }\SpecialCharTok{*} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, t }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{))[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{t]}
+\NormalTok{  tau[}\FunctionTok{is.na}\NormalTok{(tau)] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{  tau }\OtherTok{\textless{}{-}}\NormalTok{ tau }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(tau)}
+\NormalTok{  f2 }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(n\_por\_grupo }\SpecialCharTok{*}\NormalTok{ tau}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (t }\SpecialCharTok{*}\NormalTok{ sigma}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{  f  }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(f2)}
+\NormalTok{  poder }\OtherTok{\textless{}{-}} \FunctionTok{pwr.anova.test}\NormalTok{(}\AttributeTok{k =}\NormalTok{ t, }\AttributeTok{f =}\NormalTok{ f, }\AttributeTok{sig.level =} \FloatTok{0.05}\NormalTok{,}
+                           \AttributeTok{n =}\NormalTok{ n\_por\_grupo)}\SpecialCharTok{$}\NormalTok{power}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{t =}\NormalTok{ t, }\AttributeTok{f =}\NormalTok{ f, }\AttributeTok{f2 =}\NormalTok{ f2, }\AttributeTok{poder =}\NormalTok{ poder)}
+\NormalTok{\})}
+
+\NormalTok{p\_d1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df\_d, }\FunctionTok{aes}\NormalTok{(t, f)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#0B4F6C"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#0B4F6C"}\NormalTok{, }\AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"(d1) f de Cohen vs. numero de niveis t"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"Efeito total constante; t cresce, f dilui"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"numero de niveis t"}\NormalTok{, }\AttributeTok{y =} \StringTok{"f de Cohen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+
+\NormalTok{p\_d2 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df\_d, }\FunctionTok{aes}\NormalTok{(t, poder)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#B22222"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#B22222"}\NormalTok{, }\AttributeTok{size =} \FloatTok{2.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FloatTok{0.80}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"grey40"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"(d2) Poder vs. numero de niveis t"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"n = 15 por grupo, alpha = 0.05"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"numero de niveis t"}\NormalTok{, }\AttributeTok{y =} \StringTok{"poder"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+
+\NormalTok{p\_d1 }\SpecialCharTok{|}\NormalTok{ p\_d2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{deducao_qui_quadrado_nao_central_DIC_files/figure-latex/fig-5d-1} 
+
+}
+
+\caption{Efeito do numero de niveis t no f de Cohen e no poder, com efeito total constante. A medida que t cresce, f e diluido e o poder cai.}\label{fig:fig-5d}
+\end{figure}
+
+\subsection{5.4 A penalização por complexidade é
+inevitável}\label{a-penalizauxe7uxe3o-por-complexidade-uxe9-inevituxe1vel}
+
+Como o espaço de parâmetros cresce, o \textbf{risco de sobreajuste}
+cresce. A resposta clássica é penalizar a verossimilhança pelo número de
+parâmetros:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{AIC:} \(\mathrm{AIC} = -2\ell(\hat\theta) + 2p\).
+\item
+  \textbf{BIC:} \(\mathrm{BIC} = -2\ell(\hat\theta) + p \log(N)\).
+\item
+  \textbf{AICc:}
+  \(\mathrm{AICc} = \mathrm{AIC} + \frac{2p(p+1)}{N-p-1}\).
+\item
+  \textbf{Ridge:} \(\ell(\theta) - \lambda \|\theta\|_2^2\).
+\item
+  \textbf{Lasso:} \(\ell(\theta) - \lambda \|\theta\|_1\).
+\end{itemize}
+
+Todas essas penalizações \textbf{crescem com \(p\)} --- isto é,
+tornam-se mais severas à medida que o modelo fica mais complexo. Sem
+elas, o modelo com mais parâmetros sempre terá verossimilhança maior (em
+amostra), mesmo que generalize pior.
+
+O gráfico abaixo mostra esse trade-off: enquanto \(-2\log L\) sempre
+decresce com \(p\), os critérios penalizados apresentam um mínimo
+interior.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ll\_obs }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(p, }\AttributeTok{n =} \DecValTok{100}\NormalTok{) \{}
+\NormalTok{  n }\SpecialCharTok{*} \FunctionTok{log}\NormalTok{(}\DecValTok{1} \SpecialCharTok{+} \DecValTok{10} \SpecialCharTok{/}\NormalTok{ (p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+} \FloatTok{0.3} \SpecialCharTok{*}\NormalTok{ p}
+\NormalTok{\}}
+
+\NormalTok{df\_c }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{p =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{m2ll =} \FunctionTok{ll\_obs}\NormalTok{(p),}
+    \AttributeTok{AIC  =}\NormalTok{ m2ll }\SpecialCharTok{+} \DecValTok{2} \SpecialCharTok{*}\NormalTok{ p,}
+    \AttributeTok{BIC  =}\NormalTok{ m2ll }\SpecialCharTok{+}\NormalTok{ p }\SpecialCharTok{*} \FunctionTok{log}\NormalTok{(}\DecValTok{100}\NormalTok{),}
+    \AttributeTok{AICc =}\NormalTok{ AIC }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ p }\SpecialCharTok{*}\NormalTok{ (p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{100} \SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\FunctionTok{c}\NormalTok{(m2ll, AIC, BIC, AICc), }\AttributeTok{names\_to =} \StringTok{"criterio"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"valor"}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(df\_c, }\FunctionTok{aes}\NormalTok{(p, valor, }\AttributeTok{color =}\NormalTok{ criterio)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{1.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\AttributeTok{m2ll =} \StringTok{"grey50"}\NormalTok{, }\AttributeTok{AIC =} \StringTok{"\#0B4F6C"}\NormalTok{,}
+                                 \AttributeTok{BIC =} \StringTok{"\#B22222"}\NormalTok{, }\AttributeTok{AICc =} \StringTok{"\#2E8B57"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"(c) Criterios de informacao vs. numero de parametros p"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"{-}2 log L sempre decresce; AIC/BIC penalizam"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"numero de parametros p"}\NormalTok{, }\AttributeTok{y =} \StringTok{"valor do criterio"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{deducao_qui_quadrado_nao_central_DIC_files/figure-latex/fig-5c-1} 
+
+}
+
+\caption{Criterios de informacao vs. numero de parametros. -2 log L sempre decresce com p; AIC, BIC e AICc penalizam a complexidade e apresentam minimo interior.}\label{fig:fig-5c}
+\end{figure}
+
+\textbf{A conexão com o DCA.} Um fator com muitos níveis gera muitas
+dummies, que por sua vez aumentam \(p\). Sem penalização, o modelo
+saturado (com interações de ordem alta) terá verossimilhança maior do
+que o modelo aditivo --- mas o teste F e o \(f\) de Cohen já
+\textbf{internalizam} essa penalização via graus de liberdade residuais.
+É por isso que o \(F\) é sempre uma razão entre variabilidade explicada
+\textbf{por parâmetro} e variabilidade residual.
+
+\subsection{5.5 Mínimos locais e a não-convexidade em alta
+dimensão}\label{muxednimos-locais-e-a-nuxe3o-convexidade-em-alta-dimensuxe3o}
+
+Um ponto que merece destaque: \textbf{aumentar a dimensão do espaço de
+parâmetros não só dificulta a otimização --- torna a paisagem de
+verossimilhança inerentemente mais não-convexa.}
+
+Em modelos lineares gaussianos com matriz de delineamento \(\mathbf{X}\)
+de posto completo, a verossimilhança é \textbf{log-côncava} em
+\(\boldsymbol\beta\) (para \(\sigma^2\) fixo) e a solução de MQO é
+única. Mas isso é uma \textbf{exceção}, não a regra:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Modelos mistos e hierárquicos:} a verossimilhança marginal
+  envolve integrais que introduzem não-convexidade. Múltiplos máximos
+  locais são comuns.
+\item
+  \textbf{Modelos com dummies e interações de ordem alta:} a matriz
+  \(\mathbf{X}\) pode ficar \textbf{mal-condicionada} (colunas quase
+  colineares), e a superfície de verossimilhança fica achatada em
+  direções específicas --- o otimizador ``desliza'' sem encontrar o
+  ótimo.
+\item
+  \textbf{Modelos com \(\sigma^2\) desconhecido e \(t\) grande:} a
+  dependência entre \(\mu_i\) e \(\sigma^2\) cria uma \textbf{curvatura
+  variável} ao longo da superfície, e métodos de gradiente podem
+  oscilar.
+\end{enumerate}
+
+Em todos esses casos, o número de \textbf{pontos de sela} e
+\textbf{mínimos locais} cresce com \(p\), e a probabilidade de um
+algoritmo de otimização (mesmo BFGS ou Newton) parar em um ponto
+sub-ótimo \textbf{aumenta com a complexidade do modelo}. É exatamente
+por isso que:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Penalizações} (ridge, lasso) ajudam: suavizam a superfície e
+  reduzem o número de mínimos locais.
+\item
+  \textbf{Métodos de momento} (como EM) são preferidos em modelos com
+  variáveis latentes.
+\item
+  \textbf{Validação cruzada} e \textbf{critérios de informação} são
+  indispensáveis para escolher entre modelos de dimensões diferentes.
+\end{itemize}
+
+\textbf{Conclusão prática.} Quando o fator tem muitos níveis e o modelo
+tem muitas dummies, não basta ``rodar a ANOVA''. É preciso (i) verificar
+condicionamento de \(\mathbf{X}\), (ii) usar critérios penalizados para
+escolher o modelo, (iii) desconfiar de resultados de otimizadores que
+não convergem ou convergem para pontos diferentes com chutes iniciais
+diferentes.
+
+\section{Parte 6: f de Cohen vs.~d de Cohen vs.~eta
+quadrado}\label{parte-6-f-de-cohen-vs.-d-de-cohen-vs.-eta-quadrado}
+
+Esta seção responde a uma pergunta que surgiu em aula: \textbf{o f de
+Cohen é a mesma coisa que o d de Cohen? E qual é a relação com o eta
+quadrado (\(\eta^2\)) usado em meta-análises?} A resposta curta é
+\textbf{não, não são a mesma coisa}, mas são parentes próximos e
+conversíveis entre si sob condições específicas. Vamos com calma.
+
+\subsection{6.1 Três medidas, três
+escalas}\label{truxeas-medidas-truxeas-escalas}
+
+Existem três medidas de tamanho de efeito que aparecem com frequência em
+ANOVA e meta-análise:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Medida
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Símbolo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+O que mede
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Escala
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+d de Cohen & \(d\) & Diferença padronizada entre \textbf{duas} médias &
+Desvios-padrão \\
+f de Cohen & \(f\) & Tamanho de efeito \textbf{global} de um fator com
+\(t\) níveis & Desvios-padrão (mas em escala diferente) \\
+eta quadrado & \(\eta^2\) & \textbf{Proporção} da variância total
+explicada pelo fator & Adimensional, entre 0 e 1 \\
+\end{longtable}
+}
+
+As três estão relacionadas, mas \textbf{não são intercambiáveis sem
+conversão}.
+
+\subsection{6.2 A ponte entre f e eta
+quadrado}\label{a-ponte-entre-f-e-eta-quadrado}
+
+A relação fundamental é:
+\[f^2 = \frac{\eta^2}{1 - \eta^2} \qquad \Longleftrightarrow \qquad \eta^2 = \frac{f^2}{1 + f^2}\]
+
+Essa relação é \textbf{exata} e vale para qualquer medida de proporção
+de variância explicada. Ela aparece naturalmente na ANOVA: o eta
+quadrado é a razão entre \(SQ_{\text{Trat}}\) e \(SQ_{\text{Total}}\), e
+o f de Cohen é a raiz da razão entre \(SQ_{\text{Trat}}\) e
+\(SQ_{\text{Erro}}\), ajustada pelo número de graus de liberdade.
+
+Vamos verificar numericamente no R que essa relação vale para os dados
+da Aula 04.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Grade de valores de eta\^{}2}
+\NormalTok{eta2\_grid }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{200}\NormalTok{)}
+\NormalTok{f\_grid }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(eta2\_grid }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ eta2\_grid))}
+
+\NormalTok{df\_eta }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{eta2 =}\NormalTok{ eta2\_grid, }\AttributeTok{f =}\NormalTok{ f\_grid)}
+
+\CommentTok{\# Valores de referencia de Cohen (1988)}
+\NormalTok{cohen\_ref }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{rotulo =} \FunctionTok{c}\NormalTok{(}\StringTok{"pequeno"}\NormalTok{, }\StringTok{"medio"}\NormalTok{, }\StringTok{"grande"}\NormalTok{),}
+  \AttributeTok{eta2   =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.06}\NormalTok{, }\FloatTok{0.14}\NormalTok{),}
+  \AttributeTok{f      =} \FunctionTok{sqrt}\NormalTok{(eta2 }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ eta2))}
+\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(df\_eta, }\FunctionTok{aes}\NormalTok{(eta2, f)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#0B4F6C"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{data =}\NormalTok{ cohen\_ref, }\FunctionTok{aes}\NormalTok{(eta2, f, }\AttributeTok{color =}\NormalTok{ rotulo), }\AttributeTok{size =} \FloatTok{3.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_text}\NormalTok{(}\AttributeTok{data =}\NormalTok{ cohen\_ref, }\FunctionTok{aes}\NormalTok{(eta2, f, }\AttributeTok{label =}\NormalTok{ rotulo),}
+            \AttributeTok{vjust =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{size =} \FloatTok{3.5}\NormalTok{, }\AttributeTok{color =} \StringTok{"grey30"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\AttributeTok{pequeno =} \StringTok{"\#2E8B57"}\NormalTok{,}
+                                 \AttributeTok{medio  =} \StringTok{"\#B8860B"}\NormalTok{,}
+                                 \AttributeTok{grande =} \StringTok{"\#B22222"}\NormalTok{),}
+                     \AttributeTok{guide =} \StringTok{"none"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Conversao exata entre eta quadrado e f de Cohen"}\NormalTok{,}
+       \AttributeTok{subtitle =} \StringTok{"f\^{}2 = eta\^{}2 / (1 {-} eta\^{}2)"}\NormalTok{,}
+       \AttributeTok{x =} \FunctionTok{expression}\NormalTok{(eta}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{y =} \StringTok{"f de Cohen"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{deducao_qui_quadrado_nao_central_DIC_files/figure-latex/eta2-f-1} 
+
+}
+
+\caption{Relacao entre eta quadrado e f de Cohen. A curva mostra a conversao exata; os pontos sao valores tipicos de Cohen.}\label{fig:eta2-f}
+\end{figure}
+
+\subsection{6.3 Por que a confusão com o d de Cohen é
+comum}\label{por-que-a-confusuxe3o-com-o-d-de-cohen-uxe9-comum}
+
+O d de Cohen é \textbf{definido apenas para duas médias}:
+\[d = \frac{\bar y_1 - \bar y_2}{s_p},\] onde \(s_p\) é o desvio-padrão
+combinado.
+
+Quando um fator tem \textbf{exatamente dois níveis} (\(t = 2\)), o f de
+Cohen e o d de Cohen são monotonicamente relacionados por uma fórmula
+simples. Se os grupos são balanceados (\(n_1 = n_2\)):
+\[f = \frac{d}{2} \qquad \Longleftrightarrow \qquad d = 2f.\]
+
+A derivação usa a relação entre eta quadrado e d para dois grupos:
+\[\eta^2 = \frac{d^2}{d^2 + 4} \quad \Longrightarrow \quad f^2 = \frac{d^2}{4}.\]
+
+Quando o fator tem \textbf{três ou mais níveis} (\(t \geq 3\)),
+\textbf{não existe uma generalização única do d de Cohen}. Cada par de
+tratamentos tem seu próprio d, mas eles não se combinam em um único
+número que represente o efeito global do fator. Por isso, em ANOVA com
+\(t \geq 3\), usa-se o f de Cohen.
+
+\subsection{6.4 A relação com
+meta-análise}\label{a-relauxe7uxe3o-com-meta-anuxe1lise}
+
+Em meta-análise, o que se combina entre estudos é o \textbf{tamanho de
+efeito padronizado}. A escolha depende do design:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Estudos com dois grupos (teste t):} usa-se o d de Cohen. É o
+  padrão histórico em psicologia e educação.
+\item
+  \textbf{Estudos com três ou mais grupos (ANOVA):} usa-se o f de Cohen,
+  ou converte-se para eta quadrado.
+\item
+  \textbf{Estudos com proporções de variância explicada:} reporta-se eta
+  quadrado ou R quadrado, e converte-se para d ou f conforme necessário.
+\end{itemize}
+
+A tabela de conversão abaixo resume tudo:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+De
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Para
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Fórmula
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Validade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(\eta^2\) & \(f\) & \(f = \sqrt{\eta^2 / (1 - \eta^2)}\) & Sempre \\
+\(f\) & \(\eta^2\) & \(\eta^2 = f^2 / (1 + f^2)\) & Sempre \\
+\(d\) & \(f\) & \(f = d/2\) & Somente \(t = 2\), balanceado \\
+\(f\) & \(d\) & \(d = 2f\) & Somente \(t = 2\), balanceado \\
+\(\eta^2\) & \(d\) & \(d = 2\sqrt{\eta^2 / (1 - \eta^2)}\) & Somente
+\(t = 2\) \\
+\end{longtable}
+}
+
+\subsection{6.5 Código R: calculando tudo no
+DCA}\label{cuxf3digo-r-calculando-tudo-no-dca}
+
+Vamos usar os dados de tempo de reação da Aula 04 (três condições:
+Nenhuma, Sonora, Visual) para calcular \textbf{f}, \textbf{eta quadrado}
+e \textbf{d par-a-par}, mostrando o que faz sentido e o que não faz.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# {-}{-}{-} Dados da Aula 04 (replicando o exemplo) {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{48}\NormalTok{)}
+\NormalTok{condicao }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Nenhuma"}\NormalTok{, }\StringTok{"Sonora"}\NormalTok{, }\StringTok{"Visual"}\NormalTok{)}
+\NormalTok{n\_por\_grupo }\OtherTok{\textless{}{-}} \DecValTok{12}
+\NormalTok{dados\_tr }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{sujeito  =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\DecValTok{3} \SpecialCharTok{*}\NormalTok{ n\_por\_grupo),}
+  \AttributeTok{condicao =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(condicao, }\AttributeTok{each =}\NormalTok{ n\_por\_grupo), }\AttributeTok{levels =}\NormalTok{ condicao),}
+  \AttributeTok{tempo\_reacao =} \FunctionTok{c}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(n\_por\_grupo, }\DecValTok{480}\NormalTok{, }\DecValTok{45}\NormalTok{),}
+                    \FunctionTok{rnorm}\NormalTok{(n\_por\_grupo, }\DecValTok{512}\NormalTok{, }\DecValTok{45}\NormalTok{),}
+                    \FunctionTok{rnorm}\NormalTok{(n\_por\_grupo, }\DecValTok{555}\NormalTok{, }\DecValTok{45}\NormalTok{))}
+\NormalTok{)}
+
+\CommentTok{\# {-}{-}{-} ANOVA {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{modelo\_tr }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(tempo\_reacao }\SpecialCharTok{\textasciitilde{}}\NormalTok{ condicao, }\AttributeTok{data =}\NormalTok{ dados\_tr)}
+\NormalTok{resumo }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(modelo\_tr)[[}\DecValTok{1}\NormalTok{]]}
+
+\NormalTok{SS\_trat }\OtherTok{\textless{}{-}}\NormalTok{ resumo[[}\StringTok{"Sum Sq"}\NormalTok{]][}\DecValTok{1}\NormalTok{]}
+\NormalTok{SS\_erro }\OtherTok{\textless{}{-}}\NormalTok{ resumo[[}\StringTok{"Sum Sq"}\NormalTok{]][}\DecValTok{2}\NormalTok{]}
+\NormalTok{SS\_total }\OtherTok{\textless{}{-}}\NormalTok{ SS\_trat }\SpecialCharTok{+}\NormalTok{ SS\_erro}
+\NormalTok{gl\_trat }\OtherTok{\textless{}{-}}\NormalTok{ resumo[[}\StringTok{"Df"}\NormalTok{]][}\DecValTok{1}\NormalTok{]}
+\NormalTok{gl\_erro }\OtherTok{\textless{}{-}}\NormalTok{ resumo[[}\StringTok{"Df"}\NormalTok{]][}\DecValTok{2}\NormalTok{]}
+\NormalTok{N }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(dados\_tr)}
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{levels}\NormalTok{(dados\_tr}\SpecialCharTok{$}\NormalTok{condicao))}
+
+\CommentTok{\# {-}{-}{-} eta quadrado {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{eta2 }\OtherTok{\textless{}{-}}\NormalTok{ SS\_trat }\SpecialCharTok{/}\NormalTok{ SS\_total}
+
+\CommentTok{\# {-}{-}{-} f de Cohen {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{f2 }\OtherTok{\textless{}{-}}\NormalTok{ (SS\_trat }\SpecialCharTok{/}\NormalTok{ gl\_trat) }\SpecialCharTok{/}\NormalTok{ (SS\_erro }\SpecialCharTok{/}\NormalTok{ gl\_erro)}
+\NormalTok{f  }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(f2)}
+
+\CommentTok{\# {-}{-}{-} Interpretacao pelos limiares de Cohen {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{interpretar\_eta2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+  \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{\textless{}} \FloatTok{0.01}\NormalTok{) }\StringTok{"trivial"}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{\textless{}} \FloatTok{0.06}\NormalTok{) }\StringTok{"pequeno"}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{\textless{}} \FloatTok{0.14}\NormalTok{) }\StringTok{"medio"}
+  \ControlFlowTok{else} \StringTok{"grande"}
+\NormalTok{\}}
+\NormalTok{interpretar\_f }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+  \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{\textless{}} \FloatTok{0.10}\NormalTok{) }\StringTok{"pequeno"}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{\textless{}} \FloatTok{0.25}\NormalTok{) }\StringTok{"medio"}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x }\SpecialCharTok{\textless{}} \FloatTok{0.40}\NormalTok{) }\StringTok{"grande"}
+  \ControlFlowTok{else} \StringTok{"muito grande"}
+\NormalTok{\}}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"=== Resultados da ANOVA (3 grupos) ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## === Resultados da ANOVA (3 grupos) ===
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"SS\_trat ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(SS\_trat, }\DecValTok{1}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## SS_trat = 31366.5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"SS\_erro ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(SS\_erro, }\DecValTok{1}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## SS_erro = 88133
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"SS\_total ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(SS\_total, }\DecValTok{1}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## SS_total = 119499.4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"eta quadrado ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(eta2, }\DecValTok{4}\NormalTok{), }\StringTok{"{-}\textgreater{}"}\NormalTok{, }\FunctionTok{interpretar\_eta2}\NormalTok{(eta2), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## eta quadrado = 0.2625 -> grande
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"f de Cohen   ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(f, }\DecValTok{4}\NormalTok{),    }\StringTok{"{-}\textgreater{}"}\NormalTok{, }\FunctionTok{interpretar\_f}\NormalTok{(f), }\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## f de Cohen   = 2.4233 -> muito grande
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# {-}{-}{-} Verificando a conversao f\^{}2 = eta\^{}2 / (1 {-} eta\^{}2) {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"=== Verificacao da conversao exata ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## === Verificacao da conversao exata ===
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"f\^{}2 (direto)         ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(f2, }\DecValTok{6}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## f^2 (direto)         = 5.87234
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"eta\^{}2 / (1 {-} eta\^{}2)  ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(eta2 }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ eta2), }\DecValTok{6}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## eta^2 / (1 - eta^2)  = 0.355899
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Diferenca            ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{abs}\NormalTok{(f2 }\SpecialCharTok{{-}}\NormalTok{ eta2 }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ eta2)), }\DecValTok{10}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Diferenca            = 5.516441
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# {-}{-}{-} d de Cohen para cada par (com pooled SD) {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{pares }\OtherTok{\textless{}{-}} \FunctionTok{combn}\NormalTok{(}\FunctionTok{levels}\NormalTok{(dados\_tr}\SpecialCharTok{$}\NormalTok{condicao), }\DecValTok{2}\NormalTok{, }\AttributeTok{simplify =} \ConstantTok{FALSE}\NormalTok{)}
+
+\NormalTok{d\_par }\OtherTok{\textless{}{-}} \FunctionTok{map\_dfr}\NormalTok{(pares, }\ControlFlowTok{function}\NormalTok{(par) \{}
+\NormalTok{  y1 }\OtherTok{\textless{}{-}}\NormalTok{ dados\_tr}\SpecialCharTok{$}\NormalTok{tempo\_reacao[dados\_tr}\SpecialCharTok{$}\NormalTok{condicao }\SpecialCharTok{==}\NormalTok{ par[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{  y2 }\OtherTok{\textless{}{-}}\NormalTok{ dados\_tr}\SpecialCharTok{$}\NormalTok{tempo\_reacao[dados\_tr}\SpecialCharTok{$}\NormalTok{condicao }\SpecialCharTok{==}\NormalTok{ par[}\DecValTok{2}\NormalTok{]]}
+\NormalTok{  n1 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(y1); n2 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(y2)}
+\NormalTok{  s\_pooled }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(((n1 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \FunctionTok{var}\NormalTok{(y1) }\SpecialCharTok{+}\NormalTok{ (n2 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \FunctionTok{var}\NormalTok{(y2)) }\SpecialCharTok{/}\NormalTok{ (n1 }\SpecialCharTok{+}\NormalTok{ n2 }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{))}
+\NormalTok{  d }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{mean}\NormalTok{(y1) }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(y2)) }\SpecialCharTok{/}\NormalTok{ s\_pooled}
+  \FunctionTok{tibble}\NormalTok{(}
+    \AttributeTok{comparacao =} \FunctionTok{paste}\NormalTok{(par[}\DecValTok{1}\NormalTok{], }\StringTok{"vs"}\NormalTok{, par[}\DecValTok{2}\NormalTok{]),}
+    \AttributeTok{media\_1 =} \FunctionTok{mean}\NormalTok{(y1), }\AttributeTok{media\_2 =} \FunctionTok{mean}\NormalTok{(y2),}
+    \AttributeTok{d =}\NormalTok{ d, }\AttributeTok{d\_abs =} \FunctionTok{abs}\NormalTok{(d),}
+    \AttributeTok{interpretacao =} \FunctionTok{case\_when}\NormalTok{(}
+      \FunctionTok{abs}\NormalTok{(d) }\SpecialCharTok{\textless{}} \FloatTok{0.20} \SpecialCharTok{\textasciitilde{}} \StringTok{"trivial"}\NormalTok{,}
+      \FunctionTok{abs}\NormalTok{(d) }\SpecialCharTok{\textless{}} \FloatTok{0.50} \SpecialCharTok{\textasciitilde{}} \StringTok{"pequeno"}\NormalTok{,}
+      \FunctionTok{abs}\NormalTok{(d) }\SpecialCharTok{\textless{}} \FloatTok{0.80} \SpecialCharTok{\textasciitilde{}} \StringTok{"medio"}\NormalTok{,}
+      \ConstantTok{TRUE}          \SpecialCharTok{\textasciitilde{}} \StringTok{"grande"}
+\NormalTok{    )}
+\NormalTok{  )}
+\NormalTok{\})}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"=== d de Cohen para cada par de condicoes ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## === d de Cohen para cada par de condicoes ===
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(d\_par, }\AttributeTok{n =} \ConstantTok{Inf}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 6
+##   comparacao        media_1 media_2      d d_abs interpretacao
+##   <chr>               <dbl>   <dbl>  <dbl> <dbl> <chr>        
+## 1 Nenhuma vs Sonora    494.    514. -0.365 0.365 pequeno      
+## 2 Nenhuma vs Visual    494.    564. -1.34  1.34  grande       
+## 3 Sonora vs Visual     514.    564. -1.08  1.08  grande
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# {-}{-}{-} Se o fator tivesse apenas 2 niveis, d = 2f {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{=== Atencao: conversao d \textless{}{-}\textgreater{} f so vale para 2 grupos ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## === Atencao: conversao d <-> f so vale para 2 grupos ===
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Se tivessemos apenas 2 grupos balanceados, d seria aproximadamente:"}\NormalTok{,}
+    \FunctionTok{round}\NormalTok{(}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ f, }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Se tivessemos apenas 2 grupos balanceados, d seria aproximadamente: 4.8466
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Mas com t = 3, esse \textquotesingle{}d global\textquotesingle{} NAO e interpretavel.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Mas com t = 3, esse 'd global' NAO e interpretavel.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"O f de Cohen e a medida correta para o efeito global do fator.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## O f de Cohen e a medida correta para o efeito global do fator.
+\end{verbatim}
+
+\subsection{6.6 O que este bloco de código
+ensina}\label{o-que-este-bloco-de-cuxf3digo-ensina}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{O f de Cohen é calculado a partir das somas de quadrados da
+  ANOVA} --- não é uma medida separada, mas uma transformação do teste
+  F.
+\item
+  \textbf{O eta quadrado e o f de Cohen são convertíveis exatamente},
+  via \(f^2 = \eta^2 / (1 - \eta^2)\).
+\item
+  \textbf{O d de Cohen só faz sentido para comparações par-a-par}. Com
+  três grupos, temos três valores de d (um para cada par), e eles
+  \textbf{não se combinam} em um único número.
+\item
+  \textbf{Em meta-análise}, a escolha entre d e f depende do design do
+  estudo original:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Estudos com dois grupos reportam d.
+  \item
+    Estudos com três ou mais grupos reportam f ou eta quadrado.
+  \item
+    Para combinar estudos heterogêneos, é preciso converter tudo para
+    uma medida comum.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{6.7 Resumo da Parte 6}\label{resumo-da-parte-6}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Pergunta
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Resposta
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+f de Cohen é o mesmo que d de Cohen? & \textbf{Não.} f é para efeito
+global de fator com \(t\) níveis; d é para diferença entre duas
+médias. \\
+Eles se relacionam? & \textbf{Sim}, mas só quando \(t = 2\):
+\(f = d/2\). \\
+Qual usar em ANOVA com \(t \geq 3\)? & \textbf{f de Cohen} (ou eta
+quadrado). d não tem generalização única. \\
+Qual usar em meta-análise? & Depende do design dos estudos. Converter
+tudo para uma medida comum (geralmente d ou Hedges' g) antes de
+combinar. \\
+Como converter f em eta quadrado? & \(\eta^2 = f^2 / (1 + f^2)\)
+(exato). \\
+Como converter d em eta quadrado? & \(\eta^2 = d^2 / (d^2 + 4)\) (válido
+para \(t = 2\)). \\
+\end{longtable}
+}
+
+\section{Referências}\label{referuxeancias}
+
+\begin{itemize}
+\tightlist
+\item
+  Cohen, J. (1988). \emph{Statistical Power Analysis for the Behavioral
+  Sciences} (2nd ed.). Lawrence Erlbaum.
+\item
+  Cornfield, J. (1944). Randomization. \emph{Journal of the American
+  Statistical Association}, 39(228), 455--459.
+\item
+  Kempthorne, O. (1952). \emph{The Design and Analysis of Experiments}.
+  Wiley.
+\item
+  Wald, A., \& Wolfowitz, J. (1944). Confidence limits for continuous
+  distribution functions. \emph{The Annals of Mathematical Statistics},
+  15(2), 105--118.
+\item
+  Noether, G. E. (1949). On a theorem of Wald and Wolfowitz. \emph{The
+  Annals of Mathematical Statistics}, 20(3), 455--458.
+\item
+  Hájek, J. (1960). Limiting distributions in simple random sampling
+  from a finite population. \emph{Publications of the Mathematical
+  Institute of the Hungarian Academy of Sciences}, 5, 361--374.
+\item
+  Lehmann, E. L., \& Romano, J. P. (2005). \emph{Testing Statistical
+  Hypotheses} (3rd ed.). Springer.
+\item
+  Rosenberger, W. F., \& Lachin, J. M. (2016). \emph{Randomization in
+  Clinical Trials: Theory and Practice} (2nd ed.). Wiley.
+\item
+  Burnham, K. P., \& Anderson, D. R. (2002). \emph{Model Selection and
+  Multimodel Inference} (2nd ed.). Springer.
+\item
+  Fisher, R. A. (1935). \emph{The Design of Experiments}. Oliver and
+  Boyd.
+\end{itemize}
+
+\end{document}

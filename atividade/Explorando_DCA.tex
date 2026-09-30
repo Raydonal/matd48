@@ -1,0 +1,539 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={📊 Aventura Estatística na Biblioteca Omar Catunda},
+  pdfauthor={Seu nome},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{📊 Aventura Estatística na Biblioteca Omar Catunda}
+\author{Seu nome}
+\date{2026-09-23}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\begin{quote}
+\textbf{🎯 Missão}
+
+Vocês vão até a \textbf{Biblioteca Universitária de Ciências e
+Tecnologias Professor Omar Catunda} (UFBA, Campus de Ondina) para
+investigar uma pergunta curiosa:
+
+\textbf{Os livros de Estatística são todos ``iguais''? Ou será que até
+dentro da mesma área existem diferenças?}
+
+A atividade acontece \textbf{no horário da aula (10:40--12:30)}. A
+biblioteca está aberta de segunda a sexta, das 7h às 19h, então vocês
+têm tempo de sobra.
+
+O objetivo é duplo: 1. Aplicar na prática um \textbf{Delineamento
+Inteiramente Casualizado (DIC)}. 2. \textbf{Conhecer o acervo de
+Estatística} da biblioteca e descobrir o que ele tem de interessante.
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{🗺️ Parte 1 --- Localizando o
+tesouro}\label{parte-1-localizando-o-tesouro}
+
+A biblioteca fica no \textbf{Campus de Ondina, em frente ao Instituto de
+Física} e atrás da Faculdade de Arquitetura. O acervo de Estatística
+está no \textbf{2º andar}, junto com as demais áreas de exatas
+(Matemática, Computação, Física, Química, Geociências).
+
+\subsubsection{Informações gerais}\label{informauxe7uxf5es-gerais}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6667}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Item
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Informação
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Endereço & Rua Barão de Jeremoabo, s/n --- Campus de Ondina \\
+Horário & Segunda a sexta, \textbf{7h às 19h} \\
+Andar do acervo & \textbf{2º andar} \\
+O que vocês vão encontrar & Livros de Estatística, Matemática, Física,
+Química, Computação \\
+\end{longtable}
+}
+
+\subsubsection{Tarefa rápida de exploração (5
+minutos)}\label{tarefa-ruxe1pida-de-explorauxe7uxe3o-5-minutos}
+
+Antes de começar a medir, localizem a \textbf{seção de Estatística}.
+Vocês devem encontrar \textbf{3 prateleiras} (ou 3 seções de estante)
+com livros dessa área.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{As 3 prateleiras de Estatística estão próximas ou separadas?}
+\item
+  \textbf{Vocês reconhecem algum livro?} (Bussab \& Morettin,
+  Montgomery, etc.)
+\item
+  \textbf{Qual prateleira parece ter os livros mais antigos?}
+\end{enumerate}
+
+\begin{quote}
+💡 \textbf{Importante}: o ``tratamento'' do experimento serão as
+\textbf{3 prateleiras de Estatística}. Cada prateleira é um nível
+diferente.
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{🧪 Parte 2 --- O experimento
+(DIC)}\label{parte-2-o-experimento-dic}
+
+\subsubsection{Hipóteses}\label{hipuxf3teses}
+
+\begin{quote}
+\textbf{H₀ (hipótese nula)}: a média de páginas dos livros de
+Estatística é igual entre as 3 prateleiras.
+
+\textbf{H₁ (hipótese alternativa)}: pelo menos uma prateleira tem média
+de páginas diferente das demais.
+\end{quote}
+
+\subsubsection{Estrutura do
+delineamento}\label{estrutura-do-delineamento}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4762}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5238}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Elemento
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definição
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Unidade experimental} & Um livro de Estatística \\
+\textbf{Tratamento} & Prateleira de Estatística (3 níveis: P1, P2,
+P3) \\
+\textbf{Variável resposta} & Número de páginas do livro \\
+\textbf{Replicações por tratamento} & \textbf{8 livros} por prateleira
+(total = 24 livros) \\
+\textbf{Total de alunos} & 8 pessoas → \textbf{cada aluno mede 3
+livros} \\
+\end{longtable}
+}
+
+\begin{quote}
+📌 \textbf{Por que ``número de páginas''?} Porque é rápido de medir, não
+precisa de instrumento, não danifica o livro, e revela diferenças
+interessantes entre tipos de livro (manuais densos vs.~textos
+introdutórios).
+\end{quote}
+
+\subsubsection{Plano de
+aleatorização}\label{plano-de-aleatorizauxe7uxe3o}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cada grupo usa uma semente diferente. Sugestão: use o número da matrícula.}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2025}\NormalTok{)  }\CommentTok{\# ← troquem pelo número da sorte do grupo}
+
+\CommentTok{\# As 3 prateleiras de Estatística (identifiquem fisicamente: P1, P2, P3)}
+\NormalTok{prateleiras }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Prateleira 1"}\NormalTok{, }\StringTok{"Prateleira 2"}\NormalTok{, }\StringTok{"Prateleira 3"}\NormalTok{)}
+
+\CommentTok{\# Quantos livros medir por prateleira}
+\NormalTok{n\_por\_prateleira }\OtherTok{\textless{}{-}} \DecValTok{8}
+
+\NormalTok{plano }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}
+  \AttributeTok{prateleira =}\NormalTok{ prateleiras, }
+  \AttributeTok{livro\_id =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n\_por\_prateleira}
+\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# Ordem aleatória de medição (evita viés de cansaço)}
+    \AttributeTok{ordem\_medicao =} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{n}\NormalTok{()),}
+    \CommentTok{\# Posição aproximada na prateleira (para orientar a escolha)}
+    \AttributeTok{posicao =} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{15}\NormalTok{, }\FunctionTok{n}\NormalTok{(), }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{),}
+    \CommentTok{\# Aluno responsável (distribuam entre vocês)}
+    \AttributeTok{aluno =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{, }\AttributeTok{length.out =} \FunctionTok{n}\NormalTok{())}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{arrange}\NormalTok{(ordem\_medicao)}
+
+\FunctionTok{kable}\NormalTok{(plano, }\AttributeTok{caption =} \StringTok{"📋 Plano de amostragem e ordem de medição"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{📋 Plano de amostragem e ordem de medição}\tabularnewline
+\toprule\noalign{}
+prateleira & livro\_id & ordem\_medicao & posicao & aluno \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+prateleira & livro\_id & ordem\_medicao & posicao & aluno \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Prateleira 1 & 2 & 1 & 4 & 4 \\
+Prateleira 3 & 7 & 2 & 13 & 5 \\
+Prateleira 2 & 7 & 3 & 10 & 4 \\
+Prateleira 3 & 1 & 4 & 5 & 3 \\
+Prateleira 1 & 5 & 5 & 11 & 5 \\
+Prateleira 1 & 7 & 6 & 4 & 3 \\
+Prateleira 2 & 4 & 7 & 2 & 3 \\
+Prateleira 2 & 8 & 8 & 7 & 7 \\
+Prateleira 3 & 6 & 9 & 8 & 2 \\
+Prateleira 2 & 2 & 10 & 10 & 5 \\
+Prateleira 1 & 4 & 11 & 2 & 2 \\
+Prateleira 2 & 1 & 12 & 3 & 2 \\
+Prateleira 1 & 1 & 13 & 13 & 1 \\
+Prateleira 2 & 5 & 14 & 11 & 6 \\
+Prateleira 3 & 4 & 15 & 9 & 4 \\
+Prateleira 2 & 6 & 16 & 4 & 1 \\
+Prateleira 1 & 3 & 17 & 1 & 7 \\
+Prateleira 3 & 5 & 18 & 1 & 7 \\
+Prateleira 3 & 8 & 19 & 3 & 8 \\
+Prateleira 1 & 8 & 20 & 11 & 6 \\
+Prateleira 1 & 6 & 21 & 14 & 8 \\
+Prateleira 3 & 3 & 22 & 15 & 1 \\
+Prateleira 2 & 3 & 23 & 3 & 8 \\
+Prateleira 3 & 2 & 24 & 2 & 6 \\
+\end{longtable}
+
+\begin{quote}
+\textbf{Como usar:} - \textbf{Antes da aula}: rodem o código e
+imprimam/salvem a tabela. - \textbf{Na biblioteca}: sigam a coluna
+\texttt{ordem\_medicao}. - Para cada linha, vão até a prateleira
+indicada, escolham \textbf{um livro qualquer} na posição aproximada (não
+escolham pelo tamanho!), e anotem o \textbf{número de páginas}.
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{📝 Parte 3 --- Coleta de dados (em sala,
+10:40--12:30)}\label{parte-3-coleta-de-dados-em-sala-10401230}
+
+Cada aluno é responsável por \textbf{3 livros} (total 24). Preencham a
+tabela com os dados coletados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Preencham com os dados reais após a visita}
+\NormalTok{dados }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{prateleira =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{rep}\NormalTok{(}\StringTok{"Prateleira 1"}\NormalTok{, }\DecValTok{8}\NormalTok{),}
+    \FunctionTok{rep}\NormalTok{(}\StringTok{"Prateleira 2"}\NormalTok{, }\DecValTok{8}\NormalTok{),}
+    \FunctionTok{rep}\NormalTok{(}\StringTok{"Prateleira 3"}\NormalTok{, }\DecValTok{8}\NormalTok{)}
+\NormalTok{  ),}
+  \AttributeTok{livro\_id =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{paginas =} \FunctionTok{c}\NormalTok{(}
+    \CommentTok{\# 👇 COLOQUEM AQUI os números de páginas medidos}
+    \ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{,   }\CommentTok{\# Prateleira 1}
+    \ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{,   }\CommentTok{\# Prateleira 2}
+    \ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}    \CommentTok{\# Prateleira 3}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+\textbf{⏱️ Cronograma sugerido para 10:40--12:30:} \textbar{} Tempo
+\textbar{} Atividade \textbar{}
+\textbar-------\textbar-----------\textbar{} \textbar{} 10:40--10:50
+\textbar{} localização das prateleiras \textbar{} \textbar{}
+10:50--11:10 \textbar{} Coleta de dados (medição de páginas) \textbar{}
+\textbar{} 11:10--11:40 \textbar{} Digitação e organização dos dados
+\textbar{} \textbar{} 11:40--12:10 \textbar{} Análise no R (descritiva,
+ANOVA, gráficos) \textbar{} \textbar{} 12:10--12:30 \textbar{} Discussão
+e conclusões \textbar{}
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{📊 Parte 4 --- Análise dos
+dados}\label{parte-4-anuxe1lise-dos-dados}
+
+\subsubsection{Estatísticas
+descritivas}\label{estatuxedsticas-descritivas}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dados }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{group\_by}\NormalTok{(prateleira) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{n =} \FunctionTok{n}\NormalTok{(),}
+    \AttributeTok{media =} \FunctionTok{mean}\NormalTok{(paginas, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{desvio =} \FunctionTok{sd}\NormalTok{(paginas, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{mediana =} \FunctionTok{median}\NormalTok{(paginas, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{minimo =} \FunctionTok{min}\NormalTok{(paginas, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{maximo =} \FunctionTok{max}\NormalTok{(paginas, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Estatísticas descritivas por prateleira"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Gráfico}\label{gruxe1fico}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(dados, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ prateleira, }\AttributeTok{y =}\NormalTok{ paginas, }\AttributeTok{fill =}\NormalTok{ prateleira)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{, }\AttributeTok{show.legend =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_jitter}\NormalTok{(}\AttributeTok{width =} \FloatTok{0.15}\NormalTok{, }\AttributeTok{size =} \DecValTok{2}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"📚 Distribuição do número de páginas por prateleira"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Prateleira de Estatística"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Número de páginas"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{14}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set2"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{ANOVA (um fator)}\label{anova-um-fator}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{modelo }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(paginas }\SpecialCharTok{\textasciitilde{}}\NormalTok{ prateleira, }\AttributeTok{data =}\NormalTok{ dados)}
+\FunctionTok{summary}\NormalTok{(modelo)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Comparações múltiplas (se
+significativo)}\label{comparauxe7uxf5es-muxfaltiplas-se-significativo}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{TukeyHSD}\NormalTok{(modelo)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Verificação dos
+pressupostos}\label{verificauxe7uxe3o-dos-pressupostos}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Normalidade dos resíduos}
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(modelo))}
+
+\CommentTok{\# Homocedasticidade}
+\FunctionTok{library}\NormalTok{(car)}
+\FunctionTok{leveneTest}\NormalTok{(paginas }\SpecialCharTok{\textasciitilde{}}\NormalTok{ prateleira, }\AttributeTok{data =}\NormalTok{ dados)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{🎮 Parte 5 --- Desafios extras (se sobrar
+tempo)}\label{parte-5-desafios-extras-se-sobrar-tempo}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4091}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5909}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Desafio
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+O que fazer
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+🕵️ \textbf{Caçadores de livros raros} & Qual é o livro de Estatística
+mais antigo que vocês encontraram? \\
+📏 \textbf{O mais grosso e o mais fino} & Quais são os extremos de
+espessura? Em qual prateleira estão? \\
+🤔 \textbf{Meta-experimento} & Se refizessem o experimento, o que
+mudariam? Medir espessura? Incluir mais prateleiras? \\
+\end{longtable}
+}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{📤 O que entregar}\label{o-que-entregar}
+
+Cada grupo entrega \textbf{1 relatório em HTML}, contendo:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Nomes das 3 prateleiras escolhidas (com descrição de onde estão).
+\item
+  A tabela \texttt{plano} completa (aleatorização).
+\item
+  A tabela \texttt{dados} preenchida.
+\item
+  Tabela descritiva + boxplot.
+\item
+  Resultado da ANOVA (valor de p).
+\item
+  \textbf{Um parágrafo de conclusão}: houve diferença significativa
+  entre as prateleiras? O que isso significa? Quais as limitações?
+\end{enumerate}
+
+\begin{quote}
+\textbf{Dica final}: diferenças no número de páginas podem refletir
+\textbf{tipos diferentes de livro} --- manuais mais densos (ex.:
+Montgomery) vs.~textos introdutórios (ex.: Bussab \& Morettin), ou
+edições mais antigas vs.~recentes. Isso não é ``erro'' do experimento
+--- é exatamente o tipo de discussão que vale a pena em Planejamento de
+Experimentos.
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{📚 Anexo --- Curiosidades sobre a
+biblioteca}\label{anexo-curiosidades-sobre-a-biblioteca}
+
+\begin{itemize}
+\tightlist
+\item
+  A biblioteca leva o nome do matemático \textbf{Omar Catunda}, que veio
+  para Salvador em 1960 para dirigir o Instituto de Matemática e Física
+  da UFBA.
+\item
+  Foi inaugurada em \textbf{2 de agosto de 2016}, integrando as
+  comemorações dos 70 anos da UFBA.
+\item
+  O prédio tem \textbf{4,6 mil m²} e reúne cerca de \textbf{40 mil
+  volumes} nas áreas de exatas.
+\item
+  O acervo de Estatística está no \textbf{2º andar}, junto com
+  Matemática, Computação, Física, Química e Geociências.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\emph{Boa aventura estatística! Lembrem-se: um bom experimento não é
+aquele que ``dá certo'', é aquele que faz vocês entenderem o porquê.}
+```
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\end{document}

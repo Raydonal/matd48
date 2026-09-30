@@ -1,0 +1,249 @@
+---
+title: "\U0001F4CA Aventura Estatística na Biblioteca Omar Catunda"
+author: "MATD28 - Planejamento de Experimentos"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    theme: flatly
+    highlight: tango
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(knitr)
+```
+
+> **🎯 Missão**
+> 
+> Vocês vão até a **Biblioteca Universitária de Ciências e Tecnologias Professor Omar Catunda** (UFBA, Campus de Ondina) para investigar uma pergunta curiosa:
+> 
+> **Os livros de Estatística são todos "iguais"? Ou será que até dentro da mesma área existem diferenças?**
+> 
+> A atividade acontece **no horário da aula (10:40–12:30)**. A biblioteca está aberta de segunda a sexta, das 7h às 19h, então vocês têm tempo de sobra.
+> 
+> O objetivo é duplo:
+> 1. Aplicar na prática um **Delineamento Inteiramente Casualizado (DIC)**.
+> 2. **Conhecer o acervo de Estatística** da biblioteca e descobrir o que ele tem de interessante.
+
+---
+
+## 🗺️ Parte 1 — Localizando o tesouro
+
+A biblioteca fica no **Campus de Ondina, em frente ao Instituto de Física** e atrás da Faculdade de Arquitetura. O acervo de Estatística está no **2º andar**, junto com as demais áreas de exatas (Matemática, Computação, Física, Química, Geociências).
+
+### Informações gerais
+
+| Item | Informação |
+|------|------------|
+| Endereço | Rua Barão de Jeremoabo, s/n — Campus de Ondina |
+| Horário | Segunda a sexta, **7h às 19h** |
+| Andar do acervo | **2º andar** |
+| O que vocês vão encontrar | Livros de Estatística, Matemática, Física, Química, Computação |
+
+### Tarefa rápida de exploração (5 minutos)
+
+Antes de começar a medir, localizem a **seção de Estatística**. Vocês devem encontrar **3 prateleiras** (ou 3 seções de estante) com livros dessa área.
+
+1. **As 3 prateleiras de Estatística estão próximas ou separadas?**
+2. **Vocês reconhecem algum livro?** (Bussab & Morettin, Montgomery, etc.)
+3. **Qual prateleira parece ter os livros mais antigos?**
+
+> 💡 **Importante**: o "tratamento" do experimento serão as **3 prateleiras de Estatística**. Cada prateleira é um nível diferente.
+
+---
+
+## 🧪 Parte 2 — O experimento (DIC)
+
+### Hipóteses
+
+> **H₀ (hipótese nula)**: a média de páginas dos livros de Estatística é igual entre as 3 prateleiras.
+> 
+> **H₁ (hipótese alternativa)**: pelo menos uma prateleira tem média de páginas diferente das demais.
+
+### Estrutura do delineamento
+
+| Elemento | Definição |
+|----------|-----------|
+| **Unidade experimental** | Um livro de Estatística |
+| **Tratamento** | Prateleira de Estatística (3 níveis: P1, P2, P3) |
+| **Variável resposta** | Número de páginas do livro |
+| **Replicações por tratamento** | **8 livros** por prateleira (total = 24 livros) |
+| **Total de alunos** | 8 pessoas → **cada aluno mede 3 livros** |
+
+> 📌 **Por que "número de páginas"?** Porque é rápido de medir, não precisa de instrumento, não danifica o livro, e revela diferenças interessantes entre tipos de livro (manuais densos vs. textos introdutórios).
+
+### Plano de aleatorização
+
+```{r aleatorizacao}
+# Cada grupo usa uma semente diferente. Sugestão: use o número da matrícula.
+set.seed(2025)  # ← troquem pelo número da sorte do grupo
+
+# As 3 prateleiras de Estatística (identifiquem fisicamente: P1, P2, P3)
+prateleiras <- c("Prateleira 1", "Prateleira 2", "Prateleira 3")
+
+# Quantos livros medir por prateleira
+n_por_prateleira <- 8
+
+plano <- expand.grid(
+  prateleira = prateleiras, 
+  livro_id = 1:n_por_prateleira
+) |>
+  mutate(
+    # Ordem aleatória de medição (evita viés de cansaço)
+    ordem_medicao = sample(1:n()),
+    # Posição aproximada na prateleira (para orientar a escolha)
+    posicao = sample(1:15, n(), replace = TRUE),
+    # Aluno responsável (distribuam entre vocês)
+    aluno = rep(1:8, length.out = n())
+  ) |>
+  arrange(ordem_medicao)
+
+kable(plano, caption = "📋 Plano de amostragem e ordem de medição")
+```
+
+> **Como usar:**
+> - **Antes da aula**: rodem o código e imprimam/salvem a tabela.
+> - **Na biblioteca**: sigam a coluna `ordem_medicao`.
+> - Para cada linha, vão até a prateleira indicada, escolham **um livro qualquer** na posição aproximada (não escolham pelo tamanho!), e anotem o **número de páginas**.
+
+---
+
+## 📝 Parte 3 — Coleta de dados (em sala, 10:40–12:30)
+
+Cada aluno é responsável por **3 livros** (total 24). Preencham a tabela com os dados coletados.
+
+```{r entrada-dados, eval=FALSE}
+# Preencham com os dados reais após a visita
+dados <- tibble(
+  prateleira = c(
+    rep("Prateleira 1", 8),
+    rep("Prateleira 2", 8),
+    rep("Prateleira 3", 8)
+  ),
+  livro_id = rep(1:8, 3),
+  paginas = c(
+    # 👇 COLOQUEM AQUI os números de páginas medidos
+    NA, NA, NA, NA, NA, NA, NA, NA,   # Prateleira 1
+    NA, NA, NA, NA, NA, NA, NA, NA,   # Prateleira 2
+    NA, NA, NA, NA, NA, NA, NA, NA    # Prateleira 3
+  )
+)
+```
+
+> **⏱️ Cronograma sugerido para 10:40–12:30:**
+> | Tempo | Atividade |
+> |-------|-----------|
+> | 10:40–10:50 | localização das prateleiras |
+> | 10:50–11:10 | Coleta de dados (medição de páginas) |
+> | 11:10–11:40 | Digitação e organização dos dados |
+> | 11:40–12:10 | Análise no R (descritiva, ANOVA, gráficos) |
+> | 12:10–12:30 | Discussão e conclusões |
+
+---
+
+## 📊 Parte 4 — Análise dos dados
+
+### Estatísticas descritivas
+
+```{r descritiva, eval=FALSE}
+dados |>
+  group_by(prateleira) |>
+  summarise(
+    n = n(),
+    media = mean(paginas, na.rm = TRUE),
+    desvio = sd(paginas, na.rm = TRUE),
+    mediana = median(paginas, na.rm = TRUE),
+    minimo = min(paginas, na.rm = TRUE),
+    maximo = max(paginas, na.rm = TRUE)
+  ) |>
+  kable(caption = "Estatísticas descritivas por prateleira")
+```
+
+### Gráfico
+
+```{r grafico, eval=FALSE}
+ggplot(dados, aes(x = prateleira, y = paginas, fill = prateleira)) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  geom_jitter(width = 0.15, size = 2, alpha = 0.5) +
+  labs(
+    title = "📚 Distribuição do número de páginas por prateleira",
+    x = "Prateleira de Estatística",
+    y = "Número de páginas"
+  ) +
+  theme_minimal(base_size = 14) +
+  scale_fill_brewer(palette = "Set2")
+```
+
+### ANOVA (um fator)
+
+```{r anova, eval=FALSE}
+modelo <- aov(paginas ~ prateleira, data = dados)
+summary(modelo)
+```
+
+### Comparações múltiplas (se significativo)
+
+```{r tukey, eval=FALSE}
+TukeyHSD(modelo)
+```
+
+### Verificação dos pressupostos
+
+```{r pressupostos, eval=FALSE}
+# Normalidade dos resíduos
+shapiro.test(residuals(modelo))
+
+# Homocedasticidade
+library(car)
+leveneTest(paginas ~ prateleira, data = dados)
+```
+
+---
+
+## 🎮 Parte 5 — Desafios extras (se sobrar tempo)
+
+| Desafio | O que fazer |
+|---------|-------------|
+| 🕵️ **Caçadores de livros raros** | Qual é o livro de Estatística mais antigo que vocês encontraram? |
+| 📏 **O mais grosso e o mais fino** | Quais são os extremos de espessura? Em qual prateleira estão? |
+| 🤔 **Meta-experimento** | Se refizessem o experimento, o que mudariam? Medir espessura? Incluir mais prateleiras? |
+
+---
+
+## 📤 O que entregar
+
+Cada grupo entrega **1 relatório em HTML**, contendo:
+
+1. Nomes das 3 prateleiras escolhidas (com descrição de onde estão).
+2. A tabela `plano` completa (aleatorização).
+3. A tabela `dados` preenchida.
+4. Tabela descritiva + boxplot.
+5. Resultado da ANOVA (valor de p).
+6. **Um parágrafo de conclusão**: houve diferença significativa entre as prateleiras? O que isso significa? Quais as limitações?
+
+> **Dica final**: diferenças no número de páginas podem refletir **tipos diferentes de livro** — manuais mais densos (ex.: Montgomery) vs. textos introdutórios (ex.: Bussab & Morettin), ou edições mais antigas vs. recentes. Isso não é "erro" do experimento — é exatamente o tipo de discussão que vale a pena em Planejamento de Experimentos.
+
+---
+
+## 📚 Anexo — Curiosidades sobre a biblioteca
+
+- A biblioteca leva o nome do matemático **Omar Catunda**, que veio para Salvador em 1960 para dirigir o Instituto de Matemática e Física da UFBA.
+- Foi inaugurada em **2 de agosto de 2016**, integrando as comemorações dos 70 anos da UFBA.
+- O prédio tem **4,6 mil m²** e reúne cerca de **40 mil volumes** nas áreas de exatas.
+- O acervo de Estatística está no **2º andar**, junto com Matemática, Computação, Física, Química e Geociências.
+
+---
+
+*Boa aventura estatística! Lembrem-se: um bom experimento não é aquele que "dá certo", é aquele que faz vocês entenderem o porquê.*
+```
+
+---
+
