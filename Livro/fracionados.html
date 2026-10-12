@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.5 Fatoriais fracionados de dois níveis: a ideia geral | Planejamento e Análise de Experimentos</title>
   <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
-  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.5 Fatoriais fracionados de dois níveis: a ideia geral | Planejamento e Análise de Experimentos" />
   <meta property="og:type" content="book" />
@@ -53,6 +53,12 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<!-- Liga $...$ no MathJax. O pandoc ja converte a matematica da prosa, mas nao
+     toca no que esta dentro de blocos ```{=html} (caixas caixa-aplicacao/discussao/r):
+     sem isto, toda formula nessas caixas aparece como LaTeX cru no site e no PDF. -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processEscapes: true } });
+</script>
 
 
 <style type="text/css">
@@ -538,7 +544,7 @@ gitbook.start({
     "link": null,
     "text": null
   },
-  "download": null,
+  "download": ["livro-doe.pdf"],
   "search": {
     "engine": "fuse",
     "options": null

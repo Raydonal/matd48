@@ -2,7 +2,7 @@
 title: "Planejamento e Análise de Experimentos"
 subtitle: "Notas de curso — MATD48"
 author: "Raydonal Ospina Martínez"
-date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+date: "`r meses <- c('janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'); paste(as.integer(format(Sys.Date(), '%d')), 'de', meses[as.integer(format(Sys.Date(), '%m'))], 'de', format(Sys.Date(), '%Y'))`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: refs.bib

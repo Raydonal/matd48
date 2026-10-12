@@ -2,7 +2,7 @@
 title: "Planejamento e Análise de Experimentos"
 subtitle: "Notas de curso — MATD48"
 author: "Raydonal Ospina Martínez"
-date: "19 de September de 2026"
+date: "12 de outubro de 2026"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: refs.bib

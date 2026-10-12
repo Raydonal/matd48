@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Planejamento e Análise de Experimentos</title>
   <meta name="description" content="Livro-texto de apoio à disciplina MATD48 (Planejamento de Experimentos A), Departamento de Estatística, UFBA." />
-  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Planejamento e Análise de Experimentos" />
   <meta property="og:type" content="book" />
@@ -53,6 +53,12 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<!-- Liga $...$ no MathJax. O pandoc ja converte a matematica da prosa, mas nao
+     toca no que esta dentro de blocos ```{=html} (caixas caixa-aplicacao/discussao/r):
+     sem isto, toda formula nessas caixas aparece como LaTeX cru no site e no PDF. -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processEscapes: true } });
+</script>
 
 
 <style type="text/css">
@@ -445,7 +451,7 @@ div.csl-indent {
 <h1 class="title">Planejamento e Análise de Experimentos</h1>
 <h2 class="subtitle"><em>Notas de curso — MATD48</em></h2>
 <p class="author"><em>Raydonal Ospina Martínez</em></p>
-<p class="date"><em>19 de September de 2026</em></p>
+<p class="date"><em>12 de outubro de 2026</em></p>
 </div>
 <div id="prefácio" class="section level1 unnumbered hasAnchor">
 <h1>Prefácio<a href="index.html#prefácio" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -499,7 +505,7 @@ gitbook.start({
     "link": null,
     "text": null
   },
-  "download": null,
+  "download": ["livro-doe.pdf"],
   "search": {
     "engine": "fuse",
     "options": null

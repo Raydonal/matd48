@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Submuestreo e Modelo de Efeitos Aleatórios</title>
+    <title>Subamostragem e Modelo de Efeitos Aleatórios</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -17,7 +17,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Submuestreo e Modelo de Efeitos Aleatórios
+# Subamostragem e Modelo de Efeitos Aleatórios
 ]
 .subtitle[
 ## Dois níveis de erro no DCA e o que fazer quando os tratamentos são uma amostra
@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 
 class: inverse, center, middle
 
-# Aula 05 — Submuestreo e Efeitos Aleatórios
+# Aula 05 — Subamostragem e Efeitos Aleatórios
 
 ### Teoria · Aplicação · Discussão · Uso do R
 
@@ -45,46 +45,321 @@ class: inverse, center, middle
 
 ---
 
-## Submuestreo: dois níveis de erro
+## Ponto de partida: o que muda em relação à Aula 04
 
-Quando uma unidade experimental (UE) é medida `\(q\)` vezes (submuestras), o modelo ganha um segundo
-termo de erro:
+Na Aula 04, cada unidade experimental (UE) fornecia **uma** medida: uma linha da planilha por UE e
+o modelo `\(Y_{ij}=\mu+\tau_i+\varepsilon_{ij}\)`.
 
-`$$Y_{ijk} = \mu + \tau_i + \delta_{ij} + \varepsilon_{ijk}$$`
+Hoje, cada UE é medida **várias vezes**. O exemplo que acompanha a aula inteira:
 
-- `\(\delta_{ij}\sim N(0,\sigma_\delta^2)\)`: erro **experimental** (entre UEs).
-- `\(\varepsilon_{ijk}\sim N(0,\sigma_\varepsilon^2)\)`: erro de **amostragem** (entre submuestras).
-- `\(i=1,\ldots,t\)`; `\(j=1,\ldots,r\)` UEs por tratamento; `\(k=1,\ldots,q\)` submuestras por UE.
+- 4 probióticos (tratamentos) sorteados entre 20 aquários, 5 aquários por probiótico.
+- O probiótico vai misturado à ração do aquário inteiro, então quem **recebe o tratamento** é o
+  aquário: **UE = aquário**.
+- Em cada aquário pesam-se cerca de 5 tilápias, uma a uma: **unidade amostral = peixe**
+  (a *subamostra*).
 
 --
 
-Só `\(\sigma_\delta^2\)` importa para comparar tratamentos — mais submuestras **não** criam novas UEs
-(Cochran &amp; Cox, 1957).
+**Pergunta-guia:** são quase 100 pesagens. Quantas **réplicas** de cada probiótico existem?
+Resposta: 5, uma por aquário, e não 25. O resto da aula explica por quê e o que fazer com os
+peixes.
+
+---
+
+## Como é a planilha: uma linha por peixe
+
+
+``` r
+tilapia &lt;- read_csv("../Livro/data/mojarra.csv", show_col_types = FALSE) %&gt;%
+  rename(aquario = Acuario, peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %&gt;%
+  drop_na(peso_45) %&gt;%                       # 3 peixes morreram antes da pesagem final
+  mutate(probiotico = factor(probiotico), aquario = factor(aquario),
+         ganho = peso_45 - peso_inicial) %&gt;%
+  group_by(aquario) %&gt;% mutate(peixe = row_number()) %&gt;% ungroup()
+```
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; probiotico (i) &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; aquario (j) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; peixe (k) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; ganho em g (Y&lt;sub&gt;ijk&lt;/sub&gt;) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.5 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Três colunas de identificação ↔ três índices do modelo. É nesse **formato longo** (uma linha por
+medida) que os dados entram no `aov()`, `lm()` ou `lmer()`.
+
+---
+
+## Isto não é uma tabela de contingência
+
+Resumindo cada aquário pela média dos seus peixes, os mesmos dados cabem numa tabela
+probiótico × réplica:
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; probiotico &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; réplica 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; réplica 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; réplica 3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; réplica 4 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; réplica 5 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28.3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- Numa **tabela de contingência**, cada célula **conta** quantas unidades caíram numa combinação
+  de categorias (por exemplo, probiótico × sobreviveu/morreu). Ela se analisa com `\(\chi^2\)` ou
+  modelos log-lineares.
+- Aqui cada célula **contém uma medida**, o ganho médio de um aquário em gramas. E as colunas não
+  são categorias: a "réplica 3" do probiótico 1 (aquário 3) não tem nada em comum com a "réplica 3"
+  do probiótico 2 (aquário 8), o rótulo é arbitrário. Não existe efeito de coluna.
+
+---
+
+## Então o que é essa tabela?
+
+É **exatamente o DCA da Aula 04**: 4 tratamentos, 5 réplicas cada, com resposta = ganho médio do
+aquário. Cada linha da tabela é um grupo de réplicas, e embaralhar os valores **dentro** de uma
+linha não muda nada na análise.
+
+--
+
+Duas confusões comuns que esta leitura evita:
+
+- **Não é um DBCA.** No DBCA (Aula 09) as colunas são blocos reais, e o bloco 3 é o *mesmo*
+  bloco em todos os tratamentos; aqui a "réplica 3" é um aquário diferente em cada linha. Aqui não há nada parecido.
+- **Não é um fatorial probiótico × aquário.** "Aquário" não cruza com probiótico: cada aquário
+  recebe *um* probiótico só. Ele está **aninhado** em probiótico.
+
+A planilha longa do slide anterior guarda a informação adicional (os peixes) que a tabela larga
+resume. O modelo a seguir usa as duas camadas.
+
+---
+
+## O modelo, termo a termo
+
+`$$Y_{ijk} = \mu + \tau_i + \delta_{ij} + \varepsilon_{ijk},\qquad
+i=1,\ldots,t;\ j=1,\ldots,r;\ k=1,\ldots,q$$`
+
+- `\(\mu\)`: ganho médio geral.
+- `\(\tau_i\)`: efeito **fixo** do probiótico `\(i\)`, com `\(\sum_i\tau_i=0\)`.
+- `\(\delta_{ij}\sim N(0,\sigma_\delta^2)\)`: quanto o aquário `\(j\)` do probiótico `\(i\)` se afasta da
+  média do seu probiótico (temperatura, oxigênio, hierarquia entre os peixes...). É o **erro
+  experimental**, a variação entre UEs que recebem o mesmo tratamento.
+- `\(\varepsilon_{ijk}\sim N(0,\sigma_\varepsilon^2)\)`: quanto o peixe `\(k\)` se afasta da média do seu
+  aquário. É o **erro de amostragem**, a variação entre subamostras da mesma UE.
+- `\(\delta_{ij}\)` e `\(\varepsilon_{ijk}\)` independentes entre si.
+
+Na tilápia: `\(t=4\)`, `\(r=5\)` e `\(q\approx 5\)` (17 aquários com 5 peixes e 3 com 4).
+
+---
+
+## Uma linha da planilha, decomposta
+
+
+
+Peixe 1 do aquário 1 (probiótico 1), com cada termo estimado pela média correspondente:
+
+`$$\underbrace{12{,}20}_{Y_{111}} =
+\underbrace{17{,}62}_{\hat\mu=\bar Y_{\cdot\cdot\cdot}}
+\ \underbrace{-\ 5{,}06}_{\hat\tau_1=\bar Y_{1\cdot\cdot}-\bar Y_{\cdot\cdot\cdot}}
+\ \underbrace{-\ 2{,}02}_{\hat\delta_{11}=\bar Y_{11\cdot}-\bar Y_{1\cdot\cdot}}
+\ \underbrace{+\ 1{,}66}_{\hat\varepsilon_{111}=Y_{111}-\bar Y_{11\cdot}}$$`
+
+Leitura: o probiótico 1 rende menos que a média geral; o aquário 1 rende
+menos que os outros aquários do mesmo probiótico; e este peixe ganhou
+mais que a média do seu aquário.
+
+--
+
+As somas de quadrados da ANOVA são a soma, sobre **todas** as linhas da planilha, dos quadrados de
+cada uma dessas três parcelas.
+
+---
+
+## A ponte com a Aula 04: a média do aquário
+
+Tirando a média dos `\(q\)` peixes de um aquário:
+
+`$$\bar Y_{ij\cdot} = \mu + \tau_i + \underbrace{\delta_{ij} + \bar\varepsilon_{ij\cdot}}_{e_{ij}},
+\qquad \mathrm{Var}(e_{ij}) = \sigma_\delta^2 + \frac{\sigma_\varepsilon^2}{q}$$`
+
+As médias dos aquários seguem **exatamente o modelo do DCA da Aula 04**, com `\(r\)` réplicas por
+tratamento e variância do erro `\(\sigma^2=\sigma_\delta^2+\sigma_\varepsilon^2/q\)`.
+
+--
+
+Três consequências imediatas:
+
+1. As réplicas do probiótico são os **aquários**: o erro tem `\(t(r-1)=16\)` gl, não 77.
+2. Mais peixes por aquário só diminuem `\(\sigma_\varepsilon^2/q\)`. O termo `\(\sigma_\delta^2\)` fica, e
+   só mais aquários o reduzem.
+3. Com `\(q\)` igual em todos os aquários (desenho balanceado), a ANOVA das médias **é** o teste
+   correto (Cochran &amp; Cox, 1957). Vale para os dois slides seguintes.
+
+---
+
+## De onde vêm os `\(E[QM]\)`
+
+Com `\(q\)` constante, cada quadrado médio é uma variância amostral que já conhecemos:
+
+- `\(QM_{\text{exp}} = \dfrac{q}{t(r-1)}\sum_{i,j}(\bar Y_{ij\cdot}-\bar Y_{i\cdot\cdot})^2\)`:
+  `\(q\)` vezes a variância das médias de aquário dentro de cada probiótico. Pela ponte,
+  `\(E[QM_{\text{exp}}]=q\,(\sigma_\delta^2+\sigma_\varepsilon^2/q)=\sigma_\varepsilon^2+q\sigma_\delta^2\)`.
+- `\(QM_{\text{trat}} = \dfrac{rq}{t-1}\sum_i(\bar Y_{i\cdot\cdot}-\bar Y_{\cdot\cdot\cdot})^2\)`,
+  com `\(E[QM_{\text{trat}}]=\sigma_\varepsilon^2+q\sigma_\delta^2+\dfrac{qr\sum_i\tau_i^2}{t-1}\)`
+  (a mesma conta da Aula 04, com `\(\sigma^2\)` trocado por `\(\sigma_\delta^2+\sigma_\varepsilon^2/q\)`).
+- `\(QM_{\text{am}}\)`: variância entre peixes do mesmo aquário, `\(E[QM_{\text{am}}]=\sigma_\varepsilon^2\)`.
+
+--
+
+Sob `\(H_0:\tau_i=0\)`, só `\(QM_{\text{trat}}\)` e `\(QM_{\text{exp}}\)` têm a **mesma** esperança. Por isso
+`\(F=QM_{\text{trat}}/QM_{\text{exp}}\)`. Com `\(QM_{\text{am}}\)` no denominador, a razão esperada sob
+`\(H_0\)` seria `\(1+q\sigma_\delta^2/\sigma_\varepsilon^2&gt;1\)`: falsos positivos por construção.
+
+---
+
+## ANOVA com subamostragem
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Gl &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; E[QM] &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; t - 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; σ²_ε + qσ²_δ + qr Στ²/(t-1) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro experimental (entre UEs) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; t(r-1) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; σ²_ε + qσ²_δ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erro de amostragem (dentro de UE) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; tr(q-1) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; σ²_ε &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; trq - 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Teste correto: `\(F = QM_{\text{trat}}/QM_{\text{exp}}\)` com `\(t-1\)` e `\(t(r-1)\)` gl. Usar o erro de
+amostragem no denominador é **pseudorreplicação** (Aula 01/Capítulo 1): conta peixes como se
+fossem aquários, infla `\(F\)` e a taxa de falso positivo.
 
 ---
 
 ## Notação matricial: por que `\(\sigma^2\mathbf{I}\)` não basta
 
-Empilhando as `\(N=trq\)` observações em `\(\mathbf{Y}\)` (Capítulo 2), o submuestreo quebra a suposição
+Empilhando as `\(N=trq\)` observações em `\(\mathbf{Y}\)` (Capítulo 2), a subamostragem quebra a suposição
 de erros i.i.d.:
 
 `$$\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}' + \sigma_\varepsilon^2\mathbf{I}_N$$`
 
-- `\(\mathbf{Z}\)`: matriz `\(N\times tr\)` de indicadores de UE — `\(Z_{[ijk],\,i'j'}=\mathbb 1\{i=i',j=j'\}\)`.
-- `\(\mathbf{Z}\mathbf{Z}'\)` tem blocos de `\(1\)`'s do tamanho `\(q\times q\)` (submuestras da mesma UE):
-  observações da mesma UE são correlacionadas, `\(\mathrm{Cov}(Y_{ijk},Y_{ijk'})=\sigma_\delta^2\)`.
-- `\(\mathbf{V}\)` tem estrutura de **simetria composta** por bloco — logo a suposição
+- `\(\mathbf{Z}\)`: matriz `\(N\times tr\)` de indicadores de UE, `\(Z_{[ijk],\,i'j'}=\mathbb 1\{i=i',j=j'\}\)`.
+  Na planilha, é a coluna `aquario` transformada em variáveis indicadoras.
+- `\(\mathbf{Z}\mathbf{Z}'\)` tem blocos de `\(1\)`'s de tamanho `\(q\times q\)` (peixes do mesmo aquário):
+  `\(\mathrm{Cov}(Y_{ijk},Y_{ijk'})=\sigma_\delta^2\)` para `\(k\neq k'\)`.
+- `\(\mathbf{V}\)` tem estrutura de **simetria composta** por bloco, então a suposição
   `\(\mathrm{Cov}=\sigma^2\mathbf{I}\)` do teorema de Gauss-Markov (Cap. 2) **está violada**.
 
 --
 
-Violada a hipótese, o teorema não se aplica. Mas isso significa que precisamos de GLS aqui?
+Violada a hipótese, o teorema não se aplica. Então a ANOVA das médias, que usamos dois slides
+atrás, estaria errada? Precisamos de GLS?
 
 ---
 
 ## Zyskind outra vez: e o balanceamento deixa de ser detalhe
 
-Da Aula 03: com `\(\mathrm{Cov}(\boldsymbol\varepsilon)=\mathbf V\)`, o MQO continua BLUE **se e somente se** existe `\(\mathbf Q\)` com `\(\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q}\)`. Vamos testar.
+Da Aula 03: com `\(\mathrm{Cov}(\boldsymbol\varepsilon)=\mathbf V\)`, o MQO continua BLUE **se e somente se** existe `\(\mathbf Q\)` com `\(\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q}\)`. Vamos testar num desenho pequeno.
 
 
 ``` r
@@ -108,15 +383,18 @@ c(max_erro = max(abs(V %*% X - X %*% Q)),
 
 --
 
-A condição **se verifica**, e com `\(\mathbf{Q}=(q\sigma_\delta^2+\sigma_\varepsilon^2)\mathbf{I}\)`. Apesar da correlação dentro de UE, **MQO continua ótimo** — é por isso que a ANOVA agregada funciona, e não por aproximação.
+A condição **se verifica**, com `\(\mathbf{Q}=(q\sigma_\delta^2+\sigma_\varepsilon^2)\mathbf{I}\)`. Apesar da correlação dentro da UE, **o MQO continua ótimo**. É esse resultado exato, e não uma aproximação, que justifica a ANOVA das médias.
 
 ---
 
 ## O que acontece se o desenho desbalancear
 
+Na tilápia, 3 peixes morreram antes da pesagem final: três aquários ficaram com 4 peixes em vez
+de 5. O mesmo acontece aqui, num desenho pequeno:
+
 
 ``` r
-q2   &lt;- c(4, 4, 4, 4, 4, 2)                  # uma UE com 2 submostras em vez de 4
+q2   &lt;- c(4, 4, 4, 4, 4, 2)                  # uma UE com 2 subamostras em vez de 4
 ue2   &lt;- factor(rep(1:6, times = q2))
 trat2 &lt;- factor(rep(rep(1:3, each = 2), times = q2))
 X2 &lt;- model.matrix(~ trat2); Z2 &lt;- model.matrix(~ ue2 - 1)
@@ -131,15 +409,15 @@ max(abs(V2 %*% X2 - X2 %*% qr.solve(X2, V2 %*% X2)))
 
 --
 
-A condição **falha**. Com submuestragem desigual, MQO deixa de ser BLUE e a estimação correta passa por GLS / máxima verossimilhança restrita (`lme4`, `nlme`).
+A condição **falha**. Com subamostragem desigual o MQO deixa de ser BLUE, e a estimação correta passa por GLS / máxima verossimilhança restrita (`lme4`, `nlme`). A razão é visível na ponte: com `\(q_{ij}\)` variando, as médias de aquário têm variâncias `\(\sigma_\delta^2+\sigma_\varepsilon^2/q_{ij}\)` **diferentes**.
 
 --
 
-Guarde isto: **o balanceamento não é preferência estética nem comodidade de cálculo.** É o que compra o direito de analisar um desenho hierárquico com a ferramenta mais simples. Perder o balanceamento custa um teorema.
+Guarde isto: **o balanceamento não é preferência estética nem comodidade de cálculo.** É o que permite analisar um desenho hierárquico com a ferramenta mais simples.
 
 ---
 
-## O sintoma na prática: `aov()` quebra, `lmer()` não
+## O sintoma na prática: `aov()` reclama, `lmer()` não
 
 
 ``` r
@@ -163,9 +441,10 @@ m_aov &lt;- aov(y ~ trat + Error(trat:ue), data = dados_desbal)
 
 --
 
-O aviso **"Error() model is singular"** não é cosmético — é o R avisando que a separação em
-estratos (a mesma conta do Zyskind, por baixo dos panos) não fecha sem balanceamento. Continuar e
-ler o `summary()` mesmo assim seria confiar num teste que a própria função avisa não ser válido.
+`Error(trat:ue)` diz ao R que a UE é `trat:ue` e pede um estrato de erro para ela. O aviso
+**"Error() model is singular"** não é cosmético: é o R avisando que a separação em estratos (a
+mesma conta do Zyskind, por baixo dos panos) não fecha sem balanceamento. Ler o `summary()` mesmo
+assim seria confiar num teste que a própria função avisa não ser válido.
 
 ---
 
@@ -174,7 +453,7 @@ ler o `summary()` mesmo assim seria confiar num teste que a própria função av
 
 ``` r
 m_lmer &lt;- lme4::lmer(y ~ trat + (1 | ue), data = dados_desbal)
-lme4::VarCorr(m_lmer)   # sigma_delta^2 e sigma_epsilon^2 estimados por REML, sem exigir balanceamento
+lme4::VarCorr(m_lmer)   # sigma_delta e sigma_epsilon estimados por REML, sem exigir balanceamento
 ```
 
 ```
@@ -193,73 +472,46 @@ anova(m_lmer)           # teste F de tratamento -- sem p-valor aqui: exige aprox
 ## trat    2 29.689  14.845  15.369
 ```
 
-Nenhum aviso, nenhuma singularidade: `lmer()` estima os dois componentes de variância por máxima
-verossimilhança restrita, que não depende da decomposição algébrica em estratos ortogonais que
-`aov()` exige. O preço é interpretativo, não computacional — os graus de liberdade do teste `\(F\)`
-deixam de ter uma fórmula fechada simples e exigem uma aproximação (Satterthwaite ou
-Kenward-Roger, fora do escopo deste curso) em vez do `\(F_{t(r-1)}\)` exato da tabela balanceada.
-
----
-
-## ANOVA com submuestreo
-
-&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; Gl &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; E[QM] &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Tratamento &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; t - 1 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; σ²_ε + qσ²_δ + qr Στ²/(t-1) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Erro experimental &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; t(r-1) &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; σ²_ε + qσ²_δ &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Erro de amostragem &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; tr(q-1) &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; σ²_ε &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; trq - 1 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-Teste correto: `\(F = MS_{\text{Trat}}/MS_{\text{erro experimental}}\)` — **não** o erro de
-amostragem. Usar o erro de amostragem no denominador é pseudorreplicação (Aula 01/Capítulo 1):
-infla `\(F\)` e a taxa de falso positivo.
+`(1 | ue)` é o `\(\delta_{ij}\)` do modelo: um intercepto aleatório por UE. Nenhum aviso, nenhuma
+singularidade: `lmer()` estima os dois componentes de variância por máxima verossimilhança
+restrita, que não depende da decomposição em estratos ortogonais que `aov()` exige. O preço é
+interpretativo: os gl do teste `\(F\)` deixam de ter fórmula fechada e exigem uma aproximação
+(Satterthwaite ou Kenward-Roger, via pacote `lmerTest`).
 
 ---
 
 ## Modelo de efeitos aleatórios
 
-Quando os níveis do fator são uma **amostra aleatória** de uma população maior de níveis (não os
-níveis de interesse *per se*):
+Você já viu um efeito aleatório nesta aula: `\(\delta_{ij}\)`. Os aquários não interessam um a um;
+eles são uma amostra dos aquários possíveis, e o que se estima é a variância `\(\sigma_\delta^2\)`.
+
+Quando **o próprio fator de tratamento** é assim, isto é, quando seus níveis são uma **amostra
+aleatória** de uma população maior de níveis e não os níveis de interesse *per se*:
 
 `$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \tau_i\overset{iid}{\sim}N(0,\sigma_\tau^2)$$`
 
 - `\(H_0:\sigma_\tau^2=0\)` em vez de "as médias são iguais".
 - `\(\text{Corr}(Y_{ij},Y_{ij'}) = \sigma_\tau^2/(\sigma_\tau^2+\sigma^2)\)` = ICC.
-- Mesma tabela de ANOVA, mas `\(E[MS_{\text{Entre}}] = \sigma^2+n\sigma_\tau^2\)` (não envolve `\(\tau_i\)`
-  individuais) `\(\Rightarrow \hat\sigma_\tau^2 = (MS_{\text{Entre}}-MS_E)/n\)`, o estimador de
+- Mesma tabela de ANOVA, mas `\(E[QM_{\text{Entre}}] = \sigma^2+n\sigma_\tau^2\)` (não envolve os
+  `\(\tau_i\)` individuais), logo `\(\hat\sigma_\tau^2 = (QM_{\text{Entre}}-QM_E)/n\)`, o estimador de
   momentos clássico para componentes de variância (Montgomery, 2017).
 
---
+---
+
+## Efeitos fixos vs. aleatórios: a mesma matemática
 
 Em notação matricial, a mesma estrutura de simetria composta reaparece,
 `\(\mathbf{V}=\sigma_\tau^2\mathbf{Z}\mathbf{Z}'+\sigma^2\mathbf{I}_N\)`, agora com `\(\mathbf{Z}\)`
-indicando o **nível sorteado** (não a UE): submuestreo e efeitos aleatórios são duas instâncias
-do mesmo fenômeno — observações que compartilham um rótulo aleatório deixam de ser independentes.
+indicando o **nível sorteado** em vez da UE. Subamostragem e efeitos aleatórios são duas
+instâncias do mesmo fenômeno: observações que compartilham um rótulo aleatório deixam de ser
+independentes.
+
+| | Efeito fixo | Efeito aleatório |
+|---|---|---|
+| Níveis | escolhidos, são o interesse | sorteados de uma população |
+| Pergunta | "o nível 3 difere do 1?" | "quanto os níveis variam?" |
+| Parâmetro | `\(\tau_1,\ldots,\tau_t\)` | `\(\sigma_\tau^2\)` |
+| Na tilápia | probiótico | aquário |
 
 ---
 
@@ -271,103 +523,113 @@ class: inverse, center, middle
 
 ## Três formas de organizar o mesmo experimento
 
-Mesmas 12 plantas, 3 tratamentos, adaptado de Hinkelmann &amp; Kempthorne (1994):
+Mesmas 12 plantas, 3 tratamentos, adaptado de Hinkelmann &amp; Kempthorne (1994). Em cada situação,
+pergunte: **quem recebe o tratamento?**
 
 &lt;img src="assets/images/experimento1.png" alt="" width="31%" /&gt;&lt;img src="assets/images/sit2.png" alt="" width="31%" /&gt;&lt;img src="assets/images/sit3.png" alt="" width="31%" /&gt;
 
 --
 
-**Situação 1**: 1 caixa/tratamento — só **3 UEs no total**, zero gl de erro entre UEs. Fatal.
-**Situação 2**: 12 vasos individuais — sem submuestreo, 9 gl de erro. **Situação 3**: 2
-caixas/tratamento — submuestreo, mas com 2 UEs/tratamento (3 gl de erro) em vez de 1. É a mesma
-estrutura, em miniatura, do exemplo da tilápia a seguir.
+**Situação 1**: 1 caixa/tratamento, só **3 UEs no total** e zero gl de erro entre UEs. Fatal.
+**Situação 2**: 12 vasos individuais, sem subamostragem, 9 gl de erro. **Situação 3**: 2
+caixas/tratamento, com subamostragem e 3 gl de erro. É a estrutura da tilápia em miniatura.
 
 ---
 
-## Agricultura: probiótico e ganho de peso em tilápia
-
-**Dados reais** (`mojarra.csv`): 4 probióticos, 20 aquários (5 por probiótico), ~5 peixes por
-aquário medidos individualmente.
-
-- **UE = aquário** (o probiótico é misturado à ração de todo o aquário).
-- **Unidade amostral = peixe** (submuestra).
-
-
-``` r
-mojarra &lt;- read_csv("../Livro/data/mojarra.csv", show_col_types = FALSE) %&gt;%
-  rename(probiotico = probiotico, aquario = Acuario,
-         peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %&gt;%
-  drop_na(peso_45) %&gt;%
-  mutate(probiotico = factor(probiotico), aquario = factor(aquario),
-         ganho = peso_45 - peso_inicial)
-nrow(mojarra); n_distinct(mojarra$aquario)
-```
-
-```
-## [1] 97
-```
-
-```
-## [1] 20
-```
-
----
-
-## Visualizando a estrutura hierárquica
+## Visualizando a estrutura hierárquica da tilápia
 
 &lt;img src="MATD48-05_files/figure-html/plot-hierarquia-05-1.png" alt="" width="612" /&gt;
 
-Losango preto = média do aquário. Variação **entre** losangos de uma mesma cor = erro
-experimental (`\(\sigma_\delta^2\)`); variação dos pontos **ao redor** do seu losango = erro de
-amostragem (`\(\sigma_\varepsilon^2\)`). A ANOVA a seguir compara apenas os 20 losangos — não os
-quase 100 pontos.
+Losango preto = média do aquário (`\(\bar Y_{ij\cdot}\)`). A variação **entre** losangos de uma mesma
+cor estima o erro experimental; a dos pontos **ao redor** do seu losango, o erro de amostragem. O
+teste do probiótico compara os 20 losangos, não os 97 pontos.
 
 ---
 
-## ANOVA aninhada
+## A análise: dois caminhos válidos
 
 
 ``` r
-modelo_sub &lt;- aov(ganho ~ probiotico + Error(probiotico:aquario), data = mojarra)
-summary(modelo_sub)
+med_aq &lt;- tilapia %&gt;% group_by(probiotico, aquario) %&gt;%
+  summarise(ganho = mean(ganho), .groups = "drop")
+summary(aov(ganho ~ probiotico, data = med_aq))           # 1) DCA nas médias (Aula 04)
 ```
 
 ```
-## 
-## Error: probiotico:aquario
-##            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-## probiotico  3   1845   615.0   12.98 0.000149 ***
-## Residuals  16    758    47.4                     
+##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## probiotico   3  380.1  126.71   12.88 0.000155 ***
+## Residuals   16  157.4    9.84                     
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Error: Within
-##           Df Sum Sq Mean Sq F value Pr(&gt;F)
-## Residuals 77   1360   17.66
 ```
 
-Teste do probiótico: `\(MS_{\text{Trat}}/MS_{\text{entre aquários}}\)`, com 16 g.l. no denominador —
-não os 77 g.l. entre peixes dentro de aquário.
+``` r
+m_tilapia &lt;- lmerTest::lmer(ganho ~ probiotico + (1 | aquario), data = tilapia)
+anova(m_tilapia)                                           # 2) modelo misto, gl de Satterthwaite
+```
+
+```
+## Type III Analysis of Variance Table with Satterthwaite's method
+##            Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
+## probiotico 685.98  228.66     3 15.949  12.945 0.0001528 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
 
 ---
 
-## O diagrama de Hasse do submuestreo
+## Lendo o resultado
 
-Quatro nós em **cadeia**: aquário aninhado dentro de probiótico, peixe (submuestra) aninhado
-dentro de aquário — cada nível de aninhamento é um novo elo, ao contrário dos termos cruzados do
-DBCA (Aula 09).
+&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Análise &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Válida aqui? &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; DCA nas médias dos aquários &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.88 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; sim (aproximação: q quase constante) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; lmer (modelo misto) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.94 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; sim &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; aov(... + Error(probiotico:aquario)) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.98 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; não: avisa 'Error() model is singular' &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- As três concordam porque o desbalanceamento é pequeno (4 ou 5 peixes). O ponto não é o número,
+  é **qual análise se pode defender**: com `\(q\)` variando, o `lmer` é a escolha certa.
+- Conclusão: o probiótico afeta o ganho de peso, com o teste feito sobre **16 gl entre aquários**,
+  não 77 gl entre peixes.
+
+---
+
+## O diagrama de Hasse da subamostragem
+
+Quatro nós em **cadeia**: aquário aninhado em probiótico, peixe (subamostra) aninhado em aquário.
+Cada nível de aninhamento é um novo elo, ao contrário dos termos cruzados do DBCA (Aula 09).
 
 ![](../Livro/figuras/hasse/slide-submuestreo.svg)&lt;!-- --&gt;
 
-`\(1+3+16+77=97=N\)`: os 16 gl de "UE" são exatamente os `\(t(r-1)\)` da tabela simbólica; os 77 gl de
-"Submuestra" são o que sobra depois de já ter explicado probiótico e aquário — a mesma regra de
-subtração do diagrama de Hasse do Cap. 2 do livro-texto.
+`\(1+3+16+77=97=N\)`: os 16 gl de "UE" são os `\(t(r-1)\)` da tabela simbólica, e os 77 gl de
+"Subamostra" são o que sobra depois de explicar probiótico e aquário (regra de subtração do Cap. 2).
 
 ---
 
 ## Efeitos aleatórios: variabilidade entre clipes sonoros
 
-Cinco clipes de som distração sorteados de um banco maior, 8 voluntários por clipe.
+Cinco clipes de som de distração sorteados de um banco maior, 8 voluntários por clipe. Interessa
+quanto **os clipes em geral** variam, não comparar estes cinco.
 
 
 ``` r
@@ -391,6 +653,8 @@ c(sigma2_tau = sigma2_tau_hat, sigma2 = tab_cl[["Mean Sq"]][2],
 ##  242.2223275 1407.0528376    0.1468659
 ```
 
+O ICC é a fração da variância total do tempo de reação que se deve a diferenças entre clipes.
+
 ---
 
 class: inverse, center, middle
@@ -401,16 +665,20 @@ class: inverse, center, middle
 
 ## Perguntas para a turma
 
-1. No experimento da tilápia, por que **não** seria correto tratar os ~97 peixes como 97
-   réplicas independentes do probiótico?
+1. No experimento da tilápia, por que **não** seria correto tratar os 97 peixes como 97
+   réplicas independentes do probiótico? Responda usando a ponte `\(\bar Y_{ij\cdot}\)`.
 
 2. Se o orçamento permitisse 5 aquários adicionais, seria mais eficiente usá-los para mais
-   aquários por probiótico ou mais peixes por aquário existente? Por quê?
+   aquários por probiótico ou para mais peixes por aquário existente? Por quê?
 
-3. No exemplo dos clipes sonoros, por que a pergunta de pesquisa deixou de ser "o clipe 3 é
-   diferente do clipe 1?" para se tornar "quanto os clipes variam entre si?"
+3. A planilha tem uma coluna `peixe`, numerada 1 a 5 em cada aquário. Faria sentido incluir
+   `peixe` no modelo como um fator cruzado com probiótico? O que o "peixe 2" do aquário 1 tem
+   em comum com o "peixe 2" do aquário 6?
 
-4. Em que situação você trataria "tipo de distração" (Aula 04) como efeito fixo, mas "clipe
+4. No exemplo dos clipes sonoros, por que a pergunta deixou de ser "o clipe 3 é diferente do
+   clipe 1?" e passou a ser "quanto os clipes variam entre si?"
+
+5. Em que situação você trataria "tipo de distração" (Aula 04) como efeito fixo, mas "clipe
    sonoro específico" como efeito aleatório, no mesmo experimento?
 
 ---
@@ -421,54 +689,60 @@ class: inverse, center, middle
 
 ---
 
-## Retorno decrescente da submuestragem
+## Retorno decrescente da subamostragem
 
 
 ``` r
-tab_sub &lt;- summary(modelo_sub)
-MS_exp &lt;- tab_sub[["Error: probiotico:aquario"]][[1]][["Mean Sq"]][2]
-MS_am  &lt;- tab_sub[["Error: Within"]][[1]][["Mean Sq"]][1]
-q_medio &lt;- nrow(mojarra) / n_distinct(mojarra$aquario)
-sigma2_delta &lt;- (MS_exp - MS_am) / q_medio
+vc &lt;- as.data.frame(lme4::VarCorr(m_tilapia))
+sigma2_delta &lt;- vc$vcov[vc$grp == "aquario"]
+sigma2_eps   &lt;- vc$vcov[vc$grp == "Residual"]
 
 tibble(q = c(1, 5, 10, 20, 50)) %&gt;%
-  mutate(var_media_UE = round(sigma2_delta + MS_am / q, 2)) %&gt;%
-  kable(format = "html") %&gt;% kable_styling(font_size = 20, full_width = FALSE)
+  mutate(`Var(média do aquário)`      = round(sigma2_delta + sigma2_eps / q, 2),
+         `Var(média do probiótico), r=5` = round((sigma2_delta + sigma2_eps / q) / 5, 2)) %&gt;%
+  kable(format = "html") %&gt;% kable_styling(font_size = 18, full_width = FALSE)
 ```
 
-&lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:right;"&gt; q &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; var_media_UE &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Var(média do aquário) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Var(média do probiótico), r=5 &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 23.79 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.76 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9.66 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.67 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.93 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 7.89 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.58 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 7.01 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.40 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 50 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6.48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.49 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.30 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-O piso `\(\sigma_\delta^2 \approx 6.1\)` nunca desaparece — só mais aquários
-reduzem a incerteza sobre o efeito do probiótico sem limite.
+É a ponte em números: `\(\mathrm{Var}(\bar Y_{ij\cdot})=\sigma_\delta^2+\sigma_\varepsilon^2/q\)` tem
+piso `\(\hat\sigma_\delta^2\approx 6.1\)`. Mais peixes não passam disso; só mais
+aquários (o `\(r\)` no denominador da última coluna) reduzem a incerteza sobre o probiótico sem limite.
 
 ---
 
@@ -512,25 +786,29 @@ tibble(n = c(8, 15, 20, 30)) %&gt;% mutate(poder = round(map_dbl(n, poder_n), 3)
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-Com 8 réplicas/clipe, poder ≈ 0,49 para detectar `\(\gamma=0{,}25\)`; seriam necessárias ~20.
+Com 8 réplicas por clipe, o poder é ≈ 0,49 para detectar `\(\gamma=\sigma_\tau^2/\sigma^2=0{,}25\)`;
+seriam necessárias ~20.
 
 ---
 
 ## Resumo da aula
 
-- Submuestreo: modelo com `\(\delta_{ij}\)` (experimental) e `\(\varepsilon_{ijk}\)` (amostragem); o
-  teste de tratamento usa o erro experimental, nunca o de amostragem.
-- A variância da média de uma UE tem piso `\(\sigma_\delta^2\)`: mais UEs &gt; mais submuestras.
-- Efeitos aleatórios: mesma tabela de ANOVA, `\(E[QM]\)` diferente, foco em `\(\sigma_\tau^2\)` (ICC), e
-  planejamento amostral via `\(F/(1+n\gamma)\)` em vez de `\(F\)` não central.
-- Próxima aula: verificação dos pressupostos (normalidade, homocedasticidade) e transformações
-  que tornam essas ANOVAs confiáveis na prática.
+- Subamostragem: a planilha tem uma linha por **subamostra** e três índices; quem recebe o
+  tratamento (a UE) define as réplicas.
+- A tabela tratamento × réplica é um DCA de médias, não uma tabela de contingência nem um DBCA.
+- Modelo `\(Y_{ijk}=\mu+\tau_i+\delta_{ij}+\varepsilon_{ijk}\)`; a média da UE segue o DCA da Aula 04
+  com variância `\(\sigma_\delta^2+\sigma_\varepsilon^2/q\)`, e daí saem os `\(E[QM]\)` e o teste
+  `\(F=QM_{\text{trat}}/QM_{\text{exp}}\)`.
+- Balanceado: ANOVA das médias é exata (Zyskind). Desbalanceado: `lmer`.
+- Efeitos aleatórios: mesma estrutura de covariância; o alvo passa a ser `\(\sigma_\tau^2\)` (ICC).
+- Próxima aula: verificação dos pressupostos e transformações.
 
 ---
 
 ## Referências
 
 - Cochran, W. G. &amp; Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley &amp; Sons.
+- Hinkelmann, K. &amp; Kempthorne, O. (1994). *Design and Analysis of Experiments, Vol. 1*. John Wiley &amp; Sons.
 - Searle, S. R. (1971). *Linear Models*. John Wiley &amp; Sons.
 - Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
     </textarea>

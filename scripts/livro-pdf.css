@@ -1,0 +1,31 @@
+/* Ajustes de impressao para o PDF do livro (scripts/gerar_pdf_livro.R).
+   Carregado depois do style.css do gitbook e do CSS padrao do pagedown. */
+
+@page { size: A4; }
+
+body { font-size: 10.5pt; }
+
+/* codigo: quebra linha em vez de cortar na margem (mesmo problema do footgun #9) */
+pre, pre code { white-space: pre-wrap; word-break: break-word; font-size: 8.5pt; }
+pre { background: #f6f6f6; padding: 6px 8px; border-radius: 3px; }
+
+/* caixas, figuras e tabelas nao partem entre paginas quando cabem numa so */
+div.caixa-aplicacao, div.caixa-discussao, div.caixa-r, div.caixa-preta,
+div.figure, figure, table { break-inside: avoid; }
+
+img { max-width: 100%; height: auto; }
+table { font-size: 9pt; max-width: 100%; }
+
+/* o pagedown acrescenta " (page N)" em ingles a todo link interno: em portugues
+   nas referencias cruzadas, e nada nas citacoes (#ref-...) */
+.main a[href^="#"]:not([class^="footnote-"]):not([href*=":"])::after {
+  content: " (p. " target-counter(attr(href), page) ")";
+}
+.main a[href^="#ref-"]::after,
+.sourceCode a[href^="#"]::after { content: none !important; }
+
+/* o CSS de impressao do pandoc recua 5em cada linha de codigo; recuo pequeno
+   so nas linhas quebradas (hanging indent) */
+pre > code.sourceCode > span {
+  display: inline-block; text-indent: -2em; padding-left: 2em;
+}
