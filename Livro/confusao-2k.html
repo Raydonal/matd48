@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -464,15 +466,15 @@ envolvidos) para cada tratamento. Tratamentos com sinal <span class="math inline
 para o outro.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — confundindo ABCD com o bloco no 2⁴ do biodiesel
 (construção didática)</div>
-<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="confusao-2k.html#cb253-1" tabindex="-1"></a><span class="co"># Suponha que as 16 combinações do 2^4 só coubessem em 2 lotes de solvente (bloco),</span></span>
-<span id="cb253-2"><a href="confusao-2k.html#cb253-2" tabindex="-1"></a><span class="co"># de 8 corridas cada, e que quiséssemos &quot;sacrificar&quot; a interação de quarta ordem ABCD.</span></span>
-<span id="cb253-3"><a href="confusao-2k.html#cb253-3" tabindex="-1"></a><span class="co"># rep_unica já está na codificação numérica -1/+1 (seção &quot;Ortogonalidade da matriz de desenho&quot;), então o</span></span>
-<span id="cb253-4"><a href="confusao-2k.html#cb253-4" tabindex="-1"></a><span class="co"># sinal de ABCD é só o produto direto das quatro colunas.</span></span>
-<span id="cb253-5"><a href="confusao-2k.html#cb253-5" tabindex="-1"></a>combinacoes <span class="ot">&lt;-</span> rep_unica <span class="sc">%&gt;%</span></span>
-<span id="cb253-6"><a href="confusao-2k.html#cb253-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ABCD =</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
-<span id="cb253-7"><a href="confusao-2k.html#cb253-7" tabindex="-1"></a>         <span class="at">bloco =</span> <span class="fu">if_else</span>(ABCD <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Bloco 1&quot;</span>, <span class="st">&quot;Bloco 2&quot;</span>))</span>
-<span id="cb253-8"><a href="confusao-2k.html#cb253-8" tabindex="-1"></a></span>
-<span id="cb253-9"><a href="confusao-2k.html#cb253-9" tabindex="-1"></a><span class="fu">count</span>(combinacoes, bloco)</span></code></pre></div>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="confusao-2k.html#cb255-1" tabindex="-1"></a><span class="co"># Suponha que as 16 combinações do 2^4 só coubessem em 2 lotes de solvente (bloco),</span></span>
+<span id="cb255-2"><a href="confusao-2k.html#cb255-2" tabindex="-1"></a><span class="co"># de 8 corridas cada, e que quiséssemos &quot;sacrificar&quot; a interação de quarta ordem ABCD.</span></span>
+<span id="cb255-3"><a href="confusao-2k.html#cb255-3" tabindex="-1"></a><span class="co"># rep_unica já está na codificação numérica -1/+1 (seção &quot;Ortogonalidade da matriz de desenho&quot;), então o</span></span>
+<span id="cb255-4"><a href="confusao-2k.html#cb255-4" tabindex="-1"></a><span class="co"># sinal de ABCD é só o produto direto das quatro colunas.</span></span>
+<span id="cb255-5"><a href="confusao-2k.html#cb255-5" tabindex="-1"></a>combinacoes <span class="ot">&lt;-</span> rep_unica <span class="sc">%&gt;%</span></span>
+<span id="cb255-6"><a href="confusao-2k.html#cb255-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ABCD =</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
+<span id="cb255-7"><a href="confusao-2k.html#cb255-7" tabindex="-1"></a>         <span class="at">bloco =</span> <span class="fu">if_else</span>(ABCD <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Bloco 1&quot;</span>, <span class="st">&quot;Bloco 2&quot;</span>))</span>
+<span id="cb255-8"><a href="confusao-2k.html#cb255-8" tabindex="-1"></a></span>
+<span id="cb255-9"><a href="confusao-2k.html#cb255-9" tabindex="-1"></a><span class="fu">count</span>(combinacoes, bloco)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 2
 ##   bloco       n
 ##   &lt;chr&gt;   &lt;int&gt;
@@ -497,18 +499,18 @@ tentássemos colocar as duas colunas simultaneamente na matriz de desenho, <span
 ter posto coluna completo — exatamente a situação de deficiência de posto do Capítulo 2 (Seção
 <a href="estimabilidade.html#estimabilidade">2.5</a>) — e <span class="math inline">\((\mathbf{X}&#39;\mathbf{X})^{-1}\)</span> deixaria de existir.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — a colinearidade exata entre bloco e ABCD</div>
-<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="confusao-2k.html#cb255-1" tabindex="-1"></a>combinacoes <span class="ot">&lt;-</span> combinacoes <span class="sc">%&gt;%</span></span>
-<span id="cb255-2"><a href="confusao-2k.html#cb255-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bloco_num =</span> <span class="fu">if_else</span>(bloco <span class="sc">==</span> <span class="st">&quot;Bloco 1&quot;</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb255-3"><a href="confusao-2k.html#cb255-3" tabindex="-1"></a></span>
-<span id="cb255-4"><a href="confusao-2k.html#cb255-4" tabindex="-1"></a><span class="co"># A coluna de bloco é, literalmente, a coluna ABCD (correlação perfeita)</span></span>
-<span id="cb255-5"><a href="confusao-2k.html#cb255-5" tabindex="-1"></a><span class="fu">cor</span>(combinacoes<span class="sc">$</span>ABCD, combinacoes<span class="sc">$</span>bloco_num)</span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="confusao-2k.html#cb257-1" tabindex="-1"></a>combinacoes <span class="ot">&lt;-</span> combinacoes <span class="sc">%&gt;%</span></span>
+<span id="cb257-2"><a href="confusao-2k.html#cb257-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bloco_num =</span> <span class="fu">if_else</span>(bloco <span class="sc">==</span> <span class="st">&quot;Bloco 1&quot;</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb257-3"><a href="confusao-2k.html#cb257-3" tabindex="-1"></a></span>
+<span id="cb257-4"><a href="confusao-2k.html#cb257-4" tabindex="-1"></a><span class="co"># A coluna de bloco é, literalmente, a coluna ABCD (correlação perfeita)</span></span>
+<span id="cb257-5"><a href="confusao-2k.html#cb257-5" tabindex="-1"></a><span class="fu">cor</span>(combinacoes<span class="sc">$</span>ABCD, combinacoes<span class="sc">$</span>bloco_num)</span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="confusao-2k.html#cb257-1" tabindex="-1"></a><span class="co"># Ao incluir as duas no mesmo modelo, R %&gt;% lm() detecta a colinearidade exata</span></span>
-<span id="cb257-2"><a href="confusao-2k.html#cb257-2" tabindex="-1"></a><span class="co"># e descarta uma delas, reportando coeficiente NA:</span></span>
-<span id="cb257-3"><a href="confusao-2k.html#cb257-3" tabindex="-1"></a>dados_conf <span class="ot">&lt;-</span> rep_unica <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(combinacoes<span class="sc">$</span>bloco))</span>
-<span id="cb257-4"><a href="confusao-2k.html#cb257-4" tabindex="-1"></a>mod_confundido <span class="ot">&lt;-</span> <span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente <span class="sc">+</span> bloco,</span>
-<span id="cb257-5"><a href="confusao-2k.html#cb257-5" tabindex="-1"></a>                      <span class="at">data =</span> dados_conf)</span>
-<span id="cb257-6"><a href="confusao-2k.html#cb257-6" tabindex="-1"></a><span class="fu">coef</span>(mod_confundido)[<span class="fu">c</span>(<span class="st">&quot;blocoBloco 2&quot;</span>, <span class="st">&quot;Relacion:Catalizador:Temperatura:Agente&quot;</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="confusao-2k.html#cb259-1" tabindex="-1"></a><span class="co"># Ao incluir as duas no mesmo modelo, R %&gt;% lm() detecta a colinearidade exata</span></span>
+<span id="cb259-2"><a href="confusao-2k.html#cb259-2" tabindex="-1"></a><span class="co"># e descarta uma delas, reportando coeficiente NA:</span></span>
+<span id="cb259-3"><a href="confusao-2k.html#cb259-3" tabindex="-1"></a>dados_conf <span class="ot">&lt;-</span> rep_unica <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(combinacoes<span class="sc">$</span>bloco))</span>
+<span id="cb259-4"><a href="confusao-2k.html#cb259-4" tabindex="-1"></a>mod_confundido <span class="ot">&lt;-</span> <span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente <span class="sc">+</span> bloco,</span>
+<span id="cb259-5"><a href="confusao-2k.html#cb259-5" tabindex="-1"></a>                      <span class="at">data =</span> dados_conf)</span>
+<span id="cb259-6"><a href="confusao-2k.html#cb259-6" tabindex="-1"></a><span class="fu">coef</span>(mod_confundido)[<span class="fu">c</span>(<span class="st">&quot;blocoBloco 2&quot;</span>, <span class="st">&quot;Relacion:Catalizador:Temperatura:Agente&quot;</span>)]</span></code></pre></div>
 <pre><code>##                            blocoBloco 2 Relacion:Catalizador:Temperatura:Agente 
 ##                                  3.0375                                      NA</code></pre>
 <p>O <code>NA</code> no coeficiente da interação de quarta ordem não é um erro numérico — é o R relatando, da
@@ -576,6 +578,30 @@ desenho saturado nunca é gratuito, e a única escolha real é <em>qual</em> ter
 com o novo bloco.</p>
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

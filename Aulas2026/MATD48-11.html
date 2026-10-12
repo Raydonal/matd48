@@ -4,7 +4,7 @@
     <title>Quadrado Latino e Quadrado Greco-Latino</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -64,7 +64,7 @@ Blocar só por linha deixa o gradiente de coluna intacto dentro de cada bloco, e
 O DBCA controla **uma** fonte de variação. Quando há **duas**, cruzadas e conhecidas (linha e
 coluna de um talhão, por exemplo), um **quadrado latino** de ordem `\(n\)` controla as duas com
 apenas `\(n^2\)` unidades, comparando `\(n\)` tratamentos — em vez das `\(n^3\)` que um fatorial completo
-linha$\times$coluna$\times$tratamento exigiria (Fisher, 1935).
+linha × coluna × tratamento exigiria (Fisher, 1935).
 
 --
 
@@ -75,9 +75,7 @@ Regra de construção: cada tratamento aparece **exatamente uma vez em cada linh
 
 ## O modelo
 
-$$
-Y_{ijk} = \mu + \rho_i + \gamma_j + \tau_k + \varepsilon_{ijk}
-$$
+`$$Y_{ijk} = \mu + \rho_i + \gamma_j + \tau_k + \varepsilon_{ijk}$$`
 
 `\(\rho_i\)` = linha, `\(\gamma_j\)` = coluna, `\(\tau_k\)` = tratamento — mas o índice `\(k\)` **não varia
 livremente**: é determinado pelo arranjo do quadrado. `\(n^2\)` observações, não `\(n^3\)`. Tabela de
@@ -124,9 +122,7 @@ Preço: assume-se **ausência de interação** entre linha, coluna e tratamento.
 
 Sob `\(\sum\rho_i=\sum\gamma_j=\sum\tau_k=0\)`:
 
-$$
-\mathbb E[QM_{Trat}] = \sigma^2+\frac{n}{n-1}\sum_k\tau_k^2
-$$
+`$$\mathbb E[QM_{Trat}] = \sigma^2+\frac{n}{n-1}\sum_k\tau_k^2$$`
 
 --
 
@@ -208,9 +204,7 @@ outro com letras gregas (`\(\alpha,\beta,\gamma,\dots\)`), tais que **cada par (
 exatamente uma vez** — extensão natural dos quadrados latinos de Fisher para uma terceira fonte de
 bloqueio (Fisher, 1935).
 
-$$
-Y_{ijkl} = \mu + \rho_i + \gamma_j + \tau_k + \omega_l + \varepsilon_{ijkl}
-$$
+`$$Y_{ijkl} = \mu + \rho_i + \gamma_j + \tau_k + \omega_l + \varepsilon_{ijkl}$$`
 
 --
 
@@ -470,9 +464,7 @@ mod_ql &lt;- aov(resposta ~ linha + coluna + tratamento, data = dados_ql)
 
 ## A matriz de delineamento tem 3 blocos de colunas
 
-$$
-X = \big[\,\mathbf 1 \mid X_{linha} \mid X_{coluna} \mid X_{trat}\,\big]
-$$
+`$$X = \big[\,\mathbf 1 \mid X_{linha} \mid X_{coluna} \mid X_{trat}\,\big]$$`
 
 Sem nenhum produto cruzado entre eles — por isso o quadrado latino estima 3 efeitos principais
 com só `\(n^2\)` observações, ao custo de não poder estimar interação alguma entre eles.
@@ -657,7 +649,7 @@ class: inverse, center, middle
 
 ## Perguntas para a turma
 
-1. Por que o modelo de um quadrado latino não permite estimar interação linha$\times$tratamento,
+1. Por que o modelo de um quadrado latino não permite estimar interação linha × tratamento,
    ao contrário de um fatorial completo?
 
 2. Com `\(n=4\)` tratamentos, comparar um quadrado latino `\(4\times4\)` (16 unidades, duas fontes de

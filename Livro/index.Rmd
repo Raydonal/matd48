@@ -28,6 +28,27 @@ suppressPackageStartupMessages({
 
 # Prefácio {-}
 
+```{=html}
+<div class="caixa-aviso">
+<strong>Aviso de direitos autorais — versão preliminar</strong><br>
+© 2026 Raydonal Ospina Martínez. Departamento de Estatística, Universidade Federal da Bahia (UFBA).
+Todos os direitos reservados.
+<ul>
+<li><strong>Uso restrito.</strong> Material de apoio de uso exclusivo dos estudantes regularmente
+matriculados em MATD48 — Planejamento de Experimentos A, para estudo pessoal. Não é material de
+uso livre.</li>
+<li><strong>Reprodução proibida.</strong> É vedada a reprodução, distribuição, republicação,
+tradução, adaptação ou uso comercial deste material, total ou parcial, por qualquer meio, sem
+autorização prévia e por escrito do autor (Lei nº 9.610/1998, Lei de Direitos Autorais).</li>
+<li><strong>Plágio.</strong> Usar trechos, figuras, exemplos ou códigos deste texto sem citar a
+fonte constitui plágio. Para citar: Ospina Martínez, R. (2026). <em>Planejamento e Análise de
+Experimentos: notas de curso — MATD48</em> (versão preliminar). Departamento de Estatística, UFBA.</li>
+<li><strong>Em construção.</strong> Este texto está em elaboração, pode conter erros e será
+revisado sem aviso prévio. Correções e sugestões são bem-vindas pelos canais da disciplina.</li>
+</ul>
+</div>
+```
+
 Este livro reúne as notas de curso de **MATD48 — Planejamento de Experimentos A**, disciplina do
 Departamento de Estatística da Universidade Federal da Bahia (UFBA). Ele acompanha os slides de
 aula (`Aulas2026/`) e as listas de exercícios semanais (`Listas2026/`), formando um material único

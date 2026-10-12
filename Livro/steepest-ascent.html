@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -463,37 +465,37 @@ vitamina C. Um fatorial $2^2$ inicial, rodado numa região exploratória de baix
 curto (onde a equipe suspeitava, sem certeza, que a retenção seria baixa), estima um modelo de
 primeira ordem.
 </div>
-<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="steepest-ascent.html#cb268-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb268-2"><a href="steepest-ascent.html#cb268-2" tabindex="-1"></a>codif_para_natural <span class="ot">&lt;-</span> <span class="cf">function</span>(x1, x2) <span class="fu">tibble</span>(<span class="at">temperatura =</span> <span class="dv">45</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x1, <span class="at">tempo =</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> x2)</span>
-<span id="cb268-3"><a href="steepest-ascent.html#cb268-3" tabindex="-1"></a></span>
-<span id="cb268-4"><a href="steepest-ascent.html#cb268-4" tabindex="-1"></a>fatorial_inicial <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">x1 =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">x2 =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb268-5"><a href="steepest-ascent.html#cb268-5" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">codif_para_natural</span>(.<span class="sc">$</span>x1, .<span class="sc">$</span>x2)) <span class="sc">%&gt;%</span></span>
-<span id="cb268-6"><a href="steepest-ascent.html#cb268-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">retencao =</span> <span class="dv">55</span> <span class="sc">+</span> <span class="dv">4</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="dv">6</span> <span class="sc">*</span> x2 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> x1 <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.5</span>))</span>
-<span id="cb268-7"><a href="steepest-ascent.html#cb268-7" tabindex="-1"></a></span>
-<span id="cb268-8"><a href="steepest-ascent.html#cb268-8" tabindex="-1"></a>modelo_1a_ordem <span class="ot">&lt;-</span> <span class="fu">lm</span>(retencao <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> fatorial_inicial)</span>
-<span id="cb268-9"><a href="steepest-ascent.html#cb268-9" tabindex="-1"></a><span class="fu">coef</span>(modelo_1a_ordem)</span></code></pre></div>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="steepest-ascent.html#cb270-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb270-2"><a href="steepest-ascent.html#cb270-2" tabindex="-1"></a>codif_para_natural <span class="ot">&lt;-</span> <span class="cf">function</span>(x1, x2) <span class="fu">tibble</span>(<span class="at">temperatura =</span> <span class="dv">45</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x1, <span class="at">tempo =</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> x2)</span>
+<span id="cb270-3"><a href="steepest-ascent.html#cb270-3" tabindex="-1"></a></span>
+<span id="cb270-4"><a href="steepest-ascent.html#cb270-4" tabindex="-1"></a>fatorial_inicial <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">x1 =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">x2 =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb270-5"><a href="steepest-ascent.html#cb270-5" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">codif_para_natural</span>(.<span class="sc">$</span>x1, .<span class="sc">$</span>x2)) <span class="sc">%&gt;%</span></span>
+<span id="cb270-6"><a href="steepest-ascent.html#cb270-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">retencao =</span> <span class="dv">55</span> <span class="sc">+</span> <span class="dv">4</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="dv">6</span> <span class="sc">*</span> x2 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> x1 <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.5</span>))</span>
+<span id="cb270-7"><a href="steepest-ascent.html#cb270-7" tabindex="-1"></a></span>
+<span id="cb270-8"><a href="steepest-ascent.html#cb270-8" tabindex="-1"></a>modelo_1a_ordem <span class="ot">&lt;-</span> <span class="fu">lm</span>(retencao <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> fatorial_inicial)</span>
+<span id="cb270-9"><a href="steepest-ascent.html#cb270-9" tabindex="-1"></a><span class="fu">coef</span>(modelo_1a_ordem)</span></code></pre></div>
 <pre><code>## (Intercept)          x1          x2 
 ##   54.132313    4.054148    5.647708</code></pre>
 <p>O gradiente estimado <span class="math inline">\((\hat\beta_{x_1}, \hat\beta_{x_2})\)</span> aponta a direção de subida mais rápida em
 <strong>unidades codificadas</strong>; convertendo para as unidades naturais originais (multiplicando cada
 componente pela meia-amplitude codificada de cada fator, <span class="math inline">\(10°\text{C}\)</span> e <span class="math inline">\(1{,}5\text{h}\)</span>) dá o
 <strong>passo</strong> a cada movimento ao longo do caminho:</p>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="steepest-ascent.html#cb270-1" tabindex="-1"></a>grad_codificado <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_1a_ordem)[<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>)]</span>
-<span id="cb270-2"><a href="steepest-ascent.html#cb270-2" tabindex="-1"></a>passo_unitario <span class="ot">&lt;-</span> grad_codificado <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(grad_codificado<span class="sc">^</span><span class="dv">2</span>))  <span class="co"># direção unitária</span></span>
-<span id="cb270-3"><a href="steepest-ascent.html#cb270-3" tabindex="-1"></a></span>
-<span id="cb270-4"><a href="steepest-ascent.html#cb270-4" tabindex="-1"></a>caminho_subida <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">passo =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb270-5"><a href="steepest-ascent.html#cb270-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb270-6"><a href="steepest-ascent.html#cb270-6" tabindex="-1"></a>    <span class="at">x1 =</span> passo <span class="sc">*</span> passo_unitario[<span class="st">&quot;x1&quot;</span>],</span>
-<span id="cb270-7"><a href="steepest-ascent.html#cb270-7" tabindex="-1"></a>    <span class="at">x2 =</span> passo <span class="sc">*</span> passo_unitario[<span class="st">&quot;x2&quot;</span>],</span>
-<span id="cb270-8"><a href="steepest-ascent.html#cb270-8" tabindex="-1"></a>    <span class="at">temperatura =</span> <span class="dv">45</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x1,</span>
-<span id="cb270-9"><a href="steepest-ascent.html#cb270-9" tabindex="-1"></a>    <span class="at">tempo       =</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> x2,</span>
-<span id="cb270-10"><a href="steepest-ascent.html#cb270-10" tabindex="-1"></a>    <span class="co"># retencao &quot;verdadeira&quot; simulada ao longo do caminho, com um maximo por volta de x1=2.5,x2=3.2</span></span>
-<span id="cb270-11"><a href="steepest-ascent.html#cb270-11" tabindex="-1"></a>    <span class="co"># -- ruido pequeno (sd=0.3) para que o pico fique visível apesar de uma única corrida por passo</span></span>
-<span id="cb270-12"><a href="steepest-ascent.html#cb270-12" tabindex="-1"></a>    <span class="at">retencao_verdadeira =</span> <span class="dv">75</span> <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> (x1 <span class="sc">-</span> <span class="fl">2.5</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> <span class="fl">2.5</span> <span class="sc">*</span> (x2 <span class="sc">-</span> <span class="fl">3.2</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">0.3</span>)</span>
-<span id="cb270-13"><a href="steepest-ascent.html#cb270-13" tabindex="-1"></a>  )</span>
-<span id="cb270-14"><a href="steepest-ascent.html#cb270-14" tabindex="-1"></a>caminho_subida <span class="sc">%&gt;%</span> <span class="fu">select</span>(passo, temperatura, tempo, retencao_verdadeira) <span class="sc">%&gt;%</span></span>
-<span id="cb270-15"><a href="steepest-ascent.html#cb270-15" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">&quot;Caminho de máxima inclinação: um novo experimento a cada passo&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb270-16"><a href="steepest-ascent.html#cb270-16" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="steepest-ascent.html#cb272-1" tabindex="-1"></a>grad_codificado <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_1a_ordem)[<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>)]</span>
+<span id="cb272-2"><a href="steepest-ascent.html#cb272-2" tabindex="-1"></a>passo_unitario <span class="ot">&lt;-</span> grad_codificado <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(grad_codificado<span class="sc">^</span><span class="dv">2</span>))  <span class="co"># direção unitária</span></span>
+<span id="cb272-3"><a href="steepest-ascent.html#cb272-3" tabindex="-1"></a></span>
+<span id="cb272-4"><a href="steepest-ascent.html#cb272-4" tabindex="-1"></a>caminho_subida <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">passo =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb272-5"><a href="steepest-ascent.html#cb272-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb272-6"><a href="steepest-ascent.html#cb272-6" tabindex="-1"></a>    <span class="at">x1 =</span> passo <span class="sc">*</span> passo_unitario[<span class="st">&quot;x1&quot;</span>],</span>
+<span id="cb272-7"><a href="steepest-ascent.html#cb272-7" tabindex="-1"></a>    <span class="at">x2 =</span> passo <span class="sc">*</span> passo_unitario[<span class="st">&quot;x2&quot;</span>],</span>
+<span id="cb272-8"><a href="steepest-ascent.html#cb272-8" tabindex="-1"></a>    <span class="at">temperatura =</span> <span class="dv">45</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x1,</span>
+<span id="cb272-9"><a href="steepest-ascent.html#cb272-9" tabindex="-1"></a>    <span class="at">tempo       =</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> x2,</span>
+<span id="cb272-10"><a href="steepest-ascent.html#cb272-10" tabindex="-1"></a>    <span class="co"># retencao &quot;verdadeira&quot; simulada ao longo do caminho, com um maximo por volta de x1=2.5,x2=3.2</span></span>
+<span id="cb272-11"><a href="steepest-ascent.html#cb272-11" tabindex="-1"></a>    <span class="co"># -- ruido pequeno (sd=0.3) para que o pico fique visível apesar de uma única corrida por passo</span></span>
+<span id="cb272-12"><a href="steepest-ascent.html#cb272-12" tabindex="-1"></a>    <span class="at">retencao_verdadeira =</span> <span class="dv">75</span> <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> (x1 <span class="sc">-</span> <span class="fl">2.5</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> <span class="fl">2.5</span> <span class="sc">*</span> (x2 <span class="sc">-</span> <span class="fl">3.2</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">0.3</span>)</span>
+<span id="cb272-13"><a href="steepest-ascent.html#cb272-13" tabindex="-1"></a>  )</span>
+<span id="cb272-14"><a href="steepest-ascent.html#cb272-14" tabindex="-1"></a>caminho_subida <span class="sc">%&gt;%</span> <span class="fu">select</span>(passo, temperatura, tempo, retencao_verdadeira) <span class="sc">%&gt;%</span></span>
+<span id="cb272-15"><a href="steepest-ascent.html#cb272-15" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">&quot;Caminho de máxima inclinação: um novo experimento a cada passo&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb272-16"><a href="steepest-ascent.html#cb272-16" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:steepest-ascent-passos">Tabela 7.2: </span>Caminho de máxima inclinação: um novo experimento a cada passo
@@ -635,6 +637,30 @@ Box, G. E. P., &amp; Hunter, J. S. (1957). Multi-factor experimental designs for
 Box, G. E. P., &amp; Wilson, K. B. (1951). On the experimental attainment of optimum conditions. <em>Journal of the Royal Statistical Society, Series B</em>, <em>13</em>(1), 1–45.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

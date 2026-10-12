@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -501,8 +503,161 @@ pois é nele que o probiótico é aplicado (misturado à ração de todo o aquá
 sortear o probiótico peixe a peixe dentro de um mesmo aquário. Cada aquário contém, em geral, 5
 peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong> (subamostra).
 </div>
-<div id="modelo-submuestreo" class="section level3 hasAnchor" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> O modelo com dois níveis de erro<a href="dca-submuestreo.html#modelo-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="dados-submuestreo" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Como são os dados: uma linha por subamostra<a href="dca-submuestreo.html#dados-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Antes de qualquer modelo, convém olhar a planilha. Ela tem <strong>uma linha por peixe</strong>, não por
+aquário, e três colunas de identificação, uma para cada nível da estrutura:</p>
+<div class="caixa-r"><strong>Uso do R</strong> — lendo os dados da tilápia</div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="dca-submuestreo.html#cb82-1" tabindex="-1"></a>mojarra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mojarra.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb82-2"><a href="dca-submuestreo.html#cb82-2" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">probiotico =</span> probiotico, <span class="at">aquario =</span> Acuario,</span>
+<span id="cb82-3"><a href="dca-submuestreo.html#cb82-3" tabindex="-1"></a>         <span class="at">peso_inicial =</span> <span class="st">`</span><span class="at">Peso Inicial</span><span class="st">`</span>, <span class="at">peso_45 =</span> <span class="st">`</span><span class="at">Peso 45</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb82-4"><a href="dca-submuestreo.html#cb82-4" tabindex="-1"></a>  <span class="fu">drop_na</span>(peso_45) <span class="sc">%&gt;%</span>                                  <span class="co"># 3 peixes morreram antes do dia 45</span></span>
+<span id="cb82-5"><a href="dca-submuestreo.html#cb82-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb82-6"><a href="dca-submuestreo.html#cb82-6" tabindex="-1"></a>    <span class="at">probiotico =</span> <span class="fu">factor</span>(probiotico),</span>
+<span id="cb82-7"><a href="dca-submuestreo.html#cb82-7" tabindex="-1"></a>    <span class="at">aquario    =</span> <span class="fu">factor</span>(aquario),</span>
+<span id="cb82-8"><a href="dca-submuestreo.html#cb82-8" tabindex="-1"></a>    <span class="at">ganho      =</span> peso_45 <span class="sc">-</span> peso_inicial</span>
+<span id="cb82-9"><a href="dca-submuestreo.html#cb82-9" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb82-10"><a href="dca-submuestreo.html#cb82-10" tabindex="-1"></a>  <span class="fu">group_by</span>(aquario) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">peixe =</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb82-11"><a href="dca-submuestreo.html#cb82-11" tabindex="-1"></a></span>
+<span id="cb82-12"><a href="dca-submuestreo.html#cb82-12" tabindex="-1"></a>mojarra <span class="sc">%&gt;%</span> <span class="fu">filter</span>(aquario <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-13"><a href="dca-submuestreo.html#cb82-13" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(probiotico, aquario, peixe, ganho)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 4
+##   probiotico aquario peixe ganho
+##   &lt;fct&gt;      &lt;fct&gt;   &lt;int&gt; &lt;dbl&gt;
+## 1 1          1           1  12.2
+## 2 1          1           2   8.5
+## 3 1          1           3   9.4
+## 4 2          6           1   8.2
+## 5 2          6           2  11.8
+## 6 2          6           3   8.5</code></pre>
+<p>As colunas <code>probiotico</code>, <code>aquario</code> e <code>peixe</code> correspondem aos índices <span class="math inline">\(i\)</span>, <span class="math inline">\(j\)</span> e <span class="math inline">\(k\)</span> do modelo da
+próxima seção, e é nesse formato longo que os dados entram em <code>aov()</code>, <code>lm()</code> ou <code>lmer()</code>.
+Resumindo cada aquário pela média dos seus peixes, os mesmos dados cabem numa tabela probiótico
+<span class="math inline">\(\times\)</span> réplica:</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tabela-larga-mojarra">Tabela 3.6: </span>Ganho médio (g) de cada aquário, arrumado por probiótico
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+probiotico
+</th>
+<th style="text-align:right;">
+réplica 1
+</th>
+<th style="text-align:right;">
+réplica 2
+</th>
+<th style="text-align:right;">
+réplica 3
+</th>
+<th style="text-align:right;">
+réplica 4
+</th>
+<th style="text-align:right;">
+réplica 5
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+<td style="text-align:right;">
+13.0
+</td>
+<td style="text-align:right;">
+16.8
+</td>
+<td style="text-align:right;">
+13.4
+</td>
+<td style="text-align:right;">
+9.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+<td style="text-align:right;">
+15.5
+</td>
+<td style="text-align:right;">
+16.2
+</td>
+<td style="text-align:right;">
+14.3
+</td>
+<td style="text-align:right;">
+12.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+17.9
+</td>
+<td style="text-align:right;">
+21.9
+</td>
+<td style="text-align:right;">
+20.7
+</td>
+<td style="text-align:right;">
+24.0
+</td>
+<td style="text-align:right;">
+17.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+23.5
+</td>
+<td style="text-align:right;">
+24.8
+</td>
+<td style="text-align:right;">
+21.9
+</td>
+<td style="text-align:right;">
+16.8
+</td>
+<td style="text-align:right;">
+28.3
+</td>
+</tr>
+</tbody>
+</table>
+<p>Essa tabela engana com facilidade, e vale dizer o que ela <strong>não</strong> é. Não é uma tabela de
+contingência: numa tabela de contingência cada célula conta quantas unidades caíram numa
+combinação de categorias (probiótico <span class="math inline">\(\times\)</span> sobreviveu/morreu, por exemplo), e a análise é por
+<span class="math inline">\(\chi^2\)</span> ou modelos log-lineares; aqui cada célula contém uma <strong>medida</strong>, o ganho médio de um
+aquário em gramas. Também não é um DBCA nem um fatorial probiótico <span class="math inline">\(\times\)</span> aquário: a “réplica 3”
+do probiótico 1 e a “réplica 3” do probiótico 2 são aquários diferentes, sem nada em comum, de
+modo que não existe efeito de coluna, e embaralhar os valores dentro de uma linha não muda nada.
+O aquário não cruza com o probiótico, porque cada aquário recebe um probiótico só: ele está
+<strong>aninhado</strong> no probiótico. O que a tabela é, exatamente, é o DCA de um fator da Seção
+<a href="dca-uma-via.html#dca-uma-via">3.2</a>, com 4 tratamentos, 5 réplicas e o ganho médio do aquário como resposta. A
+planilha longa guarda a camada adicional, os peixes, que a tabela resume, e o modelo a seguir
+usa as duas camadas.</p>
+</div>
+<div id="modelo-submuestreo" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> O modelo com dois níveis de erro<a href="dca-submuestreo.html#modelo-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Com <span class="math inline">\(t\)</span> tratamentos, <span class="math inline">\(r\)</span> unidades experimentais (UEs) por tratamento e <span class="math inline">\(q\)</span> unidades amostrais
 (subamostras) por UE, o modelo passa a ter <strong>dois</strong> termos de erro:</p>
 <p><span class="math display">\[
@@ -519,6 +674,23 @@ peixes de um mesmo aquário), independente de <span class="math inline">\(\delta
 individual é <span class="math inline">\(\text{Var}(Y_{ijk}) = \sigma_\delta^2 + \sigma_\varepsilon^2\)</span>, mas o que importa
 para comparar tratamentos é apenas <span class="math inline">\(\sigma_\delta^2\)</span>: aumentar <span class="math inline">\(q\)</span> (mais peixes por aquário) nunca
 reduz a incerteza sobre o efeito do tratamento além de um certo ponto, porque não gera novas UEs.</p>
+<p>A ligação com o DCA de um fator aparece ao tirar a média dos <span class="math inline">\(q\)</span> peixes de um aquário:</p>
+<p><span class="math display">\[
+\bar Y_{ij\cdot} = \mu + \tau_i + e_{ij}, \qquad e_{ij} = \delta_{ij} + \bar\varepsilon_{ij\cdot},
+\qquad \mathrm{Var}(e_{ij}) = \sigma_\delta^2 + \frac{\sigma_\varepsilon^2}{q}.
+\]</span></p>
+<p>As médias dos aquários seguem, portanto, exatamente o modelo do DCA de um fator, com <span class="math inline">\(r\)</span> réplicas
+por tratamento e variância do erro <span class="math inline">\(\sigma_\delta^2+\sigma_\varepsilon^2/q\)</span>. Três consequências
+saem daí sem conta adicional. As réplicas do tratamento são as UEs, e o erro tem <span class="math inline">\(t(r-1)\)</span> graus de
+liberdade, não <span class="math inline">\(tr(q-1)\)</span>. Mais subamostras só diminuem a parcela <span class="math inline">\(\sigma_\varepsilon^2/q\)</span>, e a
+parcela <span class="math inline">\(\sigma_\delta^2\)</span> fica. E, com <span class="math inline">\(q\)</span> constante, as esperanças dos quadrados médios da tabela
+de ANOVA adiante se deduzem da Seção <a href="dca-uma-via.html#dca-uma-via">3.2</a>: o quadrado médio do erro experimental é
+<span class="math inline">\(q\)</span> vezes a variância amostral das médias de aquário dentro de cada tratamento, logo
+<span class="math inline">\(E[QM_{\text{exp}}] = q(\sigma_\delta^2+\sigma_\varepsilon^2/q) = \sigma_\varepsilon^2+q\sigma_\delta^2\)</span>;
+o de tratamento ganha a parcela <span class="math inline">\(qr\sum_i\tau_i^2/(t-1)\)</span>; e o de amostragem, que mede a variação
+entre peixes do mesmo aquário, tem esperança <span class="math inline">\(\sigma_\varepsilon^2\)</span>. Sob <span class="math inline">\(H_0:\tau_i=0\)</span>, só os dois
+primeiros têm a mesma esperança, e é por isso que o teste <span class="math inline">\(F\)</span> usa o erro experimental no
+denominador.</p>
 <p>Em notação matricial, a subamostragem quebra a suposição <span class="math inline">\(\mathrm{Cov}(\boldsymbol{\varepsilon}) = \sigma^2\mathbf{I}_N\)</span> do Capítulo 2 (Seção <a href="gauss-markov.html#gauss-markov">2.6</a>): empilhando as <span class="math inline">\(N=trq\)</span>
 observações, <span class="math inline">\(\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}&#39; + \sigma_\varepsilon^2\mathbf{I}_N\)</span>, em que <span class="math inline">\(\mathbf{Z}\)</span> é a matriz <span class="math inline">\(N\times tr\)</span> de indicadores de
 UE (<span class="math inline">\(Z_{[ijk],\,i&#39;j&#39;} = \mathbb{1}\{i=i&#39;,j=j&#39;\}\)</span>). <span class="math inline">\(\mathbf{V}\)</span> tem estrutura de blocos de
@@ -526,20 +698,20 @@ UE (<span class="math inline">\(Z_{[ijk],\,i&#39;j&#39;} = \mathbb{1}\{i=i&#39;,
 (<span class="math inline">\(k\neq k&#39;\)</span>); entre UEs diferentes, covariância nula. Um <span class="math inline">\(\mathbf{X}\)</span> com <span class="math inline">\(\mathrm{Cov}(\mathbf{Y}) =\sigma^2\mathbf{I}\)</span> deixa de bastar — é exatamente essa estrutura de <span class="math inline">\(\mathbf{V}\)</span> que faz do DCA
 com subamostragem um caso particular de <strong>modelo linear misto</strong>, ajustável de forma exata (inclusive
 sob desbalanceamento) por <code>nlme::lme()</code> ou <code>lme4::lmer()</code>, embora a ANOVA clássica com <code>Error()</code>
-usada adiante já recupere o teste correto no caso balanceado.</p>
+recupere o teste correto no caso balanceado.</p>
 <p>O que acontece se o número de subamostras por UE <strong>não</strong> for o mesmo em toda UE — um aquário
 perdeu um peixe, por exemplo? A condição de Zyskind (Seção <a href="principios-aleatorizacao.html#zyskind-dca">3.1.2.5</a>) deixa de se
 verificar, e a ANOVA clássica com <code>Error()</code> deixa de ter uma base algébrica sólida — o R, nesse
 caso, geralmente avisa:</p>
 <div class="caixa-r"><strong>Uso do R</strong> — o sintoma de perder o balanceamento: <code>aov()</code> quebra, <code>lmer()</code> não</div>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="dca-submuestreo.html#cb82-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">77</span>)</span>
-<span id="cb82-2"><a href="dca-submuestreo.html#cb82-2" tabindex="-1"></a>q_desigual <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>)   <span class="co"># uma UE com 2 subamostras em vez de 4</span></span>
-<span id="cb82-3"><a href="dca-submuestreo.html#cb82-3" tabindex="-1"></a>delta_ue   <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">6</span>, <span class="dv">0</span>, <span class="fl">1.7</span>)</span>
-<span id="cb82-4"><a href="dca-submuestreo.html#cb82-4" tabindex="-1"></a>dados_desbal <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="cf">function</span>(j) {</span>
-<span id="cb82-5"><a href="dca-submuestreo.html#cb82-5" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">ue =</span> <span class="fu">factor</span>(j), <span class="at">trat =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j]),</span>
-<span id="cb82-6"><a href="dca-submuestreo.html#cb82-6" tabindex="-1"></a>         <span class="at">y  =</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j] <span class="sc">+</span> delta_ue[j] <span class="sc">+</span> <span class="fu">rnorm</span>(q_desigual[j], <span class="dv">0</span>, <span class="fl">0.9</span>))</span>
-<span id="cb82-7"><a href="dca-submuestreo.html#cb82-7" tabindex="-1"></a>})</span>
-<span id="cb82-8"><a href="dca-submuestreo.html#cb82-8" tabindex="-1"></a><span class="fu">aov</span>(y <span class="sc">~</span> trat <span class="sc">+</span> <span class="fu">Error</span>(trat<span class="sc">:</span>ue), <span class="at">data =</span> dados_desbal)   <span class="co"># emite o aviso abaixo</span></span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="dca-submuestreo.html#cb84-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">77</span>)</span>
+<span id="cb84-2"><a href="dca-submuestreo.html#cb84-2" tabindex="-1"></a>q_desigual <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>)   <span class="co"># uma UE com 2 subamostras em vez de 4</span></span>
+<span id="cb84-3"><a href="dca-submuestreo.html#cb84-3" tabindex="-1"></a>delta_ue   <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">6</span>, <span class="dv">0</span>, <span class="fl">1.7</span>)</span>
+<span id="cb84-4"><a href="dca-submuestreo.html#cb84-4" tabindex="-1"></a>dados_desbal <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="cf">function</span>(j) {</span>
+<span id="cb84-5"><a href="dca-submuestreo.html#cb84-5" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">ue =</span> <span class="fu">factor</span>(j), <span class="at">trat =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j]),</span>
+<span id="cb84-6"><a href="dca-submuestreo.html#cb84-6" tabindex="-1"></a>         <span class="at">y  =</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j] <span class="sc">+</span> delta_ue[j] <span class="sc">+</span> <span class="fu">rnorm</span>(q_desigual[j], <span class="dv">0</span>, <span class="fl">0.9</span>))</span>
+<span id="cb84-7"><a href="dca-submuestreo.html#cb84-7" tabindex="-1"></a>})</span>
+<span id="cb84-8"><a href="dca-submuestreo.html#cb84-8" tabindex="-1"></a><span class="fu">aov</span>(y <span class="sc">~</span> trat <span class="sc">+</span> <span class="fu">Error</span>(trat<span class="sc">:</span>ue), <span class="at">data =</span> dados_desbal)   <span class="co"># emite o aviso abaixo</span></span></code></pre></div>
 <pre><code>## Warning in aov(y ~ trat + Error(trat:ue), data = dados_desbal): Error() model
 ## is singular</code></pre>
 <pre><code>## 
@@ -573,8 +745,8 @@ variância por máxima verossimilhança restrita sem exigir essa condição — 
 liberdade do teste <span class="math inline">\(F\)</span> deixam de ter fórmula fechada, exigindo uma aproximação (Satterthwaite ou
 Kenward-Roger) fora do escopo deste livro.</p>
 </div>
-<div id="o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas" class="section level3 hasAnchor" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> O diagrama de Hasse da subamostragem: aninhamento em duas camadas<a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas" class="section level3 hasAnchor" number="3.3.3">
+<h3><span class="header-section-number">3.3.3</span> O diagrama de Hasse da subamostragem: aninhamento em duas camadas<a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A estrutura de dois erros descrita acima tem um retrato imediato no diagrama de Hasse introduzido
 no Capítulo 2 (Seção <a href="hasse.html#hasse">2.2</a>). O DCA simples é uma cadeia de três nós — Média <span class="math inline">\(\prec\)</span>
 Tratamento <span class="math inline">\(\prec\)</span> Erro (Figura <a href="hasse.html#fig:hasse-dca">2.1</a> do Capítulo 2). A subamostragem insere um quarto
@@ -582,20 +754,20 @@ elo <em>abaixo</em> do erro experimental: a unidade experimental (aquário) é, 
 unidade amostral (peixe) dentro dela — exatamente o padrão de <strong>aninhamento</strong> que a Seção
 <a href="hasse.html#hasse">2.2</a> definiu como “uma cadeia direta de arestas, sem ramificação”.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA com subamostragem</div>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="dca-submuestreo.html#cb85-1" tabindex="-1"></a>nos_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb85-2"><a href="dca-submuestreo.html#cb85-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>),</span>
-<span id="cb85-3"><a href="dca-submuestreo.html#cb85-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span> <span class="sc">*</span> <span class="dv">5</span>)  <span class="co"># t=4; 20 aquarios; N=100 peixes</span></span>
-<span id="cb85-4"><a href="dca-submuestreo.html#cb85-4" tabindex="-1"></a>)</span>
-<span id="cb85-5"><a href="dca-submuestreo.html#cb85-5" tabindex="-1"></a>arestas_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb85-6"><a href="dca-submuestreo.html#cb85-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>),</span>
-<span id="cb85-7"><a href="dca-submuestreo.html#cb85-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>)</span>
-<span id="cb85-8"><a href="dca-submuestreo.html#cb85-8" tabindex="-1"></a>)</span>
-<span id="cb85-9"><a href="dca-submuestreo.html#cb85-9" tabindex="-1"></a></span>
-<span id="cb85-10"><a href="dca-submuestreo.html#cb85-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb85-11"><a href="dca-submuestreo.html#cb85-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sub, arestas_sub,</span>
-<span id="cb85-12"><a href="dca-submuestreo.html#cb85-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dca-submuestreo.svg&quot;</span>,</span>
-<span id="cb85-13"><a href="dca-submuestreo.html#cb85-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DCA com subamostragem: t=4, r=5, q=5 (N=100)&quot;</span>)</span>
-<span id="cb85-14"><a href="dca-submuestreo.html#cb85-14" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="dca-submuestreo.html#cb87-1" tabindex="-1"></a>nos_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb87-2"><a href="dca-submuestreo.html#cb87-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>),</span>
+<span id="cb87-3"><a href="dca-submuestreo.html#cb87-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span> <span class="sc">*</span> <span class="dv">5</span>)  <span class="co"># t=4; 20 aquarios; N=100 peixes</span></span>
+<span id="cb87-4"><a href="dca-submuestreo.html#cb87-4" tabindex="-1"></a>)</span>
+<span id="cb87-5"><a href="dca-submuestreo.html#cb87-5" tabindex="-1"></a>arestas_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb87-6"><a href="dca-submuestreo.html#cb87-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>),</span>
+<span id="cb87-7"><a href="dca-submuestreo.html#cb87-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>)</span>
+<span id="cb87-8"><a href="dca-submuestreo.html#cb87-8" tabindex="-1"></a>)</span>
+<span id="cb87-9"><a href="dca-submuestreo.html#cb87-9" tabindex="-1"></a></span>
+<span id="cb87-10"><a href="dca-submuestreo.html#cb87-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb87-11"><a href="dca-submuestreo.html#cb87-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sub, arestas_sub,</span>
+<span id="cb87-12"><a href="dca-submuestreo.html#cb87-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dca-submuestreo.svg&quot;</span>,</span>
+<span id="cb87-13"><a href="dca-submuestreo.html#cb87-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DCA com subamostragem: t=4, r=5, q=5 (N=100)&quot;</span>)</span>
+<span id="cb87-14"><a href="dca-submuestreo.html#cb87-14" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-submuestreo"></span>
 <img src="figuras/hasse/dca-submuestreo.svg" alt="Diagrama de Hasse do DCA com subamostragem, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): a subamostragem insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico." width="46%" />
 <p class="caption">
@@ -619,14 +791,14 @@ superiores (Média, Tratamento) pertencem à lógica de atribuição aleatória 
 formalizada no Capítulo 1; o nó de UE e o nó de unidade amostral, abaixo dele, pertencem à lógica
 de amostragem de Kish — e é exatamente por isso que aumentar <span class="math inline">\(q\)</span> (mais amostragem dentro da UE)
 nunca substitui aumentar <span class="math inline">\(r\)</span> (mais aleatorização de tratamento), como a Seção
-<a href="dca-submuestreo.html#amostra-submuestreo">3.3.4</a>, adiante, quantifica.</p>
+<a href="dca-submuestreo.html#amostra-submuestreo">3.3.5</a>, adiante, quantifica.</p>
 </div>
-<div id="anova-submuestreo" class="section level3 hasAnchor" number="3.3.3">
-<h3><span class="header-section-number">3.3.3</span> ANOVA com subamostragem<a href="dca-submuestreo.html#anova-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="anova-submuestreo" class="section level3 hasAnchor" number="3.3.4">
+<h3><span class="header-section-number">3.3.4</span> ANOVA com subamostragem<a href="dca-submuestreo.html#anova-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A soma de quadrados total se decompõe agora em três partes, não duas:</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabela-anova-sub-teorica">Tabela 3.6: </span>ANOVA do DCA com subamostragem balanceada (q subamostras por UE)
+<span id="tab:tabela-anova-sub-teorica">Tabela 3.7: </span>ANOVA do DCA com subamostragem balanceada (q subamostras por UE)
 </caption>
 <thead>
 <tr>
@@ -698,28 +870,9 @@ ignorando a estrutura de aquários — é exatamente o erro de pseudorreplicaç�
 Capítulo 1: o denominador fica artificialmente pequeno (baseado em <span class="math inline">\(tr(q-1)\)</span> graus de liberdade
 “emprestados” de dentro das UEs, não entre elas), o que infla o valor de <span class="math inline">\(F\)</span> e a taxa de falsos
 positivos.</p>
-<div class="caixa-r"><strong>Uso do R</strong> — ANOVA aninhada com `Error()`</div>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="dca-submuestreo.html#cb86-1" tabindex="-1"></a>mojarra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mojarra.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb86-2"><a href="dca-submuestreo.html#cb86-2" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">probiotico =</span> probiotico, <span class="at">aquario =</span> Acuario,</span>
-<span id="cb86-3"><a href="dca-submuestreo.html#cb86-3" tabindex="-1"></a>         <span class="at">peso_inicial =</span> <span class="st">`</span><span class="at">Peso Inicial</span><span class="st">`</span>, <span class="at">peso_45 =</span> <span class="st">`</span><span class="at">Peso 45</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb86-4"><a href="dca-submuestreo.html#cb86-4" tabindex="-1"></a>  <span class="fu">drop_na</span>(peso_45) <span class="sc">%&gt;%</span>                                  <span class="co"># 3 peixes sem medição no dia 45</span></span>
-<span id="cb86-5"><a href="dca-submuestreo.html#cb86-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb86-6"><a href="dca-submuestreo.html#cb86-6" tabindex="-1"></a>    <span class="at">probiotico =</span> <span class="fu">factor</span>(probiotico),</span>
-<span id="cb86-7"><a href="dca-submuestreo.html#cb86-7" tabindex="-1"></a>    <span class="at">aquario    =</span> <span class="fu">factor</span>(aquario),</span>
-<span id="cb86-8"><a href="dca-submuestreo.html#cb86-8" tabindex="-1"></a>    <span class="at">ganho      =</span> peso_45 <span class="sc">-</span> peso_inicial</span>
-<span id="cb86-9"><a href="dca-submuestreo.html#cb86-9" tabindex="-1"></a>  )</span>
-<span id="cb86-10"><a href="dca-submuestreo.html#cb86-10" tabindex="-1"></a></span>
-<span id="cb86-11"><a href="dca-submuestreo.html#cb86-11" tabindex="-1"></a><span class="fu">glimpse</span>(mojarra)</span></code></pre></div>
-<pre><code>## Rows: 97
-## Columns: 5
-## $ probiotico   &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-## $ aquario      &lt;fct&gt; 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, …
-## $ peso_inicial &lt;dbl&gt; 8.9, 8.5, 8.1, 9.1, 9.3, 9.0, 8.4, 8.7, 8.6, 9.4, 9.0, 8.…
-## $ peso_45      &lt;dbl&gt; 21.1, 17.0, 17.5, 22.8, 18.2, 16.5, 26.0, 18.1, 23.5, 25.…
-## $ ganho        &lt;dbl&gt; 12.2, 8.5, 9.4, 13.7, 8.9, 7.5, 17.6, 9.4, 14.9, 15.8, 13…</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabela-papel-variaveis-mojarra">Tabela 3.7: </span>Mojarra: papel de cada variável e mapeamento UE/unidade amostral
+<span id="tab:tabela-papel-variaveis-mojarra">Tabela 3.8: </span>Mojarra: papel de cada variável e mapeamento UE/unidade amostral
 </caption>
 <thead>
 <tr>
@@ -760,7 +913,7 @@ Peso por peixe (unidade amostral) e resposta derivada (<code>ganho</code>)
 </table>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabela-papel-variaveis-mojarra">Tabela 3.7: </span>Aquários por probiótico (20 UEs no total)
+<span id="tab:tabela-papel-variaveis-mojarra">Tabela 3.8: </span>Aquários por probiótico (20 UEs no total)
 </caption>
 <thead>
 <tr>
@@ -815,29 +968,38 @@ do losango do seu próprio aquário é o erro de amostragem <span class="math in
 visível o que a seção seguinte formaliza: as 20 médias de aquário (os losangos) já parecem crescer
 de probiótico 1 para 4, um padrão que a ANOVA a seguir testa formalmente usando apenas essas 20
 médias como unidade de comparação — não os quase 100 pontos coloridos.</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="dca-submuestreo.html#cb88-1" tabindex="-1"></a>modelo_sub <span class="ot">&lt;-</span> <span class="fu">aov</span>(ganho <span class="sc">~</span> probiotico <span class="sc">+</span> <span class="fu">Error</span>(probiotico<span class="sc">:</span>aquario), <span class="at">data =</span> mojarra)</span>
-<span id="cb88-2"><a href="dca-submuestreo.html#cb88-2" tabindex="-1"></a><span class="fu">summary</span>(modelo_sub)</span></code></pre></div>
-<pre><code>## 
-## Error: probiotico:aquario
-##            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-## probiotico  3   1845   615.0   12.98 0.000149 ***
-## Residuals  16    758    47.4                     
+<p>A mortalidade (3 peixes sem peso registrado no dia 45) deixa o desenho levemente desbalanceado,
+com 4 ou 5 peixes por aquário em vez de exatamente 5. É o caso em que, como vimos acima, a ANOVA
+clássica com <code>Error()</code> perde sua base algébrica e o R emite o aviso “Error() model is singular”.
+Há dois caminhos defensáveis: a ANOVA de um fator sobre as médias dos aquários (a ponte da seção
+anterior, aproximada aqui porque <span class="math inline">\(q\)</span> varia pouco) e o modelo misto, que acomoda o desbalanceamento
+de forma exata.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — a análise da tilápia por médias de aquário e por modelo misto</div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="dca-submuestreo.html#cb88-1" tabindex="-1"></a>med_aq <span class="ot">&lt;-</span> mojarra <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(probiotico, aquario) <span class="sc">%&gt;%</span></span>
+<span id="cb88-2"><a href="dca-submuestreo.html#cb88-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ganho =</span> <span class="fu">mean</span>(ganho), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb88-3"><a href="dca-submuestreo.html#cb88-3" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(ganho <span class="sc">~</span> probiotico, <span class="at">data =</span> med_aq))          <span class="co"># DCA nas 20 médias de aquário</span></span></code></pre></div>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## probiotico   3  380.1  126.71   12.88 0.000155 ***
+## Residuals   16  157.4    9.84                     
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Error: Within
-##           Df Sum Sq Mean Sq F value Pr(&gt;F)
-## Residuals 77   1360   17.66</code></pre>
-<p>Note que o erro-padrão de mortalidade (3 peixes sem peso registrado no dia 45) deixa o desenho
-levemente desbalanceado — 4 ou 5 peixes por aquário em vez de exatamente 5 — o que é comum em
-dados reais e não invalida a lógica da decomposição, ainda que a fórmula fechada de E[QM] acima
-valha exatamente apenas no caso perfeitamente balanceado. O teste do efeito do probiótico usa o
-quadrado médio <strong>entre aquários dentro de probiótico</strong> como erro (16 g.l.), não o quadrado médio
-entre peixes dentro de aquário (77 g.l.) — se o pesquisador tivesse usado este último por engano,
-o denominador do teste <span class="math inline">\(F\)</span> seria bem menor, inflando artificialmente a significância.</p>
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="dca-submuestreo.html#cb90-1" tabindex="-1"></a>modelo_sub <span class="ot">&lt;-</span> lmerTest<span class="sc">::</span><span class="fu">lmer</span>(ganho <span class="sc">~</span> probiotico <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> aquario), <span class="at">data =</span> mojarra)</span>
+<span id="cb90-2"><a href="dca-submuestreo.html#cb90-2" tabindex="-1"></a><span class="fu">anova</span>(modelo_sub)                                        <span class="co"># gl do denominador por Satterthwaite</span></span></code></pre></div>
+<pre><code>## Type III Analysis of Variance Table with Satterthwaite&#39;s method
+##            Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
+## probiotico 685.98  228.66     3 15.949  12.945 0.0001528 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>As duas análises concordam, e o <code>aov()</code> com <code>Error()</code>, que aqui emite o aviso de singularidade,
+também chegaria a um valor parecido (<span class="math inline">\(F \approx 12.98\)</span>), porque o
+desbalanceamento é pequeno. O ponto não é o número, e sim qual análise se pode defender quando <span class="math inline">\(q\)</span>
+varia: a do modelo misto. Em qualquer delas, o teste do efeito do probiótico usa a variação
+<strong>entre aquários dentro de probiótico</strong> como erro (16 g.l.), não a variação entre peixes dentro de
+aquário (77 g.l.); se o pesquisador tivesse usado esta última por engano, o denominador do teste
+<span class="math inline">\(F\)</span> seria bem menor, inflando artificialmente a significância.</p>
 </div>
-<div id="amostra-submuestreo" class="section level3 hasAnchor" number="3.3.4">
-<h3><span class="header-section-number">3.3.4</span> Tamanho de amostra com subamostragem<a href="dca-submuestreo.html#amostra-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="amostra-submuestreo" class="section level3 hasAnchor" number="3.3.5">
+<h3><span class="header-section-number">3.3.5</span> Tamanho de amostra com subamostragem<a href="dca-submuestreo.html#amostra-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Combinando <span class="math inline">\(\delta_{ij}\)</span> e <span class="math inline">\(\varepsilon_{ijk}\)</span>, a variância efetiva da média de uma UE baseada em
 <span class="math inline">\(q\)</span> subamostras é</p>
 <p><span class="math display">\[
@@ -849,22 +1011,18 @@ nenhuma quantidade de subamostragem elimina a variação entre unidades experime
 objetivo é reduzir a incerteza sobre o efeito do tratamento, aumentar <span class="math inline">\(r\)</span> (mais UEs) tem retorno
 direto e ilimitado; aumentar <span class="math inline">\(q\)</span> (mais subamostras por UE) tem retorno limitado por esse piso.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — retorno decrescente da subamostragem</div>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="dca-submuestreo.html#cb90-1" tabindex="-1"></a>tab_sub <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_sub)</span>
-<span id="cb90-2"><a href="dca-submuestreo.html#cb90-2" tabindex="-1"></a>MS_exp <span class="ot">&lt;-</span> tab_sub[[<span class="st">&quot;Error: probiotico:aquario&quot;</span>]][[<span class="dv">1</span>]][[<span class="st">&quot;Mean Sq&quot;</span>]][<span class="dv">2</span>]  <span class="co"># erro experimental</span></span>
-<span id="cb90-3"><a href="dca-submuestreo.html#cb90-3" tabindex="-1"></a>MS_am  <span class="ot">&lt;-</span> tab_sub[[<span class="st">&quot;Error: Within&quot;</span>]][[<span class="dv">1</span>]][[<span class="st">&quot;Mean Sq&quot;</span>]][<span class="dv">1</span>]              <span class="co"># erro de amostragem</span></span>
-<span id="cb90-4"><a href="dca-submuestreo.html#cb90-4" tabindex="-1"></a>q_medio <span class="ot">&lt;-</span> <span class="fu">nrow</span>(mojarra) <span class="sc">/</span> <span class="fu">n_distinct</span>(mojarra<span class="sc">$</span>aquario)</span>
-<span id="cb90-5"><a href="dca-submuestreo.html#cb90-5" tabindex="-1"></a></span>
-<span id="cb90-6"><a href="dca-submuestreo.html#cb90-6" tabindex="-1"></a>sigma2_delta <span class="ot">&lt;-</span> (MS_exp <span class="sc">-</span> MS_am) <span class="sc">/</span> q_medio</span>
-<span id="cb90-7"><a href="dca-submuestreo.html#cb90-7" tabindex="-1"></a>sigma2_eps   <span class="ot">&lt;-</span> MS_am</span>
-<span id="cb90-8"><a href="dca-submuestreo.html#cb90-8" tabindex="-1"></a></span>
-<span id="cb90-9"><a href="dca-submuestreo.html#cb90-9" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">q =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb90-10"><a href="dca-submuestreo.html#cb90-10" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_media_UE =</span> sigma2_delta <span class="sc">+</span> sigma2_eps <span class="sc">/</span> q) <span class="sc">%&gt;%</span></span>
-<span id="cb90-11"><a href="dca-submuestreo.html#cb90-11" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>,</span>
-<span id="cb90-12"><a href="dca-submuestreo.html#cb90-12" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">&quot;Variância da média de uma UE conforme o número de subamostras q&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb90-13"><a href="dca-submuestreo.html#cb90-13" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="dca-submuestreo.html#cb92-1" tabindex="-1"></a>vc <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lme4<span class="sc">::</span><span class="fu">VarCorr</span>(modelo_sub))          <span class="co"># componentes estimados por REML</span></span>
+<span id="cb92-2"><a href="dca-submuestreo.html#cb92-2" tabindex="-1"></a>sigma2_delta <span class="ot">&lt;-</span> vc<span class="sc">$</span>vcov[vc<span class="sc">$</span>grp <span class="sc">==</span> <span class="st">&quot;aquario&quot;</span>]             <span class="co"># erro experimental</span></span>
+<span id="cb92-3"><a href="dca-submuestreo.html#cb92-3" tabindex="-1"></a>sigma2_eps   <span class="ot">&lt;-</span> vc<span class="sc">$</span>vcov[vc<span class="sc">$</span>grp <span class="sc">==</span> <span class="st">&quot;Residual&quot;</span>]            <span class="co"># erro de amostragem</span></span>
+<span id="cb92-4"><a href="dca-submuestreo.html#cb92-4" tabindex="-1"></a></span>
+<span id="cb92-5"><a href="dca-submuestreo.html#cb92-5" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">q =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb92-6"><a href="dca-submuestreo.html#cb92-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_media_UE =</span> sigma2_delta <span class="sc">+</span> sigma2_eps <span class="sc">/</span> q) <span class="sc">%&gt;%</span></span>
+<span id="cb92-7"><a href="dca-submuestreo.html#cb92-7" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb92-8"><a href="dca-submuestreo.html#cb92-8" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">&quot;Variância da média de uma UE conforme o número de subamostras q&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-9"><a href="dca-submuestreo.html#cb92-9" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:retorno-decrescente-sub">Tabela 3.8: </span>Variância da média de uma UE conforme o número de subamostras q
+<span id="tab:retorno-decrescente-sub">Tabela 3.9: </span>Variância da média de uma UE conforme o número de subamostras q
 </caption>
 <thead>
 <tr>
@@ -882,7 +1040,7 @@ var_media_UE
 1
 </td>
 <td style="text-align:right;">
-23.79
+23.80
 </td>
 </tr>
 <tr>
@@ -890,7 +1048,7 @@ var_media_UE
 2
 </td>
 <td style="text-align:right;">
-14.96
+14.97
 </td>
 </tr>
 <tr>
@@ -898,7 +1056,7 @@ var_media_UE
 5
 </td>
 <td style="text-align:right;">
-9.66
+9.67
 </td>
 </tr>
 <tr>
@@ -906,7 +1064,7 @@ var_media_UE
 10
 </td>
 <td style="text-align:right;">
-7.89
+7.90
 </td>
 </tr>
 <tr>
@@ -914,7 +1072,7 @@ var_media_UE
 20
 </td>
 <td style="text-align:right;">
-7.01
+7.02
 </td>
 </tr>
 <tr>
@@ -922,14 +1080,14 @@ var_media_UE
 50
 </td>
 <td style="text-align:right;">
-6.48
+6.49
 </td>
 </tr>
 </tbody>
 </table>
 <p>Com <span class="math inline">\(\hat\sigma_\delta^2 \approx 6.1\)</span> e <span class="math inline">\(\hat\sigma_\varepsilon^2 \approx 17.7\)</span>, passar de <span class="math inline">\(q=5\)</span> (o desenho usado) para <span class="math inline">\(q=20\)</span> reduziria a variância da
 média de UE em cerca de 27%
-(de 9.66 para 7.01) — uma melhora real, mas limitada pelo piso
+(de 9.67 para 7.02) — uma melhora real, mas limitada pelo piso
 <span class="math inline">\(\sigma_\delta^2\)</span>. Já passar de <span class="math inline">\(r=5\)</span> para <span class="math inline">\(r=20\)</span> aquários por tratamento (o mesmo fator de
 aumento, <span class="math inline">\(4\times\)</span>) reduziria a variância da <strong>média de tratamento</strong>, que decresce como
 <span class="math inline">\(\sigma_\delta^2/r\)</span> sem nenhum piso, em exatos 75% (<span class="math inline">\(1 - 1/4\)</span>) — quase o triplo da redução obtida
@@ -939,6 +1097,30 @@ uma recomendação de delineamento amostral que decorre diretamente da estrutura
 intuição.</p>
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

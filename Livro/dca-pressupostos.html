@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -470,19 +472,19 @@ assim, com efeito multiplicativo (e não aditivo) do tipo de distração.
 </div>
 <div id="normalidade-dca" class="section level3 hasAnchor" number="3.5.1">
 <h3><span class="header-section-number">3.5.1</span> Normalidade: gráfico Q-Q e testes formais<a href="dca-pressupostos.html#normalidade-dca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="dca-pressupostos.html#cb97-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb97-2"><a href="dca-pressupostos.html#cb97-2" tabindex="-1"></a>condicao <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhuma&quot;</span>, <span class="st">&quot;Sonora&quot;</span>, <span class="st">&quot;Visual&quot;</span>)</span>
-<span id="cb97-3"><a href="dca-pressupostos.html#cb97-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">15</span></span>
-<span id="cb97-4"><a href="dca-pressupostos.html#cb97-4" tabindex="-1"></a>media_base <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">420</span>, <span class="dv">470</span>, <span class="dv">560</span>)</span>
-<span id="cb97-5"><a href="dca-pressupostos.html#cb97-5" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fl">0.28</span>  <span class="co"># erro multiplicativo: log(tempo) tem desvio-padrão constante nessa escala</span></span>
-<span id="cb97-6"><a href="dca-pressupostos.html#cb97-6" tabindex="-1"></a></span>
-<span id="cb97-7"><a href="dca-pressupostos.html#cb97-7" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb97-8"><a href="dca-pressupostos.html#cb97-8" tabindex="-1"></a>  <span class="at">sujeito  =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">3</span> <span class="sc">*</span> n),</span>
-<span id="cb97-9"><a href="dca-pressupostos.html#cb97-9" tabindex="-1"></a>  <span class="at">condicao =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(condicao, <span class="at">each =</span> n), <span class="at">levels =</span> condicao),</span>
-<span id="cb97-10"><a href="dca-pressupostos.html#cb97-10" tabindex="-1"></a>  <span class="at">tempo    =</span> <span class="fu">rep</span>(media_base, <span class="at">each =</span> n) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">rnorm</span>(<span class="dv">3</span> <span class="sc">*</span> n, <span class="dv">0</span>, cv))</span>
-<span id="cb97-11"><a href="dca-pressupostos.html#cb97-11" tabindex="-1"></a>)</span>
-<span id="cb97-12"><a href="dca-pressupostos.html#cb97-12" tabindex="-1"></a></span>
-<span id="cb97-13"><a href="dca-pressupostos.html#cb97-13" tabindex="-1"></a>modelo_het <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="dca-pressupostos.html#cb99-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb99-2"><a href="dca-pressupostos.html#cb99-2" tabindex="-1"></a>condicao <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhuma&quot;</span>, <span class="st">&quot;Sonora&quot;</span>, <span class="st">&quot;Visual&quot;</span>)</span>
+<span id="cb99-3"><a href="dca-pressupostos.html#cb99-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb99-4"><a href="dca-pressupostos.html#cb99-4" tabindex="-1"></a>media_base <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">420</span>, <span class="dv">470</span>, <span class="dv">560</span>)</span>
+<span id="cb99-5"><a href="dca-pressupostos.html#cb99-5" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fl">0.28</span>  <span class="co"># erro multiplicativo: log(tempo) tem desvio-padrão constante nessa escala</span></span>
+<span id="cb99-6"><a href="dca-pressupostos.html#cb99-6" tabindex="-1"></a></span>
+<span id="cb99-7"><a href="dca-pressupostos.html#cb99-7" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb99-8"><a href="dca-pressupostos.html#cb99-8" tabindex="-1"></a>  <span class="at">sujeito  =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">3</span> <span class="sc">*</span> n),</span>
+<span id="cb99-9"><a href="dca-pressupostos.html#cb99-9" tabindex="-1"></a>  <span class="at">condicao =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(condicao, <span class="at">each =</span> n), <span class="at">levels =</span> condicao),</span>
+<span id="cb99-10"><a href="dca-pressupostos.html#cb99-10" tabindex="-1"></a>  <span class="at">tempo    =</span> <span class="fu">rep</span>(media_base, <span class="at">each =</span> n) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">rnorm</span>(<span class="dv">3</span> <span class="sc">*</span> n, <span class="dv">0</span>, cv))</span>
+<span id="cb99-11"><a href="dca-pressupostos.html#cb99-11" tabindex="-1"></a>)</span>
+<span id="cb99-12"><a href="dca-pressupostos.html#cb99-12" tabindex="-1"></a></span>
+<span id="cb99-13"><a href="dca-pressupostos.html#cb99-13" tabindex="-1"></a>modelo_het <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
 <p><img src="03-dca_files/figure-html/qqplot-boxplot-dca-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
 <p>O gráfico à esquerda é o Q-Q plot de todos os resíduos combinados; o da direita — um diagnóstico
 complementar, tão útil quanto o Q-Q e frequentemente esquecido — mostra a <strong>distribuição dos
@@ -497,7 +499,7 @@ qual parte da distribuição) o desvio da normalidade ocorre. Ele é complementa
 por um teste formal — mais útil como confirmação do que o olho já sugeriu do que como árbitro
 único, sobretudo em amostras pequenas (baixo poder) ou muito grandes (rejeita quase sempre, por
 desvios sem relevância prática):</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="dca-pressupostos.html#cb98-1" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_het))</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="dca-pressupostos.html#cb100-1" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_het))</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
@@ -511,23 +513,23 @@ consistente com o Q-Q plot.</p>
 <p>Antes do teste formal, o gráfico de <strong>resíduos contra valores ajustados</strong> é o diagnóstico visual
 mais direto de heterocedasticidade: se a dispersão vertical dos pontos aumenta sistematicamente
 da esquerda para a direita (grupos com médias maiores), a variância não é constante.</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="dca-pressupostos.html#cb100-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb100-2"><a href="dca-pressupostos.html#cb100-2" tabindex="-1"></a>  <span class="at">ajustado =</span> <span class="fu">fitted</span>(modelo_het),</span>
-<span id="cb100-3"><a href="dca-pressupostos.html#cb100-3" tabindex="-1"></a>  <span class="at">residuo  =</span> <span class="fu">residuals</span>(modelo_het),</span>
-<span id="cb100-4"><a href="dca-pressupostos.html#cb100-4" tabindex="-1"></a>  <span class="at">condicao =</span> dados_het<span class="sc">$</span>condicao</span>
-<span id="cb100-5"><a href="dca-pressupostos.html#cb100-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb100-6"><a href="dca-pressupostos.html#cb100-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(ajustado, residuo, <span class="at">color =</span> condicao)) <span class="sc">+</span></span>
-<span id="cb100-7"><a href="dca-pressupostos.html#cb100-7" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;grey40&quot;</span>) <span class="sc">+</span></span>
-<span id="cb100-8"><a href="dca-pressupostos.html#cb100-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb100-9"><a href="dca-pressupostos.html#cb100-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Resíduos vs. valores ajustados&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Valor ajustado (média do grupo)&quot;</span>,</span>
-<span id="cb100-10"><a href="dca-pressupostos.html#cb100-10" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Resíduo&quot;</span>, <span class="at">color =</span> <span class="st">&quot;Condição&quot;</span>) <span class="sc">+</span></span>
-<span id="cb100-11"><a href="dca-pressupostos.html#cb100-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="dca-pressupostos.html#cb102-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb102-2"><a href="dca-pressupostos.html#cb102-2" tabindex="-1"></a>  <span class="at">ajustado =</span> <span class="fu">fitted</span>(modelo_het),</span>
+<span id="cb102-3"><a href="dca-pressupostos.html#cb102-3" tabindex="-1"></a>  <span class="at">residuo  =</span> <span class="fu">residuals</span>(modelo_het),</span>
+<span id="cb102-4"><a href="dca-pressupostos.html#cb102-4" tabindex="-1"></a>  <span class="at">condicao =</span> dados_het<span class="sc">$</span>condicao</span>
+<span id="cb102-5"><a href="dca-pressupostos.html#cb102-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb102-6"><a href="dca-pressupostos.html#cb102-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(ajustado, residuo, <span class="at">color =</span> condicao)) <span class="sc">+</span></span>
+<span id="cb102-7"><a href="dca-pressupostos.html#cb102-7" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;grey40&quot;</span>) <span class="sc">+</span></span>
+<span id="cb102-8"><a href="dca-pressupostos.html#cb102-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb102-9"><a href="dca-pressupostos.html#cb102-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Resíduos vs. valores ajustados&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Valor ajustado (média do grupo)&quot;</span>,</span>
+<span id="cb102-10"><a href="dca-pressupostos.html#cb102-10" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Resíduo&quot;</span>, <span class="at">color =</span> <span class="st">&quot;Condição&quot;</span>) <span class="sc">+</span></span>
+<span id="cb102-11"><a href="dca-pressupostos.html#cb102-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div>
 <p><img src="03-dca_files/figure-html/residuos-ajustados-dca-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
 <p>O leque se abre visivelmente da esquerda (condição “Nenhuma”, ajustado mais baixo) para a direita
 (condição “Visual”, ajustado mais alto): os resíduos ficam mais dispersos exatamente onde a média
 é maior — a marca registrada de um erro multiplicativo, e o mesmo padrão que o teste de Levene, a
 seguir, tentará (sem muito sucesso, dado o <span class="math inline">\(n\)</span> pequeno) capturar formalmente.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="dca-pressupostos.html#cb101-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="dca-pressupostos.html#cb103-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##       Df F value Pr(&gt;F)
 ## group  2  0.1136 0.8929
@@ -563,26 +565,26 @@ ANOVA ajustado a <span class="math inline">\(Y^{(\lambda)}\)</span> para uma gra
 <span class="math inline">\(-2\)</span> e <span class="math inline">\(2\)</span>). <span class="math inline">\(\lambda=1\)</span> (sem transformar), <span class="math inline">\(\lambda=0\)</span> (log) e <span class="math inline">\(\lambda=1/2\)</span> (raiz quadrada)
 são casos particulares interpretáveis dessa família.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — Box-Cox e verificação pós-transformação</div>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="dca-pressupostos.html#cb103-1" tabindex="-1"></a>bc <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">boxcox</span>(modelo_het, <span class="at">plotit =</span> <span class="cn">TRUE</span>, <span class="at">lambda =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.01</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="dca-pressupostos.html#cb105-1" tabindex="-1"></a>bc <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">boxcox</span>(modelo_het, <span class="at">plotit =</span> <span class="cn">TRUE</span>, <span class="at">lambda =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.01</span>))</span></code></pre></div>
 <p><img src="03-dca_files/figure-html/boxcox-dca-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="dca-pressupostos.html#cb104-1" tabindex="-1"></a>lambda_otimo <span class="ot">&lt;-</span> bc<span class="sc">$</span>x[<span class="fu">which.max</span>(bc<span class="sc">$</span>y)]</span>
-<span id="cb104-2"><a href="dca-pressupostos.html#cb104-2" tabindex="-1"></a>lambda_otimo</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="dca-pressupostos.html#cb106-1" tabindex="-1"></a>lambda_otimo <span class="ot">&lt;-</span> bc<span class="sc">$</span>x[<span class="fu">which.max</span>(bc<span class="sc">$</span>y)]</span>
+<span id="cb106-2"><a href="dca-pressupostos.html#cb106-2" tabindex="-1"></a>lambda_otimo</span></code></pre></div>
 <pre><code>## [1] -0.6</code></pre>
 <p>O valor que maximiza a verossimilhança perfilada é <span class="math inline">\(\hat\lambda \approx -0.6\)</span>,
 mas o intervalo de verossimilhança de 95% ao redor desse máximo é largo o bastante para incluir
 <span class="math inline">\(\lambda=0\)</span> — ou seja, a transformação <strong>logarítmica</strong>, mais simples de interpretar (diferenças
 na escala log correspondem a razões, não diferenças, na escala original), é estatisticamente
 compatível com os dados e é a escolha usual nesse tipo de situação:</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="dca-pressupostos.html#cb106-1" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> dados_het <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">log_tempo =</span> <span class="fu">log</span>(tempo))</span>
-<span id="cb106-2"><a href="dca-pressupostos.html#cb106-2" tabindex="-1"></a>modelo_log <span class="ot">&lt;-</span> <span class="fu">aov</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span>
-<span id="cb106-3"><a href="dca-pressupostos.html#cb106-3" tabindex="-1"></a></span>
-<span id="cb106-4"><a href="dca-pressupostos.html#cb106-4" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_log))</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="dca-pressupostos.html#cb108-1" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> dados_het <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">log_tempo =</span> <span class="fu">log</span>(tempo))</span>
+<span id="cb108-2"><a href="dca-pressupostos.html#cb108-2" tabindex="-1"></a>modelo_log <span class="ot">&lt;-</span> <span class="fu">aov</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span>
+<span id="cb108-3"><a href="dca-pressupostos.html#cb108-3" tabindex="-1"></a></span>
+<span id="cb108-4"><a href="dca-pressupostos.html#cb108-4" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_log))</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
 ## data:  residuals(modelo_log)
 ## W = 0.95569, p-value = 0.08363</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="dca-pressupostos.html#cb108-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="dca-pressupostos.html#cb110-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##       Df F value Pr(&gt;F)
 ## group  2  0.0259 0.9744
@@ -630,6 +632,30 @@ Levene, H. (1960). Robust tests for equality of variances. In I. Olkin et al. (E
 Shapiro, S. S., &amp; Wilk, M. B. (1965). An analysis of variance test for normality (complete samples). <em>Biometrika</em>, <em>52</em>(3/4), 591–611.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

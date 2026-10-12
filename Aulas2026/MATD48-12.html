@@ -4,7 +4,7 @@
     <title>Fatoriais A×B e A×B×C</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -61,10 +61,7 @@ Cruzar `\(A\)` e `\(B\)` resolve os dois problemas de uma vez.
 
 ## O modelo A×B
 
-$$
-y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}, \qquad
-i=1,\dots,a;\ j=1,\dots,b;\ k=1,\dots,r
-$$
+`$$y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}, \qquad i=1,\dots,a;\ j=1,\dots,b;\ k=1,\dots,r$$`
 
 com `\(\sum_i \alpha_i = \sum_j \beta_j = 0\)` e `\(\sum_i(\alpha\beta)_{ij} = \sum_j(\alpha\beta)_{ij} = 0\)`.
 
@@ -325,10 +322,7 @@ interpretação de efeito principal médio.
 
 ## Fatoriais A×B×C
 
-$$
-y_{ijkl} = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + (\alpha\gamma)_{ik} +
-(\beta\gamma)_{jk} + (\alpha\beta\gamma)_{ijk} + \varepsilon_{ijkl}
-$$
+`$$y_{ijkl} = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + (\alpha\gamma)_{ik} + (\beta\gamma)_{jk} + (\alpha\beta\gamma)_{ijk} + \varepsilon_{ijkl}$$`
 
 **Interação tripla:** mede se a interação `\(A{\times}B\)` muda com o nível de `\(C\)`. Difícil de
 interpretar, rara de ser grande — mas nunca deve ser ignorada sem ser testada.

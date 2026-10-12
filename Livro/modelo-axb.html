@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -494,15 +496,15 @@ duas conclusões científicas e práticas muito diferentes, ainda que ambas come
 fatorial.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — ajustando o fatorial A×B (ignorando o bloco por
 ora)</div>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="modelo-axb.html#cb218-1" tabindex="-1"></a>pepino <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pepino.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb218-2"><a href="modelo-axb.html#cb218-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb218-3"><a href="modelo-axb.html#cb218-3" tabindex="-1"></a>    <span class="at">riego   =</span> <span class="fu">factor</span>(riego, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Lâmina baixa (0,5)&quot;</span>, <span class="st">&quot;Lâmina alta (1,0)&quot;</span>)),</span>
-<span id="cb218-4"><a href="modelo-axb.html#cb218-4" tabindex="-1"></a>    <span class="at">silicio =</span> <span class="fu">factor</span>(silicio, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;0 ml&quot;</span>, <span class="st">&quot;500 ml&quot;</span>, <span class="st">&quot;1000 ml&quot;</span>, <span class="st">&quot;1500 ml&quot;</span>)),</span>
-<span id="cb218-5"><a href="modelo-axb.html#cb218-5" tabindex="-1"></a>    <span class="at">bloque  =</span> <span class="fu">factor</span>(bloque)</span>
-<span id="cb218-6"><a href="modelo-axb.html#cb218-6" tabindex="-1"></a>  )</span>
-<span id="cb218-7"><a href="modelo-axb.html#cb218-7" tabindex="-1"></a></span>
-<span id="cb218-8"><a href="modelo-axb.html#cb218-8" tabindex="-1"></a>modelo_axb <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> riego <span class="sc">*</span> silicio, <span class="at">data =</span> pepino)</span>
-<span id="cb218-9"><a href="modelo-axb.html#cb218-9" tabindex="-1"></a><span class="fu">summary</span>(modelo_axb)</span></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="modelo-axb.html#cb220-1" tabindex="-1"></a>pepino <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pepino.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb220-2"><a href="modelo-axb.html#cb220-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb220-3"><a href="modelo-axb.html#cb220-3" tabindex="-1"></a>    <span class="at">riego   =</span> <span class="fu">factor</span>(riego, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Lâmina baixa (0,5)&quot;</span>, <span class="st">&quot;Lâmina alta (1,0)&quot;</span>)),</span>
+<span id="cb220-4"><a href="modelo-axb.html#cb220-4" tabindex="-1"></a>    <span class="at">silicio =</span> <span class="fu">factor</span>(silicio, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;0 ml&quot;</span>, <span class="st">&quot;500 ml&quot;</span>, <span class="st">&quot;1000 ml&quot;</span>, <span class="st">&quot;1500 ml&quot;</span>)),</span>
+<span id="cb220-5"><a href="modelo-axb.html#cb220-5" tabindex="-1"></a>    <span class="at">bloque  =</span> <span class="fu">factor</span>(bloque)</span>
+<span id="cb220-6"><a href="modelo-axb.html#cb220-6" tabindex="-1"></a>  )</span>
+<span id="cb220-7"><a href="modelo-axb.html#cb220-7" tabindex="-1"></a></span>
+<span id="cb220-8"><a href="modelo-axb.html#cb220-8" tabindex="-1"></a>modelo_axb <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> riego <span class="sc">*</span> silicio, <span class="at">data =</span> pepino)</span>
+<span id="cb220-9"><a href="modelo-axb.html#cb220-9" tabindex="-1"></a><span class="fu">summary</span>(modelo_axb)</span></code></pre></div>
 <pre><code>##               Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## riego          1 0.2604  0.2604   5.283 0.035355 *  
 ## silicio        3 1.3872  0.4624   9.380 0.000819 ***
@@ -521,6 +523,30 @@ semelhante nas quatro doses.</p>
 Imbens, G. W., &amp; Rubin, D. B. (2015). <em>Causal inference for statistics, social, and biomedical sciences: An introduction</em>. Cambridge University Press.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

@@ -834,3 +834,29 @@ Ver memória de sessão `matd48-rigor-padrao` para o texto completo desta diretr
     (25→33 slides): 1 bug de layout achado e corrigido (3 imagens em `include_graphics()` sem
     `fig.show="hold"` empilham verticalmente em vez de lado a lado — 1521px de transbordo antes do
     fix), 0 transbordo depois, 0 citação crua, 0 imagem quebrada. Nada commitado ainda.
+- **2026-10-12 — PDF do livro, revisão de clareza das aulas 01–09, aviso de direitos autorais,
+  verificador de equações consertado** (resumo; detalhes em `RETOMADA.md`)
+  - **Pedido do professor:** gerar o livro em PDF; revisar as aulas, que tinham código sem
+    explicação e ideias desconectadas (exemplo citado: a subamostragem — qual é o modelo e se a base
+    de dados do DCA seria uma tabela de contingência); depois, aviso de copyright (uso exclusivo dos
+    alunos, versão em construção, proteção contra plágio) e figuras faltando no PDF.
+  - **PDF:** `scripts/gerar_pdf_livro.R` (pagedown + Chrome, não LaTeX). O primeiro PDF publicado
+    (commit `a97c61a`) saiu **sem os gráficos do R** (footgun #2 também na pasta do PDF); corrigido,
+    com checagem que interrompe a geração se faltar imagem. Versão atual: 217 p., 75 imagens.
+  - **Livro:** `$...$` ligado no MathJax (fórmulas das caixas apareciam cruas no site), data em
+    português, aviso de direitos autorais (caixa no Prefácio + rodapé em toda página do site e do
+    PDF + barra lateral), "References" → "Referências", página órfã removida, seção de
+    subamostragem do cap. 3 reescrita no padrão da aula 05.
+  - **Aulas 01–09** revisadas para clareza (planilha antes do modelo, tabela tratamento × réplica
+    explicada, exemplos numéricos ligando aula a aula, deduções em vez de fórmulas prontas). Erros
+    de conteúdo corrigidos no caminho: aula 05 analisava dados desbalanceados com `aov`+`Error()`
+    depois de ensinar que o aviso de singularidade invalida o teste; aula 06 tinha ordem de execução
+    confundida com tratamento num slide que concluía "a aleatorização protege"; aula 08 dizia que o
+    efeito "quase inverte" de sinal quando de fato inverte.
+  - **Terminologia:** "submuestreo" (espanhol) → "subamostragem" em 12 arquivos, 75 ocorrências.
+  - **`verificar_equacoes.R` nunca funcionou** (regex escapada em dobro). Corrigido e testado;
+    revelou 34 slides publicados com LaTeX cru (aulas 07, 09–14), todos corrigidos (footgun #10).
+  - **Verificação final:** 14 decks sem transbordo e sem LaTeX cru; livro 77/77 imagens, 0 `\@ref`
+    quebrado; PDF com aviso e rodapé nas 217 páginas. Publicado: lote 1 + PDF inicial
+    (`a97c61a`, `d00f53f`). **Sincronizado no clone mas não commitado:** aulas 06–14, livro com
+    aviso e figuras, scripts. Falta: aulas 10–14 (lote 3).

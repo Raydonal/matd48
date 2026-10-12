@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -489,25 +491,25 @@ o erro da subparcela (a variação entre subparcelas dentro da mesma parcela pri
 de <span class="math inline">\(\delta_{ij}\)</span>. <span class="math inline">\(\rho_i\)</span> (bloco) e <span class="math inline">\(\alpha_j\)</span> (irrigação) são efeitos fixos sujeitos às
 restrições usuais de soma zero, assim como <span class="math inline">\(\beta_k\)</span> (variedade) e <span class="math inline">\((\alpha\beta)_{jk}\)</span>
 (interação).</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="split-plot.html#cb215-1" tabindex="-1"></a>nos_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb215-2"><a href="split-plot.html#cb215-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
-<span id="cb215-3"><a href="split-plot.html#cb215-3" tabindex="-1"></a>              <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>),</span>
-<span id="cb215-4"><a href="split-plot.html#cb215-4" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span>, <span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>)</span>
-<span id="cb215-5"><a href="split-plot.html#cb215-5" tabindex="-1"></a>)</span>
-<span id="cb215-6"><a href="split-plot.html#cb215-6" tabindex="-1"></a>arestas_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb215-7"><a href="split-plot.html#cb215-7" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>,</span>
-<span id="cb215-8"><a href="split-plot.html#cb215-8" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>),</span>
-<span id="cb215-9"><a href="split-plot.html#cb215-9" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
-<span id="cb215-10"><a href="split-plot.html#cb215-10" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>,</span>
-<span id="cb215-11"><a href="split-plot.html#cb215-11" tabindex="-1"></a>           <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>)</span>
-<span id="cb215-12"><a href="split-plot.html#cb215-12" tabindex="-1"></a>)</span>
-<span id="cb215-13"><a href="split-plot.html#cb215-13" tabindex="-1"></a></span>
-<span id="cb215-14"><a href="split-plot.html#cb215-14" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb215-15"><a href="split-plot.html#cb215-15" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sp, arestas_sp,</span>
-<span id="cb215-16"><a href="split-plot.html#cb215-16" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/split-plot.svg&quot;</span>,</span>
-<span id="cb215-17"><a href="split-plot.html#cb215-17" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Split-plot: r=4, a=3, b=4 (N=48)&quot;</span>,</span>
-<span id="cb215-18"><a href="split-plot.html#cb215-18" tabindex="-1"></a>            <span class="at">tamanho =</span> <span class="fu">c</span>(<span class="fl">5.5</span>, <span class="dv">4</span>))</span>
-<span id="cb215-19"><a href="split-plot.html#cb215-19" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="split-plot.html#cb217-1" tabindex="-1"></a>nos_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb217-2"><a href="split-plot.html#cb217-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
+<span id="cb217-3"><a href="split-plot.html#cb217-3" tabindex="-1"></a>              <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>),</span>
+<span id="cb217-4"><a href="split-plot.html#cb217-4" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span>, <span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>)</span>
+<span id="cb217-5"><a href="split-plot.html#cb217-5" tabindex="-1"></a>)</span>
+<span id="cb217-6"><a href="split-plot.html#cb217-6" tabindex="-1"></a>arestas_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb217-7"><a href="split-plot.html#cb217-7" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>,</span>
+<span id="cb217-8"><a href="split-plot.html#cb217-8" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>),</span>
+<span id="cb217-9"><a href="split-plot.html#cb217-9" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
+<span id="cb217-10"><a href="split-plot.html#cb217-10" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>,</span>
+<span id="cb217-11"><a href="split-plot.html#cb217-11" tabindex="-1"></a>           <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>)</span>
+<span id="cb217-12"><a href="split-plot.html#cb217-12" tabindex="-1"></a>)</span>
+<span id="cb217-13"><a href="split-plot.html#cb217-13" tabindex="-1"></a></span>
+<span id="cb217-14"><a href="split-plot.html#cb217-14" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb217-15"><a href="split-plot.html#cb217-15" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sp, arestas_sp,</span>
+<span id="cb217-16"><a href="split-plot.html#cb217-16" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/split-plot.svg&quot;</span>,</span>
+<span id="cb217-17"><a href="split-plot.html#cb217-17" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Split-plot: r=4, a=3, b=4 (N=48)&quot;</span>,</span>
+<span id="cb217-18"><a href="split-plot.html#cb217-18" tabindex="-1"></a>            <span class="at">tamanho =</span> <span class="fu">c</span>(<span class="fl">5.5</span>, <span class="dv">4</span>))</span>
+<span id="cb217-19"><a href="split-plot.html#cb217-19" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-split-plot"></span>
 <img src="figuras/hasse/split-plot.svg" alt="Diagrama de Hasse do split-plot: r=4 blocos, a=3 métodos de irrigação (parcela principal), b=4 variedades (subparcela), N=48. Note os DOIS nós de erro -- Erro(a), que fecha o estrato da parcela principal, e Erro(b), que fecha o estrato da subparcela -- em vez do único nó de Erro do DBCA (Figura anterior)." width="85%" />
 <p class="caption">
@@ -544,18 +546,18 @@ fator de parcela principal é estimado com <strong>menos</strong> precisão que 
 com o mesmo número de observações. É um trade-off deliberado do delineamento: ganha-se viabilidade
 logística ao custo de precisão no fator que a logística obrigou a ficar na parcela principal.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — split-plot com <code>aov(..., Error(bloco/irrigacao))</code></div>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="split-plot.html#cb216-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
-<span id="cb216-2"><a href="split-plot.html#cb216-2" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">4</span>; a <span class="ot">&lt;-</span> <span class="dv">3</span>; b <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb216-3"><a href="split-plot.html#cb216-3" tabindex="-1"></a>dados_sp <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">variedade =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>b), <span class="at">irrigacao =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>a), <span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>r))</span>
-<span id="cb216-4"><a href="split-plot.html#cb216-4" tabindex="-1"></a></span>
-<span id="cb216-5"><a href="split-plot.html#cb216-5" tabindex="-1"></a>efeito_irrig <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>)[dados_sp<span class="sc">$</span>irrigacao]</span>
-<span id="cb216-6"><a href="split-plot.html#cb216-6" tabindex="-1"></a>efeito_var   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)[dados_sp<span class="sc">$</span>variedade]</span>
-<span id="cb216-7"><a href="split-plot.html#cb216-7" tabindex="-1"></a>erro_a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(r <span class="sc">*</span> a, <span class="dv">0</span>, <span class="dv">2</span>)[<span class="fu">interaction</span>(dados_sp<span class="sc">$</span>bloco, dados_sp<span class="sc">$</span>irrigacao, <span class="at">drop =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.integer</span>()]</span>
-<span id="cb216-8"><a href="split-plot.html#cb216-8" tabindex="-1"></a></span>
-<span id="cb216-9"><a href="split-plot.html#cb216-9" tabindex="-1"></a>dados_sp<span class="sc">$</span>producao <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> efeito_irrig <span class="sc">+</span> efeito_var <span class="sc">+</span> erro_a <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dados_sp), <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb216-10"><a href="split-plot.html#cb216-10" tabindex="-1"></a></span>
-<span id="cb216-11"><a href="split-plot.html#cb216-11" tabindex="-1"></a>mod_sp <span class="ot">&lt;-</span> <span class="fu">aov</span>(producao <span class="sc">~</span> irrigacao <span class="sc">*</span> variedade <span class="sc">+</span> <span class="fu">Error</span>(bloco<span class="sc">/</span>irrigacao), <span class="at">data =</span> dados_sp)</span>
-<span id="cb216-12"><a href="split-plot.html#cb216-12" tabindex="-1"></a><span class="fu">summary</span>(mod_sp)</span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="split-plot.html#cb218-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
+<span id="cb218-2"><a href="split-plot.html#cb218-2" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">4</span>; a <span class="ot">&lt;-</span> <span class="dv">3</span>; b <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb218-3"><a href="split-plot.html#cb218-3" tabindex="-1"></a>dados_sp <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">variedade =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>b), <span class="at">irrigacao =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>a), <span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>r))</span>
+<span id="cb218-4"><a href="split-plot.html#cb218-4" tabindex="-1"></a></span>
+<span id="cb218-5"><a href="split-plot.html#cb218-5" tabindex="-1"></a>efeito_irrig <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>)[dados_sp<span class="sc">$</span>irrigacao]</span>
+<span id="cb218-6"><a href="split-plot.html#cb218-6" tabindex="-1"></a>efeito_var   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)[dados_sp<span class="sc">$</span>variedade]</span>
+<span id="cb218-7"><a href="split-plot.html#cb218-7" tabindex="-1"></a>erro_a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(r <span class="sc">*</span> a, <span class="dv">0</span>, <span class="dv">2</span>)[<span class="fu">interaction</span>(dados_sp<span class="sc">$</span>bloco, dados_sp<span class="sc">$</span>irrigacao, <span class="at">drop =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.integer</span>()]</span>
+<span id="cb218-8"><a href="split-plot.html#cb218-8" tabindex="-1"></a></span>
+<span id="cb218-9"><a href="split-plot.html#cb218-9" tabindex="-1"></a>dados_sp<span class="sc">$</span>producao <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> efeito_irrig <span class="sc">+</span> efeito_var <span class="sc">+</span> erro_a <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dados_sp), <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb218-10"><a href="split-plot.html#cb218-10" tabindex="-1"></a></span>
+<span id="cb218-11"><a href="split-plot.html#cb218-11" tabindex="-1"></a>mod_sp <span class="ot">&lt;-</span> <span class="fu">aov</span>(producao <span class="sc">~</span> irrigacao <span class="sc">*</span> variedade <span class="sc">+</span> <span class="fu">Error</span>(bloco<span class="sc">/</span>irrigacao), <span class="at">data =</span> dados_sp)</span>
+<span id="cb218-12"><a href="split-plot.html#cb218-12" tabindex="-1"></a><span class="fu">summary</span>(mod_sp)</span></code></pre></div>
 <pre><code>## 
 ## Error: bloco
 ##           Df Sum Sq Mean Sq F value Pr(&gt;F)
@@ -603,6 +605,30 @@ Montgomery, D. C. (2017). <em>Design and analysis of experiments</em> (9th ed.).
 Yates, F. (1937). <em>The design and analysis of factorial experiments</em>. Imperial Bureau of Soil Science.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

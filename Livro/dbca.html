@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -462,15 +464,15 @@ implementa-o apenas em bairros de renda alta, usando bairros de renda baixa como
 o programa). Depois de um trimestre, compara o faturamento médio do comércio nos bairros com
 programa contra os sem programa.
 </div>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="dbca.html#cb151-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
-<span id="cb151-2"><a href="dbca.html#cb151-2" tabindex="-1"></a>dados_confundido <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb151-3"><a href="dbca.html#cb151-3" tabindex="-1"></a>  <span class="at">bairro    =</span> <span class="fu">c</span>(<span class="st">&quot;Boa Viagem&quot;</span>, <span class="st">&quot;Casa Forte&quot;</span>, <span class="st">&quot;Graças&quot;</span>, <span class="st">&quot;Ibura&quot;</span>, <span class="st">&quot;Coelhos&quot;</span>, <span class="st">&quot;Brasília Teimosa&quot;</span>),</span>
-<span id="cb151-4"><a href="dbca.html#cb151-4" tabindex="-1"></a>  <span class="at">renda     =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Alta&quot;</span>, <span class="st">&quot;Baixa&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Alta&quot;</span>, <span class="st">&quot;Baixa&quot;</span>)),</span>
-<span id="cb151-5"><a href="dbca.html#cb151-5" tabindex="-1"></a>  <span class="at">programa  =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Incentivo&quot;</span>, <span class="st">&quot;Controle&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Incentivo&quot;</span>, <span class="st">&quot;Controle&quot;</span>)),</span>
-<span id="cb151-6"><a href="dbca.html#cb151-6" tabindex="-1"></a>  <span class="co"># bairros de renda alta já faturam mais, com ou sem programa</span></span>
-<span id="cb151-7"><a href="dbca.html#cb151-7" tabindex="-1"></a>  <span class="at">faturamento =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">520</span>, <span class="dv">40</span>), <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">210</span>, <span class="dv">25</span>))</span>
-<span id="cb151-8"><a href="dbca.html#cb151-8" tabindex="-1"></a>)</span>
-<span id="cb151-9"><a href="dbca.html#cb151-9" tabindex="-1"></a>dados_confundido</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="dbca.html#cb153-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
+<span id="cb153-2"><a href="dbca.html#cb153-2" tabindex="-1"></a>dados_confundido <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb153-3"><a href="dbca.html#cb153-3" tabindex="-1"></a>  <span class="at">bairro    =</span> <span class="fu">c</span>(<span class="st">&quot;Boa Viagem&quot;</span>, <span class="st">&quot;Casa Forte&quot;</span>, <span class="st">&quot;Graças&quot;</span>, <span class="st">&quot;Ibura&quot;</span>, <span class="st">&quot;Coelhos&quot;</span>, <span class="st">&quot;Brasília Teimosa&quot;</span>),</span>
+<span id="cb153-4"><a href="dbca.html#cb153-4" tabindex="-1"></a>  <span class="at">renda     =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Alta&quot;</span>, <span class="st">&quot;Baixa&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Alta&quot;</span>, <span class="st">&quot;Baixa&quot;</span>)),</span>
+<span id="cb153-5"><a href="dbca.html#cb153-5" tabindex="-1"></a>  <span class="at">programa  =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Incentivo&quot;</span>, <span class="st">&quot;Controle&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Incentivo&quot;</span>, <span class="st">&quot;Controle&quot;</span>)),</span>
+<span id="cb153-6"><a href="dbca.html#cb153-6" tabindex="-1"></a>  <span class="co"># bairros de renda alta já faturam mais, com ou sem programa</span></span>
+<span id="cb153-7"><a href="dbca.html#cb153-7" tabindex="-1"></a>  <span class="at">faturamento =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">520</span>, <span class="dv">40</span>), <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">210</span>, <span class="dv">25</span>))</span>
+<span id="cb153-8"><a href="dbca.html#cb153-8" tabindex="-1"></a>)</span>
+<span id="cb153-9"><a href="dbca.html#cb153-9" tabindex="-1"></a>dados_confundido</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 4
 ##   bairro           renda programa  faturamento
 ##   &lt;chr&gt;            &lt;fct&gt; &lt;fct&gt;           &lt;dbl&gt;
@@ -480,13 +482,13 @@ programa contra os sem programa.
 ## 4 Ibura            Baixa Controle         200.
 ## 5 Coelhos          Baixa Controle         251.
 ## 6 Brasília Teimosa Baixa Controle         226.</code></pre>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="dbca.html#cb153-1" tabindex="-1"></a><span class="fu">ggplot</span>(dados_confundido, <span class="fu">aes</span>(<span class="at">x =</span> programa, <span class="at">y =</span> faturamento, <span class="at">fill =</span> renda)) <span class="sc">+</span></span>
-<span id="cb153-2"><a href="dbca.html#cb153-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb153-3"><a href="dbca.html#cb153-3" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
-<span id="cb153-4"><a href="dbca.html#cb153-4" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>), <span class="at">name =</span> <span class="st">&quot;Renda do bairro&quot;</span>) <span class="sc">+</span></span>
-<span id="cb153-5"><a href="dbca.html#cb153-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Faturamento médio (R$ mil)&quot;</span>,</span>
-<span id="cb153-6"><a href="dbca.html#cb153-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Efeito aparente do programa — ou efeito de renda?&quot;</span>) <span class="sc">+</span></span>
-<span id="cb153-7"><a href="dbca.html#cb153-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="dbca.html#cb155-1" tabindex="-1"></a><span class="fu">ggplot</span>(dados_confundido, <span class="fu">aes</span>(<span class="at">x =</span> programa, <span class="at">y =</span> faturamento, <span class="at">fill =</span> renda)) <span class="sc">+</span></span>
+<span id="cb155-2"><a href="dbca.html#cb155-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb155-3"><a href="dbca.html#cb155-3" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
+<span id="cb155-4"><a href="dbca.html#cb155-4" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>), <span class="at">name =</span> <span class="st">&quot;Renda do bairro&quot;</span>) <span class="sc">+</span></span>
+<span id="cb155-5"><a href="dbca.html#cb155-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Faturamento médio (R$ mil)&quot;</span>,</span>
+<span id="cb155-6"><a href="dbca.html#cb155-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Efeito aparente do programa — ou efeito de renda?&quot;</span>) <span class="sc">+</span></span>
+<span id="cb155-7"><a href="dbca.html#cb155-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
 <p><img src="04-blocos_files/figure-html/confundido-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
 <p>O grupo “Incentivo” fatura visivelmente mais — mas <strong>não há como saber se isso é efeito do
 programa, da renda pré-existente do bairro, ou de ambos</strong>, porque <code>renda</code> e <code>programa</code> variam em
@@ -504,15 +506,15 @@ aleatória, não determinada pela própria característica do bloco. O mapa abai
 Recife (RPA — Região Político-Administrativa) coloridos por sua área de planejamento, ilustra a
 escala em que uma blocagem geográfica desse tipo é definida: cada RPA agruparia unidades vizinhas,
 presumivelmente mais parecidas entre si, dentro das quais os tratamentos seriam então sorteados.</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="dbca.html#cb154-1" tabindex="-1"></a>recife <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">&quot;../Aulas2026/assets/Bairros_Recife/bairros-polygon.shp&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb154-2"><a href="dbca.html#cb154-2" tabindex="-1"></a></span>
-<span id="cb154-3"><a href="dbca.html#cb154-3" tabindex="-1"></a><span class="fu">ggplot</span>(recife) <span class="sc">+</span></span>
-<span id="cb154-4"><a href="dbca.html#cb154-4" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(rpa)), <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
-<span id="cb154-5"><a href="dbca.html#cb154-5" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>, <span class="at">name =</span> <span class="st">&quot;RPA</span><span class="sc">\n</span><span class="st">(bloco geográfico)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb154-6"><a href="dbca.html#cb154-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Bairros do Recife agrupados por Região Político-Administrativa&quot;</span>,</span>
-<span id="cb154-7"><a href="dbca.html#cb154-7" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cada RPA poderia servir de bloco geográfico em um DBCA&quot;</span>) <span class="sc">+</span></span>
-<span id="cb154-8"><a href="dbca.html#cb154-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb154-9"><a href="dbca.html#cb154-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="dbca.html#cb156-1" tabindex="-1"></a>recife <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">&quot;../Aulas2026/assets/Bairros_Recife/bairros-polygon.shp&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb156-2"><a href="dbca.html#cb156-2" tabindex="-1"></a></span>
+<span id="cb156-3"><a href="dbca.html#cb156-3" tabindex="-1"></a><span class="fu">ggplot</span>(recife) <span class="sc">+</span></span>
+<span id="cb156-4"><a href="dbca.html#cb156-4" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(rpa)), <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb156-5"><a href="dbca.html#cb156-5" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>, <span class="at">name =</span> <span class="st">&quot;RPA</span><span class="sc">\n</span><span class="st">(bloco geográfico)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb156-6"><a href="dbca.html#cb156-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Bairros do Recife agrupados por Região Político-Administrativa&quot;</span>,</span>
+<span id="cb156-7"><a href="dbca.html#cb156-7" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cada RPA poderia servir de bloco geográfico em um DBCA&quot;</span>) <span class="sc">+</span></span>
+<span id="cb156-8"><a href="dbca.html#cb156-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb156-9"><a href="dbca.html#cb156-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
 <p><img src="04-blocos_files/figure-html/confundido-mapa-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
 <p>Com 94 bairros distribuídos em seis RPAs, um pesquisador que quisesse comparar, por
 exemplo, três estratégias de precificação no comércio local poderia blocar por RPA (controlando
@@ -575,8 +577,8 @@ constitui, em termos de <span class="math inline">\(X\)</span>, a suposição de
 (Seção <a href="quadrado-latino.html#quadrado-latino">4.4</a>) terá a mesma estrutura, só que com <strong>três</strong> blocos de colunas
 lado a lado (tratamento, linha, coluna) em vez de dois — e nenhuma delas cruzada com as outras.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — a estrutura de X para um DBCA pequeno (t=3, b=2)</div>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="dbca.html#cb155-1" tabindex="-1"></a>dados_toy <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>))</span>
-<span id="cb155-2"><a href="dbca.html#cb155-2" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> dados_toy)</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="dbca.html#cb157-1" tabindex="-1"></a>dados_toy <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb157-2"><a href="dbca.html#cb157-2" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> dados_toy)</span></code></pre></div>
 <pre><code>##   (Intercept) tratamento2 tratamento3 bloco2
 ## 1           1           0           0      0
 ## 2           1           1           0      0
@@ -751,12 +753,12 @@ irrigação e silício como um “tratamento” só, deixando a decomposição d
 silício e sua interação para o Capítulo 5 (fatoriais em blocos), quando retomaremos exatamente
 este conjunto de dados.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — ajustando o DBCA</div>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="dbca.html#cb157-1" tabindex="-1"></a>pepino <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pepino.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb157-2"><a href="dbca.html#cb157-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb157-3"><a href="dbca.html#cb157-3" tabindex="-1"></a>    <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;riego&quot;</span>, riego, <span class="st">&quot;_&quot;</span>, silicio)),</span>
-<span id="cb157-4"><a href="dbca.html#cb157-4" tabindex="-1"></a>    <span class="at">bloco      =</span> <span class="fu">factor</span>(bloque)</span>
-<span id="cb157-5"><a href="dbca.html#cb157-5" tabindex="-1"></a>  )</span>
-<span id="cb157-6"><a href="dbca.html#cb157-6" tabindex="-1"></a><span class="fu">glimpse</span>(pepino)</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="dbca.html#cb159-1" tabindex="-1"></a>pepino <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pepino.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb159-2"><a href="dbca.html#cb159-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb159-3"><a href="dbca.html#cb159-3" tabindex="-1"></a>    <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;riego&quot;</span>, riego, <span class="st">&quot;_&quot;</span>, silicio)),</span>
+<span id="cb159-4"><a href="dbca.html#cb159-4" tabindex="-1"></a>    <span class="at">bloco      =</span> <span class="fu">factor</span>(bloque)</span>
+<span id="cb159-5"><a href="dbca.html#cb159-5" tabindex="-1"></a>  )</span>
+<span id="cb159-6"><a href="dbca.html#cb159-6" tabindex="-1"></a><span class="fu">glimpse</span>(pepino)</span></code></pre></div>
 <pre><code>## Rows: 24
 ## Columns: 6
 ## $ riego      &lt;dbl&gt; 0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5,…
@@ -772,11 +774,11 @@ neutralizar antes de comparar irrigação e silício. É por isso, e não por ac
 Seção anterior insistiu em não usar o teste <span class="math inline">\(F\)</span> de blocos para decidir se vale a pena mantê-los no
 modelo: a pergunta “o bloco é estatisticamente significativo?” não é a pergunta que nos interessa
 sobre essa coluna.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="dbca.html#cb159-1" tabindex="-1"></a>mod_dbca <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> pepino)</span>
-<span id="cb159-2"><a href="dbca.html#cb159-2" tabindex="-1"></a><span class="fu">anova</span>(mod_dbca) <span class="sc">%&gt;%</span></span>
-<span id="cb159-3"><a href="dbca.html#cb159-3" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb159-4"><a href="dbca.html#cb159-4" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do DBCA — altura de pepineiros&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb159-5"><a href="dbca.html#cb159-5" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="dbca.html#cb161-1" tabindex="-1"></a>mod_dbca <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> pepino)</span>
+<span id="cb161-2"><a href="dbca.html#cb161-2" tabindex="-1"></a><span class="fu">anova</span>(mod_dbca) <span class="sc">%&gt;%</span></span>
+<span id="cb161-3"><a href="dbca.html#cb161-3" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb161-4"><a href="dbca.html#cb161-4" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do DBCA — altura de pepineiros&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb161-5"><a href="dbca.html#cb161-5" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:dbca-pepino-mod">Tabela 4.2: </span>ANOVA do DBCA — altura de pepineiros
@@ -878,16 +880,16 @@ plotar a resposta por tratamento, com uma linha ligando as observações de cada
 de bloco fosse puramente aditivo — um simples deslocamento vertical, igual para todos os
 tratamentos —, as três linhas seriam <strong>aproximadamente paralelas</strong>.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — gráfico de perfis por bloco</div>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="dbca.html#cb160-1" tabindex="-1"></a>pal_blocos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>, <span class="st">&quot;#1baf7a&quot;</span>)  <span class="co"># paleta categórica validada (3 blocos)</span></span>
-<span id="cb160-2"><a href="dbca.html#cb160-2" tabindex="-1"></a></span>
-<span id="cb160-3"><a href="dbca.html#cb160-3" tabindex="-1"></a><span class="fu">ggplot</span>(pepino, <span class="fu">aes</span>(<span class="at">x =</span> tratamento, <span class="at">y =</span> altura, <span class="at">group =</span> bloco, <span class="at">color =</span> bloco)) <span class="sc">+</span></span>
-<span id="cb160-4"><a href="dbca.html#cb160-4" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.9</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb160-5"><a href="dbca.html#cb160-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
-<span id="cb160-6"><a href="dbca.html#cb160-6" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_blocos, <span class="at">name =</span> <span class="st">&quot;Bloco&quot;</span>) <span class="sc">+</span></span>
-<span id="cb160-7"><a href="dbca.html#cb160-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Altura (cm)&quot;</span>,</span>
-<span id="cb160-8"><a href="dbca.html#cb160-8" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Altura por combinação irrigação-silício, uma linha por bloco&quot;</span>) <span class="sc">+</span></span>
-<span id="cb160-9"><a href="dbca.html#cb160-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb160-10"><a href="dbca.html#cb160-10" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="dbca.html#cb162-1" tabindex="-1"></a>pal_blocos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>, <span class="st">&quot;#1baf7a&quot;</span>)  <span class="co"># paleta categórica validada (3 blocos)</span></span>
+<span id="cb162-2"><a href="dbca.html#cb162-2" tabindex="-1"></a></span>
+<span id="cb162-3"><a href="dbca.html#cb162-3" tabindex="-1"></a><span class="fu">ggplot</span>(pepino, <span class="fu">aes</span>(<span class="at">x =</span> tratamento, <span class="at">y =</span> altura, <span class="at">group =</span> bloco, <span class="at">color =</span> bloco)) <span class="sc">+</span></span>
+<span id="cb162-4"><a href="dbca.html#cb162-4" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.9</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb162-5"><a href="dbca.html#cb162-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
+<span id="cb162-6"><a href="dbca.html#cb162-6" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_blocos, <span class="at">name =</span> <span class="st">&quot;Bloco&quot;</span>) <span class="sc">+</span></span>
+<span id="cb162-7"><a href="dbca.html#cb162-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Altura (cm)&quot;</span>,</span>
+<span id="cb162-8"><a href="dbca.html#cb162-8" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Altura por combinação irrigação-silício, uma linha por bloco&quot;</span>) <span class="sc">+</span></span>
+<span id="cb162-9"><a href="dbca.html#cb162-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb162-10"><a href="dbca.html#cb162-10" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div>
 <p><img src="04-blocos_files/figure-html/dbca-perfis-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
 <p>As três linhas não são exatamente paralelas: cruzam-se em vários pontos (por exemplo, em torno de
 <code>riego1_0 ml</code>, o bloco 3 cai abaixo dos blocos 1 e 2, invertendo a ordem que tinham no tratamento
@@ -922,28 +924,28 @@ F_0=\frac{SQ_N}{\big(SQ_{Erro}-SQ_N\big)\big/\big[(t-1)(b-1)-1\big]}
 <p>Em palavras: parte-se o termo de erro do DBCA em duas linhas — <em>não aditividade</em> (1 gl) e <em>resto</em>
 — e pergunta-se se a primeira é grande demais para ser ruído.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — teste de Tukey de não aditividade, à mão e por pacote</div>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="dbca.html#cb161-1" tabindex="-1"></a>mu_g  <span class="ot">&lt;-</span> <span class="fu">mean</span>(pepino<span class="sc">$</span>altura)</span>
-<span id="cb161-2"><a href="dbca.html#cb161-2" tabindex="-1"></a>ef_t  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(pepino<span class="sc">$</span>altura, pepino<span class="sc">$</span>tratamento, mean) <span class="sc">-</span> mu_g  <span class="co"># efeitos de tratamento</span></span>
-<span id="cb161-3"><a href="dbca.html#cb161-3" tabindex="-1"></a>ef_b  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(pepino<span class="sc">$</span>altura, pepino<span class="sc">$</span>bloco,      mean) <span class="sc">-</span> mu_g  <span class="co"># efeitos de bloco</span></span>
-<span id="cb161-4"><a href="dbca.html#cb161-4" tabindex="-1"></a></span>
-<span id="cb161-5"><a href="dbca.html#cb161-5" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino<span class="sc">$</span>altura <span class="sc">*</span></span>
-<span id="cb161-6"><a href="dbca.html#cb161-6" tabindex="-1"></a>           ef_t[<span class="fu">as.character</span>(pepino<span class="sc">$</span>tratamento)] <span class="sc">*</span></span>
-<span id="cb161-7"><a href="dbca.html#cb161-7" tabindex="-1"></a>           ef_b[<span class="fu">as.character</span>(pepino<span class="sc">$</span>bloco)])</span>
-<span id="cb161-8"><a href="dbca.html#cb161-8" tabindex="-1"></a>SQ_N <span class="ot">&lt;-</span> num<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">sum</span>(ef_t<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="fu">sum</span>(ef_b<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb161-9"><a href="dbca.html#cb161-9" tabindex="-1"></a></span>
-<span id="cb161-10"><a href="dbca.html#cb161-10" tabindex="-1"></a>tab   <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_dbca)[[<span class="dv">1</span>]]</span>
-<span id="cb161-11"><a href="dbca.html#cb161-11" tabindex="-1"></a>SQ_E  <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]</span>
-<span id="cb161-12"><a href="dbca.html#cb161-12" tabindex="-1"></a>gl_E  <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
-<span id="cb161-13"><a href="dbca.html#cb161-13" tabindex="-1"></a>F_0   <span class="ot">&lt;-</span> SQ_N <span class="sc">/</span> ((SQ_E <span class="sc">-</span> SQ_N) <span class="sc">/</span> (gl_E <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb161-14"><a href="dbca.html#cb161-14" tabindex="-1"></a></span>
-<span id="cb161-15"><a href="dbca.html#cb161-15" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">Fonte =</span> <span class="fu">c</span>(<span class="st">&quot;Não aditividade&quot;</span>, <span class="st">&quot;Resto&quot;</span>, <span class="st">&quot;Erro do DBCA (total)&quot;</span>),</span>
-<span id="cb161-16"><a href="dbca.html#cb161-16" tabindex="-1"></a>       <span class="at">gl    =</span> <span class="fu">c</span>(<span class="dv">1</span>, gl_E <span class="sc">-</span> <span class="dv">1</span>, gl_E),</span>
-<span id="cb161-17"><a href="dbca.html#cb161-17" tabindex="-1"></a>       <span class="at">SQ    =</span> <span class="fu">c</span>(SQ_N, SQ_E <span class="sc">-</span> SQ_N, SQ_E)) <span class="sc">%&gt;%</span></span>
-<span id="cb161-18"><a href="dbca.html#cb161-18" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">QM =</span> SQ <span class="sc">/</span> gl,</span>
-<span id="cb161-19"><a href="dbca.html#cb161-19" tabindex="-1"></a>         <span class="at">F  =</span> <span class="fu">c</span>(F_0, <span class="cn">NA</span>, <span class="cn">NA</span>),</span>
-<span id="cb161-20"><a href="dbca.html#cb161-20" tabindex="-1"></a>         <span class="st">`</span><span class="at">valor-p</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">pf</span>(F_0, <span class="dv">1</span>, gl_E <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>), <span class="cn">NA</span>, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb161-21"><a href="dbca.html#cb161-21" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Partição do erro do DBCA pelo teste de Tukey&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb161-22"><a href="dbca.html#cb161-22" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="dbca.html#cb163-1" tabindex="-1"></a>mu_g  <span class="ot">&lt;-</span> <span class="fu">mean</span>(pepino<span class="sc">$</span>altura)</span>
+<span id="cb163-2"><a href="dbca.html#cb163-2" tabindex="-1"></a>ef_t  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(pepino<span class="sc">$</span>altura, pepino<span class="sc">$</span>tratamento, mean) <span class="sc">-</span> mu_g  <span class="co"># efeitos de tratamento</span></span>
+<span id="cb163-3"><a href="dbca.html#cb163-3" tabindex="-1"></a>ef_b  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(pepino<span class="sc">$</span>altura, pepino<span class="sc">$</span>bloco,      mean) <span class="sc">-</span> mu_g  <span class="co"># efeitos de bloco</span></span>
+<span id="cb163-4"><a href="dbca.html#cb163-4" tabindex="-1"></a></span>
+<span id="cb163-5"><a href="dbca.html#cb163-5" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino<span class="sc">$</span>altura <span class="sc">*</span></span>
+<span id="cb163-6"><a href="dbca.html#cb163-6" tabindex="-1"></a>           ef_t[<span class="fu">as.character</span>(pepino<span class="sc">$</span>tratamento)] <span class="sc">*</span></span>
+<span id="cb163-7"><a href="dbca.html#cb163-7" tabindex="-1"></a>           ef_b[<span class="fu">as.character</span>(pepino<span class="sc">$</span>bloco)])</span>
+<span id="cb163-8"><a href="dbca.html#cb163-8" tabindex="-1"></a>SQ_N <span class="ot">&lt;-</span> num<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">sum</span>(ef_t<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="fu">sum</span>(ef_b<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb163-9"><a href="dbca.html#cb163-9" tabindex="-1"></a></span>
+<span id="cb163-10"><a href="dbca.html#cb163-10" tabindex="-1"></a>tab   <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_dbca)[[<span class="dv">1</span>]]</span>
+<span id="cb163-11"><a href="dbca.html#cb163-11" tabindex="-1"></a>SQ_E  <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]</span>
+<span id="cb163-12"><a href="dbca.html#cb163-12" tabindex="-1"></a>gl_E  <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
+<span id="cb163-13"><a href="dbca.html#cb163-13" tabindex="-1"></a>F_0   <span class="ot">&lt;-</span> SQ_N <span class="sc">/</span> ((SQ_E <span class="sc">-</span> SQ_N) <span class="sc">/</span> (gl_E <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb163-14"><a href="dbca.html#cb163-14" tabindex="-1"></a></span>
+<span id="cb163-15"><a href="dbca.html#cb163-15" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">Fonte =</span> <span class="fu">c</span>(<span class="st">&quot;Não aditividade&quot;</span>, <span class="st">&quot;Resto&quot;</span>, <span class="st">&quot;Erro do DBCA (total)&quot;</span>),</span>
+<span id="cb163-16"><a href="dbca.html#cb163-16" tabindex="-1"></a>       <span class="at">gl    =</span> <span class="fu">c</span>(<span class="dv">1</span>, gl_E <span class="sc">-</span> <span class="dv">1</span>, gl_E),</span>
+<span id="cb163-17"><a href="dbca.html#cb163-17" tabindex="-1"></a>       <span class="at">SQ    =</span> <span class="fu">c</span>(SQ_N, SQ_E <span class="sc">-</span> SQ_N, SQ_E)) <span class="sc">%&gt;%</span></span>
+<span id="cb163-18"><a href="dbca.html#cb163-18" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">QM =</span> SQ <span class="sc">/</span> gl,</span>
+<span id="cb163-19"><a href="dbca.html#cb163-19" tabindex="-1"></a>         <span class="at">F  =</span> <span class="fu">c</span>(F_0, <span class="cn">NA</span>, <span class="cn">NA</span>),</span>
+<span id="cb163-20"><a href="dbca.html#cb163-20" tabindex="-1"></a>         <span class="st">`</span><span class="at">valor-p</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">pf</span>(F_0, <span class="dv">1</span>, gl_E <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>), <span class="cn">NA</span>, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb163-21"><a href="dbca.html#cb163-21" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Partição do erro do DBCA pelo teste de Tukey&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb163-22"><a href="dbca.html#cb163-22" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:tukey-nonadd-pepino">Tabela 4.3: </span>Partição do erro do DBCA pelo teste de Tukey
@@ -1046,10 +1048,10 @@ segunda, que é a face positiva da mesma moeda: quando <span class="math inline"
 multiplicativa costuma indicar que uma <strong>transformação</strong> da resposta (tipicamente na família
 potência — Seção <a href="dca-pressupostos.html#dca-pressupostos">3.5</a> do Capítulo 3) restauraria a aditividade, o que torna o
 teste também um diagnóstico construtivo, e não apenas um veredito.</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="dbca.html#cb162-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_dbca)</span>
-<span id="cb162-2"><a href="dbca.html#cb162-2" tabindex="-1"></a><span class="fu">dim</span>(X)               <span class="co"># 24 linhas (unidades), 10 colunas: 1 + (8-1) trat + (3-1) bloco</span></span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="dbca.html#cb164-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_dbca)</span>
+<span id="cb164-2"><a href="dbca.html#cb164-2" tabindex="-1"></a><span class="fu">dim</span>(X)               <span class="co"># 24 linhas (unidades), 10 colunas: 1 + (8-1) trat + (3-1) bloco</span></span></code></pre></div>
 <pre><code>## [1] 24 10</code></pre>
-<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="dbca.html#cb164-1" tabindex="-1"></a>X[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">9</span>)]  <span class="co"># note: nenhuma coluna cruza tratamento com bloco</span></span></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="dbca.html#cb166-1" tabindex="-1"></a>X[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">8</span><span class="sc">:</span><span class="dv">9</span>)]  <span class="co"># note: nenhuma coluna cruza tratamento com bloco</span></span></code></pre></div>
 <pre><code>##   (Intercept) tratamentoriego0.5_1000 ml tratamentoriego0.5_1500 ml
 ## 1           1                          0                          0
 ## 2           1                          0                          0
@@ -1072,20 +1074,20 @@ interação <span class="math inline">\(A{\times}B\)</span>, que absorve <span c
 DBCA tem a mesma estrutura de topo — Tratamento e Bloco cruzados, no mesmo nível — mas <strong>sem</strong>
 esse nó intermediário:</p>
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DBCA (exemplo pepino)</div>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="dbca.html#cb166-1" tabindex="-1"></a>nos_dbca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb166-2"><a href="dbca.html#cb166-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
-<span id="cb166-3"><a href="dbca.html#cb166-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">24</span>)         <span class="co"># t=8 tratamentos; b=3 blocos; N=24 parcelas</span></span>
-<span id="cb166-4"><a href="dbca.html#cb166-4" tabindex="-1"></a>)</span>
-<span id="cb166-5"><a href="dbca.html#cb166-5" tabindex="-1"></a>arestas_dbca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb166-6"><a href="dbca.html#cb166-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>),</span>
-<span id="cb166-7"><a href="dbca.html#cb166-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
-<span id="cb166-8"><a href="dbca.html#cb166-8" tabindex="-1"></a>)</span>
-<span id="cb166-9"><a href="dbca.html#cb166-9" tabindex="-1"></a></span>
-<span id="cb166-10"><a href="dbca.html#cb166-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb166-11"><a href="dbca.html#cb166-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_dbca, arestas_dbca,</span>
-<span id="cb166-12"><a href="dbca.html#cb166-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dbca.svg&quot;</span>,</span>
-<span id="cb166-13"><a href="dbca.html#cb166-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DBCA (pepino): t=8, b=3 (N=24)&quot;</span>)</span>
-<span id="cb166-14"><a href="dbca.html#cb166-14" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="dbca.html#cb168-1" tabindex="-1"></a>nos_dbca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb168-2"><a href="dbca.html#cb168-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
+<span id="cb168-3"><a href="dbca.html#cb168-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">24</span>)         <span class="co"># t=8 tratamentos; b=3 blocos; N=24 parcelas</span></span>
+<span id="cb168-4"><a href="dbca.html#cb168-4" tabindex="-1"></a>)</span>
+<span id="cb168-5"><a href="dbca.html#cb168-5" tabindex="-1"></a>arestas_dbca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb168-6"><a href="dbca.html#cb168-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>),</span>
+<span id="cb168-7"><a href="dbca.html#cb168-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
+<span id="cb168-8"><a href="dbca.html#cb168-8" tabindex="-1"></a>)</span>
+<span id="cb168-9"><a href="dbca.html#cb168-9" tabindex="-1"></a></span>
+<span id="cb168-10"><a href="dbca.html#cb168-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb168-11"><a href="dbca.html#cb168-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_dbca, arestas_dbca,</span>
+<span id="cb168-12"><a href="dbca.html#cb168-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dbca.svg&quot;</span>,</span>
+<span id="cb168-13"><a href="dbca.html#cb168-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DBCA (pepino): t=8, b=3 (N=24)&quot;</span>)</span>
+<span id="cb168-14"><a href="dbca.html#cb168-14" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-dbca"></span>
 <img src="figuras/hasse/dbca.svg" alt="Diagrama de Hasse do DBCA, exemplo pepino: t=8 combinações irrigação-silício (tratamento), b=3 blocos, N=24. Tratamento e Bloco aparecem no mesmo nível (cruzados), mas -- ao contrário do fatorial A x B do Capítulo 2 (seção sobre diagramas de Hasse) -- não há nó de interação entre eles: com uma única observação por casela tratamento x bloco, os dois convergem direto no Erro." width="58%" />
 <p class="caption">
@@ -1128,34 +1130,34 @@ quadrados de tratamentos é</p>
 SQ_{Trat}^{\,ajustada} = SQ_{Trat}^{\,ingênua} - \frac{\left[B&#39;_{j^*} - (t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}.
 \]</span></p>
 <div class="caixa-r"><strong>Uso do R</strong> — estimando um valor perdido (fórmula de Yates)</div>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="dbca.html#cb167-1" tabindex="-1"></a><span class="co"># Removemos, propositalmente, a altura observada para riego = 1, silicio = &quot;1000 ml&quot;, bloco 2</span></span>
-<span id="cb167-2"><a href="dbca.html#cb167-2" tabindex="-1"></a>alvo <span class="ot">&lt;-</span> <span class="fu">which</span>(pepino<span class="sc">$</span>riego <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pepino<span class="sc">$</span>silicio <span class="sc">==</span> <span class="st">&quot;1000 ml&quot;</span> <span class="sc">&amp;</span> pepino<span class="sc">$</span>bloque <span class="sc">==</span> <span class="dv">2</span>)</span>
-<span id="cb167-3"><a href="dbca.html#cb167-3" tabindex="-1"></a>valor_real <span class="ot">&lt;-</span> pepino<span class="sc">$</span>altura[alvo]</span>
-<span id="cb167-4"><a href="dbca.html#cb167-4" tabindex="-1"></a></span>
-<span id="cb167-5"><a href="dbca.html#cb167-5" tabindex="-1"></a>pepino_miss <span class="ot">&lt;-</span> pepino</span>
-<span id="cb167-6"><a href="dbca.html#cb167-6" tabindex="-1"></a>pepino_miss<span class="sc">$</span>altura[alvo] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb167-7"><a href="dbca.html#cb167-7" tabindex="-1"></a></span>
-<span id="cb167-8"><a href="dbca.html#cb167-8" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>tratamento); b <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>bloco)</span>
-<span id="cb167-9"><a href="dbca.html#cb167-9" tabindex="-1"></a>trat_alvo  <span class="ot">&lt;-</span> pepino<span class="sc">$</span>tratamento[alvo]</span>
-<span id="cb167-10"><a href="dbca.html#cb167-10" tabindex="-1"></a>bloco_alvo <span class="ot">&lt;-</span> pepino<span class="sc">$</span>bloco[alvo]</span>
-<span id="cb167-11"><a href="dbca.html#cb167-11" tabindex="-1"></a></span>
-<span id="cb167-12"><a href="dbca.html#cb167-12" tabindex="-1"></a>Tlinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura[pepino_miss<span class="sc">$</span>tratamento <span class="sc">==</span> trat_alvo], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb167-13"><a href="dbca.html#cb167-13" tabindex="-1"></a>Blinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura[pepino_miss<span class="sc">$</span>bloco <span class="sc">==</span> bloco_alvo], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb167-14"><a href="dbca.html#cb167-14" tabindex="-1"></a>Glinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb167-15"><a href="dbca.html#cb167-15" tabindex="-1"></a></span>
-<span id="cb167-16"><a href="dbca.html#cb167-16" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> (t <span class="sc">*</span> Tlinha <span class="sc">+</span> b <span class="sc">*</span> Blinha <span class="sc">-</span> Glinha) <span class="sc">/</span> ((t <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (b <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb167-17"><a href="dbca.html#cb167-17" tabindex="-1"></a><span class="fu">c</span>(<span class="at">valor_real =</span> valor_real, <span class="at">estimado =</span> y_hat, <span class="at">erro =</span> y_hat <span class="sc">-</span> valor_real)</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="dbca.html#cb169-1" tabindex="-1"></a><span class="co"># Removemos, propositalmente, a altura observada para riego = 1, silicio = &quot;1000 ml&quot;, bloco 2</span></span>
+<span id="cb169-2"><a href="dbca.html#cb169-2" tabindex="-1"></a>alvo <span class="ot">&lt;-</span> <span class="fu">which</span>(pepino<span class="sc">$</span>riego <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pepino<span class="sc">$</span>silicio <span class="sc">==</span> <span class="st">&quot;1000 ml&quot;</span> <span class="sc">&amp;</span> pepino<span class="sc">$</span>bloque <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb169-3"><a href="dbca.html#cb169-3" tabindex="-1"></a>valor_real <span class="ot">&lt;-</span> pepino<span class="sc">$</span>altura[alvo]</span>
+<span id="cb169-4"><a href="dbca.html#cb169-4" tabindex="-1"></a></span>
+<span id="cb169-5"><a href="dbca.html#cb169-5" tabindex="-1"></a>pepino_miss <span class="ot">&lt;-</span> pepino</span>
+<span id="cb169-6"><a href="dbca.html#cb169-6" tabindex="-1"></a>pepino_miss<span class="sc">$</span>altura[alvo] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb169-7"><a href="dbca.html#cb169-7" tabindex="-1"></a></span>
+<span id="cb169-8"><a href="dbca.html#cb169-8" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>tratamento); b <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>bloco)</span>
+<span id="cb169-9"><a href="dbca.html#cb169-9" tabindex="-1"></a>trat_alvo  <span class="ot">&lt;-</span> pepino<span class="sc">$</span>tratamento[alvo]</span>
+<span id="cb169-10"><a href="dbca.html#cb169-10" tabindex="-1"></a>bloco_alvo <span class="ot">&lt;-</span> pepino<span class="sc">$</span>bloco[alvo]</span>
+<span id="cb169-11"><a href="dbca.html#cb169-11" tabindex="-1"></a></span>
+<span id="cb169-12"><a href="dbca.html#cb169-12" tabindex="-1"></a>Tlinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura[pepino_miss<span class="sc">$</span>tratamento <span class="sc">==</span> trat_alvo], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb169-13"><a href="dbca.html#cb169-13" tabindex="-1"></a>Blinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura[pepino_miss<span class="sc">$</span>bloco <span class="sc">==</span> bloco_alvo], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb169-14"><a href="dbca.html#cb169-14" tabindex="-1"></a>Glinha <span class="ot">&lt;-</span> <span class="fu">sum</span>(pepino_miss<span class="sc">$</span>altura, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb169-15"><a href="dbca.html#cb169-15" tabindex="-1"></a></span>
+<span id="cb169-16"><a href="dbca.html#cb169-16" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> (t <span class="sc">*</span> Tlinha <span class="sc">+</span> b <span class="sc">*</span> Blinha <span class="sc">-</span> Glinha) <span class="sc">/</span> ((t <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (b <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb169-17"><a href="dbca.html#cb169-17" tabindex="-1"></a><span class="fu">c</span>(<span class="at">valor_real =</span> valor_real, <span class="at">estimado =</span> y_hat, <span class="at">erro =</span> y_hat <span class="sc">-</span> valor_real)</span></code></pre></div>
 <pre><code>## valor_real   estimado       erro 
 ##  5.1200000  4.6914286 -0.4285714</code></pre>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="dbca.html#cb169-1" tabindex="-1"></a>pepino_imputado <span class="ot">&lt;-</span> pepino_miss</span>
-<span id="cb169-2"><a href="dbca.html#cb169-2" tabindex="-1"></a>pepino_imputado<span class="sc">$</span>altura[alvo] <span class="ot">&lt;-</span> y_hat</span>
-<span id="cb169-3"><a href="dbca.html#cb169-3" tabindex="-1"></a>mod_imputado <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> pepino_imputado)</span>
-<span id="cb169-4"><a href="dbca.html#cb169-4" tabindex="-1"></a>tab_imp <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_imputado)</span>
-<span id="cb169-5"><a href="dbca.html#cb169-5" tabindex="-1"></a></span>
-<span id="cb169-6"><a href="dbca.html#cb169-6" tabindex="-1"></a>correcao <span class="ot">&lt;-</span> (Blinha <span class="sc">-</span> (t <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> y_hat)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t <span class="sc">*</span> (t <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb169-7"><a href="dbca.html#cb169-7" tabindex="-1"></a>SS_trat_ajustado <span class="ot">&lt;-</span> tab_imp[<span class="st">&quot;tratamento&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>] <span class="sc">-</span> correcao</span>
-<span id="cb169-8"><a href="dbca.html#cb169-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_ingenua =</span> tab_imp[<span class="st">&quot;tratamento&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>],</span>
-<span id="cb169-9"><a href="dbca.html#cb169-9" tabindex="-1"></a>  <span class="at">correcao =</span> correcao, <span class="at">SQ_trat_ajustada =</span> SS_trat_ajustado)</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="dbca.html#cb171-1" tabindex="-1"></a>pepino_imputado <span class="ot">&lt;-</span> pepino_miss</span>
+<span id="cb171-2"><a href="dbca.html#cb171-2" tabindex="-1"></a>pepino_imputado<span class="sc">$</span>altura[alvo] <span class="ot">&lt;-</span> y_hat</span>
+<span id="cb171-3"><a href="dbca.html#cb171-3" tabindex="-1"></a>mod_imputado <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> tratamento <span class="sc">+</span> bloco, <span class="at">data =</span> pepino_imputado)</span>
+<span id="cb171-4"><a href="dbca.html#cb171-4" tabindex="-1"></a>tab_imp <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_imputado)</span>
+<span id="cb171-5"><a href="dbca.html#cb171-5" tabindex="-1"></a></span>
+<span id="cb171-6"><a href="dbca.html#cb171-6" tabindex="-1"></a>correcao <span class="ot">&lt;-</span> (Blinha <span class="sc">-</span> (t <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> y_hat)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t <span class="sc">*</span> (t <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb171-7"><a href="dbca.html#cb171-7" tabindex="-1"></a>SS_trat_ajustado <span class="ot">&lt;-</span> tab_imp[<span class="st">&quot;tratamento&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>] <span class="sc">-</span> correcao</span>
+<span id="cb171-8"><a href="dbca.html#cb171-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_ingenua =</span> tab_imp[<span class="st">&quot;tratamento&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>],</span>
+<span id="cb171-9"><a href="dbca.html#cb171-9" tabindex="-1"></a>  <span class="at">correcao =</span> correcao, <span class="at">SQ_trat_ajustada =</span> SS_trat_ajustado)</span></code></pre></div>
 <pre><code>##  SQ_trat_ingenua         correcao SQ_trat_ajustada 
 ##      2.010202381      0.001207143      2.008995238</code></pre>
 <p>Neste exemplo, o valor real era <span class="math inline">\(5{,}12\)</span> cm e a fórmula de Yates estimou <span class="math inline">\(4{,}69\)</span> cm — um erro de
@@ -1192,21 +1194,21 @@ fator <span class="math inline">\(ER\)</span> para igualar a precisão do DBCA. 
 quando <span class="math inline">\(\nu_b&lt;\nu_c\)</span> — ele penaliza o DBCA, que é o desenho com menos graus de liberdade de erro,
 e nunca o promove. Há ainda um critério exato, devido a Lentner, Arnold e Hinkelmann, que dispensa
 a fórmula: <span class="math inline">\(ER&gt;1\)</span> se e somente se <span class="math inline">\(H=QM_{Bloco}/QM_{Erro}&gt;1\)</span>.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="dbca.html#cb171-1" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_dbca)</span>
-<span id="cb171-2"><a href="dbca.html#cb171-2" tabindex="-1"></a>MSB <span class="ot">&lt;-</span> tab[<span class="st">&quot;bloco&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>];      MSE      <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
-<span id="cb171-3"><a href="dbca.html#cb171-3" tabindex="-1"></a>gl_b <span class="ot">&lt;-</span> tab[<span class="st">&quot;bloco&quot;</span>, <span class="st">&quot;Df&quot;</span>];          gl_e_dbca <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
-<span id="cb171-4"><a href="dbca.html#cb171-4" tabindex="-1"></a>gl_e_dca <span class="ot">&lt;-</span> gl_e_dbca <span class="sc">+</span> gl_b</span>
-<span id="cb171-5"><a href="dbca.html#cb171-5" tabindex="-1"></a></span>
-<span id="cb171-6"><a href="dbca.html#cb171-6" tabindex="-1"></a>t_niv <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>tratamento); b_niv <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>bloco)</span>
-<span id="cb171-7"><a href="dbca.html#cb171-7" tabindex="-1"></a></span>
-<span id="cb171-8"><a href="dbca.html#cb171-8" tabindex="-1"></a>sigma2_dca <span class="ot">&lt;-</span> ((b_niv <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> MSB <span class="sc">+</span></span>
-<span id="cb171-9"><a href="dbca.html#cb171-9" tabindex="-1"></a>               ((t_niv <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> (t_niv <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (b_niv <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> MSE) <span class="sc">/</span> (t_niv <span class="sc">*</span> b_niv <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb171-10"><a href="dbca.html#cb171-10" tabindex="-1"></a></span>
-<span id="cb171-11"><a href="dbca.html#cb171-11" tabindex="-1"></a>correcao <span class="ot">&lt;-</span> ((gl_e_dbca <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">*</span> (gl_e_dca <span class="sc">+</span> <span class="dv">3</span>)) <span class="sc">/</span> ((gl_e_dbca <span class="sc">+</span> <span class="dv">3</span>) <span class="sc">*</span> (gl_e_dca <span class="sc">+</span> <span class="dv">1</span>))</span>
-<span id="cb171-12"><a href="dbca.html#cb171-12" tabindex="-1"></a>ER <span class="ot">&lt;-</span> correcao <span class="sc">*</span> sigma2_dca <span class="sc">/</span> MSE</span>
-<span id="cb171-13"><a href="dbca.html#cb171-13" tabindex="-1"></a></span>
-<span id="cb171-14"><a href="dbca.html#cb171-14" tabindex="-1"></a><span class="fu">c</span>(<span class="at">sigma2_DCA =</span> sigma2_dca, <span class="at">correcao_gl =</span> correcao, <span class="at">ER =</span> ER,</span>
-<span id="cb171-15"><a href="dbca.html#cb171-15" tabindex="-1"></a>  <span class="at">H =</span> MSB <span class="sc">/</span> MSE)   <span class="co"># criterio exato: ER &gt; 1 se e so se H &gt; 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="dbca.html#cb173-1" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_dbca)</span>
+<span id="cb173-2"><a href="dbca.html#cb173-2" tabindex="-1"></a>MSB <span class="ot">&lt;-</span> tab[<span class="st">&quot;bloco&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>];      MSE      <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
+<span id="cb173-3"><a href="dbca.html#cb173-3" tabindex="-1"></a>gl_b <span class="ot">&lt;-</span> tab[<span class="st">&quot;bloco&quot;</span>, <span class="st">&quot;Df&quot;</span>];          gl_e_dbca <span class="ot">&lt;-</span> tab[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
+<span id="cb173-4"><a href="dbca.html#cb173-4" tabindex="-1"></a>gl_e_dca <span class="ot">&lt;-</span> gl_e_dbca <span class="sc">+</span> gl_b</span>
+<span id="cb173-5"><a href="dbca.html#cb173-5" tabindex="-1"></a></span>
+<span id="cb173-6"><a href="dbca.html#cb173-6" tabindex="-1"></a>t_niv <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>tratamento); b_niv <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(pepino<span class="sc">$</span>bloco)</span>
+<span id="cb173-7"><a href="dbca.html#cb173-7" tabindex="-1"></a></span>
+<span id="cb173-8"><a href="dbca.html#cb173-8" tabindex="-1"></a>sigma2_dca <span class="ot">&lt;-</span> ((b_niv <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> MSB <span class="sc">+</span></span>
+<span id="cb173-9"><a href="dbca.html#cb173-9" tabindex="-1"></a>               ((t_niv <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> (t_niv <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (b_niv <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">*</span> MSE) <span class="sc">/</span> (t_niv <span class="sc">*</span> b_niv <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb173-10"><a href="dbca.html#cb173-10" tabindex="-1"></a></span>
+<span id="cb173-11"><a href="dbca.html#cb173-11" tabindex="-1"></a>correcao <span class="ot">&lt;-</span> ((gl_e_dbca <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">*</span> (gl_e_dca <span class="sc">+</span> <span class="dv">3</span>)) <span class="sc">/</span> ((gl_e_dbca <span class="sc">+</span> <span class="dv">3</span>) <span class="sc">*</span> (gl_e_dca <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb173-12"><a href="dbca.html#cb173-12" tabindex="-1"></a>ER <span class="ot">&lt;-</span> correcao <span class="sc">*</span> sigma2_dca <span class="sc">/</span> MSE</span>
+<span id="cb173-13"><a href="dbca.html#cb173-13" tabindex="-1"></a></span>
+<span id="cb173-14"><a href="dbca.html#cb173-14" tabindex="-1"></a><span class="fu">c</span>(<span class="at">sigma2_DCA =</span> sigma2_dca, <span class="at">correcao_gl =</span> correcao, <span class="at">ER =</span> ER,</span>
+<span id="cb173-15"><a href="dbca.html#cb173-15" tabindex="-1"></a>  <span class="at">H =</span> MSB <span class="sc">/</span> MSE)   <span class="co"># criterio exato: ER &gt; 1 se e so se H &gt; 1</span></span></code></pre></div>
 <pre><code>##  sigma2_DCA correcao_gl          ER           H 
 ##  0.05116033  0.98615917  0.91032808  0.11570310</code></pre>
 <p>$ER , isto é, <strong>menor que 1</strong>: neste experimento a blocagem por área do
@@ -1225,22 +1227,22 @@ cálculo de eficiência oferece é uma <strong>avaliação a posteriori</strong>
 experimento no mesmo viveiro: se a homogeneidade se confirmar em novas rodadas, um DCA com as
 mesmas <span class="math inline">\(tb\)</span> unidades entregaria mais graus de liberdade de erro e, portanto, mais poder.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — comparando o quadrado médio do erro dos dois desenhos</div>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="dbca.html#cb173-1" tabindex="-1"></a>QME_dbca <span class="ot">&lt;-</span> MSE</span>
-<span id="cb173-2"><a href="dbca.html#cb173-2" tabindex="-1"></a>QME_dca  <span class="ot">&lt;-</span> (tab[<span class="st">&quot;Residuals&quot;</span>,<span class="st">&quot;Sum Sq&quot;</span>] <span class="sc">+</span> tab[<span class="st">&quot;bloco&quot;</span>,<span class="st">&quot;Sum Sq&quot;</span>]) <span class="sc">/</span> gl_e_dca  <span class="co"># erro + bloco, agrupados</span></span>
-<span id="cb173-3"><a href="dbca.html#cb173-3" tabindex="-1"></a></span>
-<span id="cb173-4"><a href="dbca.html#cb173-4" tabindex="-1"></a>df_re <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb173-5"><a href="dbca.html#cb173-5" tabindex="-1"></a>  <span class="at">Delineamento =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;DBCA&quot;</span>, <span class="st">&quot;DCA (hipotético)&quot;</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;DBCA&quot;</span>, <span class="st">&quot;DCA (hipotético)&quot;</span>)),</span>
-<span id="cb173-6"><a href="dbca.html#cb173-6" tabindex="-1"></a>  <span class="at">QM_Erro =</span> <span class="fu">c</span>(QME_dbca, QME_dca)</span>
-<span id="cb173-7"><a href="dbca.html#cb173-7" tabindex="-1"></a>)</span>
-<span id="cb173-8"><a href="dbca.html#cb173-8" tabindex="-1"></a></span>
-<span id="cb173-9"><a href="dbca.html#cb173-9" tabindex="-1"></a><span class="fu">ggplot</span>(df_re, <span class="fu">aes</span>(<span class="at">x =</span> Delineamento, <span class="at">y =</span> QM_Erro, <span class="at">fill =</span> Delineamento)) <span class="sc">+</span></span>
-<span id="cb173-10"><a href="dbca.html#cb173-10" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.55</span>) <span class="sc">+</span></span>
-<span id="cb173-11"><a href="dbca.html#cb173-11" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.4f&quot;</span>, QM_Erro)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">4.2</span>) <span class="sc">+</span></span>
-<span id="cb173-12"><a href="dbca.html#cb173-12" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>), <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
-<span id="cb173-13"><a href="dbca.html#cb173-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="fu">expression</span>(QM[Erro]),</span>
-<span id="cb173-14"><a href="dbca.html#cb173-14" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Quadrado médio do erro: DBCA vs. DCA hipotético&quot;</span>) <span class="sc">+</span></span>
-<span id="cb173-15"><a href="dbca.html#cb173-15" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="fu">max</span>(df_re<span class="sc">$</span>QM_Erro) <span class="sc">*</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb173-16"><a href="dbca.html#cb173-16" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="dbca.html#cb175-1" tabindex="-1"></a>QME_dbca <span class="ot">&lt;-</span> MSE</span>
+<span id="cb175-2"><a href="dbca.html#cb175-2" tabindex="-1"></a>QME_dca  <span class="ot">&lt;-</span> (tab[<span class="st">&quot;Residuals&quot;</span>,<span class="st">&quot;Sum Sq&quot;</span>] <span class="sc">+</span> tab[<span class="st">&quot;bloco&quot;</span>,<span class="st">&quot;Sum Sq&quot;</span>]) <span class="sc">/</span> gl_e_dca  <span class="co"># erro + bloco, agrupados</span></span>
+<span id="cb175-3"><a href="dbca.html#cb175-3" tabindex="-1"></a></span>
+<span id="cb175-4"><a href="dbca.html#cb175-4" tabindex="-1"></a>df_re <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb175-5"><a href="dbca.html#cb175-5" tabindex="-1"></a>  <span class="at">Delineamento =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;DBCA&quot;</span>, <span class="st">&quot;DCA (hipotético)&quot;</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;DBCA&quot;</span>, <span class="st">&quot;DCA (hipotético)&quot;</span>)),</span>
+<span id="cb175-6"><a href="dbca.html#cb175-6" tabindex="-1"></a>  <span class="at">QM_Erro =</span> <span class="fu">c</span>(QME_dbca, QME_dca)</span>
+<span id="cb175-7"><a href="dbca.html#cb175-7" tabindex="-1"></a>)</span>
+<span id="cb175-8"><a href="dbca.html#cb175-8" tabindex="-1"></a></span>
+<span id="cb175-9"><a href="dbca.html#cb175-9" tabindex="-1"></a><span class="fu">ggplot</span>(df_re, <span class="fu">aes</span>(<span class="at">x =</span> Delineamento, <span class="at">y =</span> QM_Erro, <span class="at">fill =</span> Delineamento)) <span class="sc">+</span></span>
+<span id="cb175-10"><a href="dbca.html#cb175-10" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.55</span>) <span class="sc">+</span></span>
+<span id="cb175-11"><a href="dbca.html#cb175-11" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.4f&quot;</span>, QM_Erro)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">4.2</span>) <span class="sc">+</span></span>
+<span id="cb175-12"><a href="dbca.html#cb175-12" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#2a78d6&quot;</span>, <span class="st">&quot;#eb6834&quot;</span>), <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb175-13"><a href="dbca.html#cb175-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="fu">expression</span>(QM[Erro]),</span>
+<span id="cb175-14"><a href="dbca.html#cb175-14" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Quadrado médio do erro: DBCA vs. DCA hipotético&quot;</span>) <span class="sc">+</span></span>
+<span id="cb175-15"><a href="dbca.html#cb175-15" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="fu">max</span>(df_re<span class="sc">$</span>QM_Erro) <span class="sc">*</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb175-16"><a href="dbca.html#cb175-16" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
 <p><img src="04-blocos_files/figure-html/dbca-re-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
 <p>O gráfico conta a mesma história que o cálculo de eficiência: o <span class="math inline">\(QM_{Erro}\)</span> do DCA hipotético
 (<span class="math inline">\(0{,}0493\)</span>) é <strong>menor</strong> que o do DBCA (<span class="math inline">\(0{,}0554\)</span>). Isso acontece porque agrupar <span class="math inline">\(SQ_{Bloco}\)</span>
@@ -1289,6 +1291,30 @@ Tukey, J. W. (1949b). One degree of freedom for non-additivity. <em>Biometrics</
 Yates, F. (1936). Incomplete randomized blocks. <em>Annals of Eugenics</em>, <em>7</em>(2), 121–140.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -454,25 +456,25 @@ fármaco, ou concentrações de um insumo — comparar médias par a par desperd
 os níveis têm uma ordem e uma métrica. Nesses casos, é mais informativo perguntar: <em>a resposta
 cresce linearmente com o nível? Há curvatura (efeito quadrático)? A curva se inverte de novo
 (cúbico)?</em> Polinômios ortogonais decompõem <span class="math inline">\(SQ_{\text{Trat}}\)</span> exatamente nesses componentes.</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="polinomios-ortogonais.html#cb129-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
-<span id="cb129-2"><a href="polinomios-ortogonais.html#cb129-2" tabindex="-1"></a>dose_mg <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>)</span>
-<span id="cb129-3"><a href="polinomios-ortogonais.html#cb129-3" tabindex="-1"></a>n_dose  <span class="ot">&lt;-</span> <span class="dv">8</span></span>
-<span id="cb129-4"><a href="polinomios-ortogonais.html#cb129-4" tabindex="-1"></a></span>
-<span id="cb129-5"><a href="polinomios-ortogonais.html#cb129-5" tabindex="-1"></a><span class="co"># covariável: nível basal de atenção (medido ANTES da dose), usado adiante na ANCOVA</span></span>
-<span id="cb129-6"><a href="polinomios-ortogonais.html#cb129-6" tabindex="-1"></a>basal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">5</span> <span class="sc">*</span> n_dose, <span class="at">mean =</span> <span class="dv">60</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb129-7"><a href="polinomios-ortogonais.html#cb129-7" tabindex="-1"></a>dose_f <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(dose_mg, <span class="at">each =</span> n_dose))</span>
-<span id="cb129-8"><a href="polinomios-ortogonais.html#cb129-8" tabindex="-1"></a></span>
-<span id="cb129-9"><a href="polinomios-ortogonais.html#cb129-9" tabindex="-1"></a><span class="co"># efeito verdadeiro tem forma de &quot;U invertido&quot;: atenção sobe com a dose até um</span></span>
-<span id="cb129-10"><a href="polinomios-ortogonais.html#cb129-10" tabindex="-1"></a><span class="co"># ponto e depois cai (excesso de estimulação) -- um caso clássico de curvatura</span></span>
-<span id="cb129-11"><a href="polinomios-ortogonais.html#cb129-11" tabindex="-1"></a>efeito_dose <span class="ot">&lt;-</span> <span class="cf">function</span>(d) <span class="dv">20</span> <span class="sc">+</span> <span class="fl">0.35</span> <span class="sc">*</span> d <span class="sc">-</span> <span class="fl">0.0013</span> <span class="sc">*</span> d<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb129-12"><a href="polinomios-ortogonais.html#cb129-12" tabindex="-1"></a></span>
-<span id="cb129-13"><a href="polinomios-ortogonais.html#cb129-13" tabindex="-1"></a>cafeina <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb129-14"><a href="polinomios-ortogonais.html#cb129-14" tabindex="-1"></a>  <span class="at">participante =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">5</span> <span class="sc">*</span> n_dose),</span>
-<span id="cb129-15"><a href="polinomios-ortogonais.html#cb129-15" tabindex="-1"></a>  <span class="at">dose         =</span> dose_f,</span>
-<span id="cb129-16"><a href="polinomios-ortogonais.html#cb129-16" tabindex="-1"></a>  <span class="at">basal        =</span> basal,</span>
-<span id="cb129-17"><a href="polinomios-ortogonais.html#cb129-17" tabindex="-1"></a>  <span class="at">atencao_pos  =</span> <span class="dv">40</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> basal <span class="sc">+</span> <span class="fu">efeito_dose</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(dose_f))) <span class="sc">+</span></span>
-<span id="cb129-18"><a href="polinomios-ortogonais.html#cb129-18" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">5</span> <span class="sc">*</span> n_dose, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
-<span id="cb129-19"><a href="polinomios-ortogonais.html#cb129-19" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="polinomios-ortogonais.html#cb131-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb131-2"><a href="polinomios-ortogonais.html#cb131-2" tabindex="-1"></a>dose_mg <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>)</span>
+<span id="cb131-3"><a href="polinomios-ortogonais.html#cb131-3" tabindex="-1"></a>n_dose  <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb131-4"><a href="polinomios-ortogonais.html#cb131-4" tabindex="-1"></a></span>
+<span id="cb131-5"><a href="polinomios-ortogonais.html#cb131-5" tabindex="-1"></a><span class="co"># covariável: nível basal de atenção (medido ANTES da dose), usado adiante na ANCOVA</span></span>
+<span id="cb131-6"><a href="polinomios-ortogonais.html#cb131-6" tabindex="-1"></a>basal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">5</span> <span class="sc">*</span> n_dose, <span class="at">mean =</span> <span class="dv">60</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb131-7"><a href="polinomios-ortogonais.html#cb131-7" tabindex="-1"></a>dose_f <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(dose_mg, <span class="at">each =</span> n_dose))</span>
+<span id="cb131-8"><a href="polinomios-ortogonais.html#cb131-8" tabindex="-1"></a></span>
+<span id="cb131-9"><a href="polinomios-ortogonais.html#cb131-9" tabindex="-1"></a><span class="co"># efeito verdadeiro tem forma de &quot;U invertido&quot;: atenção sobe com a dose até um</span></span>
+<span id="cb131-10"><a href="polinomios-ortogonais.html#cb131-10" tabindex="-1"></a><span class="co"># ponto e depois cai (excesso de estimulação) -- um caso clássico de curvatura</span></span>
+<span id="cb131-11"><a href="polinomios-ortogonais.html#cb131-11" tabindex="-1"></a>efeito_dose <span class="ot">&lt;-</span> <span class="cf">function</span>(d) <span class="dv">20</span> <span class="sc">+</span> <span class="fl">0.35</span> <span class="sc">*</span> d <span class="sc">-</span> <span class="fl">0.0013</span> <span class="sc">*</span> d<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb131-12"><a href="polinomios-ortogonais.html#cb131-12" tabindex="-1"></a></span>
+<span id="cb131-13"><a href="polinomios-ortogonais.html#cb131-13" tabindex="-1"></a>cafeina <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb131-14"><a href="polinomios-ortogonais.html#cb131-14" tabindex="-1"></a>  <span class="at">participante =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">5</span> <span class="sc">*</span> n_dose),</span>
+<span id="cb131-15"><a href="polinomios-ortogonais.html#cb131-15" tabindex="-1"></a>  <span class="at">dose         =</span> dose_f,</span>
+<span id="cb131-16"><a href="polinomios-ortogonais.html#cb131-16" tabindex="-1"></a>  <span class="at">basal        =</span> basal,</span>
+<span id="cb131-17"><a href="polinomios-ortogonais.html#cb131-17" tabindex="-1"></a>  <span class="at">atencao_pos  =</span> <span class="dv">40</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> basal <span class="sc">+</span> <span class="fu">efeito_dose</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(dose_f))) <span class="sc">+</span></span>
+<span id="cb131-18"><a href="polinomios-ortogonais.html#cb131-18" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">5</span> <span class="sc">*</span> n_dose, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb131-19"><a href="polinomios-ortogonais.html#cb131-19" tabindex="-1"></a>)</span></code></pre></div>
 <div class="caixa-aplicacao">
 <strong>Aplicação — Psicologia: dose de cafeína e atenção sustentada</strong><br>
 Um laboratório testa o efeito da cafeína (0, 50, 100, 150 e 200 mg) sobre o desempenho em um
@@ -487,7 +489,7 @@ padrão de coeficientes ortogonais <span class="math inline">\(\lambda_i\)</span
 linear, quadrático, cúbico etc. — com até <span class="math inline">\(t-1\)</span> graus disponíveis para <span class="math inline">\(t\)</span> níveis:</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:c3b-tabela-poly">Tabela 3.14: </span>Coeficientes ortogonais tabulados para <span class="math inline">\(t=5\)</span> níveis igualmente espaçados
+<span id="tab:c3b-tabela-poly">Tabela 3.15: </span>Coeficientes ortogonais tabulados para <span class="math inline">\(t=5\)</span> níveis igualmente espaçados
 </caption>
 <thead>
 <tr>
@@ -624,10 +626,10 @@ covariância entre as estimativas, e <span class="math inline">\(SQ_k\)</span> �
 <a href="contrastes.html#contrastes">3.6</a>, com <span class="math inline">\(\boldsymbol\lambda = \boldsymbol\lambda_k\)</span>. Essa é a razão algébrica — não
 apenas um resultado feliz — de <span class="math inline">\(SQ_{\text{Trat}}\)</span> se decompor sem sobra em <span class="math inline">\(t-1\)</span> somas de
 quadrados de 1 grau de liberdade cada.</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="polinomios-ortogonais.html#cb130-1" tabindex="-1"></a><span class="fu">contrasts</span>(cafeina<span class="sc">$</span>dose) <span class="ot">&lt;-</span> <span class="fu">contr.poly</span>(<span class="dv">5</span>)</span>
-<span id="cb130-2"><a href="polinomios-ortogonais.html#cb130-2" tabindex="-1"></a>X_poly <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(atencao_pos <span class="sc">~</span> dose, <span class="at">data =</span> cafeina)  <span class="co"># 5 colunas: 1, L, Q, C, quártico</span></span>
-<span id="cb130-3"><a href="polinomios-ortogonais.html#cb130-3" tabindex="-1"></a></span>
-<span id="cb130-4"><a href="polinomios-ortogonais.html#cb130-4" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crossprod</span>(X_poly), <span class="dv">3</span>)  <span class="co"># X&#39;X_poly -- diagonal, exatamente como o argumento algébrico prevê</span></span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="polinomios-ortogonais.html#cb132-1" tabindex="-1"></a><span class="fu">contrasts</span>(cafeina<span class="sc">$</span>dose) <span class="ot">&lt;-</span> <span class="fu">contr.poly</span>(<span class="dv">5</span>)</span>
+<span id="cb132-2"><a href="polinomios-ortogonais.html#cb132-2" tabindex="-1"></a>X_poly <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(atencao_pos <span class="sc">~</span> dose, <span class="at">data =</span> cafeina)  <span class="co"># 5 colunas: 1, L, Q, C, quártico</span></span>
+<span id="cb132-3"><a href="polinomios-ortogonais.html#cb132-3" tabindex="-1"></a></span>
+<span id="cb132-4"><a href="polinomios-ortogonais.html#cb132-4" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crossprod</span>(X_poly), <span class="dv">3</span>)  <span class="co"># X&#39;X_poly -- diagonal, exatamente como o argumento algébrico prevê</span></span></code></pre></div>
 <pre><code>##             (Intercept) dose.L dose.Q dose.C dose^4
 ## (Intercept)          40      0      0      0      0
 ## dose.L                0      8      0      0      0
@@ -635,11 +637,11 @@ quadrados de 1 grau de liberdade cada.</p>
 ## dose.C                0      0      0      8      0
 ## dose^4                0      0      0      0      8</code></pre>
 <div class="caixa-r"><strong>Uso do R</strong> — ANOVA com componentes polinomiais</div>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="polinomios-ortogonais.html#cb132-1" tabindex="-1"></a><span class="fu">contrasts</span>(cafeina<span class="sc">$</span>dose) <span class="ot">&lt;-</span> <span class="fu">contr.poly</span>(<span class="dv">5</span>)  <span class="co"># coeficientes ortogonais, dose como fator</span></span>
-<span id="cb132-2"><a href="polinomios-ortogonais.html#cb132-2" tabindex="-1"></a>mod_poly <span class="ot">&lt;-</span> <span class="fu">aov</span>(atencao_pos <span class="sc">~</span> dose, <span class="at">data =</span> cafeina)</span>
-<span id="cb132-3"><a href="polinomios-ortogonais.html#cb132-3" tabindex="-1"></a></span>
-<span id="cb132-4"><a href="polinomios-ortogonais.html#cb132-4" tabindex="-1"></a><span class="fu">summary</span>(mod_poly, <span class="at">split =</span> <span class="fu">list</span>(<span class="at">dose =</span> <span class="fu">list</span>(<span class="at">Linear =</span> <span class="dv">1</span>, <span class="at">Quadratic =</span> <span class="dv">2</span>,</span>
-<span id="cb132-5"><a href="polinomios-ortogonais.html#cb132-5" tabindex="-1"></a>                                            <span class="at">Cubic =</span> <span class="dv">3</span>, <span class="at">Quartic =</span> <span class="dv">4</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="polinomios-ortogonais.html#cb134-1" tabindex="-1"></a><span class="fu">contrasts</span>(cafeina<span class="sc">$</span>dose) <span class="ot">&lt;-</span> <span class="fu">contr.poly</span>(<span class="dv">5</span>)  <span class="co"># coeficientes ortogonais, dose como fator</span></span>
+<span id="cb134-2"><a href="polinomios-ortogonais.html#cb134-2" tabindex="-1"></a>mod_poly <span class="ot">&lt;-</span> <span class="fu">aov</span>(atencao_pos <span class="sc">~</span> dose, <span class="at">data =</span> cafeina)</span>
+<span id="cb134-3"><a href="polinomios-ortogonais.html#cb134-3" tabindex="-1"></a></span>
+<span id="cb134-4"><a href="polinomios-ortogonais.html#cb134-4" tabindex="-1"></a><span class="fu">summary</span>(mod_poly, <span class="at">split =</span> <span class="fu">list</span>(<span class="at">dose =</span> <span class="fu">list</span>(<span class="at">Linear =</span> <span class="dv">1</span>, <span class="at">Quadratic =</span> <span class="dv">2</span>,</span>
+<span id="cb134-5"><a href="polinomios-ortogonais.html#cb134-5" tabindex="-1"></a>                                            <span class="at">Cubic =</span> <span class="dv">3</span>, <span class="at">Quartic =</span> <span class="dv">4</span>)))</span></code></pre></div>
 <pre><code>##                   Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## dose               4   3717   929.2  22.534 2.82e-09 ***
 ##   dose: Linear     1   1089  1089.4  26.419 1.05e-05 ***
@@ -654,8 +656,8 @@ têxtil é medida sob cinco concentrações de algodão igualmente espaçadas �
 “ver” qual grau de polinômio é necessário é ajustar os quatro graus possíveis lado a lado e
 comparar visualmente o quanto cada um se aproxima das cinco médias observadas:</p>
 <p><img src="03-dca_files/figure-html/c3b-plot-poly-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="polinomios-ortogonais.html#cb134-1" tabindex="-1"></a><span class="fu">c</span>(<span class="at">R2_linear =</span> <span class="fu">summary</span>(mod_lin_num)<span class="sc">$</span>r.squared, <span class="at">R2_quadratico =</span> <span class="fu">summary</span>(mod_quad_num)<span class="sc">$</span>r.squared,</span>
-<span id="cb134-2"><a href="polinomios-ortogonais.html#cb134-2" tabindex="-1"></a>  <span class="at">R2_cubico =</span> <span class="fu">summary</span>(mod_cub_num)<span class="sc">$</span>r.squared, <span class="at">R2_quartico =</span> <span class="fu">summary</span>(mod_quart_num)<span class="sc">$</span>r.squared)</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="polinomios-ortogonais.html#cb136-1" tabindex="-1"></a><span class="fu">c</span>(<span class="at">R2_linear =</span> <span class="fu">summary</span>(mod_lin_num)<span class="sc">$</span>r.squared, <span class="at">R2_quadratico =</span> <span class="fu">summary</span>(mod_quad_num)<span class="sc">$</span>r.squared,</span>
+<span id="cb136-2"><a href="polinomios-ortogonais.html#cb136-2" tabindex="-1"></a>  <span class="at">R2_cubico =</span> <span class="fu">summary</span>(mod_cub_num)<span class="sc">$</span>r.squared, <span class="at">R2_quartico =</span> <span class="fu">summary</span>(mod_quart_num)<span class="sc">$</span>r.squared)</span></code></pre></div>
 <pre><code>##     R2_linear R2_quadratico     R2_cubico   R2_quartico 
 ##     0.2111213     0.6656282     0.6711609     0.7203006</code></pre>
 <p>O painel deixa a progressão visível: a reta (canto superior esquerdo) claramente erra por baixo no
@@ -676,6 +678,30 @@ a decomposição polinomial responde à pergunta de forma que o pesquisador real
 quando o fator é uma dose.</p>
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -569,11 +571,11 @@ princípio de subamostragem do Capítulo 1 — infla artificialmente o tamanho a
 erros-padrão anticonservadores, exatamente o mesmo erro de pseudorreplicação identificado naquela
 seção, só que reaparecendo aqui sob um nome de produto diferente.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — poder de um teste A/B para efeitos pequenos</div>
-<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb279-1" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fl">0.10</span></span>
-<span id="cb279-2"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb279-2" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fl">0.103</span>    <span class="co"># lift de 0,3 ponto percentual — típico de um teste de UI em e-commerce</span></span>
-<span id="cb279-3"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb279-3" tabindex="-1"></a></span>
-<span id="cb279-4"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb279-4" tabindex="-1"></a>poder_ab <span class="ot">&lt;-</span> <span class="fu">power.prop.test</span>(<span class="at">p1 =</span> p0, <span class="at">p2 =</span> p1, <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.80</span>)</span>
-<span id="cb279-5"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb279-5" tabindex="-1"></a>poder_ab<span class="sc">$</span>n</span></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-1" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fl">0.10</span></span>
+<span id="cb281-2"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-2" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fl">0.103</span>    <span class="co"># lift de 0,3 ponto percentual — típico de um teste de UI em e-commerce</span></span>
+<span id="cb281-3"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-3" tabindex="-1"></a></span>
+<span id="cb281-4"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-4" tabindex="-1"></a>poder_ab <span class="ot">&lt;-</span> <span class="fu">power.prop.test</span>(<span class="at">p1 =</span> p0, <span class="at">p2 =</span> p1, <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.80</span>)</span>
+<span id="cb281-5"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-5" tabindex="-1"></a>poder_ab<span class="sc">$</span>n</span></code></pre></div>
 <pre><code>## [1] 159065.5</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
@@ -663,42 +665,42 @@ de conversão, <span class="math inline">\(p=0{,}10\)</span>) e compara duas for
 usuários acumulados, até um máximo de 2.000 por grupo, e parar assim que <span class="math inline">\(p&lt;0{,}05\)</span> (“peeking”); e
 (ii) checar uma única vez, ao final dos 2.000 usuários. Sob <span class="math inline">\(H_0\)</span>, ambas deveriam rejeitar cerca de
 <span class="math inline">\(5\%\)</span> das vezes — a pergunta é se de fato rejeitam.</p>
-<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb281-2"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-2" tabindex="-1"></a></span>
-<span id="cb281-3"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-3" tabindex="-1"></a>n_max      <span class="ot">&lt;-</span> <span class="dv">2000</span>                       <span class="co"># tamanho amostral maximo por braco</span></span>
-<span id="cb281-4"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-4" tabindex="-1"></a>checagens  <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">100</span>, n_max, <span class="at">by =</span> <span class="dv">100</span>)  <span class="co"># instantes de checagem (a cada 100 usuarios)</span></span>
-<span id="cb281-5"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-5" tabindex="-1"></a>n_sim      <span class="ot">&lt;-</span> <span class="dv">3000</span>                       <span class="co"># replicas Monte Carlo</span></span>
-<span id="cb281-6"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-6" tabindex="-1"></a>alpha      <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb281-7"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-7" tabindex="-1"></a>p_H0       <span class="ot">&lt;-</span> <span class="fl">0.10</span>                       <span class="co"># mesma taxa de conversao nos dois bracos (H0 verdadeira)</span></span>
-<span id="cb281-8"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-8" tabindex="-1"></a></span>
-<span id="cb281-9"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-9" tabindex="-1"></a>simula_uma_replica <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb281-10"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-10" tabindex="-1"></a>  grupo_a <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_max, <span class="dv">1</span>, p_H0)</span>
-<span id="cb281-11"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-11" tabindex="-1"></a>  grupo_b <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_max, <span class="dv">1</span>, p_H0)</span>
-<span id="cb281-12"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-12" tabindex="-1"></a></span>
-<span id="cb281-13"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-13" tabindex="-1"></a>  rejeitou_com_peeking <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb281-14"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-14" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> checagens) {</span>
-<span id="cb281-15"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-15" tabindex="-1"></a>    xa <span class="ot">&lt;-</span> <span class="fu">sum</span>(grupo_a[<span class="dv">1</span><span class="sc">:</span>n]); xb <span class="ot">&lt;-</span> <span class="fu">sum</span>(grupo_b[<span class="dv">1</span><span class="sc">:</span>n])</span>
-<span id="cb281-16"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-16" tabindex="-1"></a>    pval <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">prop.test</span>(<span class="fu">c</span>(xa, xb), <span class="fu">c</span>(n, n), <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value)</span>
-<span id="cb281-17"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-17" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(pval) <span class="sc">&amp;&amp;</span> pval <span class="sc">&lt;</span> alpha) { rejeitou_com_peeking <span class="ot">&lt;-</span> <span class="cn">TRUE</span>; <span class="cf">break</span> }</span>
-<span id="cb281-18"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-18" tabindex="-1"></a>  }</span>
-<span id="cb281-19"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-19" tabindex="-1"></a></span>
-<span id="cb281-20"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-20" tabindex="-1"></a>  pval_tamanho_fixo <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(</span>
-<span id="cb281-21"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-21" tabindex="-1"></a>    <span class="fu">prop.test</span>(<span class="fu">c</span>(<span class="fu">sum</span>(grupo_a), <span class="fu">sum</span>(grupo_b)), <span class="fu">c</span>(n_max, n_max), <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
-<span id="cb281-22"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-22" tabindex="-1"></a>  )</span>
-<span id="cb281-23"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-23" tabindex="-1"></a></span>
-<span id="cb281-24"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-24" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">peeking =</span> rejeitou_com_peeking, <span class="at">fixo =</span> pval_tamanho_fixo <span class="sc">&lt;</span> alpha)</span>
-<span id="cb281-25"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-25" tabindex="-1"></a>}</span>
-<span id="cb281-26"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-26" tabindex="-1"></a></span>
-<span id="cb281-27"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-27" tabindex="-1"></a>resultado_peeking <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n_sim, <span class="fu">simula_uma_replica</span>())</span>
-<span id="cb281-28"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-28" tabindex="-1"></a>taxa_peeking <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">as.logical</span>(resultado_peeking[<span class="st">&quot;peeking&quot;</span>, ]))</span>
-<span id="cb281-29"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-29" tabindex="-1"></a>taxa_fixo    <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">as.logical</span>(resultado_peeking[<span class="st">&quot;fixo&quot;</span>, ]))</span>
-<span id="cb281-30"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-30" tabindex="-1"></a></span>
-<span id="cb281-31"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-31" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb281-32"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-32" tabindex="-1"></a>  <span class="at">Procedimento =</span> <span class="fu">c</span>(<span class="st">&quot;Checagem única (n fixo = 2.000)&quot;</span>, <span class="st">&quot;Peeking a cada 100 (até n = 2.000)&quot;</span>),</span>
-<span id="cb281-33"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-33" tabindex="-1"></a>  <span class="st">`</span><span class="at">Taxa de rejeição sob H0</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(taxa_fixo, taxa_peeking)</span>
-<span id="cb281-34"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-34" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb281-35"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-35" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">&quot;Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb281-36"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb281-36" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb283-2"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-2" tabindex="-1"></a></span>
+<span id="cb283-3"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-3" tabindex="-1"></a>n_max      <span class="ot">&lt;-</span> <span class="dv">2000</span>                       <span class="co"># tamanho amostral maximo por braco</span></span>
+<span id="cb283-4"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-4" tabindex="-1"></a>checagens  <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">100</span>, n_max, <span class="at">by =</span> <span class="dv">100</span>)  <span class="co"># instantes de checagem (a cada 100 usuarios)</span></span>
+<span id="cb283-5"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-5" tabindex="-1"></a>n_sim      <span class="ot">&lt;-</span> <span class="dv">3000</span>                       <span class="co"># replicas Monte Carlo</span></span>
+<span id="cb283-6"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-6" tabindex="-1"></a>alpha      <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb283-7"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-7" tabindex="-1"></a>p_H0       <span class="ot">&lt;-</span> <span class="fl">0.10</span>                       <span class="co"># mesma taxa de conversao nos dois bracos (H0 verdadeira)</span></span>
+<span id="cb283-8"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-8" tabindex="-1"></a></span>
+<span id="cb283-9"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-9" tabindex="-1"></a>simula_uma_replica <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb283-10"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-10" tabindex="-1"></a>  grupo_a <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_max, <span class="dv">1</span>, p_H0)</span>
+<span id="cb283-11"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-11" tabindex="-1"></a>  grupo_b <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_max, <span class="dv">1</span>, p_H0)</span>
+<span id="cb283-12"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-12" tabindex="-1"></a></span>
+<span id="cb283-13"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-13" tabindex="-1"></a>  rejeitou_com_peeking <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb283-14"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-14" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> checagens) {</span>
+<span id="cb283-15"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-15" tabindex="-1"></a>    xa <span class="ot">&lt;-</span> <span class="fu">sum</span>(grupo_a[<span class="dv">1</span><span class="sc">:</span>n]); xb <span class="ot">&lt;-</span> <span class="fu">sum</span>(grupo_b[<span class="dv">1</span><span class="sc">:</span>n])</span>
+<span id="cb283-16"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-16" tabindex="-1"></a>    pval <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">prop.test</span>(<span class="fu">c</span>(xa, xb), <span class="fu">c</span>(n, n), <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value)</span>
+<span id="cb283-17"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-17" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(pval) <span class="sc">&amp;&amp;</span> pval <span class="sc">&lt;</span> alpha) { rejeitou_com_peeking <span class="ot">&lt;-</span> <span class="cn">TRUE</span>; <span class="cf">break</span> }</span>
+<span id="cb283-18"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-18" tabindex="-1"></a>  }</span>
+<span id="cb283-19"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-19" tabindex="-1"></a></span>
+<span id="cb283-20"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-20" tabindex="-1"></a>  pval_tamanho_fixo <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(</span>
+<span id="cb283-21"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-21" tabindex="-1"></a>    <span class="fu">prop.test</span>(<span class="fu">c</span>(<span class="fu">sum</span>(grupo_a), <span class="fu">sum</span>(grupo_b)), <span class="fu">c</span>(n_max, n_max), <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb283-22"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-22" tabindex="-1"></a>  )</span>
+<span id="cb283-23"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-23" tabindex="-1"></a></span>
+<span id="cb283-24"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-24" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">peeking =</span> rejeitou_com_peeking, <span class="at">fixo =</span> pval_tamanho_fixo <span class="sc">&lt;</span> alpha)</span>
+<span id="cb283-25"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-25" tabindex="-1"></a>}</span>
+<span id="cb283-26"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-26" tabindex="-1"></a></span>
+<span id="cb283-27"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-27" tabindex="-1"></a>resultado_peeking <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n_sim, <span class="fu">simula_uma_replica</span>())</span>
+<span id="cb283-28"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-28" tabindex="-1"></a>taxa_peeking <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">as.logical</span>(resultado_peeking[<span class="st">&quot;peeking&quot;</span>, ]))</span>
+<span id="cb283-29"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-29" tabindex="-1"></a>taxa_fixo    <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">as.logical</span>(resultado_peeking[<span class="st">&quot;fixo&quot;</span>, ]))</span>
+<span id="cb283-30"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-30" tabindex="-1"></a></span>
+<span id="cb283-31"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-31" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb283-32"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-32" tabindex="-1"></a>  <span class="at">Procedimento =</span> <span class="fu">c</span>(<span class="st">&quot;Checagem única (n fixo = 2.000)&quot;</span>, <span class="st">&quot;Peeking a cada 100 (até n = 2.000)&quot;</span>),</span>
+<span id="cb283-33"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-33" tabindex="-1"></a>  <span class="st">`</span><span class="at">Taxa de rejeição sob H0</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(taxa_fixo, taxa_peeking)</span>
+<span id="cb283-34"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-34" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb283-35"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-35" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">&quot;Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb283-36"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb283-36" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ab-peeking-sim">Tabela 8.2: </span>Taxa de falso positivo observada em 3.000 réplicas Monte Carlo sob H0 verdadeira
@@ -767,30 +769,30 @@ só no caso degenerado <span class="math inline">\(\sigma^2=0\)</span>). É o me
 “regressão à média”: medições extremas tendem a ser seguidas por medições mais próximas da média,
 porque parte do que as tornou extremas foi ruído, não sinal persistente.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — simulando o vício do vencedor</div>
-<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb282-2"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-2" tabindex="-1"></a></span>
-<span id="cb282-3"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-3" tabindex="-1"></a>n_variantes    <span class="ot">&lt;-</span> <span class="dv">10</span>    <span class="co"># variantes testadas simultaneamente contra o controle</span></span>
-<span id="cb282-4"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-4" tabindex="-1"></a>n_por_variante <span class="ot">&lt;-</span> <span class="dv">500</span>   <span class="co"># usuarios por variante</span></span>
-<span id="cb282-5"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-5" tabindex="-1"></a>efeito_real    <span class="ot">&lt;-</span> <span class="dv">0</span>     <span class="co"># todas as variantes tem, de fato, o MESMO efeito verdadeiro</span></span>
-<span id="cb282-6"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-6" tabindex="-1"></a>sigma          <span class="ot">&lt;-</span> <span class="dv">1</span>     <span class="co"># desvio-padrao da metrica (escala padronizada)</span></span>
-<span id="cb282-7"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-7" tabindex="-1"></a>n_sim          <span class="ot">&lt;-</span> <span class="dv">5000</span>  <span class="co"># replicas Monte Carlo</span></span>
-<span id="cb282-8"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-8" tabindex="-1"></a></span>
-<span id="cb282-9"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-9" tabindex="-1"></a>simula_vencedora <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb282-10"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-10" tabindex="-1"></a>  estimativas <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n_variantes, <span class="at">mean =</span> efeito_real, <span class="at">sd =</span> sigma <span class="sc">/</span> <span class="fu">sqrt</span>(n_por_variante))</span>
-<span id="cb282-11"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-11" tabindex="-1"></a>  estimativas[<span class="fu">which.max</span>(estimativas)]</span>
-<span id="cb282-12"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-12" tabindex="-1"></a>}</span>
-<span id="cb282-13"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-13" tabindex="-1"></a></span>
-<span id="cb282-14"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-14" tabindex="-1"></a>estimativas_vencedoras <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n_sim, <span class="fu">simula_vencedora</span>())</span>
-<span id="cb282-15"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-15" tabindex="-1"></a>vies_vencedor <span class="ot">&lt;-</span> <span class="fu">mean</span>(estimativas_vencedoras) <span class="sc">-</span> efeito_real</span>
-<span id="cb282-16"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-16" tabindex="-1"></a></span>
-<span id="cb282-17"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-17" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb282-18"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-18" tabindex="-1"></a>  <span class="at">Quantidade =</span> <span class="fu">c</span>(<span class="st">&quot;Efeito verdadeiro (idêntico em todas as variantes)&quot;</span>,</span>
-<span id="cb282-19"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-19" tabindex="-1"></a>                 <span class="st">&quot;Média das estimativas da variante vencedora (5.000 réplicas)&quot;</span>,</span>
-<span id="cb282-20"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-20" tabindex="-1"></a>                 <span class="st">&quot;Vício do vencedor&quot;</span>),</span>
-<span id="cb282-21"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-21" tabindex="-1"></a>  <span class="at">Valor =</span> <span class="fu">c</span>(efeito_real, <span class="fu">mean</span>(estimativas_vencedoras), vies_vencedor)</span>
-<span id="cb282-22"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-22" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb282-23"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-23" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb282-24"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb282-24" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb284-2"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-2" tabindex="-1"></a></span>
+<span id="cb284-3"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-3" tabindex="-1"></a>n_variantes    <span class="ot">&lt;-</span> <span class="dv">10</span>    <span class="co"># variantes testadas simultaneamente contra o controle</span></span>
+<span id="cb284-4"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-4" tabindex="-1"></a>n_por_variante <span class="ot">&lt;-</span> <span class="dv">500</span>   <span class="co"># usuarios por variante</span></span>
+<span id="cb284-5"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-5" tabindex="-1"></a>efeito_real    <span class="ot">&lt;-</span> <span class="dv">0</span>     <span class="co"># todas as variantes tem, de fato, o MESMO efeito verdadeiro</span></span>
+<span id="cb284-6"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-6" tabindex="-1"></a>sigma          <span class="ot">&lt;-</span> <span class="dv">1</span>     <span class="co"># desvio-padrao da metrica (escala padronizada)</span></span>
+<span id="cb284-7"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-7" tabindex="-1"></a>n_sim          <span class="ot">&lt;-</span> <span class="dv">5000</span>  <span class="co"># replicas Monte Carlo</span></span>
+<span id="cb284-8"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-8" tabindex="-1"></a></span>
+<span id="cb284-9"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-9" tabindex="-1"></a>simula_vencedora <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb284-10"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-10" tabindex="-1"></a>  estimativas <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n_variantes, <span class="at">mean =</span> efeito_real, <span class="at">sd =</span> sigma <span class="sc">/</span> <span class="fu">sqrt</span>(n_por_variante))</span>
+<span id="cb284-11"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-11" tabindex="-1"></a>  estimativas[<span class="fu">which.max</span>(estimativas)]</span>
+<span id="cb284-12"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-12" tabindex="-1"></a>}</span>
+<span id="cb284-13"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-13" tabindex="-1"></a></span>
+<span id="cb284-14"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-14" tabindex="-1"></a>estimativas_vencedoras <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n_sim, <span class="fu">simula_vencedora</span>())</span>
+<span id="cb284-15"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-15" tabindex="-1"></a>vies_vencedor <span class="ot">&lt;-</span> <span class="fu">mean</span>(estimativas_vencedoras) <span class="sc">-</span> efeito_real</span>
+<span id="cb284-16"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-16" tabindex="-1"></a></span>
+<span id="cb284-17"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-17" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb284-18"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-18" tabindex="-1"></a>  <span class="at">Quantidade =</span> <span class="fu">c</span>(<span class="st">&quot;Efeito verdadeiro (idêntico em todas as variantes)&quot;</span>,</span>
+<span id="cb284-19"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-19" tabindex="-1"></a>                 <span class="st">&quot;Média das estimativas da variante vencedora (5.000 réplicas)&quot;</span>,</span>
+<span id="cb284-20"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-20" tabindex="-1"></a>                 <span class="st">&quot;Vício do vencedor&quot;</span>),</span>
+<span id="cb284-21"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-21" tabindex="-1"></a>  <span class="at">Valor =</span> <span class="fu">c</span>(efeito_real, <span class="fu">mean</span>(estimativas_vencedoras), vies_vencedor)</span>
+<span id="cb284-22"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-22" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb284-23"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-23" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb284-24"><a href="parte-i-testes-ab-como-delineamento-completamente-aleatorizado.html#cb284-24" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ab-winners-curse-sim">Tabela 8.3: </span>Vício do vencedor: efeito estimado da melhor entre 10 variantes idênticas
@@ -882,6 +884,30 @@ Kohavi, R., Tang, D., &amp; Xu, Y. (2020). <em>Trustworthy online controlled exp
 Wald, A. (1945). Sequential tests of statistical hypotheses. <em>The Annals of Mathematical Statistics</em>, <em>16</em>(2), 117–186.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

@@ -20,7 +20,10 @@ decks <- if (length(args)) args else sort(Sys.glob("Aulas2026/MATD48-*.html"))
 b <- ChromoteSession$new()
 b$Emulation$setDeviceMetricsOverride(width = 1200, height = 900,
                                      deviceScaleFactor = 1, mobile = FALSE)
-padrao <- "\\\\\\\\(mathbf|mathrm|frac|sum|hat|bar|boldsymbol|underbrace|begin|text|sigma|beta|alpha|tau|varepsilon|quad|cdot|times|le|ge|neq|approx|prec)"
+# A regex vai para dentro de um literal JS /.../. O conteudo da string R precisa ter DUAS
+# barras (\\ no JS = uma barra invertida literal no texto). Com quatro barras de conteudo
+# (versao anterior, 8 no fonte) a regex so casava "\\mathbf" duplo e nunca achava nada.
+padrao <- "\\\\(mathbf|mathrm|frac|sum|hat|bar|boldsymbol|underbrace|begin|text|sigma|beta|alpha|tau|varepsilon|quad|cdot|times|le|ge|neq|approx|prec)"
 achados <- list()
 for (d in decks) {
   b$Page$navigate(paste0("file://", normalizePath(d)))

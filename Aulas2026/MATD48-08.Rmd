@@ -130,8 +130,13 @@ $$H = \frac{12}{N(N+1)} \sum_{i=1}^t \frac{R_i^2}{n_i} - 3(N+1) \ \overset{\cdot
 
 --
 
-Um "ANOVA sobre os postos": robusto a outliers e assimetria, ao custo de menor poder quando a
-normalidade de fato se sustenta.
+Forma equivalente, que mostra o que $H$ mede: com $\bar R_i=R_i/n_i$ o posto médio do grupo $i$,
+
+$$H=\frac{12}{N(N+1)}\sum_{i=1}^t n_i\Big(\bar R_i-\frac{N+1}{2}\Big)^2 .$$
+
+Sob $H_0$ todo grupo tem posto médio perto de $(N+1)/2$, o posto médio geral. $H$ é a $SQ_{\text{Trat}}$
+da Aula 04 calculada **sobre os postos**, padronizada: um "ANOVA sobre os postos", robusto a
+outliers e assimetria, ao custo de menor poder quando a normalidade de fato se sustenta.
 
 ---
 
@@ -158,6 +163,7 @@ cafeina <- tibble(
   atencao_pos = 40 + 0.5 * basal + efeito_dose(as.numeric(as.character(dose_f))) +
     rnorm(40, 0, 5)
 )
+head(cafeina, 3)    # uma linha por participante: tratamento, covariável, resposta
 ```
 
 ---
@@ -195,8 +201,28 @@ anova(mod_ancova)                 # SQ sequencial: covariável entra primeiro
 emmeans(mod_ancova, ~ dose)       # médias de dose já ajustadas para o basal médio
 ```
 
-`basal` é altamente significativo, e o `QME` (Residuals) cai em relação à ANOVA sem covariável
-da Aula 07 — a comparação entre doses ficou mais precisa.
+`basal` é altamente significativo, e o `QME` (Residuals) cai de
+`r round(anova(lm(atencao_pos ~ dose, data = cafeina))[2, 3], 1)` (ANOVA sem covariável, Aula 07)
+para `r round(anova(mod_ancova)[3, 3], 1)`: a comparação entre doses ficou mais precisa.
+
+---
+
+## Médias ajustadas, em números
+
+```{r medias-ajustadas-08, echo=FALSE}
+b_hat <- coef(mod_ancova)[["basal"]]
+cafeina %>% group_by(dose) %>%
+  summarise(`média bruta` = mean(atencao_pos), `basal médio` = mean(basal), .groups = "drop") %>%
+  mutate(`correção` = -b_hat * (`basal médio` - mean(cafeina$basal)),
+         `média ajustada` = `média bruta` + `correção`) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 1))) %>%
+  kable(format = "html") %>% kable_styling(font_size = 17, full_width = FALSE)
+```
+
+Com $\hat\beta=`r round(b_hat, 2)`$: o grupo de 50 mg calhou de receber participantes com atenção
+basal **alta** (o sorteio equilibra só em média). Parte da sua média bruta vem disso, não da dose,
+e a fórmula $\bar y_{i\cdot}-\hat\beta(\bar x_{i\cdot}-\bar x_{\cdot\cdot})$ desconta essa parte.
+Depois do ajuste, o grupo de 50 mg desce e o de 150 mg fica claramente no topo.
 
 ---
 
@@ -250,7 +276,7 @@ coef(lm(atencao_med ~ dose_num + ansiedade_pos))        # "ajustado" pelo mediad
 
 --
 
-O efeito de `dose_num` **desaparece** (e quase inverte de sinal) no segundo modelo — não porque a
+O efeito de `dose_num` **vai praticamente a zero** (e até troca de sinal) no segundo modelo — não porque a
 dose deixou de importar, mas porque ansiedade **é** o canal pelo qual ela age: condicionar num
 mediador bloqueia justamente o caminho causal que queremos medir. A régua simples da Aula 1
 continua valendo: **covariável de ANCOVA tem que vir de antes do sorteio do tratamento**, sem
@@ -409,7 +435,8 @@ pede: com respostas discretas, ignorar empates entrega um teste conservador dema
 - ANCOVA incorpora uma covariável contínua medida antes do tratamento, ajustando as médias e
   reduzindo o erro experimental — sempre checando primeiro a homogeneidade das inclinações.
 - A tabela de ANCOVA usa soma de quadrados sequencial: covariável primeiro, tratamento depois.
-- Kruskal-Wallis testa igualdade de distribuições usando postos, sem supor normalidade — a
+  A média ajustada desconta o que cada grupo deve ao seu valor médio de covariável.
+- Kruskal-Wallis ($H$ = dispersão dos postos médios dos grupos) testa igualdade de distribuições, sem supor normalidade — a
   alternativa quando os pressupostos da ANOVA falham e transformações não bastam.
 - Com isso, encerramos o Capítulo 3 (DCA). Próximo bloco de aulas: delineamentos com **blocos**.
 

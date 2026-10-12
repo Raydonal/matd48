@@ -62,9 +62,7 @@ Especialmente natural quando **bloco = sujeito** em medidas repetidas.
 Dentro de cada bloco $j$, atribua postos $1,\dots,t$ às $t$ respostas. Sejam
 $R_i=\sum_j \text{posto}(Y_{ij})$ as somas de posto por tratamento.
 
-$$
-F_r = \frac{12}{bt(t+1)}\sum_{i=1}^t R_i^2 - 3b(t+1)
-$$
+$$F_r = \frac{12}{bt(t+1)}\sum_{i=1}^t R_i^2 - 3b(t+1)$$
 
 Sob $H_0$, $F_r \overset{aprox}{\sim} \chi^2_{t-1}$.
 
@@ -98,9 +96,7 @@ para $t$ e $k$ pequenos estão catalogadas desde os primeiros manuais de delinea
 $t$ tratamentos, $b$ blocos, $r$ = repetições por tratamento, $k$ = tamanho do bloco,
 $\lambda$ = coocorrências por par:
 
-$$
-bk = tr \qquad \lambda(t-1) = r(k-1)
-$$
+$$bk = tr \qquad \lambda(t-1) = r(k-1)$$
 
 Essas identidades servem como **checagem de consistência** de qualquer arranjo proposto — se elas
 falham, o arranjo não é um BIB válido. A análise de variância de um BIB, com a soma de quadrados

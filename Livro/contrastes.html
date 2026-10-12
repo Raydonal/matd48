@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -467,32 +469,32 @@ emergir, de forma natural e não como artefato técnico do procedimento estatís
 comparações múltiplas da próxima seção: cada ATE testado isoladamente carrega seu próprio risco
 de falso positivo, e responder “algum desses efeitos é diferente de zero?” exige um controle de
 erro que leve todos eles em conta simultaneamente.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="contrastes.html#cb110-1" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
-<span id="cb110-2"><a href="contrastes.html#cb110-2" tabindex="-1"></a>  <span class="fu">library</span>(tidyverse)</span>
-<span id="cb110-3"><a href="contrastes.html#cb110-3" tabindex="-1"></a>  <span class="fu">library</span>(kableExtra)</span>
-<span id="cb110-4"><a href="contrastes.html#cb110-4" tabindex="-1"></a>  <span class="fu">library</span>(broom)</span>
-<span id="cb110-5"><a href="contrastes.html#cb110-5" tabindex="-1"></a>  <span class="fu">library</span>(emmeans)</span>
-<span id="cb110-6"><a href="contrastes.html#cb110-6" tabindex="-1"></a>  <span class="fu">library</span>(multcomp)</span>
-<span id="cb110-7"><a href="contrastes.html#cb110-7" tabindex="-1"></a>  <span class="fu">library</span>(car)</span>
-<span id="cb110-8"><a href="contrastes.html#cb110-8" tabindex="-1"></a>  <span class="fu">library</span>(agricolae)</span>
-<span id="cb110-9"><a href="contrastes.html#cb110-9" tabindex="-1"></a>})</span>
-<span id="cb110-10"><a href="contrastes.html#cb110-10" tabindex="-1"></a></span>
-<span id="cb110-11"><a href="contrastes.html#cb110-11" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb110-12"><a href="contrastes.html#cb110-12" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhum&quot;</span>, <span class="st">&quot;Analytics&quot;</span>, <span class="st">&quot;Anúncios&quot;</span>, <span class="st">&quot;Combo&quot;</span>)</span>
-<span id="cb110-13"><a href="contrastes.html#cb110-13" tabindex="-1"></a>n_por_grupo <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb110-14"><a href="contrastes.html#cb110-14" tabindex="-1"></a></span>
-<span id="cb110-15"><a href="contrastes.html#cb110-15" tabindex="-1"></a><span class="co"># efeito verdadeiro (ms) de cada configuração de scripts de terceiros sobre o</span></span>
-<span id="cb110-16"><a href="contrastes.html#cb110-16" tabindex="-1"></a><span class="co"># tempo de carregamento da página, em relação à configuração &quot;Nenhum&quot; (controle)</span></span>
-<span id="cb110-17"><a href="contrastes.html#cb110-17" tabindex="-1"></a>efeito_config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span> <span class="dv">60</span>, Anúncios <span class="ot">=</span> <span class="dv">140</span>, <span class="at">Combo =</span> <span class="dv">210</span>)</span>
-<span id="cb110-18"><a href="contrastes.html#cb110-18" tabindex="-1"></a></span>
-<span id="cb110-19"><a href="contrastes.html#cb110-19" tabindex="-1"></a>dados_scripts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb110-20"><a href="contrastes.html#cb110-20" tabindex="-1"></a>  <span class="at">pagina   =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo),</span>
-<span id="cb110-21"><a href="contrastes.html#cb110-21" tabindex="-1"></a>  <span class="at">config   =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(config, <span class="at">each =</span> n_por_grupo), <span class="at">levels =</span> config),</span>
-<span id="cb110-22"><a href="contrastes.html#cb110-22" tabindex="-1"></a>  <span class="at">tempo_ms =</span> <span class="dv">900</span> <span class="sc">+</span> efeito_config[<span class="fu">as.character</span>(config)] <span class="sc">+</span></span>
-<span id="cb110-23"><a href="contrastes.html#cb110-23" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">70</span>)</span>
-<span id="cb110-24"><a href="contrastes.html#cb110-24" tabindex="-1"></a>)</span>
-<span id="cb110-25"><a href="contrastes.html#cb110-25" tabindex="-1"></a></span>
-<span id="cb110-26"><a href="contrastes.html#cb110-26" tabindex="-1"></a>mod_scripts <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo_ms <span class="sc">~</span> config, <span class="at">data =</span> dados_scripts)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="contrastes.html#cb112-1" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb112-2"><a href="contrastes.html#cb112-2" tabindex="-1"></a>  <span class="fu">library</span>(tidyverse)</span>
+<span id="cb112-3"><a href="contrastes.html#cb112-3" tabindex="-1"></a>  <span class="fu">library</span>(kableExtra)</span>
+<span id="cb112-4"><a href="contrastes.html#cb112-4" tabindex="-1"></a>  <span class="fu">library</span>(broom)</span>
+<span id="cb112-5"><a href="contrastes.html#cb112-5" tabindex="-1"></a>  <span class="fu">library</span>(emmeans)</span>
+<span id="cb112-6"><a href="contrastes.html#cb112-6" tabindex="-1"></a>  <span class="fu">library</span>(multcomp)</span>
+<span id="cb112-7"><a href="contrastes.html#cb112-7" tabindex="-1"></a>  <span class="fu">library</span>(car)</span>
+<span id="cb112-8"><a href="contrastes.html#cb112-8" tabindex="-1"></a>  <span class="fu">library</span>(agricolae)</span>
+<span id="cb112-9"><a href="contrastes.html#cb112-9" tabindex="-1"></a>})</span>
+<span id="cb112-10"><a href="contrastes.html#cb112-10" tabindex="-1"></a></span>
+<span id="cb112-11"><a href="contrastes.html#cb112-11" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb112-12"><a href="contrastes.html#cb112-12" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhum&quot;</span>, <span class="st">&quot;Analytics&quot;</span>, <span class="st">&quot;Anúncios&quot;</span>, <span class="st">&quot;Combo&quot;</span>)</span>
+<span id="cb112-13"><a href="contrastes.html#cb112-13" tabindex="-1"></a>n_por_grupo <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb112-14"><a href="contrastes.html#cb112-14" tabindex="-1"></a></span>
+<span id="cb112-15"><a href="contrastes.html#cb112-15" tabindex="-1"></a><span class="co"># efeito verdadeiro (ms) de cada configuração de scripts de terceiros sobre o</span></span>
+<span id="cb112-16"><a href="contrastes.html#cb112-16" tabindex="-1"></a><span class="co"># tempo de carregamento da página, em relação à configuração &quot;Nenhum&quot; (controle)</span></span>
+<span id="cb112-17"><a href="contrastes.html#cb112-17" tabindex="-1"></a>efeito_config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span> <span class="dv">60</span>, Anúncios <span class="ot">=</span> <span class="dv">140</span>, <span class="at">Combo =</span> <span class="dv">210</span>)</span>
+<span id="cb112-18"><a href="contrastes.html#cb112-18" tabindex="-1"></a></span>
+<span id="cb112-19"><a href="contrastes.html#cb112-19" tabindex="-1"></a>dados_scripts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb112-20"><a href="contrastes.html#cb112-20" tabindex="-1"></a>  <span class="at">pagina   =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo),</span>
+<span id="cb112-21"><a href="contrastes.html#cb112-21" tabindex="-1"></a>  <span class="at">config   =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(config, <span class="at">each =</span> n_por_grupo), <span class="at">levels =</span> config),</span>
+<span id="cb112-22"><a href="contrastes.html#cb112-22" tabindex="-1"></a>  <span class="at">tempo_ms =</span> <span class="dv">900</span> <span class="sc">+</span> efeito_config[<span class="fu">as.character</span>(config)] <span class="sc">+</span></span>
+<span id="cb112-23"><a href="contrastes.html#cb112-23" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">70</span>)</span>
+<span id="cb112-24"><a href="contrastes.html#cb112-24" tabindex="-1"></a>)</span>
+<span id="cb112-25"><a href="contrastes.html#cb112-25" tabindex="-1"></a></span>
+<span id="cb112-26"><a href="contrastes.html#cb112-26" tabindex="-1"></a>mod_scripts <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo_ms <span class="sc">~</span> config, <span class="at">data =</span> dados_scripts)</span></code></pre></div>
 <div class="caixa-aplicacao">
 <strong>Aplicação — Ciência de dados: scripts de terceiros e tempo de carregamento</strong><br>
 Uma equipe de engenharia web quer comparar quatro configurações de uma página de produto quanto
@@ -503,7 +505,7 @@ ao tempo de carregamento: <strong>Nenhum</strong> script de terceiros (controle)
 </div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:c3b-scripts-tab">Tabela 3.12: </span>Tempo de carregamento (ms) por configuração de scripts
+<span id="tab:c3b-scripts-tab">Tabela 3.13: </span>Tempo de carregamento (ms) por configuração de scripts
 </caption>
 <thead>
 <tr>
@@ -668,7 +670,7 @@ em perguntas específicas, planejadas antes da coleta de dados.</p>
 ortogonais planejados a priori poderia ser:</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:c3b-contrastes-tab">Tabela 3.13: </span>Um conjunto de 3 contrastes ortogonais (3 graus de liberdade = <span class="math inline">\(gl_{Trat}\)</span>)
+<span id="tab:c3b-contrastes-tab">Tabela 3.14: </span>Um conjunto de 3 contrastes ortogonais (3 graus de liberdade = <span class="math inline">\(gl_{Trat}\)</span>)
 </caption>
 <thead>
 <tr>
@@ -744,36 +746,36 @@ Combo
 </tbody>
 </table>
 <div class="caixa-r"><strong>Uso do R</strong> — calculando contrastes e verificando a partição de $SQ_{Trat}$</div>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="contrastes.html#cb111-1" tabindex="-1"></a>medias  <span class="ot">&lt;-</span> <span class="fu">with</span>(dados_scripts, <span class="fu">tapply</span>(tempo_ms, config, mean))</span>
-<span id="cb111-2"><a href="contrastes.html#cb111-2" tabindex="-1"></a>ns      <span class="ot">&lt;-</span> <span class="fu">with</span>(dados_scripts, <span class="fu">tapply</span>(tempo_ms, config, length))</span>
-<span id="cb111-3"><a href="contrastes.html#cb111-3" tabindex="-1"></a>qme     <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
-<span id="cb111-4"><a href="contrastes.html#cb111-4" tabindex="-1"></a>gl_erro <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
-<span id="cb111-5"><a href="contrastes.html#cb111-5" tabindex="-1"></a></span>
-<span id="cb111-6"><a href="contrastes.html#cb111-6" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb111-7"><a href="contrastes.html#cb111-7" tabindex="-1"></a>  <span class="at">L1 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">3</span>, <span class="at">Analytics =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb111-8"><a href="contrastes.html#cb111-8" tabindex="-1"></a>  <span class="at">L2 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">2</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb111-9"><a href="contrastes.html#cb111-9" tabindex="-1"></a>  <span class="at">L3 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">0</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span>  <span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb111-10"><a href="contrastes.html#cb111-10" tabindex="-1"></a>)</span>
-<span id="cb111-11"><a href="contrastes.html#cb111-11" tabindex="-1"></a></span>
-<span id="cb111-12"><a href="contrastes.html#cb111-12" tabindex="-1"></a>resultado_contrastes <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">names</span>(coefs), <span class="cf">function</span>(nm) {</span>
-<span id="cb111-13"><a href="contrastes.html#cb111-13" tabindex="-1"></a>  cc   <span class="ot">&lt;-</span> coefs[[nm]][<span class="fu">names</span>(medias)]</span>
-<span id="cb111-14"><a href="contrastes.html#cb111-14" tabindex="-1"></a>  Lhat <span class="ot">&lt;-</span> <span class="fu">sum</span>(cc <span class="sc">*</span> medias)</span>
-<span id="cb111-15"><a href="contrastes.html#cb111-15" tabindex="-1"></a>  SQ   <span class="ot">&lt;-</span> Lhat<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(cc<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> ns)</span>
-<span id="cb111-16"><a href="contrastes.html#cb111-16" tabindex="-1"></a>  Fval <span class="ot">&lt;-</span> SQ <span class="sc">/</span> qme</span>
-<span id="cb111-17"><a href="contrastes.html#cb111-17" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">contraste =</span> nm, <span class="at">L_hat =</span> Lhat, <span class="at">SQ =</span> SQ, <span class="at">F =</span> Fval,</span>
-<span id="cb111-18"><a href="contrastes.html#cb111-18" tabindex="-1"></a>         <span class="at">p_valor =</span> <span class="fu">pf</span>(Fval, <span class="dv">1</span>, gl_erro, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb111-19"><a href="contrastes.html#cb111-19" tabindex="-1"></a>})</span>
-<span id="cb111-20"><a href="contrastes.html#cb111-20" tabindex="-1"></a>resultado_contrastes</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="contrastes.html#cb113-1" tabindex="-1"></a>medias  <span class="ot">&lt;-</span> <span class="fu">with</span>(dados_scripts, <span class="fu">tapply</span>(tempo_ms, config, mean))</span>
+<span id="cb113-2"><a href="contrastes.html#cb113-2" tabindex="-1"></a>ns      <span class="ot">&lt;-</span> <span class="fu">with</span>(dados_scripts, <span class="fu">tapply</span>(tempo_ms, config, length))</span>
+<span id="cb113-3"><a href="contrastes.html#cb113-3" tabindex="-1"></a>qme     <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
+<span id="cb113-4"><a href="contrastes.html#cb113-4" tabindex="-1"></a>gl_erro <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
+<span id="cb113-5"><a href="contrastes.html#cb113-5" tabindex="-1"></a></span>
+<span id="cb113-6"><a href="contrastes.html#cb113-6" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb113-7"><a href="contrastes.html#cb113-7" tabindex="-1"></a>  <span class="at">L1 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">3</span>, <span class="at">Analytics =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb113-8"><a href="contrastes.html#cb113-8" tabindex="-1"></a>  <span class="at">L2 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">2</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb113-9"><a href="contrastes.html#cb113-9" tabindex="-1"></a>  <span class="at">L3 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">0</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span>  <span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb113-10"><a href="contrastes.html#cb113-10" tabindex="-1"></a>)</span>
+<span id="cb113-11"><a href="contrastes.html#cb113-11" tabindex="-1"></a></span>
+<span id="cb113-12"><a href="contrastes.html#cb113-12" tabindex="-1"></a>resultado_contrastes <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">names</span>(coefs), <span class="cf">function</span>(nm) {</span>
+<span id="cb113-13"><a href="contrastes.html#cb113-13" tabindex="-1"></a>  cc   <span class="ot">&lt;-</span> coefs[[nm]][<span class="fu">names</span>(medias)]</span>
+<span id="cb113-14"><a href="contrastes.html#cb113-14" tabindex="-1"></a>  Lhat <span class="ot">&lt;-</span> <span class="fu">sum</span>(cc <span class="sc">*</span> medias)</span>
+<span id="cb113-15"><a href="contrastes.html#cb113-15" tabindex="-1"></a>  SQ   <span class="ot">&lt;-</span> Lhat<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(cc<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> ns)</span>
+<span id="cb113-16"><a href="contrastes.html#cb113-16" tabindex="-1"></a>  Fval <span class="ot">&lt;-</span> SQ <span class="sc">/</span> qme</span>
+<span id="cb113-17"><a href="contrastes.html#cb113-17" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">contraste =</span> nm, <span class="at">L_hat =</span> Lhat, <span class="at">SQ =</span> SQ, <span class="at">F =</span> Fval,</span>
+<span id="cb113-18"><a href="contrastes.html#cb113-18" tabindex="-1"></a>         <span class="at">p_valor =</span> <span class="fu">pf</span>(Fval, <span class="dv">1</span>, gl_erro, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb113-19"><a href="contrastes.html#cb113-19" tabindex="-1"></a>})</span>
+<span id="cb113-20"><a href="contrastes.html#cb113-20" tabindex="-1"></a>resultado_contrastes</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 5
 ##   contraste  L_hat      SQ     F       p_valor
 ##   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;
 ## 1 L1        -561.  262161. 60.3  0.00000000333
 ## 2 L2        -302.  152438. 35.1  0.000000883  
 ## 3 L3         -33.7   5691.  1.31 0.260</code></pre>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="contrastes.html#cb113-1" tabindex="-1"></a><span class="co"># verificação: a soma das SQ dos 3 contrastes ortogonais reproduz SQ_Trat da ANOVA</span></span>
-<span id="cb113-2"><a href="contrastes.html#cb113-2" tabindex="-1"></a><span class="fu">sum</span>(resultado_contrastes<span class="sc">$</span>SQ)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="contrastes.html#cb115-1" tabindex="-1"></a><span class="co"># verificação: a soma das SQ dos 3 contrastes ortogonais reproduz SQ_Trat da ANOVA</span></span>
+<span id="cb115-2"><a href="contrastes.html#cb115-2" tabindex="-1"></a><span class="fu">sum</span>(resultado_contrastes<span class="sc">$</span>SQ)</span></code></pre></div>
 <pre><code>## [1] 420290.4</code></pre>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="contrastes.html#cb115-1" tabindex="-1"></a><span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;config&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="contrastes.html#cb117-1" tabindex="-1"></a><span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;config&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]</span></code></pre></div>
 <pre><code>## [1] 420290.4</code></pre>
 <p>A soma das três somas de quadrados dos contrastes reproduz exatamente a soma de quadrados de
 tratamento da ANOVA — confirmando a partição. Os contrastes <span class="math inline">\(L_1\)</span> e <span class="math inline">\(L_2\)</span> são significativos
@@ -781,6 +783,30 @@ tratamento da ANOVA — confirmando a partição. Os contrastes <span class="mat
 <span class="math inline">\(L_3\)</span> não é (Anúncios e Combo não diferem significativamente entre si neste conjunto de dados).</p>
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

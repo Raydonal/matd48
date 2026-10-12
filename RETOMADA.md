@@ -1,33 +1,54 @@
-# Retomada — MATD48 2026 (reescrita completa do curso)
+# Retomada — MATD48 2026
 
-**Última atualização:** 2026-09-19, ~21:20 (horário local). Estado: **commitado e pushado para o
-GitHub**. Este arquivo existe para retomar o trabalho sem precisar reconstruir o contexto do zero.
-(Substitui a versão anterior, de 2026-08-13, que descrevia um estado pré-commit e uma estrutura de
-diretórios que não existe mais — ver "Mudança estrutural grande" abaixo. Histórico completo,
-rodada a rodada, em `PLANO_CONTEUDO.md`.)
+**Última atualização:** 2026-10-12 (sessão de revisão de clareza das aulas, PDF do livro e aviso
+de direitos autorais). Este arquivo existe para retomar o trabalho sem reconstruir o contexto do
+zero. Histórico completo, rodada a rodada, em `PLANO_CONTEUDO.md` (seção "Status").
 
-## Onde as coisas estão (isto mudou — leia antes de qualquer coisa)
+## Estado em que esta sessão parou (leia primeiro)
+
+- **Publicado no GitHub** (commits `a97c61a` e `d00f53f`, 12/10): PDF do livro, fórmulas nas caixas
+  do livro, aula 05 reescrita, aulas 01–04 revisadas, troca "submuestreo" → "subamostragem".
+- **Sincronizado no clone, mas NÃO commitado nem pushado** (aguardando aprovação do professor para
+  publicar): aulas 06–09 revisadas, correção de fórmulas cruas nas aulas 07 e 09–14, seção de
+  subamostragem do cap. 3 do livro, aviso de direitos autorais no livro (site e PDF), PDF com as
+  figuras de volta, correção do `scripts/verificar_equacoes.R`. Para publicar: no clone,
+  `git add -A Livro Aulas2026 scripts && git commit && git push`.
+- **Pergunta em aberto ao professor:** pôr o mesmo aviso de direitos autorais também nos slides
+  (`Aulas2026/`) e nas listas (`Listas2026/`)?
+- **Revisão de clareza das aulas:** feitas 01–09 (lotes 1 e 2). **Faltam 10–14** (lote 3), no mesmo
+  padrão descrito abaixo.
+
+## Onde as coisas estão
 
 Esta cópia (`/home/raydonal/MEGA/Claude/matd48`, sincronizada via MEGA) **não tem `.git`**. O
-repositório git real, com histórico e remoto, é `/home/raydonal/Github/Cursos/matd48` (remoto
-`git@github.com:Raydonal/matd48.git`, branch `main`). O fluxo normal é: editar/renderizar aqui (ou
-lá), sincronizar as duas cópias (`rsync`, ver comando abaixo), commitar e pushar a partir do clone.
-`CLAUDE.md` documenta isso na seção "Working copy has no local `.git`".
+repositório git real é `/home/raydonal/Github/Cursos/matd48` (remoto
+`git@github.com:Raydonal/matd48.git`, branch `main`). Fluxo: editar/renderizar aqui, copiar para o
+clone, commitar e pushar a partir do clone.
+
+**As duas cópias não são espelhos.** O clone tem conteúdo que o professor commitou direto lá
+(`atividade/`, `Misc/`, `cosa.txt`, `.gitignore`), e esta cópia tem arquivos só locais (`cristiano/`,
+`TERMINEI.txt`, `scripts/out/`). **Nunca use `rsync --delete`** em nenhuma direção (a versão
+anterior deste arquivo recomendava isso, e teria apagado `atividade/` e `Misc/` do clone). Sincronize
+só o que mudou:
 
 ```bash
-rsync -a --delete \
-  --exclude='.git' --exclude='.claude' --exclude='.gitignore' \
-  --exclude='cosa.txt' --exclude='Livro/_bookdown_files' \
-  /home/raydonal/MEGA/Claude/matd48/ /home/raydonal/Github/Cursos/matd48/
+ST=/home/raydonal/MEGA/Claude/matd48; CL=/home/raydonal/Github/Cursos/matd48
+diff -rq --exclude=.git --exclude=_bookdown_files "$CL" "$ST"     # veja antes o que difere
+rsync -a --exclude=_bookdown_files "$ST/Livro/" "$CL/Livro/"
+rsync -a "$ST/Aulas2026/" "$CL/Aulas2026/"
+rsync -a --exclude=out "$ST/scripts/" "$CL/scripts/"
+# Listas2026/, index.Rmd/.html, Projetos/: copiar arquivo a arquivo quando mudarem
 ```
+
+`CLAUDE.md` fica no disco das duas cópias, mas é **gitignored** no clone (o professor não quer
+"informação do Claude" no site). Não commitar.
 
 ## Backup
 
-Snapshot completo do clone git (com `.git`, histórico incluído — restaura tudo, inclusive commits)
-em: `/home/raydonal/MEGA/Claude/matd48-backups/matd48_backup_20260919-2121.tar.gz` (267 MB,
-integridade de gzip verificada). Backups anteriores (mais antigos, de antes da reestruturação de
-setembro) ainda preservados no mesmo diretório e em `/home/raydonal/Github/Cursos/matd48-backups/`.
-Gere um novo antes de qualquer mudança grande futura:
+Snapshot completo do clone git (com `.git` e histórico) em
+`/home/raydonal/MEGA/Claude/matd48-backups/`. O mais recente é o desta sessão (12/10/2026), que
+inclui as mudanças ainda não commitadas listadas acima (estão no working tree do clone). Gere um
+novo antes de qualquer mudança grande:
 
 ```bash
 TS=$(date +%Y%m%d-%H%M)
@@ -36,132 +57,129 @@ tar --exclude='matd48/Livro/_bookdown_files' -czf "/home/raydonal/MEGA/Claude/ma
 gzip -t "/home/raydonal/MEGA/Claude/matd48-backups/matd48_backup_${TS}.tar.gz" && echo OK
 ```
 
-Separado disso: `/home/raydonal/Github/Cursos/matd48-arquivo-nao-publico/` guarda uma cópia completa
-de tudo que foi **removido do repositório público** em setembro/2026 (ver seção abaixo) —
-`Aulas-2025/`, `index-2025.Rmd/.html`, `Material/`, `ExperimentalDesign/`, `ApoioLuz/`. Nunca vai
-para o GitHub; é só para referência local do professor.
+Separado disso, e nunca para o GitHub: `/home/raydonal/Github/Cursos/matd48-arquivo-nao-publico/`
+(material de 2025 e PDFs com copyright removidos do repositório em setembro/2026) e
+`/home/raydonal/Github/Cursos/matd48-gabaritos-privados/` (gabaritos das listas).
 
-## Mudança estrutural grande (setembro/2026) — o que aconteceu e por quê
+## O que foi feito na sessão de 12/10/2026
 
-O professor pediu para restringir o **site público** a livro + slides + listas de exercícios +
-projetos, e tirar do ar o material do ano passado (que estava confundindo os alunos) e qualquer
-PDF de livro com direito de autor — sem perder nada, guardando cópia completa fora do repositório.
-Como o GitHub Pages serve **qualquer** arquivo do repo por URL direta (link ou não), a única forma
-de cumprir isso de verdade foi remover os diretórios do repositório (não só tirar o link da home).
+### PDF do livro
+- `Livro/livro-doe.pdf` (217 p.) gerado por `Rscript scripts/gerar_pdf_livro.R`: renderiza o livro
+  numa cópia temporária com `pagedown::html_paged` e imprime no Chrome (ajustes em
+  `scripts/livro-pdf.css`). Não usar `bookdown::pdf_book`: o LaTeX descarta as caixas em HTML cru,
+  as tabelas HTML e os SVGs. Botão de download ativado no gitbook (`download: ["pdf"]`).
+  **Regerar o PDF sempre que o livro mudar.**
+- O script copia `_bookdown_files/*_files` para junto do HTML (sem isso todo gráfico do R saía em
+  branco no PDF, o footgun #2 do CLAUDE.md) e **para com erro** se alguma `<img>` apontar para
+  arquivo inexistente. `LIVRO_PDF_BUILD=<pasta>` fixa a pasta de build para inspeção.
 
-O que saiu do repositório público (commit `011b851`, `git rm`, cópia completa preservada em
-`matd48-arquivo-nao-publico/`):
-- `Aulas/` — material de 2025 (também guardava assets que `Aulas2026/`/`Livro/` ainda usavam —
-  ver próximo parágrafo).
-- `index-2025.Rmd`/`.html` — a home antiga.
-- `Material/`, `ExperimentalDesign/`, `ApoioLuz/` — PDFs de livros com copyright (Montgomery,
-  Box/Hunter/Hunter, Kuehl, Luz Mery González García) e material de terceiros.
+### Livro (site)
+- `Livro/mathjax-config.html` liga `$...$` no MathJax: toda fórmula dentro das caixas em HTML cru
+  aparecia crua no site publicado (8 capítulos).
+- Data da capa em português independente do locale (pt_BR não está instalado na máquina).
+- **Aviso de direitos autorais**: caixa `caixa-aviso` no início do Prefácio (uso exclusivo dos
+  alunos de MATD48, reprodução proibida sem autorização, Lei nº 9.610/1998, plágio, forma de citação,
+  versão preliminar em construção); rodapé em toda página do site via `Livro/aviso-rodape.html`
+  (incluído em `after_body`); nota na barra lateral (`_output.yml`); rodapé em toda página do PDF
+  (`@page @bottom-center` em `scripts/livro-pdf.css`). O mesmo script JS troca o título "References"
+  por "Referências" (pôr `reference-section-title` no YAML **quebra** o `split_chapters` do
+  bookdown; não tentar de novo).
+- Removida `Livro/além-do-programa-do-semestre.html`, página órfã de render antigo.
+- Cap. 3, seção "Subamostragem em um DCA": planilha antes do modelo, por que a tabela
+  tratamento × réplica não é tabela de contingência nem DBCA, ponte "média da UE segue o DCA" com
+  dedução dos E[QM], análise da tilápia por médias de aquário e `lmerTest::lmer` (o `aov` com
+  `Error()` dava aviso de singularidade nos dados desbalanceados, contradizendo o próprio texto).
 
-`Aulas/` também era o repositório de assets compartilhados (`images/`, `refs.bib`, `apa.csl`,
-`custom-styles.css`, `Bairros_Recife/` shapefile, 5 CSVs linkados na home) que `Aulas2026/*.Rmd` e
-`Livro/*.Rmd` referenciavam por caminho relativo. Antes de remover, migrei só os arquivos
-efetivamente usados para uma pasta nova, **`Aulas2026/assets/`**, e atualizei todo caminho relativo
-(`../Aulas/...` → `assets/...` em `Aulas2026/`, `../Aulas2026/assets/...` em `Livro/`). Depois
-re-renderizei tudo (livro + 14 decks + home) e revalidei do zero: 77/77 imagens, 0 `@ref()` não
-resolvido, 0 citação crua nos slides, 0 slide com transbordo. Ver `CLAUDE.md` → "How the site is
-published, and what is public" para os detalhes e para a lista do que **não** resgatar sem OK do
-professor.
+### Terminologia
+- "submuestreo"/"submuestras" (espanhol, herdado do livro-fonte) → "subamostragem"/"subamostras"
+  em aulas, livro, Lista 05 e home, com concordância de gênero. IDs de seção, rótulos de chunk e
+  nomes de arquivo (`dca-submuestreo`, `slide-submuestreo.svg`...) foram mantidos de propósito para
+  não quebrar URLs e `\@ref`.
 
-`CLAUDE.md` também deixou de ser versionado (`git rm --cached` + `.gitignore`) — fica só no disco
-local, porque o professor não quer nenhum traço de "informação do Claude" alcançável no site
-publicado. Não commitar esse arquivo de volta.
+### Revisão de clareza das aulas (pedido do professor: código sem explicação, ideias desconectadas)
+Padrão aplicado em cada deck, mantendo os quatro blocos: **mostrar a planilha antes do modelo**,
+dizer explicitamente o que a tabela tratamento × réplica é e não é, decompor uma observação real
+nos termos do modelo, ligar cada aula à anterior com um exemplo numérico, deduzir em vez de
+apresentar pronto, e conferir em R toda afirmação numérica do texto.
+- 01: resultados potenciais numa tabela de 6 estudantes (sorteio "azarado" vs. média dos 20
+  sorteios), prova depois dos três pilares, contagens vs. medidas (tabela do chá), planilha.
+- 02: da planilha para Y e X (exemplo de brinquedo, 3 servidores × 2), por que μ não é estimável.
+- 03: projeção no brinquedo (= média do grupo), ANOVA de um fator como modelo particionado
+  (SQ 784 + 58), Aitken/Zyskind movidos para o fim e motivados.
+- 04: o que é um DCA, sorteio em R, planilha do feijão longa e larga, decomposição da SQ e E[QM].
+- 05: reescrita completa (subamostragem): planilha, tabela de médias, decomposição de uma linha,
+  ponte média do aquário → DCA, E[QM] deduzidos, tilápia por médias + `lmer`.
+- 06: exemplo de ordem de execução tinha ordem **confundida** com tratamento (agora sorteada);
+  slides novos "o que acontece se um pressuposto falhar" e "de onde vêm as transformações"
+  (método delta, Box, 1954).
+- 07: "de uma pergunta para os coeficientes", tabela de coeficientes polinomiais, guia "qual
+  procedimento usar".
+- 08: médias ajustadas em números (grupo de 50 mg com basal alto por acaso), forma de H como SQ dos
+  postos, frase do mediador corrigida.
+- 09: sorteio por bloco, "DCA ou DBCA? a mesma tabela, significados diferentes",
+  SQ_Erro(DCA) = SQ_Bloco + SQ_Erro(DBCA).
 
-**Importante:** isso não reescreve o histórico antigo do git. Quem olhar commits anteriores a
-`011b851` no GitHub (ou clonar e voltar no tempo) ainda encontra `Aulas/2025` e os PDFs — só a
-versão atual do site (a que o GitHub Pages serve agora) parou de servi-los. O professor foi avisado
-disso explicitamente antes do push e concordou.
+### Bug grave encontrado: o verificador de equações nunca funcionou
+`scripts/verificar_equacoes.R` tinha a regex escapada em dobro e **nunca detectava nada**; todo
+"Nenhuma" anterior a 12/10/2026 não vale. Corrigido e testado contra um deck quebrado de propósito.
+Ao rodá-lo corrigido apareceram **34 slides com LaTeX cru já publicados** (aulas 07, 09–14), causados
+por `$$` em várias linhas e `$` colado a palavras. Todos corrigidos; documentado como footgun #10 no
+CLAUDE.md. Lição: teste o verificador contra um caso positivo antes de confiar num "zero".
 
-## Estrutura atual do repositório público
+### Outros
+- `pagedown` instalado (CRAN).
+- Scripts de Python que editam `.Rmd` devem usar strings raw (`r'''...'''`): numa string comum
+  `\alpha` vira o caractere de controle BEL e `\tfrac` vira TAB (aconteceu na aula 02; o verificador
+  de equações não pega isso). Procurar com `grep -P '\x07|\x08|\t'`.
 
-1. **`Livro/`** — bookdown, 8 capítulos (Princípios, Modelos lineares, DCA, Blocos, Fatoriais,
-   Fatoriais avançados, Superfície de resposta, A/B testing e bandits — o 8º é além do programa do
-   semestre). Ver `CLAUDE.md` → "Directory layout" para o detalhe de cada um.
-2. **`Aulas2026/`** — 14 decks xaringan (`MATD48-01` a `14`), Teoria→Aplicação→Discussão→Uso do R,
-   mais `Aulas2026/assets/` (ver acima).
-3. **`Listas2026/`** — 14 listas em LaTeX, prática, sem gabarito público (gabaritos ficam em
-   `/home/raydonal/Github/Cursos/matd48-gabaritos-privados/`, decisão de agosto/2026).
-4. **`Projetos/Projeto-I/II/III/IV`** — Projeto I é referência histórica (prova 2025); II/III/IV são
-   os 3 projetos-desafio incrementais que fecham N1/N2/N3 (40% projeto + 60% prova escrita cada,
-   sistema atual — não é mais o 50/50 de agosto).
-5. **`index.Rmd`** — homepage, cronograma 2026.2, sem link para `index-2025.html` nem para PDFs de
-   `Material/`.
+## O que falta
 
-## Estado do git
-
-Branch `main` do clone está sincronizada com `origin/main` (push feito, commit `011b851`). Working
-tree limpa. Nada pendente de commit no momento em que este arquivo foi escrito.
-
-## O que falta — pendente de revisão humana
-
-Nada foi pedido explicitamente para a próxima rodada. Pontos que ainda não tiveram uma segunda
-verificação independente, deixados de rodadas anteriores (ver `PLANO_CONTEUDO.md` para o histórico
-completo):
-- Cap.7 (Superfície de Resposta) do livro é o conteúdo mais antigo sem segunda revisão humana
-  ponta-a-ponta.
-- Nenhuma leitura humana corrida do livro inteiro aconteceu ainda depois de todas as rodadas de
-  expansão — só verificação automatizada (imagens, `@ref`, citações, transbordo) e local por seção.
-- Confirmar se o professor quer distribuir o conteúdo do antigo `Material/`/`ExperimentalDesign/`
-  por outro canal (não mais público no site) — hoje só ficam como referência em texto na
-  bibliografia da home, sem link para o PDF.
+1. Publicar o que está sincronizado e não commitado (depende de OK do professor).
+2. Revisão de clareza das aulas 10–14 (lote 3), e as seções correspondentes do livro, se o professor
+   quiser.
+3. Decidir sobre o aviso de direitos autorais nos slides e nas listas.
+4. Pontos antigos ainda sem segunda revisão humana: cap. 7 do livro inteiro; nenhuma leitura humana
+   corrida do livro completo depois das expansões.
+5. Um detalhe menor: no cap. 3, o texto inline mostra `F ≈ 12.98` com ponto decimal.
 
 ## Como retomar
 
-1. Ler o pedido específico do professor.
-2. Se for edição pontual: editar aqui (MEGA) ou no clone, re-renderizar (comandos abaixo), conferir
-   **abrindo o HTML/PNG gerado**, não só checando exit code. Depois sincronizar as duas cópias
-   (comando `rsync` no topo deste arquivo) antes de commitar no clone.
-3. Se envolver adicionar/mover arquivos que outros `.Rmd` referenciam por caminho relativo, grep por
-   todo uso do caminho antigo antes de mover — foi assim que a reestruturação de setembro descobriu
-   que `Aulas/` guardava assets ainda em uso (ver acima).
-4. Só commitar quando o professor pedir explicitamente. Push só depois de confirmar com ele
-   (ação visível/pública, ver "Executing actions with care").
+1. Ler o pedido do professor. Conteúdo em português.
+2. Editar aqui, re-renderizar, **conferir o artefato** (abrir HTML/PNG/PDF), não só o exit code.
+3. Sincronizar com o clone (comandos acima, sem `--delete`).
+4. Commitar e pushar só com OK explícito do professor (o push publica no GitHub Pages).
 
-### Comandos de verificação rápida
+### Comandos de verificação
 
 ```bash
-# Livro (bookdown) -- sempre os 3 passos, nesta ordem
+# Livro -- sempre os 3 passos, nesta ordem, e nunca dois renders do Livro/ em paralelo
 cd Livro
 rm -rf _bookdown_files *.md 0*_files
 Rscript -e 'bookdown::render_book("index.Rmd", quiet=TRUE)'
 for d in _bookdown_files/*_files; do cp -r "$d" "./$(basename "$d")"; done
+cd .. && Rscript scripts/gerar_pdf_livro.R      # PDF (para com erro se faltar figura)
 
-# checagem de imagens quebradas e de \@ref cru sobrando
+# imagens quebradas e \@ref cru no site
+cd Livro
 python3 -c "
 import re, glob, os
-img_pat = re.compile(r'<img src=\"([^\"]+)\"')
 total = missing = 0
 for fn in glob.glob('*.html'):
-    html = open(fn, encoding='utf-8', errors='ignore').read()
-    for src in img_pat.findall(html):
+    for src in re.findall(r'<img src=\"([^\"]+)\"', open(fn, encoding='utf-8', errors='ignore').read()):
         total += 1
-        p = src.split('?')[0]
-        if not p.startswith('http') and not os.path.exists(p):
+        if not src.startswith('http') and not os.path.exists(src.split('?')[0]):
             missing += 1; print('FALTANDO:', fn, src)
 print(f'{total} imagens, {missing} faltando')
 "
-grep -l '@ref(' *.html && echo "referencias quebradas encontradas acima" || echo "0 referencias quebradas"
-
-# Aulas2026 (xaringan) -- um deck por processo R (footgun #5 do CLAUDE.md)
-cd ../Aulas2026
-for i in $(seq -w 1 14); do Rscript -e "rmarkdown::render('MATD48-$i.Rmd', quiet=TRUE)"; done
-# checagem de citação crua sobrando em qualquer slide
-for f in MATD48-*.html; do grep -o '\[@[a-zA-Z0-9_]*\]' "$f" && echo "quebrado em $f"; done
-
-# transbordo de slide (Chrome headless)
+grep -l '@ref(' *.html || echo "0 referencias quebradas"
 cd ..
-Rscript scripts/verificar_slides.R
 
-# home do curso
-Rscript -e 'rmarkdown::render("index.Rmd", quiet=TRUE)'
+# Aulas -- um deck por processo R (footgun #5)
+for i in $(seq -w 1 14); do Rscript -e "rmarkdown::render('Aulas2026/MATD48-$i.Rmd', quiet=TRUE)"; done
+Rscript scripts/verificar_slides.R      # transbordo
+Rscript scripts/verificar_equacoes.R    # LaTeX cru (corrigido em 12/10/2026)
 ```
 
-## Histórico completo
-
-Toda rodada de trabalho (o que foi pedido, o que foi feito, o que foi verificado) está registrada
-em `PLANO_CONTEUDO.md`, na seção "Status", em ordem cronológica — é o log detalhado por trás deste
-resumo.
+Na sessão de 12/10/2026 o estado final foi: 14 decks sem transbordo e sem LaTeX cru; livro com
+77/77 imagens, 0 `\@ref` quebrado, 0 tabela com legenda duplicada; PDF com 217 páginas, 75 imagens,
+aviso e rodapé em todas as páginas.

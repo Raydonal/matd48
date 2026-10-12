@@ -29,3 +29,11 @@ table { font-size: 9pt; max-width: 100%; }
 pre > code.sourceCode > span {
   display: inline-block; text-indent: -2em; padding-left: 2em;
 }
+
+/* aviso de direitos autorais no rodape de todas as paginas */
+@page {
+  @bottom-center {
+    content: "© 2026 R. Ospina Martínez — UFBA · Versão preliminar, em construção · Uso exclusivo dos alunos de MATD48 · Reprodução proibida (Lei 9.610/1998)";
+    font-size: 6.5pt; color: #888;
+  }
+}

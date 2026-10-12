@@ -1146,6 +1146,110 @@ peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong
 </div>
 ```
 
+### Como são os dados: uma linha por subamostra {#dados-submuestreo}
+
+Antes de qualquer modelo, convém olhar a planilha. Ela tem **uma linha por peixe**, não por
+aquário, e três colunas de identificação, uma para cada nível da estrutura:
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — lendo os dados da tilápia</div>
+```
+
+
+``` r
+mojarra <- read_csv("data/mojarra.csv", show_col_types = FALSE) %>%
+  rename(probiotico = probiotico, aquario = Acuario,
+         peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %>%
+  drop_na(peso_45) %>%                                  # 3 peixes morreram antes do dia 45
+  mutate(
+    probiotico = factor(probiotico),
+    aquario    = factor(aquario),
+    ganho      = peso_45 - peso_inicial
+  ) %>%
+  group_by(aquario) %>% mutate(peixe = row_number()) %>% ungroup()
+
+mojarra %>% filter(aquario %in% c(1, 6)) %>% slice(c(1:3, 6:8)) %>%
+  dplyr::select(probiotico, aquario, peixe, ganho)
+```
+
+```
+## # A tibble: 6 × 4
+##   probiotico aquario peixe ganho
+##   <fct>      <fct>   <int> <dbl>
+## 1 1          1           1  12.2
+## 2 1          1           2   8.5
+## 3 1          1           3   9.4
+## 4 2          6           1   8.2
+## 5 2          6           2  11.8
+## 6 2          6           3   8.5
+```
+
+As colunas `probiotico`, `aquario` e `peixe` correspondem aos índices $i$, $j$ e $k$ do modelo da
+próxima seção, e é nesse formato longo que os dados entram em `aov()`, `lm()` ou `lmer()`.
+Resumindo cada aquário pela média dos seus peixes, os mesmos dados cabem numa tabela probiótico
+$\times$ réplica:
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:tabela-larga-mojarra)Ganho médio (g) de cada aquário, arrumado por probiótico</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> probiotico </th>
+   <th style="text-align:right;"> réplica 1 </th>
+   <th style="text-align:right;"> réplica 2 </th>
+   <th style="text-align:right;"> réplica 3 </th>
+   <th style="text-align:right;"> réplica 4 </th>
+   <th style="text-align:right;"> réplica 5 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 10.5 </td>
+   <td style="text-align:right;"> 13.0 </td>
+   <td style="text-align:right;"> 16.8 </td>
+   <td style="text-align:right;"> 13.4 </td>
+   <td style="text-align:right;"> 9.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:right;"> 10.5 </td>
+   <td style="text-align:right;"> 15.5 </td>
+   <td style="text-align:right;"> 16.2 </td>
+   <td style="text-align:right;"> 14.3 </td>
+   <td style="text-align:right;"> 12.9 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:right;"> 17.9 </td>
+   <td style="text-align:right;"> 21.9 </td>
+   <td style="text-align:right;"> 20.7 </td>
+   <td style="text-align:right;"> 24.0 </td>
+   <td style="text-align:right;"> 17.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:right;"> 23.5 </td>
+   <td style="text-align:right;"> 24.8 </td>
+   <td style="text-align:right;"> 21.9 </td>
+   <td style="text-align:right;"> 16.8 </td>
+   <td style="text-align:right;"> 28.3 </td>
+  </tr>
+</tbody>
+</table>
+
+Essa tabela engana com facilidade, e vale dizer o que ela **não** é. Não é uma tabela de
+contingência: numa tabela de contingência cada célula conta quantas unidades caíram numa
+combinação de categorias (probiótico $\times$ sobreviveu/morreu, por exemplo), e a análise é por
+$\chi^2$ ou modelos log-lineares; aqui cada célula contém uma **medida**, o ganho médio de um
+aquário em gramas. Também não é um DBCA nem um fatorial probiótico $\times$ aquário: a "réplica 3"
+do probiótico 1 e a "réplica 3" do probiótico 2 são aquários diferentes, sem nada em comum, de
+modo que não existe efeito de coluna, e embaralhar os valores dentro de uma linha não muda nada.
+O aquário não cruza com o probiótico, porque cada aquário recebe um probiótico só: ele está
+**aninhado** no probiótico. O que a tabela é, exatamente, é o DCA de um fator da Seção
+\@ref(dca-uma-via), com 4 tratamentos, 5 réplicas e o ganho médio do aquário como resposta. A
+planilha longa guarda a camada adicional, os peixes, que a tabela resume, e o modelo a seguir
+usa as duas camadas.
+
 ### O modelo com dois níveis de erro {#modelo-submuestreo}
 
 Com $t$ tratamentos, $r$ unidades experimentais (UEs) por tratamento e $q$ unidades amostrais
@@ -1168,6 +1272,26 @@ individual é $\text{Var}(Y_{ijk}) = \sigma_\delta^2 + \sigma_\varepsilon^2$, ma
 para comparar tratamentos é apenas $\sigma_\delta^2$: aumentar $q$ (mais peixes por aquário) nunca
 reduz a incerteza sobre o efeito do tratamento além de um certo ponto, porque não gera novas UEs.
 
+A ligação com o DCA de um fator aparece ao tirar a média dos $q$ peixes de um aquário:
+
+$$
+\bar Y_{ij\cdot} = \mu + \tau_i + e_{ij}, \qquad e_{ij} = \delta_{ij} + \bar\varepsilon_{ij\cdot},
+\qquad \mathrm{Var}(e_{ij}) = \sigma_\delta^2 + \frac{\sigma_\varepsilon^2}{q}.
+$$
+
+As médias dos aquários seguem, portanto, exatamente o modelo do DCA de um fator, com $r$ réplicas
+por tratamento e variância do erro $\sigma_\delta^2+\sigma_\varepsilon^2/q$. Três consequências
+saem daí sem conta adicional. As réplicas do tratamento são as UEs, e o erro tem $t(r-1)$ graus de
+liberdade, não $tr(q-1)$. Mais subamostras só diminuem a parcela $\sigma_\varepsilon^2/q$, e a
+parcela $\sigma_\delta^2$ fica. E, com $q$ constante, as esperanças dos quadrados médios da tabela
+de ANOVA adiante se deduzem da Seção \@ref(dca-uma-via): o quadrado médio do erro experimental é
+$q$ vezes a variância amostral das médias de aquário dentro de cada tratamento, logo
+$E[QM_{\text{exp}}] = q(\sigma_\delta^2+\sigma_\varepsilon^2/q) = \sigma_\varepsilon^2+q\sigma_\delta^2$;
+o de tratamento ganha a parcela $qr\sum_i\tau_i^2/(t-1)$; e o de amostragem, que mede a variação
+entre peixes do mesmo aquário, tem esperança $\sigma_\varepsilon^2$. Sob $H_0:\tau_i=0$, só os dois
+primeiros têm a mesma esperança, e é por isso que o teste $F$ usa o erro experimental no
+denominador.
+
 Em notação matricial, a subamostragem quebra a suposição $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
 \sigma^2\mathbf{I}_N$ do Capítulo 2 (Seção \@ref(gauss-markov)): empilhando as $N=trq$
 observações, $\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}' +
@@ -1178,7 +1302,7 @@ UE ($Z_{[ijk],\,i'j'} = \mathbb{1}\{i=i',j=j'\}$). $\mathbf{V}$ tem estrutura de
 =\sigma^2\mathbf{I}$ deixa de bastar — é exatamente essa estrutura de $\mathbf{V}$ que faz do DCA
 com subamostragem um caso particular de **modelo linear misto**, ajustável de forma exata (inclusive
 sob desbalanceamento) por `nlme::lme()` ou `lme4::lmer()`, embora a ANOVA clássica com `Error()`
-usada adiante já recupere o teste correto no caso balanceado.
+recupere o teste correto no caso balanceado.
 
 O que acontece se o número de subamostras por UE **não** for o mesmo em toda UE — um aquário
 perdeu um peixe, por exemplo? A condição de Zyskind (Seção \@ref(zyskind-dca)) deixa de se
@@ -1348,34 +1472,6 @@ Capítulo 1: o denominador fica artificialmente pequeno (baseado em $tr(q-1)$ gr
 "emprestados" de dentro das UEs, não entre elas), o que infla o valor de $F$ e a taxa de falsos
 positivos.
 
-```{=html}
-<div class="caixa-r"><strong>Uso do R</strong> — ANOVA aninhada com `Error()`</div>
-```
-
-
-``` r
-mojarra <- read_csv("data/mojarra.csv", show_col_types = FALSE) %>%
-  rename(probiotico = probiotico, aquario = Acuario,
-         peso_inicial = `Peso Inicial`, peso_45 = `Peso 45`) %>%
-  drop_na(peso_45) %>%                                  # 3 peixes sem medição no dia 45
-  mutate(
-    probiotico = factor(probiotico),
-    aquario    = factor(aquario),
-    ganho      = peso_45 - peso_inicial
-  )
-
-glimpse(mojarra)
-```
-
-```
-## Rows: 97
-## Columns: 5
-## $ probiotico   <fct> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-## $ aquario      <fct> 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, …
-## $ peso_inicial <dbl> 8.9, 8.5, 8.1, 9.1, 9.3, 9.0, 8.4, 8.7, 8.6, 9.4, 9.0, 8.…
-## $ peso_45      <dbl> 21.1, 17.0, 17.5, 22.8, 18.2, 16.5, 26.0, 18.1, 23.5, 25.…
-## $ ganho        <dbl> 12.2, 8.5, 9.4, 13.7, 8.9, 7.5, 17.6, 9.4, 14.9, 15.8, 13…
-```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>(\#tab:tabela-papel-variaveis-mojarra)Mojarra: papel de cada variável e mapeamento UE/unidade amostral</caption>
@@ -1439,33 +1535,54 @@ visível o que a seção seguinte formaliza: as 20 médias de aquário (os losan
 de probiótico 1 para 4, um padrão que a ANOVA a seguir testa formalmente usando apenas essas 20
 médias como unidade de comparação — não os quase 100 pontos coloridos.
 
+A mortalidade (3 peixes sem peso registrado no dia 45) deixa o desenho levemente desbalanceado,
+com 4 ou 5 peixes por aquário em vez de exatamente 5. É o caso em que, como vimos acima, a ANOVA
+clássica com `Error()` perde sua base algébrica e o R emite o aviso "Error() model is singular".
+Há dois caminhos defensáveis: a ANOVA de um fator sobre as médias dos aquários (a ponte da seção
+anterior, aproximada aqui porque $q$ varia pouco) e o modelo misto, que acomoda o desbalanceamento
+de forma exata.
+
+```{=html}
+<div class="caixa-r"><strong>Uso do R</strong> — a análise da tilápia por médias de aquário e por modelo misto</div>
+```
+
 
 ``` r
-modelo_sub <- aov(ganho ~ probiotico + Error(probiotico:aquario), data = mojarra)
-summary(modelo_sub)
+med_aq <- mojarra %>% group_by(probiotico, aquario) %>%
+  summarise(ganho = mean(ganho), .groups = "drop")
+summary(aov(ganho ~ probiotico, data = med_aq))          # DCA nas 20 médias de aquário
 ```
 
 ```
-## 
-## Error: probiotico:aquario
-##            Df Sum Sq Mean Sq F value   Pr(>F)    
-## probiotico  3   1845   615.0   12.98 0.000149 ***
-## Residuals  16    758    47.4                     
+##             Df Sum Sq Mean Sq F value   Pr(>F)    
+## probiotico   3  380.1  126.71   12.88 0.000155 ***
+## Residuals   16  157.4    9.84                     
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Error: Within
-##           Df Sum Sq Mean Sq F value Pr(>F)
-## Residuals 77   1360   17.66
 ```
 
-Note que o erro-padrão de mortalidade (3 peixes sem peso registrado no dia 45) deixa o desenho
-levemente desbalanceado — 4 ou 5 peixes por aquário em vez de exatamente 5 — o que é comum em
-dados reais e não invalida a lógica da decomposição, ainda que a fórmula fechada de E[QM] acima
-valha exatamente apenas no caso perfeitamente balanceado. O teste do efeito do probiótico usa o
-quadrado médio **entre aquários dentro de probiótico** como erro (16 g.l.), não o quadrado médio
-entre peixes dentro de aquário (77 g.l.) — se o pesquisador tivesse usado este último por engano,
-o denominador do teste $F$ seria bem menor, inflando artificialmente a significância.
+``` r
+modelo_sub <- lmerTest::lmer(ganho ~ probiotico + (1 | aquario), data = mojarra)
+anova(modelo_sub)                                        # gl do denominador por Satterthwaite
+```
+
+```
+## Type III Analysis of Variance Table with Satterthwaite's method
+##            Sum Sq Mean Sq NumDF  DenDF F value    Pr(>F)    
+## probiotico 685.98  228.66     3 15.949  12.945 0.0001528 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+
+As duas análises concordam, e o `aov()` com `Error()`, que aqui emite o aviso de singularidade,
+também chegaria a um valor parecido ($F \approx 12.98$), porque o
+desbalanceamento é pequeno. O ponto não é o número, e sim qual análise se pode defender quando $q$
+varia: a do modelo misto. Em qualquer delas, o teste do efeito do probiótico usa a variação
+**entre aquários dentro de probiótico** como erro (16 g.l.), não a variação entre peixes dentro de
+aquário (77 g.l.); se o pesquisador tivesse usado esta última por engano, o denominador do teste
+$F$ seria bem menor, inflando artificialmente a significância.
 
 ### Tamanho de amostra com subamostragem {#amostra-submuestreo}
 
@@ -1488,13 +1605,9 @@ direto e ilimitado; aumentar $q$ (mais subamostras por UE) tem retorno limitado 
 
 
 ``` r
-tab_sub <- summary(modelo_sub)
-MS_exp <- tab_sub[["Error: probiotico:aquario"]][[1]][["Mean Sq"]][2]  # erro experimental
-MS_am  <- tab_sub[["Error: Within"]][[1]][["Mean Sq"]][1]              # erro de amostragem
-q_medio <- nrow(mojarra) / n_distinct(mojarra$aquario)
-
-sigma2_delta <- (MS_exp - MS_am) / q_medio
-sigma2_eps   <- MS_am
+vc <- as.data.frame(lme4::VarCorr(modelo_sub))          # componentes estimados por REML
+sigma2_delta <- vc$vcov[vc$grp == "aquario"]             # erro experimental
+sigma2_eps   <- vc$vcov[vc$grp == "Residual"]            # erro de amostragem
 
 tibble(q = c(1, 2, 5, 10, 20, 50)) %>%
   mutate(var_media_UE = sigma2_delta + sigma2_eps / q) %>%
@@ -1514,27 +1627,27 @@ tibble(q = c(1, 2, 5, 10, 20, 50)) %>%
 <tbody>
   <tr>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 23.79 </td>
+   <td style="text-align:right;"> 23.80 </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 14.96 </td>
+   <td style="text-align:right;"> 14.97 </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 9.66 </td>
+   <td style="text-align:right;"> 9.67 </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 10 </td>
-   <td style="text-align:right;"> 7.89 </td>
+   <td style="text-align:right;"> 7.90 </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 20 </td>
-   <td style="text-align:right;"> 7.01 </td>
+   <td style="text-align:right;"> 7.02 </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 50 </td>
-   <td style="text-align:right;"> 6.48 </td>
+   <td style="text-align:right;"> 6.49 </td>
   </tr>
 </tbody>
 </table>
@@ -1544,7 +1657,7 @@ tibble(q = c(1, 2, 5, 10, 20, 50)) %>%
 Com $\hat\sigma_\delta^2 \approx 6.1$ e $\hat\sigma_\varepsilon^2 \approx
 17.7$, passar de $q=5$ (o desenho usado) para $q=20$ reduziria a variância da
 média de UE em cerca de 27%
-(de 9.66 para 7.01) — uma melhora real, mas limitada pelo piso
+(de 9.67 para 7.02) — uma melhora real, mas limitada pelo piso
 $\sigma_\delta^2$. Já passar de $r=5$ para $r=20$ aquários por tratamento (o mesmo fator de
 aumento, $4\times$) reduziria a variância da **média de tratamento**, que decresce como
 $\sigma_\delta^2/r$ sem nenhum piso, em exatos 75% ($1 - 1/4$) — quase o triplo da redução obtida

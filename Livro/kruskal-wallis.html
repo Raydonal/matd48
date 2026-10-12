@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -456,14 +458,14 @@ influentes, amostras muito pequenas) e nenhuma transformação os resolve satisf
 <strong>teste de Kruskal-Wallis</strong> oferece uma alternativa não paramétrica à ANOVA de um fator
 <span class="citation">(<a href="#ref-kruskalwallis1952">Kruskal &amp; Wallis, 1952</a>)</span>, testando se as <span class="math inline">\(t\)</span> populações têm a mesma distribuição (em particular, a
 mesma mediana) sem assumir normalidade.</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="kruskal-wallis.html#cb146-1" tabindex="-1"></a><span class="co"># tempos de carregamento reais são tipicamente assimétricos à direita: a maioria das</span></span>
-<span id="cb146-2"><a href="kruskal-wallis.html#cb146-2" tabindex="-1"></a><span class="co"># cargas é rápida, mas uma cauda de conexões lentas/congestionadas produz outliers.</span></span>
-<span id="cb146-3"><a href="kruskal-wallis.html#cb146-3" tabindex="-1"></a><span class="co"># Simulamos esse cenário contaminando o dataset de scripts com alguns tempos extremos.</span></span>
-<span id="cb146-4"><a href="kruskal-wallis.html#cb146-4" tabindex="-1"></a>dados_scripts_out <span class="ot">&lt;-</span> dados_scripts</span>
-<span id="cb146-5"><a href="kruskal-wallis.html#cb146-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb146-6"><a href="kruskal-wallis.html#cb146-6" tabindex="-1"></a>idx_lentos <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(dados_scripts_out)), <span class="dv">4</span>)</span>
-<span id="cb146-7"><a href="kruskal-wallis.html#cb146-7" tabindex="-1"></a>dados_scripts_out<span class="sc">$</span>tempo_ms[idx_lentos] <span class="ot">&lt;-</span> dados_scripts_out<span class="sc">$</span>tempo_ms[idx_lentos] <span class="sc">+</span></span>
-<span id="cb146-8"><a href="kruskal-wallis.html#cb146-8" tabindex="-1"></a>  <span class="fu">rexp</span>(<span class="dv">4</span>, <span class="at">rate =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">2000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="kruskal-wallis.html#cb148-1" tabindex="-1"></a><span class="co"># tempos de carregamento reais são tipicamente assimétricos à direita: a maioria das</span></span>
+<span id="cb148-2"><a href="kruskal-wallis.html#cb148-2" tabindex="-1"></a><span class="co"># cargas é rápida, mas uma cauda de conexões lentas/congestionadas produz outliers.</span></span>
+<span id="cb148-3"><a href="kruskal-wallis.html#cb148-3" tabindex="-1"></a><span class="co"># Simulamos esse cenário contaminando o dataset de scripts com alguns tempos extremos.</span></span>
+<span id="cb148-4"><a href="kruskal-wallis.html#cb148-4" tabindex="-1"></a>dados_scripts_out <span class="ot">&lt;-</span> dados_scripts</span>
+<span id="cb148-5"><a href="kruskal-wallis.html#cb148-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb148-6"><a href="kruskal-wallis.html#cb148-6" tabindex="-1"></a>idx_lentos <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(dados_scripts_out)), <span class="dv">4</span>)</span>
+<span id="cb148-7"><a href="kruskal-wallis.html#cb148-7" tabindex="-1"></a>dados_scripts_out<span class="sc">$</span>tempo_ms[idx_lentos] <span class="ot">&lt;-</span> dados_scripts_out<span class="sc">$</span>tempo_ms[idx_lentos] <span class="sc">+</span></span>
+<span id="cb148-8"><a href="kruskal-wallis.html#cb148-8" tabindex="-1"></a>  <span class="fu">rexp</span>(<span class="dv">4</span>, <span class="at">rate =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">2000</span>)</span></code></pre></div>
 <div class="caixa-aplicacao">
 <strong>Aplicação — Ciência de dados: carregamento de página com conexões lentas</strong><br>
 Retomamos o experimento de configurações de scripts, mas agora quatro carregamentos (de 40) foram
@@ -483,15 +485,15 @@ grupo se afastam do posto médio esperado sob a hipótese nula — um “ANOVA s
 de sobre os valores originais, o que o torna robusto a outliers e a distribuições assimétricas,
 ao custo de menor poder quando a normalidade de fato se sustenta.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — Kruskal-Wallis e comparações par a par não paramétricas</div>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="kruskal-wallis.html#cb147-1" tabindex="-1"></a><span class="fu">kruskal.test</span>(tempo_ms <span class="sc">~</span> config, <span class="at">data =</span> dados_scripts_out)</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="kruskal-wallis.html#cb149-1" tabindex="-1"></a><span class="fu">kruskal.test</span>(tempo_ms <span class="sc">~</span> config, <span class="at">data =</span> dados_scripts_out)</span></code></pre></div>
 <pre><code>## 
 ##  Kruskal-Wallis rank sum test
 ## 
 ## data:  tempo_ms by config
 ## Kruskal-Wallis chi-squared = 22.026, df = 3, p-value = 6.443e-05</code></pre>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="kruskal-wallis.html#cb149-1" tabindex="-1"></a><span class="co"># comparações par a par não paramétricas, com correção de Bonferroni</span></span>
-<span id="cb149-2"><a href="kruskal-wallis.html#cb149-2" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(dados_scripts_out<span class="sc">$</span>tempo_ms, dados_scripts_out<span class="sc">$</span>config,</span>
-<span id="cb149-3"><a href="kruskal-wallis.html#cb149-3" tabindex="-1"></a>                      <span class="at">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="kruskal-wallis.html#cb151-1" tabindex="-1"></a><span class="co"># comparações par a par não paramétricas, com correção de Bonferroni</span></span>
+<span id="cb151-2"><a href="kruskal-wallis.html#cb151-2" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(dados_scripts_out<span class="sc">$</span>tempo_ms, dados_scripts_out<span class="sc">$</span>config,</span>
+<span id="cb151-3"><a href="kruskal-wallis.html#cb151-3" tabindex="-1"></a>                      <span class="at">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ##  Pairwise comparisons using Wilcoxon rank sum exact test 
 ## 
@@ -528,6 +530,30 @@ mais sutis, o preço esperado por abrir mão do pressuposto de normalidade.</p>
 Kruskal, W. H., &amp; Wallis, W. A. (1952). Use of ranks in one-criterion variance analysis. <em>Journal of the American Statistical Association</em>, <em>47</em>(260), 583–621.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

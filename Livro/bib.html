@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -548,30 +550,30 @@ com <span class="math inline">\(t-1\)</span> graus de liberdade, entrando na tab
 usada no DBCA — é essa soma de quadrados, e não a diferença ingênua entre médias de tratamento
 brutas, que deve orientar o teste <span class="math inline">\(F\)</span> de tratamentos em um BIB.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — verificando a fórmula de Q_i contra a soma de quadrados sequencial de aov()</div>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="bib.html#cb176-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb176-2"><a href="bib.html#cb176-2" tabindex="-1"></a>blocos_lista <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>))   <span class="co"># os 4 blocos da Tabela acima</span></span>
-<span id="cb176-3"><a href="bib.html#cb176-3" tabindex="-1"></a>efeito_trat_bib  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">5</span>)     <span class="co"># tau_i (apenas para simular uma resposta plausivel)</span></span>
-<span id="cb176-4"><a href="bib.html#cb176-4" tabindex="-1"></a>efeito_bloco_bib <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">6</span>)     <span class="co"># beta_j</span></span>
-<span id="cb176-5"><a href="bib.html#cb176-5" tabindex="-1"></a></span>
-<span id="cb176-6"><a href="bib.html#cb176-6" tabindex="-1"></a>dados_bib <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">seq_along</span>(blocos_lista), <span class="cf">function</span>(j) {</span>
-<span id="cb176-7"><a href="bib.html#cb176-7" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">bloco =</span> j, <span class="at">trat =</span> blocos_lista[[j]],</span>
-<span id="cb176-8"><a href="bib.html#cb176-8" tabindex="-1"></a>         <span class="at">nota =</span> <span class="dv">50</span> <span class="sc">+</span> efeito_trat_bib[blocos_lista[[j]]] <span class="sc">+</span> efeito_bloco_bib[j] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="fl">1.5</span>))</span>
-<span id="cb176-9"><a href="bib.html#cb176-9" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(bloco), <span class="at">trat =</span> <span class="fu">factor</span>(trat))</span>
-<span id="cb176-10"><a href="bib.html#cb176-10" tabindex="-1"></a></span>
-<span id="cb176-11"><a href="bib.html#cb176-11" tabindex="-1"></a>k_bib <span class="ot">&lt;-</span> <span class="dv">3</span>; t_bib <span class="ot">&lt;-</span> <span class="dv">4</span>; lambda_bib <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb176-12"><a href="bib.html#cb176-12" tabindex="-1"></a>T_trat  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_bib<span class="sc">$</span>nota, dados_bib<span class="sc">$</span>trat, sum)</span>
-<span id="cb176-13"><a href="bib.html#cb176-13" tabindex="-1"></a>B_bloco <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_bib<span class="sc">$</span>nota, dados_bib<span class="sc">$</span>bloco, sum)</span>
-<span id="cb176-14"><a href="bib.html#cb176-14" tabindex="-1"></a></span>
-<span id="cb176-15"><a href="bib.html#cb176-15" tabindex="-1"></a>soma_blocos_do_trat <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>t_bib, <span class="cf">function</span>(i) {</span>
-<span id="cb176-16"><a href="bib.html#cb176-16" tabindex="-1"></a>  bl <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">map_lgl</span>(blocos_lista, <span class="sc">~</span> i <span class="sc">%in%</span> .x))</span>
-<span id="cb176-17"><a href="bib.html#cb176-17" tabindex="-1"></a>  <span class="fu">sum</span>(B_bloco[bl])</span>
-<span id="cb176-18"><a href="bib.html#cb176-18" tabindex="-1"></a>})</span>
-<span id="cb176-19"><a href="bib.html#cb176-19" tabindex="-1"></a></span>
-<span id="cb176-20"><a href="bib.html#cb176-20" tabindex="-1"></a>Q <span class="ot">&lt;-</span> T_trat <span class="sc">-</span> soma_blocos_do_trat <span class="sc">/</span> k_bib</span>
-<span id="cb176-21"><a href="bib.html#cb176-21" tabindex="-1"></a>SQ_trat_ajustada <span class="ot">&lt;-</span> k_bib <span class="sc">*</span> <span class="fu">sum</span>(Q<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (lambda_bib <span class="sc">*</span> t_bib)</span>
-<span id="cb176-22"><a href="bib.html#cb176-22" tabindex="-1"></a></span>
-<span id="cb176-23"><a href="bib.html#cb176-23" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_formula =</span> SQ_trat_ajustada,</span>
-<span id="cb176-24"><a href="bib.html#cb176-24" tabindex="-1"></a>  <span class="at">SQ_trat_aov =</span> <span class="fu">anova</span>(<span class="fu">aov</span>(nota <span class="sc">~</span> bloco <span class="sc">+</span> trat, <span class="at">data =</span> dados_bib))[<span class="st">&quot;trat&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="bib.html#cb178-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb178-2"><a href="bib.html#cb178-2" tabindex="-1"></a>blocos_lista <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>))   <span class="co"># os 4 blocos da Tabela acima</span></span>
+<span id="cb178-3"><a href="bib.html#cb178-3" tabindex="-1"></a>efeito_trat_bib  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">5</span>)     <span class="co"># tau_i (apenas para simular uma resposta plausivel)</span></span>
+<span id="cb178-4"><a href="bib.html#cb178-4" tabindex="-1"></a>efeito_bloco_bib <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">6</span>)     <span class="co"># beta_j</span></span>
+<span id="cb178-5"><a href="bib.html#cb178-5" tabindex="-1"></a></span>
+<span id="cb178-6"><a href="bib.html#cb178-6" tabindex="-1"></a>dados_bib <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">seq_along</span>(blocos_lista), <span class="cf">function</span>(j) {</span>
+<span id="cb178-7"><a href="bib.html#cb178-7" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">bloco =</span> j, <span class="at">trat =</span> blocos_lista[[j]],</span>
+<span id="cb178-8"><a href="bib.html#cb178-8" tabindex="-1"></a>         <span class="at">nota =</span> <span class="dv">50</span> <span class="sc">+</span> efeito_trat_bib[blocos_lista[[j]]] <span class="sc">+</span> efeito_bloco_bib[j] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="fl">1.5</span>))</span>
+<span id="cb178-9"><a href="bib.html#cb178-9" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">bloco =</span> <span class="fu">factor</span>(bloco), <span class="at">trat =</span> <span class="fu">factor</span>(trat))</span>
+<span id="cb178-10"><a href="bib.html#cb178-10" tabindex="-1"></a></span>
+<span id="cb178-11"><a href="bib.html#cb178-11" tabindex="-1"></a>k_bib <span class="ot">&lt;-</span> <span class="dv">3</span>; t_bib <span class="ot">&lt;-</span> <span class="dv">4</span>; lambda_bib <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb178-12"><a href="bib.html#cb178-12" tabindex="-1"></a>T_trat  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_bib<span class="sc">$</span>nota, dados_bib<span class="sc">$</span>trat, sum)</span>
+<span id="cb178-13"><a href="bib.html#cb178-13" tabindex="-1"></a>B_bloco <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_bib<span class="sc">$</span>nota, dados_bib<span class="sc">$</span>bloco, sum)</span>
+<span id="cb178-14"><a href="bib.html#cb178-14" tabindex="-1"></a></span>
+<span id="cb178-15"><a href="bib.html#cb178-15" tabindex="-1"></a>soma_blocos_do_trat <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>t_bib, <span class="cf">function</span>(i) {</span>
+<span id="cb178-16"><a href="bib.html#cb178-16" tabindex="-1"></a>  bl <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">map_lgl</span>(blocos_lista, <span class="sc">~</span> i <span class="sc">%in%</span> .x))</span>
+<span id="cb178-17"><a href="bib.html#cb178-17" tabindex="-1"></a>  <span class="fu">sum</span>(B_bloco[bl])</span>
+<span id="cb178-18"><a href="bib.html#cb178-18" tabindex="-1"></a>})</span>
+<span id="cb178-19"><a href="bib.html#cb178-19" tabindex="-1"></a></span>
+<span id="cb178-20"><a href="bib.html#cb178-20" tabindex="-1"></a>Q <span class="ot">&lt;-</span> T_trat <span class="sc">-</span> soma_blocos_do_trat <span class="sc">/</span> k_bib</span>
+<span id="cb178-21"><a href="bib.html#cb178-21" tabindex="-1"></a>SQ_trat_ajustada <span class="ot">&lt;-</span> k_bib <span class="sc">*</span> <span class="fu">sum</span>(Q<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (lambda_bib <span class="sc">*</span> t_bib)</span>
+<span id="cb178-22"><a href="bib.html#cb178-22" tabindex="-1"></a></span>
+<span id="cb178-23"><a href="bib.html#cb178-23" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_formula =</span> SQ_trat_ajustada,</span>
+<span id="cb178-24"><a href="bib.html#cb178-24" tabindex="-1"></a>  <span class="at">SQ_trat_aov =</span> <span class="fu">anova</span>(<span class="fu">aov</span>(nota <span class="sc">~</span> bloco <span class="sc">+</span> trat, <span class="at">data =</span> dados_bib))[<span class="st">&quot;trat&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>])</span></code></pre></div>
 <pre><code>## SQ_trat_formula     SQ_trat_aov 
 ##        62.04573        62.04573</code></pre>
 <p>Os dois valores coincidem: ajustar <code>bloco</code> <strong>antes</strong> de <code>trat</code> no modelo linear e pedir a soma de
@@ -591,6 +593,30 @@ Montgomery, D. C. (2017). <em>Design and analysis of experiments</em> (9th ed.).
 Yates, F. (1936). Incomplete randomized blocks. <em>Annals of Eugenics</em>, <em>7</em>(2), 121–140.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -490,11 +492,11 @@ covariável é, nesse sentido, <strong>uma projeção adicional</strong>: primei
 <span class="math inline">\(\mathbf z\)</span> do espaço de resposta, e só então perguntamos se o tratamento explica alguma variação
 <strong>além</strong> dela — exatamente por que a soma de quadrados sequencial da tabela a seguir entra a
 covariável primeiro.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="ancova.html#cb136-1" tabindex="-1"></a>X_ancova <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(atencao_pos <span class="sc">~</span> dose <span class="sc">+</span> basal, <span class="at">data =</span> cafeina)  <span class="co"># X_trat | z</span></span>
-<span id="cb136-2"><a href="ancova.html#cb136-2" tabindex="-1"></a><span class="fu">dim</span>(X_ancova)                                    <span class="co"># N x (t + 1): 5 colunas de dose + basal</span></span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="ancova.html#cb138-1" tabindex="-1"></a>X_ancova <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(atencao_pos <span class="sc">~</span> dose <span class="sc">+</span> basal, <span class="at">data =</span> cafeina)  <span class="co"># X_trat | z</span></span>
+<span id="cb138-2"><a href="ancova.html#cb138-2" tabindex="-1"></a><span class="fu">dim</span>(X_ancova)                                    <span class="co"># N x (t + 1): 5 colunas de dose + basal</span></span></code></pre></div>
 <pre><code>## [1] 40  6</code></pre>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="ancova.html#cb138-1" tabindex="-1"></a>beta_hat_ancova <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X_ancova) <span class="sc">%*%</span> X_ancova) <span class="sc">%*%</span> <span class="fu">t</span>(X_ancova) <span class="sc">%*%</span> cafeina<span class="sc">$</span>atencao_pos</span>
-<span id="cb138-2"><a href="ancova.html#cb138-2" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">t</span>(beta_hat_ancova), <span class="dv">3</span>)                     <span class="co"># bate com coef(mod_ancova) abaixo</span></span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="ancova.html#cb140-1" tabindex="-1"></a>beta_hat_ancova <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X_ancova) <span class="sc">%*%</span> X_ancova) <span class="sc">%*%</span> <span class="fu">t</span>(X_ancova) <span class="sc">%*%</span> cafeina<span class="sc">$</span>atencao_pos</span>
+<span id="cb140-2"><a href="ancova.html#cb140-2" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">t</span>(beta_hat_ancova), <span class="dv">3</span>)                     <span class="co"># bate com coef(mod_ancova) abaixo</span></span></code></pre></div>
 <pre><code>##      (Intercept) dose.L  dose.Q dose.C dose^4 basal
 ## [1,]       68.36 13.281 -14.009 -1.748 -2.507 0.625</code></pre>
 </div>
@@ -504,9 +506,9 @@ covariável primeiro.</p>
 covariável) e erro — nessa ordem, porque a covariável deve ser removida do erro <strong>antes</strong> de
 avaliar o efeito de tratamento:</p>
 <div class="caixa-r"><strong>Uso do R</strong> — ANCOVA: ajustando pela atenção basal</div>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="ancova.html#cb140-1" tabindex="-1"></a><span class="co"># 1. Verificar homogeneidade das inclinações: a interação basal:dose deve ser não significativa</span></span>
-<span id="cb140-2"><a href="ancova.html#cb140-2" tabindex="-1"></a>mod_inclinacoes <span class="ot">&lt;-</span> <span class="fu">lm</span>(atencao_pos <span class="sc">~</span> basal <span class="sc">*</span> dose, <span class="at">data =</span> cafeina)</span>
-<span id="cb140-3"><a href="ancova.html#cb140-3" tabindex="-1"></a><span class="fu">anova</span>(mod_inclinacoes)</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="ancova.html#cb142-1" tabindex="-1"></a><span class="co"># 1. Verificar homogeneidade das inclinações: a interação basal:dose deve ser não significativa</span></span>
+<span id="cb142-2"><a href="ancova.html#cb142-2" tabindex="-1"></a>mod_inclinacoes <span class="ot">&lt;-</span> <span class="fu">lm</span>(atencao_pos <span class="sc">~</span> basal <span class="sc">*</span> dose, <span class="at">data =</span> cafeina)</span>
+<span id="cb142-3"><a href="ancova.html#cb142-3" tabindex="-1"></a><span class="fu">anova</span>(mod_inclinacoes)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: atencao_pos
@@ -517,9 +519,9 @@ avaliar o efeito de tratamento:</p>
 ## Residuals  30  559.68   18.66                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="ancova.html#cb142-1" tabindex="-1"></a><span class="co"># 2. Interação não significativa (p &gt; 0.05) -&gt; prossegue com o modelo aditivo (ANCOVA)</span></span>
-<span id="cb142-2"><a href="ancova.html#cb142-2" tabindex="-1"></a>mod_ancova <span class="ot">&lt;-</span> <span class="fu">lm</span>(atencao_pos <span class="sc">~</span> basal <span class="sc">+</span> dose, <span class="at">data =</span> cafeina)</span>
-<span id="cb142-3"><a href="ancova.html#cb142-3" tabindex="-1"></a><span class="fu">anova</span>(mod_ancova)          <span class="co"># soma de quadrados sequencial: covariável entra primeiro</span></span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="ancova.html#cb144-1" tabindex="-1"></a><span class="co"># 2. Interação não significativa (p &gt; 0.05) -&gt; prossegue com o modelo aditivo (ANCOVA)</span></span>
+<span id="cb144-2"><a href="ancova.html#cb144-2" tabindex="-1"></a>mod_ancova <span class="ot">&lt;-</span> <span class="fu">lm</span>(atencao_pos <span class="sc">~</span> basal <span class="sc">+</span> dose, <span class="at">data =</span> cafeina)</span>
+<span id="cb144-3"><a href="ancova.html#cb144-3" tabindex="-1"></a><span class="fu">anova</span>(mod_ancova)          <span class="co"># soma de quadrados sequencial: covariável entra primeiro</span></span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: atencao_pos
@@ -529,8 +531,8 @@ avaliar o efeito de tratamento:</p>
 ## Residuals 34  659.18   19.39                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="ancova.html#cb144-1" tabindex="-1"></a><span class="co"># médias de dose ajustadas para o valor médio de basal (emmeans faz o ajuste automaticamente)</span></span>
-<span id="cb144-2"><a href="ancova.html#cb144-2" tabindex="-1"></a><span class="fu">emmeans</span>(mod_ancova, <span class="sc">~</span> dose)</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="ancova.html#cb146-1" tabindex="-1"></a><span class="co"># médias de dose ajustadas para o valor médio de basal (emmeans faz o ajuste automaticamente)</span></span>
+<span id="cb146-2"><a href="ancova.html#cb146-2" tabindex="-1"></a><span class="fu">emmeans</span>(mod_ancova, <span class="sc">~</span> dose)</span></code></pre></div>
 <pre><code>##  dose emmean   SE df lower.CL upper.CL
 ##  0      91.6 1.59 34     88.3     94.8
 ##  50    106.8 1.75 34    103.3    110.4
@@ -571,6 +573,30 @@ menos eficiente?</li>
 </div>
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

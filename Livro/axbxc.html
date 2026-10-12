@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -521,17 +523,17 @@ $3\times3\times3=27$ combinações, cada uma executada em duas injeções indepe
 (repetições), 54 corridas ao todo. A resposta é a proporção do composto recuperado.
 </div>
 <div class="caixa-r"><strong>Uso do R</strong> — ANOVA do fatorial 3×3×3 com repetição</div>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="axbxc.html#cb235-1" tabindex="-1"></a>acuosas <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/acuosas.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb235-2"><a href="axbxc.html#cb235-2" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
-<span id="cb235-3"><a href="axbxc.html#cb235-3" tabindex="-1"></a>    <span class="at">viscosidade =</span> <span class="fu">factor</span>(Viscosidad, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;baixa&quot;</span>, <span class="st">&quot;média&quot;</span>, <span class="st">&quot;alta&quot;</span>)),</span>
-<span id="cb235-4"><a href="axbxc.html#cb235-4" tabindex="-1"></a>    <span class="at">salinidade  =</span> <span class="fu">factor</span>(Salinidad,  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;baixa&quot;</span>, <span class="st">&quot;média&quot;</span>, <span class="st">&quot;alta&quot;</span>)),</span>
-<span id="cb235-5"><a href="axbxc.html#cb235-5" tabindex="-1"></a>    <span class="at">tempo       =</span> <span class="fu">factor</span>(Tiempo,     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;curto&quot;</span>, <span class="st">&quot;médio&quot;</span>, <span class="st">&quot;longo&quot;</span>)),</span>
-<span id="cb235-6"><a href="axbxc.html#cb235-6" tabindex="-1"></a>    <span class="at">injecao     =</span> <span class="fu">factor</span>(inyeccion),</span>
-<span id="cb235-7"><a href="axbxc.html#cb235-7" tabindex="-1"></a>    <span class="at">recuperacao =</span> recupera</span>
-<span id="cb235-8"><a href="axbxc.html#cb235-8" tabindex="-1"></a>  )</span>
-<span id="cb235-9"><a href="axbxc.html#cb235-9" tabindex="-1"></a></span>
-<span id="cb235-10"><a href="axbxc.html#cb235-10" tabindex="-1"></a>modelo_axbxc <span class="ot">&lt;-</span> <span class="fu">aov</span>(recuperacao <span class="sc">~</span> viscosidade <span class="sc">*</span> salinidade <span class="sc">*</span> tempo, <span class="at">data =</span> acuosas)</span>
-<span id="cb235-11"><a href="axbxc.html#cb235-11" tabindex="-1"></a><span class="fu">summary</span>(modelo_axbxc)</span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="axbxc.html#cb237-1" tabindex="-1"></a>acuosas <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/acuosas.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb237-2"><a href="axbxc.html#cb237-2" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb237-3"><a href="axbxc.html#cb237-3" tabindex="-1"></a>    <span class="at">viscosidade =</span> <span class="fu">factor</span>(Viscosidad, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;baixa&quot;</span>, <span class="st">&quot;média&quot;</span>, <span class="st">&quot;alta&quot;</span>)),</span>
+<span id="cb237-4"><a href="axbxc.html#cb237-4" tabindex="-1"></a>    <span class="at">salinidade  =</span> <span class="fu">factor</span>(Salinidad,  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;baixa&quot;</span>, <span class="st">&quot;média&quot;</span>, <span class="st">&quot;alta&quot;</span>)),</span>
+<span id="cb237-5"><a href="axbxc.html#cb237-5" tabindex="-1"></a>    <span class="at">tempo       =</span> <span class="fu">factor</span>(Tiempo,     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;curto&quot;</span>, <span class="st">&quot;médio&quot;</span>, <span class="st">&quot;longo&quot;</span>)),</span>
+<span id="cb237-6"><a href="axbxc.html#cb237-6" tabindex="-1"></a>    <span class="at">injecao     =</span> <span class="fu">factor</span>(inyeccion),</span>
+<span id="cb237-7"><a href="axbxc.html#cb237-7" tabindex="-1"></a>    <span class="at">recuperacao =</span> recupera</span>
+<span id="cb237-8"><a href="axbxc.html#cb237-8" tabindex="-1"></a>  )</span>
+<span id="cb237-9"><a href="axbxc.html#cb237-9" tabindex="-1"></a></span>
+<span id="cb237-10"><a href="axbxc.html#cb237-10" tabindex="-1"></a>modelo_axbxc <span class="ot">&lt;-</span> <span class="fu">aov</span>(recuperacao <span class="sc">~</span> viscosidade <span class="sc">*</span> salinidade <span class="sc">*</span> tempo, <span class="at">data =</span> acuosas)</span>
+<span id="cb237-11"><a href="axbxc.html#cb237-11" tabindex="-1"></a><span class="fu">summary</span>(modelo_axbxc)</span></code></pre></div>
 <pre><code>##                              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## viscosidade                   2 0.4981 0.24906  34.680 3.47e-08 ***
 ## salinidade                    2 0.0986 0.04930   6.865  0.00389 ** 
@@ -676,36 +678,36 @@ com <span class="math inline">\(3\)</span> níveis, <span class="math inline">\(
 exemplo deste livro com <strong>três</strong> fatores cruzados, e vale formalizar sua estrutura antes de seguir
 para os fatoriais <span class="math inline">\(2^k\)</span> do Capítulo 6, em que diagramas com quatro e mais fatores serão a norma.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do fatorial 3×3×3 de extração</div>
-<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="axbxc.html#cb237-1" tabindex="-1"></a>nos_axbxc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb237-2"><a href="axbxc.html#cb237-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Salinidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
-<span id="cb237-3"><a href="axbxc.html#cb237-3" tabindex="-1"></a>              <span class="st">&quot;Visc.×Sal.&quot;</span>, <span class="st">&quot;Visc.×Tempo&quot;</span>, <span class="st">&quot;Sal.×Tempo&quot;</span>,</span>
-<span id="cb237-4"><a href="axbxc.html#cb237-4" tabindex="-1"></a>              <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
-<span id="cb237-5"><a href="axbxc.html#cb237-5" tabindex="-1"></a>  <span class="co"># classes = numero de combinacoes distintas que o termo distingue</span></span>
-<span id="cb237-6"><a href="axbxc.html#cb237-6" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
-<span id="cb237-7"><a href="axbxc.html#cb237-7" tabindex="-1"></a>              <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>,</span>
-<span id="cb237-8"><a href="axbxc.html#cb237-8" tabindex="-1"></a>              <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">54</span>)</span>
-<span id="cb237-9"><a href="axbxc.html#cb237-9" tabindex="-1"></a>)</span>
-<span id="cb237-10"><a href="axbxc.html#cb237-10" tabindex="-1"></a></span>
-<span id="cb237-11"><a href="axbxc.html#cb237-11" tabindex="-1"></a>arestas_axbxc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb237-12"><a href="axbxc.html#cb237-12" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>,</span>
-<span id="cb237-13"><a href="axbxc.html#cb237-13" tabindex="-1"></a>           <span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Salinidade&quot;</span>,</span>
-<span id="cb237-14"><a href="axbxc.html#cb237-14" tabindex="-1"></a>           <span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
-<span id="cb237-15"><a href="axbxc.html#cb237-15" tabindex="-1"></a>           <span class="st">&quot;Salinidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
-<span id="cb237-16"><a href="axbxc.html#cb237-16" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.&quot;</span>, <span class="st">&quot;Visc.×Tempo&quot;</span>, <span class="st">&quot;Sal.×Tempo&quot;</span>,</span>
-<span id="cb237-17"><a href="axbxc.html#cb237-17" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>),</span>
-<span id="cb237-18"><a href="axbxc.html#cb237-18" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Salinidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
-<span id="cb237-19"><a href="axbxc.html#cb237-19" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.&quot;</span>, <span class="st">&quot;Visc.×Sal.&quot;</span>,</span>
-<span id="cb237-20"><a href="axbxc.html#cb237-20" tabindex="-1"></a>           <span class="st">&quot;Visc.×Tempo&quot;</span>, <span class="st">&quot;Visc.×Tempo&quot;</span>,</span>
-<span id="cb237-21"><a href="axbxc.html#cb237-21" tabindex="-1"></a>           <span class="st">&quot;Sal.×Tempo&quot;</span>, <span class="st">&quot;Sal.×Tempo&quot;</span>,</span>
-<span id="cb237-22"><a href="axbxc.html#cb237-22" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>, <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>, <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>,</span>
-<span id="cb237-23"><a href="axbxc.html#cb237-23" tabindex="-1"></a>           <span class="st">&quot;Erro&quot;</span>)</span>
-<span id="cb237-24"><a href="axbxc.html#cb237-24" tabindex="-1"></a>)</span>
-<span id="cb237-25"><a href="axbxc.html#cb237-25" tabindex="-1"></a></span>
-<span id="cb237-26"><a href="axbxc.html#cb237-26" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb237-27"><a href="axbxc.html#cb237-27" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_axbxc, arestas_axbxc,</span>
-<span id="cb237-28"><a href="axbxc.html#cb237-28" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/axbxc.svg&quot;</span>,</span>
-<span id="cb237-29"><a href="axbxc.html#cb237-29" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Fatorial 3&amp;#215;3&amp;#215;3: viscosidade, salinidade, tempo, r=2 (N=54)&quot;</span>)</span>
-<span id="cb237-30"><a href="axbxc.html#cb237-30" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="axbxc.html#cb239-1" tabindex="-1"></a>nos_axbxc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb239-2"><a href="axbxc.html#cb239-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Salinidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
+<span id="cb239-3"><a href="axbxc.html#cb239-3" tabindex="-1"></a>              <span class="st">&quot;Visc.×Sal.&quot;</span>, <span class="st">&quot;Visc.×Tempo&quot;</span>, <span class="st">&quot;Sal.×Tempo&quot;</span>,</span>
+<span id="cb239-4"><a href="axbxc.html#cb239-4" tabindex="-1"></a>              <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
+<span id="cb239-5"><a href="axbxc.html#cb239-5" tabindex="-1"></a>  <span class="co"># classes = numero de combinacoes distintas que o termo distingue</span></span>
+<span id="cb239-6"><a href="axbxc.html#cb239-6" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
+<span id="cb239-7"><a href="axbxc.html#cb239-7" tabindex="-1"></a>              <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>,</span>
+<span id="cb239-8"><a href="axbxc.html#cb239-8" tabindex="-1"></a>              <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">54</span>)</span>
+<span id="cb239-9"><a href="axbxc.html#cb239-9" tabindex="-1"></a>)</span>
+<span id="cb239-10"><a href="axbxc.html#cb239-10" tabindex="-1"></a></span>
+<span id="cb239-11"><a href="axbxc.html#cb239-11" tabindex="-1"></a>arestas_axbxc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb239-12"><a href="axbxc.html#cb239-12" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>,</span>
+<span id="cb239-13"><a href="axbxc.html#cb239-13" tabindex="-1"></a>           <span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Salinidade&quot;</span>,</span>
+<span id="cb239-14"><a href="axbxc.html#cb239-14" tabindex="-1"></a>           <span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
+<span id="cb239-15"><a href="axbxc.html#cb239-15" tabindex="-1"></a>           <span class="st">&quot;Salinidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
+<span id="cb239-16"><a href="axbxc.html#cb239-16" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.&quot;</span>, <span class="st">&quot;Visc.×Tempo&quot;</span>, <span class="st">&quot;Sal.×Tempo&quot;</span>,</span>
+<span id="cb239-17"><a href="axbxc.html#cb239-17" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>),</span>
+<span id="cb239-18"><a href="axbxc.html#cb239-18" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Viscosidade&quot;</span>, <span class="st">&quot;Salinidade&quot;</span>, <span class="st">&quot;Tempo&quot;</span>,</span>
+<span id="cb239-19"><a href="axbxc.html#cb239-19" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.&quot;</span>, <span class="st">&quot;Visc.×Sal.&quot;</span>,</span>
+<span id="cb239-20"><a href="axbxc.html#cb239-20" tabindex="-1"></a>           <span class="st">&quot;Visc.×Tempo&quot;</span>, <span class="st">&quot;Visc.×Tempo&quot;</span>,</span>
+<span id="cb239-21"><a href="axbxc.html#cb239-21" tabindex="-1"></a>           <span class="st">&quot;Sal.×Tempo&quot;</span>, <span class="st">&quot;Sal.×Tempo&quot;</span>,</span>
+<span id="cb239-22"><a href="axbxc.html#cb239-22" tabindex="-1"></a>           <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>, <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>, <span class="st">&quot;Visc.×Sal.×Tempo&quot;</span>,</span>
+<span id="cb239-23"><a href="axbxc.html#cb239-23" tabindex="-1"></a>           <span class="st">&quot;Erro&quot;</span>)</span>
+<span id="cb239-24"><a href="axbxc.html#cb239-24" tabindex="-1"></a>)</span>
+<span id="cb239-25"><a href="axbxc.html#cb239-25" tabindex="-1"></a></span>
+<span id="cb239-26"><a href="axbxc.html#cb239-26" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb239-27"><a href="axbxc.html#cb239-27" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_axbxc, arestas_axbxc,</span>
+<span id="cb239-28"><a href="axbxc.html#cb239-28" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/axbxc.svg&quot;</span>,</span>
+<span id="cb239-29"><a href="axbxc.html#cb239-29" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Fatorial 3&amp;#215;3&amp;#215;3: viscosidade, salinidade, tempo, r=2 (N=54)&quot;</span>)</span>
+<span id="cb239-30"><a href="axbxc.html#cb239-30" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-axbxc"></span>
 <img src="figuras/hasse/axbxc.svg" alt="Diagrama de Hasse do fatorial 3x3x3 de extração (viscosidade, salinidade, tempo, r=2 injeções, N=54). Os três fatores ocupam o mesmo nível (cruzados entre si); as três interações duplas refinam exatamente o par de fatores que as compõe; a interação tripla refina as três duplas simultaneamente; o Erro, na base, recebe o que sobra depois de toda a estrutura de tratamento." width="92%" />
 <p class="caption">
@@ -751,6 +753,30 @@ Box, G. E. P., Hunter, J. S., &amp; Hunter, W. G. (2005). <em>Statistics for exp
 Yates, F. (1937). <em>The design and analysis of factorial experiments</em>. Imperial Bureau of Soil Science.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

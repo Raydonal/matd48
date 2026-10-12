@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -474,19 +476,19 @@ purificação (<code>Agente</code>). O fatorial $2^4$ completo (16 tratamentos) 
 <strong>duas repetições</strong> (32 corridas), medindo o rendimento percentual de biodiesel.
 </div>
 <div class="caixa-r"><strong>Uso do R</strong> — ANOVA completa do 2⁴ replicado</div>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="fatoriais-2k.html#cb240-1" tabindex="-1"></a><span class="co"># Mantemos os quatro fatores em sua codificação numérica original (-1/+1), em vez de</span></span>
-<span id="cb240-2"><a href="fatoriais-2k.html#cb240-2" tabindex="-1"></a><span class="co"># convertê-los para factor(): a seção &quot;Ortogonalidade da matriz de desenho&quot; mostra que é exatamente essa</span></span>
-<span id="cb240-3"><a href="fatoriais-2k.html#cb240-3" tabindex="-1"></a><span class="co"># codificação simétrica que faz X&#39;X ser diagonal. A tabela de ANOVA abaixo não muda em nada</span></span>
-<span id="cb240-4"><a href="fatoriais-2k.html#cb240-4" tabindex="-1"></a><span class="co"># — soma de quadrados de um fatorial 2^k balanceado não depende de como cada fator é codificado —</span></span>
-<span id="cb240-5"><a href="fatoriais-2k.html#cb240-5" tabindex="-1"></a><span class="co"># mas as próximas seções (contraste de Yates, Lenth) dependem disso de forma essencial.</span></span>
-<span id="cb240-6"><a href="fatoriais-2k.html#cb240-6" tabindex="-1"></a>biodiesel <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/biodiesel.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb240-7"><a href="fatoriais-2k.html#cb240-7" tabindex="-1"></a></span>
-<span id="cb240-8"><a href="fatoriais-2k.html#cb240-8" tabindex="-1"></a>modelo_2k <span class="ot">&lt;-</span> <span class="fu">aov</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente, <span class="at">data =</span> biodiesel)</span>
-<span id="cb240-9"><a href="fatoriais-2k.html#cb240-9" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(modelo_2k) <span class="sc">%&gt;%</span></span>
-<span id="cb240-10"><a href="fatoriais-2k.html#cb240-10" tabindex="-1"></a>  <span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.10</span> <span class="sc">|</span> <span class="fu">is.na</span>(p.value)) <span class="sc">%&gt;%</span></span>
-<span id="cb240-11"><a href="fatoriais-2k.html#cb240-11" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">4</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb240-12"><a href="fatoriais-2k.html#cb240-12" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Termos com p &lt; 0,10 na ANOVA completa do fatorial 2⁴ (rendimento de biodiesel)&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb240-13"><a href="fatoriais-2k.html#cb240-13" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="fatoriais-2k.html#cb242-1" tabindex="-1"></a><span class="co"># Mantemos os quatro fatores em sua codificação numérica original (-1/+1), em vez de</span></span>
+<span id="cb242-2"><a href="fatoriais-2k.html#cb242-2" tabindex="-1"></a><span class="co"># convertê-los para factor(): a seção &quot;Ortogonalidade da matriz de desenho&quot; mostra que é exatamente essa</span></span>
+<span id="cb242-3"><a href="fatoriais-2k.html#cb242-3" tabindex="-1"></a><span class="co"># codificação simétrica que faz X&#39;X ser diagonal. A tabela de ANOVA abaixo não muda em nada</span></span>
+<span id="cb242-4"><a href="fatoriais-2k.html#cb242-4" tabindex="-1"></a><span class="co"># — soma de quadrados de um fatorial 2^k balanceado não depende de como cada fator é codificado —</span></span>
+<span id="cb242-5"><a href="fatoriais-2k.html#cb242-5" tabindex="-1"></a><span class="co"># mas as próximas seções (contraste de Yates, Lenth) dependem disso de forma essencial.</span></span>
+<span id="cb242-6"><a href="fatoriais-2k.html#cb242-6" tabindex="-1"></a>biodiesel <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/biodiesel.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb242-7"><a href="fatoriais-2k.html#cb242-7" tabindex="-1"></a></span>
+<span id="cb242-8"><a href="fatoriais-2k.html#cb242-8" tabindex="-1"></a>modelo_2k <span class="ot">&lt;-</span> <span class="fu">aov</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente, <span class="at">data =</span> biodiesel)</span>
+<span id="cb242-9"><a href="fatoriais-2k.html#cb242-9" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(modelo_2k) <span class="sc">%&gt;%</span></span>
+<span id="cb242-10"><a href="fatoriais-2k.html#cb242-10" tabindex="-1"></a>  <span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.10</span> <span class="sc">|</span> <span class="fu">is.na</span>(p.value)) <span class="sc">%&gt;%</span></span>
+<span id="cb242-11"><a href="fatoriais-2k.html#cb242-11" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">4</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb242-12"><a href="fatoriais-2k.html#cb242-12" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&quot;Termos com p &lt; 0,10 na ANOVA completa do fatorial 2⁴ (rendimento de biodiesel)&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb242-13"><a href="fatoriais-2k.html#cb242-13" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:biodiesel-anova">Tabela 6.1: </span>Termos com p &lt; 0,10 na ANOVA completa do fatorial 2⁴ (rendimento de biodiesel)
@@ -710,14 +712,14 @@ exatamente quando o desenho é balanceado). Isso não é uma coincidência do de
 consequência direta de cada coluna assumir apenas os valores <span class="math inline">\(\pm1\)</span> em proporções iguais e de
 forma cruzada.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — verificando que X'X é diagonal no 2⁴</div>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="fatoriais-2k.html#cb241-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente, <span class="at">data =</span> biodiesel)</span>
-<span id="cb241-2"><a href="fatoriais-2k.html#cb241-2" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
-<span id="cb241-3"><a href="fatoriais-2k.html#cb241-3" tabindex="-1"></a></span>
-<span id="cb241-4"><a href="fatoriais-2k.html#cb241-4" tabindex="-1"></a><span class="co"># Todas as entradas fora da diagonal são zero?</span></span>
-<span id="cb241-5"><a href="fatoriais-2k.html#cb241-5" tabindex="-1"></a><span class="fu">all</span>(XtX[<span class="fu">upper.tri</span>(XtX)] <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="fatoriais-2k.html#cb243-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente, <span class="at">data =</span> biodiesel)</span>
+<span id="cb243-2"><a href="fatoriais-2k.html#cb243-2" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
+<span id="cb243-3"><a href="fatoriais-2k.html#cb243-3" tabindex="-1"></a></span>
+<span id="cb243-4"><a href="fatoriais-2k.html#cb243-4" tabindex="-1"></a><span class="co"># Todas as entradas fora da diagonal são zero?</span></span>
+<span id="cb243-5"><a href="fatoriais-2k.html#cb243-5" tabindex="-1"></a><span class="fu">all</span>(XtX[<span class="fu">upper.tri</span>(XtX)] <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="fatoriais-2k.html#cb243-1" tabindex="-1"></a><span class="co"># A diagonal inteira vale n = 32 (o número de corridas)</span></span>
-<span id="cb243-2"><a href="fatoriais-2k.html#cb243-2" tabindex="-1"></a><span class="fu">range</span>(<span class="fu">diag</span>(XtX))</span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="fatoriais-2k.html#cb245-1" tabindex="-1"></a><span class="co"># A diagonal inteira vale n = 32 (o número de corridas)</span></span>
+<span id="cb245-2"><a href="fatoriais-2k.html#cb245-2" tabindex="-1"></a><span class="fu">range</span>(<span class="fu">diag</span>(XtX))</span></code></pre></div>
 <pre><code>## [1] 32 32</code></pre>
 <p>Quando <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\)</span> é diagonal, sua inversa também é diagonal — basta inverter cada
 elemento — e as equações normais <span class="math inline">\(\mathbf{X}&#39;\mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}&#39;\mathbf{Y}\)</span> do Capítulo 2 (Seção <a href="minimos-quadrados.html#minimos-quadrados">2.4</a>) se <strong>desacoplam</strong>
@@ -734,15 +736,15 @@ resposta, normalizado pela norma ao quadrado da coluna. Essa é exatamente a fó
 “contraste de Yates” — soma da resposta com sinal <span class="math inline">\(+\)</span> menos soma com sinal <span class="math inline">\(-\)</span>, dividida pela
 metade do número de corridas — só que agora obtida como caso particular da álgebra de mínimos
 quadrados do Capítulo 2, não como uma regra memorizada à parte.</p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="fatoriais-2k.html#cb245-1" tabindex="-1"></a>y  <span class="ot">&lt;-</span> biodiesel<span class="sc">$</span>Rendimiento</span>
-<span id="cb245-2"><a href="fatoriais-2k.html#cb245-2" tabindex="-1"></a>xa <span class="ot">&lt;-</span> X[, <span class="st">&quot;Relacion&quot;</span>]                      <span class="co"># coluna de sinais ±1 do fator Relação</span></span>
-<span id="cb245-3"><a href="fatoriais-2k.html#cb245-3" tabindex="-1"></a></span>
-<span id="cb245-4"><a href="fatoriais-2k.html#cb245-4" tabindex="-1"></a>efeito_via_produto_interno <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">sum</span>(xa <span class="sc">*</span> y) <span class="sc">/</span> <span class="fu">sum</span>(xa <span class="sc">*</span> xa)</span>
-<span id="cb245-5"><a href="fatoriais-2k.html#cb245-5" tabindex="-1"></a>efeito_via_regressao <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span></span>
-<span id="cb245-6"><a href="fatoriais-2k.html#cb245-6" tabindex="-1"></a>                                       Temperatura <span class="sc">*</span> Agente, <span class="at">data =</span> biodiesel))[<span class="st">&quot;Relacion&quot;</span>]</span>
-<span id="cb245-7"><a href="fatoriais-2k.html#cb245-7" tabindex="-1"></a></span>
-<span id="cb245-8"><a href="fatoriais-2k.html#cb245-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">produto_interno =</span> efeito_via_produto_interno,</span>
-<span id="cb245-9"><a href="fatoriais-2k.html#cb245-9" tabindex="-1"></a>  <span class="at">regressao        =</span> <span class="fu">unname</span>(efeito_via_regressao))</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="fatoriais-2k.html#cb247-1" tabindex="-1"></a>y  <span class="ot">&lt;-</span> biodiesel<span class="sc">$</span>Rendimiento</span>
+<span id="cb247-2"><a href="fatoriais-2k.html#cb247-2" tabindex="-1"></a>xa <span class="ot">&lt;-</span> X[, <span class="st">&quot;Relacion&quot;</span>]                      <span class="co"># coluna de sinais ±1 do fator Relação</span></span>
+<span id="cb247-3"><a href="fatoriais-2k.html#cb247-3" tabindex="-1"></a></span>
+<span id="cb247-4"><a href="fatoriais-2k.html#cb247-4" tabindex="-1"></a>efeito_via_produto_interno <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">sum</span>(xa <span class="sc">*</span> y) <span class="sc">/</span> <span class="fu">sum</span>(xa <span class="sc">*</span> xa)</span>
+<span id="cb247-5"><a href="fatoriais-2k.html#cb247-5" tabindex="-1"></a>efeito_via_regressao <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span></span>
+<span id="cb247-6"><a href="fatoriais-2k.html#cb247-6" tabindex="-1"></a>                                       Temperatura <span class="sc">*</span> Agente, <span class="at">data =</span> biodiesel))[<span class="st">&quot;Relacion&quot;</span>]</span>
+<span id="cb247-7"><a href="fatoriais-2k.html#cb247-7" tabindex="-1"></a></span>
+<span id="cb247-8"><a href="fatoriais-2k.html#cb247-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">produto_interno =</span> efeito_via_produto_interno,</span>
+<span id="cb247-9"><a href="fatoriais-2k.html#cb247-9" tabindex="-1"></a>  <span class="at">regressao        =</span> <span class="fu">unname</span>(efeito_via_regressao))</span></code></pre></div>
 <pre><code>## produto_interno       regressao 
 ##        -1.99375        -1.99375</code></pre>
 <p>A ortogonalidade tem uma segunda consequência, agora sobre a ANOVA: como as colunas são
@@ -806,48 +808,48 @@ total, contra a ordem <span class="math inline">\(2^k(2^k-1)\)</span> de operaç
 importava muito com lápis e papel, e que hoje sobrevive sobretudo por seu valor didático.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — implementando o algoritmo tabular de Yates e
 verificando-o contra os efeitos já calculados do biodiesel</div>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="fatoriais-2k.html#cb247-1" tabindex="-1"></a><span class="co"># Uma passada do algoritmo: metade inferior = somas de pares consecutivos,</span></span>
-<span id="cb247-2"><a href="fatoriais-2k.html#cb247-2" tabindex="-1"></a><span class="co"># metade superior = diferencas (segundo menos primeiro) dos mesmos pares</span></span>
-<span id="cb247-3"><a href="fatoriais-2k.html#cb247-3" tabindex="-1"></a>passada_yates <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
-<span id="cb247-4"><a href="fatoriais-2k.html#cb247-4" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
-<span id="cb247-5"><a href="fatoriais-2k.html#cb247-5" tabindex="-1"></a>  somas       <span class="ot">&lt;-</span> v[<span class="fu">seq</span>(<span class="dv">1</span>, n, <span class="at">by =</span> <span class="dv">2</span>)] <span class="sc">+</span> v[<span class="fu">seq</span>(<span class="dv">2</span>, n, <span class="at">by =</span> <span class="dv">2</span>)]</span>
-<span id="cb247-6"><a href="fatoriais-2k.html#cb247-6" tabindex="-1"></a>  diferencas  <span class="ot">&lt;-</span> v[<span class="fu">seq</span>(<span class="dv">2</span>, n, <span class="at">by =</span> <span class="dv">2</span>)] <span class="sc">-</span> v[<span class="fu">seq</span>(<span class="dv">1</span>, n, <span class="at">by =</span> <span class="dv">2</span>)]</span>
-<span id="cb247-7"><a href="fatoriais-2k.html#cb247-7" tabindex="-1"></a>  <span class="fu">c</span>(somas, diferencas)</span>
-<span id="cb247-8"><a href="fatoriais-2k.html#cb247-8" tabindex="-1"></a>}</span>
-<span id="cb247-9"><a href="fatoriais-2k.html#cb247-9" tabindex="-1"></a></span>
-<span id="cb247-10"><a href="fatoriais-2k.html#cb247-10" tabindex="-1"></a>algoritmo_yates <span class="ot">&lt;-</span> <span class="cf">function</span>(totais, k) {</span>
-<span id="cb247-11"><a href="fatoriais-2k.html#cb247-11" tabindex="-1"></a>  v <span class="ot">&lt;-</span> totais</span>
-<span id="cb247-12"><a href="fatoriais-2k.html#cb247-12" tabindex="-1"></a>  <span class="cf">for</span> (passo <span class="cf">in</span> <span class="fu">seq_len</span>(k)) v <span class="ot">&lt;-</span> <span class="fu">passada_yates</span>(v)</span>
-<span id="cb247-13"><a href="fatoriais-2k.html#cb247-13" tabindex="-1"></a>  v</span>
-<span id="cb247-14"><a href="fatoriais-2k.html#cb247-14" tabindex="-1"></a>}</span>
-<span id="cb247-15"><a href="fatoriais-2k.html#cb247-15" tabindex="-1"></a></span>
-<span id="cb247-16"><a href="fatoriais-2k.html#cb247-16" tabindex="-1"></a><span class="co"># Reaproveitando o 2^4 do biodiesel (secao &quot;Fatoriais 2^k: notacao e ANOVA&quot;): totais de tratamento</span></span>
-<span id="cb247-17"><a href="fatoriais-2k.html#cb247-17" tabindex="-1"></a><span class="co"># em ordem-padrao (1, a, b, ab, c, ac, ..., abcd), construida a partir dos 4 bits do indice</span></span>
-<span id="cb247-18"><a href="fatoriais-2k.html#cb247-18" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb247-19"><a href="fatoriais-2k.html#cb247-19" tabindex="-1"></a>ordem_padrao <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">idx =</span> <span class="dv">0</span><span class="sc">:</span>(<span class="dv">2</span><span class="sc">^</span>k <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb247-20"><a href="fatoriais-2k.html#cb247-20" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb247-21"><a href="fatoriais-2k.html#cb247-21" tabindex="-1"></a>    <span class="at">Relacion    =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">1</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb247-22"><a href="fatoriais-2k.html#cb247-22" tabindex="-1"></a>    <span class="at">Catalizador =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">2</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb247-23"><a href="fatoriais-2k.html#cb247-23" tabindex="-1"></a>    <span class="at">Temperatura =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">4</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb247-24"><a href="fatoriais-2k.html#cb247-24" tabindex="-1"></a>    <span class="at">Agente      =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">8</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb247-25"><a href="fatoriais-2k.html#cb247-25" tabindex="-1"></a>  )</span>
-<span id="cb247-26"><a href="fatoriais-2k.html#cb247-26" tabindex="-1"></a></span>
-<span id="cb247-27"><a href="fatoriais-2k.html#cb247-27" tabindex="-1"></a>totais_trat <span class="ot">&lt;-</span> ordem_padrao <span class="sc">%&gt;%</span></span>
-<span id="cb247-28"><a href="fatoriais-2k.html#cb247-28" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
-<span id="cb247-29"><a href="fatoriais-2k.html#cb247-29" tabindex="-1"></a>    biodiesel <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Relacion, Catalizador, Temperatura, Agente) <span class="sc">%&gt;%</span></span>
-<span id="cb247-30"><a href="fatoriais-2k.html#cb247-30" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(Rendimiento), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>),</span>
-<span id="cb247-31"><a href="fatoriais-2k.html#cb247-31" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Relacion&quot;</span>, <span class="st">&quot;Catalizador&quot;</span>, <span class="st">&quot;Temperatura&quot;</span>, <span class="st">&quot;Agente&quot;</span>)</span>
-<span id="cb247-32"><a href="fatoriais-2k.html#cb247-32" tabindex="-1"></a>  )</span>
-<span id="cb247-33"><a href="fatoriais-2k.html#cb247-33" tabindex="-1"></a></span>
-<span id="cb247-34"><a href="fatoriais-2k.html#cb247-34" tabindex="-1"></a>v_final <span class="ot">&lt;-</span> <span class="fu">algoritmo_yates</span>(totais_trat<span class="sc">$</span>total, k)</span>
-<span id="cb247-35"><a href="fatoriais-2k.html#cb247-35" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">unique</span>(totais_trat<span class="sc">$</span>n)                          <span class="co"># 2 replicas por tratamento</span></span>
-<span id="cb247-36"><a href="fatoriais-2k.html#cb247-36" tabindex="-1"></a>efeitos_yates <span class="ot">&lt;-</span> v_final[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">/</span> (r <span class="sc">*</span> <span class="dv">2</span><span class="sc">^</span>(k <span class="sc">-</span> <span class="dv">1</span>))        <span class="co"># descarta o total geral (posicao 1)</span></span>
-<span id="cb247-37"><a href="fatoriais-2k.html#cb247-37" tabindex="-1"></a></span>
-<span id="cb247-38"><a href="fatoriais-2k.html#cb247-38" tabindex="-1"></a><span class="co"># Efeitos ja calculados via produto interno / regressao (secao &quot;Ortogonalidade da matriz de desenho&quot;)</span></span>
-<span id="cb247-39"><a href="fatoriais-2k.html#cb247-39" tabindex="-1"></a>efeitos_regressao <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
-<span id="cb247-40"><a href="fatoriais-2k.html#cb247-40" tabindex="-1"></a>                                  <span class="at">data =</span> biodiesel))[<span class="sc">-</span><span class="dv">1</span>]</span>
-<span id="cb247-41"><a href="fatoriais-2k.html#cb247-41" tabindex="-1"></a></span>
-<span id="cb247-42"><a href="fatoriais-2k.html#cb247-42" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">sort</span>(efeitos_yates) <span class="sc">-</span> <span class="fu">sort</span>(efeitos_regressao)))</span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="fatoriais-2k.html#cb249-1" tabindex="-1"></a><span class="co"># Uma passada do algoritmo: metade inferior = somas de pares consecutivos,</span></span>
+<span id="cb249-2"><a href="fatoriais-2k.html#cb249-2" tabindex="-1"></a><span class="co"># metade superior = diferencas (segundo menos primeiro) dos mesmos pares</span></span>
+<span id="cb249-3"><a href="fatoriais-2k.html#cb249-3" tabindex="-1"></a>passada_yates <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
+<span id="cb249-4"><a href="fatoriais-2k.html#cb249-4" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
+<span id="cb249-5"><a href="fatoriais-2k.html#cb249-5" tabindex="-1"></a>  somas       <span class="ot">&lt;-</span> v[<span class="fu">seq</span>(<span class="dv">1</span>, n, <span class="at">by =</span> <span class="dv">2</span>)] <span class="sc">+</span> v[<span class="fu">seq</span>(<span class="dv">2</span>, n, <span class="at">by =</span> <span class="dv">2</span>)]</span>
+<span id="cb249-6"><a href="fatoriais-2k.html#cb249-6" tabindex="-1"></a>  diferencas  <span class="ot">&lt;-</span> v[<span class="fu">seq</span>(<span class="dv">2</span>, n, <span class="at">by =</span> <span class="dv">2</span>)] <span class="sc">-</span> v[<span class="fu">seq</span>(<span class="dv">1</span>, n, <span class="at">by =</span> <span class="dv">2</span>)]</span>
+<span id="cb249-7"><a href="fatoriais-2k.html#cb249-7" tabindex="-1"></a>  <span class="fu">c</span>(somas, diferencas)</span>
+<span id="cb249-8"><a href="fatoriais-2k.html#cb249-8" tabindex="-1"></a>}</span>
+<span id="cb249-9"><a href="fatoriais-2k.html#cb249-9" tabindex="-1"></a></span>
+<span id="cb249-10"><a href="fatoriais-2k.html#cb249-10" tabindex="-1"></a>algoritmo_yates <span class="ot">&lt;-</span> <span class="cf">function</span>(totais, k) {</span>
+<span id="cb249-11"><a href="fatoriais-2k.html#cb249-11" tabindex="-1"></a>  v <span class="ot">&lt;-</span> totais</span>
+<span id="cb249-12"><a href="fatoriais-2k.html#cb249-12" tabindex="-1"></a>  <span class="cf">for</span> (passo <span class="cf">in</span> <span class="fu">seq_len</span>(k)) v <span class="ot">&lt;-</span> <span class="fu">passada_yates</span>(v)</span>
+<span id="cb249-13"><a href="fatoriais-2k.html#cb249-13" tabindex="-1"></a>  v</span>
+<span id="cb249-14"><a href="fatoriais-2k.html#cb249-14" tabindex="-1"></a>}</span>
+<span id="cb249-15"><a href="fatoriais-2k.html#cb249-15" tabindex="-1"></a></span>
+<span id="cb249-16"><a href="fatoriais-2k.html#cb249-16" tabindex="-1"></a><span class="co"># Reaproveitando o 2^4 do biodiesel (secao &quot;Fatoriais 2^k: notacao e ANOVA&quot;): totais de tratamento</span></span>
+<span id="cb249-17"><a href="fatoriais-2k.html#cb249-17" tabindex="-1"></a><span class="co"># em ordem-padrao (1, a, b, ab, c, ac, ..., abcd), construida a partir dos 4 bits do indice</span></span>
+<span id="cb249-18"><a href="fatoriais-2k.html#cb249-18" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb249-19"><a href="fatoriais-2k.html#cb249-19" tabindex="-1"></a>ordem_padrao <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">idx =</span> <span class="dv">0</span><span class="sc">:</span>(<span class="dv">2</span><span class="sc">^</span>k <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb249-20"><a href="fatoriais-2k.html#cb249-20" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb249-21"><a href="fatoriais-2k.html#cb249-21" tabindex="-1"></a>    <span class="at">Relacion    =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">1</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb249-22"><a href="fatoriais-2k.html#cb249-22" tabindex="-1"></a>    <span class="at">Catalizador =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">2</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb249-23"><a href="fatoriais-2k.html#cb249-23" tabindex="-1"></a>    <span class="at">Temperatura =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">4</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb249-24"><a href="fatoriais-2k.html#cb249-24" tabindex="-1"></a>    <span class="at">Agente      =</span> <span class="fu">if_else</span>(<span class="fu">bitwAnd</span>(idx, <span class="dv">8</span><span class="dt">L</span>) <span class="sc">&gt;</span> <span class="dv">0</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb249-25"><a href="fatoriais-2k.html#cb249-25" tabindex="-1"></a>  )</span>
+<span id="cb249-26"><a href="fatoriais-2k.html#cb249-26" tabindex="-1"></a></span>
+<span id="cb249-27"><a href="fatoriais-2k.html#cb249-27" tabindex="-1"></a>totais_trat <span class="ot">&lt;-</span> ordem_padrao <span class="sc">%&gt;%</span></span>
+<span id="cb249-28"><a href="fatoriais-2k.html#cb249-28" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb249-29"><a href="fatoriais-2k.html#cb249-29" tabindex="-1"></a>    biodiesel <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Relacion, Catalizador, Temperatura, Agente) <span class="sc">%&gt;%</span></span>
+<span id="cb249-30"><a href="fatoriais-2k.html#cb249-30" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(Rendimiento), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>),</span>
+<span id="cb249-31"><a href="fatoriais-2k.html#cb249-31" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Relacion&quot;</span>, <span class="st">&quot;Catalizador&quot;</span>, <span class="st">&quot;Temperatura&quot;</span>, <span class="st">&quot;Agente&quot;</span>)</span>
+<span id="cb249-32"><a href="fatoriais-2k.html#cb249-32" tabindex="-1"></a>  )</span>
+<span id="cb249-33"><a href="fatoriais-2k.html#cb249-33" tabindex="-1"></a></span>
+<span id="cb249-34"><a href="fatoriais-2k.html#cb249-34" tabindex="-1"></a>v_final <span class="ot">&lt;-</span> <span class="fu">algoritmo_yates</span>(totais_trat<span class="sc">$</span>total, k)</span>
+<span id="cb249-35"><a href="fatoriais-2k.html#cb249-35" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">unique</span>(totais_trat<span class="sc">$</span>n)                          <span class="co"># 2 replicas por tratamento</span></span>
+<span id="cb249-36"><a href="fatoriais-2k.html#cb249-36" tabindex="-1"></a>efeitos_yates <span class="ot">&lt;-</span> v_final[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">/</span> (r <span class="sc">*</span> <span class="dv">2</span><span class="sc">^</span>(k <span class="sc">-</span> <span class="dv">1</span>))        <span class="co"># descarta o total geral (posicao 1)</span></span>
+<span id="cb249-37"><a href="fatoriais-2k.html#cb249-37" tabindex="-1"></a></span>
+<span id="cb249-38"><a href="fatoriais-2k.html#cb249-38" tabindex="-1"></a><span class="co"># Efeitos ja calculados via produto interno / regressao (secao &quot;Ortogonalidade da matriz de desenho&quot;)</span></span>
+<span id="cb249-39"><a href="fatoriais-2k.html#cb249-39" tabindex="-1"></a>efeitos_regressao <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
+<span id="cb249-40"><a href="fatoriais-2k.html#cb249-40" tabindex="-1"></a>                                  <span class="at">data =</span> biodiesel))[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb249-41"><a href="fatoriais-2k.html#cb249-41" tabindex="-1"></a></span>
+<span id="cb249-42"><a href="fatoriais-2k.html#cb249-42" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">sort</span>(efeitos_yates) <span class="sc">-</span> <span class="fu">sort</span>(efeitos_regressao)))</span></code></pre></div>
 <pre><code>## [1] 1.676437e-14</code></pre>
 <p>A diferença máxima entre os 15 efeitos calculados pelo algoritmo tabular e os mesmos 15 efeitos
 obtidos por regressão é numericamente zero: as duas rotas — produto interno de colunas de sinais e
@@ -867,6 +869,30 @@ ordem crescente nasce dos efeitos de ordem menor já calculados.</p>
 Yates, F. (1937). <em>The design and analysis of factorial experiments</em>. Imperial Bureau of Soil Science.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

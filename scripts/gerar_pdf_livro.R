@@ -22,7 +22,8 @@
 raiz <- normalizePath(".")
 stopifnot(file.exists(file.path(raiz, "Livro", "_bookdown.yml")))
 
-build <- file.path(tempdir(), "livro-pdf")
+# LIVRO_PDF_BUILD permite fixar (e depois inspecionar) a pasta de build
+build <- Sys.getenv("LIVRO_PDF_BUILD", file.path(tempdir(), "livro-pdf"))
 unlink(build, recursive = TRUE)
 dir.create(file.path(build, "Aulas2026"), recursive = TRUE)
 # os capitulos referenciam ../Aulas2026/assets/... (imagens, apa.csl)
@@ -52,6 +53,22 @@ html <- bookdown::render_book(
   ),
   output_dir = "_pdf", quiet = TRUE
 )
+
+# Footgun #2 do CLAUDE.md, tambem aqui: o render deixa os PNGs dos graficos em
+# _bookdown_files/0N-capitulo_files/, mas o HTML aponta para 0N-capitulo_files/.
+# Sem esta copia, todo grafico gerado pelo R sai em branco no PDF.
+for (d in Sys.glob("_bookdown_files/*_files"))
+  file.copy(d, dirname(html), recursive = TRUE)
+
+# Toda <img> do HTML paginado tem de apontar para um arquivo que existe. Um
+# render "limpo" (exit 0) pode deixar figura quebrada -- e no PDF ela some sem aviso.
+pagina <- paste(readLines(html, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+srcs <- regmatches(pagina, gregexpr('<img src="[^"]+"', pagina))[[1]]
+srcs <- sub('^<img src="', "", sub('"$', "", srcs))
+srcs <- srcs[!grepl("^(https?:|data:)", srcs)]
+faltando <- srcs[!file.exists(file.path(dirname(html), URLdecode(srcs)))]
+cat(length(srcs), "imagens no HTML,", length(faltando), "faltando\n")
+if (length(faltando)) stop("Figuras ausentes no PDF:\n", paste(faltando, collapse = "\n"))
 
 pdf <- file.path(raiz, "Livro", "livro-doe.pdf")
 pagedown::chrome_print(html, output = pdf, timeout = 600, verbose = 0)

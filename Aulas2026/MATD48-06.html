@@ -4,10 +4,12 @@
     <title>Verificação de Pressupostos e Transformações</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/custom-styles.css" type="text/css" />
   </head>
   <body>
@@ -43,6 +45,94 @@ class: inverse, center, middle
 
 ---
 
+## Três pressupostos, uma checagem possível
+
+A validade dos testes `\(F\)`, ICs e cálculos de tamanho amostral (Aulas 04–05) repousa em:
+
+1. **Independência** — garantida (ou não) pelo desenho; não se verifica nos dados.
+2. **Normalidade** dos erros.
+3. **Variância constante** entre tratamentos (homocedasticidade).
+
+--
+
+Os erros `\(\varepsilon_{ij}\)` não são observáveis; o que temos são os **resíduos**
+`\(e_{ij} = Y_{ij}-\bar Y_{i\cdot}\)`, isto é, `\(\mathbf e=(\mathbf I-\mathbf P_X)\mathbf Y\)` (Aula 03):
+o desvio de cada observação em relação à média do seu grupo. Eles fazem o papel de "erros
+estimados", e normalidade e homocedasticidade se checam neles (Montgomery, 2017).
+
+---
+
+## O que acontece se um pressuposto falhar
+
+Nem toda violação custa o mesmo:
+
+- **Independência** é a mais grave. Erros correlacionados enviesam o `\(MS_E\)`, e o teste `\(F\)`
+  perde a referência (é a pseudorreplicação da Aula 05). Não há correção depois dos dados: a
+  proteção é o desenho, isto é, sortear e identificar corretamente a UE.
+- **Normalidade:** o teste `\(F\)` é razoavelmente robusto, sobretudo em desenhos balanceados com `\(n\)`
+  moderado, porque compara **médias**, e médias tendem à normal. O maior risco são caudas pesadas e
+  pontos discrepantes, que inflam `\(MS_E\)` e tiram poder.
+- **Homocedasticidade:** o `\(MS_E\)` é uma média ponderada das variâncias dos grupos (Aula 04). Com
+  `\(n_i\)` iguais, o `\(F\)` sofre pouco. Com `\(n_i\)` diferentes, se os grupos **menores** têm a variância
+  **maior**, o nível real do teste passa do nominal (Box, 1954), e os ICs dos grupos mais variáveis
+  ficam curtos demais.
+
+---
+
+## Normalidade: gráfico e teste
+
+- **Q-Q plot**: quantis amostrais dos resíduos vs. quantis teóricos da normal. Mostra **onde**
+  (em qual cauda/região) o desvio ocorre — mais informativo que um único número.
+- **Shapiro-Wilk** (Shapiro &amp; Wilk, 1965): teste formal, útil como confirmação, não como árbitro único
+  — baixo poder em `\(n\)` pequeno, rejeita quase sempre em `\(n\)` muito grande por desvios sem
+  relevância prática.
+
+---
+
+## Homogeneidade de variância
+
+- **Teste de Levene** (Levene, 1960): compara desvios absolutos em torno da **mediana** de cada
+  grupo — robusto a não normalidade (preferível ao de Bartlett (1937), sensível a ela).
+- Ausência de rejeição **não** é evidência de que a homocedasticidade vale — sobretudo com poucas
+  observações por grupo. Inspeção gráfica (resíduos vs. ajustados) continua indispensável.
+
+---
+
+## De onde vêm as transformações
+
+Se a variância cresce com a média, `\(\mathrm{Var}(Y)=c\,\mu^{2a}\)`, procura-se `\(h\)` que a torne
+constante. Pelo método delta,
+
+`$$\mathrm{Var}\big(h(Y)\big)\approx h'(\mu)^2\,\mathrm{Var}(Y) = h'(\mu)^2\,c\,\mu^{2a},$$`
+
+que é constante se `\(h'(\mu)\propto\mu^{-a}\)`:
+
+`$$h(Y)=\begin{cases}Y^{1-a}, &amp; a\neq1\\ \log Y, &amp; a=1\end{cases}$$`
+
+--
+
+| Relação média-variância | `\(a\)` | Transformação | Exemplo típico |
+|---|:-:|---|---|
+| desvio-padrão `\(\propto\)` média (CV constante) | 1 | `\(\log Y\)` | tempos, concentrações |
+| variância `\(\propto\)` média | 1/2 | `\(\sqrt Y\)` | contagens (Poisson) |
+| desvio-padrão `\(\propto\)` média² | 2 | `\(1/Y\)` | taxas, tempos muito assimétricos |
+
+A família de Box-Cox, a seguir, é exatamente `\(Y^{\lambda}\)` com `\(\lambda=1-a\)`. Escolher `\(\lambda\)` é
+estimar quanto a variância cresce com a média.
+
+---
+
+## Transformações usuais e Box-Cox
+
+- **Log** (`\(\log Y\)`): variância `\(\propto\)` média$^2$ (erro multiplicativo) — tempos, contagens
+  grandes, dados positivos assimétricos à direita.
+- **Raiz quadrada** (`\(\sqrt Y\)`, ou `\(\sqrt{Y+1/2}\)`): variância `\(\propto\)` média — contagens.
+- **Box-Cox** (Box &amp; Cox, 1964): família `\(Y^{(\lambda)}=(Y^\lambda-1)/\lambda\)` (`\(\log Y\)` se
+  `\(\lambda=0\)`); `\(\lambda\)` escolhido maximizando a verossimilhança perfilada do modelo ajustado a
+  `\(Y^{(\lambda)}\)` (Box, Hunter &amp; Hunter, 2005).
+
+---
+
 ## Resíduos: verificação, mas também **descoberta**
 
 Analisar resíduos não é só carimbar pressupostos. É a única parte da análise capaz de revelar que **o delineamento esqueceu um fator**. Quatro coisas se procura (Kempthorne, 1952):
@@ -70,59 +160,48 @@ Os itens 1, 2 e 4 são *verificação*. O **item 3 é descoberta** — e é o ma
 
 À esquerda, a tendência ascendente grita: existe algo **ligado ao tempo** que o modelo não tem — aqui, o equipamento aquecendo ao longo do dia. Nenhum teste de normalidade ou de Levene detectaria isso; o Q-Q plot ficaria bonito.
 
-À direita, com a ordem no modelo, o padrão desaparece. **A aleatorização protege a validade; o gráfico de ordem revela o que bloquear da próxima vez.**
+À direita, com a ordem no modelo, o padrão desaparece. O que isso muda na análise, a seguir.
 
 ---
 
-## Três pressupostos, uma checagem possível
+## O que a aleatorização fez, e o que não fez
 
-A validade dos testes `\(F\)`, ICs e cálculos de tamanho amostral (Aulas 04–05) repousa em:
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Modelo &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; QM do erro &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F do tratamento &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; y ~ trat &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; y ~ ordem + trat &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.7 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
-1. **Independência** — garantida (ou não) pelo desenho; não se verifica nos dados.
-2. **Normalidade** dos erros.
-3. **Variância constante** entre tratamentos (homocedasticidade).
+- Como a ordem de execução foi **sorteada**, a deriva não favorece nenhum tratamento: o teste sem
+  a ordem é **válido**, só que ruidoso, porque a deriva foi parar no erro.
+- Pondo a ordem no modelo, o erro encolhe e o `\(F\)` cresce: **mesmos dados, mais precisão**.
+- Se a ordem *não* tivesse sido sorteada (todos os A primeiro, depois os B...), a deriva se
+  confundiria com o tratamento, e nenhum modelo separaria uma coisa da outra (confusão, Aula 01).
 
---
-
-Normalidade e homocedasticidade são checáveis a partir dos **resíduos**
-`\(e_{ij} = Y_{ij}-\bar Y_{i\cdot}\)` do modelo ajustado — a checagem de adequação do modelo via
-análise de resíduos (Montgomery, 2017).
-
----
-
-## Normalidade: gráfico e teste
-
-- **Q-Q plot**: quantis amostrais dos resíduos vs. quantis teóricos da normal. Mostra **onde**
-  (em qual cauda/região) o desvio ocorre — mais informativo que um único número.
-- **Shapiro-Wilk** (Shapiro &amp; Wilk, 1965): teste formal, útil como confirmação, não como árbitro único
-  — baixo poder em `\(n\)` pequeno, rejeita quase sempre em `\(n\)` muito grande por desvios sem
-  relevância prática.
-
----
-
-## Homogeneidade de variância
-
-- **Teste de Levene** (Levene, 1960): compara desvios absolutos em torno da **mediana** de cada
-  grupo — robusto a não normalidade (preferível ao de Bartlett (1937), sensível a ela).
-- Ausência de rejeição **não** é evidência de que a homocedasticidade vale — sobretudo com poucas
-  observações por grupo. Inspeção gráfica (resíduos vs. ajustados) continua indispensável.
-
----
-
-## Transformações usuais
-
-- **Log** (`\(\log Y\)`): variância `\(\propto\)` média$^2$ (erro multiplicativo) — tempos, contagens
-  grandes, dados positivos assimétricos à direita.
-- **Raiz quadrada** (`\(\sqrt Y\)`, ou `\(\sqrt{Y+1/2}\)`): variância `\(\propto\)` média — contagens.
-- **Box-Cox** (Box &amp; Cox, 1964): família `\(Y^{(\lambda)}=(Y^\lambda-1)/\lambda\)` (`\(\log Y\)` se
-  `\(\lambda=0\)`); `\(\lambda\)` escolhido maximizando a verossimilhança perfilada do modelo ajustado a
-  `\(Y^{(\lambda)}\)` (Box, Hunter &amp; Hunter, 2005).
+**A aleatorização protege a validade; o gráfico de ordem revela o que bloquear da próxima vez**
+(blocos, Aula 09).
 
 ---
 
 ## Pontos discrepantes: quando investigar, não descartar
 
-O item 4 da primeira teoria — "resíduos grandes merecem investigação" — precisa de uma régua.
+O item 4 da lista de descoberta, "resíduos grandes merecem investigação", precisa de uma régua.
 **Resíduo estudentizado** `\(r_i = e_i / \big(s\sqrt{1-h_{ii}}\big)\)`, com `\(h_{ii}\)` a alavancagem
 (diagonal da matriz de projeção `\(\mathbf{P}_X\)`, Capítulo 2): divide o resíduo bruto pelo seu
 próprio desvio-padrão, o que o torna comparável entre observações com alavancagens diferentes —
@@ -142,6 +221,7 @@ inverte a lógica: o objetivo é entender a causa, não maquiar o ajuste.
 
 
 ``` r
+set.seed(6)
 dados_ord &lt;- tibble(ordem = 1:40,
                      trat = factor(rep(c("A","B","C","D"), each = 10)),
                      y = 50 + as.numeric(trat)*2 + rnorm(40, 0, 2))
@@ -155,6 +235,8 @@ which(abs(r_estud) &gt; 2)
 ## 7 
 ## 7
 ```
+
+A observação 7, onde somamos 12 unidades, aparece com `\(r_7\approx3.7\)`. Se outra observação também passar de 2, é o esperado por acaso: com 40 resíduos, cerca de 5% deles passam de 2 mesmo sem nada de errado.
 
 ---
 
@@ -371,10 +453,13 @@ médias por fertilizante fica mais direta na escala original).
 
 ## Resumo da aula
 
+- Resíduos `\(\mathbf e=(\mathbf I-\mathbf P_X)\mathbf Y\)` substituem os erros não observáveis.
+  Independência é a violação mais grave e só o desenho a protege.
 - Normalidade: Q-Q plot (onde o desvio ocorre) + Shapiro-Wilk (confirmação formal).
 - Homocedasticidade: Levene, robusto a não normalidade; ausência de rejeição não é prova de que o
   pressuposto vale, sobretudo em `\(n\)` pequeno.
-- Log e raiz quadrada são casos especiais da família Box-Cox; `\(\lambda\)` escolhido por
+- Transformação estabilizadora: `\(\mathrm{Var}(Y)\propto\mu^{2a}\Rightarrow Y^{1-a}\)` (log se `\(a=1\)`).
+  Log e raiz quadrada são casos especiais da família Box-Cox; `\(\lambda\)` escolhido por
   verossimilhança perfilada, mas interpretabilidade pode justificar arredondar para 0, 1/2 ou 1.
 - Resíduos estudentizados `\(r_i\)` dão uma régua comparável para "resíduo grande" — `\(|r_i|&gt;3\)` pede
   investigação, não descarte automático.
@@ -388,6 +473,7 @@ médias por fertilizante fica mais direta na escala original).
 
 ## Referências
 
+- Box, G. E. P. (1954). Some Theorems on Quadratic Forms Applied in the Study of Analysis of Variance Problems, I. *The Annals of Mathematical Statistics*, 25(2), 290–302.
 - Montgomery, D. C. (2017). *Design and Analysis of Experiments* (9ª ed.). John Wiley &amp; Sons.
 - Shapiro, S. S. &amp; Wilk, M. B. (1965). An Analysis of Variance Test for Normality (Complete Samples). *Biometrika*, 52(3/4), 591–611.
 - Levene, H. (1960). Robust Tests for Equality of Variances. Em *Contributions to Probability and Statistics: Essays in Honor of Harold Hotelling* (pp. 278–292). Stanford University Press.

@@ -77,6 +77,26 @@ Balanceado ($n_i = n$): $\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\sum_i c_i^2$
 
 ---
 
+## De uma pergunta para os coeficientes
+
+O exemplo do Bloco 2 tem 4 configurações de página: Nenhum (controle), Analytics, Anúncios,
+Combo. Cada pergunta científica vira um vetor $(c_1,c_2,c_3,c_4)$:
+
+| Pergunta em palavras | $L$ | $(c_1,c_2,c_3,c_4)$ |
+|---|---|:-:|
+| Qualquer script pesa, em média? | $\mu_1-\tfrac13(\mu_2+\mu_3+\mu_4)$ | $(3,-1,-1,-1)$ |
+| Analytics é mais leve que os que têm anúncio? | $\mu_2-\tfrac12(\mu_3+\mu_4)$ | $(0,2,-1,-1)$ |
+| Combo pesa mais que só Anúncios? | $\mu_3-\mu_4$ | $(0,0,1,-1)$ |
+
+--
+
+- Multiplicar todos os $c_i$ por uma constante não muda o teste (só a escala de $\hat L$), por isso
+  se usam inteiros: $(3,-1,-1,-1)$ em vez de $(1,-\tfrac13,-\tfrac13,-\tfrac13)$.
+- A receita: **positivos** no grupo de um lado da pergunta, **negativos** no outro, **zero** em
+  quem não participa, e soma zero.
+
+---
+
 ## Leitura causal: contraste = efeito causal
 
 Em resultados potenciais, cada UE tem $t$ resultados potenciais $Y_i(1),\ldots,Y_i(t)$, um por
@@ -126,7 +146,8 @@ forma quadrática idempotente de posto 1 (Cap. 2, formas quadráticas) $\Rightar
 
 Dois contrastes $\{c_i\}$, $\{d_i\}$ são **ortogonais** se $\sum_i c_i d_i / n_i = 0$.
 
-Para $t$ tratamentos, no máximo $t-1$ contrastes mutuamente ortogonais.
+Para $t$ tratamentos, no máximo $t-1$ contrastes mutuamente ortogonais. Os três do slide anterior
+são ortogonais: por exemplo, $(3,-1,-1,-1)\cdot(0,2,-1,-1)=0-2+1+1=0$ (com $n_i$ iguais).
 
 --
 
@@ -196,24 +217,39 @@ Tukey, mas **não controla o FWER** (Duncan, 1955).
 
 ---
 
+## Qual procedimento usar?
+
+A escolha depende da **pergunta**, e deve ser feita **antes** de ver os dados:
+
+| Pergunta | Procedimento |
+|---|---|
+| Poucas comparações específicas, planejadas e ortogonais | contrastes, sem correção |
+| Cada tratamento contra um controle | Dunnett |
+| Todos os pares | Tukey HSD |
+| Poucas comparações planejadas, não ortogonais | Bonferroni |
+| Qualquer contraste, inclusive sugerido pelos dados | Scheffé |
+| Níveis quantitativos igualmente espaçados | polinômios ortogonais |
+| Agrupar médias em classes disjuntas | Scott-Knott |
+
+Duncan aparece muito na literatura aplicada, mas não controla o FWER (próximos slides): use-o
+sabendo disso.
+
+---
+
 ## Por que Bonferroni funciona: desigualdade de Boole
 
 Bonferroni não é uma receita — é um teorema de duas linhas. Seja $A_i$ o evento "cometer erro
 tipo I na $i$-ésima das $m$ comparações". A **desigualdade de Boole** (ou subaditividade da
 probabilidade) diz que
 
-$$
-P\!\left(\bigcup_{i=1}^{m} A_i\right) \;\le\; \sum_{i=1}^{m} P(A_i).
-$$
+$$P\!\left(\bigcup_{i=1}^{m} A_i\right) \;\le\; \sum_{i=1}^{m} P(A_i).$$
 
 --
 
 O FWER é justamente $P(\bigcup_i A_i)$: a probabilidade de errar **em pelo menos uma**
 comparação. Se conduzirmos cada teste ao nível $\alpha/m$, então $P(A_i) = \alpha/m$ e
 
-$$
-\text{FWER} \;\le\; \sum_{i=1}^{m} \frac{\alpha}{m} \;=\; \alpha .
-$$
+$$\text{FWER} \;\le\; \sum_{i=1}^{m} \frac{\alpha}{m} \;=\; \alpha .$$
 
 --
 
@@ -229,9 +265,7 @@ maior a dependência entre as comparações, mais folga se perde.
 Duncan não usa $\alpha$ fixo: para comparar duas médias separadas por **amplitude** $p$ (isto é,
 com $p-2$ médias entre elas na ordenação), ele adota o *nível de proteção*
 
-$$
-\alpha_p \;=\; 1 - (1-\alpha)^{\,p-1},
-$$
+$$\alpha_p \;=\; 1 - (1-\alpha)^{\,p-1},$$
 
 que é a taxa de erro de um conjunto de $p-1$ comparações independentes ao nível $\alpha$.
 
@@ -270,14 +304,19 @@ decompor $SQ_{\text{Trat}}$ em tendência é mais informativo que comparar pares
 
 --
 
-Coeficientes ortogonais tabulados $\lambda_i$ por grau (linear, quadrático, cúbico, ...):
+Para $t=5$ doses igualmente espaçadas, os coeficientes (o que `contr.poly(5)` dá, a menos de escala):
 
-$$\hat L_k = \sum_i \lambda_i \bar y_{i\cdot}, \qquad
-\mathrm{Var}(\hat L_k) = \frac{\sigma^2}{n}\sum_i \lambda_i^2, \qquad
-SQ_k = \frac{n\,\hat L_k^{\,2}}{\sum_i \lambda_i^2},$$
+| grau | $\lambda_1$ | $\lambda_2$ | $\lambda_3$ | $\lambda_4$ | $\lambda_5$ | pergunta |
+|---|:-:|:-:|:-:|:-:|:-:|---|
+| linear | −2 | −1 | 0 | 1 | 2 | a resposta sobe (ou desce) com a dose? |
+| quadrático | 2 | −1 | −2 | −1 | 2 | há curvatura (U ou U invertido)? |
+| cúbico | −1 | 2 | 0 | −2 | 1 | a curvatura muda de sentido? |
+| quártico | 1 | −4 | 6 | −4 | 1 | — |
 
-cada um com 1 gl, e $SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_k$ — o caso particular de contrastes
-ortogonais desenhado para capturar tendência, não diferenças ad hoc.
+São os polinômios $1, x, x^2,\dots$ nas doses, ortogonalizados por Gram-Schmidt.
+
+Cada grau é um contraste: $SQ_k = n\hat L_k^{\,2}/\sum_i\lambda_i^2$, 1 gl, e
+$SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_k$.
 
 ---
 
@@ -462,7 +501,7 @@ Três grupos **disjuntos** — nenhum tratamento em dois grupos ao mesmo tempo. 
 
 ---
 
-## Tukey vs. Duncan: onde os dois divergem
+## Tukey vs. Duncan: aqui coincidem, mas nem sempre
 
 ```{r plot-scripts, echo=FALSE, fig.width=8, fig.height=3.5}
 ggplot(dados_scripts, aes(config, tempo_ms, fill = config)) +
@@ -504,7 +543,7 @@ Níveis **quantitativos, igualmente espaçados** — cenário ideal para polinô
 set.seed(7)
 dose_mg <- c(0, 50, 100, 150, 200)
 dose_f <- factor(rep(dose_mg, each = 8))
-basal <- rnorm(40, 60, 8)
+basal <- rnorm(40, 60, 8)            # atenção antes da cafeína: usada na Aula 08 (ANCOVA)
 efeito_dose <- function(d) 20 + 0.35 * d - 0.0013 * d^2  # "U invertido"
 
 cafeina <- tibble(

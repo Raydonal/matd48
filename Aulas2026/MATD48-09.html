@@ -4,7 +4,7 @@
     <title>Delineamento em Blocos Completos Aleatorizados (DBCA)</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -98,22 +98,46 @@ homogêneos e sortear tratamentos *dentro* de cada bloco.
 O **DBCA** formaliza isso para `\(t\)` tratamentos e `\(b\)` blocos completos (todo tratamento aparece
 uma vez em cada bloco):
 
-$$
-Y_{ij} = \mu + \tau_i + \beta_j + \varepsilon_{ij}, \qquad i=1,\dots,t;\ j=1,\dots,b
-$$
+`$$Y_{ij} = \mu + \tau_i + \beta_j + \varepsilon_{ij}, \qquad i=1,\dots,t;\ j=1,\dots,b$$`
 
-`\(\varepsilon_{ij}\sim N(0,\sigma^2)\)` independentes. **Sem** interação tratamento$\times$bloco: o
+`\(\varepsilon_{ij}\sim N(0,\sigma^2)\)` independentes. **Sem** interação tratamento × bloco: o
 efeito de um tratamento é o mesmo (a menos de erro) em todo bloco.
+
+---
+
+## Como se sorteia um DBCA
+
+No DCA (Aula 04), um único sorteio distribuía os tratamentos entre **todas** as UEs. No DBCA
+há **um sorteio por bloco**: dentro de cada bloco, os `\(t\)` tratamentos são distribuídos ao acaso
+entre as `\(t\)` UEs daquele bloco.
+
+
+``` r
+set.seed(9)
+plano_dbca &lt;- map_dfr(1:3, function(j)
+  tibble(bloco = j, parcela = 1:4, tratamento = sample(c("A", "B", "C", "D"))))
+plano_dbca %&gt;% pivot_wider(names_from = parcela, values_from = tratamento, names_prefix = "parcela ")
+```
+
+```
+## # A tibble: 3 × 5
+##   bloco `parcela 1` `parcela 2` `parcela 3` `parcela 4`
+##   &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      
+## 1     1 C           A           B           D          
+## 2     2 D           C           A           B          
+## 3     3 D           C           B           A
+```
+
+Todo tratamento aparece **exatamente uma vez** em cada bloco (bloco completo). O que muda de bloco
+para bloco é só a posição.
 
 ---
 
 ## Notação matricial: `\(Y = X\beta + \varepsilon\)`
 
-$$
-X = \big[\,\mathbf 1 \mid X_{trat} \mid X_{bloco}\,\big]
-$$
+`$$X = \big[\,\mathbf 1 \mid X_{trat} \mid X_{bloco}\,\big]$$`
 
-Sem colunas de produto tratamento$\times$bloco — é isso, na matriz, que é a suposição de
+Sem colunas de produto tratamento × bloco — é isso, na matriz, que é a suposição de
 aditividade.
 
 
@@ -193,7 +217,8 @@ amostragem reduz a variância de uma média — a mesma lógica da eficiência r
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-Teste de interesse: `\(F_0 = QM_{Trat}/QM_{Erro}\)`.
+`\(SQ_{Trat}=b\sum_i(\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2\)`, `\(SQ_{Bloco}=t\sum_j(\bar y_{\cdot j}-\bar y_{\cdot\cdot})^2\)`,
+`\(SQ_{Erro}=\sum_{i,j}(y_{ij}-\bar y_{i\cdot}-\bar y_{\cdot j}+\bar y_{\cdot\cdot})^2\)`. Teste de interesse: `\(F_0 = QM_{Trat}/QM_{Erro}\)`.
 
 --
 
@@ -203,14 +228,29 @@ foram *fixados pelo delineamento*, não sorteados; sua função é reduzir o err
 
 ---
 
+## De onde vem o ganho da blocagem
+
+Analise os **mesmos** dados como DCA (ignorando o bloco) e como DBCA:
+
+`$$\underbrace{SQ_{Erro}^{\,DCA}}_{t(b-1)\ \text{gl}} \;=\; \underbrace{SQ_{Bloco}}_{b-1\ \text{gl}} \;+\; \underbrace{SQ_{Erro}^{\,DBCA}}_{(t-1)(b-1)\ \text{gl}}$$`
+
+A `\(SQ_{Trat}\)` é a mesma nas duas análises: o bloco **não mexe** na comparação dos tratamentos (todo
+tratamento aparece em todo bloco, então a diferença entre blocos se cancela). Ele só tira do erro a
+parte da variação que se deve às diferenças entre blocos.
+
+--
+
+- Se os blocos diferem muito, `\(SQ_{Bloco}\)` é grande, o erro encolhe e o `\(F\)` do tratamento cresce.
+- Se os blocos são parecidos, perde-se `\(b-1\)` gl do erro e quase nada de `\(SQ\)`: a blocagem custa
+  mais do que rende. A eficiência relativa, adiante, faz exatamente essa conta.
+
+---
+
 ## Por que o teste de blocos não deve orientar decisão
 
 Sob `\(\sum_i\tau_i=0\)`, `\(\sum_j\beta_j=0\)`:
 
-$$
-\mathbb E[QM_{Trat}] = \sigma^2 + \frac{b}{t-1}\sum_i \tau_i^2, \qquad
-\mathbb E[QM_{Bloco}] = \sigma^2 + \frac{t}{b-1}\sum_j \beta_j^2
-$$
+`$$\mathbb E[QM_{Trat}] = \sigma^2 + \frac{b}{t-1}\sum_i \tau_i^2, \qquad \mathbb E[QM_{Bloco}] = \sigma^2 + \frac{t}{b-1}\sum_j \beta_j^2$$`
 
 `\(\mathbb E[QM_{Erro}]=\sigma^2\)` em ambos os casos — a matemática do teste `\(QM_{Bloco}/QM_{Erro}\)`
 é perfeitamente válida.
@@ -228,9 +268,7 @@ heterogêneos. A pergunta que importa é a eficiência relativa, adiante.
 Uma observação perdida na célula (tratamento `\(i^*\)`, bloco `\(j^*\)`) pode ser estimada por
 (Yates, 1936):
 
-$$
-\hat y_{i^*j^*} = \frac{t\,T'_{i^*} + b\,B'_{j^*} - G'}{(t-1)(b-1)}
-$$
+`$$\hat y_{i^*j^*} = \frac{t\,T'_{i^*} + b\,B'_{j^*} - G'}{(t-1)(b-1)}$$`
 
 `\(T'\)`, `\(B'\)`, `\(G'\)`: totais de tratamento, bloco e geral, **excluindo** a observação perdida.
 
@@ -241,9 +279,7 @@ Duas ressalvas ao prosseguir com a ANOVA:
 1. Reduza `\(gl_{Erro}\)` em 1 (a observação estimada não é informação nova).
 2. `\(SQ_{Trat}\)` fica levemente viesada para cima; correção aproximada:
 
-$$
-SQ_{Trat}^{ajustada} = SQ_{Trat}^{ingênua} - \frac{\left[B'_{j^*}-(t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}
-$$
+`$$SQ_{Trat}^{ajustada} = SQ_{Trat}^{ingênua} - \frac{\left[B'_{j^*}-(t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}$$`
 
 ---
 
@@ -251,10 +287,7 @@ $$
 
 Valeu a pena blocar? (Montgomery, 2017; Cochran &amp; Cox, 1957):
 
-$$
-ER(DBCA,DCA) = \frac{(gl_B+1)(gl_{E,DCA}+3)\,QM_{Bloco} + gl_{E,DCA}(gl_B+3)\,QM_{Erro}}
-                     {(gl_{E,DCA}+1)(gl_B+3)\,QM_{Erro}}
-$$
+`$$ER(DBCA,DCA) = \frac{(gl_B+1)(gl_{E,DCA}+3)\,QM_{Bloco} + gl_{E,DCA}(gl_B+3)\,QM_{Erro}} {(gl_{E,DCA}+1)(gl_B+3)\,QM_{Erro}}$$`
 
 com `\(gl_B=b-1\)` e `\(gl_{E,DCA}=gl_{Erro}+gl_B\)` (graus de liberdade do erro que um DCA teria tido com
 o mesmo número de unidades).
@@ -278,7 +311,7 @@ class: inverse, center, middle
 diferem quanto à altura de plantas de pepino?
 
 - **Bloco** = área do viveiro (3 blocos, cada um com sua heterogeneidade de solo/insolação).
-- **Tratamento** = cada uma das 8 combinações irrigação$\times$silício (simplificação de um fator
+- **Tratamento** = cada uma das 8 combinações irrigação × silício (simplificação de um fator
   só; no Capítulo 5/Aula 12 decompomos esse efeito em irrigação, silício e interação).
 
 --
@@ -315,11 +348,82 @@ sentido perguntar "o bloco 2 é significativo?"; ele só existe para ser neutral
 
 ---
 
+## DCA ou DBCA? A mesma tabela, significados diferentes
+
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; tratamento &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; bloco 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; bloco 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; bloco 3 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego0.5_0 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.26 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.40 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego0.5_500 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.91 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.17 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego0.5_1000 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.61 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego0.5_1500 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.80 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego1_0 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.72 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.20 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego1_500 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego1_1000 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.78 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; riego1_1500 ml &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.11 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Parece a tabela tratamento × réplica da Aula 04, mas **as colunas agora significam algo**: o
+"bloco 2" é a **mesma** área do viveiro para os 8 tratamentos. Por isso existe efeito de coluna
+(`\(\beta_j\)`), e por isso **não** se pode embaralhar valores dentro de uma linha, ao contrário do DCA.
+Continua não sendo tabela de contingência: cada célula é uma altura medida.
+
+---
+
 ## A população conceitual de respostas de um DBCA
 
 &lt;img src="assets/images/quadro5Blocos.png" alt="" width="55%" /&gt;
 
-`\(Y_{ijk}\)` = resultado (potencial) do tratamento `\(k\)` na `\(j\)`-ésima UE do bloco `\(i\)`: uma tabela
+`\(Y_{ijk}\)` = resultado (potencial) do tratamento `\(k\)` na `\(j\)`-ésima UE do bloco `\(i\)`. Como cada bloco
+tem uma UE por tratamento, depois do sorteio sobra um índice a menos e voltamos a `\(Y_{ij}\)`: uma tabela
 bloco `\(\times\)` tratamento, não um vetor solto de 24 números — é essa estrutura que o
 `aov(altura ~ tratamento + bloco)` a seguir está de fato ajustando.
 
@@ -470,7 +574,7 @@ class: inverse, center, middle
 1. Se `\(QM_{Bloco}\)` tivesse sido bem maior que `\(QM_{Erro}\)` neste experimento, o que isso indicaria
    sobre a decisão original de blocar por área do viveiro?
 
-2. O modelo do DBCA não inclui interação tratamento$\times$bloco. É razoável supor que a diferença
+2. O modelo do DBCA não inclui interação tratamento × bloco. É razoável supor que a diferença
    entre duas doses de silício seja a mesma nos três blocos? Como você verificaria essa suposição
    informalmente com um gráfico?
 
@@ -574,7 +678,9 @@ c(SQ_N = SQ_N, F = F_0, p = pf(F_0, 1, gl_E - 1, lower.tail = FALSE))
 
 - Sem controle, um fator de ruído pode ficar completamente **confundido** com o tratamento; o DBCA
   evita isso sorteando dentro de blocos, não fixando o tratamento por bloco.
-- DBCA: uma fonte de bloqueio, ANOVA decompõe `\(SQ_{Total}\)` em tratamento + bloco + erro; a
+- DBCA: um sorteio por bloco; na tabela tratamento × bloco as colunas são blocos reais (no DCA,
+  réplicas arbitrárias). `\(SQ_{Erro}^{DCA}=SQ_{Bloco}+SQ_{Erro}^{DBCA}\)`: o ganho vem daí.
+- ANOVA decompõe `\(SQ_{Total}\)` em tratamento + bloco + erro; a
   esperança dos quadrados médios explica formalmente por que não se testa o bloco.
 - Valor perdido: fórmula de Yates, com ajuste em `\(gl_{Erro}\)` e em `\(SQ_{Trat}\)`.
 - Eficiência relativa quantifica se blocar valeu a pena — não é automático.

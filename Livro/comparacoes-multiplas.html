@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -555,10 +557,10 @@ relevante para quem for ler ou revisar esse tipo de trabalho.</p>
 entre si; tratamentos sem letra em comum diferem. Essa representação (<em>compact letter display</em>,
 CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — Tukey, Bonferroni, Scheffé, Dunnett, Duncan e agrupamento</div>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="comparacoes-multiplas.html#cb117-1" tabindex="-1"></a>emm_scripts <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod_scripts, <span class="sc">~</span> config)</span>
-<span id="cb117-2"><a href="comparacoes-multiplas.html#cb117-2" tabindex="-1"></a></span>
-<span id="cb117-3"><a href="comparacoes-multiplas.html#cb117-3" tabindex="-1"></a><span class="co"># todos os pares, três correções diferentes</span></span>
-<span id="cb117-4"><a href="comparacoes-multiplas.html#cb117-4" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="comparacoes-multiplas.html#cb119-1" tabindex="-1"></a>emm_scripts <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod_scripts, <span class="sc">~</span> config)</span>
+<span id="cb119-2"><a href="comparacoes-multiplas.html#cb119-2" tabindex="-1"></a></span>
+<span id="cb119-3"><a href="comparacoes-multiplas.html#cb119-3" tabindex="-1"></a><span class="co"># todos os pares, três correções diferentes</span></span>
+<span id="cb119-4"><a href="comparacoes-multiplas.html#cb119-4" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast             estimate   SE df t.ratio p.value
 ##  Nenhum - Analytics      -86.2 29.5 36  -2.922  0.0291
 ##  Nenhum - Anúncios      -220.5 29.5 36  -7.478 &lt;0.0001
@@ -568,7 +570,7 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ##  Anúncios - Combo        -33.7 29.5 36  -1.144  0.6650
 ## 
 ## P value adjustment: tukey method for comparing a family of 4 estimates</code></pre>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="comparacoes-multiplas.html#cb119-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;bonferroni&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="comparacoes-multiplas.html#cb121-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;bonferroni&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast             estimate   SE df t.ratio p.value
 ##  Nenhum - Analytics      -86.2 29.5 36  -2.922  0.0359
 ##  Nenhum - Anúncios      -220.5 29.5 36  -7.478 &lt;0.0001
@@ -578,7 +580,7 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ##  Anúncios - Combo        -33.7 29.5 36  -1.144  1.0000
 ## 
 ## P value adjustment: bonferroni method for 6 tests</code></pre>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="comparacoes-multiplas.html#cb121-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;scheffe&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="comparacoes-multiplas.html#cb123-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;scheffe&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast             estimate   SE df t.ratio p.value
 ##  Nenhum - Analytics      -86.2 29.5 36  -2.922  0.0511
 ##  Nenhum - Anúncios      -220.5 29.5 36  -7.478 &lt;0.0001
@@ -588,16 +590,16 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ##  Anúncios - Combo        -33.7 29.5 36  -1.144  0.7282
 ## 
 ## P value adjustment: scheffe method with rank 3</code></pre>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="comparacoes-multiplas.html#cb123-1" tabindex="-1"></a><span class="co"># cada tratamento vs. o controle &quot;Nenhum&quot; (Dunnett)</span></span>
-<span id="cb123-2"><a href="comparacoes-multiplas.html#cb123-2" tabindex="-1"></a><span class="fu">contrast</span>(emm_scripts, <span class="at">method =</span> <span class="st">&quot;trt.vs.ctrl&quot;</span>, <span class="at">ref =</span> <span class="st">&quot;Nenhum&quot;</span>, <span class="at">adjust =</span> <span class="st">&quot;dunnettx&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="comparacoes-multiplas.html#cb125-1" tabindex="-1"></a><span class="co"># cada tratamento vs. o controle &quot;Nenhum&quot; (Dunnett)</span></span>
+<span id="cb125-2"><a href="comparacoes-multiplas.html#cb125-2" tabindex="-1"></a><span class="fu">contrast</span>(emm_scripts, <span class="at">method =</span> <span class="st">&quot;trt.vs.ctrl&quot;</span>, <span class="at">ref =</span> <span class="st">&quot;Nenhum&quot;</span>, <span class="at">adjust =</span> <span class="st">&quot;dunnettx&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast           estimate   SE df t.ratio p.value
 ##  Analytics - Nenhum     86.2 29.5 36   2.922  0.0167
 ##  Anúncios - Nenhum     220.5 29.5 36   7.478 &lt;0.0001
 ##  Combo - Nenhum        254.2 29.5 36   8.623 &lt;0.0001
 ## 
 ## P value adjustment: dunnettx method for 3 tests</code></pre>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="comparacoes-multiplas.html#cb125-1" tabindex="-1"></a><span class="co"># agrupamento compacto por letras (compact letter display)</span></span>
-<span id="cb125-2"><a href="comparacoes-multiplas.html#cb125-2" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(emm_scripts, <span class="at">Letters =</span> letters, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="comparacoes-multiplas.html#cb127-1" tabindex="-1"></a><span class="co"># agrupamento compacto por letras (compact letter display)</span></span>
+<span id="cb127-2"><a href="comparacoes-multiplas.html#cb127-2" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(emm_scripts, <span class="at">Letters =</span> letters, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
 <pre><code>##  config    emmean   SE df lower.CL upper.CL .group
 ##  Nenhum       859 20.8 36      805      914  a    
 ##  Analytics    946 20.8 36      891     1000   b   
@@ -611,9 +613,9 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ## NOTE: If two or more means share the same grouping symbol,
 ##       then we cannot show them to be different.
 ##       But we also did not show them to be the same.</code></pre>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="comparacoes-multiplas.html#cb127-1" tabindex="-1"></a><span class="co"># Teste de Duncan (amplitude múltipla): fora do R base, via agricolae</span></span>
-<span id="cb127-2"><a href="comparacoes-multiplas.html#cb127-2" tabindex="-1"></a>duncan_scripts <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">duncan.test</span>(mod_scripts, <span class="st">&quot;config&quot;</span>, <span class="at">console =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb127-3"><a href="comparacoes-multiplas.html#cb127-3" tabindex="-1"></a>duncan_scripts<span class="sc">$</span>groups   <span class="co"># médias ordenadas + agrupamento por letras (Duncan)</span></span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="comparacoes-multiplas.html#cb129-1" tabindex="-1"></a><span class="co"># Teste de Duncan (amplitude múltipla): fora do R base, via agricolae</span></span>
+<span id="cb129-2"><a href="comparacoes-multiplas.html#cb129-2" tabindex="-1"></a>duncan_scripts <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">duncan.test</span>(mod_scripts, <span class="st">&quot;config&quot;</span>, <span class="at">console =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb129-3"><a href="comparacoes-multiplas.html#cb129-3" tabindex="-1"></a>duncan_scripts<span class="sc">$</span>groups   <span class="co"># médias ordenadas + agrupamento por letras (Duncan)</span></span></code></pre></div>
 <pre><code>##            tempo_ms groups
 ## Combo     1113.6160      a
 ## Anúncios  1079.8775      a
@@ -674,6 +676,30 @@ Scheffé, H. (1959). <em>The analysis of variance</em>. John Wiley &amp; Sons.
 Tukey, J. W. (1949a). Comparing individual means in the analysis of variance. <em>Biometrics</em>, <em>5</em>(2), 99–114.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

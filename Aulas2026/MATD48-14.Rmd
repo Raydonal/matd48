@@ -157,9 +157,7 @@ avisava antes de qualquer dado existir.
 
 ## Superfície de resposta: da pergunta "o que importa" para "qual é o ótimo"
 
-$$
-y = \beta_0 + \sum_i \beta_i x_i + \sum_i \beta_{ii} x_i^2 + \sum_{i<j}\beta_{ij}x_ix_j + \varepsilon
-$$
+$$y = \beta_0 + \sum_i \beta_i x_i + \sum_i \beta_{ii} x_i^2 + \sum_{i<j}\beta_{ij}x_ix_j + \varepsilon$$
 
 Os termos $\beta_{ii}$ (quadráticos) são o que um $2^k$ nunca estima — um desenho de 2 níveis é
 algebricamente **cego a curvatura**.
@@ -242,9 +240,9 @@ ggplot(grade, aes(Velocidad, angulo, z = pred)) +
 eigen(A_hess / 2)$values   # sinais opostos => ponto de sela
 ```
 
-O ponto estacionário ($V\approx3{,}28$, ângulo$\approx56{,}4°$) é uma **sela**: a superfície sobe
+O ponto estacionário ($V\approx3{,}28$, ângulo $\approx56{,}4°$) é uma **sela**: a superfície sobe
 em uma direção e desce em outra. O mínimo de energia **na região estudada** fica no canto
-($V=4{,}5$, ângulo$\approx59{,}0°$, energia $\approx0{,}027$) — a busca pelo ótimo prático deve
+($V=4{,}5$, ângulo $\approx59{,}0°$, energia $\approx0{,}027$) — a busca pelo ótimo prático deve
 seguir para a **fronteira** da região experimental, não parar no ponto estacionário interior.
 
 ---

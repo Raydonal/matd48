@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -492,26 +494,26 @@ simulação no artigo original):</p>
 <p>Um efeito é declarado “grande” se <span class="math inline">\(|c_i| &gt; \text{ME}\)</span>.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — método de Lenth, half-normal e Pareto em uma
 única repetição do 2⁴</div>
-<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="nao-replicado.html#cb249-1" tabindex="-1"></a><span class="co"># Simulando o cenário mais comum: apenas UMA repetição por tratamento</span></span>
-<span id="cb249-2"><a href="nao-replicado.html#cb249-2" tabindex="-1"></a>rep_unica <span class="ot">&lt;-</span> biodiesel <span class="sc">%&gt;%</span></span>
-<span id="cb249-3"><a href="nao-replicado.html#cb249-3" tabindex="-1"></a>  <span class="fu">distinct</span>(Relacion, Catalizador, Temperatura, Agente, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb249-4"><a href="nao-replicado.html#cb249-4" tabindex="-1"></a></span>
-<span id="cb249-5"><a href="nao-replicado.html#cb249-5" tabindex="-1"></a>modelo_saturado <span class="ot">&lt;-</span> <span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
-<span id="cb249-6"><a href="nao-replicado.html#cb249-6" tabindex="-1"></a>                       <span class="at">data =</span> rep_unica)</span>
-<span id="cb249-7"><a href="nao-replicado.html#cb249-7" tabindex="-1"></a>efeitos <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(modelo_saturado)[<span class="sc">-</span><span class="dv">1</span>]   <span class="co"># exclui o intercepto</span></span>
-<span id="cb249-8"><a href="nao-replicado.html#cb249-8" tabindex="-1"></a>efeitos <span class="ot">&lt;-</span> <span class="fu">sort</span>(efeitos, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb249-9"><a href="nao-replicado.html#cb249-9" tabindex="-1"></a></span>
-<span id="cb249-10"><a href="nao-replicado.html#cb249-10" tabindex="-1"></a><span class="co"># --- Método de Lenth ---</span></span>
-<span id="cb249-11"><a href="nao-replicado.html#cb249-11" tabindex="-1"></a>s0  <span class="ot">&lt;-</span> <span class="fl">1.5</span> <span class="sc">*</span> <span class="fu">median</span>(<span class="fu">abs</span>(efeitos))</span>
-<span id="cb249-12"><a href="nao-replicado.html#cb249-12" tabindex="-1"></a>pse <span class="ot">&lt;-</span> <span class="fl">1.5</span> <span class="sc">*</span> <span class="fu">median</span>(<span class="fu">abs</span>(efeitos)[<span class="fu">abs</span>(efeitos) <span class="sc">&lt;</span> <span class="fl">2.5</span> <span class="sc">*</span> s0])</span>
-<span id="cb249-13"><a href="nao-replicado.html#cb249-13" tabindex="-1"></a>m   <span class="ot">&lt;-</span> <span class="fu">length</span>(efeitos)</span>
-<span id="cb249-14"><a href="nao-replicado.html#cb249-14" tabindex="-1"></a>d   <span class="ot">&lt;-</span> m <span class="sc">/</span> <span class="dv">3</span></span>
-<span id="cb249-15"><a href="nao-replicado.html#cb249-15" tabindex="-1"></a>me  <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, d) <span class="sc">*</span> pse</span>
-<span id="cb249-16"><a href="nao-replicado.html#cb249-16" tabindex="-1"></a></span>
-<span id="cb249-17"><a href="nao-replicado.html#cb249-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;PSE =&quot;</span>, <span class="fu">round</span>(pse, <span class="dv">3</span>), <span class="st">&quot; | graus de liberdade efetivos =&quot;</span>, d,</span>
-<span id="cb249-18"><a href="nao-replicado.html#cb249-18" tabindex="-1"></a>    <span class="st">&quot; | margem de erro (ME) =&quot;</span>, <span class="fu">round</span>(me, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="nao-replicado.html#cb251-1" tabindex="-1"></a><span class="co"># Simulando o cenário mais comum: apenas UMA repetição por tratamento</span></span>
+<span id="cb251-2"><a href="nao-replicado.html#cb251-2" tabindex="-1"></a>rep_unica <span class="ot">&lt;-</span> biodiesel <span class="sc">%&gt;%</span></span>
+<span id="cb251-3"><a href="nao-replicado.html#cb251-3" tabindex="-1"></a>  <span class="fu">distinct</span>(Relacion, Catalizador, Temperatura, Agente, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb251-4"><a href="nao-replicado.html#cb251-4" tabindex="-1"></a></span>
+<span id="cb251-5"><a href="nao-replicado.html#cb251-5" tabindex="-1"></a>modelo_saturado <span class="ot">&lt;-</span> <span class="fu">lm</span>(Rendimiento <span class="sc">~</span> Relacion <span class="sc">*</span> Catalizador <span class="sc">*</span> Temperatura <span class="sc">*</span> Agente,</span>
+<span id="cb251-6"><a href="nao-replicado.html#cb251-6" tabindex="-1"></a>                       <span class="at">data =</span> rep_unica)</span>
+<span id="cb251-7"><a href="nao-replicado.html#cb251-7" tabindex="-1"></a>efeitos <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(modelo_saturado)[<span class="sc">-</span><span class="dv">1</span>]   <span class="co"># exclui o intercepto</span></span>
+<span id="cb251-8"><a href="nao-replicado.html#cb251-8" tabindex="-1"></a>efeitos <span class="ot">&lt;-</span> <span class="fu">sort</span>(efeitos, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb251-9"><a href="nao-replicado.html#cb251-9" tabindex="-1"></a></span>
+<span id="cb251-10"><a href="nao-replicado.html#cb251-10" tabindex="-1"></a><span class="co"># --- Método de Lenth ---</span></span>
+<span id="cb251-11"><a href="nao-replicado.html#cb251-11" tabindex="-1"></a>s0  <span class="ot">&lt;-</span> <span class="fl">1.5</span> <span class="sc">*</span> <span class="fu">median</span>(<span class="fu">abs</span>(efeitos))</span>
+<span id="cb251-12"><a href="nao-replicado.html#cb251-12" tabindex="-1"></a>pse <span class="ot">&lt;-</span> <span class="fl">1.5</span> <span class="sc">*</span> <span class="fu">median</span>(<span class="fu">abs</span>(efeitos)[<span class="fu">abs</span>(efeitos) <span class="sc">&lt;</span> <span class="fl">2.5</span> <span class="sc">*</span> s0])</span>
+<span id="cb251-13"><a href="nao-replicado.html#cb251-13" tabindex="-1"></a>m   <span class="ot">&lt;-</span> <span class="fu">length</span>(efeitos)</span>
+<span id="cb251-14"><a href="nao-replicado.html#cb251-14" tabindex="-1"></a>d   <span class="ot">&lt;-</span> m <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb251-15"><a href="nao-replicado.html#cb251-15" tabindex="-1"></a>me  <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, d) <span class="sc">*</span> pse</span>
+<span id="cb251-16"><a href="nao-replicado.html#cb251-16" tabindex="-1"></a></span>
+<span id="cb251-17"><a href="nao-replicado.html#cb251-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;PSE =&quot;</span>, <span class="fu">round</span>(pse, <span class="dv">3</span>), <span class="st">&quot; | graus de liberdade efetivos =&quot;</span>, d,</span>
+<span id="cb251-18"><a href="nao-replicado.html#cb251-18" tabindex="-1"></a>    <span class="st">&quot; | margem de erro (ME) =&quot;</span>, <span class="fu">round</span>(me, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## PSE = 2.588  | graus de liberdade efetivos = 5  | margem de erro (ME) = 6.651</code></pre>
-<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="nao-replicado.html#cb251-1" tabindex="-1"></a>efeitos[<span class="fu">abs</span>(efeitos) <span class="sc">&gt;</span> me]</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="nao-replicado.html#cb253-1" tabindex="-1"></a>efeitos[<span class="fu">abs</span>(efeitos) <span class="sc">&gt;</span> me]</span></code></pre></div>
 <pre><code>## Relacion:Catalizador:Temperatura 
 ##                           8.2875</code></pre>
 <p><img src="06-fatoriais-avancado_files/figure-html/biodiesel-halfnormal-1.png" alt="" width="80%" style="display: block; margin: auto;" /></p>
@@ -553,6 +555,30 @@ Daniel, C. (1959). Use of half-normal plots in interpreting factorial two-level 
 Lenth, R. V. (1989). Quick and easy analysis of unreplicated factorials. <em>Technometrics</em>, <em>31</em>(4), 469–473.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

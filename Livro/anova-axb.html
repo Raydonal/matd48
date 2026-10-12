@@ -253,10 +253,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
+<li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#dados-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> Como são os dados: uma linha por subamostra</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.2</b> O modelo com dois níveis de erro</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.3</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.5" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.5</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -429,6 +430,7 @@ div.csl-indent {
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
+<li style="padding: 0.5em 15px; font-size: 0.8em; color: #888;">© 2026 R. Ospina Martínez — UFBA.<br>Versão preliminar. Uso restrito aos alunos de MATD48.</li>
 
 </ul>
 
@@ -679,22 +681,22 @@ Uma loja testa <strong>layout</strong> (Lista/Grade) × <strong>desconto exibido
 tráfego real não se divide em partes iguais entre as quatro combinações — a tabela abaixo mostra
 tamanhos de casela desiguais (30 a 70 sessões), a situação típica de um teste A/B em produção.
 </div>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="anova-axb.html#cb220-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb220-2"><a href="anova-axb.html#cb220-2" tabindex="-1"></a>n_celula <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Lista_Nao =</span> <span class="dv">40</span>, <span class="at">Lista_Sim =</span> <span class="dv">55</span>, <span class="at">Grade_Nao =</span> <span class="dv">30</span>, <span class="at">Grade_Sim =</span> <span class="dv">70</span>)</span>
-<span id="cb220-3"><a href="anova-axb.html#cb220-3" tabindex="-1"></a>media_celula <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Lista_Nao =</span> <span class="dv">42</span>, <span class="at">Lista_Sim =</span> <span class="dv">47</span>, <span class="at">Grade_Nao =</span> <span class="dv">44</span>, <span class="at">Grade_Sim =</span> <span class="dv">53</span>)</span>
-<span id="cb220-4"><a href="anova-axb.html#cb220-4" tabindex="-1"></a></span>
-<span id="cb220-5"><a href="anova-axb.html#cb220-5" tabindex="-1"></a>dados_desbal <span class="ot">&lt;-</span> <span class="fu">map2_dfr</span>(n_celula, media_celula, <span class="sc">~</span> <span class="fu">tibble</span>(<span class="at">tempo =</span> <span class="fu">rnorm</span>(.x, .y, <span class="dv">8</span>)),</span>
-<span id="cb220-6"><a href="anova-axb.html#cb220-6" tabindex="-1"></a>                         <span class="at">.id =</span> <span class="st">&quot;celula&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb220-7"><a href="anova-axb.html#cb220-7" tabindex="-1"></a>  <span class="fu">separate</span>(celula, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;layout&quot;</span>, <span class="st">&quot;desconto&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb220-8"><a href="anova-axb.html#cb220-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">layout =</span> <span class="fu">factor</span>(layout, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Grade&quot;</span>, <span class="st">&quot;Lista&quot;</span>)),</span>
-<span id="cb220-9"><a href="anova-axb.html#cb220-9" tabindex="-1"></a>         <span class="at">desconto =</span> <span class="fu">factor</span>(desconto, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Nao&quot;</span>, <span class="st">&quot;Sim&quot;</span>)))</span>
-<span id="cb220-10"><a href="anova-axb.html#cb220-10" tabindex="-1"></a></span>
-<span id="cb220-11"><a href="anova-axb.html#cb220-11" tabindex="-1"></a><span class="fu">table</span>(dados_desbal<span class="sc">$</span>layout, dados_desbal<span class="sc">$</span>desconto)</span></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="anova-axb.html#cb222-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb222-2"><a href="anova-axb.html#cb222-2" tabindex="-1"></a>n_celula <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Lista_Nao =</span> <span class="dv">40</span>, <span class="at">Lista_Sim =</span> <span class="dv">55</span>, <span class="at">Grade_Nao =</span> <span class="dv">30</span>, <span class="at">Grade_Sim =</span> <span class="dv">70</span>)</span>
+<span id="cb222-3"><a href="anova-axb.html#cb222-3" tabindex="-1"></a>media_celula <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Lista_Nao =</span> <span class="dv">42</span>, <span class="at">Lista_Sim =</span> <span class="dv">47</span>, <span class="at">Grade_Nao =</span> <span class="dv">44</span>, <span class="at">Grade_Sim =</span> <span class="dv">53</span>)</span>
+<span id="cb222-4"><a href="anova-axb.html#cb222-4" tabindex="-1"></a></span>
+<span id="cb222-5"><a href="anova-axb.html#cb222-5" tabindex="-1"></a>dados_desbal <span class="ot">&lt;-</span> <span class="fu">map2_dfr</span>(n_celula, media_celula, <span class="sc">~</span> <span class="fu">tibble</span>(<span class="at">tempo =</span> <span class="fu">rnorm</span>(.x, .y, <span class="dv">8</span>)),</span>
+<span id="cb222-6"><a href="anova-axb.html#cb222-6" tabindex="-1"></a>                         <span class="at">.id =</span> <span class="st">&quot;celula&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb222-7"><a href="anova-axb.html#cb222-7" tabindex="-1"></a>  <span class="fu">separate</span>(celula, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;layout&quot;</span>, <span class="st">&quot;desconto&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb222-8"><a href="anova-axb.html#cb222-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">layout =</span> <span class="fu">factor</span>(layout, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Grade&quot;</span>, <span class="st">&quot;Lista&quot;</span>)),</span>
+<span id="cb222-9"><a href="anova-axb.html#cb222-9" tabindex="-1"></a>         <span class="at">desconto =</span> <span class="fu">factor</span>(desconto, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Nao&quot;</span>, <span class="st">&quot;Sim&quot;</span>)))</span>
+<span id="cb222-10"><a href="anova-axb.html#cb222-10" tabindex="-1"></a></span>
+<span id="cb222-11"><a href="anova-axb.html#cb222-11" tabindex="-1"></a><span class="fu">table</span>(dados_desbal<span class="sc">$</span>layout, dados_desbal<span class="sc">$</span>desconto)</span></code></pre></div>
 <pre><code>##        
 ##         Nao Sim
 ##   Grade  30  70
 ##   Lista  40  55</code></pre>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="anova-axb.html#cb222-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(tempo <span class="sc">~</span> layout <span class="sc">*</span> desconto, <span class="at">data =</span> dados_desbal))   <span class="co"># layout primeiro</span></span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="anova-axb.html#cb224-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(tempo <span class="sc">~</span> layout <span class="sc">*</span> desconto, <span class="at">data =</span> dados_desbal))   <span class="co"># layout primeiro</span></span></code></pre></div>
 <pre><code>##                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## layout            1   2332  2332.0  37.974 4.16e-09 ***
 ## desconto          1   2511  2510.8  40.886 1.21e-09 ***
@@ -702,7 +704,7 @@ tamanhos de casela desiguais (30 a 70 sessões), a situação típica de um test
 ## Residuals       191  11729    61.4                     
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="anova-axb.html#cb224-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(tempo <span class="sc">~</span> desconto <span class="sc">*</span> layout, <span class="at">data =</span> dados_desbal))   <span class="co"># desconto primeiro</span></span></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="anova-axb.html#cb226-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(tempo <span class="sc">~</span> desconto <span class="sc">*</span> layout, <span class="at">data =</span> dados_desbal))   <span class="co"># desconto primeiro</span></span></code></pre></div>
 <pre><code>##                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## desconto          1   3114  3113.5  50.700 2.13e-11 ***
 ## layout            1   1729  1729.3  28.159 3.08e-07 ***
@@ -714,11 +716,11 @@ tamanhos de casela desiguais (30 a 70 sessões), a situação típica de um test
 sintoma da falta de ortogonalidade. Nos dois casos, <span class="math inline">\(SQ_{AB}\)</span> (a interação) é idêntico, porque a
 interação é sempre o último termo a entrar, ajustado por tudo o resto em qualquer ordem.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — Tipo II e Tipo III com <code>car::Anova()</code></div>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="anova-axb.html#cb226-1" tabindex="-1"></a>contrastes_originais <span class="ot">&lt;-</span> <span class="fu">options</span>(<span class="st">&quot;contrasts&quot;</span>)           <span class="co"># preserva o default do capitulo</span></span>
-<span id="cb226-2"><a href="anova-axb.html#cb226-2" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts =</span> <span class="fu">c</span>(<span class="st">&quot;contr.sum&quot;</span>, <span class="st">&quot;contr.poly&quot;</span>))      <span class="co"># exigido para Tipo III fazer sentido</span></span>
-<span id="cb226-3"><a href="anova-axb.html#cb226-3" tabindex="-1"></a>modelo_desbal <span class="ot">&lt;-</span> <span class="fu">lm</span>(tempo <span class="sc">~</span> layout <span class="sc">*</span> desconto, <span class="at">data =</span> dados_desbal)</span>
-<span id="cb226-4"><a href="anova-axb.html#cb226-4" tabindex="-1"></a></span>
-<span id="cb226-5"><a href="anova-axb.html#cb226-5" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(modelo_desbal, <span class="at">type =</span> <span class="st">&quot;II&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="anova-axb.html#cb228-1" tabindex="-1"></a>contrastes_originais <span class="ot">&lt;-</span> <span class="fu">options</span>(<span class="st">&quot;contrasts&quot;</span>)           <span class="co"># preserva o default do capitulo</span></span>
+<span id="cb228-2"><a href="anova-axb.html#cb228-2" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts =</span> <span class="fu">c</span>(<span class="st">&quot;contr.sum&quot;</span>, <span class="st">&quot;contr.poly&quot;</span>))      <span class="co"># exigido para Tipo III fazer sentido</span></span>
+<span id="cb228-3"><a href="anova-axb.html#cb228-3" tabindex="-1"></a>modelo_desbal <span class="ot">&lt;-</span> <span class="fu">lm</span>(tempo <span class="sc">~</span> layout <span class="sc">*</span> desconto, <span class="at">data =</span> dados_desbal)</span>
+<span id="cb228-4"><a href="anova-axb.html#cb228-4" tabindex="-1"></a></span>
+<span id="cb228-5"><a href="anova-axb.html#cb228-5" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(modelo_desbal, <span class="at">type =</span> <span class="st">&quot;II&quot;</span>)</span></code></pre></div>
 <pre><code>## Anova Table (Type II tests)
 ## 
 ## Response: tempo
@@ -729,7 +731,7 @@ interação é sempre o último termo a entrar, ajustado por tudo o resto em qua
 ## Residuals       11729.4 191                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="anova-axb.html#cb228-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(modelo_desbal, <span class="at">type =</span> <span class="st">&quot;III&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="anova-axb.html#cb230-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(modelo_desbal, <span class="at">type =</span> <span class="st">&quot;III&quot;</span>)</span></code></pre></div>
 <pre><code>## Anova Table (Type III tests)
 ## 
 ## Response: tempo
@@ -741,7 +743,7 @@ interação é sempre o último termo a entrar, ajustado por tudo o resto em qua
 ## Residuals        11729 191                        
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="anova-axb.html#cb230-1" tabindex="-1"></a><span class="fu">options</span>(contrastes_originais)   <span class="co"># restaura imediatamente -- nao deve vazar para as secoes seguintes</span></span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="anova-axb.html#cb232-1" tabindex="-1"></a><span class="fu">options</span>(contrastes_originais)   <span class="co"># restaura imediatamente -- nao deve vazar para as secoes seguintes</span></span></code></pre></div>
 <p>O Tipo II dá exatamente <span class="math inline">\(SQ_{\text{layout}}=\)</span> 1729.3
 (o mesmo valor de quando <code>layout</code> entra <strong>depois</strong> de <code>desconto</code> no Tipo I) e
 <span class="math inline">\(SQ_{\text{desconto}}=\)</span> 2510.8
@@ -766,6 +768,30 @@ Langsrud, Ø. (2003). <span>ANOVA</span> for unbalanced data: Use type <span>II<
 Speed, F. M., Hocking, R. R., &amp; Hackney, O. P. (1978). Methods of analysis of linear models with unbalanced data. <em>Journal of the American Statistical Association</em>, <em>73</em>(361), 105–112.
 </div>
 </div>
+<!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo
+     da pagina sem recarregar ao navegar, por isso o rodape e reinserido a cada troca. -->
+<script>
+(function () {
+  var TEXTO = '© 2026 Raydonal Ospina Martínez — Departamento de Estatística, UFBA. ' +
+    '<strong>Versão preliminar, em construção.</strong> Uso exclusivo dos estudantes de MATD48; ' +
+    'reprodução, distribuição ou uso sem citação proibidos sem autorização do autor (Lei nº 9.610/1998).';
+  function poe() {
+    var alvo = document.querySelector('.page-inner section.normal');
+    if (!alvo || alvo.querySelector('.aviso-rodape')) return;
+    var d = document.createElement('div');
+    d.className = 'aviso-rodape'; d.innerHTML = TEXTO; alvo.appendChild(d);
+  }
+  // o gitbook rotula a bibliografia de cada pagina como "References"; em portugues.
+  // (reference-section-title no YAML quebra o split_chapters do bookdown.)
+  function traduz() {
+    document.querySelectorAll('.page-inner h1, .page-inner h2, .page-inner h3').forEach(function (h) {
+      if (h.textContent.trim() === 'References') h.textContent = 'Referências';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { poe(); traduz(); });
+  if (window.gitbook && gitbook.events) gitbook.events.bind('page.change', function () { poe(); traduz(); });
+})();
+</script>
             </section>
 
           </div>

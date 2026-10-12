@@ -4,7 +4,7 @@
     <title>Fatoriais 2ᵏ: ortogonalidade, análise sem repetição e confusão</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -87,10 +87,7 @@ range(diag(XtX))                # todos os 16 valores da diagonal = n = 32
 
 `\(\mathbf{X}'\mathbf{X}\)` diagonal `\(\Rightarrow\)` equações normais **desacopladas**:
 
-$$
-\hat\beta_j = \frac{\mathbf{x}_j'\mathbf{Y}}{n}, \qquad
-\text{efeito}_j = \frac{2}{n}\sum_{i=1}^n (\pm1)\,y_i
-$$
+`$$\hat\beta_j = \frac{\mathbf{x}_j'\mathbf{Y}}{n}, \qquad \text{efeito}_j = \frac{2}{n}\sum_{i=1}^n (\pm1)\,y_i$$`
 
 --
 
@@ -223,11 +220,7 @@ Mesmo ranking, como barras, com a margem de erro de Lenth sobreposta.
 
 ## Margem de erro de Lenth
 
-$$
-s_0 = 1{,}5\cdot\text{med}_i|c_i|, \qquad
-\text{PSE} = 1{,}5\cdot\text{med}_{\{|c_i|&lt;2{,}5s_0\}}|c_i|, \qquad
-\text{ME} = t_{0{,}975;\,d}\cdot\text{PSE},\ d=\tfrac{m}{3}
-$$
+`$$s_0 = 1{,}5\cdot\text{med}_i|c_i|, \qquad \text{PSE} = 1{,}5\cdot\text{med}_{\{|c_i|&lt;2{,}5s_0\}}|c_i|, \qquad \text{ME} = t_{0{,}975;\,d}\cdot\text{PSE},\ d=\tfrac{m}{3}$$`
 
 Um efeito é "grande" se `\(|c_i| &gt; \text{ME}\)` (Lenth, 1989).
 
