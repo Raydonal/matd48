@@ -12,3 +12,12 @@
 .remark-slide-content h1 {
   font-size: 1.8rem;
 }
+
+/* Aviso de direitos autorais em todo slide (canto inferior esquerdo; o numero do
+   slide fica no direito). Pseudo-elemento: nao ocupa espaco no fluxo do slide. */
+.remark-slide-content::after {
+  content: "© 2026 R. Ospina Martínez — UFBA · Versão preliminar · Uso exclusivo dos alunos de MATD48 · Reprodução proibida sem autorização (Lei 9.610/1998)";
+  position: absolute; left: 20px; bottom: 8px;
+  font-size: 9px; color: #9a9a9a; opacity: 0.9;
+}
+.remark-slide-content.inverse::after { color: #d0d0d0; }

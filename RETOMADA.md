@@ -6,17 +6,18 @@ zero. Histórico completo, rodada a rodada, em `PLANO_CONTEUDO.md` (seção "Sta
 
 ## Estado em que esta sessão parou (leia primeiro)
 
-- **Publicado no GitHub** (commits `a97c61a` e `d00f53f`, 12/10): PDF do livro, fórmulas nas caixas
-  do livro, aula 05 reescrita, aulas 01–04 revisadas, troca "submuestreo" → "subamostragem".
-- **Sincronizado no clone, mas NÃO commitado nem pushado** (aguardando aprovação do professor para
-  publicar): aulas 06–09 revisadas, correção de fórmulas cruas nas aulas 07 e 09–14, seção de
-  subamostragem do cap. 3 do livro, aviso de direitos autorais no livro (site e PDF), PDF com as
-  figuras de volta, correção do `scripts/verificar_equacoes.R`. Para publicar: no clone,
-  `git add -A Livro Aulas2026 scripts && git commit && git push`.
-- **Pergunta em aberto ao professor:** pôr o mesmo aviso de direitos autorais também nos slides
-  (`Aulas2026/`) e nas listas (`Listas2026/`)?
+- **Tudo publicado no GitHub** (commits `a97c61a`, `d00f53f`, `31a85a9` e o commit final de 12/10
+  com o aviso nos slides e listas): PDF do livro com figuras, aviso de direitos autorais no livro,
+  nos 14 decks e nas 14 listas, aulas 01–09 revisadas, fórmulas cruas corrigidas nas 14 aulas,
+  troca "submuestreo" → "subamostragem".
+- **Aviso de direitos autorais**: livro (ver abaixo); slides via `.remark-slide-content::after` em
+  `Aulas2026/assets/custom-styles.css` (o CSS é referenciado pelo HTML, então vale para os 14 decks
+  sem re-render); listas via `Listas2026/preamble.tex` (linha sob o cabeçalho + rodapé em toda
+  página).
 - **Revisão de clareza das aulas:** feitas 01–09 (lotes 1 e 2). **Faltam 10–14** (lote 3), no mesmo
   padrão descrito abaixo.
+- Detalhe pré-existente notado nas listas: elas dizem "O gabarito completo está em GabaritoNN.pdf",
+  mas os gabaritos não são públicos desde agosto/2026. Perguntar ao professor se quer tirar a frase.
 
 ## Onde as coisas estão
 
@@ -134,13 +135,11 @@ CLAUDE.md. Lição: teste o verificador contra um caso positivo antes de confiar
 
 ## O que falta
 
-1. Publicar o que está sincronizado e não commitado (depende de OK do professor).
-2. Revisão de clareza das aulas 10–14 (lote 3), e as seções correspondentes do livro, se o professor
+1. Revisão de clareza das aulas 10–14 (lote 3), e as seções correspondentes do livro, se o professor
    quiser.
-3. Decidir sobre o aviso de direitos autorais nos slides e nas listas.
-4. Pontos antigos ainda sem segunda revisão humana: cap. 7 do livro inteiro; nenhuma leitura humana
+2. Pontos antigos ainda sem segunda revisão humana: cap. 7 do livro inteiro; nenhuma leitura humana
    corrida do livro completo depois das expansões.
-5. Um detalhe menor: no cap. 3, o texto inline mostra `F ≈ 12.98` com ponto decimal.
+3. Um detalhe menor: no cap. 3, o texto inline mostra `F ≈ 12.98` com ponto decimal.
 
 ## Como retomar
 
