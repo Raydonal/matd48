@@ -134,7 +134,7 @@ Duas ideias que se confundem com frequência, mas que têm papéis estatísticos
   efetivamente medida. Pode coincidir com a unidade experimental ou não.
 
 Quando várias unidades amostrais vêm da mesma unidade experimental, dizemos que há
-**submuestreo** (ou pseudorreplicação, se isso for ignorado na análise). Tratar submuestras como
+**subamostragem** (ou pseudorreplicação, se isso for ignorado na análise). Tratar subamostras como
 se fossem repetições independentes do tratamento é um dos erros mais comuns — e mais graves — em
 análise de experimentos, porque infla artificialmente o tamanho amostral e reduz erros-padrão de
 forma não legítima.
@@ -152,11 +152,11 @@ estudante estuda uma lista de 40 palavras e depois responde a <strong>duas prova
 
 Aqui, a **unidade experimental é o estudante** — é nele que a técnica de estudo (o tratamento) é
 aplicada, e é impossível "sortear de novo" a técnica para uma prova sem sortear de novo o
-estudante. A **unidade amostral é cada prova respondida**: há duas medições (submuestras) por
+estudante. A **unidade amostral é cada prova respondida**: há duas medições (subamostras) por
 estudante. Se o pesquisador tratasse as 60 provas como 60 réplicas independentes do experimento,
 estaria contando cada estudante duas vezes, ignorando que as duas notas de uma mesma pessoa são
 correlacionadas — um erro clássico de pseudorreplicação (voltaremos a isso formalmente com
-submuestreo no Capítulo 3, ao tratar do DCA).
+subamostragem no Capítulo 3, ao tratar do DCA).
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — simulando a distinção UE vs. unidade amostral</div>
@@ -233,11 +233,11 @@ dados_provas %>%
 
 O número de réplicas legítimo para inferência sobre o efeito da técnica é **10 por grupo** (o
 número de estudantes), não 20 (o número de provas) — este é exatamente o ponto que retomaremos
-com rigor ao estudar o desenho completamente aleatorizado com submuestreo.
+com rigor ao estudar o desenho completamente aleatorizado com subamostragem.
 
 <div class="figure" style="text-align: center">
-<img src="01-principios_files/figure-html/plot-submuestreo-1.png" alt="Duas notas (provas A e B) por estudante, uma linha ligando as duas submuestras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B." width="75%" />
-<p class="caption">(\#fig:plot-submuestreo)Duas notas (provas A e B) por estudante, uma linha ligando as duas submuestras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B.</p>
+<img src="01-principios_files/figure-html/plot-submuestreo-1.png" alt="Duas notas (provas A e B) por estudante, uma linha ligando as duas subamostras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B." width="75%" />
+<p class="caption">(\#fig:plot-submuestreo)Duas notas (provas A e B) por estudante, uma linha ligando as duas subamostras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B.</p>
 </div>
 
 O gráfico deixa visível, e não só conceitual, o que a distinção UE/unidade amostral significa: as
@@ -245,7 +245,7 @@ duas notas ligadas pela mesma linha (mesmo estudante) ficam sistematicamente mai
 si do que notas de estudantes diferentes dentro da mesma técnica — a variação *entre* linhas
 (entre estudantes) é maior do que a variação *dentro* de cada linha (entre as duas provas do mesmo
 estudante). É exatamente essa correlação dentro da unidade experimental que torna as 60 notas não
-independentes entre si, e que a análise do Capítulo 3 (DCA com submuestreo) precisa levar em conta
+independentes entre si, e que a análise do Capítulo 3 (DCA com subamostragem) precisa levar em conta
 para não superestimar o tamanho amostral efetivo.
 
 ## Fontes de variação {#fontes-variacao}
@@ -378,7 +378,7 @@ experimental resolve simultaneamente três problemas, correspondentes a três fa
 2. **Desenho para controle do erro** — *como* atribuir tratamentos às unidades para que a
    comparação seja justa: aleatorização, blocagem, uso de covariáveis.
 3. **Desenho amostral** — *quantas* unidades e *como* medir a resposta: número de réplicas,
-   submuestragem, esquema de medição repetida.
+   subamostragem, esquema de medição repetida.
 
 Os três princípios abaixo pertencem sobretudo ao segundo aspecto, mas condicionam os outros dois.
 
@@ -387,7 +387,7 @@ Os três princípios abaixo pertencem sobretudo ao segundo aspecto, mas condicio
 Repetir um tratamento em várias unidades experimentais **independentes** permite estimar a
 variabilidade do erro experimental e, com isso, testar se a diferença observada entre
 tratamentos é maior do que se esperaria só por acaso. Sem repetição genuína (não confundir com
-submuestreo — Seção \@ref(unidades)), não há como estimar o erro e, portanto, não há inferência
+subamostragem — Seção \@ref(unidades)), não há como estimar o erro e, portanto, não há inferência
 válida.
 
 ### Aleatorização
@@ -813,9 +813,9 @@ inferência sob aleatorização de tratamentos em experimentos agrícolas é tam
 da teoria moderna de amostragem em populações finitas [@neyman1923application; @kish1965survey], e
 tratou as duas aleatorizações — de amostra e de tratamento — com o mesmo formalismo combinatório de
 "qual subconjunto foi sorteado, entre todos os subconjuntos igualmente prováveis". O
-**submuestreo**, que o Capítulo 3 formaliza em detalhe (\@ref(dca-submuestreo)), é o ponto em que
+**subamostragem**, que o Capítulo 3 formaliza em detalhe (\@ref(dca-submuestreo)), é o ponto em que
 as duas ideias se encontram dentro de um único experimento: a atribuição do tratamento acontece na
-unidade experimental, mas a *amostragem* de quantas e quais submuestras medir dentro de cada
+unidade experimental, mas a *amostragem* de quantas e quais subamostras medir dentro de cada
 unidade é, literalmente, um problema de desenho amostral aninhado dentro do desenho experimental.
 
 ### Controle local (blocagem)
@@ -856,7 +856,7 @@ o "programa beta". Isso é aleatorização? Que population é representada pela 
   (o resultado generaliza para outras unidades/populações) são perguntas logicamente separadas —
   boa aleatorização garante a primeira, não a segunda.
 - Unidade experimental é onde o tratamento é sorteado; unidade amostral é onde a resposta é
-  medida — quando diferem, há submuestreo, e o tamanho amostral relevante para inferência é o
+  medida — quando diferem, há subamostragem, e o tamanho amostral relevante para inferência é o
   número de unidades experimentais, não o de observações.
 - Toda resposta varia por efeito do tratamento, por diferenças sistemáticas entre unidades e por
   erro experimental — o delineamento organiza essas três fontes.

@@ -135,11 +135,11 @@ sorteia a ordem Trat. 3, Trat. 1, Trat. 2, enquanto Bloco 2 sorteia Trat. 1, Tra
 permutação diferente, exatamente como a Seção \@ref(dbca) descreve a aleatorização restrita: cada
 UE dentro de um bloco tem a mesma chance de receber cada tratamento, mas o sorteio não se estende
 entre blocos. Note também que cada UE aqui contém duas unidades amostrais (dois vasos), o que
-significa que este desenho combina blocagem **e** submuestreo simultaneamente — um lembrete de que
+significa que este desenho combina blocagem **e** subamostragem simultaneamente — um lembrete de que
 as duas ideias (Seção \@ref(dca-submuestreo) e esta seção) não são mutuamente exclusivas: é
-perfeitamente possível ter um DBCA com submuestreo dentro de cada UE, embora o modelo $Y_{ij} = \mu
+perfeitamente possível ter um DBCA com subamostragem dentro de cada UE, embora o modelo $Y_{ij} = \mu
 + \tau_i + \beta_j + \varepsilon_{ij}$ apresentado acima descreva o caso mais simples, sem
-submuestreo (uma única observação por combinação tratamento-bloco).
+subamostragem (uma única observação por combinação tratamento-bloco).
 
 ### Notação matricial: $Y=X\beta+\varepsilon$
 

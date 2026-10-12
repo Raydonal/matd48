@@ -58,6 +58,58 @@ apenas aplicá-la mecanicamente (Searle, 1971; Rao, 1973).
 
 ---
 
+## Da planilha para $\mathbf{Y}$ e $\mathbf{X}$
+
+Um exemplo de brinquedo: tempo de resposta (ms) de 3 servidores, 2 medições cada.
+
+.pull-left[
+| linha | servidor | tempo |
+|:-:|:-:|:-:|
+| 1 | A | 110 |
+| 2 | A | 118 |
+| 3 | B | 131 |
+| 4 | B | 125 |
+| 5 | C | 102 |
+| 6 | C | 98 |
+
+Cada linha da planilha vira uma linha de $\mathbf Y$ e de $\mathbf X$; `servidor` vira três
+colunas indicadoras.
+]
+.pull-right[
+$$\underbrace{\begin{pmatrix}110\\118\\131\\125\\102\\98\end{pmatrix}}_{\mathbf Y}
+=\underbrace{\begin{pmatrix}1&1&0&0\\1&1&0&0\\1&0&1&0\\1&0&1&0\\1&0&0&1\\1&0&0&1\end{pmatrix}}_{\mathbf X}
+\underbrace{\begin{pmatrix}\mu\\\alpha_A\\\alpha_B\\\alpha_C\end{pmatrix}}_{\boldsymbol\beta}
++\boldsymbol\varepsilon$$
+
+A linha 3, por exemplo, diz $Y_3=\mu+\alpha_B+\varepsilon_3$.
+]
+
+--
+
+É exatamente o modelo do DCA (Aula 04), $Y_{ij}=\mu+\alpha_i+\varepsilon_{ij}$, escrito com uma
+linha por observação. Toda ANOVA do curso é um $\mathbf X$ como este, com mais colunas.
+
+---
+
+## Um problema à vista: a primeira coluna é a soma das outras três
+
+Na matriz $\mathbf X$ do slide anterior, coluna 1 = coluna 2 + coluna 3 + coluna 4. Consequência:
+**dois vetores $\boldsymbol\beta$ diferentes produzem exatamente os mesmos dados esperados.**
+
+| | $\mu$ | $\alpha_A$ | $\alpha_B$ | $\alpha_C$ | média A | média B | média C |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| $\boldsymbol\beta^{(1)}$ | 100 | 14 | 28 | 0 | 114 | 128 | 100 |
+| $\boldsymbol\beta^{(2)}$ | 90 | 24 | 38 | 10 | 114 | 128 | 100 |
+
+--
+
+Nenhum dado pode dizer se $\mu$ vale 100 ou 90: $\mu$ **não é estimável**. Mas as médias
+$\mu+\alpha_i$ e as diferenças $\alpha_A-\alpha_B=-14$ são iguais nos dois casos: essas **são
+estimáveis**. A definição formal, a seguir, diz exatamente quais combinações sobrevivem a essa
+ambiguidade.
+
+---
+
 ## De onde vem esse modelo? A população conceitual de respostas
 
 Na Aula 01, cada unidade $u$ e cada tratamento $t$ tinham um **resultado potencial** $Y_u(t)$ — só
@@ -135,8 +187,10 @@ $\mathbf{X}$.
 
 --
 
-Isso importa muito para modelos de ANOVA (Capítulo 3): a codificação usual de um fator com $k$
-níveis por $k$ indicadoras + intercepto é, de propósito, deficiente em posto.
+No exemplo de brinquedo: $\mu+\alpha_A$ é estimável, com $\mathbf a=(\tfrac12,\tfrac12,0,0,0,0)'$
+(a média das linhas do servidor A), mas $\mu$ sozinho não é, porque nenhum $\mathbf a$ produz
+$\mathrm E[\mathbf a'\mathbf Y]=\mu$ para todo $\boldsymbol\beta$. A codificação usual de um fator
+com $k$ níveis por $k$ indicadoras + intercepto é, de propósito, deficiente em posto (Capítulo 3).
 
 ---
 
@@ -237,7 +291,7 @@ c(colunas = ncol(X_sobre), posto = qr(X_sobre)$rank)
 
 --
 
-4 colunas, posto 3: $\mu$ isolado não é estimável, mas $\mu + \alpha_A$ (média do servidor A) e
+A mesma estrutura do exemplo de brinquedo, agora com 60 linhas. 4 colunas, posto 3: $\mu$ isolado não é estimável, mas $\mu + \alpha_A$ (média do servidor A) e
 $\alpha_A - \alpha_B$ (diferença entre servidores) são.
 
 ---
@@ -336,7 +390,7 @@ exatamente a média do grupo — a definição de estimabilidade em ação.
 
 ## Uma inversa generalizada em quatro passos (sem SVD)
 
-A via SVD dá a inversa de Moore-Penrose — a "mais natural". Mas qualquer $\mathbf{G}$ com $\mathbf{A}\mathbf{G}\mathbf{A}=\mathbf{A}$ serve, e há um algoritmo de papel e lápis:
+`A` é o $\mathbf X'\mathbf X$ de um DCA com 2 tratamentos e 2 réplicas (o brinquedo do Bloco 1, menor). Além da Moore-Penrose, qualquer $\mathbf{G}$ com $\mathbf{A}\mathbf{G}\mathbf{A}=\mathbf{A}$ serve, e há um algoritmo de papel e lápis:
 
 .pull-left[
 1. achar uma submatriz $r\times r$ de **posto completo** ($r=\mathrm{posto}(\mathbf A)$);
@@ -410,7 +464,8 @@ estimabilidade já vinha usando por trás de `MASS::ginv()`.
 ## Resumo da aula
 
 - Modelo linear: $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$, com
-  $\mathbf{X}$ codificando o desenho.
+  $\mathbf{X}$ codificando o desenho: uma linha por linha da planilha, uma coluna indicadora por
+  nível de fator.
 - Mínimos quadrados resolve $\mathbf{X}'\mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}'\mathbf{Y}$;
   resíduos ortogonais às colunas de $\mathbf{X}$.
 - Estimabilidade: só combinações lineares $\boldsymbol{\lambda}'\boldsymbol{\beta}$ no espaço-linha

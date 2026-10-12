@@ -123,7 +123,7 @@ cronograma <- tribble(
     "[Aula](Aulas2026/MATD48-03.html) · [Cap. 2](Livro/modelos-lineares.html) · [Lista](Listas2026/Lista03.pdf)",
   "17 e 22/09/2026", "04", "Delineamento Completamente Aleatorizado (DCA)",
     "[Aula](Aulas2026/MATD48-04.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista04.pdf)",
-  "24 e 29/09/2026", "05", "Submuestreo e modelo de efeitos aleatórios",
+  "24 e 29/09/2026", "05", "Subamostragem e modelo de efeitos aleatórios",
     "[Aula](Aulas2026/MATD48-05.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista05.pdf)",
   "01 e 06/10/2026", "06", "Verificação de pressupostos e transformações",
     "[Aula](Aulas2026/MATD48-06.html) · [Cap. 3](Livro/dca.html) · [Lista](Listas2026/Lista06.pdf)",
@@ -169,7 +169,7 @@ cronograma %>%
 
 Bases reais usadas no livro-texto (extraídas de `ApoioLuz/BasesDatosDE.xlsx`, ver `Livro/data/`):
 
- * [[Mojarra — aquicultura, submuestreo]](Livro/data/mojarra.csv)
+ * [[Mojarra — aquicultura, subamostragem]](Livro/data/mojarra.csv)
  * [[Pepino — irrigação × silício em blocos]](Livro/data/pepino.csv)
  * [[Acuosas — recuperação de compostos voláteis, fatorial]](Livro/data/acuosas.csv)
  * [[Biodiesel — fatorial 2⁴]](Livro/data/biodiesel.csv)

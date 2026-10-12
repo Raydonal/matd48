@@ -40,18 +40,75 @@ class: inverse, center, middle
 
 ---
 
-## De onde vem a validade de um teste em um experimento?
+## O que é um DCA
 
-Sob $H_0$ (tratamento sem efeito), os rótulos de tratamento são **permutáveis** entre as
-unidades — foi o sorteio que escolheu uma entre muitas alocações igualmente prováveis.
+O **delineamento completamente aleatorizado** é o desenho mais simples que satisfaz os três
+pilares da Aula 01:
 
-Um **teste de aleatorização**: reembaralha os rótulos muitas vezes, recalcula a estatística a
-cada vez, e o valor-$p$ é a proporção de reembaralhamentos tão extremos quanto o observado.
+- $t$ tratamentos e $N$ unidades experimentais **homogêneas** (nada conhecido as distingue de
+  antemão: por isso não há blocos);
+- decide-se quantas UEs cada tratamento recebe ($n_i$, repetição);
+- **sorteia-se** quais UEs recebem cada tratamento, sem nenhuma restrição (aleatorização
+  completa): qualquer das $N!/(n_1!\cdots n_t!)$ alocações é igualmente provável.
 
 --
 
-A teoria normal-linear (ANOVA) que vem a seguir é uma **excelente aproximação** a esse teste
-exato — sem exigir reembaralhamento computacional (Fisher, 1935; Edgington & Onghena, 2007).
+Exemplo real, que acompanha a aula: 4 fertilizantes, 20 parcelas de feijão, 5 parcelas por
+fertilizante. O sorteio, em R, é uma linha:
+
+```{r sorteio-04}
+set.seed(1); plano <- tibble(parcela = 1:20, fertilizante = sample(rep(paste0("F", 1:4), each = 5)))
+head(plano$fertilizante, 8)
+```
+
+---
+
+## Como é a planilha de um DCA
+
+```{r feijao-planilha-04}
+feijao <- read_csv("../Livro/data/feijao.csv", show_col_types = FALSE) %>%
+  mutate(Fertilizante = factor(Fertilizante, labels = paste0("F", 1:4)))
+head(feijao, 5)
+```
+
+**Uma linha por UE (parcela)**, uma coluna com o tratamento sorteado e uma com a resposta medida.
+A ordem das parcelas mostra o sorteio: a parcela 3 recebeu F4, as parcelas 1 e 2, F1. Nada no
+número da parcela diz qual fertilizante ela recebeu.
+
+---
+
+## A mesma informação numa tabela tratamento × réplica
+
+```{r feijao-larga-04, echo=FALSE}
+feijao %>% arrange(Fertilizante, Parcela) %>% group_by(Fertilizante) %>% mutate(replica = paste("réplica", row_number())) %>%
+  ungroup() %>% dplyr::select(-Parcela) %>% pivot_wider(names_from = replica, values_from = Producao) %>%
+  kable(format = "html") %>% kable_styling(font_size = 16, full_width = FALSE)
+```
+
+- Os livros costumam mostrar o DCA assim. **Não é uma tabela de contingência:** cada célula
+  contém uma **produção medida em kg**, não uma contagem de parcelas.
+- As colunas não são um segundo fator: a "réplica 1" de F1 e a "réplica 1" de F2 são parcelas
+  diferentes, sem nada em comum. Embaralhar valores **dentro** de uma linha não muda a análise;
+  trocar valores **entre** linhas muda tudo.
+- Em índices: linha $i$ = tratamento, coluna $j$ = réplica, célula $= Y_{ij}$.
+
+---
+
+## O modelo do DCA a uma via
+
+$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij}\overset{iid}{\sim}N(0,\sigma^2)$$
+
+- $i = 1,\ldots,t$ tratamentos (linhas da tabela larga); $j = 1,\ldots,n_i$ repetições
+  (colunas); $N=\sum_i n_i$ = número de linhas da planilha longa.
+- $\mu_i = \mu+\tau_i$ é a média do tratamento $i$; $\sum_i n_i\tau_i = 0$.
+- $Y_{ij}$, $\varepsilon_{ij}$ são aleatórios; $\mu,\tau_i$ são parâmetros fixos. No feijão,
+  $\tau_4$ é quanto o F4 rende acima da média geral, e $\varepsilon_{4j}$ é o que a parcela $j$
+  de F4 tem de particular (solo, umidade).
+
+--
+
+Estimadores de mínimos quadrados: $\hat\mu_i=\bar Y_{i\cdot}$,
+$\hat\sigma^2=MS_E=\dfrac{1}{N-t}\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2$.
 
 ---
 
@@ -74,6 +131,21 @@ Complementar ao teste de aleatorização: Fisher testa a hipótese aguda $Y_u(i)
 Neyman estima/testa a hipótese fraca $\tau_{i,k}=0$ (nenhum efeito, *em média*). O que o modelo
 $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ acrescenta não é a validade do ponto estimado — já garantida
 por Neyman — mas distribuições exatas ($t$, $F$) em amostra finita para ICs e testes.
+
+---
+
+## De onde vem a validade de um teste em um experimento?
+
+Sob $H_0$ (tratamento sem efeito), os rótulos de tratamento são **permutáveis** entre as
+unidades — foi o sorteio que escolheu uma entre muitas alocações igualmente prováveis.
+
+Um **teste de aleatorização**: reembaralha os rótulos muitas vezes, recalcula a estatística a
+cada vez, e o valor-$p$ é a proporção de reembaralhamentos tão extremos quanto o observado.
+
+--
+
+A teoria normal-linear (ANOVA) que vem a seguir é uma **excelente aproximação** a esse teste
+exato — sem exigir reembaralhamento computacional (Fisher, 1935; Edgington & Onghena, 2007).
 
 ---
 
@@ -106,24 +178,9 @@ próprio mecanismo de aleatorização do delineamento (mesmo diagrama do Cap. 3 
 
 ---
 
-## O modelo do DCA a uma via
-
-$$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij}\overset{iid}{\sim}N(0,\sigma^2)$$
-
-- $i = 1,\ldots,t$ tratamentos; $j = 1,\ldots,n_i$ repetições; $N=\sum_i n_i$.
-- $\mu_i = \mu+\tau_i$ é a média do tratamento $i$; $\sum_i n_i\tau_i = 0$.
-- $Y_{ij}$, $\varepsilon_{ij}$ são aleatórios; $\mu,\tau_i$ são parâmetros fixos.
-
---
-
-Estimadores de mínimos quadrados: $\hat\mu_i=\bar Y_{i\cdot}$,
-$\hat\sigma^2=MS_E=\dfrac{1}{N-t}\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2$.
-
----
-
 ## Mas de onde **vem** esse modelo?
 
-O slide anterior **postulou** $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$. Num curso de regressão isso basta. Aqui não: nós **sorteamos** as unidades, e o sorteio é nosso. Então o modelo pode ser **deduzido** (Cornfield, 1944; Kempthorne, 1952).
+Até aqui o modelo $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ foi **postulado**. Num curso de regressão isso basta. Aqui não: nós **sorteamos** as unidades, e o sorteio é nosso. Então o modelo pode ser **deduzido** (Cornfield, 1944; Kempthorne, 1952).
 
 --
 
@@ -197,7 +254,7 @@ Substituindo na relação de seleção e usando $\sum_j\delta_{ir}^{\,j}=1$:
 
 $$y_{ir}=\underbrace{\bar Y_{\cdot\cdot}}_{\mu}+\underbrace{(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})}_{\tau_i}+\underbrace{\sum_j \delta_{ir}^{\,j}(\bar Y_{\cdot j}-\bar Y_{\cdot\cdot})}_{\omega_{ir}} \;=\; \mu+\tau_i+\omega_{ir}$$
 
-O modelo do slide anterior **não foi suposto: foi obtido**.
+O modelo do DCA **não foi suposto: foi obtido**, com o $\varepsilon_{ij}$ ganhando um significado concreto: $\omega_{ir}$, o efeito da unidade que o sorteio pôs naquela posição.
 
 ---
 
@@ -238,18 +295,27 @@ E, no entanto, **MQO continua BLUE** — a condição de Zyskind da Aula 03 se v
 
 ---
 
-## Intervalos de confiança
+## A decomposição da soma de quadrados
 
-**Média de um tratamento** ($100(1-\alpha)\%$):
+Cada desvio em relação à média geral se parte em dois:
+$\;Y_{ij}-\bar Y_{\cdot\cdot}=\underbrace{(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})}_{\text{entre tratamentos}}+\underbrace{(Y_{ij}-\bar Y_{i\cdot})}_{\text{dentro do tratamento}}$.
+Elevando ao quadrado e somando, o termo cruzado se anula (os resíduos somam zero em cada grupo):
 
-$$\bar Y_{i\cdot} \pm t_{\alpha/2,\,N-t}\sqrt{MS_E/n_i}$$
+$$\underbrace{\sum_{i,j}(Y_{ij}-\bar Y_{\cdot\cdot})^2}_{SQ_{\text{Total}}}
+=\underbrace{\sum_i n_i(\bar Y_{i\cdot}-\bar Y_{\cdot\cdot})^2}_{SQ_{\text{Trat}}}
++\underbrace{\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2}_{SQ_E}$$
 
-**Diferença entre duas médias**:
+É o Pitágoras da Aula 03: $SQ_{\text{Trat}}=\lVert(\mathbf P_X-\mathbf P_{\mathbf 1})\mathbf Y\rVert^2$,
+$SQ_E=\lVert(\mathbf I-\mathbf P_X)\mathbf Y\rVert^2$.
 
-$$(\bar Y_{i\cdot}-\bar Y_{k\cdot}) \pm t_{\alpha/2,\,N-t}\sqrt{MS_E\left(\tfrac{1}{n_i}+\tfrac{1}{n_k}\right)}$$
+--
 
-Os dois usam o **mesmo** $MS_E$ — a ANOVA combina (*pools*) a variabilidade dos $t$ grupos em uma
-única estimativa de $\sigma^2$.
+**Esperanças** (sob o modelo, com $\sum_i n_i\tau_i=0$):
+
+$$E[MS_E]=\sigma^2,\qquad E[MS_{\text{Trat}}]=\sigma^2+\frac{\sum_i n_i\tau_i^2}{t-1}$$
+
+Sob $H_0:\tau_i=0$ as duas esperanças coincidem, e $F=MS_{\text{Trat}}/MS_E$ fica em torno de 1.
+Quanto maiores os $\tau_i$, maior $F$. É esse raciocínio que a Aula 05 repete com dois níveis de erro.
 
 ---
 
@@ -266,6 +332,21 @@ tibble(
 
 $H_0:\tau_1=\cdots=\tau_t=0 \;\Rightarrow\; F\sim F_{t-1,N-t}$. Sob $H_1$, $F$ é não central com
 $\phi^2 = \dfrac{\sum_i n_i\tau_i^2}{t\sigma^2}$ — a chave do número de réplicas, adiante.
+
+---
+
+## Intervalos de confiança
+
+**Média de um tratamento** ($100(1-\alpha)\%$):
+
+$$\bar Y_{i\cdot} \pm t_{\alpha/2,\,N-t}\sqrt{MS_E/n_i}$$
+
+**Diferença entre duas médias**:
+
+$$(\bar Y_{i\cdot}-\bar Y_{k\cdot}) \pm t_{\alpha/2,\,N-t}\sqrt{MS_E\left(\tfrac{1}{n_i}+\tfrac{1}{n_k}\right)}$$
+
+Os dois usam o **mesmo** $MS_E$ — a ANOVA combina (*pools*) a variabilidade dos $t$ grupos em uma
+única estimativa de $\sigma^2$.
 
 ---
 
@@ -323,7 +404,7 @@ class: inverse, center, middle
 **Pergunta:** nenhuma distração, distração sonora e distração visual diferem quanto ao tempo de
 reação (ms) em uma tarefa de decisão simples?
 
-- 36 voluntários, sorteados 12 por condição (**UE = voluntário**, sem submuestreo aqui).
+- 36 voluntários, sorteados 12 por condição (**UE = voluntário**, sem subamostragem aqui).
 - 1 fator (tipo de distração), 3 níveis, DCA sem blocos.
 
 ```{r dados-04}
@@ -423,14 +504,14 @@ Os dois valores-$p$ ficam próximos: a aproximação normal-linear é razoável 
 ## Número de réplicas necessário
 
 ```{r pwr-04}
-medias_grupo <- c(494, 514, 564)
+medias_grupo <- tab_ic$media        # médias observadas (slide de ICs)
 f_cohen <- sqrt(mean((medias_grupo - mean(medias_grupo))^2)) / sqrt(MS_E)
 f_cohen
 
 pwr::pwr.anova.test(k = 3, f = f_cohen, sig.level = 0.05, power = 0.80)
 ```
 
-Com o tamanho de efeito observado, ~11 réplicas por grupo bastariam para poder de 80% — as 12
+Com o tamanho de efeito observado, ~`r ceiling(pwr::pwr.anova.test(k = 3, f = f_cohen, sig.level = 0.05, power = 0.80)$n)` réplicas por grupo bastariam para poder de 80% — as 12
 usadas já garantem poder pouco acima disso.
 
 ---
@@ -440,12 +521,11 @@ usadas já garantem poder pouco acima disso.
 O exemplo de distração foi simulado (efeito verdadeiro conhecido, controlado de propósito).
 Fechamos com a mesma máquina rodando num dado real, sem efeito verdadeiro conhecido de antemão.
 
-**Aplicação — Agricultura:** 4 fertilizantes (F1–F4), 20 parcelas homogêneas sorteadas em 4 grupos
+**Aplicação — Agricultura:** os dados do feijão do Bloco 1. 4 fertilizantes (F1–F4), 20 parcelas homogêneas sorteadas em 4 grupos
 de 5 (**UE = parcela**), produção de feijão (kg) medida na colheita.
 
 ```{r feijao-04}
-feijao <- read_csv("../Livro/data/feijao.csv", show_col_types = FALSE) %>%
-  mutate(Fertilizante = factor(Fertilizante, labels = paste0("F", 1:4)))
+# feijao já foi lido no Bloco 1
 mod_feijao <- aov(Producao ~ Fertilizante, data = feijao)
 summary(mod_feijao)
 ```
@@ -480,12 +560,15 @@ real, sem garantia — o assunto da Aula 06.
 
 ## Resumo da aula
 
+- DCA: $t$ tratamentos sorteados sem restrição entre $N$ UEs homogêneas. Planilha: uma linha por
+  UE; a tabela tratamento × réplica guarda medidas, não contagens.
+- $SQ_{\text{Total}}=SQ_{\text{Trat}}+SQ_E$; sob $H_0$, $E[MS_{\text{Trat}}]=E[MS_E]=\sigma^2$.
 - O teste $F$ da ANOVA aproxima um teste de aleatorização exato, sem exigir reembaralhamento.
 - $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$: a tabela de ANOVA decompõe $SQ_{\text{Total}}$ em
   tratamento + erro; ICs para médias e diferenças usam o $MS_E$ combinado.
 - Número de réplicas: função de $\alpha$, poder desejado e do $f$ de Cohen (via
   `pwr::pwr.anova.test()`), não há fórmula fechada.
-- Próxima aula: o que muda quando há **submuestreo** (mais de uma medição por unidade
+- Próxima aula: o que muda quando há **subamostragem** (mais de uma medição por unidade
   experimental) e quando os "tratamentos" são uma **amostra aleatória** de uma população maior.
 
 ---

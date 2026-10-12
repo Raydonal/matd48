@@ -55,8 +55,8 @@ nome aos diagramas de Hasse em teoria de ordem. O termo do topo é sempre a **m�
 em sua própria classe, dentro do que os termos acima já explicaram). Dois termos que não têm
 aresta entre si, nem um caminho de arestas ligando um ao outro, são **ortogonais** — nem um refina
 o outro — e é exatamente esse tipo de relação que caracteriza fatores **cruzados**; uma cadeia
-direta de arestas, por outro lado, caracteriza fatores **aninhados** (o padrão já visto no
-submuestreo do Capítulo 3, antes mesmo de termos o nome para ele).
+direta de arestas, por outro lado, caracteriza fatores **aninhados** (o padrão já visto na
+subamostragem do Capítulo 3, antes mesmo de termos o nome para ele).
 
 A regra para contar graus de liberdade a partir do diagrama é simples e se aplica termo a termo:
 $$

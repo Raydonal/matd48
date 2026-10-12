@@ -4,7 +4,7 @@
     <title>Princípios do Delineamento de Experimentos</title>
     <meta charset="utf-8" />
     <meta name="author" content="Raydonal Ospina" />
-    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.32/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -129,7 +129,7 @@ sistematicamente desbalanceada entre grupos, em expectativa (prova formal a segu
 - **Unidade experimental (UE):** onde o tratamento é sorteado. É o nível da aleatorização.
 - **Unidade amostral:** onde a resposta é efetivamente medida.
 
-Quando várias unidades amostrais vêm da mesma UE, há **submuestreo**. Contá-las como réplicas
+Quando várias unidades amostrais vêm da mesma UE, há **subamostragem**. Contá-las como réplicas
 independentes é um erro clássico: infla artificialmente o *n* e reduz o erro-padrão de forma
 ilegítima.
 
@@ -157,13 +157,18 @@ Toda resposta varia por três razões simultâneas:
 
 O delineamento isola (1), controla (2) e estima honestamente (3).
 
+No exemplo do Bloco 2 as três aparecem literalmente na fórmula que gera cada nota:
+`\(\text{nota} = 65 + \underbrace{\text{efeito da técnica}}_{(1)} + \underbrace{\text{habilidade do estudante}}_{(2)} + \underbrace{\text{ruído da prova}}_{(3)}\)`.
+
 ---
 
 ## Fator, nível, tratamento
 
 - **Fator:** variável controlada pelo pesquisador.
 - **Níveis:** valores específicos que o fator assume.
-- **Tratamento:** combinação de níveis atribuída a uma unidade experimental.
+- **Tratamento:** combinação de níveis atribuída a uma unidade experimental. Com um fator só,
+  tratamento = nível. Com dois fatores (dose 0/50/100 × variedade V1/V2), cada tratamento é um
+  **par**, como (50, V2): são `\(3\times2=6\)` tratamentos (Aula 12).
 
 &lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
@@ -203,49 +208,6 @@ Seguindo a formalização clássica (Fisher, 1935; Cochran &amp; Cox, 1957):
 3. **Desenho amostral** — *quantas* unidades, como medir.
 
 Os três princípios a seguir pertencem sobretudo ao aspecto 2.
-
----
-
-## Por que a aleatorização funciona: resultados potenciais
-
-Formalização de Neyman (1923) / Rubin (1974)
-(Imbens &amp; Rubin, 2015). Para cada unidade `\(i\)`: dois **resultados potenciais**, `\(Y_i(0)\)` e `\(Y_i(1)\)` —
-só um é observável. `\(Z_i \in \{0,1\}\)`: tratamento sorteado. Observado: `\(Y_i = Z_iY_i(1)+(1-Z_i)Y_i(0)\)`.
-
-`$$\text{ATE} = \bar Y(1) - \bar Y(0), \qquad
-\widehat{\text{ATE}} = \bar Y_1^{\,obs} - \bar Y_0^{\,obs}$$`
-
---
-
-Tratando `\(\{Y_i(0),Y_i(1)\}\)` como **fixos** e só `\(Z_i\)` como aleatório (sorteio de qual
-subconjunto de tamanho `\(n_1\)` recebe tratamento):
-
-`$$E\!\left[\bar Y_1^{\,obs}\right] = \frac{1}{N}\sum_i Y_i(1) = \bar Y(1)
-\;\;\Longrightarrow\;\; E\!\left[\widehat{\text{ATE}}\right] = \text{ATE}$$`
-
-porque a aleatorização faz do grupo tratado uma **amostra aleatória simples** dos `\(N\)` valores
-`\(Y_i(1)\)` — não-viés **sem** suposição distribucional. Sem sorteio, `\(Z_i\)` pode depender de
-`\((Y_i(0),Y_i(1))\)`: a igualdade quebra, e `\(\widehat{\text{ATE}}\)` mistura efeito causal com viés de
-seleção.
-
----
-
-## Validade interna vs. validade externa
-
-A demonstração acima garante **validade interna**: dentro da amostra de `\(N\)` unidades estudadas, a
-diferença de médias é não-viesada para o ATE *dessa amostra*. É uma afirmação sobre o mecanismo
-de atribuição (a aleatorização), não sobre quem são as `\(N\)` unidades.
-
---
-
-**Validade externa** (Owen, 2020): o efeito estimado nessas `\(N\)` unidades se generaliza
-para outras unidades, fora do estudo? Validade interna alta **não implica** validade externa
-alta — um experimento com aleatorização impecável ainda pode dizer pouco sobre uma população mais
-ampla, se a amostra não for representativa dela (voluntários de um "programa beta", estudantes de
-graduação como sujeitos de laboratório, parcelas de uma única estação experimental).
-
-Não há solução puramente estatística para validade externa — só o cuidado de deixar explícito
-**a que população** e **sob quais condições** a conclusão se aplica.
 
 ---
 
@@ -393,9 +355,118 @@ fisher.test(cha, alternative = "greater")$p.value
 Não há aproximação, nem normalidade, nem `\(n\)` grande: a distribuição de referência **é** o conjunto das 70 aleatorizações.
 ]
 
+---
+
+## Contagens ou medidas: duas tabelas que parecem iguais
+
+A matriz `cha` do slide anterior é uma **tabela de contingência**: cada célula **conta xícaras**
+(quantas foram classificadas como "leite 1º" sendo de fato "leite 1º", etc.). A resposta é
+categórica (acertou o tipo ou não), e por isso o teste é de contagens.
+
 --
 
-É o mesmo argumento do teste de aleatorização da Aula 04 — e a origem histórica dele.
+Nas próximas aulas a resposta será uma **medida** (nota, peso, tempo). Os dados também poderão ser
+arrumados numa tabela tratamento × réplica, mas cada célula **conterá um valor medido**, não uma
+contagem, e a análise será a ANOVA. Antes de escolher o teste, pergunte sempre: *o que está dentro
+da célula?*
+
+--
+
+O argumento de Fisher, porém, é o mesmo nos dois casos: a distribuição de referência vem do
+próprio sorteio. Ele reaparece no teste de aleatorização da Aula 04.
+
+---
+
+## Resultados potenciais numa tabela
+
+Seis estudantes; tratamento = teste-prática (`\(Z_i=1\)`) ou releitura (`\(Z_i=0\)`). Cada um tem **duas**
+notas possíveis, mas o experimento só revela uma.
+
+.pull-left[
+**O que a natureza conhece**
+
+| `\(i\)` | `\(Y_i(0)\)` | `\(Y_i(1)\)` | `\(Y_i(1)-Y_i(0)\)` |
+|:-:|:-:|:-:|:-:|
+| 1 | 62 | 70 | 8 |
+| 2 | 75 | 79 | 4 |
+| 3 | 58 | 69 | 11 |
+| 4 | 80 | 82 | 2 |
+| 5 | 66 | 75 | 9 |
+| 6 | 71 | 77 | 6 |
+
+ATE = média da última coluna = **6,67**.
+]
+.pull-right[
+**O que um sorteio mostra** (`\(Z=(1,0,1,0,0,1)\)`)
+
+| `\(i\)` | `\(Z_i\)` | `\(Y_i(0)\)` | `\(Y_i(1)\)` |
+|:-:|:-:|:-:|:-:|
+| 1 | 1 | ? | 70 |
+| 2 | 0 | 75 | ? |
+| 3 | 1 | ? | 69 |
+| 4 | 0 | 80 | ? |
+| 5 | 0 | 66 | ? |
+| 6 | 1 | ? | 77 |
+
+`\(\widehat{\text{ATE}} = 72{,}00 - 73{,}67 = -1{,}67\)`.
+]
+
+---
+
+## Um sorteio erra; o sorteio, em média, não
+
+
+
+O sorteio do slide anterior deu `\(\widehat{\text{ATE}}=-1{,}67\)`, longe do verdadeiro 6,67: a metade
+"tratada" calhou de ter alunos que iriam mal de qualquer jeito. Mas há `\(\binom{6}{3}=20\)` sorteios
+possíveis, e cada um é igualmente provável.
+
+&lt;img src="MATD48-01_files/figure-html/po-hist-1.png" alt="" width="540" /&gt;
+
+A média dos 20 valores é exatamente 6,67. O próximo slide prova que isso não é coincidência.
+
+---
+
+## Por que a aleatorização funciona: a prova
+
+Formalização de Neyman (1923) / Rubin (1974)
+(Imbens &amp; Rubin, 2015), generalizando a tabela anterior. Para cada unidade `\(i\)`: dois **resultados potenciais**, `\(Y_i(0)\)` e `\(Y_i(1)\)` —
+só um é observável. `\(Z_i \in \{0,1\}\)`: tratamento sorteado. Observado: `\(Y_i = Z_iY_i(1)+(1-Z_i)Y_i(0)\)`.
+
+`$$\text{ATE} = \bar Y(1) - \bar Y(0), \qquad
+\widehat{\text{ATE}} = \bar Y_1^{\,obs} - \bar Y_0^{\,obs}$$`
+
+--
+
+Tratando `\(\{Y_i(0),Y_i(1)\}\)` como **fixos** e só `\(Z_i\)` como aleatório (sorteio de qual
+subconjunto de tamanho `\(n_1\)` recebe tratamento):
+
+`$$E\!\left[\bar Y_1^{\,obs}\right] = \frac{1}{N}\sum_i Y_i(1) = \bar Y(1)
+\;\;\Longrightarrow\;\; E\!\left[\widehat{\text{ATE}}\right] = \text{ATE}$$`
+
+porque a aleatorização faz do grupo tratado uma **amostra aleatória simples** dos `\(N\)` valores
+`\(Y_i(1)\)` — não-viés **sem** suposição distribucional. Sem sorteio, `\(Z_i\)` pode depender de
+`\((Y_i(0),Y_i(1))\)`: a igualdade quebra, e `\(\widehat{\text{ATE}}\)` mistura efeito causal com viés de
+seleção.
+
+---
+
+## Validade interna vs. validade externa
+
+A demonstração acima garante **validade interna**: dentro da amostra de `\(N\)` unidades estudadas, a
+diferença de médias é não-viesada para o ATE *dessa amostra*. É uma afirmação sobre o mecanismo
+de atribuição (a aleatorização), não sobre quem são as `\(N\)` unidades.
+
+--
+
+**Validade externa** (Owen, 2020): o efeito estimado nessas `\(N\)` unidades se generaliza
+para outras unidades, fora do estudo? Validade interna alta **não implica** validade externa
+alta — um experimento com aleatorização impecável ainda pode dizer pouco sobre uma população mais
+ampla, se a amostra não for representativa dela (voluntários de um "programa beta", estudantes de
+graduação como sujeitos de laboratório, parcelas de uma única estação experimental).
+
+Não há solução puramente estatística para validade externa — só o cuidado de deixar explícito
+**a que população** e **sob quais condições** a conclusão se aplica.
 
 ---
 
@@ -407,7 +478,7 @@ organiza, na prática, num roteiro de cinco passos (Question, Plan, Data, Analys
 1. **Question** — qual pergunta causal, precisa e mensurável? (não "o tratamento funciona?", mas
    "qual o ATE do tratamento X sobre a resposta Y, na população Z?")
 2. **Plan** — desenho de tratamentos, desenho para controle do erro (os três pilares), desenho
-   amostral: quantas UEs, submuestragem, blocagem.
+   amostral: quantas UEs, subamostragem, blocagem.
 3. **Data** — coleta seguindo exatamente o plano (nenhum desvio ad-hoc do sorteio).
 4. **Analysis** — a ferramenta estatística certa para a estrutura de dados que o plano gerou (não
    o inverso).
@@ -426,22 +497,24 @@ class: inverse, center, middle
 
 ## Técnicas de estudo e desempenho em prova
 
-**Pergunta:** releitura, flashcards e teste-prática diferem quanto à nota em uma prova de
+**Question:** releitura, flashcards e teste-prática diferem quanto à nota em uma prova de
 vocabulário?
+
+**Plan:**
 
 - 30 estudantes, sorteados em 3 grupos de 10 (**UE = estudante**).
 - Cada estudante responde **duas provas paralelas** (A e B) sobre o mesmo material
-  (**unidade amostral = prova**, submuestreo).
+  (**unidade amostral = prova**, subamostragem).
 
 --
 
-**Desenho de tratamentos:** 1 fator (técnica), 3 níveis.
-**Controle do erro:** aleatorização simples, sem blocos.
-**Desenho amostral:** 10 UEs por grupo, 2 submuestras por UE.
+**Os três aspectos do plano.** Desenho de tratamentos: 1 fator (técnica), 3 níveis.
+Controle do erro: aleatorização simples, sem blocos.
+Desenho amostral: 10 UEs por grupo, 2 subamostras por UE.
 
 ---
 
-## Os dados simulados
+## Data: os dados simulados
 
 
 ``` r
@@ -492,7 +565,56 @@ dados_provas &lt;- dados_estudantes %&gt;%
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-O *n* relevante para inferência é **10 por grupo** (estudantes), não 20 (provas).
+O *n* relevante para inferência é **10 por grupo** (estudantes), não 20 (provas). A linha `nota = ...`
+é a fórmula das três fontes de variação: `efeito` (1), `habilidade` (2) e `rnorm(n(), 0, 3)` (3).
+
+---
+
+## Como é a planilha: uma linha por prova
+
+&lt;table class="table" style="font-size: 17px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; estudante &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; tecnica &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; prova &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; nota &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Releitura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Releitura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Flashcards &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Flashcards &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.9 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- Cada estudante ocupa **duas linhas**, uma por prova. A coluna `estudante` identifica a UE; a
+  coluna `prova` identifica a unidade amostral dentro dela.
+- `habilidade` não está na planilha: na vida real ninguém a observa. Ela só existe na simulação, e
+  é ela que torna as duas notas do mesmo estudante parecidas.
+- Sem a coluna `estudante`, seria impossível saber quais notas vêm da mesma UE. É a coluna mais
+  importante da planilha, e a que mais se perde na prática.
 
 ---
 
@@ -701,12 +823,8 @@ class: inverse, center, middle
 
 
 ``` r
-# 1. O fator de tratamento, com os níveis na ordem que queremos exibir
-dados_estudantes$tecnica &lt;- factor(dados_estudantes$tecnica,
-                                    levels = c("Releitura", "Flashcards", "Teste-prática"))
-
-# 2. A unidade experimental precisa de um identificador único e explícito —
-#    é ele que usaremos para agregar o submuestreo antes de qualquer teste.
+# A unidade experimental precisa de um identificador único e explícito —
+#    é ele que usaremos para agregar a subamostragem antes de qualquer teste.
 media_por_estudante &lt;- dados_provas %&gt;%
   group_by(estudante, tecnica) %&gt;%
   summarise(nota_media = mean(nota), .groups = "drop")
@@ -756,9 +874,9 @@ broom::tidy(modelo_correto)[1, c("term","df","p.value")]
 ## 1 tecnica     2 0.0000230
 ```
 
-Note a diferença nos graus de liberdade e no p-valor: tratar submuestras como réplicas
+Note a diferença nos graus de liberdade e no p-valor: tratar subamostras como réplicas
 independentes muda a conclusão. Formalizaremos por que isso acontece — e como corrigi-lo — ao
-estudar o **modelo de submuestreo em um DCA**, no Capítulo 3.
+estudar o **modelo de subamostragem em um DCA**, no Capítulo 3.
 
 ---
 
@@ -768,6 +886,9 @@ estudar o **modelo de submuestreo em um DCA**, no Capítulo 3.
 - Três fontes de variação: tratamento, variação sistemática entre UEs, erro experimental.
 - Fator, nível, tratamento: o vocabulário do desenho de tratamentos.
 - Repetição, aleatorização, controle local: os três pilares do controle do erro.
+- Resultados potenciais: cada UE tem `\(Y_i(0)\)` e `\(Y_i(1)\)`, só um é visto; a aleatorização torna
+  `\(\widehat{\text{ATE}}\)` não viesado, na média sobre os sorteios possíveis.
+- A planilha tem uma linha por unidade **amostral**; a coluna da UE diz quantas réplicas existem.
 - Próxima aula: a maquinaria formal — o **modelo linear** — para expressar tudo isso com precisão.
 
 ---

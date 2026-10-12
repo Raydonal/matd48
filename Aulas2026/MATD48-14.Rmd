@@ -311,7 +311,7 @@ sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso
 .pull-left[
 **Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+ \varepsilon$ como linguagem comum.
 
-**Cap. 3:** DCA, submuestreo, transformações, comparações múltiplas.
+**Cap. 3:** DCA, subamostragem, transformações, comparações múltiplas.
 ]
 .pull-right[
 **Cap. 4:** blocos, quadrados latinos e greco-latinos.

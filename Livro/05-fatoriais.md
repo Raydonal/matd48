@@ -766,7 +766,7 @@ estrutura de árvore em vez de uma cadeia ou um losango simples.
 <ol>
 <li>Se a interação viscosidade×salinidade tivesse sido significativa, por que reportar apenas as
 médias marginais da Tabela acima seria enganoso? O que deveria ser reportado no lugar?</li>
-<li>O desenho usa duas injeções por combinação de níveis (repetição verdadeira, não submuestreo —
+<li>O desenho usa duas injeções por combinação de níveis (repetição verdadeira, não subamostragem —
 ver a seção sobre unidades experimentais e amostrais do Capítulo 1). O que mudaria na análise, e por que ela deixaria de ser válida, se
 houvesse apenas uma corrida por combinação?</li>
 <li>Uma equipe de produto testando cor do botão × layout × texto do CTA sobre a taxa de conversão

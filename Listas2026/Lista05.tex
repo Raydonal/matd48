@@ -1,15 +1,15 @@
 \documentclass[11pt]{article}
-\newcommand{\ListaTitulo}{Lista 05 --- Submuestreo e Efeitos Aleatórios}
+\newcommand{\ListaTitulo}{Lista 05 --- Subamostragem e Efeitos Aleatórios}
 \input{preamble}
 
 \begin{document}
 
-\cabecalho{Lista de Exercícios 05}{DCA com submuestreo e modelo de efeitos aleatórios (Capítulo 3 / Aula 05)}
+\cabecalho{Lista de Exercícios 05}{DCA com subamostragem e modelo de efeitos aleatórios (Capítulo 3 / Aula 05)}
 
 \noindent \textit{Entrega: até a próxima aula. Justifique todas as respostas --- nestas listas, a
 justificativa vale mais que a resposta final. O gabarito completo está em \texttt{Gabarito05.pdf}.}
 
-\begin{questao}{1} \textbf{(Agricultura/pecuária --- identificação de unidades com submuestreo)}
+\begin{questao}{1} \textbf{(Agricultura/pecuária --- identificação de unidades com subamostragem)}
 
 Um zootecnista testa o efeito de três dietas (A, B, C) sobre o teor de gordura no leite (\%).
 Doze vacas são usadas, sorteadas 4 para cada dieta; cada vaca é ordenhada 3 vezes ao longo do
@@ -17,7 +17,7 @@ dia, e o teor de gordura é medido em cada ordenha separadamente.
 
 \begin{enumerate}[label=(\alph*)]
   \item Identifique a unidade experimental e a unidade amostral. Quantos níveis $t$, UEs por
-    tratamento $r$ e submuestras por UE $q$ há neste desenho? Confira que $N = trq$ bate com o
+    tratamento $r$ e subamostras por UE $q$ há neste desenho? Confira que $N = trq$ bate com o
     número total de medições.
   \item Escreva o modelo estatístico apropriado para $Y_{ijk}$, definindo cada termo.
   \item Se o zootecnista rodasse uma ANOVA de um fator diretamente nas $N$ medições de gordura
@@ -28,7 +28,7 @@ dia, e o teor de gordura é medido em cada ordenha separadamente.
 
 \begin{questao}{2} \textbf{(Dedução --- esperança do quadrado médio do erro experimental)}
 
-Considere o modelo balanceado de submuestreo $Y_{ijk} = \mu + \tau_i + \delta_{ij} +
+Considere o modelo balanceado de subamostragem $Y_{ijk} = \mu + \tau_i + \delta_{ij} +
 \varepsilon_{ijk}$, $i=1,\ldots,t$, $j=1,\ldots,r$, $k=1,\ldots,q$, com $\delta_{ij}
 \overset{iid}{\sim} N(0,\sigma_\delta^2)$ e $\varepsilon_{ijk} \overset{iid}{\sim}
 N(0,\sigma_\varepsilon^2)$ independentes entre si. A soma de quadrados do erro experimental é
@@ -46,11 +46,11 @@ $\sigma_X^2$, então $E\!\left[\sum_{j=1}^r (X_j-\bar X)^2\right] = (r-1)\sigma_
   \item Usando o item (a) e o fato fornecido, mostre que $E[SQ_{\text{exp}}] = t(r-1)(\sigma_\varepsilon^2
     + q\sigma_\delta^2)$.
   \item Conclua que $E[MS_{\text{exp}}] = E[SQ_{\text{exp}}]/[t(r-1)] = \sigma_\varepsilon^2 +
-    q\sigma_\delta^2$, confirmando a coluna $E[QM]$ da tabela de ANOVA com submuestreo.
+    q\sigma_\delta^2$, confirmando a coluna $E[QM]$ da tabela de ANOVA com subamostragem.
 \end{enumerate}
 \end{questao}
 
-\begin{questao}{3} \textbf{(Agricultura/pecuária --- ANOVA com submuestreo, tabela incompleta)}
+\begin{questao}{3} \textbf{(Agricultura/pecuária --- ANOVA com subamostragem, tabela incompleta)}
 
 Retomando o experimento das dietas (Questão 1: $t=3$, $r=4$, $q=3$, $N=36$), o ajuste da ANOVA
 aninhada produziu os valores abaixo (alguns propositalmente omitidos, marcados com "?").

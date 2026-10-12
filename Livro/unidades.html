@@ -251,12 +251,12 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
 <li class="chapter" data-level="3.2.7" data-path="dca-uma-via.html"><a href="dca-uma-via.html#dca-feijao"><i class="fa fa-check"></i><b>3.2.7</b> Um segundo exemplo, com dado real: fertilizante em feijão</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -457,7 +457,7 @@ independente. É o nível em que a <em>aleatorização</em> acontece.</li>
 efetivamente medida. Pode coincidir com a unidade experimental ou não.</li>
 </ul>
 <p>Quando várias unidades amostrais vêm da mesma unidade experimental, dizemos que há
-<strong>submuestreo</strong> (ou pseudorreplicação, se isso for ignorado na análise). Tratar submuestras como
+<strong>subamostragem</strong> (ou pseudorreplicação, se isso for ignorado na análise). Tratar subamostras como
 se fossem repetições independentes do tratamento é um dos erros mais comuns — e mais graves — em
 análise de experimentos, porque infla artificialmente o tamanho amostral e reduz erros-padrão de
 forma não legítima.</p>
@@ -471,11 +471,11 @@ estudante estuda uma lista de 40 palavras e depois responde a <strong>duas prova
 </div>
 <p>Aqui, a <strong>unidade experimental é o estudante</strong> — é nele que a técnica de estudo (o tratamento) é
 aplicada, e é impossível “sortear de novo” a técnica para uma prova sem sortear de novo o
-estudante. A <strong>unidade amostral é cada prova respondida</strong>: há duas medições (submuestras) por
+estudante. A <strong>unidade amostral é cada prova respondida</strong>: há duas medições (subamostras) por
 estudante. Se o pesquisador tratasse as 60 provas como 60 réplicas independentes do experimento,
 estaria contando cada estudante duas vezes, ignorando que as duas notas de uma mesma pessoa são
 correlacionadas — um erro clássico de pseudorreplicação (voltaremos a isso formalmente com
-submuestreo no Capítulo 3, ao tratar do DCA).</p>
+subamostragem no Capítulo 3, ao tratar do DCA).</p>
 <div class="caixa-r"><strong>Uso do R</strong> — simulando a distinção UE vs. unidade amostral</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="unidades.html#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
 <span id="cb1-2"><a href="unidades.html#cb1-2" tabindex="-1"></a></span>
@@ -577,11 +577,11 @@ Teste-prática
 </table>
 <p>O número de réplicas legítimo para inferência sobre o efeito da técnica é <strong>10 por grupo</strong> (o
 número de estudantes), não 20 (o número de provas) — este é exatamente o ponto que retomaremos
-com rigor ao estudar o desenho completamente aleatorizado com submuestreo.</p>
+com rigor ao estudar o desenho completamente aleatorizado com subamostragem.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:plot-submuestreo"></span>
-<img src="01-principios_files/figure-html/plot-submuestreo-1.png" alt="Duas notas (provas A e B) por estudante, uma linha ligando as duas submuestras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B." width="75%" />
+<img src="01-principios_files/figure-html/plot-submuestreo-1.png" alt="Duas notas (provas A e B) por estudante, uma linha ligando as duas subamostras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B." width="75%" />
 <p class="caption">
-Figura 1.2: Duas notas (provas A e B) por estudante, uma linha ligando as duas submuestras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B.
+Figura 1.2: Duas notas (provas A e B) por estudante, uma linha ligando as duas subamostras da mesma unidade experimental. Cada cor é uma técnica de estudo; a forma do ponto (círculo vs. triângulo) distingue a prova A da prova B.
 </p>
 </div>
 <p>O gráfico deixa visível, e não só conceitual, o que a distinção UE/unidade amostral significa: as
@@ -589,7 +589,7 @@ duas notas ligadas pela mesma linha (mesmo estudante) ficam sistematicamente mai
 si do que notas de estudantes diferentes dentro da mesma técnica — a variação <em>entre</em> linhas
 (entre estudantes) é maior do que a variação <em>dentro</em> de cada linha (entre as duas provas do mesmo
 estudante). É exatamente essa correlação dentro da unidade experimental que torna as 60 notas não
-independentes entre si, e que a análise do Capítulo 3 (DCA com submuestreo) precisa levar em conta
+independentes entre si, e que a análise do Capítulo 3 (DCA com subamostragem) precisa levar em conta
 para não superestimar o tamanho amostral efetivo.</p>
 </div>
             </section>

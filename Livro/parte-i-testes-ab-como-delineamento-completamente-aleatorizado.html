@@ -251,12 +251,12 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
 <li class="chapter" data-level="3.2.7" data-path="dca-uma-via.html"><a href="dca-uma-via.html#dca-feijao"><i class="fa fa-check"></i><b>3.2.7</b> Um segundo exemplo, com dado real: fertilizante em feijão</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -493,7 +493,7 @@ recebeu qual condição; uma plataforma digital recebe milhões de requisições
 decidir, em tempo real e sem consultar um banco de dados central, se um usuário específico vê a
 versão A ou B — e precisa que a <em>mesma</em> pessoa continue vendo a mesma versão em visitas
 subsequentes (senão a “unidade experimental” se confunde com a “unidade de observação”, o mesmo
-problema de submuestreo da Seção <a href="unidades.html#unidades">1.2</a>, só que ao contrário: aqui queremos <em>evitar</em>
+problema de subamostragem da Seção <a href="unidades.html#unidades">1.2</a>, só que ao contrário: aqui queremos <em>evitar</em>
 múltiplas atribuições da mesma unidade). A solução industrial padrão é a <strong>aleatorização por
 hash</strong>: aplica-se uma função hash determinística (por exemplo, MD5 ou MurmurHash) ao identificador
 do usuário concatenado com um identificador do experimento, e o resultado — um número
@@ -561,11 +561,11 @@ o “ATE médio nas primeiras 48 horas” pode ser um estimando diferente do “
 que o time de produto realmente quer.</p>
 <p><strong>Dependência temporal dentro do mesmo usuário.</strong> O mesmo usuário volta ao site várias vezes ao
 longo do período do teste, e cada visita gera uma observação — mas, exatamente como no problema de
-submuestreo formalizado na Seção <a href="unidades.html#unidades">1.2</a>, essas observações repetidas <strong>não são réplicas
+subamostragem formalizado na Seção <a href="unidades.html#unidades">1.2</a>, essas observações repetidas <strong>não são réplicas
 independentes</strong>: são correlacionadas dentro do usuário (alguém propenso a comprar tende a comprar
 em várias visitas; alguém que nunca compra continua não comprando). Tratar cada visita como uma
 unidade experimental independente — em vez de agregar por usuário antes de testar, como manda o
-princípio de submuestreo do Capítulo 1 — infla artificialmente o tamanho amostral efetivo e produz
+princípio de subamostragem do Capítulo 1 — infla artificialmente o tamanho amostral efetivo e produz
 erros-padrão anticonservadores, exatamente o mesmo erro de pseudorreplicação identificado naquela
 seção, só que reaparecendo aqui sob um nome de produto diferente.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — poder de um teste A/B para efeitos pequenos</div>

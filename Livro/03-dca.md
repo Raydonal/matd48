@@ -9,7 +9,7 @@ linear. Este capítulo une as duas coisas no delineamento mais simples possível
 entre as unidades experimentais, sem qualquer restrição de blocagem. É o ponto de partida de
 todo o resto do curso — e, por ser o desenho mais simples, também é o lugar certo para introduzir
 com rigor a ideia de **teste de aleatorização**, o modelo estatístico, a ANOVA, o planejamento do
-tamanho amostral, o problema do submuestreo, o modelo de efeitos aleatórios e a verificação dos
+tamanho amostral, o problema da subamostragem, o modelo de efeitos aleatórios e a verificação dos
 pressupostos que tornam a inferência clássica válida.
 
 ## Princípios de aleatorização: a ideia de um teste de aleatorização {#principios-aleatorizacao}
@@ -471,7 +471,7 @@ realiza a tarefa uma única vez sob sua condição sorteada, e o tempo de reaç�
 Este é um DCA a uma via de classificação: um único fator (tipo de distração), três níveis, sem
 blocagem — a atribuição de voluntários às condições é inteiramente aleatória. A **unidade
 experimental e a unidade amostral coincidem** aqui (um voluntário, uma medição): não há
-submuestreo — assunto ao qual voltaremos na Seção \@ref(dca-submuestreo).
+subamostragem — assunto ao qual voltaremos na Seção \@ref(dca-submuestreo).
 
 <div class="figure" style="text-align: center">
 <img src="03-dca_files/figure-html/fig-layout-dca-1.png" alt="Layout de um DCA: 36 unidades experimentais dispostas em uma grade puramente ilustrativa (a posição na grade não tem nenhum significado -- não há linha, coluna nem vizinhança relevante), coloridas pelo tratamento sorteado. Note a ausência de qualquer padrão espacial ou de agrupamento: essa é justamente a marca do DCA -- nenhuma restrição além do sorteio -- que o contrasta com os delineamentos em blocos do Capítulo 4." width="75%" />
@@ -1094,39 +1094,39 @@ Shapiro-Wilk nos resíduos dá $p\approx 0.046$
 situação real que a Seção \@ref(dca-pressupostos), a seguir, ensina a diagnosticar e tratar (em
 vez de ignorar).
 
-## Submuestreo em um DCA {#dca-submuestreo}
+## Subamostragem em um DCA {#dca-submuestreo}
 
 Retomamos aqui, com rigor, a distinção entre unidade experimental (UE) e unidade amostral
 introduzida no Capítulo 1 (Seção \@ref(unidades)): quando uma UE é medida mais de uma vez —
 várias tentativas de um mesmo sujeito, vários peixes do mesmo aquário, várias leituras do mesmo
-lote — dizemos que há **submuestreo**. As submuestras não são réplicas do tratamento: são
+lote — dizemos que há **subamostragem**. As subamostras não são réplicas do tratamento: são
 réplicas da *medição* dentro de uma única aplicação do tratamento, e carregam uma fonte de
 variação a mais, que precisa ser modelada separadamente.
 
 <div class="figure" style="text-align: center">
-<img src="../Aulas2026/assets/images/experimento1.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
-<p class="caption">(\#fig:fig-ue-uo-submuestreo-1)Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.</p>
+<img src="../Aulas2026/assets/images/experimento1.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
+<p class="caption">(\#fig:fig-ue-uo-submuestreo-1)Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.</p>
 </div><div class="figure" style="text-align: center">
-<img src="../Aulas2026/assets/images/sit2.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
-<p class="caption">(\#fig:fig-ue-uo-submuestreo-2)Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.</p>
+<img src="../Aulas2026/assets/images/sit2.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
+<p class="caption">(\#fig:fig-ue-uo-submuestreo-2)Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.</p>
 </div><div class="figure" style="text-align: center">
-<img src="../Aulas2026/assets/images/sit3.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
-<p class="caption">(\#fig:fig-ue-uo-submuestreo-3)Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma submuestra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem submuestreo. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- submuestreo como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.</p>
+<img src="../Aulas2026/assets/images/sit3.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
+<p class="caption">(\#fig:fig-ue-uo-submuestreo-3)Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.</p>
 </div>
 
 Os três diagramas mostram o mesmo número de plantas (12 no total, três tratamentos) organizadas de
 formas distintas. Na Situação 1, o sorteio de tratamento ocorre **caixa a caixa**: uma vez que uma
 caixa recebe, digamos, o Tratamento 1, todos os quatro vasos dentro dela recebem necessariamente o
-mesmo tratamento — a caixa é a UE, e as quatro plantas dentro dela são submuestras da mesma UE.
+mesmo tratamento — a caixa é a UE, e as quatro plantas dentro dela são subamostras da mesma UE.
 Como só existe **uma** caixa por tratamento, há apenas **3 UEs em todo o experimento** — uma por
 tratamento, não três por tratamento —, e isso é fatal: com uma única UE por tratamento, não sobra
 nenhum grau de liberdade para estimar o erro experimental *entre* UEs, e o efeito do tratamento
 fica completamente confundido com qualquer peculiaridade daquela caixa específica (Capítulo 1,
 Seção \@ref(fontes-variacao)). Na Situação 2, cada vaso é sorteado **individualmente**: a moeda do
 desenho aleatorizado é lançada 12 vezes, uma por vaso, e UE e unidade amostral coincidem — não há
-submuestreo, e as 12 observações são, de fato, 12 réplicas independentes do sorteio de tratamento,
+subamostragem, e as 12 observações são, de fato, 12 réplicas independentes do sorteio de tratamento,
 com $12-3=9$ graus de liberdade de erro. A Situação 3 corrige o problema fatal da Situação 1 sem
-abrir mão do submuestreo: **duas** caixas por tratamento (não uma) dão 2 UEs por tratamento — poucas,
+abrir mão da subamostragem: **duas** caixas por tratamento (não uma) dão 2 UEs por tratamento — poucas,
 mas suficientes para estimar o erro experimental entre caixas, com $2\times3-3=3$ graus de
 liberdade — a mesma estrutura, em miniatura, do exemplo real da tilápia a seguir (4 probióticos,
 5 aquários cada). A diferença entre as três situações não aparece em nenhuma estatística
@@ -1142,14 +1142,14 @@ quanto ao ganho de peso de tilápias entre o início do experimento e o dia 45. 
 20 aquários, sorteados 5 para cada probiótico — o <strong>aquário é a unidade experimental</strong>,
 pois é nele que o probiótico é aplicado (misturado à ração de todo o aquário) e não é possível
 sortear o probiótico peixe a peixe dentro de um mesmo aquário. Cada aquário contém, em geral, 5
-peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong> (submuestra).
+peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong> (subamostra).
 </div>
 ```
 
 ### O modelo com dois níveis de erro {#modelo-submuestreo}
 
 Com $t$ tratamentos, $r$ unidades experimentais (UEs) por tratamento e $q$ unidades amostrais
-(submuestras) por UE, o modelo passa a ter **dois** termos de erro:
+(subamostras) por UE, o modelo passa a ter **dois** termos de erro:
 
 $$
 Y_{ijk} = \mu + \tau_i + \delta_{ij} + \varepsilon_{ijk},
@@ -1162,13 +1162,13 @@ $$
 em que $\delta_{ij} \overset{iid}{\sim} N(0,\sigma_\delta^2)$ é o **erro experimental** (o desvio
 específico da UE $j$ dentro do tratamento $i$ — por exemplo, algo peculiar daquele aquário, além
 do efeito do probiótico) e $\varepsilon_{ijk} \overset{iid}{\sim} N(0,\sigma_\varepsilon^2)$ é o
-**erro de amostragem** (o desvio específico da submuestra $k$ dentro da UE — a variação entre
+**erro de amostragem** (o desvio específico da subamostra $k$ dentro da UE — a variação entre
 peixes de um mesmo aquário), independente de $\delta_{ij}$. A variância total de uma observação
 individual é $\text{Var}(Y_{ijk}) = \sigma_\delta^2 + \sigma_\varepsilon^2$, mas o que importa
 para comparar tratamentos é apenas $\sigma_\delta^2$: aumentar $q$ (mais peixes por aquário) nunca
 reduz a incerteza sobre o efeito do tratamento além de um certo ponto, porque não gera novas UEs.
 
-Em notação matricial, o submuestreo quebra a suposição $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
+Em notação matricial, a subamostragem quebra a suposição $\mathrm{Cov}(\boldsymbol{\varepsilon}) =
 \sigma^2\mathbf{I}_N$ do Capítulo 2 (Seção \@ref(gauss-markov)): empilhando as $N=trq$
 observações, $\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}' +
 \sigma_\varepsilon^2\mathbf{I}_N$, em que $\mathbf{Z}$ é a matriz $N\times tr$ de indicadores de
@@ -1176,11 +1176,11 @@ UE ($Z_{[ijk],\,i'j'} = \mathbb{1}\{i=i',j=j'\}$). $\mathbf{V}$ tem estrutura de
 **simetria composta**: dentro de uma mesma UE, $\mathrm{Cov}(Y_{ijk},Y_{ijk'}) = \sigma_\delta^2$
 ($k\neq k'$); entre UEs diferentes, covariância nula. Um $\mathbf{X}$ com $\mathrm{Cov}(\mathbf{Y})
 =\sigma^2\mathbf{I}$ deixa de bastar — é exatamente essa estrutura de $\mathbf{V}$ que faz do DCA
-com submuestreo um caso particular de **modelo linear misto**, ajustável de forma exata (inclusive
+com subamostragem um caso particular de **modelo linear misto**, ajustável de forma exata (inclusive
 sob desbalanceamento) por `nlme::lme()` ou `lme4::lmer()`, embora a ANOVA clássica com `Error()`
 usada adiante já recupere o teste correto no caso balanceado.
 
-O que acontece se o número de submuestras por UE **não** for o mesmo em toda UE — um aquário
+O que acontece se o número de subamostras por UE **não** for o mesmo em toda UE — um aquário
 perdeu um peixe, por exemplo? A condição de Zyskind (Seção \@ref(zyskind-dca)) deixa de se
 verificar, e a ANOVA clássica com `Error()` deixa de ter uma base algébrica sólida — o R, nesse
 caso, geralmente avisa:
@@ -1192,7 +1192,7 @@ caso, geralmente avisa:
 
 ``` r
 set.seed(77)
-q_desigual <- c(4, 4, 4, 4, 4, 2)   # uma UE com 2 submuestras em vez de 4
+q_desigual <- c(4, 4, 4, 4, 4, 2)   # uma UE com 2 subamostras em vez de 4
 delta_ue   <- rnorm(6, 0, 1.7)
 dados_desbal <- map_dfr(1:6, function(j) {
   tibble(ue = factor(j), trat = factor(rep(1:3, each = 2)[j]),
@@ -1240,17 +1240,17 @@ variância por máxima verossimilhança restrita sem exigir essa condição — 
 liberdade do teste $F$ deixam de ter fórmula fechada, exigindo uma aproximação (Satterthwaite ou
 Kenward-Roger) fora do escopo deste livro.
 
-### O diagrama de Hasse do submuestreo: aninhamento em duas camadas
+### O diagrama de Hasse da subamostragem: aninhamento em duas camadas
 
 A estrutura de dois erros descrita acima tem um retrato imediato no diagrama de Hasse introduzido
 no Capítulo 2 (Seção \@ref(hasse)). O DCA simples é uma cadeia de três nós — Média $\prec$
-Tratamento $\prec$ Erro (Figura \@ref(fig:hasse-dca) do Capítulo 2). O submuestreo insere um quarto
+Tratamento $\prec$ Erro (Figura \@ref(fig:hasse-dca) do Capítulo 2). A subamostragem insere um quarto
 elo *abaixo* do erro experimental: a unidade experimental (aquário) é, ela própria, refinada pela
 unidade amostral (peixe) dentro dela — exatamente o padrão de **aninhamento** que a Seção
 \@ref(hasse) definiu como "uma cadeia direta de arestas, sem ramificação".
 
 ```{=html}
-<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA com submuestreo</div>
+<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA com subamostragem</div>
 ```
 
 
@@ -1267,13 +1267,13 @@ arestas_sub <- tibble(
 knitr::include_graphics(
   hasse_svg(nos_sub, arestas_sub,
             arquivo = "figuras/hasse/dca-submuestreo.svg",
-            titulo  = "DCA com submuestreo: t=4, r=5, q=5 (N=100)")
+            titulo  = "DCA com subamostragem: t=4, r=5, q=5 (N=100)")
 )
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figuras/hasse/dca-submuestreo.svg" alt="Diagrama de Hasse do DCA com submuestreo, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): o submuestreo insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico." width="46%" />
-<p class="caption">(\#fig:hasse-submuestreo)Diagrama de Hasse do DCA com submuestreo, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): o submuestreo insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico.</p>
+<img src="figuras/hasse/dca-submuestreo.svg" alt="Diagrama de Hasse do DCA com subamostragem, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): a subamostragem insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico." width="46%" />
+<p class="caption">(\#fig:hasse-submuestreo)Diagrama de Hasse do DCA com subamostragem, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): a subamostragem insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico.</p>
 </div>
 
 Os graus de liberdade dos quatro nós somam exatamente $N=trq=4\times5\times5=100$: $1$ (Média) $+\,
@@ -1297,12 +1297,12 @@ de amostragem de Kish — e é exatamente por isso que aumentar $q$ (mais amostr
 nunca substitui aumentar $r$ (mais aleatorização de tratamento), como a Seção
 \@ref(amostra-submuestreo), adiante, quantifica.
 
-### ANOVA com submuestreo {#anova-submuestreo}
+### ANOVA com subamostragem {#anova-submuestreo}
 
 A soma de quadrados total se decompõe agora em três partes, não duas:
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-anova-sub-teorica)ANOVA do DCA com submuestreo balanceado (q submuestras por UE)</caption>
+<caption>(\#tab:tabela-anova-sub-teorica)ANOVA do DCA com subamostragem balanceada (q subamostras por UE)</caption>
  <thead>
   <tr>
    <th style="text-align:left;"> Fonte de variação </th>
@@ -1467,10 +1467,10 @@ quadrado médio **entre aquários dentro de probiótico** como erro (16 g.l.), n
 entre peixes dentro de aquário (77 g.l.) — se o pesquisador tivesse usado este último por engano,
 o denominador do teste $F$ seria bem menor, inflando artificialmente a significância.
 
-### Tamanho de amostra com submuestreo {#amostra-submuestreo}
+### Tamanho de amostra com subamostragem {#amostra-submuestreo}
 
 Combinando $\delta_{ij}$ e $\varepsilon_{ijk}$, a variância efetiva da média de uma UE baseada em
-$q$ submuestras é
+$q$ subamostras é
 
 $$
 \text{Var}(\bar Y_{ij\cdot}) = \sigma_\delta^2 + \frac{\sigma_\varepsilon^2}{q}.
@@ -1478,12 +1478,12 @@ $$
 
 Essa expressão tem uma implicação prática importante: como função de $q$, ela decresce, mas com
 retornos decrescentes, aproximando-se assintoticamente de um **piso** igual a $\sigma_\delta^2$ —
-nenhuma quantidade de submuestragem elimina a variação entre unidades experimentais. Se o
+nenhuma quantidade de subamostragem elimina a variação entre unidades experimentais. Se o
 objetivo é reduzir a incerteza sobre o efeito do tratamento, aumentar $r$ (mais UEs) tem retorno
-direto e ilimitado; aumentar $q$ (mais submuestras por UE) tem retorno limitado por esse piso.
+direto e ilimitado; aumentar $q$ (mais subamostras por UE) tem retorno limitado por esse piso.
 
 ```{=html}
-<div class="caixa-r"><strong>Uso do R</strong> — retorno decrescente da submuestragem</div>
+<div class="caixa-r"><strong>Uso do R</strong> — retorno decrescente da subamostragem</div>
 ```
 
 
@@ -1499,12 +1499,12 @@ sigma2_eps   <- MS_am
 tibble(q = c(1, 2, 5, 10, 20, 50)) %>%
   mutate(var_media_UE = sigma2_delta + sigma2_eps / q) %>%
   kable(digits = 2,
-        caption = "Variância da média de uma UE conforme o número de submuestras q") %>%
+        caption = "Variância da média de uma UE conforme o número de subamostras q") %>%
   kable_styling(full_width = FALSE)
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:retorno-decrescente-sub)Variância da média de uma UE conforme o número de submuestras q</caption>
+<caption>(\#tab:retorno-decrescente-sub)Variância da média de uma UE conforme o número de subamostras q</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> q </th>
@@ -1548,8 +1548,8 @@ média de UE em cerca de 27%
 $\sigma_\delta^2$. Já passar de $r=5$ para $r=20$ aquários por tratamento (o mesmo fator de
 aumento, $4\times$) reduziria a variância da **média de tratamento**, que decresce como
 $\sigma_\delta^2/r$ sem nenhum piso, em exatos 75% ($1 - 1/4$) — quase o triplo da redução obtida
-investindo o mesmo fator de aumento em submuestras. Sempre que o custo por UE adicional for
-comparável ao custo por submuestra adicional, investir em mais UEs é a escolha mais eficiente —
+investindo o mesmo fator de aumento em subamostras. Sempre que o custo por UE adicional for
+comparável ao custo por subamostra adicional, investir em mais UEs é a escolha mais eficiente —
 uma recomendação de delineamento amostral que decorre diretamente da estrutura do modelo, não de
 intuição.
 
@@ -1592,7 +1592,7 @@ nível $i$ (aqui, do mesmo clipe sonoro) são correlacionadas: $\text{Corr}(Y_{i
 intraclasse (ICC)**. Em notação matricial, isso é a mesma estrutura de blocos de simetria
 composta $\mathbf{V}=\sigma_\tau^2\mathbf{Z}\mathbf{Z}'+\sigma^2\mathbf{I}_N$ da Seção
 \@ref(modelo-submuestreo), agora com $\mathbf{Z}$ indicando o **nível sorteado** (o clipe), não a
-UE — sinal de que submuestreo e efeitos aleatórios são duas instâncias do mesmo fenômeno
+UE — sinal de que subamostragem e efeitos aleatórios são duas instâncias do mesmo fenômeno
 estatístico: observações que compartilham um rótulo aleatório deixam de ser independentes. A
 hipótese de interesse muda de "as médias são iguais?" para "a variância entre níveis é nula?":
 
@@ -1668,7 +1668,7 @@ glimpse(dados_clipe)
 ```
 
 ``` r
-# UE = voluntário (8 por clipe, sem submuestreo); "clipe" é o nível sorteado da população de sons
+# UE = voluntário (8 por clipe, sem subamostragem); "clipe" é o nível sorteado da população de sons
 
 modelo_clipe <- aov(tempo_reacao ~ clipe, data = dados_clipe)
 summary(modelo_clipe)
@@ -1823,7 +1823,7 @@ Toda a inferência das seções anteriores — testes $F$, intervalos de confian
 tamanho amostral — depende de três suposições sobre os erros do modelo: **normalidade**,
 **variância constante** entre tratamentos (homocedasticidade) e **independência**. A
 independência é garantida (ou não) pelo desenho — pela aleatorização e pela ausência de
-dependências não modeladas, como o submuestreo tratado incorretamente — e não se verifica
+dependências não modeladas, como a subamostragem tratada incorretamente — e não se verifica
 diretamente nos dados; normalidade e homocedasticidade, por sua vez, são checáveis a partir dos
 **resíduos** do modelo ajustado, $e_{ij} = Y_{ij} - \bar Y_{i\cdot}$ — em notação matricial da
 Seção \@ref(matricial-dca), o vetor $\mathbf{e} = (\mathbf{I}_N-\mathbf{P}_X)\mathbf{Y}$, a
@@ -3126,7 +3126,7 @@ Este capítulo cobriu o delineamento completamente aleatorizado (DCA) do início
   razoáveis, uma excelente aproximação a ele.
 - O modelo do DCA, $Y_{ij} = \mu + \tau_i + \varepsilon_{ij}$, gera a tabela de ANOVA, ICs para
   médias e diferenças de médias, e um cálculo de número de réplicas baseado em tamanho de efeito.
-- **Submuestreo** exige um segundo termo de erro no modelo; o teste correto do tratamento usa o
+- **Subamostragem** exige um segundo termo de erro no modelo; o teste correto do tratamento usa o
   erro *experimental* (entre unidades experimentais), não o de amostragem — usar o segundo por
   engano é pseudorreplicação.
 - O **modelo de efeitos aleatórios** troca "os níveis diferem?" por "quanto os níveis variam?",

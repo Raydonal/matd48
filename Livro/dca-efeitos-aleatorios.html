@@ -251,12 +251,12 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.6" data-path="dca-uma-via.html"><a href="dca-uma-via.html#numero-replicas-dca"><i class="fa fa-check"></i><b>3.2.6</b> Número de réplicas necessário</a></li>
 <li class="chapter" data-level="3.2.7" data-path="dca-uma-via.html"><a href="dca-uma-via.html#dca-feijao"><i class="fa fa-check"></i><b>3.2.7</b> Um segundo exemplo, com dado real: fertilizante em feijão</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Submuestreo em um DCA</a>
+<li class="chapter" data-level="3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html"><i class="fa fa-check"></i><b>3.3</b> Subamostragem em um DCA</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#modelo-submuestreo"><i class="fa fa-check"></i><b>3.3.1</b> O modelo com dois níveis de erro</a></li>
-<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-do-submuestreo-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse do submuestreo: aninhamento em duas camadas</a></li>
-<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com submuestreo</a></li>
-<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com submuestreo</a></li>
+<li class="chapter" data-level="3.3.2" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#o-diagrama-de-hasse-da-subamostragem-aninhamento-em-duas-camadas"><i class="fa fa-check"></i><b>3.3.2</b> O diagrama de Hasse da subamostragem: aninhamento em duas camadas</a></li>
+<li class="chapter" data-level="3.3.3" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#anova-submuestreo"><i class="fa fa-check"></i><b>3.3.3</b> ANOVA com subamostragem</a></li>
+<li class="chapter" data-level="3.3.4" data-path="dca-submuestreo.html"><a href="dca-submuestreo.html#amostra-submuestreo"><i class="fa fa-check"></i><b>3.3.4</b> Tamanho de amostra com subamostragem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="dca-efeitos-aleatorios.html"><a href="dca-efeitos-aleatorios.html"><i class="fa fa-check"></i><b>3.4</b> O modelo de efeitos aleatórios</a>
 <ul>
@@ -479,7 +479,7 @@ nível <span class="math inline">\(i\)</span> (aqui, do mesmo clipe sonoro) são
 intraclasse (ICC)</strong>. Em notação matricial, isso é a mesma estrutura de blocos de simetria
 composta <span class="math inline">\(\mathbf{V}=\sigma_\tau^2\mathbf{Z}\mathbf{Z}&#39;+\sigma^2\mathbf{I}_N\)</span> da Seção
 <a href="dca-submuestreo.html#modelo-submuestreo">3.3.1</a>, agora com <span class="math inline">\(\mathbf{Z}\)</span> indicando o <strong>nível sorteado</strong> (o clipe), não a
-UE — sinal de que submuestreo e efeitos aleatórios são duas instâncias do mesmo fenômeno
+UE — sinal de que subamostragem e efeitos aleatórios são duas instâncias do mesmo fenômeno
 estatístico: observações que compartilham um rótulo aleatório deixam de ser independentes. A
 hipótese de interesse muda de “as médias são iguais?” para “a variância entre níveis é nula?”:</p>
 <p><span class="math display">\[
@@ -564,7 +564,7 @@ momentos a partir da tabela de ANOVA (método de Henderson tipo I):</p>
 ## $ clipe        &lt;fct&gt; Clipe 1, Clipe 1, Clipe 1, Clipe 1, Clipe 1, Clipe 1, Cli…
 ## $ efeito       &lt;dbl&gt; -9.520009, -9.520009, -9.520009, -9.520009, -9.520009, -9…
 ## $ tempo_reacao &lt;dbl&gt; 549.8946, 476.8590, 505.9134, 515.5454, 560.4078, 408.587…</code></pre>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="dca-efeitos-aleatorios.html#cb93-1" tabindex="-1"></a><span class="co"># UE = voluntário (8 por clipe, sem submuestreo); &quot;clipe&quot; é o nível sorteado da população de sons</span></span>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="dca-efeitos-aleatorios.html#cb93-1" tabindex="-1"></a><span class="co"># UE = voluntário (8 por clipe, sem subamostragem); &quot;clipe&quot; é o nível sorteado da população de sons</span></span>
 <span id="cb93-2"><a href="dca-efeitos-aleatorios.html#cb93-2" tabindex="-1"></a></span>
 <span id="cb93-3"><a href="dca-efeitos-aleatorios.html#cb93-3" tabindex="-1"></a>modelo_clipe <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo_reacao <span class="sc">~</span> clipe, <span class="at">data =</span> dados_clipe)</span>
 <span id="cb93-4"><a href="dca-efeitos-aleatorios.html#cb93-4" tabindex="-1"></a><span class="fu">summary</span>(modelo_clipe)</span></code></pre></div>

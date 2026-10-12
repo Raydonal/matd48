@@ -96,7 +96,7 @@ recebeu qual condição; uma plataforma digital recebe milhões de requisições
 decidir, em tempo real e sem consultar um banco de dados central, se um usuário específico vê a
 versão A ou B — e precisa que a *mesma* pessoa continue vendo a mesma versão em visitas
 subsequentes (senão a "unidade experimental" se confunde com a "unidade de observação", o mesmo
-problema de submuestreo da Seção \@ref(unidades), só que ao contrário: aqui queremos *evitar*
+problema de subamostragem da Seção \@ref(unidades), só que ao contrário: aqui queremos *evitar*
 múltiplas atribuições da mesma unidade). A solução industrial padrão é a **aleatorização por
 hash**: aplica-se uma função hash determinística (por exemplo, MD5 ou MurmurHash) ao identificador
 do usuário concatenado com um identificador do experimento, e o resultado — um número
@@ -174,11 +174,11 @@ que o time de produto realmente quer.
 
 **Dependência temporal dentro do mesmo usuário.** O mesmo usuário volta ao site várias vezes ao
 longo do período do teste, e cada visita gera uma observação — mas, exatamente como no problema de
-submuestreo formalizado na Seção \@ref(unidades), essas observações repetidas **não são réplicas
+subamostragem formalizado na Seção \@ref(unidades), essas observações repetidas **não são réplicas
 independentes**: são correlacionadas dentro do usuário (alguém propenso a comprar tende a comprar
 em várias visitas; alguém que nunca compra continua não comprando). Tratar cada visita como uma
 unidade experimental independente — em vez de agregar por usuário antes de testar, como manda o
-princípio de submuestreo do Capítulo 1 — infla artificialmente o tamanho amostral efetivo e produz
+princípio de subamostragem do Capítulo 1 — infla artificialmente o tamanho amostral efetivo e produz
 erros-padrão anticonservadores, exatamente o mesmo erro de pseudorreplicação identificado naquela
 seção, só que reaparecendo aqui sob um nome de produto diferente.
 
@@ -692,7 +692,7 @@ replicado — estatisticamente mais eficiente e mais interpretável.
   efeitos pequenos relativos à variância exigem amostras enormes, múltiplas métricas monitoradas
   simultaneamente reintroduzem o problema de comparações múltiplas do Capítulo 3, efeitos de
   novidade/primazia violam a suposição de resultado potencial estável no tempo, e visitas repetidas
-  do mesmo usuário reintroduzem o problema de submuestreo do Capítulo 1.
+  do mesmo usuário reintroduzem o problema de subamostragem do Capítulo 1.
 - *Peeking* (checar o resultado repetidamente e parar no primeiro cruzamento de significância) infla
   drasticamente a taxa de falso positivo em relação ao $\alpha$ nominal — confirmado
   numericamente por simulação — porque viola a suposição de tamanho amostral fixo do teste
