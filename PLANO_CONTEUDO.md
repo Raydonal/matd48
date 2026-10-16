@@ -860,3 +860,108 @@ Ver memória de sessão `matd48-rigor-padrao` para o texto completo desta diretr
     quebrado; PDF com aviso e rodapé nas 217 páginas. Publicado: lote 1 + PDF inicial
     (`a97c61a`, `d00f53f`). **Sincronizado no clone mas não commitado:** aulas 06–14, livro com
     aviso e figuras, scripts. Falta: aulas 10–14 (lote 3).
+- **2026-10-15 — Aula 07 e Cap. 3 (contrastes, comparações múltiplas, polinômios ortogonais)
+  expandidos**
+  - **Pedido do professor:** dificuldade para ministrar a aula 07; mais detalhes, gráficos,
+    interpretações, os dados à mostra, tudo calculado, perguntas respondidas com os dados, a
+    questão dos ordenamentos e exemplo completo de polinômios — nos slides e no livro.
+  - **Aula 07** (39 → 85 slides): dados brutos e resumo de cada exemplo antes dos testes;
+    contraste normalizado + IC; $L_1$ à mão; contrastes não ortogonais (SQ somam 44% a mais);
+    todas as réguas (LSD, Duncan, SNK, Dunnett, Tukey, Bonferroni, Scheffé) calculadas e
+    comparadas num gráfico e num quadro par × método; SNK passo a passo e "mesma diferença,
+    veredictos diferentes" (ordenamento); probabilidade de ranking; Dunnett unilateral; FWER
+    simulado sob $H_0$ completa e parcial; *data snooping* com Scheffé; polinômios à mão,
+    Gram-Schmidt, falta de ajuste, volta à escala de mg, dose ótima (método delta + simulação),
+    doses desiguais, armadilha da ordem alfabética dos níveis. Teoria nova: Tukey (amplitude
+    estudentizada), Scheffé (Cauchy-Schwarz), SNK.
+  - **Cap. 3:** as mesmas adições, em prosa; Scott-Knott entrou no livro (antes só na aula).
+    5 entradas novas em `Livro/refs.bib` (Hsu 1996, Newman 1939, Keuls 1952, Scott & Knott 1974,
+    Fisher & Yates 1938).
+  - **Erros de conteúdo corrigidos:** (1) o livro dizia que Bonferroni e Scheffé não rejeitam
+    Analytics − Nenhum; Bonferroni rejeita (p = 0,036), só Scheffé não (p = 0,051). (2) Aula e livro
+    diziam que cúbico e quártico "agregam pouco"; nos dados o quártico é significativo (p = 0,018) e
+    a falta de ajuste da parábola também (p = 0,044) — agora discutido como falso positivo (a curva
+    verdadeira é quadrática; simulação: 10% de chance de cúbico ou quártico saírem significativos).
+    (3) O slide de contrastes ortogonais dizia que os testes $F$ são independentes; só os
+    numeradores são. (4) A dose ótima estimada (≈120 mg, IC delta 110–130) não cobre a verdadeira
+    (135 mg) — explicado no texto (curvatura superestimada; topo achatado).
+  - **Ambiente:** foi preciso instalar `lmerTest` e `pagedown` e usar o pandoc do RStudio
+    (`RSTUDIO_PANDOC=/usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64`, footgun #7).
+  - **Verificação:** aula 07 sem transbordo e sem LaTeX cru, revisão visual de todos os slides;
+    livro 87/87 imagens, 0 `\@ref` quebrado, 0 legenda duplicada. Nada commitado.
+  - **Segunda passada (mesmo dia), a pedido do professor — FWER e Duncan mais visuais:**
+    aula 07 (85 → 107 slides) e Cap. 3 ganharam (i) explicação de FWER em palavras, a grade de 100
+    experimentos simulados sem efeito (casas vermelhas = falsos positivos; 17/100 linhas com testes
+    $t$, 7/100 com Tukey) e a curva do FWER contra o número de tratamentos, com controle fraco ×
+    forte; (ii) o **teste de Duncan passo a passo com dados reais de feijão** (`Livro/data/feijao.csv`):
+    médias ordenadas num eixo, cada par como um arco com altura/cor pela amplitude $p$, simulação da
+    distribuição da amplitude de $p$ médias sob $H_0$ (por que a régua cresce com $p$), tabela e
+    gráfico das réguas Duncan/SNK/Tukey, as três etapas de cima para baixo, a regra de coerência
+    (cenário hipotético com $QME = 9$), diagrama de traços → letras, conferência com `agricolae` e o
+    par em que Duncan e Tukey discordam (F2 − F1 = 2,37 kg: $R_3$ Duncan 1,98, Tukey 2,55); F4 − F2
+    fica a 0,017 kg da régua $R_2$. Funções compartilhadas em `Livro/comparacoes_helpers.R`
+    (mesmo padrão do `hasse_helpers.R`; o script do PDF copia o arquivo).
+  - **Lista 07:** questões 7 (Duncan passo a passo no feijão, comparação com Tukey) e 8 (dedução:
+    Bonferroni por Boole, FWER do Duncan $=\alpha_t$ e do SNK $=\alpha$ sob $H_0$ completa, falha do
+    SNK sob $H_0$ parcial). O gabarito privado (fora do repositório) **não** cobre as questões 7–8.
+- **2026-10-15 (noite) — figuras dos slides no livro, gabaritos e PDF por LaTeX**
+  - **Pedido do professor:** alunos notaram que imagens dos experimentos dos slides não estavam no
+    livro; compilar o PDF localmente com o TeX instalado; ajustar os gabaritos.
+  - **Figuras dos slides que faltavam no livro** (auditoria dos 14 decks contra os 8 capítulos):
+    Cap. 1 — van Helmont e Priestley (imagens; o texto já os citava), a senhora que toma chá com o
+    teste exato e a distribuição hipergeométrica (exemplo inteiro faltava); Cap. 3 — quadro da
+    população conceitual de respostas, resíduo × ordem de execução (nova subseção sobre
+    independência, com tabela do ganho de precisão), homogeneidade das inclinações na ANCOVA;
+    Cap. 4 — quadro da população conceitual do DBCA (imagem), graus de liberdade comprados pela
+    réplica do quadrado latino; Cap. 6 — interação catalisador × agente do biodiesel. As demais ~70
+    figuras dos decks já tinham equivalente no livro.
+  - **Gabaritos:** a pasta privada não existia nesta máquina; os 14 foram recuperados do histórico
+    do git para `/home/raydonal/MEGA/Claude/matd48-gabaritos-privados/Listas2026/` (fora do
+    repositório). Gabarito05: terminologia (subamostragem); Gabarito07: soluções das questões 7 e 8.
+    Os 14 compilam.
+  - **PDF do livro agora por LaTeX** (`scripts/gerar_pdf_livro.R`, xelatex): o caminho via Chrome
+    travava. 232 páginas, 124/124 caixas, as mesmas 105 figuras do site. Detalhes e armadilhas no
+    CLAUDE.md. Fórmulas corrigidas no fonte para compilar no LaTeX: `$i^\*$` → `$i^{*}$` e
+    `^{\,ingênua}` → `^{\,\text{ingênua}}` (Cap. 4).
+  - **Verificação:** site 106/106 imagens, 0 `\@ref` quebrado; PDF sem tabela quebrada, sem caractere
+    sem glifo, sem figura maior que a página. Nada commitado.
+- **2026-10-15 (madrugada/noite, cont.) — fio condutor "controlado × não controlado", siglas, legendas, aulas 10–14**
+  - **Pedido do professor:** "o coração do curso (experimentos controlados e não controlados) não
+    está sendo discutido em cada capítulo/slide"; "FWER, preciso que diga o que significa a sigla,
+    isso vale para qualquer sigla"; renderizar saídas, figuras e tabelas; conferir tudo e melhorar
+    as descrições.
+  - **Fio condutor:** novo `Livro/controle_helpers.R` (compartilhado livro + slides, semente própria
+    em cada função). Cada capítulo termina com `## Controlado × não controlado` (Cap. 1: subseção
+    em Neyman-Rubin): autosseleção do agricultor (Cap. 1), viés de variável omitida
+    $(\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf z\,\gamma$ (Cap. 2), taxa de rejeição do $F$ sob
+    $H_0$ com autosseleção (Cap. 3), DBCA × observacional com/sem ajuste por bloco (Cap. 4),
+    $\sum 1/n_{ij}\ge 16/N$ e células vazias (Cap. 5), matriz de aliases planejada × histórica
+    (Cap. 6), dados de acaso e erro da direção de subida, VIF (Cap. 7), A/B × bandit × adesão
+    voluntária e IPW (Cap. 8). Prefácio explica o fio. Nas 14 aulas, 1–2 slides no início do
+    Bloco 3 (aula 05: pseudorrepetição; aula 06: ordem de execução sistemática × sorteada; aulas
+    10–11 reaproveitam o Cap. 4).
+  - **Siglas:** expandidas na 1ª ocorrência em cada capítulo e cada aula (~45 no livro, ~90 nos
+    slides, incluindo legendas e cabeçalhos de tabela); tabela "Siglas usadas no livro" no prefácio.
+  - **Legendas:** as 32 figuras do livro que não tinham `fig.cap` ganharam legenda descritiva.
+  - **Aulas 10–14 (revisão de clareza pendente desde 12/10):** dados mostrados antes dos modelos
+    (Friedman com postos, painel do café, campo do quadrado latino, pepino, extração, biodiesel,
+    energia), ANOVA do BIB nova, interpretação com números inline no lugar de valores digitados.
+  - **Verificação:** livro 115/115 imagens, 0 `\@ref` quebrado, 0 legenda duplicada; 14 decks sem
+    transbordo e sem LaTeX cru; PDF 247 páginas, 139/139 caixas, 0 caractere sem glifo
+    (`gerar_pdf_livro.R` agora copia `controle_helpers.R`). Nada commitado.
+- **2026-10-15 (noite, 2ª passada) — controlado × não controlado em toda a aula e todo o capítulo**
+  - **Pedido do professor:** a 1ª passada ficou concentrada no Bloco 3 / fim do capítulo; o tema
+    tinha de atravessar cada aula e cada capítulo.
+  - **Aulas (14):** slide de abertura no Bloco 1 "O que esta aula controla (e o que não controla)"
+    (aula 01: "O fio do curso"); 17 slides de aplicação "quem decidiu a atribuição?" com a versão
+    não controlada do exemplo (aulas 02 e 03 agora dizem que seus dados são **observacionais**, e a
+    03 separa controle estatístico de controle pelo desenho); slide de perguntas sobre o tema antes
+    do Bloco 4; item novo no resumo de cada aula.
+  - **Livro (8 capítulos):** caixa `caixa-aviso` de abertura "O que este capítulo controla"; 17
+    parágrafos após as caixas de aplicação principais; item novo em cada resumo.
+  - **Dean, Voss & Draguljić (2017)** (PDF trazido pelo professor para `cristiano/`, fora do git):
+    usado só como referência; parágrafo próprio no Cap. 1 (estufa: observar mostra o problema,
+    experimentar mostra a causa; regra de atribuição como decisão de planejamento) e slide
+    correspondente na aula 01, com a referência escrita à mão.
+  - **Verificação:** 14 decks sem transbordo e sem LaTeX cru; livro 115/115 imagens, 0 `\@ref`;
+    PDF 248 páginas, 147/147 caixas, 0 caractere sem glifo. Nada commitado.

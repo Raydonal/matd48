@@ -45,9 +45,21 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+Um fatorial é uma decisão sobre **quais combinações de níveis serão observadas**:
+
+- **Controla:** o **cruzamento**. Cada nível de `\(A\)` aparece com cada nível de `\(B\)`, o mesmo número de vezes, e as colunas de `\(\mathbf X\)` ficam ortogonais. É isso que torna a interação estimável e as somas de quadrados independentes da ordem.
+- **Com sorteio:** a combinação de cada unidade é sorteada, e a interação estimada é causal.
+- **Não controla:** combinações que você não incluiu, e fatores que você não variou.
+
+Nos dados que um processo produz sozinho, os fatores **andam juntos** (hábitos dos operadores), e o cruzamento não existe.
+
+---
+
 ## Por que cruzar fatores?
 
-"Um fator de cada vez" (OFAT) tem dois defeitos (Box, Hunter &amp; Hunter, 2005; Montgomery, 2017):
+"Um fator de cada vez" (OFAT, *one factor at a time*) tem dois defeitos (Box, Hunter &amp; Hunter, 2005; Montgomery, 2017):
 
 1. **Não detecta interação** — pode convergir para um ótimo aparente que está longe do real.
 2. **É ineficiente** — um fatorial completo estima todos os efeitos com a mesma precisão de um
@@ -80,7 +92,7 @@ Sob a estrutura de resultados potenciais (Imbens &amp; Rubin, 2015):
 .pull-left[
 **Efeito principal `\(\alpha_i\)`**
 
-= ATE de `\(A\)`, **marginalizado** sobre a distribuição de níveis de `\(B\)` no experimento.
+= ATE (efeito médio do tratamento) de `\(A\)`, **marginalizado** sobre a distribuição de níveis de `\(B\)` no experimento.
 ]
 .pull-right[
 **Interação `\((\alpha\beta)_{ij}\)`**
@@ -167,7 +179,7 @@ Antes de escrever qualquer soma de quadrados, uma pergunta de **estrutura**: qua
 
 ---
 
-## Da estrutura à tabela de ANOVA, mecanicamente
+## Da estrutura à tabela de ANOVA (análise de variância), mecanicamente
 
 **Algoritmo (4 passos).** Dado o diagrama de Hasse do delineamento:
 
@@ -374,9 +386,88 @@ class: inverse, center, middle
 
 ---
 
-## Irrigação × silício na altura do pepino
+## Irrigação × silício na altura do pepino: os dados
 
-**Fatores:** `riego` (2 níveis) × `silicio` (4 níveis), 3 repetições, 24 parcelas.
+**Fatores:** `riego` (lâmina de irrigação, 2 níveis) × `silicio` (dose, 4 níveis), 3 repetições, 24 parcelas.
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Irrigação &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Silício &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; As 3 alturas (cm) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 0.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4,26; 4,07; 4,40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.24 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 0.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1000 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4,35; 4,95; 4,61 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.64 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 0.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1500 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4,44; 4,55; 4,80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.60 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 0.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 500 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4,91; 5,21; 5,17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4,72; 4,55; 4,20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.49 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1000 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4,62; 5,12; 4,78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.84 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1500 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5,25; 5,08; 5,11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.15 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 500 ml &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5,22; 4,69; 4,88 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.93 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+As 8 combinações, cada uma com as 3 parcelas que a receberam. É desta tabela que saem as médias do gráfico de interação e todas as somas de quadrados.
+
+
+---
+
+## O que o desenho fatorial garantiu aqui
+
+As 8 combinações irrigação × silício têm **3 parcelas cada** (uma em cada bloco do campo), com o tratamento de cada parcela sorteado. Por isso:
+
+- a interação `riego:silicio` é estimável, porque nenhuma combinação ficou vazia;
+- as SQ (somas de quadrados) de irrigação e de silício não dependem da ordem em que entram no modelo.
+
+**A versão não controlada:** registros de produtores. Quem irriga mais tende a usar mais insumos, inclusive silício. Haveria muitas parcelas "irrigação alta + silício alto", poucas ou nenhuma "irrigação baixa + silício alto", e a interação ficaria mal estimada ou não estimável.
+
+---
+
+## A ANOVA do fatorial
 
 
 ``` r
@@ -394,6 +485,10 @@ summary(modelo_axb)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
+
+
+Leia de baixo para cima: primeiro a **interação** (`riego:silicio`, `\(p=\)` 0,086). Só depois dela os efeitos principais têm leitura simples: irrigação `\(p=\)` 0,035, silício `\(p=\)` 0,00082. Erro com `\(ab(r-1)=16\)` graus de liberdade (gl).
+
 ---
 
 ## O diagrama de Hasse deste fatorial A×B
@@ -403,7 +498,7 @@ e se reencontram na interação, que os refina a ambos.
 
 ![](../Livro/figuras/hasse/slide-axb.svg)&lt;!-- --&gt;
 
-`\(1+1+3+3+16=24=N\)` — os 3 gl de `riego×silicio` são `\(12-1-1-3=(a-1)(b-1)\)`, a mesma contagem
+`\(1+1+3+3+16=24=N\)` — os 3 graus de liberdade (gl) de `riego×silicio` são `\(12-1-1-3=(a-1)(b-1)\)`, a mesma contagem
 geométrica do exemplo A×B do Cap. 2 do livro-texto, aqui com os números reais do pepino.
 
 ---
@@ -425,7 +520,28 @@ salinidade, tempo), 3 níveis cada, 2 injeções — `\(3^3 \times 2 = 54\)` cor
 ``` r
 acuosas &lt;- read_csv("../Livro/data/acuosas.csv", show_col_types = FALSE) %&gt;%
   transmute(viscosidade = factor(Viscosidad), salinidade = factor(Salinidad),
-            tempo = factor(Tiempo), recuperacao = recupera)
+            tempo = factor(Tiempo), injecao = inyeccion, recuperacao = recupera)
+head(acuosas, 6)          # 54 linhas: 27 combinações x 2 injeções
+```
+
+```
+## # A tibble: 6 × 5
+##   viscosidade salinidade tempo injecao recuperacao
+##   &lt;fct&gt;       &lt;fct&gt;      &lt;fct&gt;   &lt;dbl&gt;       &lt;dbl&gt;
+## 1 0           0          1           1       0.666
+## 2 0           0          1           2       0.654
+## 3 0           0          2           1       0.675
+## 4 0           0          2           2       0.681
+## 5 0           0          3           1       0.692
+## 6 0           0          3           2       0.732
+```
+
+---
+
+## A ANOVA do fatorial de três fatores
+
+
+``` r
 mod3 &lt;- aov(recuperacao ~ viscosidade * salinidade * tempo, data = acuosas)
 broom::tidy(mod3) %&gt;% select(term, df, p.value) %&gt;%
   mutate(p.value = round(p.value, 3)) %&gt;%
@@ -488,8 +604,10 @@ broom::tidy(mod3) %&gt;% select(term, df, p.value) %&gt;%
 
 ## Interpretando: efeitos aditivos
 
-Os três efeitos principais são significativos; **nenhuma interação** é. Os fatores atuam de
-forma aproximadamente aditiva — uma conclusão que só podemos afirmar *depois* de testar a
+&lt;img src="MATD48-12_files/figure-html/acuosas-marginais-1.png" alt="" width="92%" /&gt;
+
+Média de recuperação em cada nível de cada fator (barras: ± 1 erro-padrão). Os três efeitos principais são significativos; **nenhuma interação** é, e por isso estas três tendências isoladas já descrevem o processo: os fatores atuam de
+forma aproximadamente aditiva. É uma conclusão que só podemos afirmar *depois* de testar a
 interação, nunca antes.
 
 ---
@@ -522,6 +640,41 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Fatores que andam juntos**
+
+Fatorial 2×2 (temperatura × catalisador), 24 corridas. **Planejado:** 6 por combinação. **Registros de processo:** os operadores quase sempre usam alta+novo ou baixa+antigo.
+
+
+``` r
+celulas_cap5()     # um histórico típico (85% das corridas "no hábito")
+```
+
+```
+## # A tibble: 4 × 4
+##   Temperatura Catalisador `Planejado (fatorial)` `Registros de processo`
+##   &lt;chr&gt;       &lt;chr&gt;                        &lt;dbl&gt;                   &lt;int&gt;
+## 1 Baixa       Antigo                           6                       9
+## 2 Baixa       Novo                             6                       0
+## 3 Alta        Antigo                           6                       2
+## 4 Alta        Novo                             6                      13
+```
+
+Interação `\(\hat\theta=\bar y_{11}-\bar y_{12}-\bar y_{21}+\bar y_{22}\)`, com `\(\text{Var}(\hat\theta)=\sigma^2\sum_{ij}1/n_{ij}\ \ge\ 16\sigma^2/N\)`:
+o mínimo é atingido **só** no fatorial balanceado. Uma célula vazia torna `\(\theta\)` **não estimável**.
+
+---
+
+## Quanto o hábito dos operadores custa
+
+&lt;img src="MATD48-12_files/figure-html/cnc-a12-graf-1.png" alt="" width="95%" /&gt;
+
+Com 90% das corridas no hábito: **metade** dos históricos não estima a interação, e a outra metade a estima com ~2,5 vezes a variância do fatorial.
+Além disso, sem balanceamento as SQ tipo I, II e III discordam (colunas de `\(A\)`, `\(B\)`, `\(AB\)` não ortogonais).
+
+---
+
 ## Perguntas para a turma
 
 1. Se a interação viscosidade×salinidade fosse significativa, por que reportar só médias
@@ -530,11 +683,19 @@ class: inverse, center, middle
 2. Nosso desenho tem repetição verdadeira (duas injeções). O que mudaria se houvesse só uma
    corrida por combinação?
 
-3. Um teste A/B/n online (cor do botão × layout × CTA) é estruturalmente A×B×C. Que cuidado
+3. Um teste A/B/n online (cor do botão × layout × CTA, *call to action*) é estruturalmente A×B×C. Que cuidado
    extra ele exige, que um experimento de bancada controla mais facilmente?
 
 4. Na leitura causal, o que significa dizer que `\((\alpha\beta)_{ij}\)` é "heterogeneidade de efeito
    de tratamento"? Dê um exemplo em que isso mudaria uma decisão de negócio.
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Por que os registros históricos de um processo quase nunca permitem estimar uma interação, mesmo com milhares de linhas?
+2. Num teste A/B/n com três fatores (cor, layout, CTA), o que o sorteio de cada usuário para uma das combinações garante que um lançamento gradual (uma mudança por mês) não garante?
 
 ---
 
@@ -605,6 +766,7 @@ particionado.
   represente.
 - Próxima aula: o caso especial `\(2^k\)` — ortogonalidade exata, análise sem repetição e confusão em
   blocos.
+- **Controlado × não controlado:** o fatorial controla o **cruzamento** dos fatores; nos registros de processo, eles andam juntos, células ficam vazias e a interação deixa de ser estimável.
 
 ---
 

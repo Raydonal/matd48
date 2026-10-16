@@ -15,6 +15,8 @@ suppressPackageStartupMessages({
   library(pwr)
 })
 source("hasse_helpers.R")
+source("comparacoes_helpers.R")   # Duncan/SNK passo a passo e FWER (compartilhado com a Aula 07)
+source("controle_helpers.R")   # fio condutor: controlado x não controlado (seção ao fim do capítulo)
 ```
 
 O Capítulo 1 estabeleceu repetição, aleatorização e controle local como os três pilares do
@@ -23,9 +25,23 @@ linear. Este capítulo une as duas coisas no delineamento mais simples possível
 **delineamento completamente aleatorizado (DCA)**, em que um único fator é sorteado livremente
 entre as unidades experimentais, sem qualquer restrição de blocagem. É o ponto de partida de
 todo o resto do curso — e, por ser o desenho mais simples, também é o lugar certo para introduzir
-com rigor a ideia de **teste de aleatorização**, o modelo estatístico, a ANOVA, o planejamento do
+com rigor a ideia de **teste de aleatorização**, o modelo estatístico, a análise de variância (ANOVA), o planejamento do
 tamanho amostral, o problema da subamostragem, o modelo de efeitos aleatórios e a verificação dos
 pressupostos que tornam a inferência clássica válida.
+
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+O delineamento completamente aleatorizado (DCA) é o experimento controlado mínimo: um único sorteio
+distribui os tratamentos entre as unidades experimentais. Ele controla tudo o que as unidades
+trazem de antes do experimento, medido ou não, e é desse sorteio que o capítulo deduz o próprio
+modelo e a distribuição de referência do teste $F$. Ele não controla a heterogeneidade entre as
+unidades, que vai inteira para o erro (o Capítulo 4 trata disso com blocos), nem o que acontece
+depois do sorteio, como a ordem de execução. As comparações múltiplas acrescentam outro tipo de
+controle, o das taxas de erro, que não substitui o primeiro.
+</div>
+```
 
 ## Princípios de aleatorização: a ideia de um teste de aleatorização {#principios-aleatorizacao}
 
@@ -167,7 +183,7 @@ fontes 2+3 combinadas (o que sobra) — só que agora vista sob 4.000 partiçõe
 *posto* não muda: qualquer reembaralhamento continua produzindo $t=3$ grupos não vazios (o sorteio
 apenas troca *quais* 12 unidades vão para cada grupo, nunca o número de grupos nem o tamanho de
 cada um, que ficam fixados pelo desenho). Logo $\mathrm{posto}(\mathbf{X})=3$ em toda reamostragem,
-e a contagem por subtração do diagrama de Hasse (Capítulo 2, Seção \@ref(hasse)) — $\text{gl}
+e a contagem por subtração do diagrama de Hasse (Capítulo 2, Seção \@ref(hasse)) — com gl indicando graus de liberdade, $\text{gl}
 (\text{Trat})=t-1=2$, $\text{gl}(\text{Erro})=N-t=33$ — vale identicamente para as 4.000 partições,
 não só para os dados observados. É exatamente por isso que a *forma* da curva de referência (uma
 $F$ com $(2,33)$ graus de liberdade) é estável sob reembaralhamento, mesmo sem nenhuma suposição de
@@ -239,6 +255,29 @@ O quadro $t\times N$ dos $Y_{ij}$ é a **população conceitual de respostas**. 
 de cada unidade $j$ veremos **uma** linha apenas, a do tratamento que o sorteio lhe deu. São
 exatamente os **resultados potenciais** de Neyman-Rubin da Seção \@ref(potencial-causal), agora
 organizados como uma tabela — e é essa tabela que torna a derivação possível.
+
+```{r pop-conceitual-dca, echo=FALSE, fig.width=8.5, fig.height=2.4, fig.cap="A população conceitual de respostas de um DCA com t = 3 tratamentos (A, B, C) e N = 9 unidades: cada célula é a resposta que a unidade j teria sob o tratamento i. Em verde, as células que um sorteio particular deixa observar — exatamente uma por coluna, porque cada unidade recebe um único tratamento."}
+set.seed(4)
+t_ <- 3; N_ <- 9
+obs <- sample(rep(1:t_, length.out = N_))
+expand_grid(unidade = 1:N_, trat = 1:t_) %>%
+  mutate(observado = trat == obs[unidade],
+         rot = paste0("Y[", trat, "*',", unidade, "']")) %>%
+  ggplot(aes(unidade, trat)) +
+  geom_tile(aes(fill = observado), color = "white", linewidth = 1.1) +
+  geom_text(aes(label = rot, color = observado), parse = TRUE, size = 3.3) +
+  scale_fill_manual(values = c(`FALSE` = "#eef1f5", `TRUE` = "#2e6b4f"), guide = "none") +
+  scale_color_manual(values = c(`FALSE` = "grey55", `TRUE` = "white"), guide = "none") +
+  scale_y_continuous(breaks = 1:t_, labels = c("A", "B", "C"), expand = c(0, 0)) +
+  scale_x_continuous(breaks = 1:N_, expand = c(0, 0)) +
+  labs(x = "unidade experimental j", y = "tratamento i") +
+  theme_minimal(base_size = 11) + theme(panel.grid = element_blank())
+```
+
+A Figura \@ref(fig:pop-conceitual-dca) torna o quadro concreto: das $t \times N = 27$ respostas
+potenciais, o experimento revela apenas $N = 9$, uma por coluna, e **qual** delas aparece em cada
+coluna foi decidido pelo sorteio. Todo o resto da derivação consiste em descrever o que esse sorteio
+faz com as médias do quadro.
 
 Escreva as médias marginais $\bar Y_{i\cdot}$ (sobre unidades, para o tratamento $i$),
 $\bar Y_{\cdot j}$ (sobre tratamentos, para a unidade $j$) e $\bar Y_{\cdot\cdot}$ (geral). A
@@ -385,10 +424,10 @@ tibble(
 Se $\mathrm{Var}(\boldsymbol\omega)=\mathbf V\neq\sigma^2\mathbf I$, o teorema de Gauss-Markov não
 se aplica, e o estimador de variância mínima passa a ser o de **mínimos quadrados generalizados**
 de @aitken1936least, $\hat{\boldsymbol\beta}_{GLS}=(\mathbf X'\mathbf V^{-1}\mathbf X)^{-}
-\mathbf X'\mathbf V^{-1}\mathbf Y$. Seria desconfortável: todo o curso usa MQO.
+\mathbf X'\mathbf V^{-1}\mathbf Y$. Seria desconfortável: todo o curso usa mínimos quadrados ordinários (MQO).
 
 O resultado que resolve a questão é de @zyskind1967canonical. Sob o modelo de Aitken, o estimador
-de **mínimos quadrados ordinários** permanece BLUE se e somente se existe uma matriz $\mathbf Q$
+de **mínimos quadrados ordinários** permanece BLUE (melhor estimador linear não viesado) se e somente se existe uma matriz $\mathbf Q$
 tal que
 
 $$
@@ -443,6 +482,12 @@ realiza a tarefa uma única vez sob sua condição sorteada, e o tempo de reaç�
 </div>
 ```
 
+Quem decidiu a condição de cada voluntário foi o **sorteio**. Na versão não controlada, cada
+voluntário escolheria em que condição ser testado (e os mais lentos poderiam evitar as
+distrações), ou o laboratório testaria a condição visual só no fim do dia. A tabela de ANOVA
+sairia igual na forma, mas responderia a "estes grupos de pessoas diferem?", e não a "a distração
+tem efeito?"; a Seção \@ref(cnc-cap3) mede o tamanho dessa diferença.
+
 Este é um DCA a uma via de classificação: um único fator (tipo de distração), três níveis, sem
 blocagem — a atribuição de voluntários às condições é inteiramente aleatória. A **unidade
 experimental e a unidade amostral coincidem** aqui (um voluntário, uma medição): não há
@@ -490,7 +535,7 @@ $$
 Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij} \overset{iid}{\sim} N(0, \sigma^2),
 $$
 
-em que $\mu$ é a média geral, $\tau_i$ é o efeito (fixo, desconhecido) do $i$-ésimo tratamento,
+em que _iid_ abrevia "independentes e identicamente distribuídos", $\mu$ é a média geral, $\tau_i$ é o efeito (fixo, desconhecido) do $i$-ésimo tratamento,
 sujeito à restrição $\sum_i n_i \tau_i = 0$ (ou $\sum_i \tau_i = 0$ no caso balanceado) para
 tornar o modelo identificável, e $\varepsilon_{ij}$ é o erro experimental — a soma de tudo aquilo
 que não é explicado pelo tratamento nem pela média geral (Capítulo 1, Seção
@@ -560,7 +605,7 @@ $$
 = \sigma^2\,\mathrm{diag}(1/n_1,\ldots,1/n_t),
 $$
 
-exatamente o erro-padrão $\sqrt{\sigma^2/n_i}$ usado nos ICs da próxima seção — agora com
+exatamente o erro-padrão $\sqrt{\sigma^2/n_i}$ usado nos intervalos de confiança (ICs) da próxima seção — agora com
 justificativa matricial completa em vez de apenas invocada. A dedução detalhada, para este $\mathbf{X}$
 específico, é o Exercício 4 da Lista 04.
 
@@ -674,7 +719,7 @@ $(N-t)\,\text{MS}_E/\sigma^2 \sim \chi^2_{N-t}$, independente de todas as $\bar 
 dá origem a dois intervalos de confiança fundamentais, ambos baseados na distribuição $t$ de
 Student com $N-t$ graus de liberdade (os graus de liberdade do erro).
 
-**IC para a média de um tratamento.** Um intervalo de $100(1-\alpha)\%$ de confiança para
+**Intervalo de confiança (IC) para a média de um tratamento.** Um intervalo de $100(1-\alpha)\%$ de confiança para
 $\mu_i$ é
 
 $$
@@ -766,7 +811,7 @@ $$
 \;\overset{\text{balanceado}}{=}\; n f^2 .
 $$
 
-$\Phi^2$ é a grandeza auxiliar usada nas **curvas características de operação** (curvas OC) de
+$\Phi^2$ é a grandeza auxiliar usada nas **curvas características de operação** (curvas OC, de *operating characteristic*) de
 @montgomery2017design, tabuladas para leitura gráfica do poder; **não** é o parâmetro de não
 centralidade de distribuição alguma. A distinção é prática, não pedante: funções como
 `pwr::pwr.anova.test()` e `stats::pf(..., ncp = )` esperam $\lambda = Nf^2$, de modo que usar
@@ -880,10 +925,15 @@ conhecido de antemão.
 <strong>Aplicação — Agricultura: dose de fertilizante na produção de feijão</strong><br>
 Um agrônomo compara quatro fertilizantes (F1–F4) quanto à produção de feijão. Vinte parcelas de
 terra, previamente homogeneizadas quanto a exposição solar e tipo de solo, são sorteadas em quatro
-grupos de cinco (<strong>UE = parcela</strong>), cada grupo recebendo um dos quatro fertilizantes.
+grupos de cinco (<strong>unidade experimental, UE = parcela</strong>), cada grupo recebendo um dos quatro fertilizantes.
 Produção (kg) é medida ao final da colheita.
 </div>
 ```
+
+As 20 parcelas foram sorteadas entre os fertilizantes. Se o agrônomo tivesse aplicado o
+fertilizante mais caro nas parcelas de melhor aparência, todas as análises a seguir (ANOVA,
+contrastes, Duncan, Tukey) continuariam produzindo números, mas ordenariam parcelas, não
+fertilizantes.
 
 ```{r feijao-import}
 feijao <- read_csv("data/feijao.csv", show_col_types = FALSE) %>%
@@ -929,7 +979,7 @@ lote — dizemos que há **subamostragem**. As subamostras não são réplicas d
 réplicas da *medição* dentro de uma única aplicação do tratamento, e carregam uma fonte de
 variação a mais, que precisa ser modelada separadamente.
 
-```{r fig-ue-uo-submuestreo, echo=FALSE, out.width="95%", fig.cap="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1."}
+```{r fig-ue-uo-submuestreo, echo=FALSE, out.width="95%", fig.cap="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1."}
 knitr::include_graphics(c("../Aulas2026/assets/images/experimento1.png", "../Aulas2026/assets/images/sit2.png",
                            "../Aulas2026/assets/images/sit3.png"))
 ```
@@ -965,6 +1015,11 @@ sortear o probiótico peixe a peixe dentro de um mesmo aquário. Cada aquário c
 peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong> (subamostra).
 </div>
 ```
+
+O controle aqui vale no nível em que o sorteio aconteceu: o **aquário**. Os peixes de um mesmo
+aquário compartilham água, temperatura e alimentação, e não foram sorteados um a um. Tratá-los como
+unidades experimentais seria fingir um controle que não houve, e, com o probiótico sem efeito,
+o teste $F$ rejeitaria $H_0$ em cerca de metade dos experimentos.
 
 ### Como são os dados: uma linha por subamostra {#dados-submuestreo}
 
@@ -1009,7 +1064,7 @@ Essa tabela engana com facilidade, e vale dizer o que ela **não** é. Não é u
 contingência: numa tabela de contingência cada célula conta quantas unidades caíram numa
 combinação de categorias (probiótico $\times$ sobreviveu/morreu, por exemplo), e a análise é por
 $\chi^2$ ou modelos log-lineares; aqui cada célula contém uma **medida**, o ganho médio de um
-aquário em gramas. Também não é um DBCA nem um fatorial probiótico $\times$ aquário: a "réplica 3"
+aquário em gramas. Também não é um DBCA (delineamento em blocos completos aleatorizados, Capítulo 4) nem um fatorial probiótico $\times$ aquário: a "réplica 3"
 do probiótico 1 e a "réplica 3" do probiótico 2 são aquários diferentes, sem nada em comum, de
 modo que não existe efeito de coluna, e embaralhar os valores dentro de uma linha não muda nada.
 O aquário não cruza com o probiótico, porque cada aquário recebe um probiótico só: ele está
@@ -1200,7 +1255,7 @@ mojarra %>%
   kable_styling(full_width = FALSE)
 ```
 
-```{r plot-hierarquia-mojarra, echo=FALSE, fig.width=8.5, fig.height=4.3}
+```{r plot-hierarquia-mojarra, echo=FALSE, fig.width=8.5, fig.height=4.3, fig.cap="Ganho de peso de cada peixe (pontos coloridos, um por subamostra) em cada aquário, com a média do aquário em losango preto e as cores indicando o probiótico. A dispersão entre losangos de mesma cor é o erro experimental (variação entre aquários); a dispersão dos pontos em torno do losango do próprio aquário é o erro de amostragem (variação entre peixes)."}
 ggplot(mojarra, aes(x = aquario, y = ganho, color = probiotico)) +
   geom_jitter(width = 0.08, size = 1.8, alpha = 0.75) +
   stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
@@ -1513,7 +1568,7 @@ dados_het <- tibble(
 modelo_het <- aov(tempo ~ condicao, data = dados_het)
 ```
 
-```{r qqplot-boxplot-dca, echo=FALSE, fig.width=8.5, fig.height=4}
+```{r qqplot-boxplot-dca, echo=FALSE, fig.width=8.5, fig.height=4, fig.cap="Diagnóstico dos resíduos do DCA de tempo de reação sob distração. Esquerda: gráfico quantil-quantil (Q-Q) de todos os resíduos contra a normal, com os pontos se afastando da reta na cauda superior (assimetria à direita). Direita: boxplot dos resíduos por condição; as caixas se alongam para cima e ficam mais altas de Nenhuma para Visual, antecipando variâncias diferentes entre os grupos."}
 p_qq <- dados_het %>%
   mutate(residuo = residuals(modelo_het)) %>%
   ggplot(aes(sample = residuo)) +
@@ -1560,7 +1615,7 @@ Antes do teste formal, o gráfico de **resíduos contra valores ajustados** é o
 mais direto de heterocedasticidade: se a dispersão vertical dos pontos aumenta sistematicamente
 da esquerda para a direita (grupos com médias maiores), a variância não é constante.
 
-```{r residuos-ajustados-dca, fig.width=5.5, fig.height=4.2}
+```{r residuos-ajustados-dca, fig.width=5.5, fig.height=4.2, fig.cap="Resíduos contra valores ajustados (as médias de cada condição) no DCA de tempo de reação. A dispersão dos resíduos aumenta da condição com menor média (Nenhuma) para a de maior média (Visual): o leque típico de um erro multiplicativo, em que a variância cresce com a média."}
 tibble(
   ajustado = fitted(modelo_het),
   residuo  = residuals(modelo_het),
@@ -1591,6 +1646,59 @@ tem pouco poder para detectar diferenças de variância moderadas, mesmo quando,
 (erro multiplicativo) e como o gráfico acima já deixou claro, a variância populacional realmente
 cresce com a média. É outro lembrete de que ausência de significância não é evidência de que o
 pressuposto vale — sobretudo em amostras pequenas, a inspeção gráfica continua indispensável.
+
+### Independência: resíduos contra a ordem de execução {#independencia-dca}
+
+A independência não se testa com um teste de normalidade ou de Levene, mas há um gráfico que
+denuncia a violação mais comum na prática — e que a maioria das análises esquece: os **resíduos
+contra a ordem em que as unidades foram medidas**. Se algo ligado ao tempo afeta a resposta (o
+equipamento aquece ao longo do dia, o avaliador se cansa, a temperatura do laboratório muda), os
+resíduos de unidades medidas em sequência ficam correlacionados, e o gráfico mostra uma tendência.
+
+A simulação abaixo reproduz esse cenário: 40 unidades, 4 tratamentos, a **ordem de execução
+sorteada**, e uma deriva linear de 0,28 unidades por medição (o equipamento aquecendo).
+
+```{r residuo-ordem-dca}
+set.seed(21)
+n_ord  <- 40
+ordem  <- 1:n_ord
+deriva <- 0.28 * ordem                                         # aquecimento do equipamento
+trat_o <- factor(sample(rep(c("A", "B", "C", "D"), each = 10)))   # ordem de execução SORTEADA
+y_o    <- 50 + as.numeric(trat_o) * 2 + deriva + rnorm(n_ord, 0, 2)
+```
+
+```{r plot-residuo-ordem, echo=FALSE, fig.width=8.5, fig.height=3.6, fig.cap="Resíduos contra a ordem de execução, com uma curva loess (vermelho). Esquerda: modelo só com o tratamento — a tendência crescente revela uma deriva ligada ao tempo que o modelo não contém. Direita: modelo com a ordem como covariável — o padrão desaparece."}
+bind_rows(
+  tibble(ordem, res = residuals(aov(y_o ~ trat_o)), cenario = "Modelo SEM a ordem"),
+  tibble(ordem, res = residuals(aov(y_o ~ trat_o + ordem)), cenario = "Modelo COM a ordem")
+) %>%
+  mutate(cenario = factor(cenario, levels = c("Modelo SEM a ordem", "Modelo COM a ordem"))) %>%
+  ggplot(aes(ordem, res)) +
+  geom_hline(yintercept = 0, color = "grey60") +
+  geom_point(size = 2, alpha = 0.8, color = "#2a78d6") +
+  geom_smooth(method = "loess", formula = y ~ x, se = FALSE, color = "#b3392b", linewidth = 0.8) +
+  facet_wrap(~ cenario) +
+  labs(x = "ordem de execução", y = "resíduo") + theme_minimal(base_size = 12)
+```
+
+```{r ordem-anova-dca, echo=FALSE}
+a_sem <- summary(aov(y_o ~ trat_o))[[1]]; a_com <- summary(aov(y_o ~ ordem + trat_o))[[1]]
+tibble(Modelo = c("y ~ tratamento", "y ~ ordem + tratamento"),
+       `QM do erro` = round(c(a_sem[["Mean Sq"]][2], a_com[["Mean Sq"]][3]), 1),
+       `F do tratamento` = round(c(a_sem[["F value"]][1], a_com[["F value"]][2]), 1)) %>%
+  kable(caption = "Quadrado médio do erro e F do tratamento, sem e com a ordem de execução no modelo") %>%
+  kable_styling(full_width = FALSE)
+```
+
+À esquerda da Figura \@ref(fig:plot-residuo-ordem), a tendência é inequívoca; à direita, com a
+ordem no modelo, ela desaparece. A Tabela \@ref(tab:ordem-anova-dca) mostra o que isso muda, e a
+leitura tem três partes. Primeiro, como a ordem de execução foi **sorteada**, a deriva não favorece
+nenhum tratamento: o teste sem a ordem é **válido**, apenas ruidoso, porque a deriva foi parar no
+erro. Segundo, pondo a ordem no modelo, o erro encolhe e o $F$ cresce — mesmos dados, mais
+precisão. Terceiro, se a ordem **não** tivesse sido sorteada (todos os A primeiro, depois os B...),
+a deriva se confundiria com o tratamento, e nenhum modelo separaria uma coisa da outra — a
+confusão do Capítulo 1. A aleatorização protege a validade; o gráfico de ordem revela o que
+**bloquear** no próximo experimento (Capítulo 4).
 
 ### Transformações usuais {#transformacoes-dca}
 
@@ -1651,7 +1759,7 @@ original.
 <div class="caixa-r"><strong>Uso do R</strong> — antes e depois da transformação, lado a lado</div>
 ```
 
-```{r antes-depois-transf, echo=FALSE, fig.width=8.5, fig.height=4}
+```{r antes-depois-transf, echo=FALSE, fig.width=8.5, fig.height=4, fig.cap="Resíduos contra valores ajustados antes (esquerda, escala original) e depois (direita, escala log) da transformação. O leque que se abria da esquerda para a direita na escala original desaparece na escala log, em que a dispersão é parecida nas três condições: a transformação estabilizou a variância."}
 p_antes <- tibble(ajustado = fitted(modelo_het), residuo = residuals(modelo_het)) %>%
   ggplot(aes(ajustado, residuo)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
@@ -1686,7 +1794,7 @@ diagnosticar quando essa última camada, especificamente, está em risco.
 
 O restante deste capítulo trata de perguntas mais refinadas dentro do mesmo DCA — comparações
 planejadas (contrastes), tendências ao longo de níveis quantitativos (polinômios ortogonais),
-comparações múltiplas *a posteriori*, ajuste por covariáveis (ANCOVA) e a alternativa não
+comparações múltiplas *a posteriori*, ajuste por covariáveis (análise de covariância, ANCOVA) e a alternativa não
 paramétrica de Kruskal-Wallis quando nem mesmo as transformações da seção anterior bastam para
 justificar o modelo normal.
 
@@ -1694,23 +1802,28 @@ justificar o modelo normal.
 
 A ANOVA de um fator responde a uma pergunta agregada: *existe pelo menos uma diferença entre as
 $t$ médias de tratamento?* Rejeitar $H_0: \mu_1 = \mu_2 = \cdots = \mu_t$ não diz **quais**
-médias diferem, nem **em que direção**. Contrastes e procedimentos de comparação múltipla
-respondem exatamente a essas perguntas mais específicas — mas, como veremos, fazê-lo com rigor
-exige cuidado extra, porque testar muitas hipóteses sobre o mesmo conjunto de dados infla a
-chance de pelo menos um falso positivo.
+médias diferem, nem **em que direção**, nem **de quanto**. Contrastes e procedimentos de
+comparação múltipla respondem exatamente a essas perguntas mais específicas — mas, como veremos,
+fazê-lo com rigor exige cuidado extra, porque testar muitas hipóteses sobre o mesmo conjunto de
+dados infla a chance de pelo menos um falso positivo. As três seções que seguem (contrastes,
+comparações múltiplas e polinômios ortogonais) usam dois conjuntos de dados, mostrados por
+inteiro antes de qualquer teste, e seguem sempre a mesma ordem: a teoria, os dados, a conta feita
+à mão, a conferência no R, o gráfico e a interpretação.
 
 Vale explicitar a leitura causal por trás desta seção, retomando o arcabouço de resultados
 potenciais introduzido no Capítulo 1: cada unidade experimental tem $t$ resultados potenciais
 $Y_i(1), \ldots, Y_i(t)$ — um por braço de tratamento —, dos quais só o do braço sorteado é
 observado. Cada média $\mu_i = E[Y(i)]$ é a média populacional do resultado potencial sob o
 tratamento $i$, e um contraste par a par $\mu_i - \mu_j$ é, literalmente, um **efeito médio de
-tratamento** (ATE) entre os braços $i$ e $j$. Quando $t>2$, existem $\binom{t}{2}$ ATEs par a par
-possíveis — mais uma infinidade de contrastes que agregam grupos de braços —, e é essa
-multiplicidade de efeitos causais estimados simultaneamente sobre o mesmo experimento que faz
-emergir, de forma natural e não como artefato técnico do procedimento estatístico, o problema de
-comparações múltiplas da próxima seção: cada ATE testado isoladamente carrega seu próprio risco
-de falso positivo, e responder "algum desses efeitos é diferente de zero?" exige um controle de
-erro que leve todos eles em conta simultaneamente.
+tratamento** (ATE) entre os braços $i$ e $j$. Um contraste mais geral também é causal:
+$\mu_1 - \tfrac13(\mu_2+\mu_3+\mu_4)$ é o ATE do braço 1 contra uma mistura uniforme dos braços
+2, 3 e 4. Quando $t>2$, existem $\binom{t}{2}$ ATEs par a par possíveis — mais uma infinidade de
+contrastes que agregam grupos de braços —, e é essa multiplicidade de efeitos causais estimados
+simultaneamente sobre o mesmo experimento que faz emergir, de forma natural e não como artefato
+técnico do procedimento estatístico, o problema de comparações múltiplas da próxima seção: cada
+ATE testado isoladamente carrega seu próprio risco de falso positivo, e responder "algum desses
+efeitos é diferente de zero?" exige um controle de erro que leve todos eles em conta
+simultaneamente.
 
 ```{r c3b-sim-scripts, message=FALSE, warning=FALSE}
 suppressPackageStartupMessages({
@@ -1722,6 +1835,11 @@ suppressPackageStartupMessages({
   library(car)
   library(agricolae)
 })
+# formatação em português; fm() e fpm() são para números dentro de $...$ (MathJax)
+fmt <- function(x, d = 1) formatC(x, format = "f", digits = d, big.mark = ".", decimal.mark = ",")
+fp  <- function(p) ifelse(p < 0.0001, "< 0,0001", formatC(p, format = "f", digits = 4, decimal.mark = ","))
+fm  <- function(x, d = 1) gsub(",", "{,}", fmt(x, d), fixed = TRUE)
+fpm <- function(p) gsub(",", "{,}", fp(p), fixed = TRUE)
 
 set.seed(2026)
 config <- c("Nenhum", "Analytics", "Anúncios", "Combo")
@@ -1748,17 +1866,75 @@ Uma equipe de engenharia web quer comparar quatro configurações de uma página
 ao tempo de carregamento: <strong>Nenhum</strong> script de terceiros (controle),
 <strong>Analytics</strong> apenas, <strong>Anúncios</strong> apenas, e <strong>Combo</strong>
 (chat de suporte + anúncios). Dez carregamentos independentes são medidos em cada configuração
-(<code>n = 10</code> por grupo, 40 no total), sob condições de rede controladas.
+(<code>n = 10</code> por grupo, 40 no total), sob condições de rede controladas e em ordem sorteada
+(<strong>UE = carregamento</strong>). Antes da coleta, a equipe registrou três perguntas: (i) scripts
+de terceiros atrasam a página? (ii) se for para ter um script, o de analytics é o mais leve?
+(iii) acrescentar o chat aos anúncios custa caro?
 </div>
 ```
 
-```{r c3b-scripts-tab, echo=FALSE}
+Os 40 carregamentos foram feitos numa ordem sorteada, na mesma máquina e na mesma rede. Comparar,
+em vez disso, sites reais que usam ou não anúncios e chat misturaria scripts com tipo de site
+(sites com anúncios tendem a ser maiores), e nenhuma correção para comparações múltiplas
+removeria essa mistura.
+
+### Os dados e a ANOVA global {#dados-scripts}
+
+A Tabela \@ref(tab:c3c-dados-scripts) mostra os 40 tempos medidos. Cada coluna é um tratamento e
+cada linha, uma réplica; a numeração da réplica não tem significado (não há pareamento entre o
+carregamento 3 de "Nenhum" e o carregamento 3 de "Combo"), é só uma forma compacta de dispor os
+dados de um DCA.
+
+```{r c3c-dados-scripts, echo=FALSE}
 dados_scripts %>%
-  group_by(config) %>%
-  summarise(n = n(), media_ms = mean(tempo_ms), dp_ms = sd(tempo_ms), .groups = "drop") %>%
-  kable(digits = 1, caption = "Tempo de carregamento (ms) por configuração de scripts") %>%
+  mutate(rep = rep(1:10, 4), tempo_ms = round(tempo_ms)) %>%
+  pivot_wider(id_cols = rep, names_from = config, values_from = tempo_ms) %>%
+  rename(`Réplica` = rep) %>%
+  kable(caption = "Os 40 tempos de carregamento (ms), por configuração de scripts") %>%
   kable_styling(full_width = FALSE)
 ```
+
+```{r c3b-scripts-tab, echo=FALSE}
+resumo_scripts <- dados_scripts %>%
+  group_by(config) %>%
+  summarise(n = n(), media = mean(tempo_ms), dp = sd(tempo_ms),
+            min = min(tempo_ms), max = max(tempo_ms), .groups = "drop")
+resumo_scripts %>%
+  rename(`Configuração` = config, `Média` = media, DP = dp, `Mín.` = min, `Máx.` = max) %>%
+  kable(digits = 1, caption = "Resumo do tempo de carregamento (ms) por configuração de scripts") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r c3c-plot-dados-scripts, echo=FALSE, fig.width=8, fig.height=4.2, fig.cap="Tempos de carregamento individuais (pontos cinza) e média de cada configuração com intervalo de confiança de 95% calculado com o QME combinado da ANOVA (36 gl), em azul."}
+qme_s <- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
+ic_s <- resumo_scripts %>%
+  mutate(li = media - qt(0.975, 36) * sqrt(qme_s / n), ls = media + qt(0.975, 36) * sqrt(qme_s / n))
+ggplot(dados_scripts, aes(config, tempo_ms)) +
+  geom_jitter(width = 0.08, alpha = 0.45, size = 2, color = "grey35") +
+  geom_errorbar(data = ic_s, aes(y = media, ymin = li, ymax = ls), width = 0.18,
+                color = "#0B4F6C", linewidth = 0.9) +
+  geom_point(data = ic_s, aes(y = media), color = "#0B4F6C", size = 3.5) +
+  geom_text(data = ic_s, aes(y = media, label = round(media)), nudge_x = 0.3, size = 4) +
+  labs(x = NULL, y = "Tempo de carregamento (ms)") + theme_minimal(base_size = 13)
+```
+
+O gráfico já sugere a ordenação Nenhum < Analytics < {Anúncios ≈ Combo}, e os desvios-padrão
+parecidos (de `r fmt(min(resumo_scripts$dp), 0)` a `r fmt(max(resumo_scripts$dp), 0)` ms) são compatíveis com a
+homocedasticidade que o $QME$ combinado pressupõe. A ANOVA global quantifica o que se vê:
+
+```{r c3c-anova-scripts}
+tab_aov_s <- tidy(mod_scripts)
+tab_aov_s
+sq_trat_s <- tab_aov_s$sumsq[1]; sq_tot_s <- sum(tab_aov_s$sumsq)
+```
+
+Com $F = `r fm(tab_aov_s$statistic[1], 2)`$ em (3, 36) gl, não há dúvida razoável de que as
+configurações diferem; $R^2 = SQ_{\text{Trat}}/SQ_{\text{Total}} = `r fm(sq_trat_s / sq_tot_s, 2)`$, ou seja,
+a configuração explica cerca de `r round(100 * sq_trat_s / sq_tot_s)`% da variação dos tempos. O
+desvio-padrão de um carregamento dentro de uma configuração é $\sqrt{QME} = `r fm(sqrt(qme_s), 1)`$ ms, e o
+erro-padrão de uma diferença entre duas médias é $\sqrt{2QME/10} = `r fm(sqrt(2 * qme_s / 10), 1)`$ ms — a
+"unidade de ruído" contra a qual todas as comparações desta seção serão medidas. Até aqui sabemos
+**que** há diferença; as subseções seguintes respondem **onde**, **quanto** e **com que garantia**.
 
 ### Definição, esperança e variância de um contraste
 
@@ -1768,10 +1944,13 @@ qualquer combinação linear
 $$L = \sum_{i=1}^{t} c_i \mu_i, \qquad \text{sujeita a} \qquad \sum_{i=1}^{t} c_i = 0.$$
 
 A restrição $\sum c_i = 0$ é o que distingue um contraste de uma combinação linear qualquer: ela
-garante que $L$ mede uma **diferença** entre grupos (ou grupos de grupos), não um nível geral. Com
-os dados, $L$ é estimado por $\hat L = \sum_{i=1}^t c_i \bar y_{i\cdot}$, trocando cada $\mu_i$
-pela média amostral do respectivo grupo. Como as médias amostrais dos $t$ grupos são
-independentes (unidades experimentais diferentes) e $E(\bar y_{i\cdot}) = \mu_i$,
+garante que $L$ mede uma **diferença** entre grupos (ou grupos de grupos), não um nível geral.
+Formalmente, somar a mesma constante $k$ a todas as médias não altera $L$, porque
+$\sum c_i(\mu_i + k) = L + k\sum c_i = L$ — um contraste é invariante ao nível geral da resposta,
+exatamente como deve ser uma comparação. Com os dados, $L$ é estimado por
+$\hat L = \sum_{i=1}^t c_i \bar y_{i\cdot}$, trocando cada $\mu_i$ pela média amostral do respectivo
+grupo. Como as médias amostrais dos $t$ grupos são independentes (unidades experimentais
+diferentes) e $E(\bar y_{i\cdot}) = \mu_i$,
 
 $$E(\hat L) = \sum_{i=1}^t c_i\, E(\bar y_{i\cdot}) = \sum_{i=1}^t c_i \mu_i = L,$$
 
@@ -1784,6 +1963,39 @@ $$\mathrm{Var}(\hat L) = \sum_{i=1}^t c_i^2\, \mathrm{Var}(\bar y_{i\cdot}) = \s
 que se reduz a $\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\displaystyle\sum_{i=1}^t c_i^2$ no caso
 balanceado ($n_i = n$ para todo $i$), o caso mais comum na prática e o único em que os
 coeficientes $c_i$ tabulados na literatura clássica se aplicam diretamente.
+
+Cada pergunta científica se traduz num vetor de coeficientes pela mesma receita: coeficientes
+**positivos** nos tratamentos de um lado da pergunta, **negativos** nos do outro lado, **zero** nos
+que não participam, e soma zero. Para as três perguntas registradas no protocolo do exemplo:
+
+| Pergunta | $L$ | $(c_1,c_2,c_3,c_4)$ |
+|---|---|:-:|
+| Scripts de terceiros atrasam a página? | $\mu_1-\tfrac13(\mu_2+\mu_3+\mu_4)$ | $(3,-1,-1,-1)$ |
+| Analytics é mais leve que os que têm anúncio? | $\mu_2-\tfrac12(\mu_3+\mu_4)$ | $(0,2,-1,-1)$ |
+| O chat acrescenta tempo aos anúncios? | $\mu_3-\mu_4$ | $(0,0,1,-1)$ |
+
+Multiplicar todos os $c_i$ por uma constante não muda o teste (só a escala de $\hat L$); por isso
+costuma-se usar inteiros, $(3,-1,-1,-1)$ em vez de $(1,-\tfrac13,-\tfrac13,-\tfrac13)$.
+
+### Normalização e intervalo de confiança {#contraste-normalizado}
+
+A conveniência dos inteiros tem um custo de leitura: com $(3,-1,-1,-1)$, $\hat L$ é **três vezes**
+a diferença entre a média do controle e a média das demais, e não essa diferença. Para
+interpretar um contraste na escala da resposta, divide-se cada coeficiente pela soma dos
+coeficientes positivos,
+
+$$c_i^{*} = \frac{c_i}{\sum_{c_j>0} c_j} \qquad\Longrightarrow\qquad \hat L^{*} = \bar m_{+} - \bar m_{-},$$
+
+em que $\bar m_{+}$ e $\bar m_{-}$ são as médias simples das médias de tratamento de cada lado da
+pergunta. O contraste normalizado $\hat L^{*}$ está em ms, e seu intervalo de confiança de
+$100(1-\alpha)\%$ — válido para **um** contraste especificado antes dos dados — é
+
+$$\hat L^{*} \pm t_{\alpha/2,\;gl_{\text{erro}}}\sqrt{QME\sum_{i=1}^t \frac{(c_i^{*})^2}{n_i}}.$$
+
+A estatística $t$, o $F$ e o p-valor são **idênticos** com $c_i$ ou $c_i^{*}$ (a constante se cancela
+entre numerador e denominador); só a leitura muda. A recomendação prática é reportar sempre
+$\hat L^{*}$ com seu intervalo: o teste diz **se** há efeito, o intervalo diz **quanto**, e as
+duas informações são necessárias para uma decisão.
 
 ### Soma de quadrados de um contraste e sua distribuição
 
@@ -1805,7 +2017,10 @@ $$t = \frac{\hat L}{\sqrt{QME \sum_i c_i^2/n_i}}.$$
 
 Um contraste é, portanto, um teste com 1 grau de liberdade **encaixado dentro** da ANOVA — mais
 específico e, em geral, mais poderoso do que o teste F global de $t-1$ graus de liberdade, desde
-que a pergunta específica seja definida **antes** de olhar os dados.
+que a pergunta específica seja definida **antes** de olhar os dados. A intuição do ganho de poder
+é geométrica: se o efeito verdadeiro está concentrado numa única direção do espaço de
+tratamentos, o $F$ global o dilui por $t-1$ graus de liberdade, enquanto o contraste aponta direto
+para aquela direção e não "paga" pelas outras $t-2$.
 
 ### Notação matricial: contraste como forma linear e quadrática
 
@@ -1833,10 +2048,10 @@ A soma de quadrados do contraste é a forma quadrática de posto 1
 $$SQ_L = (\boldsymbol\lambda'\hat{\boldsymbol\mu})\,\big[\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda\big]^{-1}\,(\boldsymbol\lambda'\hat{\boldsymbol\mu}) \;=\; \mathbf Y'\mathbf A_{\boldsymbol\lambda}\mathbf Y,$$
 
 em que $\mathbf A_{\boldsymbol\lambda}$ é simétrica e idempotente, de posto 1 — uma projeção sobre
-a direção definida por $\boldsymbol\lambda$ dentro do subespaço de tratamento. Pelo teorema sobre
-formas quadráticas idempotentes do Capítulo 2 (Seção \@ref(formas-quadraticas)),
-$SQ_L/\sigma^2 \sim \chi^2_1$ sob $H_0: L=0$ — a mesma conclusão obtida escalarmente acima, agora
-como caso particular de um resultado geral, não uma coincidência.
+a direção $\mathbf X(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda$ dentro do subespaço de
+tratamento. Pelo teorema sobre formas quadráticas idempotentes do Capítulo 2 (Seção
+\@ref(formas-quadraticas)), $SQ_L/\sigma^2 \sim \chi^2_1$ sob $H_0: L=0$ — a mesma conclusão
+obtida escalarmente acima, agora como caso particular de um resultado geral, não uma coincidência.
 
 Essa leitura geométrica também explica *por que* contrastes ortogonais se comportam tão bem: um
 conjunto de $t-1$ contrastes ortogonais $\boldsymbol\lambda_1,\ldots,\boldsymbol\lambda_{t-1}$
@@ -1866,13 +2081,16 @@ particionam exatamente a soma de quadrados de tratamento, sem sobra e sem sobrep
 
 $$SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_{L_k}, \qquad gl_{\text{Trat}} = \sum_{k=1}^{t-1} 1 = t-1.$$
 
-Além disso, sob normalidade, os $t-1$ testes $F$ resultantes são **estatisticamente
-independentes** entre si — uma propriedade que nenhuma coleção arbitrária de contrastes possui.
-Isso torna contrastes ortogonais a ferramenta natural para decompor a variação entre tratamentos
-em perguntas específicas, planejadas antes da coleta de dados.
+Sob normalidade, os numeradores $SQ_{L_k}$ são independentes entre si e do $QME$, como visto na
+subseção anterior; os testes $F_k$ só não são independentes porque dividem pelo mesmo $QME$
+(com muitos graus de liberdade de erro essa dependência é fraca). Isso torna contrastes ortogonais
+a ferramenta natural para decompor a variação entre tratamentos em perguntas específicas,
+planejadas antes da coleta de dados: cada pergunta recebe sua própria "fatia" de $SQ_{\text{Trat}}$,
+sem que a informação de uma contamine a de outra.
 
-Para os quatro grupos do exemplo de carregamento de página, um conjunto de 3 contrastes
-ortogonais planejados a priori poderia ser:
+Para os quatro grupos do exemplo de carregamento de página, as três perguntas do protocolo formam
+um conjunto completo de contrastes ortogonais: os produtos internos são
+$L_1\cdot L_2 = 0-2+1+1 = 0$, $L_1\cdot L_3 = 0+0-1+1 = 0$ e $L_2\cdot L_3 = 0+0-1+1 = 0$.
 
 ```{r c3b-contrastes-tab, echo=FALSE}
 tibble(
@@ -1887,14 +2105,36 @@ tibble(
   kable_styling(full_width = FALSE)
 ```
 
+### Um contraste calculado à mão {#contraste-a-mao}
+
+Antes de delegar ao R, vale fazer uma conta completa. A Tabela \@ref(tab:c3c-l1-mao) organiza o
+cálculo de $L_1$ (controle contra a média das três configurações com script).
+
+```{r c3c-l1-mao, echo=FALSE}
+medias <- with(dados_scripts, tapply(tempo_ms, config, mean))
+ns     <- with(dados_scripts, tapply(tempo_ms, config, length))
+qme    <- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
+c1 <- c(3, -1, -1, -1)
+L1 <- sum(c1 * medias); v1 <- sum(c1^2 / ns)
+tibble(`Configuração` = names(medias), `$\\bar y_{i\\cdot}$` = fmt(medias, 2), `$c_i$` = as.character(c1),
+       `$c_i\\bar y_{i\\cdot}$` = fmt(c1 * medias, 2), `$c_i^2/n_i$` = fmt(c1^2 / ns, 1)) %>%
+  bind_rows(tibble(`Configuração` = "Soma", `$\\bar y_{i\\cdot}$` = "", `$c_i$` = "0",
+                   `$c_i\\bar y_{i\\cdot}$` = fmt(L1, 2), `$c_i^2/n_i$` = fmt(v1, 1))) %>%
+  kable(escape = FALSE, align = "lrrrr", caption = "Cálculo de $\\hat L_1$ e de sua variância, passo a passo") %>%
+  kable_styling(full_width = FALSE) %>% row_spec(5, bold = TRUE)
+```
+
+Daí: $\hat L_1 = `r fm(L1, 1)`$; $EP(\hat L_1) = \sqrt{QME \times `r fm(v1)`} = \sqrt{`r fm(qme, 1)` \times `r fm(v1)`} = `r fm(sqrt(qme * v1), 1)`$;
+$t = `r fm(L1 / sqrt(qme * v1), 2)`$; $SQ_{L_1} = \hat L_1^2/`r fm(v1)` = `r fm(L1^2 / v1, 0)`$ e
+$F = SQ_{L_1}/QME = `r fm(L1^2 / v1 / qme, 1)` = t^2$, com (1, 36) gl. Na escala de ms, dividindo
+pela soma dos coeficientes positivos (3), $\hat L_1^{*} = `r fm(L1 / 3, 1)`$ ms: sem scripts, a página
+carrega em média `r round(abs(L1) / 3)` ms mais rápido que a média das três configurações com script.
+
 ```{=html}
-<div class="caixa-r"><strong>Uso do R</strong> — calculando contrastes e verificando a partição de $SQ_{Trat}$</div>
+<div class="caixa-r"><strong>Uso do R</strong> — os três contrastes: estimativa normalizada, intervalo, teste e partição de $SQ_{Trat}$</div>
 ```
 
 ```{r c3b-contrastes-calc}
-medias  <- with(dados_scripts, tapply(tempo_ms, config, mean))
-ns      <- with(dados_scripts, tapply(tempo_ms, config, length))
-qme     <- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
 gl_erro <- summary(mod_scripts)[[1]]["Residuals", "Df"]
 
 coefs <- list(
@@ -1905,11 +2145,13 @@ coefs <- list(
 
 resultado_contrastes <- map_dfr(names(coefs), function(nm) {
   cc   <- coefs[[nm]][names(medias)]
-  Lhat <- sum(cc * medias)
-  SQ   <- Lhat^2 / sum(cc^2 / ns)
-  Fval <- SQ / qme
-  tibble(contraste = nm, L_hat = Lhat, SQ = SQ, F = Fval,
-         p_valor = pf(Fval, 1, gl_erro, lower.tail = FALSE))
+  cs   <- cc / sum(cc[cc > 0])                 # coeficientes normalizados: escala de ms
+  Lhat <- sum(cs * medias)
+  ep   <- sqrt(qme * sum(cs^2 / ns))
+  SQ   <- sum(cc * medias)^2 / sum(cc^2 / ns)  # igual com cc ou cs
+  tibble(contraste = nm, L_ms = Lhat, ep = ep,
+         li = Lhat - qt(0.975, gl_erro) * ep, ls = Lhat + qt(0.975, gl_erro) * ep,
+         SQ = SQ, F = SQ / qme, p_valor = pf(SQ / qme, 1, gl_erro, lower.tail = FALSE))
 })
 resultado_contrastes
 
@@ -1919,9 +2161,85 @@ summary(mod_scripts)[[1]]["config", "Sum Sq"]
 ```
 
 A soma das três somas de quadrados dos contrastes reproduz exatamente a soma de quadrados de
-tratamento da ANOVA — confirmando a partição. Os contrastes $L_1$ e $L_2$ são significativos
-(scripts, de fato, atrasam o carregamento, e Analytics sozinho atrasa menos que Anúncios/Combo);
-$L_3$ não é (Anúncios e Combo não diferem significativamente entre si neste conjunto de dados).
+tratamento da ANOVA — confirmando a partição. A Figura \@ref(fig:c3c-plot-contrastes-ic) mostra os
+três contrastes normalizados com seus intervalos, e a Figura \@ref(fig:c3c-plot-contrastes-sq),
+como cada um se apropria de uma fatia de $SQ_{\text{Trat}}$.
+
+```{r c3c-plot-contrastes-ic, echo=FALSE, fig.width=8, fig.height=3.2, fig.cap="Os três contrastes planejados na escala de ms (coeficientes normalizados), com intervalos de confiança de 95%. A linha tracejada marca o zero (ausência de diferença)."}
+resultado_contrastes %>%
+  mutate(rotulo = c("L1: Nenhum − média(demais)", "L2: Analytics − média(Anúncios, Combo)",
+                    "L3: Anúncios − Combo")) %>%
+  ggplot(aes(L_ms, fct_rev(rotulo))) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_pointrange(aes(xmin = li, xmax = ls), color = "#0B4F6C", linewidth = 0.9, size = 0.6) +
+  geom_text(aes(label = paste0(round(L_ms), " ms")), nudge_y = 0.3, size = 3.8) +
+  labs(x = "Contraste normalizado (ms) e IC 95%", y = NULL) + theme_minimal(base_size = 12)
+```
+
+```{r c3c-plot-contrastes-sq, echo=FALSE, fig.width=7, fig.height=3.6, fig.cap="Partição da soma de quadrados (SQ) de tratamentos pelos três contrastes ortogonais: as barras somam exatamente a linha tracejada; o rótulo dá a SQ de cada contraste e sua porcentagem da SQ de tratamentos."}
+resultado_contrastes %>%
+  mutate(pct = 100 * SQ / sq_trat_s) %>%
+  ggplot(aes(x = contraste, y = SQ, fill = contraste)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_text(aes(label = paste0(fmt(SQ, 0), " (", round(pct), "%)")), vjust = -0.5, size = 3.8) +
+  geom_hline(yintercept = sq_trat_s, linetype = "dashed", color = "grey40") +
+  annotate("text", x = 0.6, y = sq_trat_s, label = "SQ_Trat total", vjust = -0.6, hjust = 0,
+           size = 3.4, color = "grey30") +
+  scale_y_continuous(limits = c(0, sq_trat_s * 1.12)) +
+  labs(x = NULL, y = "Soma de quadrados") + theme_minimal(base_size = 12)
+```
+
+A leitura é direta. $L_1$ e $L_2$ têm intervalos inteiramente abaixo de zero: scripts de
+terceiros atrasam a página, e Analytics atrasa bem menos que as configurações com anúncio. Em
+termos de variação, `r round(100 * resultado_contrastes$SQ[1] / sq_trat_s)`% de toda a diferença entre configurações é
+"ter ou não ter script", `r round(100 * resultado_contrastes$SQ[2] / sq_trat_s)`% é "anúncio ou não", e apenas
+`r round(100 * resultado_contrastes$SQ[3] / sq_trat_s)`% é "chat em cima do anúncio". $L_3$ não é significativo, mas
+o seu intervalo, de `r fmt(resultado_contrastes$li[3], 0)` a `r fmt(resultado_contrastes$ls[3], 0)` ms, merece mais atenção do
+que o p-valor: "não significativo" **não** quer dizer "igual". Os dados são compatíveis tanto com o
+Combo carregando um pouco mais rápido que Anúncios quanto com ele carregando até
+`r round(-resultado_contrastes$li[3])` ms mais lento — e, para uma página de produto, 90 ms podem importar.
+
+### Contrastes não ortogonais {#contrastes-nao-ortogonais}
+
+Nada impede testar contrastes não ortogonais; cada um continua sendo um teste válido de 1 grau de
+liberdade. O que se perde é a contabilidade. Considere a família natural "cada configuração contra
+o controle", com coeficientes $(-1,1,0,0)$, $(-1,0,1,0)$ e $(-1,0,0,1)$: o produto interno de
+quaisquer dois deles é $(-1)(-1) = 1 \ne 0$, porque todos reutilizam a média do controle.
+
+```{r c3c-nao-ortogonais}
+coefs_ctrl <- list(`Analytics−Nenhum` = c(-1, 1, 0, 0), `Anúncios−Nenhum` = c(-1, 0, 1, 0),
+                   `Combo−Nenhum` = c(-1, 0, 0, 1))
+sq_ctrl <- sapply(coefs_ctrl, function(cc) sum(cc * medias)^2 / sum(cc^2 / ns))
+round(c(sq_ctrl, soma = sum(sq_ctrl), SQ_Trat = sq_trat_s))
+```
+
+A soma das três $SQ$ (`r fmt(sum(sq_ctrl), 0)`) passa de $SQ_{\text{Trat}}$ (`r fmt(sq_trat_s, 0)`) em
+`r round(100 * (sum(sq_ctrl) / sq_trat_s - 1))`%: a média do controle, a mais baixa de todas, entra nas três perguntas,
+e sua distância às demais é contada três vezes. Não há erro de conta — há sobreposição de
+informação. Cada teste segue válido isoladamente; o que deixa de valer é ler as $SQ$ como fatias
+da variação. E, como os três testes são correlacionados positivamente (compartilham
+$\bar y_{\text{Nenhum}}$), a correção adequada para tratá-los como família não é a de Bonferroni,
+que ignora a correlação, e sim a de Dunnett, que a usa (Seção \@ref(comparacoes-multiplas)).
+
+### O que os contrastes respondem nestes dados {#contrastes-respostas}
+
+Voltando às três perguntas do protocolo:
+
+1. **Scripts de terceiros atrasam a página?** Sim: em média `r round(abs(resultado_contrastes$L_ms[1]))` ms
+   (IC 95%: `r round(abs(resultado_contrastes$ls[1]))` a `r round(abs(resultado_contrastes$li[1]))` ms), cerca de
+   `r round(100 * abs(resultado_contrastes$L_ms[1]) / medias[1])`% do tempo da página limpa.
+2. **Se for para ter um script, Analytics é o mais leve?** Sim: Analytics carrega
+   `r round(abs(resultado_contrastes$L_ms[2]))` ms mais rápido que a média das duas opções com anúncio
+   (IC: `r round(abs(resultado_contrastes$ls[2]))` a `r round(abs(resultado_contrastes$li[2]))` ms).
+3. **Acrescentar o chat aos anúncios custa caro?** Os dados não permitem afirmar nem negar. A
+   diferença estimada é de `r round(abs(resultado_contrastes$L_ms[3]))` ms, com intervalo que inclui zero. Com o
+   desvio-padrão observado, detectar uma diferença de 30 ms com poder de 80% exigiria cerca de
+   `r ceiling(power.t.test(delta = 30, sd = sqrt(qme), power = 0.8)$n)` carregamentos por configuração
+   (`power.t.test(delta = 30, sd = sqrt(qme), power = 0.8)`), e não 10: a pergunta (iii) estava
+   subdimensionada no desenho, um lembrete da Seção \@ref(numero-replicas-dca).
+
+Os três testes estão protegidos sem correção adicional porque são planejados, ortogonais e em
+número de $t-1$: cada um usa uma fatia diferente de $SQ_{\text{Trat}}$.
 
 ## Procedimentos de comparação múltipla {#comparacoes-multiplas}
 
@@ -1930,14 +2248,85 @@ de perguntas é pequeno e conhecido antes da coleta de dados. Mas frequentemente
 **todos os pares de médias**, ou comparar cada tratamento contra um grupo controle, sem ter
 decidido de antemão exatamente quais comparações importam. Fazer isso com testes $t$ repetidos,
 um por par, é perigoso: com $t=4$ grupos há $\binom{4}{2}=6$ comparações possíveis, e mesmo que
-$H_0$ seja verdadeira em todas elas, a probabilidade de pelo menos um falso positivo ao nível
-nominal $\alpha=0{,}05$ por teste é
+$H_0$ seja verdadeira em todas elas, se os seis testes fossem independentes a probabilidade de pelo
+menos um falso positivo ao nível nominal $\alpha=0{,}05$ por teste seria
 
 $$P(\text{pelo menos 1 falso positivo}) = 1 - (1-\alpha)^{6} \approx 1 - 0{,}95^6 \approx 0{,}26,$$
 
-mais de cinco vezes o nível nominal. Essa inflação da **taxa de erro por família**
-(*family-wise error rate*, FWER) é o problema que os procedimentos a seguir resolvem, cada um
-com um compromisso diferente entre conservadorismo e poder.
+mais de cinco vezes o nível nominal. Como os seis testes compartilham médias e o mesmo $QME$, eles
+não são independentes e o valor exato é um pouco menor — a simulação da Seção
+\@ref(fwer-simulada) dá cerca de 19% —, mas a ordem de grandeza do problema é essa. Duas taxas de
+erro precisam ser distinguidas:
+
+| Taxa de erro | Definição | Controlada por |
+|---|---|---|
+| por comparação | $P(\text{erro tipo I em um teste})$ | LSD (*least significant difference*) de Fisher, testes $t$ repetidos |
+| por família (FWER, *family-wise error rate*) | $P(\text{pelo menos 1 erro tipo I na família})$ | Tukey, Dunnett, Bonferroni, Scheffé |
+
+Essa inflação da **taxa de erro por família** (*family-wise error rate*, FWER) é o problema que os
+procedimentos a seguir resolvem, cada um com um compromisso diferente entre conservadorismo e
+poder [@hsu1996multiple].
+
+### O que significa controlar a taxa de erro por família {#fwer}
+
+A sigla merece uma explicação sem fórmulas antes de qualquer procedimento. A **família** é o
+conjunto de todas as comparações que serão feitas e relatadas sobre um experimento — no exemplo de
+scripts, com a pergunta "quais pares diferem?", os seis pares. A família **erra** quando pelo menos
+uma dessas comparações declara uma diferença que não existe; não importa qual, nem quantas. O FWER
+é a probabilidade desse evento,
+
+$$\text{FWER} = P(A_1 \cup A_2 \cup \cdots \cup A_m), \qquad A_k = \{\text{falso positivo na } k\text{-ésima comparação}\}.$$
+
+Uma analogia ajuda: uma casa com seis cômodos, cada um com um detector de fumaça que dispara à toa
+em 5% das noites. Cada detector, isoladamente, é bom; mas a chance de a casa ser acordada sem
+incêndio numa noite qualquer é de cerca de $1-0{,}95^6 \approx 26\%$. **Controlar o FWER em 5%** é
+garantir que, em 95% dos experimentos, **nenhuma** das comparações relatadas seja um alarme falso —
+uma garantia sobre o relatório inteiro, não sobre cada linha dele.
+
+A Figura \@ref(fig:c3c-fwer-grade) torna isso visível. Simulamos 100 experimentos com o desenho do
+exemplo ($t=4$, $n=10$, $\sigma=70$ ms) em que as quatro médias verdadeiras são **iguais**, e em
+cada um comparamos os seis pares por testes $t$ ao nível de 5% e por Tukey.
+
+```{r c3c-fwer-grade, echo=FALSE, fig.width=9, fig.height=4.6, out.width="100%", fig.cap="Cem experimentos simulados sem efeito nenhum (linhas) e os seis pares comparados em cada um (colunas). Vermelho: par declarado diferente (falso positivo); rosa: os demais pares de um experimento que teve algum falso positivo. Esquerda: seis testes t, cada um a 5%; direita: Tukey."}
+grade_fw <- sim_grade_fwer(B = 100)
+cont_fw <- grade_fw %>% group_by(metodo, exp) %>% summarise(algum = any(fp), .groups = "drop") %>%
+  group_by(metodo) %>% summarise(n = sum(algum))
+grade_fw %>% group_by(metodo, exp) %>% mutate(algum = any(fp)) %>% ungroup() %>%
+  left_join(cont_fw, by = "metodo") %>%
+  mutate(painel = paste0(metodo, ": ", n, " de 100 com alarme falso"),
+         est = case_when(fp ~ "falso positivo", algum ~ "outro par do mesmo experimento", TRUE ~ "ok")) %>%
+  ggplot(aes(par, exp, fill = est)) + geom_tile(color = "white", linewidth = 0.2) +
+  facet_wrap(~ painel) +
+  scale_fill_manual(values = c(`falso positivo` = "#c0392b", `outro par do mesmo experimento` = "#f5c6c0",
+                               ok = "grey93"), name = NULL) +
+  scale_x_continuous(breaks = 1:6, labels = c("2−1", "3−1", "4−1", "3−2", "4−2", "4−3")) +
+  labs(x = "par comparado", y = "experimento (4 médias iguais)") +
+  theme_minimal(base_size = 11) + theme(legend.position = "top", panel.grid = element_blank())
+```
+
+Cada **casa** vermelha é rara — cerca de 5% das casas da esquerda, como prometido por cada teste
+$t$. Mas cada **linha** com alguma casa vermelha não é: `r cont_fw$n[1]` dos 100 experimentos produziriam
+pelo menos uma "descoberta" falsa com testes $t$ (o valor esperado é perto de 20%), contra
+`r cont_fw$n[2]` com Tukey (esperado: 5%). E o problema cresce rapidamente com o número de tratamentos
+(Figura \@ref(fig:c3c-fwer-curva)): com 10 tratamentos e 45 pares, achar alguma diferença por acaso é
+quase certo.
+
+```{r c3c-fwer-curva, echo=FALSE, fig.width=8, fig.height=3.4, fig.cap="Probabilidade de pelo menos um falso positivo ao fazer todos os pares com testes t a 5%, tratados como independentes, em função do número de tratamentos; o rótulo dá o número de pares e a linha tracejada marca 5%."}
+tibble(t = 2:12) %>% mutate(m = choose(t, 2), fwer = 1 - 0.95^m) %>%
+  ggplot(aes(t, fwer)) + geom_line(color = "#0B4F6C", linewidth = 1) +
+  geom_point(color = "#0B4F6C", size = 2.5) +
+  geom_text(aes(label = paste0(m, " pares")), vjust = -1, size = 3.1) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", color = "#d98324") +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1.08)) + scale_x_continuous(breaks = 2:12) +
+  labs(x = "número de tratamentos t", y = "P(≥ 1 falso positivo)") + theme_minimal(base_size = 12)
+```
+
+Há dois sentidos de "controlar". O controle **fraco** vale só quando **todas** as médias são
+iguais; o controle **forte** vale qualquer que seja o padrão de médias iguais e diferentes — que é
+o caso relevante, porque, depois de rejeitar o $F$ global, sabemos justamente que nem todas são
+iguais. Tukey, Dunnett, Bonferroni e Scheffé controlam o FWER no sentido forte; o LSD protegido e o
+SNK (Student-Newman-Keuls), só no fraco; o Duncan, em nenhum dos dois. A Seção \@ref(fwer-simulada) mostra isso numa
+simulação com os dois cenários.
 
 ### O perigo do "data snooping" {#data-snooping}
 
@@ -1967,6 +2356,37 @@ de Scheffé, a seguir, é a resposta formal a essa lacuna: ele protege simultane
 espaço infinito de contrastes lineares possíveis, de modo que, mesmo que o pesquisador escolha o
 contraste mais favorável depois de olhar os dados, o FWER continua controlado em $\alpha$.
 
+### A estrutura comum: a diferença mínima significativa {#dms}
+
+Com dados balanceados ($n_i = n$), quase todos os procedimentos par a par têm a mesma forma:
+declaram $\mu_i \ne \mu_j$ quando a diferença observada $|\bar y_{i\cdot} - \bar y_{j\cdot}|$ supera
+uma **diferença mínima significativa** (DMS), que é um multiplicador vezes um erro-padrão. O que
+distingue os procedimentos é apenas o multiplicador — e, com ele, a garantia oferecida. Com
+$\nu = gl_{\text{erro}}$:
+
+| Procedimento | DMS | Controla |
+|---|---|---|
+| LSD de Fisher | $t_{\alpha/2,\nu}\sqrt{2QME/n}$ | taxa por comparação |
+| Bonferroni ($m$ comparações) | $t_{\alpha/(2m),\nu}\sqrt{2QME/n}$ | FWER, de forma conservadora |
+| Tukey HSD (*honestly significant difference*) | $q_{\alpha;\,t,\nu}\sqrt{QME/n}$ | FWER, todos os pares |
+| Dunnett | $d_{\alpha;\,t-1,\nu}\sqrt{2QME/n}$ | FWER, cada tratamento vs. controle |
+| Scheffé | $\sqrt{(t-1)F_{\alpha;\,t-1,\nu}}\,\sqrt{2QME/n}$ | FWER, todo contraste |
+| SNK | $q_{\alpha;\,p,\nu}\sqrt{QME/n}$, $p$ = amplitude | FWER só sob $H_0$ completa |
+| Duncan | $q_{\alpha_p;\,p,\nu}\sqrt{QME/n}$, $\alpha_p = 1-(1-\alpha)^{p-1}$ | não controla o FWER |
+
+Ver os procedimentos como **réguas** de comprimentos diferentes, aplicadas às mesmas diferenças, é
+a forma mais útil de compará-los — e é o que faremos com os dados na Seção \@ref(reguas-dados).
+
+### LSD de Fisher
+
+O procedimento mais antigo é a *least significant difference* de Fisher [@fisher1935design]: o
+teste $t$ de duas médias, usando o $QME$ da ANOVA como estimativa de $\sigma^2$ (o que dá mais
+graus de liberdade que um teste $t$ com só os dois grupos). Controla apenas a taxa de erro **por
+comparação**. Na versão **protegida**, o LSD só é aplicado se o $F$ global rejeitar $H_0$; isso
+controla o FWER quando **todas** as médias são iguais (porque então só se chega aos pares com
+probabilidade $\alpha$), mas não quando apenas algumas são — um ponto que a simulação da Seção
+\@ref(fwer-simulada) torna concreto.
+
 ### Método de Scheffé
 
 Controla o FWER para **qualquer** contraste que se queira testar, incluindo contrastes definidos
@@ -1976,35 +2396,67 @@ $H_0: L=0$ se
 
 $$\frac{SQ_L}{QME} > (t-1)\, F_{\alpha;\, t-1,\, gl_{\text{erro}}}.$$
 
-O fator $(t-1)$ multiplicando o valor crítico de $F$ é o preço pago por proteger simultaneamente
-uma família infinita de contrastes possíveis [@scheffe1959analysis] — e é exatamente esse fator
-extra que torna Scheffé a "licença para bisbilhotar os dados" de forma estatisticamente honesta:
-qualquer contraste, planejado ou não, só é declarado significativo se for grande o bastante para
-não ser apenas o maior entre muitos desvios aleatórios possíveis.
+De onde vem o fator $(t-1)$? Para dados balanceados e qualquer contraste ($\sum c_i = 0$), a
+desigualdade de Cauchy-Schwarz dá
+
+$$\hat L^2 = \Big(\sum_{i=1}^t c_i(\bar y_{i\cdot} - \bar y_{\cdot\cdot})\Big)^2 \le \sum_{i=1}^t c_i^2 \cdot \sum_{i=1}^t (\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2 \quad\Longrightarrow\quad SQ_L = \frac{n\hat L^2}{\sum_i c_i^2} \le n\sum_{i=1}^t(\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2 = SQ_{\text{Trat}},$$
+
+em que a primeira igualdade usa $\sum c_i = 0$ para subtrair $\bar y_{\cdot\cdot}$ de graça. Logo, o
+maior $F$ de contraste possível — o do contraste mais favorável, escolhido depois de ver os dados —
+é
+
+$$\max_{\mathbf c}\ \frac{SQ_L}{QME} = \frac{SQ_{\text{Trat}}}{QME} = (t-1)\,F_{\text{obs}},$$
+
+atingido pelo contraste com $c_i \propto \bar y_{i\cdot} - \bar y_{\cdot\cdot}$. (Sob uma hipótese
+geral, aplica-se o mesmo argumento a $\bar y_{i\cdot} - \mu_i$.) Comparar cada $SQ_L/QME$ com
+$(t-1)F_{\alpha;t-1,\nu}$ equivale, portanto, a exigir que o contraste supere o que o **maior** de
+todos os contrastes atingiria por acaso com probabilidade $\alpha$ — e o FWER fica exatamente em
+$\alpha$ sobre uma família infinita [@scheffe1959analysis]. Duas consequências: nenhum contraste é
+significativo por Scheffé se o $F$ global não for (o Scheffé é o teste $F$ global "desdobrado" em
+direções); e é esse fator extra que torna Scheffé a "licença para bisbilhotar os dados" de forma
+estatisticamente honesta.
 
 ### Método de Bonferroni
 
 O método de Bonferroni [-@bonferroni1936] divide o nível de significância global $\alpha$
-igualmente entre as $m$ comparações planejadas:
-cada teste individual é avaliado contra $\alpha/m$ (equivalentemente, cada p-valor é multiplicado
-por $m$). É simples, aplica-se a qualquer conjunto pré-especificado de comparações (não só
-pares), mas é conservador quando $m$ é grande, perdendo poder.
+igualmente entre as $m$ comparações planejadas: cada teste individual é avaliado contra $\alpha/m$
+(equivalentemente, cada p-valor é multiplicado por $m$). A justificativa é a desigualdade de Boole:
+se $A_k$ é o evento "erro tipo I na $k$-ésima comparação",
+
+$$\text{FWER} = P\Big(\bigcup_{k=1}^m A_k\Big) \le \sum_{k=1}^m P(A_k) = m\cdot\frac{\alpha}{m} = \alpha.$$
+
+É simples, aplica-se a qualquer conjunto pré-especificado de comparações (não só pares), mas é
+conservador quando $m$ é grande ou quando as comparações são correlacionadas — a desigualdade de
+Boole é estrita sempre que os eventos $A_k$ se intersectam, o que ocorre sempre que as comparações
+compartilham médias e o $QME$.
 
 ### Tukey HSD (*honestly significant difference*)
 
 Desenhado especificamente para **todas as comparações par a par** entre $t$ médias, usa a
-distribuição da **amplitude estudentizada** (*studentized range*) em vez da distribuição $t$, o
-que o torna mais poderoso que Bonferroni para essa família específica de comparações
-[@tukey1949comparing]. É o procedimento padrão quando o objetivo é "comparar tudo com tudo" sem
-um grupo controle privilegiado.
+distribuição da **amplitude estudentizada** (*studentized range*) em vez da distribuição $t$
+[@tukey1949comparing]. Com dados balanceados, a estatística
+
+$$Q = \frac{\max_i(\bar y_{i\cdot}-\mu_i) - \min_i(\bar y_{i\cdot}-\mu_i)}{\sqrt{QME/n}} \sim q_{t,\nu}$$
+
+tem distribuição tabelada (é a amplitude de $t$ normais independentes dividida por um desvio-padrão
+independente com $\nu$ gl). O argumento de Tukey é de uma linha: se a **maior** das $\binom t2$
+diferenças padronizadas fica abaixo de $q_{\alpha;t,\nu}$, todas as outras também ficam. Logo
+$P(\text{nenhum falso positivo}) = P(Q \le q_{\alpha;t,\nu}) = 1-\alpha$ — o FWER é **exatamente**
+$\alpha$ para a família de todos os pares. É por isso que Tukey é mais poderoso que Bonferroni
+nessa família: Bonferroni usa uma desigualdade, Tukey usa a distribuição exata do máximo. É o
+procedimento padrão quando o objetivo é "comparar tudo com tudo" sem um grupo controle
+privilegiado.
 
 ### Comparação com um grupo controle: Dunnett
 
 Quando o interesse não é comparar todos os pares, mas sim **cada tratamento contra um único grupo
 controle** (como "Nenhum" no exemplo de scripts), o número de comparações cai de $\binom{t}{2}$
 para $t-1$, e essas comparações são correlacionadas entre si (todas compartilham o mesmo grupo
-controle). O teste de Dunnett explora essa estrutura, sendo mais poderoso que Tukey ou Bonferroni
-para esse propósito específico [@dunnett1955multiple].
+controle; com $n$ iguais a correlação entre duas delas é $1/2$). O teste de Dunnett usa a
+distribuição conjunta dessas $t-1$ estatísticas $t$ (uma $t$ multivariada) para obter o valor
+crítico $d_{\alpha;t-1,\nu}$, sendo mais poderoso que Tukey ou Bonferroni para esse propósito
+específico [@dunnett1955multiple]. Admite também a versão **unilateral**, quando a pergunta tem
+direção ("o tratamento piora?") — desde que a direção seja fixada no protocolo, antes dos dados.
 
 ### Teste de amplitude múltipla de Duncan
 
@@ -2017,30 +2469,353 @@ crítico próprio — a **amplitude mínima significativa**
 
 $$R_p = r_{\alpha,\,p,\,gl_{\text{erro}}} \sqrt{\frac{QME}{n}},$$
 
-em que $r_{\alpha,p,\nu}$ vem de uma tabela específica de Duncan (implementada, por exemplo, em
-`agricolae::duncan.test()`) e cresce com $p$: $R_2 < R_3 < \cdots < R_t$. A diferença
-$\bar y_{(j)} - \bar y_{(i)}$ é declarada significativa se exceder $R_{j-i+1}$ — médias adjacentes
-($p=2$) só precisam superar o menor valor crítico da lista, enquanto a diferença entre a maior e a
-menor média precisa superar o maior.
+em que $r_{\alpha,p,\nu} = q_{\alpha_p;\,p,\nu}$ vem de uma tabela específica de Duncan
+(implementada, por exemplo, em `agricolae::duncan.test()`) e cresce com $p$:
+$R_2 < R_3 < \cdots < R_t$. A diferença $\bar y_{(j)} - \bar y_{(i)}$ é declarada significativa se
+exceder $R_{j-i+1}$ — médias adjacentes ($p=2$) só precisam superar o menor valor crítico da lista,
+enquanto a diferença entre a maior e a menor média precisa superar o maior.
 
 Essa escala móvel equivale a proteger cada amplitude $p$ com um nível $\alpha_p = 1 -
 (1-\alpha)^{p-1}$, que **cresce** com $p$ em vez de permanecer fixo em $\alpha$ — ao contrário de
 Tukey, que usa o mesmo nível $\alpha$ para toda comparação par a par, qualquer que seja sua
-amplitude. Na prática, isso torna Duncan sistematicamente mais liberal (mais poder, mais
-comparações declaradas significativas) do que Tukey, mas ao custo de **não controlar o FWER** no
-nível nominal $\alpha$ para o conjunto de comparações como um todo — a taxa real de pelo menos um
-falso positivo na família de testes fica acima de $\alpha$. Por essa razão, seu uso vem sendo
-desaconselhado na literatura em favor de procedimentos que controlam o FWER de forma rigorosa
-(Tukey para pares, Dunnett contra um controle); ainda assim, permanece comum em periódicos de
-ciências agrárias, o que torna sua interpretação correta — inclusive de suas limitações —
-relevante para quem for ler ou revisar esse tipo de trabalho.
+amplitude. Com $\alpha = 0{,}05$ e $t=4$, $\alpha_4 = 1-0{,}95^3 \approx 0{,}143$: sob $H_0$
+completa, a chance de o Duncan declarar **alguma** diferença é de 14%, não de 5%. Na prática, isso
+torna Duncan sistematicamente mais liberal (mais poder, mais comparações declaradas
+significativas) do que Tukey, mas ao custo de **não controlar o FWER** no nível nominal $\alpha$
+para o conjunto de comparações como um todo. Por essa razão, seu uso vem sendo desaconselhado na
+literatura em favor de procedimentos que controlam o FWER de forma rigorosa (Tukey para pares,
+Dunnett contra um controle); ainda assim, permanece comum em periódicos de ciências agrárias, o que
+torna sua interpretação correta — inclusive de suas limitações — relevante para quem for ler ou
+revisar esse tipo de trabalho.
 
-### Agrupamento de tratamentos (*compact letter display*)
+### Student-Newman-Keuls (SNK)
 
-Uma forma compacta de reportar o resultado de comparações múltiplas par a par é atribuir letras
-às médias: tratamentos que compartilham pelo menos uma letra **não** diferem significativamente
-entre si; tratamentos sem letra em comum diferem. Essa representação (*compact letter display*,
-CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.
+O SNK [@newman1939distribution; @keuls1952use] tem a mesma estrutura em etapas de Duncan, mas usa
+o nível $\alpha$ fixo em cada amplitude: $R_p = q_{\alpha;\,p,\nu}\sqrt{QME/n}$. Para $p = t$ ele
+coincide com Tukey; para $p=2$, com Duncan e com o LSD. Fica, portanto, entre os dois. O SNK
+controla o FWER sob $H_0$ **completa** (todas as médias iguais), porque então tudo depende do
+primeiro teste, o da amplitude $t$, feito ao nível $\alpha$. Mas sob $H_0$ **parcial** — algumas
+médias iguais, outras não — os pares de médias iguais que ficam vizinhos depois do ordenamento são
+testados, cada um, ao nível $\alpha$, e o FWER cresce com o número desses pares.
+
+### O teste de Duncan passo a passo, com dados reais {#duncan-passo-a-passo}
+
+A descrição do Duncan acima é compacta demais para quem o vê pela primeira vez. Esta subseção o
+executa inteiro, passo a passo e com gráficos, sobre os dados **reais** de fertilizantes em feijão
+da Seção \@ref(dca-feijao) — escolhidos porque, neles, Duncan e Tukey **discordam**, o que torna
+visível o efeito de cada escolha do procedimento. Em uma frase, o Duncan **ordena as médias e
+compara cada par com uma régua que depende de quantas médias o par abrange, começando pelo par
+mais afastado e só descendo enquanto as comparações maiores forem significativas.**
+
+```{r c3c-feij-dados, echo=FALSE}
+feijao %>% group_by(Fertilizante) %>% mutate(Parcela = row_number()) %>% ungroup() %>%
+  pivot_wider(id_cols = Parcela, names_from = Fertilizante, values_from = Producao, names_sort = TRUE) %>%
+  kable(digits = 2, caption = "Produção de feijão (kg) nas 20 parcelas, por fertilizante") %>%
+  kable_styling(full_width = FALSE)
+qme_f <- deviance(mod_feijao) / df.residual(mod_feijao); gl_f <- df.residual(mod_feijao)
+med_f <- tapply(feijao$Producao, feijao$Fertilizante, mean); ms_f <- sort(med_f); se_f <- sqrt(qme_f / 5)
+amp <- sim_amplitude(2:4, nu = gl_f)
+qs <- amp %>% group_by(p) %>% summarise(q95 = quantile(Q, 0.95))
+```
+
+A ANOVA da Seção \@ref(dca-feijao) deu $F = `r fm(summary(mod_feijao)[[1]]$"F value"[1], 2)`$ com (3, `r gl_f`) gl e
+$QME = `r fm(qme_f, 3)`$. As médias são F1 = `r fmt(med_f["F1"], 3)`, F2 = `r fmt(med_f["F2"], 3)`,
+F3 = `r fmt(med_f["F3"], 3)` e F4 = `r fmt(med_f["F4"], 3)` kg, e o erro-padrão de uma média é
+$\sqrt{QME/n} = \sqrt{`r fm(qme_f, 3)`/5} = `r fm(se_f, 3)`$ kg — a unidade em que todas as réguas desta
+subseção são expressas.
+
+**Passo 1 — ordenar.** A Figura \@ref(fig:c3c-feij-regua) põe as quatro médias no eixo da produção,
+em ordem crescente, com a posição de cada uma entre parênteses. A ordem não é a dos rótulos: F3 vem
+antes de F2. As distâncias entre vizinhas são `r fmt(ms_f[2] - ms_f[1], 2)` (F3 − F1),
+`r fmt(ms_f[3] - ms_f[2], 2)` (F2 − F3) e `r fmt(ms_f[4] - ms_f[3], 2)` kg (F4 − F2).
+
+```{r c3c-feij-regua, echo=FALSE, fig.width=7.6, fig.height=1.9, out.width="90%", fig.cap="As quatro médias de produção de feijão (kg) ordenadas no eixo da resposta; entre parênteses, a posição de cada uma na ordenação."}
+plot_regua_medias(ms_f)
+```
+
+**Passo 2 — contar a amplitude.** A **amplitude** $p$ de um par é o número de médias ordenadas que
+ele abrange, incluindo as duas pontas. Na Figura \@ref(fig:c3c-feij-arcos) cada par é um arco, com
+altura e cor dadas pela amplitude: o único par de amplitude 4 é F4 − F1 (maior contra menor); os de
+amplitude 3, F2 − F1 e F4 − F3, têm uma média entre as pontas; os três de amplitude 2 são vizinhos.
+
+```{r c3c-feij-arcos, echo=FALSE, fig.width=7.6, fig.height=3, out.width="95%", fig.cap="Os seis pares de médias como arcos sobre o eixo das médias ordenadas; altura e cor indicam a amplitude p do par (2: vizinhas; 3: uma média entre as pontas; 4: maior contra menor)."}
+pd_f <- passos_amplitude(med_f, qme_f, 5, gl_f, "Duncan")
+plot_arcos_amplitude(pd_f, ms_f)
+```
+
+**Por que a régua deveria crescer com $p$.** A Figura \@ref(fig:c3c-feij-intuicao) responde com uma
+simulação: sorteamos $p$ médias **sem efeito nenhum** e medimos a distância entre a maior e a menor,
+em erros-padrão. Com mais médias, os extremos se afastam só por acaso; o percentil 95% de cada
+distribuição — `r fmt(qs$q95[1], 2)`, `r fmt(qs$q95[2], 2)` e
+`r fmt(qs$q95[3], 2)` para $p = 2, 3, 4$ — é exatamente o valor tabelado
+$q_{0,05;\,p,`r gl_f`}$ da amplitude estudentizada. Daí a ideia dos procedimentos em etapas: exigir mais
+de um par que abrange mais médias, porque ele "tem mais chance" de parecer afastado sem ser.
+
+```{r c3c-feij-intuicao, echo=FALSE, fig.width=8, fig.height=3.2, fig.cap="Distribuição simulada da distância entre a maior e a menor de p médias, em erros-padrão, quando todas as médias verdadeiras são iguais (16 gl para o erro); as linhas tracejadas marcam o percentil 95% de cada distribuição."}
+ggplot(amp, aes(Q, color = factor(p), fill = factor(p))) +
+  geom_density(alpha = 0.15, linewidth = 1) +
+  geom_vline(data = qs, aes(xintercept = q95, color = factor(p)), linetype = "dashed") +
+  scale_color_manual(values = c(`2` = "#2e8b57", `3` = "#d98324", `4` = "#8b2e6e"), name = "nº de médias p") +
+  scale_fill_manual(values = c(`2` = "#2e8b57", `3` = "#d98324", `4` = "#8b2e6e"), name = "nº de médias p") +
+  coord_cartesian(xlim = c(0, 7)) +
+  labs(x = "(maior − menor) / EP de uma média", y = NULL) + theme_minimal(base_size = 12)
+```
+
+**Passo 3 — uma régua por amplitude.** Para cada $p$, $R_p = r_p\sqrt{QME/n}$, em que o $r_p$ de
+Duncan é o quantil da amplitude estudentizada no nível $1-\alpha_p$, com $\alpha_p = 1-(1-\alpha)^{p-1}$
+(no R, `qtukey((1 - 0.05)^(p - 1), p, gl)`). A Tabela \@ref(tab:c3c-feij-reguas) traz as réguas de
+Duncan, SNK e Tukey, e a Figura \@ref(fig:c3c-feij-escada) as compara.
+
+```{r c3c-feij-reguas, echo=FALSE}
+reg_f <- tibble(p = 2:4, alpha_p = 1 - 0.95^(p - 1),
+                r_Duncan = sapply(2:4, function(p) qtukey(0.95^(p - 1), p, gl_f)),
+                R_Duncan = r_Duncan * se_f,
+                R_SNK = sapply(2:4, function(p) qtukey(0.95, p, gl_f)) * se_f,
+                R_Tukey = qtukey(0.95, 4, gl_f) * se_f)
+reg_f %>% transmute(`Amplitude p` = p, `Nível de proteção αp` = paste0(fmt(100 * alpha_p, 2), "%"),
+                    `r_p (Duncan)` = fmt(r_Duncan, 3), `R_p Duncan` = fmt(R_Duncan, 3),
+                    `R_p SNK` = fmt(R_SNK, 3), `Tukey (fixa)` = fmt(R_Tukey, 3)) %>%
+  kable(align = "cccccc", caption = "Réguas (kg) de Duncan, SNK e Tukey para os dados de feijão, por amplitude") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r c3c-feij-escada, echo=FALSE, fig.width=7.5, fig.height=3.2, fig.cap="Régua (diferença mínima significativa, em kg) de Duncan, SNK e Tukey em função da amplitude p do par, para os dados de feijão."}
+reg_f %>% dplyr::select(p, Duncan = R_Duncan, SNK = R_SNK, Tukey = R_Tukey) %>%
+  pivot_longer(-p, names_to = "metodo", values_to = "R") %>%
+  ggplot(aes(p, R, color = metodo)) + geom_line(linewidth = 1.1) + geom_point(size = 3) +
+  geom_text(aes(label = fmt(R, 2)), vjust = -0.9, size = 3.5, show.legend = FALSE) +
+  scale_x_continuous(breaks = 2:4) + scale_y_continuous(limits = c(1.8, 2.7)) +
+  scale_color_manual(values = c(Duncan = "#2e8b57", SNK = "#d98324", Tukey = "#0B4F6C")) +
+  labs(x = "amplitude p do par", y = "régua R_p (kg)", color = NULL) + theme_minimal(base_size = 12)
+```
+
+Para pares vizinhos ($p=2$), Duncan, SNK e LSD usam a mesma régua. Com $p$ crescente, o Duncan
+cresce devagar (de `r fmt(reg_f$R_Duncan[1], 2)` a `r fmt(reg_f$R_Duncan[3], 2)` kg), porque relaxa o nível
+($\alpha_p$ sobe de 5% para `r fmt(100 * reg_f$alpha_p[3], 1)`%); o SNK cresce mais, até alcançar Tukey em
+$p=t$; e Tukey usa a régua máxima para todos os pares. É nos pares de amplitude intermediária e
+grande que o Duncan se afasta do Tukey.
+
+**Passo 4 — testar de cima para baixo.** A Figura \@ref(fig:c3c-feij-etapas) mostra as três etapas.
+Na primeira ($p=4$), $\bar y_{F4} - \bar y_{F1} = `r fm(pd_f$dif[1], 2)` > R_4 = `r fm(pd_f$R[1], 2)`$: F4 e F1
+diferem, e isso libera para teste os dois pares de amplitude 3 que ficam "dentro" desse arco. Na
+segunda ($p=3$), F2 − F1 = `r fmt(pd_f$dif[2], 2)` e F4 − F3 = `r fmt(pd_f$dif[3], 2)` são comparados com
+$R_3 = `r fm(pd_f$R[2], 2)`$, e os dois diferem. Na terceira ($p=2$), os três pares vizinhos são comparados
+com $R_2 = `r fm(pd_f$R[4], 2)`$: F3 − F1 = `r fmt(pd_f$dif[4], 2)`, F2 − F3 = `r fmt(pd_f$dif[5], 2)` e
+F4 − F2 = `r fmt(pd_f$dif[6], 3)`; nenhum difere. O último fica a apenas
+`r fmt(pd_f$R[6] - pd_f$dif[6], 3)` kg da régua — uma decisão frágil, que uma única parcela poderia inverter,
+e que por isso deve ser reportada com a diferença e seu intervalo, não só com "=".
+
+```{r c3c-feij-etapas, echo=FALSE, fig.width=7.6, fig.height=8.4, out.width="95%", fig.cap="As três etapas do teste de Duncan nos dados de feijão. Em cada painel, os arcos da etapa corrente estão em destaque (verde: diferença significativa; vermelho: não significativa) com a diferença observada e a régua; arcos de etapas anteriores aparecem claros, coloridos pelo resultado, e os das etapas seguintes em cinza."}
+gridExtra::grid.arrange(
+  plot_etapa(pd_f, ms_f, 4) + ggtitle("Etapa 1: amplitude p = 4"),
+  plot_etapa(pd_f, ms_f, 3) + ggtitle("Etapa 2: amplitude p = 3"),
+  plot_etapa(pd_f, ms_f, 2) + ggtitle("Etapa 3: amplitude p = 2 (vizinhas)"),
+  ncol = 1)
+```
+
+**A regra de coerência em ação.** Nos dados reais, todas as comparações das etapas 1 e 2 foram
+significativas, e a regra de coerência não chegou a atuar. Para vê-la funcionar, imagine o mesmo
+experimento com as **mesmas médias**, mas muito mais ruidoso, com $QME = 9$ (Figura
+\@ref(fig:c3c-feij-coerencia)). Agora a comparação de ponta a ponta já falha, e os pares de
+amplitude 3 e 2 **nem são testados**: se nem as médias mais afastadas diferem, nenhum par contido
+entre elas pode diferir. É essa regra que impede o procedimento de produzir a contradição "F1 e F4
+são iguais, mas F1 e F2 diferem".
+
+```{r c3c-feij-coerencia, echo=FALSE, fig.width=7.6, fig.height=2.9, out.width="95%", fig.cap="Cenário hipotético com as mesmas médias de feijão e QME = 9: a comparação de amplitude 4 não é significativa (arco claro avermelhado) e, pela regra de coerência, os pares de amplitude 3 (roxo) e 2 não são testados."}
+pd_ruido <- passos_amplitude(med_f, 9, 5, gl_f, "Duncan")
+plot_etapa(pd_ruido, ms_f, 3)
+```
+
+**Passo 5 — das decisões aos traços e às letras.** O resultado se resume num diagrama de **traços**
+(Figura \@ref(fig:c3c-feij-tracos)): um traço sob um grupo de médias consecutivas indica que nenhum
+par dentro dele difere. Cada traço vira uma **letra** (a para o grupo que contém a maior média). Pelo
+Duncan, os grupos são {F1, F3}, {F3, F2} e {F2, F4}, donde F1 = c, F3 = bc, F2 = ab e F4 = a. Pelo
+Tukey, os grupos são {F1, F3, F2} e {F2, F4}, donde F1 = b, F3 = b, F2 = ab e F4 = a.
+
+```{r c3c-feij-tracos, echo=FALSE, fig.width=7.6, fig.height=3.4, out.width="95%", fig.cap="Diagrama de traços para os dados de feijão pelo Duncan (acima) e pelo Tukey (abaixo): médias ligadas por um mesmo traço não diferem pelo critério correspondente; ao lado de cada média, a letra resultante."}
+pk_f <- passos_amplitude(med_f, qme_f, 5, gl_f, R_fixo = qtukey(0.95, 4, gl_f) * se_f)
+plot_tracos(list(Duncan = pd_f, Tukey = pk_f), ms_f)
+```
+
+A conferência com o `agricolae` reproduz os valores de $r_p$ e $R_p$ e as letras; o que o pacote
+não mostra é o caminho — as etapas e a regra de coerência —, que é justamente o que explica o
+resultado:
+
+```{r c3c-feij-agricolae}
+dt <- agricolae::duncan.test(mod_feijao, "Fertilizante", console = FALSE)
+dt$duncan            # r_p ("Table") e R_p ("CriticalRange") para p = 2, 3, 4
+dt$groups            # médias ordenadas da maior para a menor, com as letras
+```
+
+**Onde Duncan e Tukey discordam.** O par F2 − F1, com `r fmt(med_f["F2"] - med_f["F1"], 2)` kg, é
+declarado diferente pelo Duncan e pelo SNK e não pelo Tukey, pelo Bonferroni nem pelo Scheffé
+(Figura \@ref(fig:c3c-feij-discorda)). Os dados não mudaram; mudou a **garantia** pedida. O Duncan
+julga esse par com proteção $\alpha_3 = 1-0{,}95^2 \approx 9{,}75\%$, e a família de comparações, sob
+$H_0$ completa, com $\alpha_4 \approx 14\%$.
+
+```{r c3c-feij-discorda, echo=FALSE, fig.width=8, fig.height=3.2, fig.cap="A diferença observada entre F2 e F1 (linha vermelha) contra a régua de cada procedimento: barras verdes são réguas menores que a diferença (o procedimento declara F2 diferente de F1), barras cinza, réguas maiores."}
+dif21 <- unname(med_f["F2"] - med_f["F1"])
+tibble(metodo = c("Duncan (p = 3)", "SNK (p = 3)", "Tukey", "Bonferroni", "Scheffé"),
+       R = c(reg_f$R_Duncan[2], reg_f$R_SNK[2], reg_f$R_Tukey[1],
+             qt(1 - 0.05 / 12, gl_f) * sqrt(2) * se_f, sqrt(3 * qf(0.95, 3, gl_f)) * sqrt(2) * se_f)) %>%
+  mutate(decisao = ifelse(dif21 > R, "declara F2 diferente de F1", "não declara")) %>%
+  ggplot(aes(R, fct_rev(factor(metodo, levels = metodo)), fill = decisao)) +
+  geom_col(width = 0.6) + geom_vline(xintercept = dif21, color = "#c0392b", linewidth = 1.1) +
+  geom_text(aes(label = fmt(R, 2)), hjust = 1.15, color = "white", size = 3.8) +
+  scale_fill_manual(values = c(`declara F2 diferente de F1` = "#2e8b57", `não declara` = "grey55"), name = NULL) +
+  coord_cartesian(xlim = c(0, 3.1)) + labs(x = "régua (kg)", y = NULL) +
+  theme_minimal(base_size = 12) + theme(legend.position = "top")
+```
+
+A leitura prática é a de sempre, agora com um exemplo concreto: o Duncan é uma ferramenta de
+**triagem** — útil para apontar candidatos promissores para um próximo experimento —, mas uma
+**conclusão** que vai virar recomendação a produtores ("F2 rende mais que F1") precisa de um
+procedimento que controle o FWER, como Tukey, ou Dunnett se houver uma testemunha. A função
+`passos_amplitude()` de `comparacoes_helpers.R`, usada nas figuras desta subseção, devolve a tabela
+completa de etapas para qualquer conjunto de médias, com `metodo = "Duncan"` ou `"SNK"`.
+
+### A questão do ordenamento: procedimentos em etapas {#ordenamento}
+
+Duncan e SNK dependem da **ordem** das médias observadas, e isso merece uma discussão própria,
+porque é onde mora tanto a sua lógica quanto o seu problema.
+
+**Por que faz sentido a régua depender da posição.** Sob $H_0$, a distância esperada entre o
+maior e o menor de $p$ valores aleatórios cresce com $p$. Uma diferença de 70 ms entre duas médias
+vizinhas na ordenação é, portanto, mais surpreendente do que a mesma diferença entre os extremos de
+quatro médias — os extremos estão longe "por construção". Os procedimentos em etapas exigem mais
+das amplitudes maiores por essa razão.
+
+**A regra de coerência.** O teste começa pela amplitude $t$ (maior contra menor); uma amplitude
+menor só é examinada se **todas** as amplitudes que a contêm tiverem sido significativas. Isso
+evita a contradição de declarar diferentes duas médias que estão dentro de um grupo já declarado
+homogêneo.
+
+**O problema conceitual.** A posição $p$ de um par é **ela própria aleatória**: depende das médias
+observadas, não de algo fixado antes dos dados. A garantia de Duncan e SNK vale para "amplitudes
+de médias ordenadas", não para pares de tratamentos escolhidos de antemão — e é por isso que
+nenhum dos dois controla o FWER em geral. Tukey evita o problema aplicando a todos os pares a régua
+dos extremos, o pior caso.
+
+**Ordenar também é uma pergunta.** Em muitas aplicações a pergunta não é "quais pares diferem?",
+e sim "qual é o melhor (ou o pior) tratamento?". Um ranking só se sustenta onde as médias se
+separam com segurança; quando duas médias vizinhas não se distinguem, a ordem entre elas é
+essencialmente aleatória. A Seção \@ref(ranking-scripts) quantifica isso nos dados.
+
+### Todos os procedimentos nos mesmos dados {#reguas-dados}
+
+A Tabela \@ref(tab:c3c-difs) lista as seis diferenças observadas, da menor para a maior, com a
+amplitude de cada par na ordenação Nenhum < Analytics < Anúncios < Combo.
+
+```{r c3c-difs, echo=FALSE}
+ord <- sort(medias)
+pares_tab <- combn(names(ord), 2) %>% t() %>% as_tibble(.name_repair = ~ c("menor", "maior")) %>%
+  mutate(dif = ord[maior] - ord[menor],
+         p_amp = match(maior, names(ord)) - match(menor, names(ord)) + 1,
+         t = dif / sqrt(2 * qme / 10), p_sem = 2 * pt(-abs(t), 36)) %>%
+  arrange(dif)
+pares_tab %>% transmute(Par = paste(maior, "−", menor), `Diferença (ms)` = fmt(dif),
+                        `Amplitude p` = p_amp, t = fmt(t, 2), `p (sem correção)` = fp(p_sem)) %>%
+  kable(align = "lrcrr", caption = "As seis diferenças entre médias, ordenadas, com a amplitude de cada par e o teste t sem correção") %>%
+  kable_styling(full_width = FALSE)
+```
+
+Todas as diferenças têm o mesmo erro-padrão, $\sqrt{2QME/10} = `r fm(sqrt(2 * qme / 10))`$ ms. O código a
+seguir calcula a régua (DMS) de cada procedimento nestes dados:
+
+```{r c3c-reguas}
+ep1 <- sqrt(qme / 10); ep2 <- sqrt(2 * qme / 10); nu <- 36; tt <- 4; m_par <- choose(4, 2)
+d_dunnett <- attr(confint(glht(mod_scripts, linfct = mcp(config = "Dunnett")))$confint, "calpha")
+reguas <- tibble(
+  Procedimento = c("LSD", "Duncan p=2", "Duncan p=3", "Duncan p=4", "SNK p=2", "SNK p=3",
+                   "SNK p=4", "Dunnett", "Tukey", "Bonferroni", "Scheffé"),
+  DMS = c(qt(0.975, nu) * ep2,
+          sapply(2:4, function(p) qtukey(0.95^(p - 1), p, nu)) * ep1,  # Duncan: nível alpha_p
+          sapply(2:4, function(p) qtukey(0.95, p, nu)) * ep1,          # SNK: nível alpha fixo
+          d_dunnett * ep2, qtukey(0.95, tt, nu) * ep1,
+          qt(1 - 0.05 / (2 * m_par), nu) * ep2, sqrt((tt - 1) * qf(0.95, tt - 1, nu)) * ep2))
+reguas %>% mutate(DMS = round(DMS, 1)) %>% as.data.frame()
+```
+
+Do LSD (`r fmt(reguas$DMS[1])` ms) ao Scheffé (`r fmt(reguas$DMS[11])` ms) a régua fica
+`r round(100 * (reguas$DMS[11] / reguas$DMS[1] - 1))`% mais longa. A Figura \@ref(fig:c3c-plot-reguas) põe todas as
+réguas contra as diferenças observadas.
+
+```{r c3c-plot-reguas, echo=FALSE, fig.width=9, fig.height=4.6, out.width="100%", fig.cap="Diferença mínima significativa de cada procedimento (barras azuis) e as seis diferenças observadas entre médias (linhas pontilhadas laranja, rotuladas no topo). Um par é declarado diferente pelo procedimento quando sua linha pontilhada fica à direita do fim da barra."}
+ordem_proc <- rev(reguas$Procedimento)
+ggplot(reguas, aes(DMS, factor(Procedimento, levels = ordem_proc))) +
+  geom_vline(data = pares_tab, aes(xintercept = dif), color = "#d98324", linetype = "dotted") +
+  geom_segment(aes(x = 0, xend = DMS, yend = factor(Procedimento, levels = ordem_proc)),
+               color = "#0B4F6C", linewidth = 1.4) +
+  geom_point(color = "#0B4F6C", size = 2.5) +
+  annotate("text", x = pares_tab$dif, y = 11.9, angle = 90, hjust = 1, size = 3, color = "#b06010",
+           label = paste0(substr(pares_tab$maior, 1, 4), "−", substr(pares_tab$menor, 1, 4))) +
+  coord_cartesian(xlim = c(0, 265), ylim = c(1, 12)) +
+  labs(x = "Diferença mínima significativa (ms)", y = NULL) +
+  theme_minimal(base_size = 12)
+```
+
+```{r c3c-decide-func, echo=FALSE}
+# Decisão de cada procedimento para todos os pares, a partir das médias, do QME, de n e do gl.
+# Duncan e SNK seguem a regra de coerência: da maior amplitude para a menor.
+decide_pares <- function(m, qme, n, nu, alpha = 0.05) {
+  t <- length(m); pares <- combn(t, 2); se <- sqrt(qme / n)
+  k_dun <- c(NA, sapply(2:t, function(p) qtukey((1 - alpha)^(p - 1), p, nu)))
+  k_snk <- c(NA, sapply(2:t, function(p) qtukey(1 - alpha, p, nu)))
+  em_etapas <- function(k) {
+    o <- order(m); ms <- m[o]; sig <- matrix(FALSE, t, t)
+    for (p in t:2) for (i in 1:(t - p + 1)) { j <- i + p - 1
+      pode <- p == t || ((i == 1 || sig[i - 1, j]) && (j == t || sig[i, j + 1]))
+      sig[i, j] <- pode && (ms[j] - ms[i] > k[p] * se) }
+    r <- match(seq_len(t), o)
+    sig[cbind(pmin(r[pares[1, ]], r[pares[2, ]]), pmax(r[pares[1, ]], r[pares[2, ]]))]
+  }
+  dif <- abs(m[pares[1, ]] - m[pares[2, ]])
+  F_obs <- n * sum((m - mean(m))^2) / (t - 1) / qme
+  list(`LSD sem proteção` = dif > qt(1 - alpha / 2, nu) * sqrt(2) * se,
+       `LSD protegido` = (F_obs > qf(1 - alpha, t - 1, nu)) & dif > qt(1 - alpha / 2, nu) * sqrt(2) * se,
+       Duncan = em_etapas(k_dun), SNK = em_etapas(k_snk),
+       Tukey = dif > qtukey(1 - alpha, t, nu) * se,
+       Bonferroni = dif > qt(1 - alpha / (2 * ncol(pares)), nu) * sqrt(2) * se,
+       `Scheffé` = dif > sqrt(2 * (t - 1) * qf(1 - alpha, t - 1, nu)) * se)
+}
+```
+
+```{r c3c-decisoes, echo=FALSE}
+dec <- decide_pares(medias, qme, 10, 36)
+pares_nomes <- combn(names(medias), 2)
+as_tibble(lapply(dec, function(d) ifelse(d, "≠", "="))) %>%
+  mutate(Par = paste(pares_nomes[2, ], "−", pares_nomes[1, ]),
+         `Diferença` = fmt(abs(medias[pares_nomes[2, ]] - medias[pares_nomes[1, ]])), .before = 1) %>%
+  kable(align = "lrccccccc", caption = "Decisão de cada procedimento para cada par (≠: diferença declarada significativa a 5%)") %>%
+  kable_styling(full_width = FALSE) %>% row_spec(1, bold = TRUE)
+```
+
+Os procedimentos concordam em cinco dos seis pares: as diferenças grandes (acima de 130 ms)
+sobrevivem a qualquer correção, e Anúncios − Combo (`r fmt(pares_tab$dif[1])` ms) não é significativa por
+nenhum método. Toda a divergência está no par **Analytics − Nenhum** (`r fmt(pares_tab$dif[2])` ms), que
+cai entre a régua de Bonferroni (`r fmt(reguas$DMS[10])` ms) e a de Scheffé (`r fmt(reguas$DMS[11])` ms): é
+declarado diferente por LSD, Duncan, SNK, Dunnett, Tukey e Bonferroni, e só o Scheffé não o
+declara. O exemplo ilustra bem a hierarquia das réguas e o fato de que a escolha do procedimento só
+importa nos casos de fronteira — razão a mais para fixá-la no protocolo.
+
+A Tabela \@ref(tab:c3c-snk-passos) mostra o SNK aplicado passo a passo, com a regra de coerência:
+começa-se pela amplitude 4 (Combo − Nenhum); só porque ela foi significativa as amplitudes 3 são
+testadas, e só porque estas foram as vizinhas são testadas.
+
+```{r c3c-snk-passos, echo=FALSE}
+r_snk <- setNames(reguas$DMS[5:7], 2:4)
+pares_tab %>% arrange(desc(p_amp), desc(dif)) %>%
+  mutate(Etapa = row_number(), Par = paste(maior, "−", menor),
+         DMS = r_snk[as.character(p_amp)], `Decisão` = ifelse(dif > DMS, "≠", "=")) %>%
+  transmute(Etapa, Par, `Amplitude p` = p_amp, `Diferença` = fmt(dif), `DMS (SNK)` = fmt(DMS), `Decisão`) %>%
+  kable(align = "clcrrc", caption = "SNK em etapas: da maior amplitude para a menor") %>%
+  kable_styling(full_width = FALSE)
+```
+
+E a dependência da posição fica explícita imaginando uma diferença hipotética de 75 ms: pelo SNK
+ela seria significativa entre médias vizinhas (régua de `r fmt(reguas$DMS[5])` ms) ou separadas por
+uma média (`r fmt(reguas$DMS[6])` ms), mas não entre os extremos (`r fmt(reguas$DMS[7])` ms); por Tukey,
+a régua é `r fmt(reguas$DMS[9])` ms para qualquer posição, e os 75 ms nunca seriam significativos.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — Tukey, Bonferroni, Scheffé, Dunnett, Duncan e agrupamento</div>
@@ -2065,57 +2840,234 @@ multcomp::cld(emm_scripts, Letters = letters, adjust = "tukey")
 # Teste de Duncan (amplitude múltipla): fora do R base, via agricolae
 duncan_scripts <- agricolae::duncan.test(mod_scripts, "config", console = FALSE)
 duncan_scripts$groups   # médias ordenadas + agrupamento por letras (Duncan)
+duncan_scripts$duncan   # amplitudes mínimas significativas R_p para p = 2, 3, 4
 ```
+
+```{r c3c-dunnett-uni}
+# Dunnett unilateral: a pergunta do protocolo é "o script PIORA o tempo?"
+g_uni <- glht(mod_scripts, linfct = mcp(config = "Dunnett"), alternative = "greater")
+summary(g_uni)
+```
+
+Dois detalhes desta saída merecem comentário. Primeiro, o par Analytics − Nenhum tem p ≈ 0,017 por
+Dunnett e p ≈ 0,029 por Tukey: Dunnett corrige para três comparações (só contra o controle), Tukey
+para seis. Se a pergunta do protocolo é apenas "cada script piora em relação a nenhum?", pagar por
+seis comparações é desperdiçar poder. Segundo, na versão unilateral o p-valor desse par cai para
+cerca de metade — legítimo aqui porque nenhum script de terceiros **acelera** uma página e a
+direção foi fixada antes da coleta; escolher "unilateral" depois de ver o sinal da diferença seria
+mais uma forma de *data snooping*.
 
 O agrupamento de Duncan reaparece na coluna `groups` acima: neste conjunto de dados, ele coincide
-com o `cld()` de Tukey exibido antes (mesma partição em três grupos, "a"/"b"/"c"), porque os
-quatro efeitos de configuração são grandes o bastante para que até o critério mais rigoroso de
-Tukey já os separe. A diferença entre os dois métodos fica visível justamente nos casos de
-fronteira — pares cuja diferença observada fica **entre** o valor crítico mais liberal de Duncan
-para aquela amplitude e o valor crítico único, mais conservador, de Tukey; nesses casos, e só
-neles, Duncan declara significativo um par que Tukey não declara, exatamente o preço, discutido
-acima, de usar valores críticos $R_p$ menores para amplitudes pequenas sem controlar
-rigorosamente o FWER no nível nominal.
+com o `cld()` de Tukey exibido antes (mesma partição em três grupos), porque os efeitos de
+configuração são grandes o bastante para que até o critério mais rigoroso de Tukey já os separe.
+A diferença entre os dois métodos fica visível justamente nos casos de fronteira — pares cuja
+diferença observada fica **entre** o valor crítico mais liberal de Duncan para aquela amplitude e o
+valor crítico único, mais conservador, de Tukey (aqui, entre `r fmt(reguas$DMS[2])` e
+`r fmt(reguas$DMS[9])` ms para vizinhas); nesses casos, e só neles, Duncan declara significativo um par
+que Tukey não declara.
 
-```{r c3b-plot-cld, echo=FALSE, fig.width=6.5, fig.height=4}
-ggplot(dados_scripts, aes(x = config, y = tempo_ms, fill = config)) +
-  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
-  labs(x = NULL, y = "Tempo de carregamento (ms)",
-       title = "Tempo de carregamento por configuração de scripts") +
-  theme_minimal(base_size = 13)
-```
-
-Note que os quatro procedimentos concordam nas conclusões mais nítidas (Nenhum difere de todos os
-demais) mas divergem nos casos de fronteira: Bonferroni e Scheffé — os mais conservadores — não
-rejeitam a diferença entre "Nenhum" e "Analytics" ao nível de 5%, enquanto Tukey a considera
-significativa. Não existe um procedimento universalmente "correto"; a escolha depende de qual
-família de comparações reflete a pergunta de pesquisa.
-
-```{r c3b-plot-tukey-ic, echo=FALSE, fig.width=7, fig.height=3.8}
+```{r c3b-plot-tukey-ic, echo=FALSE, fig.width=7.5, fig.height=3.8, fig.cap="Intervalos de confiança de 95% para as seis diferenças entre médias: simultâneos de Tukey (azul) e individuais, sem correção (laranja). Um par difere quando o intervalo não cruza o zero (linha tracejada)."}
 ic_tukey <- as.data.frame(confint(pairs(emm_scripts, adjust = "tukey")))
-ggplot(ic_tukey, aes(x = estimate, y = reorder(contrast, estimate))) +
+ic_lsd   <- as.data.frame(confint(pairs(emm_scripts, adjust = "none")))
+bind_rows(mutate(ic_tukey, metodo = "Tukey (simultâneo)"), mutate(ic_lsd, metodo = "t sem correção")) %>%
+  ggplot(aes(x = estimate, y = reorder(contrast, estimate), color = metodo)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
-  geom_pointrange(aes(xmin = lower.CL, xmax = upper.CL), color = "#0B4F6C", linewidth = 0.8) +
-  labs(x = "Diferença estimada (ms)", y = NULL,
-       title = "Intervalos de confiança simultâneos (Tukey HSD, 95%)") +
-  theme_minimal(base_size = 13)
+  geom_pointrange(aes(xmin = lower.CL, xmax = upper.CL), linewidth = 0.8,
+                  position = position_dodge(width = 0.5)) +
+  scale_color_manual(values = c("#d98324", "#0B4F6C")) +
+  labs(x = "Diferença estimada (ms)", y = NULL, color = NULL) +
+  theme_minimal(base_size = 12) + theme(legend.position = "top")
 ```
 
-Um par difere significativamente quando seu IC não cruza zero: só "Anúncios − Combo" cruza,
-confirmando $SQ_{L_3}$ não significativo da partição por contrastes ortogonais.
+Os intervalos de Tukey são `r round(100 * (qtukey(0.95, 4, 36) / sqrt(2) / qt(0.975, 36) - 1))`% mais largos que os
+individuais: é o preço de a garantia de 95% valer para os seis ao mesmo tempo. Só
+"Anúncios − Combo" cruza zero nos dois casos, confirmando o $SQ_{L_3}$ não significativo da partição
+por contrastes ortogonais.
+
+### Agrupamento de tratamentos (*compact letter display*)
+
+Uma forma compacta de reportar o resultado de comparações múltiplas par a par é atribuir letras
+às médias: tratamentos que compartilham pelo menos uma letra **não** diferem significativamente
+entre si; tratamentos sem letra em comum diferem. Essa representação (*compact letter display*,
+CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos. As letras em si são
+arbitrárias — o `cld()` do `multcomp` começa pela menor média, o `agricolae` pela maior —; o que
+importa é se há letra em comum. A Figura \@ref(fig:c3c-plot-letras) é a forma de relatório: dados,
+médias com intervalo e letras de Tukey numa só figura.
+
+```{r c3c-plot-letras, echo=FALSE, fig.width=7.5, fig.height=4.2, fig.cap="Tempos individuais (cinza), médias com IC de 95% (azul) e letras do agrupamento de Tukey: configurações com letra em comum não diferem a 5% (FWER)."}
+letras <- multcomp::cld(emm_scripts, Letters = letters, adjust = "tukey") %>% as.data.frame()
+ggplot(letras, aes(config, emmean)) +
+  geom_jitter(data = dados_scripts, aes(config, tempo_ms), width = 0.08, alpha = 0.3, color = "grey40") +
+  geom_pointrange(aes(ymin = lower.CL, ymax = upper.CL), color = "#0B4F6C", linewidth = 0.9) +
+  geom_text(aes(y = upper.CL + 70, label = trimws(.group)), size = 6, fontface = "bold", color = "#8b2e6e") +
+  labs(x = NULL, y = "Tempo de carregamento (ms)") + theme_minimal(base_size = 13)
+```
+
+O CLD tem, porém, um defeito conhecido: um tratamento pode receber **duas** letras ("ab"), ficando
+"igual" a dois grupos que são diferentes entre si — o que não é ambiguidade dos dados, e sim do
+procedimento, que testa pares e depois tenta resumir os resultados em grupos. Veremos isso
+acontecer nos dados de cafeína, na próxima seção.
+
+### Scott-Knott: grupos que não se sobrepõem {#scott-knott}
+
+O método de Scott e Knott [-@scottknott1974cluster] ataca o problema por outro caminho: em vez de
+testar pares, **particiona** o conjunto de médias ordenadas em grupos disjuntos, por um critério de
+máxima verossimilhança. O algoritmo é recursivo: (1) ordenar as $k$ médias; (2) entre as $k-1$
+bipartições possíveis que respeitam a ordem, achar a que maximiza a soma de quadrados entre os dois
+grupos, $B_0$; (3) testar se $B_0$ é grande demais para ser acaso, pela estatística
+
+$$\lambda=\frac{\pi}{2(\pi-2)}\cdot\frac{B_0}{\hat\sigma_0^2} \;\dot\sim\; \chi^2_{\,k/(\pi-2)}, \qquad \hat\sigma_0^2=\frac{\sum_i n_i(\bar y_i-\bar y)^2+\nu\,QME}{k+\nu};$$
+
+(4) se for, dividir e repetir o procedimento em cada parte. O algoritmo cabe em poucas linhas:
+
+```{r c3c-scott-knott}
+sk <- function(med, n_i, QME, gl, alpha = 0.05) {
+  grupo <- rep(1L, length(med)); prox <- 2L
+  parte <- function(idx) {
+    if (length(idx) < 2) return(invisible(NULL))
+    m_ <- med[idx]; n_ <- n_i[idx]; k <- length(idx)
+    B0 <- sapply(1:(k - 1), function(j) {
+      T1 <- sum(n_[1:j] * m_[1:j]); T2 <- sum(n_[(j+1):k] * m_[(j+1):k])
+      T1^2 / sum(n_[1:j]) + T2^2 / sum(n_[(j+1):k]) - (T1 + T2)^2 / sum(n_)
+    })
+    j <- which.max(B0)
+    s2_0   <- (sum(n_ * (m_ - mean(m_))^2) + gl * QME) / (k + gl)
+    lambda <- (pi / (2 * (pi - 2))) * max(B0) / s2_0
+    if (lambda > qchisq(1 - alpha, k / (pi - 2))) {      # divide e recorre
+      novos <- idx[(j+1):k]; grupo[novos] <<- prox; prox <<- prox + 1L
+      parte(idx[1:j]); parte(novos)
+    }
+  }
+  parte(seq_along(med)); grupo
+}
+med_ord <- sort(medias); g_sk <- sk(med_ord, ns[names(med_ord)], qme, gl_erro)
+tibble(`Configuração` = names(med_ord), `Média (ms)` = round(med_ord, 1),
+       `Scott-Knott` = LETTERS[match(g_sk, unique(g_sk))])
+```
+
+Três grupos disjuntos, os mesmos de Tukey aqui. O pacote `ScottKnott` (função `SK()`) devolve o
+mesmo resultado; implementá-lo à mão é deliberado, para que a lógica de partição fique visível.
+
+### Ordenamento como pergunta: quem é o mais lento? {#ranking-scripts}
+
+A ordem observada das médias é Combo > Anúncios > Analytics > Nenhum. Com que segurança se pode
+dizer que o Combo é a configuração mais lenta? Uma forma simples de responder é tratar as médias
+verdadeiras como incertas, com $\mu_i \sim N(\bar y_{i\cdot}, QME/n)$ — uma aproximação de bootstrap
+paramétrico (ou a posteriori com priori plana) —, sortear muitas vezes as quatro médias e registrar
+a posição de cada configuração no ranking.
+
+```{r c3c-rank-prob, fig.width=7.5, fig.height=3.2, fig.cap="Probabilidade aproximada de cada configuração ocupar cada posição no ranking de tempo de carregamento (1 = mais lenta), obtida sorteando 10.000 vezes as médias de N(média observada, QME/n)."}
+set.seed(11)
+sim_m <- sapply(medias, function(mu) rnorm(10000, mu, sqrt(qme / 10)))
+pos <- t(apply(-sim_m, 1, rank))       # posição 1 = mais lenta
+prob_rank <- map_dfr(colnames(pos), function(cfg)
+  tibble(config = cfg, posicao = 1:4, prob = sapply(1:4, function(k) mean(pos[, cfg] == k))))
+ggplot(prob_rank, aes(factor(posicao), factor(config, levels = rev(names(medias))), fill = prob)) +
+  geom_tile(color = "white") + geom_text(aes(label = scales::percent(prob, 1)), size = 4.2) +
+  scale_fill_gradient(low = "white", high = "#0B4F6C", guide = "none") +
+  labs(x = "Posição no ranking (1 = mais lenta)", y = NULL) + theme_minimal(base_size = 12)
+```
+
+Nenhum é a mais rápida e Analytics a segunda com probabilidade praticamente 1. Mas o Combo é o mais
+lento em só cerca de `r round(100 * mean(pos[, "Combo"] == 1))`% dos sorteios: a ordem entre Combo e Anúncios não é
+sustentada pelos dados, o mesmo que dizem Tukey, o contraste $L_3$ e o intervalo de confiança da
+diferença. O ranking que os dados permitem é parcial: Nenhum < Analytics < {Anúncios, Combo}.
+
+### Quanto custa ser liberal: o FWER simulado {#fwer-simulada}
+
+A discussão sobre quem controla o FWER e em que condições fica concreta com uma simulação.
+Repetimos 2.000 vezes um experimento com o mesmo desenho ($t = 4$, $n = 10$, $\sigma = 70$ ms) em
+dois cenários: $H_0$ completa (quatro médias iguais) e $H_0$ parcial (duas configurações iguais
+entre si, outras duas iguais entre si, com 200 ms entre os pares). Em cada repetição registramos se
+**algum par de médias verdadeiramente iguais** foi declarado diferente.
+
+```{r c3c-sim-fwer, fig.width=9, fig.height=3.8, fig.cap="Taxa de erro por família (FWER) estimada em 2.000 repetições do experimento para cada procedimento, sob H0 completa (esquerda) e sob H0 parcial (direita). A linha tracejada marca o nível nominal de 5%."}
+fwer_sim <- function(mu, n = 10, sigma = 70, B = 2000) {
+  t <- length(mu); pares <- combn(t, 2); nulos <- mu[pares[1, ]] == mu[pares[2, ]]
+  rowMeans(replicate(B, {
+    y <- matrix(rnorm(n * t, rep(mu, each = n), sigma), n)
+    sapply(decide_pares(colMeans(y), mean(apply(y, 2, var)), n, t * (n - 1)),
+           function(d) any(d[nulos]))
+  }))
+}
+set.seed(2027)
+fw <- bind_rows(
+  enframe(fwer_sim(c(0, 0, 0, 0)), "metodo", "fwer") %>% mutate(cenario = "H0 completa: 4 médias iguais"),
+  enframe(fwer_sim(c(0, 0, 200, 200)), "metodo", "fwer") %>%
+    mutate(cenario = "H0 parcial: 2 pares iguais, 200 ms entre pares"))
+ggplot(fw, aes(fwer, factor(metodo, levels = rev(names(dec))))) +
+  geom_col(fill = "#0B4F6C", width = 0.65) +
+  geom_vline(xintercept = 0.05, color = "#d98324", linetype = "dashed") +
+  geom_text(aes(label = scales::percent(fwer, 0.1, decimal.mark = ",")), hjust = -0.15, size = 3.3) +
+  facet_wrap(~ cenario) + scale_x_continuous(labels = scales::percent, limits = c(0, 0.25)) +
+  labs(x = "FWER simulado", y = NULL) + theme_minimal(base_size = 11)
+```
+
+```{r c3c-fwer-vals, include=FALSE}
+fwv <- function(m, c) fw$fwer[fw$metodo == m & grepl(c, fw$cenario)]
+```
+
+O resultado organiza toda a discussão anterior. Sob $H_0$ completa, os testes $t$ sem correção
+erram em `r scales::percent(fwv("LSD sem proteção", "completa"), 1)` das repetições e o Duncan em
+`r scales::percent(fwv("Duncan", "completa"), 1)` (o valor teórico é $\alpha_4 \approx 14{,}3\%$), enquanto LSD protegido,
+SNK e Tukey ficam em torno de 5% e Bonferroni e Scheffé abaixo disso. Sob $H_0$ **parcial**, porém,
+LSD protegido e SNK sobem para `r scales::percent(fwv("SNK", "parcial"), 1)`: o $F$ global é sempre significativo (há
+200 ms entre os pares), de modo que a "proteção" desaparece, e os dois pares de médias iguais, que
+ficam vizinhos na ordenação, são testados cada um ao nível de 5% — $1-0{,}95^2 \approx 9{,}75\%$.
+Tukey, Bonferroni e Scheffé ficam abaixo de 5% nos dois cenários: é isso que significa "controlar o
+FWER em sentido forte".
+
+### *Data snooping* na prática {#snooping-pratica}
+
+Suponha agora que a comparação Analytics − Nenhum **não** estivesse no protocolo: alguém olhou a
+Figura \@ref(fig:c3c-plot-dados-scripts) e decidiu testá-la. A régua honesta para um contraste
+sugerido pelos dados é a de Scheffé.
+
+```{r c3c-snooping}
+L_an <- medias["Analytics"] - medias["Nenhum"]; t_an <- unname(L_an / sqrt(2 * qme / 10))
+c(t_obs = t_an, t_crit_planejado = qt(0.975, 36), t_crit_Scheffe = sqrt(3 * qf(0.95, 3, 36)))
+c_snoop <- c(1, 1, -1, -1) / 2        # "sem anúncio" vs. "com anúncio", também sugerido pelo gráfico
+abs(sum(c_snoop * medias)) / sqrt(qme * sum(c_snoop^2) / 10)
+```
+
+Como contraste planejado, $t = `r fm(t_an, 2)`$ passaria folgado do valor crítico
+`r fmt(qt(0.975, 36), 2)`; como contraste sugerido pelos dados, o critério de Scheffé exige
+`r fmt(sqrt(3 * qf(0.95, 3, 36)), 2)`, e o par fica por um fio abaixo dele. Já o contraste "sem anúncio
+vs. com anúncio", também inspirado pelo gráfico, dá
+$t = `r fm(abs(sum(c_snoop * medias)) / sqrt(qme * sum(c_snoop^2) / 10), 1)`$ e passa por qualquer régua. A
+lição é geral: efeitos grandes não precisam de planejamento para sobreviver a uma correção honesta;
+os de fronteira, sim.
+
+### O que as comparações múltiplas respondem nestes dados {#comparacoes-respostas}
+
+1. **Quais configurações diferem entre si?** Todas, exceto Anúncios e Combo (Tukey, FWER de 5%). A
+   conclusão sobre Analytics × Nenhum depende do procedimento: só o Scheffé não a sustenta.
+2. **Cada script piora em relação a nenhum?** Sim, os três (Dunnett): Analytics
+   +`r round(medias[2] - medias[1])` ms, Anúncios +`r round(medias[3] - medias[1])` ms, Combo +`r round(medias[4] - medias[1])` ms.
+3. **É possível ordenar as quatro configurações?** Só parcialmente: Nenhum < Analytics <
+   {Anúncios, Combo}; afirmar que "o Combo é o pior" não é sustentado.
+4. **Que procedimento reportar?** O que responde à pergunta do protocolo — Dunnett para "contra o
+   controle", Tukey para "todos os pares". Reportar o procedimento que produziu mais asteriscos é
+   *data snooping* de procedimento.
 
 ```{=html}
 <div class="caixa-discussao">
 <strong>Para discutir</strong>
 <ol>
 <li>Por que faz sentido usar Dunnett (não Tukey) quando a única pergunta de interesse é "cada
-configuração aumenta o tempo de carregamento em relação a não usar nenhum script?"</li>
+configuração aumenta o tempo de carregamento em relação a não usar nenhum script?" E por que, nesse
+caso, a versão unilateral é legítima?</li>
 <li>Um pesquisador roda a ANOVA, olha os dados, percebe uma diferença "interessante" entre dois
 grupos que não tinha planejado comparar, e testa essa diferença com um teste $t$ comum. Por que
 isso viola as premissas por trás de todos os procedimentos desta seção, mesmo que o p-valor
-reportado pareça pequeno?</li>
-<li>Em que situação prática o conservadorismo extra do método de Scheffé compensa a perda de
-poder, em vez de ser simplesmente um custo a evitar?</li>
+reportado pareça pequeno? O que muda se ele usar Scheffé?</li>
+<li>O contraste $L_3$ (Anúncios contra Combo) não foi significativo, e um gerente conclui que "o
+chat não custa nada". O que você responderia, usando o intervalo de confiança de $L_3$ e o cálculo
+de tamanho amostral?</li>
+<li>Os três contrastes "cada script contra Nenhum" somaram mais que $SQ_{Trat}$. Isso indica um erro
+de conta? O que representa a soma "a mais"?</li>
+<li>Na simulação, LSD protegido e SNK controlaram o FWER sob $H_0$ completa, mas não sob $H_0$
+parcial. Explique o mecanismo, com base no teste $F$ preliminar e na regra de coerência.</li>
 <li>O teste de Duncan é mais liberal que Tukey porque usa um nível de proteção $\alpha_p$ que
 cresce com a amplitude $p$ da comparação, em vez de manter $\alpha$ fixo. Isso é uma vantagem ou
 uma desvantagem? Em que tipo de publicação você esperaria ver Duncan preferido a Tukey, apesar de
@@ -2160,14 +3112,75 @@ cafeina <- tibble(
 Um laboratório testa o efeito da cafeína (0, 50, 100, 150 e 200 mg) sobre o desempenho em um
 teste de atenção sustentada, aplicado 40 minutos após a ingestão. Quarenta participantes são
 sorteados em 5 grupos de 8 (<strong>UE = participante</strong>). Os níveis do fator — a dose — são
-quantitativos e igualmente espaçados em 50 mg, o cenário ideal para polinômios ortogonais.
+quantitativos e igualmente espaçados em 50 mg, o cenário ideal para polinômios ortogonais. As
+perguntas do laboratório: a atenção depende da dose? Mais cafeína é sempre melhor? Existe uma dose
+ótima? Como os dados são simulados, conhecemos a curva verdadeira — uma parábola com pico em
+0,35/(2 × 0,0013) ≈ 135 mg —, o que permitirá, ao final, avaliar o quanto a análise acertou.
 </div>
 ```
+
+A dose foi sorteada entre os participantes, e a atenção basal foi medida antes do sorteio. Por
+isso, quando a Seção \@ref(ancova) ajustar pela atenção basal, o ajuste vai ganhar **precisão**, não
+corrigir viés: o sorteio já garante que as doses não diferem, em média, na atenção basal.
+
+### Os dados {#dados-cafeina}
+
+```{r c3c-dados-cafeina, echo=FALSE}
+cafeina %>% mutate(part = rep(1:8, 5), atencao_pos = round(atencao_pos, 1)) %>%
+  pivot_wider(id_cols = part, names_from = dose, values_from = atencao_pos,
+              names_glue = "{dose} mg") %>%
+  rename(Participante = part) %>%
+  kable(caption = "Escore de atenção sustentada dos 40 participantes, por dose de cafeína") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r c3c-resumo-cafeina, echo=FALSE}
+resumo_caf <- cafeina %>% group_by(dose) %>%
+  summarise(n = n(), media = mean(atencao_pos), dp = sd(atencao_pos), .groups = "drop")
+resumo_caf %>% rename(`Dose (mg)` = dose, `Média` = media, DP = dp) %>%
+  kable(digits = 2, caption = "Média e desvio-padrão do escore de atenção por dose") %>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r c3c-plot-dados-cafeina, echo=FALSE, fig.width=8, fig.height=4.2, fig.cap="Escores individuais de atenção (cinza) e média por dose com IC de 95% calculado com o QME combinado (azul); a linha tracejada só liga as médias observadas, não é um modelo ajustado."}
+mod_poly <- aov(atencao_pos ~ dose, data = cafeina)
+qme_c <- summary(mod_poly)[[1]]["Residuals", "Mean Sq"]
+caf_num <- cafeina %>% mutate(d = as.numeric(as.character(dose)))
+ic_c <- resumo_caf %>% mutate(d = dose_mg, li = media - qt(0.975, 35) * sqrt(qme_c / 8),
+                              ls = media + qt(0.975, 35) * sqrt(qme_c / 8))
+ggplot(caf_num, aes(d, atencao_pos)) +
+  geom_jitter(width = 3, alpha = 0.45, color = "grey35") +
+  geom_line(data = ic_c, aes(d, media), color = "#0B4F6C", linetype = "dashed") +
+  geom_pointrange(data = ic_c, aes(d, media, ymin = li, ymax = ls), color = "#0B4F6C", size = 0.6) +
+  scale_x_continuous(breaks = dose_mg) +
+  labs(x = "Dose de cafeína (mg)", y = "Atenção sustentada (escore)") + theme_minimal(base_size = 13)
+```
+
+A média sobe muito de 0 para 50 mg (+`r fmt(resumo_caf$media[2] - resumo_caf$media[1], 1)` pontos), fica num
+platô entre 50 e 150 mg e cai em 200 mg. O grupo de 0 mg é o mais disperso (desvio-padrão, DP, de
+`r fmt(resumo_caf$dp[1], 1)`), mas nenhum DP é mais que o dobro de outro, o que é compatível com a
+homocedasticidade. Agora o eixo horizontal é **métrico**: a pergunta natural já não é "que doses
+diferem?", e sim "qual é a forma da curva dose-resposta?".
+
+A ANOVA global confirma o efeito da dose ($F = `r fm(summary(mod_poly)[[1]]$"F value"[1], 1)`$ em (4, 35) gl,
+$p < 0{,}0001$). Comparar as doses aos pares, porém, responde mal à pergunta:
+
+```{r c3c-cafeina-tukey}
+emm_caf <- emmeans(mod_poly, ~ dose)
+multcomp::cld(emm_caf, Letters = letters, adjust = "tukey") %>% as.data.frame() %>%
+  arrange(dose) %>% dplyr::select(dose, emmean, .group)
+```
+
+Tukey compara dez pares e devolve letras sobrepostas: 0 mg difere de todas as outras doses; 150 e
+200 mg diferem entre si; mas 50 e 100 mg ficam "iguais" às duas (letras "bc") — exatamente o defeito
+do CLD discutido na seção anterior. Além disso, a análise par a par ignora que 50 mg está **entre**
+0 e 100 mg: trataria do mesmo modo doses rotuladas como "A", "B", "C". Os polinômios ortogonais
+usam essa ordem e essa métrica.
 
 ### Esperança, variância e soma de quadrados
 
 Para níveis quantitativos igualmente espaçados e $n$ constante por grupo, existe uma tabela
-padrão de coeficientes ortogonais $\lambda_i$ (Fisher \& Yates) para cada grau do polinômio —
+padrão de coeficientes ortogonais $\lambda_i$ [@fisheryates1938tables] para cada grau do polinômio —
 linear, quadrático, cúbico etc. — com até $t-1$ graus disponíveis para $t$ níveis:
 
 ```{r c3b-tabela-poly, echo=FALSE}
@@ -2175,9 +3188,11 @@ tibble(
   Grau = c("Linear", "Quadrático", "Cúbico", "Quártico"),
   `0 mg` = c(-2, 2, -1, 1), `50 mg` = c(-1, -1, 2, -4),
   `100 mg` = c(0, -2, 0, 6), `150 mg` = c(1, -1, -2, -4),
-  `200 mg` = c(2, 2, 1, 1)
+  `200 mg` = c(2, 2, 1, 1), `$\\sum\\lambda^2$` = c(10, 14, 10, 70),
+  Pergunta = c("a resposta sobe ou desce com a dose?", "há curvatura (U ou U invertido)?",
+               "a curvatura muda de sentido?", "ondulação de 4ª ordem")
 ) %>%
-  kable(caption = "Coeficientes ortogonais tabulados para $t=5$ níveis igualmente espaçados") %>%
+  kable(escape = FALSE, caption = "Coeficientes ortogonais tabulados para $t=5$ níveis igualmente espaçados") %>%
   kable_styling(full_width = FALSE)
 ```
 
@@ -2185,15 +3200,35 @@ Cada linha da tabela é um contraste com $\sum_i \lambda_i = 0$, e quaisquer dua
 ortogonais entre si ($\sum_i \lambda_i \lambda_i' = 0$) — são exatamente o caso particular de
 contrastes ortogonais da Seção \@ref(contrastes), com coeficientes escolhidos para isolar
 tendência polinomial em vez de comparações ad hoc entre grupos. Para o componente de grau $k$,
-com coeficientes $\lambda_i$:
+com coeficientes $\lambda_{ki}$:
 
-$$\hat L_k = \sum_{i=1}^t \lambda_i \bar y_{i\cdot}, \qquad
-\mathrm{Var}(\hat L_k) = \frac{\sigma^2}{n}\sum_{i=1}^t \lambda_i^2, \qquad
-SQ_k = \frac{n\,\hat L_k^{\,2}}{\sum_{i=1}^t \lambda_i^2},$$
+$$\hat L_k = \sum_{i=1}^t \lambda_{ki} \bar y_{i\cdot}, \qquad
+\mathrm{Var}(\hat L_k) = \frac{\sigma^2}{n}\sum_{i=1}^t \lambda_{ki}^2, \qquad
+SQ_k = \frac{n\,\hat L_k^{\,2}}{\sum_{i=1}^t \lambda_{ki}^2},$$
 
 cada um com 1 grau de liberdade, e $SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_k$ exatamente como na
 partição por contrastes ortogonais gerais. Na prática, o R constrói esses coeficientes
 automaticamente (função `contr.poly()`), reescalados para ter norma 1.
+
+### De onde vêm os coeficientes
+
+Os números da tabela não são arbitrários. Codifique a dose $d$ em
+$x = (d-\bar d)/\Delta \in \{-2,-1,0,1,2\}$, com $\Delta = 50$ mg o espaçamento, e ortogonalize os
+monômios $1, x, x^2, x^3, x^4$ pelo processo de Gram-Schmidt, usando como produto interno a soma
+sobre os cinco pontos. O resultado são os polinômios
+
+$$P_1(x) = x, \qquad P_2(x) = x^2 - 2, \qquad P_3(x) = \tfrac{5}{6}\big(x^3 - \tfrac{17}{5}x\big), \qquad P_4(x) = \tfrac{35}{12}\big(x^4 - \tfrac{31}{7}x^2 + \tfrac{72}{35}\big),$$
+
+e os coeficientes tabelados são os valores de $P_k$ nos cinco pontos. Por exemplo,
+$P_2(-2) = 2$, $P_2(-1) = -1$, $P_2(0) = -2$, $P_2(1) = -1$, $P_2(2) = 2$ — a linha do quadrático. O
+termo $-2$ em $P_2$ é a projeção de $x^2$ sobre a constante (a média de $x^2$ nos cinco pontos), que
+Gram-Schmidt remove; as constantes $\tfrac56$ e $\tfrac{35}{12}$ só tornam os valores inteiros.
+
+A consequência prática é importante: o ajuste por polinômios ortogonais **é** uma regressão
+polinomial na dose, escrita numa base em que os termos não se confundem. Com
+$\hat b_k = \hat L_k/\sum_i\lambda_{ki}^2$, a curva ajustada de grau 2 é
+$\hat y(x) = \bar y_{\cdot\cdot} + \hat b_1 P_1(x) + \hat b_2 P_2(x)$, e basta substituir
+$x = (d-100)/50$ para voltar à escala de mg (Seção \@ref(dose-otima)).
 
 ### A matriz de polinômios ortogonais como parte de $\mathbf X$
 
@@ -2223,6 +3258,31 @@ X_poly <- model.matrix(atencao_pos ~ dose, data = cafeina)  # 5 colunas: 1, L, Q
 round(crossprod(X_poly), 3)  # X'X_poly -- diagonal, exatamente como o argumento algébrico prevê
 ```
 
+### Os componentes calculados à mão {#poly-a-mao}
+
+A Tabela \@ref(tab:c3c-poly-mao) faz a conta dos quatro componentes a partir das cinco médias.
+
+```{r c3c-poly-mao, echo=FALSE}
+mb <- resumo_caf$media
+lam <- rbind(Linear = c(-2, -1, 0, 1, 2), `Quadrático` = c(2, -1, -2, -1, 2),
+             `Cúbico` = c(-1, 2, 0, -2, 1), `Quártico` = c(1, -4, 6, -4, 1))
+Lk <- as.vector(lam %*% mb); s2 <- rowSums(lam^2); SQk <- 8 * Lk^2 / s2
+tibble(Grau = rownames(lam),
+       `$\\lambda$ (0, 50, 100, 150, 200 mg)` = apply(lam, 1, paste, collapse = ", "),
+       `$\\hat L_k = \\sum\\lambda\\bar y$` = fmt(Lk, 2), `$\\sum\\lambda^2$` = s2,
+       `$SQ_k = 8\\hat L_k^2/\\sum\\lambda^2$` = fmt(SQk, 1), F = fmt(SQk / qme_c, 2),
+       `p-valor` = fp(pf(SQk / qme_c, 1, 35, lower.tail = FALSE))) %>%
+  kable(escape = FALSE, align = "llrrrrr",
+        caption = "Os quatro componentes polinomiais calculados a partir das médias por dose (QME com 35 gl)") %>%
+  kable_styling(full_width = FALSE)
+```
+
+As médias por dose são $\bar y = (`r paste(fm(mb, 2), collapse = ";\\ ")`)$ e $QME = `r fm(qme_c, 2)`$, com 35 gl. Para o
+componente linear, por exemplo,
+$\hat L_L = -2(`r fm(mb[1], 2)`) - (`r fm(mb[2], 2)`) + 0 + (`r fm(mb[4], 2)`) + 2(`r fm(mb[5], 2)`) = `r fm(Lk[1], 2)`$
+e $SQ_L = 8 \times `r fm(Lk[1], 2)`^2/10 = `r fm(SQk[1], 1)`$. A soma das quatro somas de quadrados é
+`r fmt(sum(SQk), 1)`, que é $SQ_{\text{Trat}}$.
+
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — ANOVA com componentes polinomiais</div>
 ```
@@ -2235,12 +3295,31 @@ summary(mod_poly, split = list(dose = list(Linear = 1, Quadratic = 2,
                                             Cubic = 3, Quartic = 4)))
 ```
 
+A saída reproduz a conta à mão linha a linha. Os termos linear e quadrático são muito
+significativos; o cúbico não; e o **quártico também é significativo** ($p \approx `r fm(pf(SQk[4] / qme_c, 1, 35, lower.tail = FALSE), 3)`$),
+um resultado que precisa de interpretação cuidadosa (Seção \@ref(quartico-acaso)). A Figura
+\@ref(fig:c3c-plot-poly-sq) mostra o peso de cada grau.
+
+```{r c3c-plot-poly-sq, echo=FALSE, fig.width=7.5, fig.height=3.6, fig.cap="Partição de a SQ de tratamentos da cafeína em componentes linear, quadrático, cúbico e quártico; barras escuras indicam componentes com p < 0,05, e o rótulo dá a SQ e sua porcentagem de a SQ de tratamentos."}
+tibble(grau = factor(rownames(lam), levels = rownames(lam)), SQ = SQk,
+       sig = pf(SQk / qme_c, 1, 35, lower.tail = FALSE) < 0.05) %>%
+  ggplot(aes(grau, SQ, fill = sig)) + geom_col(width = 0.6) +
+  geom_text(aes(label = paste0(fmt(SQ, 0), " (", round(100 * SQ / sum(SQk)), "%)")), vjust = -0.4, size = 3.8) +
+  scale_fill_manual(values = c(`TRUE` = "#0B4F6C", `FALSE` = "grey70"), labels = c("p ≥ 0,05", "p < 0,05")) +
+  scale_y_continuous(limits = c(0, max(SQk) * 1.15)) +
+  labs(x = NULL, y = "Soma de quadrados", fill = NULL) + theme_minimal(base_size = 12)
+```
+
+O quadrático sozinho responde por `r round(100 * SQk[2] / sum(SQk))`% de $SQ_{\text{Trat}}$, e linear e
+quadrático juntos por `r round(100 * sum(SQk[1:2]) / sum(SQk))`%; o quártico, embora significativo, explica
+`r round(100 * SQk[4] / sum(SQk))`%. A forma dominante é um "U invertido" que sobe com a dose.
+
 Como no experimento do algodão de Montgomery — um DCA clássico em que a resistência de um fio
 têxtil é medida sob cinco concentrações de algodão igualmente espaçadas —, o jeito mais direto de
 "ver" qual grau de polinômio é necessário é ajustar os quatro graus possíveis lado a lado e
 comparar visualmente o quanto cada um se aproxima das cinco médias observadas:
 
-```{r c3b-plot-poly, echo=FALSE, fig.width=8.5, fig.height=6.5}
+```{r c3b-plot-poly, echo=FALSE, fig.width=8.5, fig.height=6.5, fig.cap="Ajustes polinomiais de grau 1 a 4 da atenção em função da dose: pontos cinza são os participantes, pontos pretos as médias por dose, e a curva colorida o polinômio ajustado; o título de cada painel traz o R² do ajuste."}
 cafeina_num <- cafeina %>% mutate(dose_num = as.numeric(as.character(dose)))
 mod_lin_num   <- lm(atencao_pos ~ dose_num, data = cafeina_num)
 mod_quad_num  <- lm(atencao_pos ~ dose_num + I(dose_num^2), data = cafeina_num)
@@ -2275,23 +3354,218 @@ c(R2_linear = summary(mod_lin_num)$r.squared, R2_quadratico = summary(mod_quad_n
   R2_cubico = summary(mod_cub_num)$r.squared, R2_quartico = summary(mod_quart_num)$r.squared)
 ```
 
-O painel deixa a progressão visível: a reta (canto superior esquerdo) claramente erra por baixo no
-meio da faixa de doses e por cima nas pontas, com $R^2\approx$ `r round(summary(mod_lin_num)$r.squared, 2)`
-apenas; a parábola (canto superior direito) já captura a maior parte do padrão — sobe até um pico
-e desce —, saltando para $R^2\approx$ `r round(summary(mod_quad_num)$r.squared, 2)`; os ajustes
-cúbico e quártico (linha de baixo) acrescentam flexibilidade extra, mas a melhora de $R^2$ de um
-para o outro é pequena, sinal de que os termos de ordem mais alta agregam pouco além do que a
-parábola já explica. Essa é a mesma conclusão que a tabela ANOVA particionada abaixo confirma
-numericamente, mas o painel a torna imediatamente visível: o **grau necessário** para descrever a
-curva de resposta é o menor grau que já "parece certo" a olho, antes mesmo de olhar qualquer
-p-valor — os testes formais servem para confirmar, com rigor, o que o gráfico já sugeriu.
+O painel deixa a progressão visível. A reta (canto superior esquerdo) erra o padrão por completo:
+fica abaixo das médias no platô e acima delas em 0 mg, com
+$R^2 \approx `r fm(summary(mod_lin_num)$r.squared, 2)`$ apenas. A parábola (canto superior direito) já
+captura o essencial — sobe até um pico e desce —, saltando para
+$R^2 \approx `r fm(summary(mod_quad_num)$r.squared, 2)`$. O cúbico quase não acrescenta, e o quártico passa
+**exatamente** pelas cinco médias: com cinco parâmetros para cinco pontos, ele não é um modelo da
+curva, é uma reprodução das médias, e seu $R^2$ (`r fmt(summary(mod_quart_num)$r.squared, 2)`) é o
+máximo atingível com a dose tratada como fator — a diferença para 1 é o erro puro, a variação
+entre participantes que receberam a mesma dose. O **grau necessário** é o menor que já descreve a
+curva de forma plausível, e o painel sugere a parábola; a seção seguinte mostra por que os testes
+formais, aqui, complicam um pouco essa conclusão.
 
-O termo **linear** e o **quadrático** são ambos significativos, consistente com a curva de
-resposta desenhada por construção: a atenção sobe com a dose até um ponto e depois se estabiliza
-ou cai — um clássico efeito de "U invertido" na relação entre estimulação e desempenho. Isso é
-informação que uma ANOVA comum, ou comparações par a par entre as 5 doses, não expõe diretamente:
-a decomposição polinomial responde à pergunta de forma que o pesquisador realmente tem em mente
-quando o fator é uma dose.
+### Falta de ajuste: a parábola basta? {#falta-ajuste-poly}
+
+Com a dose tratada como **fator** (cinco médias livres), o modelo do DCA é o mais flexível
+possível para estes dados. Um polinômio de grau $g < t-1$ é um modelo **encaixado** nele, e a
+diferença entre os dois é a **falta de ajuste**:
+
+$$SQ_{\text{falta}} = SQ_{\text{Trat}} - \sum_{k=1}^{g} SQ_k = \sum_{k=g+1}^{t-1} SQ_k, \qquad F_{\text{falta}} = \frac{SQ_{\text{falta}}/(t-1-g)}{QME} \sim F_{t-1-g,\;N-t}.$$
+
+O denominador é o **erro puro** do DCA — a variação entre réplicas da mesma dose —, o que só existe
+porque o experimento tem repetição em cada nível: sem réplicas, não haveria como distinguir "o
+polinômio não descreve as médias" de "as médias são ruidosas". Em termos do Capítulo 2, é mais uma
+soma de quadrados extra, $\mathbf Y'(\mathbf P_{\text{fator}} - \mathbf P_{\text{grau } g})\mathbf Y$.
+
+```{r c3c-falta-ajuste}
+fa <- anova(mod_quad_num, mod_poly)   # quadrático (encaixado) vs. dose como fator
+fa
+```
+
+Para a parábola, $SQ_{\text{falta}} = SQ_C + SQ_4 = `r fm(SQk[3], 1)` + `r fm(SQk[4], 1)` = `r fm(fa$"Sum of Sq"[2], 1)`$ com
+2 gl, $F = `r fm(fa$F[2], 2)`$ e $p = `r fpm(fa$"Pr(>F)"[2])`$. Formalmente, ao nível de 5%, rejeita-se que a
+parábola descreva as cinco médias — é a mesma informação do quártico significativo, dita de outro
+modo. A Figura \@ref(fig:c3c-plot-desvios) mostra onde ela erra.
+
+```{r c3c-plot-desvios, echo=FALSE, fig.width=7.5, fig.height=3.4, fig.cap="Diferença entre a média observada em cada dose e o valor da parábola ajustada, com barras de mais ou menos dois erros-padrão de uma média (raiz de QME/8)."}
+desv <- medias_dose %>% mutate(ajuste = predict(mod_quad_num, newdata = .), desvio = media - ajuste,
+                               ep = sqrt(qme_c / 8))
+ggplot(desv, aes(dose_num, desvio)) +
+  geom_hline(yintercept = 0, color = "grey40") +
+  geom_pointrange(aes(ymin = desvio - 2 * ep, ymax = desvio + 2 * ep), color = "#8b2e6e", size = 0.6) +
+  geom_line(color = "#8b2e6e", linetype = "dashed") +
+  geom_text(aes(label = fmt(desvio, 1)), nudge_x = 12, size = 3.8) +
+  scale_x_continuous(breaks = dose_mg) +
+  labs(x = "Dose (mg)", y = "Média observada − parábola") + theme_minimal(base_size = 12)
+```
+
+Os desvios fazem um zigue-zague de sinais $+,-,+$ em 50, 100 e 150 mg — exatamente o desenho do
+coeficiente quártico $(1,-4,6,-4,1)$ com o sinal trocado (o $\hat L_4$ é negativo). A parábola
+subestima o platô em 50 mg e o superestima em 100 mg, por cerca de 4 pontos, menos que o
+desvio-padrão de um participante ($\sqrt{QME} \approx `r fm(sqrt(qme_c), 1)`$).
+
+### O quártico significativo: efeito real ou acaso? {#quartico-acaso}
+
+Aqui temos uma vantagem rara: **sabemos** que a curva verdadeira é uma parábola, de modo que o
+quártico significativo é, com certeza, um falso positivo. Ele era previsível? Repetimos o mesmo
+experimento 2.000 vezes, a partir do modelo verdadeiro, e registramos com que frequência os termos
+cúbico e quártico — ambos nulos na verdade — saem significativos.
+
+```{r c3c-sim-quartico}
+set.seed(321)
+x_d <- rep(dose_mg, each = 8)
+pq <- replicate(2000, {
+  yy <- 40 + 0.5 * rnorm(40, 60, 8) + efeito_dose(x_d) + rnorm(40, 0, 5)
+  f <- factor(x_d); contrasts(f) <- contr.poly(5)
+  summary(aov(yy ~ f), split = list(f = list(L = 1, Q = 2, C = 3, Q4 = 4)))[[1]][["Pr(>F)"]][4:5]
+})
+c(cubico = mean(pq[1, ] < 0.05), quartico = mean(pq[2, ] < 0.05),
+  algum_dos_dois = mean(apply(pq < 0.05, 2, any)))
+```
+
+Cada um dos dois termos nulos sai significativo em cerca de 5% das repetições, como deve ser, e
+**pelo menos um deles** em `r scales::percent(mean(apply(pq < 0.05, 2, any)), 0.1, decimal.mark = ",")` — testar os $t-1 = 4$
+graus é, também, uma família de testes, e o problema de multiplicidade da seção anterior reaparece
+aqui. Na prática, sem conhecer a verdade, três critérios ajudam a decidir:
+
+- **Plausibilidade:** não há mecanismo fisiológico conhecido para uma ondulação de quarta ordem na
+  resposta à cafeína, ao passo que o "U invertido" (lei de Yerkes-Dodson) é bem documentado.
+- **Parcimônia e tamanho:** os desvios em relação à parábola são de cerca de 4 pontos e explicam
+  `r round(100 * SQk[4] / sum(SQk))`% da variação entre doses.
+- **Replicação:** um termo de alta ordem que é real reaparece num novo experimento; um acidental,
+  não. Um quártico isolado, sem cúbico e sem justificativa, é o candidato típico a acaso.
+
+A conclusão defensável é adotar a parábola para descrever e interpretar a curva, **reportando** a
+falta de ajuste em vez de escondê-la.
+
+### De volta à escala da dose: a equação e a dose ótima {#dose-otima}
+
+Com $x = (d-100)/50$, $\hat b_1 = \hat L_L/10$ e $\hat b_2 = \hat L_Q/14$, a parábola na base ortogonal é
+
+```{r c3c-poly-volta}
+b1 <- Lk[1] / 10; b2 <- Lk[2] / 14; ybar <- mean(mb)
+c(ybar = ybar, b1 = b1, b2 = b2)
+coef(mod_quad_num)                  # a mesma parábola, ajustada direto na dose
+```
+
+$$\hat y = `r fm(ybar, 2)` + `r fm(b1, 3)`\,x `r fm(b2, 3)`\,(x^2-2), \qquad x = \frac{d-100}{50}.$$
+
+Expandindo, o coeficiente de $d^2$ é $`r fm(b2, 3)`/2500 = `r gsub(",", "{,}", formatC(b2 / 2500, format = "f", digits = 6, decimal.mark = ","), fixed = TRUE)`$, o mesmo
+do `lm` ajustado diretamente na dose: os polinômios ortogonais não são outro modelo, são a mesma
+regressão, numa base em que os termos não se confundem (e em que, por isso, retirar o termo
+quadrático não altera a estimativa do linear, o que não acontece na base $d, d^2$).
+
+A pergunta "existe uma dose ótima?" se responde pelo vértice da parábola, $d^\star = -\hat\beta_1/(2\hat\beta_2)$,
+uma função não linear dos coeficientes. Seu erro-padrão sai do método delta,
+$\mathrm{Var}(\hat d^\star) \approx \nabla g'\,\widehat{\mathrm{Cov}}(\hat{\boldsymbol\beta})\,\nabla g$, com
+$\nabla g = \big(0,\ -1/(2\hat\beta_2),\ \hat\beta_1/(2\hat\beta_2^2)\big)'$:
+
+```{r c3c-dose-otima}
+b <- coef(mod_quad_num); V <- vcov(mod_quad_num)
+d_ot  <- unname(-b[2] / (2 * b[3]))
+grad  <- c(0, -1 / (2 * b[3]), b[2] / (2 * b[3]^2))
+ep_ot <- sqrt(drop(t(grad) %*% V %*% grad))
+c(dose_otima = d_ot, ep = ep_ot, li = d_ot - qt(0.975, 37) * ep_ot, ls = d_ot + qt(0.975, 37) * ep_ot)
+```
+
+A dose que maximiza a atenção estimada é de cerca de **`r round(d_ot)` mg** (IC de 95% pelo método
+delta: `r round(d_ot - qt(0.975, 37) * ep_ot)` a `r round(d_ot + qt(0.975, 37) * ep_ot)` mg), com atenção prevista de
+`r fmt(predict(mod_quad_num, newdata = tibble(dose_num = d_ot)), 1)` pontos. A dose ótima verdadeira, 135 mg, fica
+**fora** desse intervalo. A Figura \@ref(fig:c3c-sim-vertice) explica o que aconteceu.
+
+```{r c3c-sim-vertice, fig.width=8, fig.height=3.4, fig.cap="Distribuição da dose ótima estimada (vértice da parábola) em 2.000 repetições simuladas do experimento a partir do modelo verdadeiro; a linha verde contínua marca a dose ótima verdadeira (135 mg) e a roxa tracejada, a estimativa obtida com os dados observados."}
+set.seed(123)
+vs <- replicate(2000, {
+  yy <- 40 + 0.5 * rnorm(40, 60, 8) + efeito_dose(x_d) + rnorm(40, 0, 5)
+  bb <- coef(lm(yy ~ x_d + I(x_d^2))); -bb[2] / (2 * bb[3])
+})
+ggplot(tibble(v = vs[vs > 50 & vs < 250]), aes(v)) +
+  geom_histogram(binwidth = 4, fill = "grey70", color = "white") +
+  geom_vline(xintercept = 0.35 / (2 * 0.0013), color = "#2e8b57", linewidth = 1) +
+  geom_vline(xintercept = d_ot, color = "#8b2e6e", linewidth = 1, linetype = "dashed") +
+  labs(x = "Dose ótima estimada (mg)", y = "Frequência") + theme_minimal(base_size = 12)
+```
+
+Três observações. Primeiro, um intervalo de 95% erra 5% das vezes, e esta amostra está numa cauda:
+em apenas `r fmt(100 * mean(vs < d_ot), 1)`% das repetições a estimativa saiu tão baixa. Segundo, o motivo é
+identificável: esta amostra **superestimou a curvatura** ($\hat\beta_2 = `r gsub(",", "{,}", formatC(b[3], format = "f", digits = 5, decimal.mark = ","), fixed = TRUE)`$ contra
+$-0{,}0013$ verdadeiro) — o mesmo platô "achatado" entre 50 e 150 mg que gerou o quártico — e o
+erro-padrão do método delta, proporcional a $1/|\hat\beta_2|$, herda esse otimismo; a distribuição
+do vértice é, além disso, assimétrica, o que o método delta ignora. Terceiro, e mais importante
+para a decisão: perto do pico a curva é achatada. Na curva verdadeira, 120 e 135 mg diferem em
+apenas `r fmt(efeito_dose(135) - efeito_dose(120), 2)` ponto de atenção. A dose ótima é difícil de localizar
+justamente porque errar o pico custa pouco.
+
+### Doses não igualmente espaçadas e a ordem dos níveis {#poly-armadilhas}
+
+Os coeficientes tabelados valem **apenas** para níveis igualmente espaçados. Se as doses fossem 0,
+50, 100, 200 e 400 mg, os números $(-2,-1,0,1,2)$ testariam uma tendência no **posto** da dose, não
+na dose; os coeficientes certos dependem dos valores dos níveis:
+
+```{r c3c-poly-desigual}
+P_certo <- contr.poly(5, scores = c(0, 50, 100, 200, 400))   # ortogonais NAS DOSES REAIS
+round(P_certo, 3)
+lin_tab <- c(-2, -1, 0, 1, 2)                                 # "linear" da tabela
+round(c(cor_com_linear_real = cor(lin_tab, P_certo[, 1]),
+        cor_com_quadratico_real = cor(lin_tab, P_certo[, 2])), 2)
+```
+
+O "linear" tabelado não é ortogonal ao quadrático verdadeiro (correlação de
+`r fmt(cor(lin_tab, P_certo[, 2]), 2)`): parte da curvatura vaza para o termo linear, e as somas de quadrados
+deixam de particionar $SQ_{\text{Trat}}$ com significado. O caminho correto é `contr.poly(k, scores = doses)`
+ou, equivalentemente, `lm(y ~ poly(dose_num, 2))` sobre a variável numérica.
+
+Uma segunda armadilha, mais traiçoeira porque não gera mensagem de erro, é a **ordem dos níveis do
+fator**. `contr.poly()` atribui os coeficientes na ordem de `levels()`, e se a dose for lida como
+texto o R a ordena alfabeticamente:
+
+```{r c3c-poly-ordem-errada}
+dose_txt <- factor(as.character(cafeina$dose))
+levels(dose_txt)                                   # "0" "100" "150" "200" "50": 50 mg no fim!
+contrasts(dose_txt) <- contr.poly(5)
+summary(aov(cafeina$atencao_pos ~ dose_txt),
+        split = list(dose_txt = list(L = 1, Q = 2, C = 3, Q4 = 4)))
+```
+
+A $SQ_{\text{Trat}}$ total é a mesma (o fator é o mesmo), mas a partição perde todo o sentido: o
+"linear" passa a medir outra coisa, e o cúbico, que antes não era significativo, passa a ser.
+Antes de usar polinômios ortogonais, confira sempre `levels()` — ou construa o fator com
+`factor(dose, levels = c(0, 50, 100, 150, 200))`.
+
+### O que os dados de cafeína respondem {#cafeina-respostas}
+
+1. **A atenção depende da dose?** Sim ($F_{4,35} = `r fm(summary(mod_poly)[[1]]$"F value"[1], 1)`$).
+2. **Mais cafeína é sempre melhor?** Não: o termo linear é positivo, mas o quadrático, negativo e
+   responsável por `r round(100 * SQk[2] / sum(SQk))`% da variação entre doses, mostra que a curva sobe e depois desce.
+3. **Existe uma dose ótima?** A parábola estima cerca de `r round(d_ot)` mg, mas o pico é mal
+   determinado; o que os dados sustentam com segurança é um platô entre 50 e 150 mg.
+4. **200 mg é pior que 150 mg?** Sim: queda de `r fmt(mb[4] - mb[5], 1)` pontos (Tukey, p ≈ 0,008), coerente
+   com excesso de estimulação.
+5. **Vale a pena passar de 50 mg?** 150 mg rende só `r fmt(mb[4] - mb[2], 1)` pontos a mais que 50 mg,
+   diferença não significativa: a menor dose do platô já entrega quase todo o benefício.
+6. **A parábola é o modelo certo?** É o modelo plausível e parcimonioso; a falta de ajuste
+   ($p \approx `r fm(fa$"Pr(>F)"[2], 3)`$) foi registrada e discutida, e sabemos — por construção — que, neste
+   caso, ela era um falso positivo.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir</strong>
+<ol>
+<li>No exemplo da cafeína o termo quártico foi significativo, mas a curva verdadeira é uma
+parábola. Sem a simulação, que evidência adicional você pediria antes de adotar um polinômio de
+quarto grau?</li>
+<li>Por que o teste de falta de ajuste exige réplicas em cada dose? O que aconteceria com ele num
+experimento com uma única observação por dose?</li>
+<li>Se as cinco doses não estivessem igualmente espaçadas (0, 50, 100, 200, 400 mg), os
+coeficientes tabulados ainda poderiam ser usados diretamente? Por quê?</li>
+<li>A dose ótima estimada ficou longe da verdadeira, mas a atenção prevista nas duas doses é quase
+igual. Para quem decide uma recomendação de consumo, qual dos dois fatos importa mais? E para um
+farmacologista interessado no mecanismo?</li>
+</ol>
+</div>
+```
 
 ## Análise de covariância (ANCOVA) {#ancova}
 
@@ -2369,6 +3643,17 @@ mod_inclinacoes <- lm(atencao_pos ~ basal * dose, data = cafeina)
 anova(mod_inclinacoes)
 ```
 
+```{r plot-homog-incl, echo=FALSE, fig.width=7.5, fig.height=3.6, fig.cap="Atenção pós-dose contra atenção basal, com uma reta de mínimos quadrados ajustada separadamente para cada dose: inclinações parecidas indicam que o pressuposto de homogeneidade das inclinações da ANCOVA é razoável."}
+ggplot(cafeina, aes(basal, atencao_pos, color = dose)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8, formula = y ~ x) +
+  labs(x = "Atenção basal", y = "Atenção pós-dose", color = "Dose (mg)") +
+  theme_minimal(base_size = 12)
+```
+
+As cinco retas ajustadas separadamente (Figura \@ref(fig:plot-homog-incl)) já são visualmente
+quase paralelas; o teste da interação `basal:dose` apenas formaliza o que o gráfico sugere.
+
 ```{r c3b-ancova-2}
 # 2. Interação não significativa (p > 0.05) -> prossegue com o modelo aditivo (ANCOVA)
 mod_ancova <- lm(atencao_pos ~ basal + dose, data = cafeina)
@@ -2392,7 +3677,7 @@ colorido por tratamento, com uma reta de regressão ajustada para cada grupo. So
 (inclinações homogêneas), essas retas são **paralelas por construção** — a mesma inclinação
 $\hat\beta$, só com interceptos diferentes por dose:
 
-```{r c3b-plot-ancova, echo=FALSE, fig.width=7.5, fig.height=4.5}
+```{r c3b-plot-ancova, echo=FALSE, fig.width=7.5, fig.height=4.5, fig.cap="ANCOVA da atenção pós-dose com a atenção basal como covariável. Pontos: participantes, coloridos pela dose de cafeína; retas: o modelo ajustado, com a mesma inclinação para todas as doses e interceptos diferentes. A distância vertical entre as retas é o efeito da dose ajustado pela atenção basal."}
 grade_basal <- tibble(basal = seq(min(cafeina$basal), max(cafeina$basal), length.out = 50))
 
 retas_dose <- map_dfr(levels(cafeina$dose), function(d) {
@@ -2517,6 +3802,75 @@ comparações par a par por postos (Wilcoxon com correção de Bonferroni) mant�
 conclusões da Seção \@ref(comparacoes-multiplas), com um pouco menos de nitidez nas diferenças
 mais sutis, o preço esperado por abrir mão do pressuposto de normalidade.
 
+## Controlado × não controlado: o teste $F$ quando ninguém sorteou {#cnc-cap3}
+
+O capítulo começou deduzindo o delineamento completamente aleatorizado (DCA) do próprio sorteio
+(Seção \@ref(principios-aleatorizacao)): a distribuição de referência do teste é a distribuição da
+estatística sobre **todos os sorteios possíveis**, e o teste $F$ é uma aproximação dela. Daí uma
+consequência que costuma passar despercebida: **sem sorteio, o valor-$p$ do teste $F$ não tem
+referência.** A tabela de ANOVA pode ser calculada com qualquer planilha, mas a frase "se os
+tratamentos não tivessem efeito, uma diferença deste tamanho apareceria em só 5% das vezes" só faz
+sentido quando as "vezes" são sorteios que o pesquisador realmente fez.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: três condições de distração, nenhuma com efeito</strong><br>
+Retomamos o estudo de tempo de reação sob distração (nenhuma, sonora, visual), agora com
+<strong>H<sub>0</sub> verdadeira por construção</strong>: a distração não muda nada, e o tempo de
+reação de cada pessoa depende só da sua velocidade basal, mais um ruído de medida. São 36
+participantes. <strong>Controlado:</strong> 12 participantes sorteados para cada condição.
+<strong>Não controlado:</strong> cada participante escolhe a condição em que quer ser testado, e os
+mais lentos tendem a evitar as distrações (escolhem "nenhuma") com uma força κ: κ = 0 é escolha ao
+acaso, κ = 2 é uma preferência forte. Em cada regime e cada κ, repetimos o estudo 1.000 vezes e
+contamos em quantas o teste F rejeita H<sub>0</sub> a 5%.
+</div>
+```
+
+```{r cnc-cap3}
+cnc3 <- cnc_cap3()     # taxa de rejeição a 5%, com H0 verdadeira, para kappa de 0 a 2
+cnc3 %>% filter(kappa %in% c(0, 0.5, 1, 2)) %>%
+  pivot_wider(names_from = regime, values_from = rejeicao)
+```
+
+```{r cnc-cap3-graf, echo=FALSE, fig.width=8, fig.height=4.4, fig.cap="Proporção de estudos em que o teste F do DCA rejeita H0 a 5%, quando H0 é verdadeira (a distração não tem efeito nenhum), em função da força κ da autosseleção. A linha tracejada marca os 5% nominais. Com sorteio (azul), a taxa fica em 5% qualquer que seja κ, porque κ não interfere no sorteio. Quando o participante escolhe a condição (laranja), a taxa sobe rapidamente: com κ = 1, o teste 'descobre' um efeito inexistente em quase 9 de cada 10 estudos."}
+grafico_cap3(cnc3)
+```
+
+Duas observações tornam o resultado menos misterioso do que parece:
+
+- **O teste $F$ não está errado: ele detecta corretamente que os grupos diferem.** Sob
+  autosseleção, os três grupos realmente têm médias diferentes, porque reúnem pessoas diferentes
+  (os lentos se concentram em "nenhuma"). O que o teste não pode dizer é **por que** diferem. A
+  hipótese que ele rejeita é "as três médias populacionais dos grupos são iguais", não "a distração
+  não tem efeito"; só o sorteio faz as duas frases coincidirem.
+- **O erro tipo I deixa de ser controlado pelo pesquisador.** No regime controlado, o nível de 5% é
+  uma escolha; no observacional, ele é consequência de um mecanismo de escolha que o analista não
+  conhece (aqui, κ). Uma taxa de rejeição de 87% sob $H_0$ não é um teste conservador ou liberal: é
+  um teste que responde a outra pergunta.
+
+O mesmo raciocínio vale para tudo o que o capítulo construiu sobre a tabela de ANOVA: os contrastes
+e as comparações múltiplas (com controle da taxa de erro por família, FWER, *family-wise error
+rate*) herdam a garantia do sorteio. Controlar o FWER em 5% com Tukey ou Bonferroni é inútil se
+cada comparação individual já estiver viesada pela autosseleção. A análise de covariância (ANCOVA,
+Seção \@ref(ancova)) pode corrigir um desequilíbrio numa covariável **medida**, como o tempo basal,
+mas não nas que ninguém mediu.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>Se o tempo de reação basal de cada participante tivesse sido medido antes da escolha, uma
+ANCOVA com essa covariável traria a taxa de rejeição de volta para perto de 5%? Que suposição sobre
+o mecanismo de escolha essa correção exige?</li>
+<li>Em um DCA desbalanceado, os tamanhos de grupo variam; na autosseleção, também. Por que o
+desbalanceamento, sozinho, não causa o problema da figura, e o que causa?</li>
+<li>Um laboratório só testa a condição "visual" às sextas-feiras à tarde, por conveniência de
+agenda. Isso é autosseleção? Que tipo de confusão é, e como um sorteio da ordem das sessões a
+evitaria?</li>
+</ol>
+</div>
+```
+
 ## Resumo do capítulo
 
 Este capítulo cobriu o delineamento completamente aleatorizado (DCA) do início ao fim:
@@ -2556,3 +3910,8 @@ Todo esse ferramental resolve comparações dentro de **um único** fator de cla
 Capítulo 4 introduz uma segunda fonte de estrutura no delineamento — os **blocos** — mostrando
 como controlar formalmente uma fonte de variação sistemática conhecida (turma, dia, sujeito,
 talhão) sem sacrificar a validade da comparação entre tratamentos.
+- **Controlado × não controlado:** o sorteio do DCA controla o que as unidades trazem de antes,
+  medido ou não. Sem ele, o teste $F$ continua calculável, mas a sua referência desaparece: com
+  autosseleção, rejeita $H_0$ verdadeira muito além dos 5%. O controle vale no nível em que o
+  sorteio aconteceu (o aquário, não o peixe), e controlar o FWER não corrige viés.
+

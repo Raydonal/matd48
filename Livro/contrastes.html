@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -453,73 +488,298 @@ div.csl-indent {
 <h2><span class="header-section-number">3.6</span> Contrastes e comparações múltiplas<a href="contrastes.html#contrastes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A ANOVA de um fator responde a uma pergunta agregada: <em>existe pelo menos uma diferença entre as
 <span class="math inline">\(t\)</span> médias de tratamento?</em> Rejeitar <span class="math inline">\(H_0: \mu_1 = \mu_2 = \cdots = \mu_t\)</span> não diz <strong>quais</strong>
-médias diferem, nem <strong>em que direção</strong>. Contrastes e procedimentos de comparação múltipla
-respondem exatamente a essas perguntas mais específicas — mas, como veremos, fazê-lo com rigor
-exige cuidado extra, porque testar muitas hipóteses sobre o mesmo conjunto de dados infla a
-chance de pelo menos um falso positivo.</p>
+médias diferem, nem <strong>em que direção</strong>, nem <strong>de quanto</strong>. Contrastes e procedimentos de
+comparação múltipla respondem exatamente a essas perguntas mais específicas — mas, como veremos,
+fazê-lo com rigor exige cuidado extra, porque testar muitas hipóteses sobre o mesmo conjunto de
+dados infla a chance de pelo menos um falso positivo. As três seções que seguem (contrastes,
+comparações múltiplas e polinômios ortogonais) usam dois conjuntos de dados, mostrados por
+inteiro antes de qualquer teste, e seguem sempre a mesma ordem: a teoria, os dados, a conta feita
+à mão, a conferência no R, o gráfico e a interpretação.</p>
 <p>Vale explicitar a leitura causal por trás desta seção, retomando o arcabouço de resultados
 potenciais introduzido no Capítulo 1: cada unidade experimental tem <span class="math inline">\(t\)</span> resultados potenciais
 <span class="math inline">\(Y_i(1), \ldots, Y_i(t)\)</span> — um por braço de tratamento —, dos quais só o do braço sorteado é
 observado. Cada média <span class="math inline">\(\mu_i = E[Y(i)]\)</span> é a média populacional do resultado potencial sob o
 tratamento <span class="math inline">\(i\)</span>, e um contraste par a par <span class="math inline">\(\mu_i - \mu_j\)</span> é, literalmente, um <strong>efeito médio de
-tratamento</strong> (ATE) entre os braços <span class="math inline">\(i\)</span> e <span class="math inline">\(j\)</span>. Quando <span class="math inline">\(t&gt;2\)</span>, existem <span class="math inline">\(\binom{t}{2}\)</span> ATEs par a par
-possíveis — mais uma infinidade de contrastes que agregam grupos de braços —, e é essa
-multiplicidade de efeitos causais estimados simultaneamente sobre o mesmo experimento que faz
-emergir, de forma natural e não como artefato técnico do procedimento estatístico, o problema de
-comparações múltiplas da próxima seção: cada ATE testado isoladamente carrega seu próprio risco
-de falso positivo, e responder “algum desses efeitos é diferente de zero?” exige um controle de
-erro que leve todos eles em conta simultaneamente.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="contrastes.html#cb112-1" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
-<span id="cb112-2"><a href="contrastes.html#cb112-2" tabindex="-1"></a>  <span class="fu">library</span>(tidyverse)</span>
-<span id="cb112-3"><a href="contrastes.html#cb112-3" tabindex="-1"></a>  <span class="fu">library</span>(kableExtra)</span>
-<span id="cb112-4"><a href="contrastes.html#cb112-4" tabindex="-1"></a>  <span class="fu">library</span>(broom)</span>
-<span id="cb112-5"><a href="contrastes.html#cb112-5" tabindex="-1"></a>  <span class="fu">library</span>(emmeans)</span>
-<span id="cb112-6"><a href="contrastes.html#cb112-6" tabindex="-1"></a>  <span class="fu">library</span>(multcomp)</span>
-<span id="cb112-7"><a href="contrastes.html#cb112-7" tabindex="-1"></a>  <span class="fu">library</span>(car)</span>
-<span id="cb112-8"><a href="contrastes.html#cb112-8" tabindex="-1"></a>  <span class="fu">library</span>(agricolae)</span>
-<span id="cb112-9"><a href="contrastes.html#cb112-9" tabindex="-1"></a>})</span>
-<span id="cb112-10"><a href="contrastes.html#cb112-10" tabindex="-1"></a></span>
-<span id="cb112-11"><a href="contrastes.html#cb112-11" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb112-12"><a href="contrastes.html#cb112-12" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhum&quot;</span>, <span class="st">&quot;Analytics&quot;</span>, <span class="st">&quot;Anúncios&quot;</span>, <span class="st">&quot;Combo&quot;</span>)</span>
-<span id="cb112-13"><a href="contrastes.html#cb112-13" tabindex="-1"></a>n_por_grupo <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb112-14"><a href="contrastes.html#cb112-14" tabindex="-1"></a></span>
-<span id="cb112-15"><a href="contrastes.html#cb112-15" tabindex="-1"></a><span class="co"># efeito verdadeiro (ms) de cada configuração de scripts de terceiros sobre o</span></span>
-<span id="cb112-16"><a href="contrastes.html#cb112-16" tabindex="-1"></a><span class="co"># tempo de carregamento da página, em relação à configuração &quot;Nenhum&quot; (controle)</span></span>
-<span id="cb112-17"><a href="contrastes.html#cb112-17" tabindex="-1"></a>efeito_config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span> <span class="dv">60</span>, Anúncios <span class="ot">=</span> <span class="dv">140</span>, <span class="at">Combo =</span> <span class="dv">210</span>)</span>
-<span id="cb112-18"><a href="contrastes.html#cb112-18" tabindex="-1"></a></span>
-<span id="cb112-19"><a href="contrastes.html#cb112-19" tabindex="-1"></a>dados_scripts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb112-20"><a href="contrastes.html#cb112-20" tabindex="-1"></a>  <span class="at">pagina   =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo),</span>
-<span id="cb112-21"><a href="contrastes.html#cb112-21" tabindex="-1"></a>  <span class="at">config   =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(config, <span class="at">each =</span> n_por_grupo), <span class="at">levels =</span> config),</span>
-<span id="cb112-22"><a href="contrastes.html#cb112-22" tabindex="-1"></a>  <span class="at">tempo_ms =</span> <span class="dv">900</span> <span class="sc">+</span> efeito_config[<span class="fu">as.character</span>(config)] <span class="sc">+</span></span>
-<span id="cb112-23"><a href="contrastes.html#cb112-23" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">70</span>)</span>
-<span id="cb112-24"><a href="contrastes.html#cb112-24" tabindex="-1"></a>)</span>
-<span id="cb112-25"><a href="contrastes.html#cb112-25" tabindex="-1"></a></span>
-<span id="cb112-26"><a href="contrastes.html#cb112-26" tabindex="-1"></a>mod_scripts <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo_ms <span class="sc">~</span> config, <span class="at">data =</span> dados_scripts)</span></code></pre></div>
+tratamento</strong> (ATE) entre os braços <span class="math inline">\(i\)</span> e <span class="math inline">\(j\)</span>. Um contraste mais geral também é causal:
+<span class="math inline">\(\mu_1 - \tfrac13(\mu_2+\mu_3+\mu_4)\)</span> é o ATE do braço 1 contra uma mistura uniforme dos braços
+2, 3 e 4. Quando <span class="math inline">\(t&gt;2\)</span>, existem <span class="math inline">\(\binom{t}{2}\)</span> ATEs par a par possíveis — mais uma infinidade de
+contrastes que agregam grupos de braços —, e é essa multiplicidade de efeitos causais estimados
+simultaneamente sobre o mesmo experimento que faz emergir, de forma natural e não como artefato
+técnico do procedimento estatístico, o problema de comparações múltiplas da próxima seção: cada
+ATE testado isoladamente carrega seu próprio risco de falso positivo, e responder “algum desses
+efeitos é diferente de zero?” exige um controle de erro que leve todos eles em conta
+simultaneamente.</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="contrastes.html#cb123-1" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb123-2"><a href="contrastes.html#cb123-2" tabindex="-1"></a>  <span class="fu">library</span>(tidyverse)</span>
+<span id="cb123-3"><a href="contrastes.html#cb123-3" tabindex="-1"></a>  <span class="fu">library</span>(kableExtra)</span>
+<span id="cb123-4"><a href="contrastes.html#cb123-4" tabindex="-1"></a>  <span class="fu">library</span>(broom)</span>
+<span id="cb123-5"><a href="contrastes.html#cb123-5" tabindex="-1"></a>  <span class="fu">library</span>(emmeans)</span>
+<span id="cb123-6"><a href="contrastes.html#cb123-6" tabindex="-1"></a>  <span class="fu">library</span>(multcomp)</span>
+<span id="cb123-7"><a href="contrastes.html#cb123-7" tabindex="-1"></a>  <span class="fu">library</span>(car)</span>
+<span id="cb123-8"><a href="contrastes.html#cb123-8" tabindex="-1"></a>  <span class="fu">library</span>(agricolae)</span>
+<span id="cb123-9"><a href="contrastes.html#cb123-9" tabindex="-1"></a>})</span>
+<span id="cb123-10"><a href="contrastes.html#cb123-10" tabindex="-1"></a><span class="co"># formatação em português; fm() e fpm() são para números dentro de $...$ (MathJax)</span></span>
+<span id="cb123-11"><a href="contrastes.html#cb123-11" tabindex="-1"></a>fmt <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">d =</span> <span class="dv">1</span>) <span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> d, <span class="at">big.mark =</span> <span class="st">&quot;.&quot;</span>, <span class="at">decimal.mark =</span> <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb123-12"><a href="contrastes.html#cb123-12" tabindex="-1"></a>fp  <span class="ot">&lt;-</span> <span class="cf">function</span>(p) <span class="fu">ifelse</span>(p <span class="sc">&lt;</span> <span class="fl">0.0001</span>, <span class="st">&quot;&lt; 0,0001&quot;</span>, <span class="fu">formatC</span>(p, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">decimal.mark =</span> <span class="st">&quot;,&quot;</span>))</span>
+<span id="cb123-13"><a href="contrastes.html#cb123-13" tabindex="-1"></a>fm  <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">d =</span> <span class="dv">1</span>) <span class="fu">gsub</span>(<span class="st">&quot;,&quot;</span>, <span class="st">&quot;{,}&quot;</span>, <span class="fu">fmt</span>(x, d), <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb123-14"><a href="contrastes.html#cb123-14" tabindex="-1"></a>fpm <span class="ot">&lt;-</span> <span class="cf">function</span>(p) <span class="fu">gsub</span>(<span class="st">&quot;,&quot;</span>, <span class="st">&quot;{,}&quot;</span>, <span class="fu">fp</span>(p), <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb123-15"><a href="contrastes.html#cb123-15" tabindex="-1"></a></span>
+<span id="cb123-16"><a href="contrastes.html#cb123-16" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb123-17"><a href="contrastes.html#cb123-17" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhum&quot;</span>, <span class="st">&quot;Analytics&quot;</span>, <span class="st">&quot;Anúncios&quot;</span>, <span class="st">&quot;Combo&quot;</span>)</span>
+<span id="cb123-18"><a href="contrastes.html#cb123-18" tabindex="-1"></a>n_por_grupo <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb123-19"><a href="contrastes.html#cb123-19" tabindex="-1"></a></span>
+<span id="cb123-20"><a href="contrastes.html#cb123-20" tabindex="-1"></a><span class="co"># efeito verdadeiro (ms) de cada configuração de scripts de terceiros sobre o</span></span>
+<span id="cb123-21"><a href="contrastes.html#cb123-21" tabindex="-1"></a><span class="co"># tempo de carregamento da página, em relação à configuração &quot;Nenhum&quot; (controle)</span></span>
+<span id="cb123-22"><a href="contrastes.html#cb123-22" tabindex="-1"></a>efeito_config <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span> <span class="dv">60</span>, Anúncios <span class="ot">=</span> <span class="dv">140</span>, <span class="at">Combo =</span> <span class="dv">210</span>)</span>
+<span id="cb123-23"><a href="contrastes.html#cb123-23" tabindex="-1"></a></span>
+<span id="cb123-24"><a href="contrastes.html#cb123-24" tabindex="-1"></a>dados_scripts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb123-25"><a href="contrastes.html#cb123-25" tabindex="-1"></a>  <span class="at">pagina   =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo),</span>
+<span id="cb123-26"><a href="contrastes.html#cb123-26" tabindex="-1"></a>  <span class="at">config   =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(config, <span class="at">each =</span> n_por_grupo), <span class="at">levels =</span> config),</span>
+<span id="cb123-27"><a href="contrastes.html#cb123-27" tabindex="-1"></a>  <span class="at">tempo_ms =</span> <span class="dv">900</span> <span class="sc">+</span> efeito_config[<span class="fu">as.character</span>(config)] <span class="sc">+</span></span>
+<span id="cb123-28"><a href="contrastes.html#cb123-28" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">4</span> <span class="sc">*</span> n_por_grupo, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">70</span>)</span>
+<span id="cb123-29"><a href="contrastes.html#cb123-29" tabindex="-1"></a>)</span>
+<span id="cb123-30"><a href="contrastes.html#cb123-30" tabindex="-1"></a></span>
+<span id="cb123-31"><a href="contrastes.html#cb123-31" tabindex="-1"></a>mod_scripts <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo_ms <span class="sc">~</span> config, <span class="at">data =</span> dados_scripts)</span></code></pre></div>
 <div class="caixa-aplicacao">
 <strong>Aplicação — Ciência de dados: scripts de terceiros e tempo de carregamento</strong><br>
 Uma equipe de engenharia web quer comparar quatro configurações de uma página de produto quanto
 ao tempo de carregamento: <strong>Nenhum</strong> script de terceiros (controle),
 <strong>Analytics</strong> apenas, <strong>Anúncios</strong> apenas, e <strong>Combo</strong>
 (chat de suporte + anúncios). Dez carregamentos independentes são medidos em cada configuração
-(<code>n = 10</code> por grupo, 40 no total), sob condições de rede controladas.
+(<code>n = 10</code> por grupo, 40 no total), sob condições de rede controladas e em ordem sorteada
+(<strong>UE = carregamento</strong>). Antes da coleta, a equipe registrou três perguntas: (i) scripts
+de terceiros atrasam a página? (ii) se for para ter um script, o de analytics é o mais leve?
+(iii) acrescentar o chat aos anúncios custa caro?
 </div>
+<p>Os 40 carregamentos foram feitos numa ordem sorteada, na mesma máquina e na mesma rede. Comparar,
+em vez disso, sites reais que usam ou não anúncios e chat misturaria scripts com tipo de site
+(sites com anúncios tendem a ser maiores), e nenhuma correção para comparações múltiplas
+removeria essa mistura.</p>
+<div id="dados-scripts" class="section level3 hasAnchor" number="3.6.1">
+<h3><span class="header-section-number">3.6.1</span> Os dados e a ANOVA global<a href="contrastes.html#dados-scripts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Tabela <a href="contrastes.html#tab:c3c-dados-scripts">3.14</a> mostra os 40 tempos medidos. Cada coluna é um tratamento e
+cada linha, uma réplica; a numeração da réplica não tem significado (não há pareamento entre o
+carregamento 3 de “Nenhum” e o carregamento 3 de “Combo”), é só uma forma compacta de dispor os
+dados de um DCA.</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:c3b-scripts-tab">Tabela 3.13: </span>Tempo de carregamento (ms) por configuração de scripts
+<span id="tab:c3c-dados-scripts">Tabela 3.14: </span>Os 40 tempos de carregamento (ms), por configuração de scripts
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Réplica
+</th>
+<th style="text-align:right;">
+Nenhum
+</th>
+<th style="text-align:right;">
+Analytics
+</th>
+<th style="text-align:right;">
+Anúncios
+</th>
+<th style="text-align:right;">
+Combo
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+936
+</td>
+<td style="text-align:right;">
+931
+</td>
+<td style="text-align:right;">
+1017
+</td>
+<td style="text-align:right;">
+1073
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+824
+</td>
+<td style="text-align:right;">
+909
+</td>
+<td style="text-align:right;">
+1028
+</td>
+<td style="text-align:right;">
+1122
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+910
+</td>
+<td style="text-align:right;">
+944
+</td>
+<td style="text-align:right;">
+943
+</td>
+<td style="text-align:right;">
+1092
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+894
+</td>
+<td style="text-align:right;">
+944
+</td>
+<td style="text-align:right;">
+1143
+</td>
+<td style="text-align:right;">
+1133
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+853
+</td>
+<td style="text-align:right;">
+782
+</td>
+<td style="text-align:right;">
+1043
+</td>
+<td style="text-align:right;">
+1123
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+724
+</td>
+<td style="text-align:right;">
+1054
+</td>
+<td style="text-align:right;">
+1174
+</td>
+<td style="text-align:right;">
+1192
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+849
+</td>
+<td style="text-align:right;">
+1003
+</td>
+<td style="text-align:right;">
+1161
+</td>
+<td style="text-align:right;">
+1152
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+829
+</td>
+<td style="text-align:right;">
+975
+</td>
+<td style="text-align:right;">
+1044
+</td>
+<td style="text-align:right;">
+1048
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+908
+</td>
+<td style="text-align:right;">
+904
+</td>
+<td style="text-align:right;">
+1085
+</td>
+<td style="text-align:right;">
+1150
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+867
+</td>
+<td style="text-align:right;">
+1008
+</td>
+<td style="text-align:right;">
+1161
+</td>
+<td style="text-align:right;">
+1052
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3b-scripts-tab">Tabela 3.15: </span>Resumo do tempo de carregamento (ms) por configuração de scripts
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
-config
+Configuração
 </th>
 <th style="text-align:right;">
 n
 </th>
 <th style="text-align:right;">
-media_ms
+Média
 </th>
 <th style="text-align:right;">
-dp_ms
+DP
+</th>
+<th style="text-align:right;">
+Mín.
+</th>
+<th style="text-align:right;">
+Máx.
 </th>
 </tr>
 </thead>
@@ -537,6 +797,12 @@ Nenhum
 <td style="text-align:right;">
 60.3
 </td>
+<td style="text-align:right;">
+723.9
+</td>
+<td style="text-align:right;">
+936.4
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -550,6 +816,12 @@ Analytics
 </td>
 <td style="text-align:right;">
 74.6
+</td>
+<td style="text-align:right;">
+781.7
+</td>
+<td style="text-align:right;">
+1054.3
 </td>
 </tr>
 <tr>
@@ -565,6 +837,12 @@ Anúncios
 <td style="text-align:right;">
 77.4
 </td>
+<td style="text-align:right;">
+942.6
+</td>
+<td style="text-align:right;">
+1173.6
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -579,19 +857,53 @@ Combo
 <td style="text-align:right;">
 46.7
 </td>
+<td style="text-align:right;">
+1047.6
+</td>
+<td style="text-align:right;">
+1191.5
+</td>
 </tr>
 </tbody>
 </table>
-<div id="definição-esperança-e-variância-de-um-contraste" class="section level3 hasAnchor" number="3.6.1">
-<h3><span class="header-section-number">3.6.1</span> Definição, esperança e variância de um contraste<a href="contrastes.html#definição-esperança-e-variância-de-um-contraste" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-plot-dados-scripts"></span>
+<img src="03-dca_files/figure-html/c3c-plot-dados-scripts-1.png" alt="Tempos de carregamento individuais (pontos cinza) e média de cada configuração com intervalo de confiança de 95% calculado com o QME combinado da ANOVA (36 gl), em azul." width="75%" />
+<p class="caption">
+Figura 3.18: Tempos de carregamento individuais (pontos cinza) e média de cada configuração com intervalo de confiança de 95% calculado com o QME combinado da ANOVA (36 gl), em azul.
+</p>
+</div>
+<p>O gráfico já sugere a ordenação Nenhum &lt; Analytics &lt; {Anúncios ≈ Combo}, e os desvios-padrão
+parecidos (de 47 a 77 ms) são compatíveis com a
+homocedasticidade que o <span class="math inline">\(QME\)</span> combinado pressupõe. A ANOVA global quantifica o que se vê:</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="contrastes.html#cb124-1" tabindex="-1"></a>tab_aov_s <span class="ot">&lt;-</span> <span class="fu">tidy</span>(mod_scripts)</span>
+<span id="cb124-2"><a href="contrastes.html#cb124-2" tabindex="-1"></a>tab_aov_s</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 6
+##   term         df   sumsq  meansq statistic   p.value
+##   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 config        3 420290. 140097.      32.2  2.67e-10
+## 2 Residuals    36 156479.   4347.      NA   NA</code></pre>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="contrastes.html#cb126-1" tabindex="-1"></a>sq_trat_s <span class="ot">&lt;-</span> tab_aov_s<span class="sc">$</span>sumsq[<span class="dv">1</span>]; sq_tot_s <span class="ot">&lt;-</span> <span class="fu">sum</span>(tab_aov_s<span class="sc">$</span>sumsq)</span></code></pre></div>
+<p>Com <span class="math inline">\(F = 32{,}23\)</span> em (3, 36) gl, não há dúvida razoável de que as
+configurações diferem; <span class="math inline">\(R^2 = SQ_{\text{Trat}}/SQ_{\text{Total}} = 0{,}73\)</span>, ou seja,
+a configuração explica cerca de 73% da variação dos tempos. O
+desvio-padrão de um carregamento dentro de uma configuração é <span class="math inline">\(\sqrt{QME} = 65{,}9\)</span> ms, e o
+erro-padrão de uma diferença entre duas médias é <span class="math inline">\(\sqrt{2QME/10} = 29{,}5\)</span> ms — a
+“unidade de ruído” contra a qual todas as comparações desta seção serão medidas. Até aqui sabemos
+<strong>que</strong> há diferença; as subseções seguintes respondem <strong>onde</strong>, <strong>quanto</strong> e <strong>com que garantia</strong>.</p>
+</div>
+<div id="definição-esperança-e-variância-de-um-contraste" class="section level3 hasAnchor" number="3.6.2">
+<h3><span class="header-section-number">3.6.2</span> Definição, esperança e variância de um contraste<a href="contrastes.html#definição-esperança-e-variância-de-um-contraste" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Sejam <span class="math inline">\(\mu_1, \ldots, \mu_t\)</span> as médias populacionais dos <span class="math inline">\(t\)</span> tratamentos. Um <strong>contraste</strong> é
 qualquer combinação linear</p>
 <p><span class="math display">\[L = \sum_{i=1}^{t} c_i \mu_i, \qquad \text{sujeita a} \qquad \sum_{i=1}^{t} c_i = 0.\]</span></p>
 <p>A restrição <span class="math inline">\(\sum c_i = 0\)</span> é o que distingue um contraste de uma combinação linear qualquer: ela
-garante que <span class="math inline">\(L\)</span> mede uma <strong>diferença</strong> entre grupos (ou grupos de grupos), não um nível geral. Com
-os dados, <span class="math inline">\(L\)</span> é estimado por <span class="math inline">\(\hat L = \sum_{i=1}^t c_i \bar y_{i\cdot}\)</span>, trocando cada <span class="math inline">\(\mu_i\)</span>
-pela média amostral do respectivo grupo. Como as médias amostrais dos <span class="math inline">\(t\)</span> grupos são
-independentes (unidades experimentais diferentes) e <span class="math inline">\(E(\bar y_{i\cdot}) = \mu_i\)</span>,</p>
+garante que <span class="math inline">\(L\)</span> mede uma <strong>diferença</strong> entre grupos (ou grupos de grupos), não um nível geral.
+Formalmente, somar a mesma constante <span class="math inline">\(k\)</span> a todas as médias não altera <span class="math inline">\(L\)</span>, porque
+<span class="math inline">\(\sum c_i(\mu_i + k) = L + k\sum c_i = L\)</span> — um contraste é invariante ao nível geral da resposta,
+exatamente como deve ser uma comparação. Com os dados, <span class="math inline">\(L\)</span> é estimado por
+<span class="math inline">\(\hat L = \sum_{i=1}^t c_i \bar y_{i\cdot}\)</span>, trocando cada <span class="math inline">\(\mu_i\)</span> pela média amostral do respectivo
+grupo. Como as médias amostrais dos <span class="math inline">\(t\)</span> grupos são independentes (unidades experimentais
+diferentes) e <span class="math inline">\(E(\bar y_{i\cdot}) = \mu_i\)</span>,</p>
 <p><span class="math display">\[E(\hat L) = \sum_{i=1}^t c_i\, E(\bar y_{i\cdot}) = \sum_{i=1}^t c_i \mu_i = L,\]</span></p>
 <p>ou seja, <span class="math inline">\(\hat L\)</span> é um estimador não viesado de <span class="math inline">\(L\)</span>. Assumindo variância homogênea <span class="math inline">\(\sigma^2\)</span>
 entre tratamentos (o mesmo pressuposto de homocedasticidade da ANOVA) e <span class="math inline">\(n_i\)</span> réplicas no
@@ -600,9 +912,61 @@ tratamento <span class="math inline">\(i\)</span>,</p>
 <p>que se reduz a <span class="math inline">\(\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\displaystyle\sum_{i=1}^t c_i^2\)</span> no caso
 balanceado (<span class="math inline">\(n_i = n\)</span> para todo <span class="math inline">\(i\)</span>), o caso mais comum na prática e o único em que os
 coeficientes <span class="math inline">\(c_i\)</span> tabulados na literatura clássica se aplicam diretamente.</p>
+<p>Cada pergunta científica se traduz num vetor de coeficientes pela mesma receita: coeficientes
+<strong>positivos</strong> nos tratamentos de um lado da pergunta, <strong>negativos</strong> nos do outro lado, <strong>zero</strong> nos
+que não participam, e soma zero. Para as três perguntas registradas no protocolo do exemplo:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pergunta</th>
+<th><span class="math inline">\(L\)</span></th>
+<th align="center"><span class="math inline">\((c_1,c_2,c_3,c_4)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scripts de terceiros atrasam a página?</td>
+<td><span class="math inline">\(\mu_1-\tfrac13(\mu_2+\mu_3+\mu_4)\)</span></td>
+<td align="center"><span class="math inline">\((3,-1,-1,-1)\)</span></td>
+</tr>
+<tr class="even">
+<td>Analytics é mais leve que os que têm anúncio?</td>
+<td><span class="math inline">\(\mu_2-\tfrac12(\mu_3+\mu_4)\)</span></td>
+<td align="center"><span class="math inline">\((0,2,-1,-1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>O chat acrescenta tempo aos anúncios?</td>
+<td><span class="math inline">\(\mu_3-\mu_4\)</span></td>
+<td align="center"><span class="math inline">\((0,0,1,-1)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Multiplicar todos os <span class="math inline">\(c_i\)</span> por uma constante não muda o teste (só a escala de <span class="math inline">\(\hat L\)</span>); por isso
+costuma-se usar inteiros, <span class="math inline">\((3,-1,-1,-1)\)</span> em vez de <span class="math inline">\((1,-\tfrac13,-\tfrac13,-\tfrac13)\)</span>.</p>
 </div>
-<div id="soma-de-quadrados-de-um-contraste-e-sua-distribuição" class="section level3 hasAnchor" number="3.6.2">
-<h3><span class="header-section-number">3.6.2</span> Soma de quadrados de um contraste e sua distribuição<a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="contraste-normalizado" class="section level3 hasAnchor" number="3.6.3">
+<h3><span class="header-section-number">3.6.3</span> Normalização e intervalo de confiança<a href="contrastes.html#contraste-normalizado" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A conveniência dos inteiros tem um custo de leitura: com <span class="math inline">\((3,-1,-1,-1)\)</span>, <span class="math inline">\(\hat L\)</span> é <strong>três vezes</strong>
+a diferença entre a média do controle e a média das demais, e não essa diferença. Para
+interpretar um contraste na escala da resposta, divide-se cada coeficiente pela soma dos
+coeficientes positivos,</p>
+<p><span class="math display">\[c_i^{*} = \frac{c_i}{\sum_{c_j&gt;0} c_j} \qquad\Longrightarrow\qquad \hat L^{*} = \bar m_{+} - \bar m_{-},\]</span></p>
+<p>em que <span class="math inline">\(\bar m_{+}\)</span> e <span class="math inline">\(\bar m_{-}\)</span> são as médias simples das médias de tratamento de cada lado da
+pergunta. O contraste normalizado <span class="math inline">\(\hat L^{*}\)</span> está em ms, e seu intervalo de confiança de
+<span class="math inline">\(100(1-\alpha)\%\)</span> — válido para <strong>um</strong> contraste especificado antes dos dados — é</p>
+<p><span class="math display">\[\hat L^{*} \pm t_{\alpha/2,\;gl_{\text{erro}}}\sqrt{QME\sum_{i=1}^t \frac{(c_i^{*})^2}{n_i}}.\]</span></p>
+<p>A estatística <span class="math inline">\(t\)</span>, o <span class="math inline">\(F\)</span> e o p-valor são <strong>idênticos</strong> com <span class="math inline">\(c_i\)</span> ou <span class="math inline">\(c_i^{*}\)</span> (a constante se cancela
+entre numerador e denominador); só a leitura muda. A recomendação prática é reportar sempre
+<span class="math inline">\(\hat L^{*}\)</span> com seu intervalo: o teste diz <strong>se</strong> há efeito, o intervalo diz <strong>quanto</strong>, e as
+duas informações são necessárias para uma decisão.</p>
+</div>
+<div id="soma-de-quadrados-de-um-contraste-e-sua-distribuição" class="section level3 hasAnchor" number="3.6.4">
+<h3><span class="header-section-number">3.6.4</span> Soma de quadrados de um contraste e sua distribuição<a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A soma de quadrados atribuível a um contraste é</p>
 <p><span class="math display">\[SQ_L = \frac{\hat L^{\,2}}{\sum_{i=1}^t c_i^2/n_i},\]</span></p>
 <p>com <strong>1 grau de liberdade</strong>, qualquer que seja o número de tratamentos <span class="math inline">\(t\)</span> — um contraste é,
@@ -615,10 +979,13 @@ reportar um contraste isolado:</p>
 <p><span class="math display">\[t = \frac{\hat L}{\sqrt{QME \sum_i c_i^2/n_i}}.\]</span></p>
 <p>Um contraste é, portanto, um teste com 1 grau de liberdade <strong>encaixado dentro</strong> da ANOVA — mais
 específico e, em geral, mais poderoso do que o teste F global de <span class="math inline">\(t-1\)</span> graus de liberdade, desde
-que a pergunta específica seja definida <strong>antes</strong> de olhar os dados.</p>
+que a pergunta específica seja definida <strong>antes</strong> de olhar os dados. A intuição do ganho de poder
+é geométrica: se o efeito verdadeiro está concentrado numa única direção do espaço de
+tratamentos, o <span class="math inline">\(F\)</span> global o dilui por <span class="math inline">\(t-1\)</span> graus de liberdade, enquanto o contraste aponta direto
+para aquela direção e não “paga” pelas outras <span class="math inline">\(t-2\)</span>.</p>
 </div>
-<div id="notação-matricial-contraste-como-forma-linear-e-quadrática" class="section level3 hasAnchor" number="3.6.3">
-<h3><span class="header-section-number">3.6.3</span> Notação matricial: contraste como forma linear e quadrática<a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="notação-matricial-contraste-como-forma-linear-e-quadrática" class="section level3 hasAnchor" number="3.6.5">
+<h3><span class="header-section-number">3.6.5</span> Notação matricial: contraste como forma linear e quadrática<a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Recorde o modelo linear do Capítulo 2 (Seção <a href="modelo-geral.html#modelo-geral">2.3</a>) e sua parametrização de médias
 de casela (<em>cell-means</em>) para o DCA: <span class="math inline">\(\mathbf Y = \mathbf X\boldsymbol\mu + \boldsymbol\varepsilon\)</span>,
 em que <span class="math inline">\(\mathbf X\)</span> é a matriz <span class="math inline">\(N\times t\)</span> de indicadoras de tratamento (posto coluna completo
@@ -636,10 +1003,10 @@ variância</p>
 <p>A soma de quadrados do contraste é a forma quadrática de posto 1</p>
 <p><span class="math display">\[SQ_L = (\boldsymbol\lambda&#39;\hat{\boldsymbol\mu})\,\big[\boldsymbol\lambda&#39;(\mathbf X&#39;\mathbf X)^{-1}\boldsymbol\lambda\big]^{-1}\,(\boldsymbol\lambda&#39;\hat{\boldsymbol\mu}) \;=\; \mathbf Y&#39;\mathbf A_{\boldsymbol\lambda}\mathbf Y,\]</span></p>
 <p>em que <span class="math inline">\(\mathbf A_{\boldsymbol\lambda}\)</span> é simétrica e idempotente, de posto 1 — uma projeção sobre
-a direção definida por <span class="math inline">\(\boldsymbol\lambda\)</span> dentro do subespaço de tratamento. Pelo teorema sobre
-formas quadráticas idempotentes do Capítulo 2 (Seção <a href="formas-quadraticas.html#formas-quadraticas">2.10</a>),
-<span class="math inline">\(SQ_L/\sigma^2 \sim \chi^2_1\)</span> sob <span class="math inline">\(H_0: L=0\)</span> — a mesma conclusão obtida escalarmente acima, agora
-como caso particular de um resultado geral, não uma coincidência.</p>
+a direção <span class="math inline">\(\mathbf X(\mathbf X&#39;\mathbf X)^{-1}\boldsymbol\lambda\)</span> dentro do subespaço de
+tratamento. Pelo teorema sobre formas quadráticas idempotentes do Capítulo 2 (Seção
+<a href="formas-quadraticas.html#formas-quadraticas">2.10</a>), <span class="math inline">\(SQ_L/\sigma^2 \sim \chi^2_1\)</span> sob <span class="math inline">\(H_0: L=0\)</span> — a mesma conclusão
+obtida escalarmente acima, agora como caso particular de um resultado geral, não uma coincidência.</p>
 <p>Essa leitura geométrica também explica <em>por que</em> contrastes ortogonais se comportam tão bem: um
 conjunto de <span class="math inline">\(t-1\)</span> contrastes ortogonais <span class="math inline">\(\boldsymbol\lambda_1,\ldots,\boldsymbol\lambda_{t-1}\)</span>
 corresponde a <span class="math inline">\(t-1\)</span> projeções de posto 1 mutuamente ortogonais, cuja soma reconstrói exatamente a
@@ -654,23 +1021,26 @@ cuidado o que isso <strong>não</strong> diz: as estatísticas <span class="math
 denominador aleatório <span class="math inline">\(QM_E\)</span> e, por isso, <strong>não</strong> são independentes entre si, ainda que seus
 numeradores sejam. A distinção é formalizada a seguir.</p>
 </div>
-<div id="contrastes-ortogonais" class="section level3 hasAnchor" number="3.6.4">
-<h3><span class="header-section-number">3.6.4</span> Contrastes ortogonais<a href="contrastes.html#contrastes-ortogonais" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="contrastes-ortogonais" class="section level3 hasAnchor" number="3.6.6">
+<h3><span class="header-section-number">3.6.6</span> Contrastes ortogonais<a href="contrastes.html#contrastes-ortogonais" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Dois contrastes com coeficientes <span class="math inline">\(\{c_i\}\)</span> e <span class="math inline">\(\{d_i\}\)</span> são <strong>ortogonais</strong> se</p>
 <p><span class="math display">\[\sum_{i=1}^t \frac{c_i d_i}{n_i} = 0 \qquad \Big(\text{balanceado: } \sum_{i=1}^t c_i d_i = 0\Big).\]</span></p>
 <p>Para <span class="math inline">\(t\)</span> tratamentos existem no máximo <span class="math inline">\(t - 1\)</span> contrastes mutuamente ortogonais. A propriedade
 notável de um <strong>conjunto completo</strong> de <span class="math inline">\(t-1\)</span> contrastes ortogonais é que suas somas de quadrados
 particionam exatamente a soma de quadrados de tratamento, sem sobra e sem sobreposição:</p>
 <p><span class="math display">\[SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_{L_k}, \qquad gl_{\text{Trat}} = \sum_{k=1}^{t-1} 1 = t-1.\]</span></p>
-<p>Além disso, sob normalidade, os <span class="math inline">\(t-1\)</span> testes <span class="math inline">\(F\)</span> resultantes são <strong>estatisticamente
-independentes</strong> entre si — uma propriedade que nenhuma coleção arbitrária de contrastes possui.
-Isso torna contrastes ortogonais a ferramenta natural para decompor a variação entre tratamentos
-em perguntas específicas, planejadas antes da coleta de dados.</p>
-<p>Para os quatro grupos do exemplo de carregamento de página, um conjunto de 3 contrastes
-ortogonais planejados a priori poderia ser:</p>
+<p>Sob normalidade, os numeradores <span class="math inline">\(SQ_{L_k}\)</span> são independentes entre si e do <span class="math inline">\(QME\)</span>, como visto na
+subseção anterior; os testes <span class="math inline">\(F_k\)</span> só não são independentes porque dividem pelo mesmo <span class="math inline">\(QME\)</span>
+(com muitos graus de liberdade de erro essa dependência é fraca). Isso torna contrastes ortogonais
+a ferramenta natural para decompor a variação entre tratamentos em perguntas específicas,
+planejadas antes da coleta de dados: cada pergunta recebe sua própria “fatia” de <span class="math inline">\(SQ_{\text{Trat}}\)</span>,
+sem que a informação de uma contamine a de outra.</p>
+<p>Para os quatro grupos do exemplo de carregamento de página, as três perguntas do protocolo formam
+um conjunto completo de contrastes ortogonais: os produtos internos são
+<span class="math inline">\(L_1\cdot L_2 = 0-2+1+1 = 0\)</span>, <span class="math inline">\(L_1\cdot L_3 = 0+0-1+1 = 0\)</span> e <span class="math inline">\(L_2\cdot L_3 = 0+0-1+1 = 0\)</span>.</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:c3b-contrastes-tab">Tabela 3.14: </span>Um conjunto de 3 contrastes ortogonais (3 graus de liberdade = <span class="math inline">\(gl_{Trat}\)</span>)
+<span id="tab:c3b-contrastes-tab">Tabela 3.16: </span>Um conjunto de 3 contrastes ortogonais (3 graus de liberdade = <span class="math inline">\(gl_{Trat}\)</span>)
 </caption>
 <thead>
 <tr>
@@ -745,42 +1115,224 @@ Combo
 </tr>
 </tbody>
 </table>
-<div class="caixa-r"><strong>Uso do R</strong> — calculando contrastes e verificando a partição de $SQ_{Trat}$</div>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="contrastes.html#cb113-1" tabindex="-1"></a>medias  <span class="ot">&lt;-</span> <span class="fu">with</span>(dados_scripts, <span class="fu">tapply</span>(tempo_ms, config, mean))</span>
-<span id="cb113-2"><a href="contrastes.html#cb113-2" tabindex="-1"></a>ns      <span class="ot">&lt;-</span> <span class="fu">with</span>(dados_scripts, <span class="fu">tapply</span>(tempo_ms, config, length))</span>
-<span id="cb113-3"><a href="contrastes.html#cb113-3" tabindex="-1"></a>qme     <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
-<span id="cb113-4"><a href="contrastes.html#cb113-4" tabindex="-1"></a>gl_erro <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
-<span id="cb113-5"><a href="contrastes.html#cb113-5" tabindex="-1"></a></span>
-<span id="cb113-6"><a href="contrastes.html#cb113-6" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb113-7"><a href="contrastes.html#cb113-7" tabindex="-1"></a>  <span class="at">L1 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">3</span>, <span class="at">Analytics =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb113-8"><a href="contrastes.html#cb113-8" tabindex="-1"></a>  <span class="at">L2 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">2</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb113-9"><a href="contrastes.html#cb113-9" tabindex="-1"></a>  <span class="at">L3 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">0</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span>  <span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb113-10"><a href="contrastes.html#cb113-10" tabindex="-1"></a>)</span>
-<span id="cb113-11"><a href="contrastes.html#cb113-11" tabindex="-1"></a></span>
-<span id="cb113-12"><a href="contrastes.html#cb113-12" tabindex="-1"></a>resultado_contrastes <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">names</span>(coefs), <span class="cf">function</span>(nm) {</span>
-<span id="cb113-13"><a href="contrastes.html#cb113-13" tabindex="-1"></a>  cc   <span class="ot">&lt;-</span> coefs[[nm]][<span class="fu">names</span>(medias)]</span>
-<span id="cb113-14"><a href="contrastes.html#cb113-14" tabindex="-1"></a>  Lhat <span class="ot">&lt;-</span> <span class="fu">sum</span>(cc <span class="sc">*</span> medias)</span>
-<span id="cb113-15"><a href="contrastes.html#cb113-15" tabindex="-1"></a>  SQ   <span class="ot">&lt;-</span> Lhat<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(cc<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> ns)</span>
-<span id="cb113-16"><a href="contrastes.html#cb113-16" tabindex="-1"></a>  Fval <span class="ot">&lt;-</span> SQ <span class="sc">/</span> qme</span>
-<span id="cb113-17"><a href="contrastes.html#cb113-17" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">contraste =</span> nm, <span class="at">L_hat =</span> Lhat, <span class="at">SQ =</span> SQ, <span class="at">F =</span> Fval,</span>
-<span id="cb113-18"><a href="contrastes.html#cb113-18" tabindex="-1"></a>         <span class="at">p_valor =</span> <span class="fu">pf</span>(Fval, <span class="dv">1</span>, gl_erro, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb113-19"><a href="contrastes.html#cb113-19" tabindex="-1"></a>})</span>
-<span id="cb113-20"><a href="contrastes.html#cb113-20" tabindex="-1"></a>resultado_contrastes</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 5
-##   contraste  L_hat      SQ     F       p_valor
-##   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;
-## 1 L1        -561.  262161. 60.3  0.00000000333
-## 2 L2        -302.  152438. 35.1  0.000000883  
-## 3 L3         -33.7   5691.  1.31 0.260</code></pre>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="contrastes.html#cb115-1" tabindex="-1"></a><span class="co"># verificação: a soma das SQ dos 3 contrastes ortogonais reproduz SQ_Trat da ANOVA</span></span>
-<span id="cb115-2"><a href="contrastes.html#cb115-2" tabindex="-1"></a><span class="fu">sum</span>(resultado_contrastes<span class="sc">$</span>SQ)</span></code></pre></div>
+</div>
+<div id="contraste-a-mao" class="section level3 hasAnchor" number="3.6.7">
+<h3><span class="header-section-number">3.6.7</span> Um contraste calculado à mão<a href="contrastes.html#contraste-a-mao" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Antes de delegar ao R, vale fazer uma conta completa. A Tabela <a href="contrastes.html#tab:c3c-l1-mao">3.17</a> organiza o
+cálculo de <span class="math inline">\(L_1\)</span> (controle contra a média das três configurações com script).</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3c-l1-mao">Tabela 3.17: </span>Cálculo de <span class="math inline">\(\hat L_1\)</span> e de sua variância, passo a passo
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Configuração
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\bar y_{i\cdot}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(c_i\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(c_i\bar y_{i\cdot}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(c_i^2/n_i\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Nenhum
+</td>
+<td style="text-align:right;">
+859,38
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.578,14
+</td>
+<td style="text-align:right;">
+0,9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Analytics
+</td>
+<td style="text-align:right;">
+945,53
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-945,53
+</td>
+<td style="text-align:right;">
+0,1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anúncios
+</td>
+<td style="text-align:right;">
+1.079,88
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-1.079,88
+</td>
+<td style="text-align:right;">
+0,1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combo
+</td>
+<td style="text-align:right;">
+1.113,62
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-1.113,62
+</td>
+<td style="text-align:right;">
+0,1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Soma
+</td>
+<td style="text-align:right;font-weight: bold;">
+</td>
+<td style="text-align:right;font-weight: bold;">
+0
+</td>
+<td style="text-align:right;font-weight: bold;">
+-560,89
+</td>
+<td style="text-align:right;font-weight: bold;">
+1,2
+</td>
+</tr>
+</tbody>
+</table>
+<p>Daí: <span class="math inline">\(\hat L_1 = -560{,}9\)</span>; <span class="math inline">\(EP(\hat L_1) = \sqrt{QME \times 1{,}2} = \sqrt{4.346{,}6 \times 1{,}2} = 72{,}2\)</span>;
+<span class="math inline">\(t = -7{,}77\)</span>; <span class="math inline">\(SQ_{L_1} = \hat L_1^2/1{,}2 = 262.161\)</span> e
+<span class="math inline">\(F = SQ_{L_1}/QME = 60{,}3 = t^2\)</span>, com (1, 36) gl. Na escala de ms, dividindo
+pela soma dos coeficientes positivos (3), <span class="math inline">\(\hat L_1^{*} = -187{,}0\)</span> ms: sem scripts, a página
+carrega em média 187 ms mais rápido que a média das três configurações com script.</p>
+<div class="caixa-r"><strong>Uso do R</strong> — os três contrastes: estimativa normalizada, intervalo, teste e partição de $SQ_{Trat}$</div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="contrastes.html#cb127-1" tabindex="-1"></a>gl_erro <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Df&quot;</span>]</span>
+<span id="cb127-2"><a href="contrastes.html#cb127-2" tabindex="-1"></a></span>
+<span id="cb127-3"><a href="contrastes.html#cb127-3" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb127-4"><a href="contrastes.html#cb127-4" tabindex="-1"></a>  <span class="at">L1 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">3</span>, <span class="at">Analytics =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb127-5"><a href="contrastes.html#cb127-5" tabindex="-1"></a>  <span class="at">L2 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">2</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb127-6"><a href="contrastes.html#cb127-6" tabindex="-1"></a>  <span class="at">L3 =</span> <span class="fu">c</span>(<span class="at">Nenhum =</span> <span class="dv">0</span>, <span class="at">Analytics =</span>  <span class="dv">0</span>, <span class="st">`</span><span class="at">Anúncios</span><span class="st">`</span> <span class="ot">=</span>  <span class="dv">1</span>, <span class="at">Combo =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb127-7"><a href="contrastes.html#cb127-7" tabindex="-1"></a>)</span>
+<span id="cb127-8"><a href="contrastes.html#cb127-8" tabindex="-1"></a></span>
+<span id="cb127-9"><a href="contrastes.html#cb127-9" tabindex="-1"></a>resultado_contrastes <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">names</span>(coefs), <span class="cf">function</span>(nm) {</span>
+<span id="cb127-10"><a href="contrastes.html#cb127-10" tabindex="-1"></a>  cc   <span class="ot">&lt;-</span> coefs[[nm]][<span class="fu">names</span>(medias)]</span>
+<span id="cb127-11"><a href="contrastes.html#cb127-11" tabindex="-1"></a>  cs   <span class="ot">&lt;-</span> cc <span class="sc">/</span> <span class="fu">sum</span>(cc[cc <span class="sc">&gt;</span> <span class="dv">0</span>])                 <span class="co"># coeficientes normalizados: escala de ms</span></span>
+<span id="cb127-12"><a href="contrastes.html#cb127-12" tabindex="-1"></a>  Lhat <span class="ot">&lt;-</span> <span class="fu">sum</span>(cs <span class="sc">*</span> medias)</span>
+<span id="cb127-13"><a href="contrastes.html#cb127-13" tabindex="-1"></a>  ep   <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(qme <span class="sc">*</span> <span class="fu">sum</span>(cs<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> ns))</span>
+<span id="cb127-14"><a href="contrastes.html#cb127-14" tabindex="-1"></a>  SQ   <span class="ot">&lt;-</span> <span class="fu">sum</span>(cc <span class="sc">*</span> medias)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(cc<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> ns)  <span class="co"># igual com cc ou cs</span></span>
+<span id="cb127-15"><a href="contrastes.html#cb127-15" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">contraste =</span> nm, <span class="at">L_ms =</span> Lhat, <span class="at">ep =</span> ep,</span>
+<span id="cb127-16"><a href="contrastes.html#cb127-16" tabindex="-1"></a>         <span class="at">li =</span> Lhat <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, gl_erro) <span class="sc">*</span> ep, <span class="at">ls =</span> Lhat <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, gl_erro) <span class="sc">*</span> ep,</span>
+<span id="cb127-17"><a href="contrastes.html#cb127-17" tabindex="-1"></a>         <span class="at">SQ =</span> SQ, <span class="at">F =</span> SQ <span class="sc">/</span> qme, <span class="at">p_valor =</span> <span class="fu">pf</span>(SQ <span class="sc">/</span> qme, <span class="dv">1</span>, gl_erro, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb127-18"><a href="contrastes.html#cb127-18" tabindex="-1"></a>})</span>
+<span id="cb127-19"><a href="contrastes.html#cb127-19" tabindex="-1"></a>resultado_contrastes</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 8
+##   contraste   L_ms    ep     li     ls      SQ     F       p_valor
+##   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;
+## 1 L1        -187.   24.1 -236.  -138.  262161. 60.3  0.00000000333
+## 2 L2        -151.   25.5 -203.   -99.4 152438. 35.1  0.000000883  
+## 3 L3         -33.7  29.5  -93.5   26.1   5691.  1.31 0.260</code></pre>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="contrastes.html#cb129-1" tabindex="-1"></a><span class="co"># verificação: a soma das SQ dos 3 contrastes ortogonais reproduz SQ_Trat da ANOVA</span></span>
+<span id="cb129-2"><a href="contrastes.html#cb129-2" tabindex="-1"></a><span class="fu">sum</span>(resultado_contrastes<span class="sc">$</span>SQ)</span></code></pre></div>
 <pre><code>## [1] 420290.4</code></pre>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="contrastes.html#cb117-1" tabindex="-1"></a><span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;config&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="contrastes.html#cb131-1" tabindex="-1"></a><span class="fu">summary</span>(mod_scripts)[[<span class="dv">1</span>]][<span class="st">&quot;config&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>]</span></code></pre></div>
 <pre><code>## [1] 420290.4</code></pre>
 <p>A soma das três somas de quadrados dos contrastes reproduz exatamente a soma de quadrados de
-tratamento da ANOVA — confirmando a partição. Os contrastes <span class="math inline">\(L_1\)</span> e <span class="math inline">\(L_2\)</span> são significativos
-(scripts, de fato, atrasam o carregamento, e Analytics sozinho atrasa menos que Anúncios/Combo);
-<span class="math inline">\(L_3\)</span> não é (Anúncios e Combo não diferem significativamente entre si neste conjunto de dados).</p>
+tratamento da ANOVA — confirmando a partição. A Figura <a href="contrastes.html#fig:c3c-plot-contrastes-ic">3.19</a> mostra os
+três contrastes normalizados com seus intervalos, e a Figura <a href="contrastes.html#fig:c3c-plot-contrastes-sq">3.20</a>,
+como cada um se apropria de uma fatia de <span class="math inline">\(SQ_{\text{Trat}}\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-plot-contrastes-ic"></span>
+<img src="03-dca_files/figure-html/c3c-plot-contrastes-ic-1.png" alt="Os três contrastes planejados na escala de ms (coeficientes normalizados), com intervalos de confiança de 95%. A linha tracejada marca o zero (ausência de diferença)." width="75%" />
+<p class="caption">
+Figura 3.19: Os três contrastes planejados na escala de ms (coeficientes normalizados), com intervalos de confiança de 95%. A linha tracejada marca o zero (ausência de diferença).
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-plot-contrastes-sq"></span>
+<img src="03-dca_files/figure-html/c3c-plot-contrastes-sq-1.png" alt="Partição da soma de quadrados (SQ) de tratamentos pelos três contrastes ortogonais: as barras somam exatamente a linha tracejada; o rótulo dá a SQ de cada contraste e sua porcentagem da SQ de tratamentos." width="75%" />
+<p class="caption">
+Figura 3.20: Partição da soma de quadrados (SQ) de tratamentos pelos três contrastes ortogonais: as barras somam exatamente a linha tracejada; o rótulo dá a SQ de cada contraste e sua porcentagem da SQ de tratamentos.
+</p>
+</div>
+<p>A leitura é direta. <span class="math inline">\(L_1\)</span> e <span class="math inline">\(L_2\)</span> têm intervalos inteiramente abaixo de zero: scripts de
+terceiros atrasam a página, e Analytics atrasa bem menos que as configurações com anúncio. Em
+termos de variação, 62% de toda a diferença entre configurações é
+“ter ou não ter script”, 36% é “anúncio ou não”, e apenas
+1% é “chat em cima do anúncio”. <span class="math inline">\(L_3\)</span> não é significativo, mas
+o seu intervalo, de -94 a 26 ms, merece mais atenção do
+que o p-valor: “não significativo” <strong>não</strong> quer dizer “igual”. Os dados são compatíveis tanto com o
+Combo carregando um pouco mais rápido que Anúncios quanto com ele carregando até
+94 ms mais lento — e, para uma página de produto, 90 ms podem importar.</p>
+</div>
+<div id="contrastes-nao-ortogonais" class="section level3 hasAnchor" number="3.6.8">
+<h3><span class="header-section-number">3.6.8</span> Contrastes não ortogonais<a href="contrastes.html#contrastes-nao-ortogonais" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Nada impede testar contrastes não ortogonais; cada um continua sendo um teste válido de 1 grau de
+liberdade. O que se perde é a contabilidade. Considere a família natural “cada configuração contra
+o controle”, com coeficientes <span class="math inline">\((-1,1,0,0)\)</span>, <span class="math inline">\((-1,0,1,0)\)</span> e <span class="math inline">\((-1,0,0,1)\)</span>: o produto interno de
+quaisquer dois deles é <span class="math inline">\((-1)(-1) = 1 \ne 0\)</span>, porque todos reutilizam a média do controle.</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="contrastes.html#cb133-1" tabindex="-1"></a>coefs_ctrl <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">Analytics−Nenhum</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">`</span><span class="at">Anúncios−Nenhum</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb133-2"><a href="contrastes.html#cb133-2" tabindex="-1"></a>                   <span class="st">`</span><span class="at">Combo−Nenhum</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb133-3"><a href="contrastes.html#cb133-3" tabindex="-1"></a>sq_ctrl <span class="ot">&lt;-</span> <span class="fu">sapply</span>(coefs_ctrl, <span class="cf">function</span>(cc) <span class="fu">sum</span>(cc <span class="sc">*</span> medias)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(cc<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> ns))</span>
+<span id="cb133-4"><a href="contrastes.html#cb133-4" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(sq_ctrl, <span class="at">soma =</span> <span class="fu">sum</span>(sq_ctrl), <span class="at">SQ_Trat =</span> sq_trat_s))</span></code></pre></div>
+<pre><code>## Analytics−Nenhum  Anúncios−Nenhum     Combo−Nenhum             soma 
+##            37111           243095           323180           603386 
+##          SQ_Trat 
+##           420290</code></pre>
+<p>A soma das três <span class="math inline">\(SQ\)</span> (603.386) passa de <span class="math inline">\(SQ_{\text{Trat}}\)</span> (420.290) em
+44%: a média do controle, a mais baixa de todas, entra nas três perguntas,
+e sua distância às demais é contada três vezes. Não há erro de conta — há sobreposição de
+informação. Cada teste segue válido isoladamente; o que deixa de valer é ler as <span class="math inline">\(SQ\)</span> como fatias
+da variação. E, como os três testes são correlacionados positivamente (compartilham
+<span class="math inline">\(\bar y_{\text{Nenhum}}\)</span>), a correção adequada para tratá-los como família não é a de Bonferroni,
+que ignora a correlação, e sim a de Dunnett, que a usa (Seção <a href="comparacoes-multiplas.html#comparacoes-multiplas">3.7</a>).</p>
+</div>
+<div id="contrastes-respostas" class="section level3 hasAnchor" number="3.6.9">
+<h3><span class="header-section-number">3.6.9</span> O que os contrastes respondem nestes dados<a href="contrastes.html#contrastes-respostas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Voltando às três perguntas do protocolo:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Scripts de terceiros atrasam a página?</strong> Sim: em média 187 ms
+(IC 95%: 138 a 236 ms), cerca de
+22% do tempo da página limpa.</li>
+<li><strong>Se for para ter um script, Analytics é o mais leve?</strong> Sim: Analytics carrega
+151 ms mais rápido que a média das duas opções com anúncio
+(IC: 99 a 203 ms).</li>
+<li><strong>Acrescentar o chat aos anúncios custa caro?</strong> Os dados não permitem afirmar nem negar. A
+diferença estimada é de 34 ms, com intervalo que inclui zero. Com o
+desvio-padrão observado, detectar uma diferença de 30 ms com poder de 80% exigiria cerca de
+77 carregamentos por configuração
+(<code>power.t.test(delta = 30, sd = sqrt(qme), power = 0.8)</code>), e não 10: a pergunta (iii) estava
+subdimensionada no desenho, um lembrete da Seção <a href="dca-uma-via.html#numero-replicas-dca">3.2.6</a>.</li>
+</ol>
+<p>Os três testes estão protegidos sem correção adicional porque são planejados, ortogonais e em
+número de <span class="math inline">\(t-1\)</span>: cada um usa uma fatia diferente de <span class="math inline">\(SQ_{\text{Trat}}\)</span>.</p>
 </div>
 </div>
 <!-- Rodape de direitos autorais em toda pagina do gitbook. O gitbook troca o conteudo

@@ -43,17 +43,28 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+Hoje aparece a palavra **controlar** em dois sentidos que não devem ser confundidos:
+
+- **Controle estatístico:** incluir uma covariável no modelo e estimar o efeito "mantida fixa" essa covariável. É o que o teorema FWL (Frisch-Waugh-Lovell) formaliza: residualizar nas outras colunas de `\(\mathbf X\)`.
+- **Controle pelo desenho:** fixar ou **sortear** a variável antes da coleta, de modo que nada mais possa determiná-la.
+
+O controle estatístico só alcança o que foi **medido e incluído**. O controle pelo desenho (sorteio) alcança também o que **ninguém mediu**. O Bloco 3 mostra quanto custa confundir os dois.
+
+---
+
 ## O teorema de Gauss-Markov
 
 Sob `\(\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}\)`, `\(\mathrm{Cov}(\boldsymbol{\varepsilon}) = \sigma^2\mathbf{I}_n\)` (sem exigir normalidade):
 
 &gt; Se `\(\boldsymbol{\lambda}'\boldsymbol{\beta}\)` é estimável, `\(\boldsymbol{\lambda}'\hat{\boldsymbol{\beta}}\)`
-&gt; é o **BLUE** — o estimador linear não viesado de menor variância (Plackett, 1950; Searle, 1971).
+&gt; é o **BLUE** (*best linear unbiased estimator*) — o estimador linear não viesado de menor variância (Plackett, 1950; Searle, 1971).
 
 --
 
 - "Melhor" = dentro da classe de estimadores **lineares não viesados**. Estimadores viesados
-  (ridge) podem ter EQM menor em certos cenários.
+  (ridge) podem ter EQM (erro quadrático médio) menor em certos cenários.
 - Não exige normalidade — só entra para testes/IC exatos.
 
 `$$\mathrm{Cov}(\hat{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$$`
@@ -99,7 +110,7 @@ Três servidores, duas medições cada, `\(\mathbf X\)` com intercepto + 3 indic
 
 **Projetar sobre `\(\mathcal C(\mathbf X)\)` = trocar cada observação pela média do seu grupo.** O
 resíduo é o desvio de cada observação em relação à média do grupo. O traço de `\(\mathbf P_X\)` é
-`\(6\times\tfrac12=3=\mathrm{posto}(\mathbf X)\)`, e sobram `\(6-3=3\)` gl para o erro.
+`\(6\times\tfrac12=3=\mathrm{posto}(\mathbf X)\)`, e sobram `\(6-3=3\)` graus de liberdade (gl) para o erro.
 
 ---
 
@@ -113,7 +124,7 @@ Toda a álgebra anterior é **uma figura**: `\(\hat{\mathbf{Y}}\)` é o ponto de
 
 - minimizar `\(\lVert\mathbf{Y}-\mathbf{X}\boldsymbol{\beta}\rVert^2\)` = **baixar uma perpendicular**;
 - o ângulo reto **é** a equação normal `\(\mathbf{X}'\mathbf{e}=\mathbf{0}\)`;
-- Pitágoras dá a ANOVA: `\(\lVert\mathbf{Y}\rVert^2=\lVert\hat{\mathbf{Y}}\rVert^2+\lVert\mathbf{e}\rVert^2\)`.
+- Pitágoras dá a ANOVA (análise de variância): `\(\lVert\mathbf{Y}\rVert^2=\lVert\hat{\mathbf{Y}}\rVert^2+\lVert\mathbf{e}\rVert^2\)`.
 ]
 
 --
@@ -129,6 +140,8 @@ Por que isso importa para **planejamento**: `\(\mathbf{P}_X\)` depende só de `\
 --
 
 **Soma de quadrados extra:**
+
+Com SQE = soma de quadrados dos erros (resíduos):
 
 `$$\mathrm{SQE}(\text{reduzido}) - \mathrm{SQE}(\text{completo}) = \mathbf{Y}'(\mathbf{P}_X -
 \mathbf{P}_{X_1})\mathbf{Y}$$`
@@ -155,11 +168,11 @@ servidor. Então `\(H_0:\boldsymbol\beta_2=\mathbf 0\)` é "os servidores não d
 
 | | conta | valor | gl |
 |---|---|:-:|:-:|
-| SQ extra = SQ Tratamento | `\(\lVert(\mathbf P_X-\mathbf P_{X_1})\mathbf Y\rVert^2 = 2(0^2+14^2+(-14)^2)\)` | 784 | 2 |
+| SQ (soma de quadrados) extra = SQ Tratamento | `\(\lVert(\mathbf P_X-\mathbf P_{X_1})\mathbf Y\rVert^2 = 2(0^2+14^2+(-14)^2)\)` | 784 | 2 |
 | SQ Erro | `\(\lVert(\mathbf I-\mathbf P_X)\mathbf Y\rVert^2=16+16+9+9+4+4\)` | 58 | 3 |
 | SQ Total | `\(\lVert(\mathbf I-\mathbf P_{X_1})\mathbf Y\rVert^2\)` | 842 | 5 |
 
-`\(F=(784/2)/(58/3)=20{,}3\)`. **É a tabela de ANOVA do DCA (Aula 04)**, obtida só com projeções:
+`\(F=(784/2)/(58/3)=20{,}3\)`. **É a tabela de ANOVA do DCA (delineamento completamente aleatorizado, Aula 04)**, obtida só com projeções:
 a soma de quadrados extra do modelo particionado é a SQ de tratamento.
 
 ---
@@ -189,7 +202,7 @@ substituindo na segunda linha de blocos e usando `\(\mathbf{P}_{X_1} = \mathbf{X
 
 ---
 
-## FWL e planejamento experimental: por que a ANCOVA funciona
+## FWL (Frisch-Waugh-Lovell) e planejamento: por que a ANCOVA (análise de covariância) funciona
 
 Sob **aleatorização** (Capítulo 1), o tratamento `\(\mathbf{X}_1\)` é independente de qualquer
 covariável pré-tratamento `\(\mathbf{X}_2\)` — residualizar uma na outra quase não muda nada.
@@ -266,7 +279,7 @@ Tudo até aqui supôs `\(\mathrm{Cov}(\boldsymbol{\varepsilon})=\sigma^2\mathbf{
 
 --
 
-Isso deveria ser um problema para nós: veremos na Aula 04 que **a própria aleatorização induz erros correlacionados**. Se fosse preciso trocar MQO por GLS a cada delineamento, o curso inteiro mudaria de figura.
+Isso deveria ser um problema para nós: veremos na Aula 04 que **a própria aleatorização induz erros correlacionados**. Se fosse preciso trocar MQO (mínimos quadrados ordinários) por GLS (mínimos quadrados generalizados, *generalized least squares*) a cada delineamento, o curso inteiro mudaria de figura.
 
 ---
 
@@ -330,6 +343,18 @@ dados_sono &lt;- tibble(
 ) %&gt;%
   mutate(tempo_reacao = 480 - 18 * horas_sono + 0.22 * cafeina_mg + rnorm(n, 0, 22))
 ```
+
+
+---
+
+## "Controlando pelo sono": que tipo de controle é esse?
+
+Nestes dados, **ninguém sorteou** nem o sono nem a cafeína: os 60 participantes relataram quanto dormiram e quanto café tomaram.
+
+- "Controlando pelas horas de sono" aqui é **controle estatístico**: o coeficiente da cafeína é calculado com o sono residualizado (FWL).
+- Ele **não** controla o que não está no modelo: quem toma mais café pode ser quem está mais cansado, mais ansioso ou mais habituado à cafeína.
+
+**A versão controlada:** sortear a dose de cafeína (0 a 200 mg, cápsulas idênticas, duplo-cego). Aí o efeito da cafeína não depende de ter medido o cansaço, e o sono vira uma covariável para ganhar **precisão** (Aula 08).
 
 ---
 
@@ -398,6 +423,30 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**O viés de variável omitida**
+
+Modelo verdadeiro `\(\mathbf Y=\mathbf X_1\boldsymbol\beta_1+\mathbf z\gamma+\boldsymbol\varepsilon\)`; ajusta-se só `\(\mathbf X_1\)` (o estresse `\(\mathbf z\)` não foi medido):
+
+`$$E[\hat{\boldsymbol\beta}_1]=\boldsymbol\beta_1+\underbrace{(\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf z}_{\boldsymbol\delta}\,\gamma$$`
+
+- `\(\boldsymbol\delta\)` = coeficiente da regressão de `\(\mathbf z\)` em `\(\mathbf X_1\)`: o mesmo objeto do teorema FWL.
+- Viés = `\(\gamma\times\boldsymbol\delta\)`. A natureza fixa `\(\gamma\)`; **o pesquisador fixa `\(\boldsymbol\delta\)`** quando sorteia `\(\mathbf X_1\)`:
+  sorteio `\(\Rightarrow\)` `\(\mathbf z\)` independente de `\(\mathbf X_1\)` `\(\Rightarrow\)` `\(E[\boldsymbol\delta]=\mathbf 0\)`.
+- O sorteio não zera `\(\boldsymbol\delta\)` numa amostra: desequilíbrios de acaso entram na **variância**, não no **viés**.
+
+---
+
+## A fórmula confere com a simulação
+
+&lt;img src="MATD48-03_files/figure-html/cnc-a03-1.png" alt="" width="90%" /&gt;
+
+Sono observado: `\(\delta=-0{,}6\)`, `\(\gamma=15\)` `\(\Rightarrow\)` viés previsto `\(\gamma\delta=\)` -9,00; viés simulado -9,03 ms/h.
+Gauss-Markov continua valendo, mas para o parâmetro **do modelo ajustado**, que não é o efeito causal do sono.
+
+---
+
 ## Perguntas para a turma
 
 1. O teorema de Gauss-Markov garante variância mínima **entre estimadores lineares não
@@ -426,6 +475,14 @@ class: inverse, center, middle
    aleatoriamente, sem relação com o sono de cada participante), o que aconteceria com
    `\(\tilde{\mathbf{X}}_2\)` em relação a `\(\mathbf{X}_2\)` original? Que implicação isso tem para a
    necessidade de incluir `horas_sono` no modelo, se o objetivo é só estimar o efeito da cafeína?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Com dados observacionais, por que incluir mais covariáveis no modelo nunca garante que o viés de variável omitida acabou? O que precisaria ser verdade sobre `\(\boldsymbol\delta\)`?
+2. Num experimento com a cafeína sorteada, incluir o sono no modelo muda o **viés** ou só a **variância** do efeito estimado da cafeína? Justifique pelo FWL.
 
 ---
 
@@ -567,6 +624,7 @@ O histograma de 3.000 réplicas de Monte Carlo acompanha de perto a densidade qu
 - Sob normalidade, formas quadráticas idempotentes de `\(\mathbf{Y}\)` são qui-quadrado — a base exata
   da ANOVA.
 - Próximo capítulo: aplicamos tudo isso ao delineamento completamente aleatorizado (DCA).
+- **Controlado × não controlado:** "controlar" por uma covariável no modelo corrige só o que foi medido; sortear a variável de interesse controla também o que não foi. Viés de variável omitida `\(=\gamma\,\boldsymbol\delta\)`, e o sorteio faz `\(E[\boldsymbol\delta]=\mathbf 0\)`.
 
 ---
 

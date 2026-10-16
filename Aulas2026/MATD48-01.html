@@ -45,6 +45,21 @@ class: inverse, center, middle
 
 ---
 
+## O fio do curso: controlado × não controlado
+
+Toda aula deste curso volta à mesma pergunta: **quem decidiu qual unidade recebe qual tratamento?**
+
+- **Experimento controlado:** o pesquisador **atribui** o tratamento, de preferência por **sorteio**. Diferenças entre grupos podem ser lidas como efeito do tratamento.
+- **Estudo não controlado (observacional):** o pesquisador só **registra** o que aconteceu. Quem recebeu o tratamento escolheu, foi escolhido ou calhou de estar lá, e essa escolha pode estar ligada à resposta.
+
+--
+
+A planilha das duas situações pode ser **idêntica**. O que muda é o mecanismo que gerou a coluna do tratamento, e é ele que decide se a conclusão é causal.
+
+Cada aula termina o Bloco 1 sabendo **o que o delineamento do dia controla**, e o Bloco 3 mostra, por simulação, **o que daria errado sem ele**.
+
+---
+
 ## Por que planejar, e não só analisar?
 
 Um experimento bem desenhado responde a uma pergunta causal antes de qualquer dado existir — a
@@ -101,6 +116,26 @@ problema de confusão da próxima seção.
 
 ---
 
+## Observar mostra o problema; experimentar mostra a causa
+
+Numa estufa, as mudas da **bancada 3** crescem menos que as outras. Os registros mostram **que** há um problema, mas não **por quê**:
+
+- menos luz naquela bancada?
+- um lote ruim de substrato na bandeja?
+- o técnico daquela bancada rega de outro jeito?
+
+--
+
+O experimento **move de propósito** cada candidato a causa, e sorteia as trocas:
+
+- trocar as **bandejas** de bancada: se o problema acompanha a bandeja, é o substrato;
+- trocar os **técnicos** entre bancadas: se acompanha o técnico, é a rega;
+- se fica na bancada 3, é o lugar (luz, temperatura).
+
+A **regra de atribuição** (quem recebe o quê) é decidida **antes** da coleta (Dean, Voss &amp; Draguljić, 2017).
+
+---
+
 ## Confusão (*confounding*)
 
 Duas variáveis estão **confundidas** quando seus efeitos sobre a resposta não podem ser separados
@@ -117,7 +152,7 @@ fundo (sazonalidade, aprendizado, mudança de público) se confunde com o tratam
 
 --
 
-Confusão por variável **medida** pode, em princípio, entrar no modelo como covariável (ANCOVA,
+Confusão por variável **medida** pode, em princípio, entrar no modelo como covariável (ANCOVA, análise de covariância;
 Capítulo 3). Confusão por variável **desconhecida** é o caso perigoso — e é exatamente aí que a
 aleatorização mostra sua força: sorteando o tratamento, nenhuma variável, medida ou não, fica
 sistematicamente desbalanceada entre grupos, em expectativa (prova formal a seguir).
@@ -293,7 +328,7 @@ comparar uma vez. Fisher, a seguir, combina os quatro numa só receita.
 
 .pull-left[
 ### Repetição
-Tratamentos em várias UEs independentes → estima o erro experimental.
+Tratamentos em várias unidades experimentais (UEs) independentes → estima o erro experimental.
 
 ### Aleatorização
 Sorteio (não conveniência) → grupos comparáveis em tudo, observado ou não. Sem ela, não há
@@ -367,7 +402,7 @@ categórica (acertou o tipo ou não), e por isso o teste é de contagens.
 
 Nas próximas aulas a resposta será uma **medida** (nota, peso, tempo). Os dados também poderão ser
 arrumados numa tabela tratamento × réplica, mas cada célula **conterá um valor medido**, não uma
-contagem, e a análise será a ANOVA. Antes de escolher o teste, pergunte sempre: *o que está dentro
+contagem, e a análise será a ANOVA (análise de variância). Antes de escolher o teste, pergunte sempre: *o que está dentro
 da célula?*
 
 --
@@ -394,7 +429,7 @@ notas possíveis, mas o experimento só revela uma.
 | 5 | 66 | 75 | 9 |
 | 6 | 71 | 77 | 6 |
 
-ATE = média da última coluna = **6,67**.
+ATE (efeito médio do tratamento, *average treatment effect*) = média da última coluna = **6,67**.
 ]
 .pull-right[
 **O que um sorteio mostra** (`\(Z=(1,0,1,0,0,1)\)`)
@@ -470,7 +505,7 @@ Não há solução puramente estatística para validade externa — só o cuidad
 
 ---
 
-## Do princípio ao processo: o ciclo QPDAC
+## Do princípio ao processo: o ciclo QPDAC (Questão, Plano, Dados, Análise, Conclusão)
 
 Tudo que vimos neste bloco — quantificar, controlar, os três pilares, resultados potenciais — se
 organiza, na prática, num roteiro de cinco passos (Question, Plan, Data, Analysis, Conclusion):
@@ -511,6 +546,19 @@ vocabulário?
 **Os três aspectos do plano.** Desenho de tratamentos: 1 fator (técnica), 3 níveis.
 Controle do erro: aleatorização simples, sem blocos.
 Desenho amostral: 10 UEs por grupo, 2 subamostras por UE.
+
+
+---
+
+## Quem decidiu a técnica de cada estudante?
+
+**Neste exemplo, o sorteio.** Cada estudante recebe flashcards, releitura ou teste-prática por sorteio, e é isso que permite dizer que a diferença entre as notas é efeito da **técnica**.
+
+**A versão não controlada da mesma pergunta:** perguntar a cada estudante qual técnica ele usa e comparar as notas.
+
+- Quem escolhe teste-prática tende a ser quem já estuda mais e com mais método.
+- A diferença de notas misturaria **técnica** com **perfil de quem a escolhe**, e nada na planilha separaria os dois.
+- Mesmo com mil estudantes, a conclusão continuaria viesada: mais dados não substituem o sorteio.
 
 ---
 
@@ -640,6 +688,18 @@ estudantes diferentes. Isso é exatamente o que a distinção UE/unidade amostra
 - **Repetição:** milhares de sessões por braço. **Aleatorização:** sorteio por sessão, não por
   dia/horário (evita confundir layout com hora do dia — a lição da Seção "Confusão").
 
+
+---
+
+## No teste A/B, quem decide é o sorteio
+
+Cada usuário cai em A ou B **por sorteio**, feito pelo sistema na hora do acesso. Por isso a diferença de conversão estima o efeito causal da versão B.
+
+**A versão não controlada:** lançar B como **opção** e comparar quem ativou com quem não ativou.
+
+- Quem ativa uma novidade tende a ser o usuário mais engajado, que já compraria mais.
+- Esse é o erro mais comum em ciência de dados: comparar **adotantes** com **não adotantes** e chamar a diferença de efeito do produto.
+
 ---
 
 ## Data: os dados simulados (taxa real conhecida, porque é simulação)
@@ -729,7 +789,7 @@ broom::tidy(teste_ab) %&gt;% select(estimate1, estimate2, p.value, conf.low, con
 &lt;img src="MATD48-01_files/figure-html/ab-plot-1.png" alt="" width="331.2" /&gt;
 ]
 .pull-right[
-`\(\widehat{\text{ATE}} = \hat p_B-\hat p_A =\)` 0.0139, IC 95%
+`\(\widehat{\text{ATE}} = \hat p_B-\hat p_A =\)` 0.0139, intervalo de confiança (IC) de 95%
 não inclui zero (p &lt; 0,001).
 
 **Conclusion (linguagem simples):** o layout em grade aumentou a conversão em
@@ -796,6 +856,59 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Quem escolhe a parcela?**
+
+As mesmas 40 parcelas e os mesmos `\(Y_i(0), Y_i(1)\)` do Bloco 1. Só muda **quem decide** quem recebe V2:
+o **sorteio** (azul) ou o **agricultor**, que planta a semente nova nas terras mais férteis (laranja).
+
+&lt;img src="MATD48-01_files/figure-html/cnc-a01-1.png" alt="" width="92%" /&gt;
+
+Tracejado: ATE verdadeiro (5,13). Linhas cheias: média de cada regime.
+
+---
+
+## O que a figura mostra
+
+&lt;table class="table" style="font-size: 16px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Regime &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Viés &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DP &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; REQM &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Controlado: sorteio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5,09 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0,03 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1,66 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1,66 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Não controlado: o agricultor escolhe &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10,65 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5,52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1,02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5,62 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+DP = desvio-padrão entre repetições; REQM = raiz do erro quadrático médio (viés + variabilidade).
+
+- O sorteio acerta **em média**. A escolha do agricultor estima 10,65: erra sempre para o mesmo lado.
+- **Mais dados não corrigem viés**: repetir o estudo observacional só repete o erro.
+- **Nada na planilha denuncia o problema**: o viés está no *mecanismo* que gerou `\(Z_i\)`.
+
+Este par de slides volta em **todas as aulas**: o que o delineamento do dia controla, e o que daria errado sem ele.
+
+---
+
 ## Perguntas para a turma
 
 1. Se o professor deixasse os alunos **escolherem** a técnica de estudo, em vez de sortear,
@@ -810,6 +923,15 @@ class: inverse, center, middle
 
 4. No exemplo das provas paralelas, o que mudaria na análise se, em vez de reportar a média das
    duas provas por estudante, alguém rodasse a ANOVA diretamente nas 60 notas?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Uma escola compara as notas de turmas que **adotaram** uma plataforma de exercícios com as que não adotaram. Liste duas variáveis que podem ter decidido a adoção e que também afetam as notas.
+2. Em que situações não é possível (ou não é ético) sortear o tratamento? Fumo, escolaridade, uma cirurgia: o que um estudo observacional ainda consegue dizer nesses casos, e o que não consegue?
+3. "Correlação não implica causalidade." Reescreva a frase usando os termos **atribuição** e **sorteio**.
 
 ---
 
@@ -876,7 +998,7 @@ broom::tidy(modelo_correto)[1, c("term","df","p.value")]
 
 Note a diferença nos graus de liberdade e no p-valor: tratar subamostras como réplicas
 independentes muda a conclusão. Formalizaremos por que isso acontece — e como corrigi-lo — ao
-estudar o **modelo de subamostragem em um DCA**, no Capítulo 3.
+estudar o **modelo de subamostragem em um DCA** (delineamento completamente aleatorizado), no Capítulo 3.
 
 ---
 
@@ -890,6 +1012,7 @@ estudar o **modelo de subamostragem em um DCA**, no Capítulo 3.
   `\(\widehat{\text{ATE}}\)` não viesado, na média sobre os sorteios possíveis.
 - A planilha tem uma linha por unidade **amostral**; a coluna da UE diz quantas réplicas existem.
 - Próxima aula: a maquinaria formal — o **modelo linear** — para expressar tudo isso com precisão.
+- **Controlado × não controlado:** o mesmo conjunto de números sustenta ou não uma conclusão causal conforme **quem decidiu** o tratamento. Sorteio: sim. Escolha do agricultor, do estudante ou do usuário: não.
 
 ---
 
@@ -897,6 +1020,7 @@ estudar o **modelo de subamostragem em um DCA**, no Capítulo 3.
 
 - Fisher, R. A. (1935). *The Design of Experiments*. Oliver and Boyd.
 - Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2ª ed.). John Wiley &amp; Sons.
+- Dean, A., Voss, D. &amp; Draguljić, D. (2017). *Design and Analysis of Experiments* (2ª ed.). Springer.
 - Popper, K. R. (1959). *The Logic of Scientific Discovery*. Hutchinson &amp; Co.
 - Owen, A. B. (2020). *A First Course in Experimental Design: Notes from Stat 263/363*. Stanford University.
 - Cochran, W. G. &amp; Cox, G. M. (1957). *Experimental Designs* (2ª ed.). John Wiley &amp; Sons.

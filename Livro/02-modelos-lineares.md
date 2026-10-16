@@ -11,6 +11,20 @@ teoria de análise de variância (ANOVA) que vem a seguir. Dominar a álgebra de
 permite, no Capítulo 3, *deduzir* por que a ANOVA funciona, em vez de apenas aplicá-la
 mecanicamente [@searle1971linear; @rao1973linear].
 
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+Toda a teoria deste capítulo trata a matriz $\mathbf X$ como conhecida e fixa, e vale para qualquer
+$\mathbf X$. O que muda de um estudo para outro é o <strong>significado</strong> dos coeficientes:
+num experimento controlado, o pesquisador escreve $\mathbf X$ antes da coleta e sorteia quem recebe
+o quê, e um coeficiente é um efeito causal; num estudo observacional, $\mathbf X$ é o que o mundo
+produziu, e o coeficiente mede associação ajustada pelas outras colunas. O teorema de
+Frisch-Waugh-Lovell (FWL) mostra exatamente o que o "controle estatístico" por uma covariável faz,
+e a seção final do capítulo mostra o que ele não faz.
+</div>
+```
+
 ## Da população conceitual de respostas ao modelo linear {#populacao-conceitual}
 
 Antes de escrever qualquer símbolo, vale nomear explicitamente o objeto que a tabela científica do
@@ -58,7 +72,7 @@ o outro — e é exatamente esse tipo de relação que caracteriza fatores **cru
 direta de arestas, por outro lado, caracteriza fatores **aninhados** (o padrão já visto na
 subamostragem do Capítulo 3, antes mesmo de termos o nome para ele).
 
-A regra para contar graus de liberdade a partir do diagrama é simples e se aplica termo a termo:
+A regra para contar graus de liberdade (gl) a partir do diagrama é simples e se aplica termo a termo:
 $$
 \text{gl}(v) = (\text{número de classes distintas de } v) - \sum_{u \prec v} \text{gl}(u),
 $$
@@ -72,7 +86,7 @@ $\text{gl}(v)$ é, algebricamente, o **posto de uma matriz de projeção** — o
 contrapartida geométrica, expressa como uma figura em vez de uma matriz.
 
 ```{=html}
-<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse de um DCA de um fator</div>
+<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse de um delineamento completamente aleatorizado (DCA) de um fator</div>
 ```
 
 
@@ -208,13 +222,20 @@ distribuição de $\mathbf{Y}$.
 
 ```{=html}
 <div class="caixa-aplicacao">
-<strong>Aplicação — Ciência de dados: tempo de resposta de uma API</strong><br>
+<strong>Aplicação — Ciência de dados: tempo de resposta de uma API (interface de programação de aplicações, o serviço que outros sistemas consultam)</strong><br>
 Uma equipe de engenharia monitora o <strong>tempo de resposta</strong> (em milissegundos) de uma
 API sob diferentes números de <strong>requisições simultâneas</strong>, em três configurações de
 <strong>servidor</strong> (A, B, C). A pergunta: o tempo de resposta cresce com a carga? Difere
 entre servidores? Simulamos 60 medições.
 </div>
 ```
+
+Note que estes dados são **observacionais**: ninguém sorteou o número de requisições, que é o que o
+tráfego produziu, nem o servidor de cada medida. A inclinação estimada mede quanto o tempo de
+resposta **acompanha** a carga. Se os horários de pico fossem também os de rede mais
+congestionada, ela misturaria carga com congestionamento. A versão controlada da mesma pergunta é
+um teste de carga, em que a equipe fixa o número de requisições em níveis escolhidos e sorteia a
+ordem das rodadas e o servidor de cada uma; a regressão seria a mesma, e a interpretação, causal.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — simulando os dados da API</div>
@@ -457,7 +478,7 @@ coef(mod_simples)
 
 Os dois métodos coincidem, como deveriam: `lm()` não faz nada conceitualmente diferente de
 resolver $\mathbf{X}'\mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}'\mathbf{Y}$ (na prática, usa
-decomposição QR por estabilidade numérica, não a inversão direta de $\mathbf{X}'\mathbf{X}$, mas o
+decomposição QR ($\mathbf X = \mathbf Q\mathbf R$, com $\mathbf Q$ de colunas ortonormais e $\mathbf R$ triangular superior) por estabilidade numérica, não a inversão direta de $\mathbf{X}'\mathbf{X}$, mas o
 resultado é o mesmo). Cada requisição simultânea adicional está associada a um aumento estimado de
 0.35 ms no tempo de resposta.
 
@@ -785,7 +806,7 @@ estável para lidar com matrizes próximas de deficientes em posto (por exemplo,
 covariáveis são quase, mas não exatamente, colineares), e é o algoritmo que pacotes de álgebra
 linear (R, `numpy`, `MATLAB`) de fato usam por trás de rotinas como `MASS::ginv()`.
 
-## O teorema de Gauss-Markov e o BLUE {#gauss-markov}
+## O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado) {#gauss-markov}
 
 Sob as suposições de Gauss-Markov ($\mathrm{E}[\boldsymbol{\varepsilon}] = \mathbf{0}$,
 $\mathrm{Cov}(\boldsymbol{\varepsilon}) = \sigma^2\mathbf{I}_n$ — sem exigir normalidade), o
@@ -989,7 +1010,7 @@ forma que usaremos para construir a tabela de ANOVA no Capítulo 3. Seja $\mathb
 \mathbf{1}\mathbf{1}'$ a matriz $n\times n$ de 1's, e $\mathbf{M} = \mathbf{I}_n -
 \tfrac{1}{n}\mathbf{J}$. $\mathbf{M}$ é, ela mesma, uma matriz de projeção — simétrica e
 idempotente — sobre o subespaço ortogonal ao vetor $\mathbf{1}$; projetar $\mathbf{Y}$ com
-$\mathbf{M}$ é **centrar** os dados:
+$\mathbf{M}$ é **centrar** os dados, e o resultado é a soma de quadrados total ($\mathrm{SQ}_{\text{Total}}$):
 
 $$
 \mathbf{Y}'\mathbf{M}\mathbf{Y} = \mathbf{Y}'\mathbf{Y} - \frac{1}{n}\mathbf{Y}'\mathbf{J}\mathbf{Y}
@@ -1072,7 +1093,7 @@ $\mathbf{X}_2$ ($n \times p_2$) contém as colunas cuja utilidade queremos testa
 </div>
 
 O **princípio da soma de quadrados extra**
-compara a soma de quadrados dos erros do modelo reduzido (só $\mathbf{X}_1$) com a do modelo
+compara a soma de quadrados dos erros (SQE) do modelo reduzido (só $\mathbf{X}_1$) com a do modelo
 completo:
 
 $$
@@ -1103,6 +1124,11 @@ Pergunta: depois de controlar pelas horas de sono, a cafeína ainda ajuda a expl
 reação?
 </div>
 ```
+
+Aqui "controlar pelo sono" é **controle estatístico**: nenhum dos dois fatores foi sorteado, e o
+coeficiente da cafeína é calculado com o sono residualizado. Isso não alcança o que não está no
+modelo (quem toma mais café pode ser quem está mais cansado). Sortear a dose de cafeína faria o
+efeito não depender de ter medido o cansaço, e o sono passaria a servir só para ganhar precisão.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — simulação e teste do submodelo</div>
@@ -1435,7 +1461,10 @@ ggplot(tibble(estatisticas), aes(x = estatisticas)) +
   theme_minimal(base_size = 13)
 ```
 
-<img src="02-modelos-lineares_files/figure-html/monte-carlo-qui2-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="02-modelos-lineares_files/figure-html/monte-carlo-qui2-1.png" alt="Histograma de SQE/σ² em 4.000 repetições de Monte Carlo, regerando Y sob o modelo ajustado com σ = 22, e a densidade qui-quadrado teórica com os graus de liberdade do resíduo (curva laranja). O histograma acompanha a curva: a forma quadrática idempotente do resíduo, dividida por σ², tem a distribuição qui-quadrado prevista pela teoria." width="75%" />
+<p class="caption">(\#fig:monte-carlo-qui2)Histograma de SQE/σ² em 4.000 repetições de Monte Carlo, regerando Y sob o modelo ajustado com σ = 22, e a densidade qui-quadrado teórica com os graus de liberdade do resíduo (curva laranja). O histograma acompanha a curva: a forma quadrática idempotente do resíduo, dividida por σ², tem a distribuição qui-quadrado prevista pela teoria.</p>
+</div>
 
 O histograma simulado (4.000 réplicas de Monte Carlo, regerando $\mathbf{Y}$ sob o modelo
 verdadeiro a cada repetição) acompanha de perto a densidade qui-quadrado teórica com
@@ -1459,6 +1488,139 @@ continuaria válido?</li>
 <li>A matriz de projeção $\mathbf{P}_X$ depende apenas de $\mathbf{X}$, nunca de $\mathbf{Y}$. Que
 consequência prática isso tem para decidir, antes de coletar os dados, quão precisas serão as
 estimativas de um experimento planejado?</li>
+</ol>
+</div>
+```
+
+## Controlado × não controlado: a variável omitida e a matriz $\mathbf X$ {#cnc-cap2}
+
+Tudo neste capítulo trata $\mathbf X$ como uma matriz **conhecida e fixa**. Em um experimento, ela
+é literalmente escrita pelo pesquisador antes da coleta: ele decide quantas unidades recebem cada
+tratamento e sorteia quais. Em um estudo observacional, $\mathbf X$ é o que o mundo produziu, e o
+mundo raramente produz colunas independentes daquilo que ficou de fora do modelo. A álgebra das
+seções anteriores mostra exatamente o tamanho do estrago.
+
+**O viés de variável omitida, em notação matricial.** Suponha que o modelo verdadeiro seja
+$$
+\mathbf Y = \mathbf X_1\boldsymbol\beta_1 + \mathbf z\,\gamma + \boldsymbol\varepsilon,
+\qquad E[\boldsymbol\varepsilon] = \mathbf 0,
+$$
+mas que a variável $\mathbf z$ não tenha sido medida, de modo que o analista ajusta só
+$\mathbf Y = \mathbf X_1\boldsymbol\beta_1 + \text{erro}$. O estimador de mínimos quadrados é
+$\hat{\boldsymbol\beta}_1 = (\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf Y$, e, condicionando em
+$\mathbf X_1$ e $\mathbf z$,
+$$
+E[\hat{\boldsymbol\beta}_1] = \boldsymbol\beta_1 + \underbrace{(\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf z}_{\boldsymbol\delta}\;\gamma .
+$$
+O vetor $\boldsymbol\delta$ é o coeficiente da regressão de $\mathbf z$ nas colunas de
+$\mathbf X_1$: o mesmo objeto que aparece no teorema de Frisch-Waugh-Lovell (FWL, Seção
+\@ref(fwl)). O viés é, portanto, **o produto de duas coisas**: quanto a variável omitida afeta a
+resposta ($\gamma$) e quanto ela anda junto com as colunas do modelo ($\boldsymbol\delta$). Basta
+uma delas ser zero para o viés desaparecer.
+
+O pesquisador não controla $\gamma$, que é uma propriedade da natureza. Mas ele **controla
+$\boldsymbol\delta$** quando sorteia as colunas de $\mathbf X_1$: se o valor de $x$ atribuído a
+cada unidade é decidido por sorteio, independentemente de qualquer característica dela, então
+$\mathbf z$ é independente de $\mathbf X_1$ e $E[\boldsymbol\delta] = \mathbf 0$ na distribuição do
+sorteio. Em uma amostra específica $\boldsymbol\delta$ não é exatamente zero (o sorteio deixa
+pequenos desequilíbrios), mas esses desequilíbrios têm média zero: entram na variância do
+estimador, não no seu viés. É a versão matricial do que a Seção \@ref(neyman-rubin) do Capítulo 1
+provou para a diferença de médias.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Psicologia: sono e tempo de reação</strong><br>
+Queremos o efeito de uma hora a mais de sono sobre o tempo de reação (em milissegundos). O
+estresse também aumenta o tempo de reação (15 ms por ponto numa escala de estresse), e o efeito
+verdadeiro do sono é de −8 ms por hora. <strong>Não controlado:</strong> 60 pessoas relatam quanto
+dormiram; quem dorme menos é também quem está mais estressado (cada hora a menos de sono vem com
+0,6 ponto a mais de estresse). <strong>Controlado:</strong> 60 voluntários são sorteados para
+protocolos de restrição de sono de 4 a 9 horas, e o estresse de cada um não depende do sorteio. Em
+ambos os casos, o analista ajusta só <code>lm(tr ~ sono)</code>: o estresse não foi medido.
+</div>
+```
+
+
+``` r
+cnc2 <- cnc_cap2()                         # 3.000 estudos de 60 pessoas em cada regime
+res2 <- resumo_estimador(cnc2$est, cnc2$b)
+res2
+```
+
+```
+## # A tibble: 2 × 5
+##   regime                          media       vies    dp  reqm
+##   <fct>                           <dbl>      <dbl> <dbl> <dbl>
+## 1 Controlado: sono sorteado       -8.00 -0.0000108  1.48  1.48
+## 2 Não controlado: sono observado -17.0  -9.03       1.53  9.16
+```
+
+``` r
+cnc2$vies_previsto                         # gamma * delta = 15 * (-0,6)
+```
+
+```
+## [1] -9
+```
+
+<div class="figure" style="text-align: center">
+<img src="02-modelos-lineares_files/figure-html/cnc-cap2-dados-1.png" alt="Um conjunto de dados de cada regime: horas de sono contra o estresse, a variável que o analista não mediu. Com o sono sorteado (azul), o estresse não acompanha o sono e a reta é praticamente horizontal: δ ≈ 0. Com o sono observado (laranja), quem dorme menos está mais estressado: δ ≈ −0,6." width="75%" />
+<p class="caption">(\#fig:cnc-cap2-dados)Um conjunto de dados de cada regime: horas de sono contra o estresse, a variável que o analista não mediu. Com o sono sorteado (azul), o estresse não acompanha o sono e a reta é praticamente horizontal: δ ≈ 0. Com o sono observado (laranja), quem dorme menos está mais estressado: δ ≈ −0,6.</p>
+</div>
+
+<div class="figure" style="text-align: center">
+<img src="02-modelos-lineares_files/figure-html/cnc-cap2-graf-1.png" alt="Inclinação do sono estimada por lm(tr ~ sono) em 3.000 estudos de cada regime. A linha tracejada é o efeito verdadeiro (−8 ms por hora). O estudo observacional se concentra em torno de −17: o efeito verdadeiro somado ao viés γδ = 15 × (−0,6) = −9 previsto pela fórmula da variável omitida." width="75%" />
+<p class="caption">(\#fig:cnc-cap2-graf)Inclinação do sono estimada por lm(tr ~ sono) em 3.000 estudos de cada regime. A linha tracejada é o efeito verdadeiro (−8 ms por hora). O estudo observacional se concentra em torno de −17: o efeito verdadeiro somado ao viés γδ = 15 × (−0,6) = −9 previsto pela fórmula da variável omitida.</p>
+</div>
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:cnc-cap2-tab)Inclinação estimada do sono (ms por hora) nos dois regimes. Viés = média menos o efeito verdadeiro (−8); DP = desvio-padrão entre os 3.000 estudos; REQM = raiz do erro quadrático médio.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Regime </th>
+   <th style="text-align:right;"> Média </th>
+   <th style="text-align:right;"> Viés </th>
+   <th style="text-align:right;"> DP </th>
+   <th style="text-align:right;"> REQM </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Controlado: sono sorteado </td>
+   <td style="text-align:right;"> -8,00 </td>
+   <td style="text-align:right;"> 0,00 </td>
+   <td style="text-align:right;"> 1,48 </td>
+   <td style="text-align:right;"> 1,48 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Não controlado: sono observado </td>
+   <td style="text-align:right;"> -17,03 </td>
+   <td style="text-align:right;"> -9,03 </td>
+   <td style="text-align:right;"> 1,53 </td>
+   <td style="text-align:right;"> 9,16 </td>
+  </tr>
+</tbody>
+</table>
+
+O viés simulado (-9,03 ms/h) coincide com o previsto pela fórmula
+($\gamma\delta = -9,00$), e o desvio-padrão é praticamente o mesmo nos dois
+regimes: o estudo observacional não é menos preciso, é **sistematicamente errado**, e errado na
+direção que o pesquisador provavelmente esperava (dormir pouco "parece" ainda pior do que é). Note
+também o que a teoria de Gauss-Markov (Seção \@ref(gauss-markov)) diz e não diz: ela garante que
+mínimos quadrados é o melhor estimador linear não viesado **do modelo ajustado**; se o modelo
+ajustado omite uma coluna correlacionada com as demais, o "não viesado" se refere a um parâmetro
+que não é o efeito causal do sono.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>No regime observacional, incluir o estresse no modelo (<code>lm(tr ~ sono + estresse)</code>)
+eliminaria o viés. Por que essa solução não está disponível para as variáveis que ninguém pensou em
+medir, e por que o sorteio funciona mesmo para elas?</li>
+<li>Escreva $\boldsymbol\delta$ para o caso em que $\mathbf X_1$ tem só o intercepto e a coluna
+$\mathbf x$ do sono, e mostre que a inclinação em $\boldsymbol\delta$ é
+$\widehat{\text{Cov}}(x,z)/\widehat{\text{Var}}(x)$. O que o sorteio faz com o numerador?</li>
 </ol>
 </div>
 ```
@@ -1487,6 +1649,10 @@ estimativas de um experimento planejado?</li>
   em posto — e é o que `MASS::ginv()` calcula internamente.
 - Sob normalidade, formas lineares de $\mathbf{Y}$ são normais e formas quadráticas idempotentes
   de $\mathbf{Y}$ são qui-quadrado — a base exata da tabela de ANOVA do Capítulo 3.
+- **Controlado × não controlado:** a álgebra de mínimos quadrados é a mesma para qualquer
+  $\mathbf X$; o que dá sentido causal a $\hat{\boldsymbol\beta}$ é o pesquisador ter escrito e
+  sorteado $\mathbf X$. O viés de variável omitida vale $\gamma\boldsymbol\delta$, e o sorteio faz
+  $E[\boldsymbol\delta]=\mathbf 0$.
 
 ### Uma nota sobre notação: de $\beta$ genérico a $\tau$, e depois a $\alpha,\beta,\gamma,\dots$ {-}
 

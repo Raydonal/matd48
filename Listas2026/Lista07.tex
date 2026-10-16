@@ -157,4 +157,55 @@ Erro           & 20 & 370 & 18{,}5 & --    & --      \\
 \end{enumerate}
 \end{questao}
 
+\begin{questao}{7} \textbf{(Agricultura --- o teste de Duncan passo a passo, dados reais)}
+
+No experimento de fertilizantes em feijão (Cap.~3, DCA com $t=4$ fertilizantes e $n=5$ parcelas
+cada), as médias de produção (kg) foram
+\[
+\bar y_{F1} = 4{,}952, \quad \bar y_{F2} = 7{,}318, \quad \bar y_{F3} = 5{,}546, \quad \bar y_{F4} = 9{,}188,
+\]
+com $QME = 1{,}982$ e $gl_{\text{erro}} = 16$. Os valores tabelados de Duncan são $r_2 = 2{,}998$,
+$r_3 = 3{,}144$ e $r_4 = 3{,}235$; o de Tukey é $q_{0{,}05;\,4,16} = 4{,}046$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Ordene as médias e, para cada um dos seis pares, indique a amplitude $p$. Desenhe as
+    médias num eixo e cada par como um arco, como nos gráficos da aula.
+  \item Calcule $\sqrt{QME/n}$ e as réguas $R_2$, $R_3$ e $R_4$ de Duncan.
+  \item Execute o procedimento de cima para baixo ($p = 4$, depois 3, depois 2), indicando em cada
+    etapa quais pares são testados, a diferença observada, a régua e a decisão. Em algum momento a
+    regra de coerência impediu um teste? Justifique.
+  \item Construa o diagrama de traços e as letras do Duncan.
+  \item Repita com a régua única de Tukey, $q_{0{,}05;\,4,16}\sqrt{QME/n}$. Em qual par os dois
+    procedimentos discordam? Qual é o nível de proteção $\alpha_p$ com que o Duncan julgou esse par?
+  \item Um agrônomo quer recomendar F2 em vez de F1 a produtores. Qual dos dois procedimentos
+    sustenta essa recomendação? Explique em termos de FWER.
+  \item Qual par vizinho fica mais perto da régua $R_2$? Por quanto? O que isso sugere sobre como
+    reportar o resultado?
+\end{enumerate}
+\end{questao}
+
+\begin{questao}{8} \textbf{(Dedução --- a taxa de erro por família de Duncan, SNK e Bonferroni)}
+
+Considere um DCA balanceado com $t$ tratamentos e o nível nominal $\alpha$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Sejam $A_1, \ldots, A_m$ os eventos ``falso positivo na $k$-ésima comparação''. Usando a
+    desigualdade de Boole, $P(\bigcup_k A_k) \le \sum_k P(A_k)$, mostre que testar cada comparação
+    ao nível $\alpha/m$ garante $\text{FWER} \le \alpha$ (Bonferroni). Quando a desigualdade é estrita?
+  \item Sob $H_0$ completa ($\mu_1 = \cdots = \mu_t$), mostre que o teste de Duncan declara
+    \emph{alguma} diferença se e somente se a amplitude total $\bar y_{(t)} - \bar y_{(1)}$ exceder
+    $R_t$. (Dica: use a regra de coerência.)
+  \item Como $r_t$ é o quantil da amplitude estudentizada de $t$ médias no nível
+    $1 - \alpha_t$, com $\alpha_t = 1-(1-\alpha)^{t-1}$, conclua que, sob $H_0$ completa, o FWER do
+    Duncan é exatamente $\alpha_t$. Calcule-o para $\alpha = 0{,}05$ e $t = 4$, $6$ e $10$.
+  \item Repita o raciocínio do item (b) para o SNK, que usa $q_{\alpha;\,p,\nu}$ em toda amplitude, e
+    mostre que sob $H_0$ completa seu FWER é exatamente $\alpha$.
+  \item Agora suponha $t = 4$ com $\mu_1 = \mu_2$ e $\mu_3 = \mu_4$, mas com os dois pares muito
+    distantes entre si. Argumente que, com alta probabilidade, as médias 1 e 2 ficam vizinhas na
+    ordenação, assim como 3 e 4, e que o SNK testa cada um desses pares ao nível $\alpha$. Conclua
+    que o FWER do SNK fica perto de $1-(1-\alpha)^2$, e não de $\alpha$. Que nome se dá a esse tipo de
+    controle (só sob $H_0$ completa)?
+\end{enumerate}
+\end{questao}
+
 \end{document}

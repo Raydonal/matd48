@@ -45,6 +45,16 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+O quadrado latino controla **duas fontes conhecidas ao mesmo tempo** (linha e coluna): cada tratamento aparece uma vez em cada linha e uma vez em cada coluna. O greco-latino acrescenta uma terceira.
+
+- **Controla:** os dois (ou três) gradientes que o pesquisador **conhece e registrou**.
+- **Não controla:** tudo o que não está nas linhas e colunas, e é por isso que o quadrado precisa ser **sorteado** (aleatorização de Yates) em vez de usado sempre na mesma forma.
+- Também não controla **interações** entre linha, coluna e tratamento: o modelo as supõe nulas.
+
+---
+
 ## Motivação: dois gradientes ortogonais
 
 Fertilidade variando em **duas direções ao mesmo tempo**, independentemente (declividade nas
@@ -61,7 +71,7 @@ Blocar só por linha deixa o gradiente de coluna intacto dentro de cada bloco, e
 
 ## Duas fontes de bloqueio cruzadas
 
-O DBCA controla **uma** fonte de variação. Quando há **duas**, cruzadas e conhecidas (linha e
+O DBCA (delineamento em blocos completos aleatorizados) controla **uma** fonte de variação. Quando há **duas**, cruzadas e conhecidas (linha e
 coluna de um talhão, por exemplo), um **quadrado latino** de ordem `\(n\)` controla as duas com
 apenas `\(n^2\)` unidades, comparando `\(n\)` tratamentos — em vez das `\(n^3\)` que um fatorial completo
 linha × coluna × tratamento exigiria (Fisher, 1935).
@@ -79,7 +89,7 @@ Regra de construção: cada tratamento aparece **exatamente uma vez em cada linh
 
 `\(\rho_i\)` = linha, `\(\gamma_j\)` = coluna, `\(\tau_k\)` = tratamento — mas o índice `\(k\)` **não varia
 livremente**: é determinado pelo arranjo do quadrado. `\(n^2\)` observações, não `\(n^3\)`. Tabela de
-ANOVA e pressupostos seguem o tratamento padrão de (Montgomery, 2017).
+ANOVA (análise de variância) e pressupostos seguem o tratamento padrão de (Montgomery, 2017).
 
 &lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
@@ -243,6 +253,16 @@ quad
 ## [3,] "C"  "D"  "A"  "B" 
 ## [4,] "D"  "A"  "B"  "C"
 ```
+
+
+---
+
+## O que foi decidido pelo pesquisador neste campo
+
+- **Linha** (declividade) e **coluna** (umidade) foram definidas pelos gradientes conhecidos do terreno.
+- A posição de cada adubo no quadrado deve sair da **aleatorização de Yates**: sortear um quadrado reduzido, permutar linhas, colunas e letras.
+
+**A versão não controlada:** um produtor que aplicou cada adubo numa faixa do terreno e anotou declividade e umidade. Mesmo com as duas medidas na planilha, os adubos não estariam balanceados nas linhas e colunas, e o efeito de cada adubo dependeria de quais gradientes ele pegou.
 
 ---
 
@@ -413,6 +433,61 @@ dados_ql &lt;- expand_grid(linha = 1:4, coluna = 1:4) %&gt;%
 mod_ql &lt;- aov(resposta ~ linha + coluna + tratamento, data = dados_ql)
 ```
 
+---
+
+## Como são os dados: a resposta em cada célula do campo
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Linha &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Coluna 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Coluna 2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Coluna 3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Coluna 4 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; A: 19,29 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B: 21,03 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C: 24,18 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; D: 20,36 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B: 26,41 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C: 23,88 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; D: 25,59 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; A: 23,75 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C: 23,95 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; D: 16,80 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; A: 19,01 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B: 22,58 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; D: 20,15 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; A: 18,69 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B: 23,62 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C: 27,01 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Cada célula traz o adubo sorteado para ela e a produção medida. Na simulação, os efeitos
+verdadeiros são linha `\((0, 2, -1, 1)\)`, coluna `\((0, -2, 1, 1)\)` e adubo A `\(=0\)`, B `\(=3\)`, C `\(=5\)`,
+D `\(=1\)`, com erro de desvio-padrão 1,2. A ANOVA a seguir tem de separar as três fontes a partir
+de 16 números.
+
+---
+
+## A ANOVA do quadrado latino
+
 &lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -460,6 +535,10 @@ mod_ql &lt;- aov(resposta ~ linha + coluna + tratamento, data = dados_ql)
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+- Adubo: `\(F=\)` 13,9 com 3 e 6 graus de liberdade (gl), `\(p=\)` 0,0041: há diferença entre os adubos **depois** de descontar declividade e umidade.
+- Médias observadas de A, B, C, D: 20,19; 23,41; 24,75; 20,73. As verdadeiras são `\(20{,}5+\tau\)`: 20,5; 23,5; 25,5; 21,5. O balanceamento faz cada média passar uma vez por cada linha e coluna, e por isso ela não é contaminada por elas.
+- Só 6 gl de erro: os efeitos de linha e coluna, menores, podem não aparecer como significativos. Isso não é motivo para retirá-los do modelo (o desenho os impôs).
+
 ---
 
 ## A matriz de delineamento tem 3 blocos de colunas
@@ -506,7 +585,7 @@ aresta entre si — e só se reencontram no Erro.
 ![](../Livro/figuras/hasse/slide-quadrado-latino.svg)&lt;!-- --&gt;
 
 `\(1+3+3+3+6=16=N=n^2\)` — o preço de controlar duas fontes de bloqueio com um só fator cruzado a
-mais é justamente esses `\(gl\)` que, no DBCA (Aula 09, só um bloco), teriam sobrado para o Erro.
+mais é justamente esses graus de liberdade (`\(gl\)`) que, no DBCA (Aula 09, só um bloco), teriam sobrado para o Erro.
 
 ---
 
@@ -636,14 +715,29 @@ mod_glq &lt;- aov(resposta ~ linha + coluna + roman + grego, data = dados_glq)
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-Só 3 graus de liberdade para o erro — testes pouco sensíveis (`\(p\approx0{,}07\)`–$0{,}08$) mesmo com
-efeitos reais simulados.
+
+
+Só 3 graus de liberdade para o erro: testes pouco sensíveis (variedade `\(p=\)` 0,073, adubo `\(p=\)` 0,079) mesmo com
+efeitos reais simulados (variedade A, B, C, D `\(= 0, 2, 4, 1\)`; adubo `\(= 0, 1, -1, 2\)`).
 
 ---
 
 class: inverse, center, middle
 
 # Bloco 3 — Discussão
+
+---
+
+## Controlado × não controlado
+
+**Duas fontes conhecidas, e o resto?**
+
+O quadrado latino controla **duas** fontes **conhecidas** (linha e coluna). O que não está nelas, só o **sorteio** controla.
+É o mesmo padrão da Aula 09 (adubo em áreas de viveiro): ajustar pelo que foi medido não basta.
+
+&lt;img src="MATD48-11_files/figure-html/cnc-a11-1.png" alt="" width="88%" /&gt;
+
+Por isso o quadrado latino ainda precisa de **aleatorização** (sortear linhas, colunas e letras): o balanceamento protege contra as fontes que você conhece, e o sorteio, contra as que você não conhece.
 
 ---
 
@@ -663,6 +757,14 @@ class: inverse, center, middle
 4. No exemplo variedade×adubo, os testes-$F$ tiveram `\(p\approx0{,}07\)`–$0{,}08$ apesar de os efeitos
    simulados serem reais e razoavelmente grandes. O que isso ensina sobre o uso prático de
    quadrados greco-latinos pequenos?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Usar sempre o mesmo quadrado cíclico, sem sortear, transforma o experimento em parcialmente não controlado. Que tipo de variável poderia ficar confundida com o tratamento?
+2. Com registros observacionais que anotam linha e coluna de cada parcela, é possível "reconstruir" um quadrado latino na análise? Por quê?
 
 ---
 
@@ -717,6 +819,7 @@ length(unique(pares)) == length(pares)  # TRUE =&gt; construção válida
   para todo `\(n\ge3\)` exceto `\(n=6\)`.
 - Encerra o Capítulo 4. Próxima aula: arranjos fatoriais — dois ou mais fatores de tratamento
   cruzados deliberadamente no mesmo experimento.
+- **Controlado × não controlado:** linha e coluna controlam as fontes conhecidas; o sorteio do quadrado controla as que não estão nelas. Sem sorteio, o balanceamento protege só contra o que você já sabia.
 
 ---
 

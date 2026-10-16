@@ -168,10 +168,20 @@ hasse_svg <- function(nos, arestas, arquivo, titulo = NULL, destacar = character
   dot_tmp <- tempfile(fileext = ".dot")
   writeLines(dot, dot_tmp)
   st <- system2("dot", c("-Tsvg", shQuote(dot_tmp), "-o", shQuote(arquivo)))
-  unlink(dot_tmp)
   if (st != 0 || !file.exists(arquivo)) {
+    unlink(dot_tmp)
     stop("Falha ao gerar o SVG com o Graphviz (`dot`). Status: ", st)
   }
+  # No PDF do livro (LaTeX, scripts/gerar_pdf_livro.R) SVG não entra: devolve um PDF vetorial
+  # gerado pelo mesmo Graphviz, com o mesmo desenho.
+  if (isTRUE(knitr::is_latex_output())) {
+    arquivo_pdf <- sub("\\.svg$", ".pdf", arquivo)
+    st <- system2("dot", c("-Tpdf", shQuote(dot_tmp), "-o", shQuote(arquivo_pdf)))
+    unlink(dot_tmp)
+    if (st != 0 || !file.exists(arquivo_pdf)) stop("Falha ao gerar o PDF do diagrama de Hasse.")
+    return(arquivo_pdf)
+  }
+  unlink(dot_tmp)
   arquivo
 }
 

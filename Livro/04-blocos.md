@@ -13,6 +13,20 @@ extensão para quando os blocos são pequenos demais para conter todos os tratam
 incompletos balanceados). Terminamos com **duas fontes de bloqueio cruzadas** (quadrado latino) e
 **três** (quadrado greco-latino).
 
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+Este capítulo acrescenta ao sorteio uma segunda forma de controle, o <strong>controle local</strong>:
+agrupar unidades parecidas segundo uma fonte de variação conhecida (área, sujeito, máquina, linha e
+coluna do campo) e equilibrar os tratamentos dentro de cada grupo. O bloco controla o que é
+conhecido e registrado; o sorteio dentro do bloco controla todo o resto. Um estudo observacional
+pode imitar a primeira forma de controle, ajustando pelo bloco depois da coleta, mas nunca a
+segunda. Também não se controlam as interações entre tratamento e bloco, que o modelo supõe
+nulas e o teste de Tukey ajuda a verificar.
+</div>
+```
+
 ## O delineamento em blocos completos aleatorizados (DBCA) {#dbca}
 
 ### Motivação: o que dá errado sem controle local — fatores confundidos
@@ -68,7 +82,10 @@ ggplot(dados_confundido, aes(x = programa, y = faturamento, fill = renda)) +
   theme_minimal(base_size = 12)
 ```
 
-<img src="04-blocos_files/figure-html/confundido-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/confundido-plot-1.png" alt="Faturamento médio do comércio nos seis bairros do exemplo, por grupo (programa de incentivo ou controle) e colorido pela renda do bairro. Todos os bairros com o programa são de renda alta e todos os de controle são de renda baixa: programa e renda estão completamente confundidos, e a diferença entre as caixas não pode ser atribuída a nenhum dos dois." width="75%" />
+<p class="caption">(\#fig:confundido-plot)Faturamento médio do comércio nos seis bairros do exemplo, por grupo (programa de incentivo ou controle) e colorido pela renda do bairro. Todos os bairros com o programa são de renda alta e todos os de controle são de renda baixa: programa e renda estão completamente confundidos, e a diferença entre as caixas não pode ser atribuída a nenhum dos dois.</p>
+</div>
 
 O grupo "Incentivo" fatura visivelmente mais — mas **não há como saber se isso é efeito do
 programa, da renda pré-existente do bairro, ou de ambos**, porque `renda` e `programa` variam em
@@ -101,7 +118,10 @@ ggplot(recife) +
   theme(axis.text = element_blank(), panel.grid = element_blank())
 ```
 
-<img src="04-blocos_files/figure-html/confundido-mapa-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/confundido-mapa-1.png" alt="Bairros do Recife coloridos pela Região Político-Administrativa (RPA) a que pertencem. Cada RPA reúne bairros vizinhos e poderia servir de bloco geográfico, dentro do qual os tratamentos seriam sorteados." width="75%" />
+<p class="caption">(\#fig:confundido-mapa)Bairros do Recife coloridos pela Região Político-Administrativa (RPA) a que pertencem. Cada RPA reúne bairros vizinhos e poderia servir de bloco geográfico, dentro do qual os tratamentos seriam sorteados.</p>
+</div>
 
 Com 94 bairros distribuídos em seis RPAs, um pesquisador que quisesse comparar, por
 exemplo, três estratégias de precificação no comércio local poderia blocar por RPA (controlando
@@ -198,7 +218,7 @@ model.matrix(~ tratamento + bloco, data = dados_toy)
 ```
 
 O estimador de mínimos quadrados $\hat\beta=(X'X)^{-1}X'Y$ e a matriz de projeção
-$H=X(X'X)^{-1}X'$ (Capítulo 2) aplicam-se sem modificação — a ANOVA que segue nada mais é do que
+$H=X(X'X)^{-1}X'$ (Capítulo 2) aplicam-se sem modificação — a análise de variância (ANOVA) que segue nada mais é do que
 uma forma de organizar $\|Y-\hat Y\|^2=\|(I-H)Y\|^2$ e suas partes atribuíveis a cada bloco de
 colunas de $X$.
 
@@ -212,7 +232,7 @@ resposta que $u$ *teria* sob o tratamento $i$, quer esse tratamento tenha sido d
 $u$ ou não. O efeito causal médio do tratamento $i$ contra o tratamento $i'$ é
 $\mathbb E[Y_u(i)-Y_u(i')]$, tomado sobre a população de unidades.
 
-Em um DCA (sem blocos), o sorteio é *completo*: cada unidade tem a mesma probabilidade de receber
+Em um delineamento completamente aleatorizado (DCA, sem blocos), o sorteio é *completo*: cada unidade tem a mesma probabilidade de receber
 cada tratamento, e essa aleatorização garante $\mathbb E[Y_u(i)\mid \text{recebeu }i] =
 \mathbb E[Y_u(i)]$ — o grupo que de fato recebeu $i$ é, em expectativa, uma amostra representativa
 de como *toda* a população responderia a $i$. No DBCA, o sorteio é **restrito** (ou
@@ -228,6 +248,25 @@ blocagem *não piore nada* é fraca (basta que o sorteio dentro de cada bloco se
 a condição para que ela *ajude* é que os blocos correlacionem com a resposta — se não
 correlacionarem, o único custo é gastar $b-1$ graus de liberdade do erro à toa, como veremos no
 exemplo do viveiro de pepineiros.
+
+#### A população conceitual de respostas de um DBCA
+
+A mesma construção da população conceitual do DCA (Seção \@ref(modelo-deduzido)) se estende ao
+DBCA, agora com um índice a mais (Figura \@ref(fig:fig-quadro-blocos)). Seja $Y_{ijk}$ o resultado
+potencial do tratamento $k$ na $j$-ésima unidade experimental do bloco $i$, com $i = 1, \ldots, b$,
+$j = 1, \ldots, t$ e $k = 1, \ldots, t$: cada bloco tem tantas unidades quanto tratamentos, e cada
+unidade tem um resultado potencial para cada tratamento.
+
+<div class="figure" style="text-align: center">
+<img src="../Aulas2026/assets/images/quadro5Blocos.png" alt="População conceitual de respostas de um DBCA: para cada bloco i e cada unidade experimental j dentro dele, a resposta potencial Y_ijk sob cada tratamento k, com as médias marginais por unidade, por bloco e por tratamento." width="62%" />
+<p class="caption">(\#fig:fig-quadro-blocos)População conceitual de respostas de um DBCA: para cada bloco i e cada unidade experimental j dentro dele, a resposta potencial Y_ijk sob cada tratamento k, com as médias marginais por unidade, por bloco e por tratamento.</p>
+</div>
+
+O sorteio restrito atribui, dentro de cada bloco, um tratamento diferente a cada unidade. Depois
+dele, cada bloco revela exatamente **uma** resposta por tratamento, o índice da unidade deixa de ser
+necessário e voltamos a $Y_{ik}$ — uma tabela bloco $\times$ tratamento, e não um vetor solto de
+$bt$ números. É essa estrutura de dupla entrada que o modelo aditivo do DBCA, e o
+`aov(resposta ~ tratamento + bloco)` dos exemplos, está de fato ajustando.
 
 ### Tabela de ANOVA
 
@@ -320,6 +359,11 @@ contíguas do viveiro, cada uma com sua própria heterogeneidade de solo e insol
 planta de cada combinação por bloco.
 </div>
 ```
+
+Os blocos foram definidos antes, pela heterogeneidade conhecida do terreno, e dentro de cada um os
+tratamentos foram sorteados entre as parcelas. O bloco controla a diferença entre áreas; o sorteio,
+a diferença entre parcelas dentro de cada área. Registros de uma fazenda em que o técnico aplicou o
+silício onde achou melhor teriam o mesmo bloco na planilha, mas não o segundo controle.
 
 Para introduzir o DBCA de um único fator, tratamos cada uma das $2\times 4=8$ combinações de
 irrigação e silício como um "tratamento" só, deixando a decomposição desse efeito em irrigação,
@@ -438,7 +482,10 @@ ggplot(pepino, aes(x = tratamento, y = altura, group = bloco, color = bloco)) +
   theme(axis.text.x = element_text(angle = 40, hjust = 1))
 ```
 
-<img src="04-blocos_files/figure-html/dbca-perfis-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/dbca-perfis-1.png" alt="Gráfico de perfis do DBCA do pepino: altura de cada combinação irrigação-silício (eixo horizontal), com uma linha por bloco. Se tratamento e bloco fossem exatamente aditivos, as três linhas seriam paralelas; aqui elas se cruzam em alguns tratamentos, e o teste de não aditividade de Tukey, a seguir, decide se isso vai além do ruído." width="75%" />
+<p class="caption">(\#fig:dbca-perfis)Gráfico de perfis do DBCA do pepino: altura de cada combinação irrigação-silício (eixo horizontal), com uma linha por bloco. Se tratamento e bloco fossem exatamente aditivos, as três linhas seriam paralelas; aqui elas se cruzam em alguns tratamentos, e o teste de não aditividade de Tukey, a seguir, decide se isso vai além do ruído.</p>
+</div>
 
 As três linhas não são exatamente paralelas: cruzam-se em vários pontos (por exemplo, em torno de
 `riego1_0 ml`, o bloco 3 cai abaixo dos blocos 1 e 2, invertendo a ordem que tinham no tratamento
@@ -461,7 +508,7 @@ $$
 
 isto é, o desvio da aditividade na casela $(i,j)$ é proporcional ao produto dos dois efeitos
 principais. Sob essa restrição sobra **um** grau de liberdade a estimar — $\eta$ —, e um grau de
-liberdade cabe folgadamente nos $(t-1)(b-1)$ do erro. A soma de quadrados de não aditividade é
+liberdade cabe folgadamente nos $(t-1)(b-1)$ do erro. A soma de quadrados de não aditividade, com um grau de liberdade (gl), é
 
 $$
 SQ_N=\frac{\Big[\sum_{i}\sum_{j} y_{ij}\,(\bar y_{i\cdot}-\bar y_{\cdot\cdot})\,
@@ -655,19 +702,19 @@ em 1 o grau de liberdade do erro (a observação estimada não traz informação
 quadrados de tratamentos calculada com o valor estimado fica levemente viesada para cima e pode ser
 corrigida.
 
-Para uma única observação perdida na célula (tratamento $i^\*$, bloco $j^\*$), o valor que
+Para uma única observação perdida na célula (tratamento $i^{*}$, bloco $j^{*}$), o valor que
 minimiza $SQ_{Erro}$ é
 
 $$
 \hat y_{i^*j^*} = \frac{t\,T'_{i^*} + b\,B'_{j^*} - G'}{(t-1)(b-1)},
 $$
 
-em que $T'_{i^*}$ é o total do tratamento $i^\*$ (excluindo a observação perdida), $B'_{j^*}$ é o
-total do bloco $j^\*$ (idem) e $G'$ é o total geral (idem). A correção aproximada para a soma de
+em que $T'_{i^*}$ é o total do tratamento $i^{*}$ (excluindo a observação perdida), $B'_{j^*}$ é o
+total do bloco $j^{*}$ (idem) e $G'$ é o total geral (idem). A correção aproximada para a soma de
 quadrados de tratamentos é
 
 $$
-SQ_{Trat}^{\,ajustada} = SQ_{Trat}^{\,ingênua} - \frac{\left[B'_{j^*} - (t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}.
+SQ_{Trat}^{\,\text{ajustada}} = SQ_{Trat}^{\,\text{ingênua}} - \frac{\left[B'_{j^*} - (t-1)\hat y_{i^*j^*}\right]^2}{t(t-1)}.
 $$
 
 ```{=html}
@@ -823,7 +870,10 @@ ggplot(df_re, aes(x = Delineamento, y = QM_Erro, fill = Delineamento)) +
   theme_minimal(base_size = 12)
 ```
 
-<img src="04-blocos_files/figure-html/dbca-re-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/dbca-re-plot-1.png" alt="Quadrado médio do erro do DBCA do pepino e do DCA hipotético que se obteria ignorando os blocos (somando a soma de quadrados, SQ, de bloco ao erro). O quadrado médio (QM) do erro do DCA hipotético é menor: os blocos absorveram pouca variação e custaram graus de liberdade, de modo que blocar não ajudou neste experimento." width="75%" />
+<p class="caption">(\#fig:dbca-re-plot)Quadrado médio do erro do DBCA do pepino e do DCA hipotético que se obteria ignorando os blocos (somando a soma de quadrados, SQ, de bloco ao erro). O quadrado médio (QM) do erro do DCA hipotético é menor: os blocos absorveram pouca variação e custaram graus de liberdade, de modo que blocar não ajudou neste experimento.</p>
+</div>
 
 O gráfico conta a mesma história que o cálculo de eficiência: o $QM_{Erro}$ do DCA hipotético
 ($0{,}0493$) é **menor** que o do DBCA ($0{,}0554$). Isso acontece porque agrupar $SQ_{Bloco}$
@@ -877,6 +927,11 @@ direita (a maioria melhora pouco, alguns melhoram muito), o que torna a suposiç
 do DBCA questionável com apenas 12 blocos.
 </div>
 ```
+
+Quando o bloco é o paciente, o que o desenho controla além do bloco é a **ordem** das técnicas,
+sorteada para cada paciente, com intervalo de *washout*. Em prontuários em que o terapeuta escolheu
+a ordem, a técnica aplicada por último coincidiria com o paciente que já está melhorando, e o
+bloco não removeria essa confusão.
 
 Dentro de cada bloco $j$, atribuem-se postos $1,\dots,t$ às $t$ respostas (do menor para o maior).
 Sejam $R_i = \sum_j \text{posto}(Y_{ij})$ as somas de posto por tratamento. Sob $H_0$ (nenhuma
@@ -979,7 +1034,10 @@ ggplot(dados_terapia, aes(x = tecnica, y = reducao)) +
   theme(axis.text.x = element_text(angle = 15, hjust = 1))
 ```
 
-<img src="04-blocos_files/figure-html/friedman-perfis-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/friedman-perfis-1.png" alt="Redução de sintomas (%) por técnica terapêutica, com um boxplot por técnica e uma linha cinza ligando as três medidas de cada paciente (o bloco). As distribuições são assimétricas à direita nas três técnicas, e as linhas se cruzam com frequência: poucos pacientes mantêm a mesma ordem entre as técnicas." width="75%" />
+<p class="caption">(\#fig:friedman-perfis)Redução de sintomas (%) por técnica terapêutica, com um boxplot por técnica e uma linha cinza ligando as três medidas de cada paciente (o bloco). As distribuições são assimétricas à direita nas três técnicas, e as linhas se cruzam com frequência: poucos pacientes mantêm a mesma ordem entre as técnicas.</p>
+</div>
 
 Duas coisas ficam visíveis que a estatística de Friedman, por si só, não mostra: (i) a assimetria à
 direita mencionada na motivação — a maioria dos pacientes melhora pouco e uma cauda melhora muito,
@@ -1004,7 +1062,7 @@ número limitado de amostras antes que o paladar sature; uma parcela experimenta
 físico para poucas variedades; um paciente só tolera um número limitado de sessões de teste. Um
 **delineamento em blocos incompletos** usa blocos de tamanho $k < t$. Se, além disso, o desenho é
 construído de modo que **cada par de tratamentos apareça junto no mesmo bloco o mesmo número de
-vezes**, o delineamento é dito **balanceado (BIB)** [@yates1936incomplete] — a propriedade que
+vezes**, o delineamento é dito **balanceado (BIB, de *balanced incomplete block*)** [@yates1936incomplete] — a propriedade que
 preserva a comparabilidade entre quaisquer dois tratamentos, análoga ao que a completude dos
 blocos garante no DBCA.
 
@@ -1060,7 +1118,10 @@ $\lambda(t-1)=2\times3=6=r(k-1)=3\times2$.
 A propriedade de balanceamento fica mais fácil de enxergar em uma **matriz de incidência**
 bloco$\times$tratamento: cada célula marca se aquele tratamento aparece naquele bloco.
 
-<img src="04-blocos_files/figure-html/bibd-incidencia-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/bibd-incidencia-1.png" alt="Matriz de incidência do BIB (blocos incompletos balanceados) com t = 4 tratamentos, b = 4 blocos de tamanho k = 3. Azul indica que o tratamento aparece no bloco. Cada linha tem 3 células azuis, cada coluna tem 3 (r = 3), e cada par de colunas divide azul em exatamente 2 linhas (λ = 2)." width="75%" />
+<p class="caption">(\#fig:bibd-incidencia)Matriz de incidência do BIB (blocos incompletos balanceados) com t = 4 tratamentos, b = 4 blocos de tamanho k = 3. Azul indica que o tratamento aparece no bloco. Cada linha tem 3 células azuis, cada coluna tem 3 (r = 3), e cada par de colunas divide azul em exatamente 2 linhas (λ = 2).</p>
+</div>
 
 Cada linha (bloco) tem exatamente $k=3$ células azuis, cada coluna (tratamento) tem exatamente
 $r=3$ células azuis, e qualquer par de colunas compartilha azul em exatamente $\lambda=2$ linhas —
@@ -1164,7 +1225,10 @@ ggplot(campo, aes(x = coluna, y = linha, fill = fertilidade)) +
   theme_minimal(base_size = 12)
 ```
 
-<img src="04-blocos_files/figure-html/ql-motivacao-grid-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/ql-motivacao-grid-1.png" alt="Fertilidade simulada de um campo de 8 × 8 parcelas com dois gradientes ortogonais: a fertilidade cai de cima para baixo (declividade, nas linhas) e da esquerda para a direita (umidade, nas colunas). Blocar só por linha deixaria o gradiente das colunas dentro de cada bloco, e vice-versa: é a situação que pede um quadrado latino." width="75%" />
+<p class="caption">(\#fig:ql-motivacao-grid)Fertilidade simulada de um campo de 8 × 8 parcelas com dois gradientes ortogonais: a fertilidade cai de cima para baixo (declividade, nas linhas) e da esquerda para a direita (umidade, nas colunas). Blocar só por linha deixaria o gradiente das colunas dentro de cada bloco, e vice-versa: é a situação que pede um quadrado latino.</p>
+</div>
 
 Se bloqueássemos **só** por linha (faixas horizontais), cada bloco ainda conteria o gradiente
 inteiro de coluna, não neutralizado; se bloqueássemos **só** por coluna, sobraria o gradiente de
@@ -1246,6 +1310,11 @@ em cada coluna.
 </div>
 ```
 
+Linha e coluna controlam os dois gradientes conhecidos; o sorteio do quadrado (Seção sobre a
+aleatorização, adiante) controla o que não está neles. Um produtor que aplicou cada adubo numa
+faixa do terreno e anotou declividade e umidade teria as duas medidas, mas não o balanceamento:
+o efeito de cada adubo dependeria de quais gradientes ele pegou.
+
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — construindo e analisando um quadrado latino 4x4</div>
 ```
@@ -1273,7 +1342,10 @@ O arranjo abstrato de letras fica mais concreto como um diagrama: cada célula d
 linha$\times$coluna recebe a cor do tratamento que lhe cabe, com a letra sobreposta para que a
 identidade do tratamento nunca dependa só da cor.
 
-<img src="04-blocos_files/figure-html/ql-heatmap-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/ql-heatmap-1.png" alt="Esquema do quadrado latino 4 × 4 usado no exemplo: cada letra (tratamento) aparece exatamente uma vez em cada linha e uma vez em cada coluna." width="75%" />
+<p class="caption">(\#fig:ql-heatmap)Esquema do quadrado latino 4 × 4 usado no exemplo: cada letra (tratamento) aparece exatamente uma vez em cada linha e uma vez em cada coluna.</p>
+</div>
 
 Cada linha da grade (lida da esquerda para a direita) contém as quatro letras exatamente uma vez,
 e o mesmo vale para cada coluna (lida de cima para baixo) — é essa dupla restrição, visível de
@@ -1647,6 +1719,16 @@ Confira: $gl_{Erro} = (n-1)[p(n-1)-1] = 3\times(2\times3-1) = 15$, exatamente o 
 pelo ajuste acima — replicar duas vezes elevou os graus de liberdade do erro de 6 para 15,
 tornando o teste sobre tratamentos bem mais sensível do que seria com um único quadrado.
 
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/plot-gl-rep-1.png" alt="Graus de liberdade do erro do quadrado latino replicado, (n-1)[p(n-1)-1], em função do número de réplicas p, para quadrados 3x3, 4x4 e 5x5; os pontos destacados são o exemplo do texto (n = 4: de 6 para 15 gl com duas réplicas)." width="75%" />
+<p class="caption">(\#fig:plot-gl-rep)Graus de liberdade do erro do quadrado latino replicado, (n-1)[p(n-1)-1], em função do número de réplicas p, para quadrados 3x3, 4x4 e 5x5; os pontos destacados são o exemplo do texto (n = 4: de 6 para 15 gl com duas réplicas).</p>
+</div>
+
+A Figura \@ref(fig:plot-gl-rep) mostra o ganho em geral: com um quadrado $3\times3$ isolado sobram
+só 2 graus de liberdade para o erro — um teste $F$ praticamente sem poder —, e cada réplica
+acrescenta $(n-1)^2$ graus de liberdade. É o que a réplica "compra": não mais tratamentos, e sim
+uma estimativa de $\sigma^2$ em que se pode confiar.
+
 ### Quantas réplicas? Uma análise de poder
 
 A pergunta prática — "vale a pena replicar, e quantas vezes?" — pode ser respondida antes de
@@ -1737,7 +1819,10 @@ ggplot(tab_poder, aes(x = p, y = poder)) +
   theme_minimal(base_size = 12)
 ```
 
-<img src="04-blocos_files/figure-html/poder-ql-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/poder-ql-plot-1.png" alt="Poder para detectar um efeito grande de tratamento (f = 0,4) em função do número de réplicas p do quadrado latino. A linha tracejada marca o poder convencional de 80%; com um único quadrado o poder é baixo, porque restam poucos graus de liberdade para o erro." width="75%" />
+<p class="caption">(\#fig:poder-ql-plot)Poder para detectar um efeito grande de tratamento (f = 0,4) em função do número de réplicas p do quadrado latino. A linha tracejada marca o poder convencional de 80%; com um único quadrado o poder é baixo, porque restam poucos graus de liberdade para o erro.</p>
+</div>
 
 Com um único quadrado ($p=1$, $gl_{Erro}=6$), o poder para detectar um efeito grande é de apenas
 15% — mesmo um efeito real e
@@ -1759,7 +1844,7 @@ quadrado latino — só que agora há **duas** fontes de bloqueio (linha e colun
 não só "valeu a pena blocar?", mas "qual das duas fontes carregou mais peso?". A comparação mais
 direta aqui é, na verdade, **exata**, sem nenhuma aproximação: como $SQ_{Total}$ não depende de
 qual modelo foi ajustado, a soma de quadrados que um DCA hipotético (que ignorasse linha e coluna)
-atribuiria ao erro é exatamente o que sobra depois de remover só o tratamento,
+atribuiria ao erro é exatamente o que sobra depois de remover só o tratamento (QL indica o quadrado latino),
 $$
 SQ_{Erro}^{(DCA)} = SQ_{Total} - SQ_{Trat} = SQ_{Linha} + SQ_{Coluna} + SQ_{Erro}^{(QL)},
 $$
@@ -1868,6 +1953,10 @@ o cenário exato de um quadrado latino $5\times5$: cada variante é exibida exat
 cada faixa horária e uma vez em cada dia da semana, ao longo de 25 janelas de exibição.
 </div>
 ```
+
+Hora e dia são as duas fontes conhecidas; o sorteio de qual variante vai a cada combinação hora ×
+dia controla o resto. Lançar uma variante por dia, na ordem em que ficaram prontas, confundiria a
+variante com o dia da semana, que é exatamente o que o quadrado latino evita.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — construção, ajuste e notação matricial do quadrado latino 5x5</div>
@@ -2012,7 +2101,10 @@ ggplot(emm_df, aes(x = variante, y = emmean)) +
   theme_minimal(base_size = 12)
 ```
 
-<img src="04-blocos_files/figure-html/ql-ex2-emm-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/ql-ex2-emm-1.png" alt="Conversão média ajustada de cada variante de checkout no quadrado latino de e-commerce (controlando hora e dia), com intervalo de confiança de 95%. Os intervalos da variante C (a melhor) e da E (a pior) não se sobrepõem." width="75%" />
+<p class="caption">(\#fig:ql-ex2-emm)Conversão média ajustada de cada variante de checkout no quadrado latino de e-commerce (controlando hora e dia), com intervalo de confiança de 95%. Os intervalos da variante C (a melhor) e da E (a pior) não se sobrepõem.</p>
+</div>
 
 As médias ajustadas separam claramente a variante C (10.35%,
 a melhor) da variante E (7.93%, a pior) — os intervalos
@@ -2147,7 +2239,10 @@ c(linhas_sao_permutacoes = linhas_ok, lambda_min = lambda_obs[1], lambda_max = l
 ##                      1                      1                      1
 ```
 
-<img src="04-blocos_files/figure-html/youden-heatmap-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/youden-heatmap-1.png" alt="Quadrado de Youden com v = 7 genótipos em 3 linhas (posições na bancada) e 7 colunas (datas de plantio). Cada linha contém os 7 genótipos; cada coluna, só 3; e todo par de genótipos aparece junto em exatamente uma coluna." width="75%" />
+<p class="caption">(\#fig:youden-heatmap)Quadrado de Youden com v = 7 genótipos em 3 linhas (posições na bancada) e 7 colunas (datas de plantio). Cada linha contém os 7 genótipos; cada coluna, só 3; e todo par de genótipos aparece junto em exatamente uma coluna.</p>
+</div>
 
 O contraste com o quadrado latino completo salta aos olhos: cada **linha** ainda contém todos os 7
 genótipos (lida na horizontal, a figura mostra os 7 rótulos diferentes), mas cada **coluna** só
@@ -2430,7 +2525,10 @@ n_distinct(paste(dados_glq$roman, dados_glq$grego))  # 16: todo par (romano, gre
 A sobreposição dos dois quadrados fica mais concreta como diagrama: a cor de cada célula marca a
 variedade (letra romana), e o rótulo mostra o par completo (variedade, adubo).
 
-<img src="04-blocos_files/figure-html/glq-heatmap-1.png" alt="" width="75%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/glq-heatmap-1.png" alt="Quadrado greco-latino 4 × 4: a cor e a letra romana indicam a variedade; a letra grega, o adubo. Cada variedade e cada adubo aparecem uma vez por linha e uma vez por coluna, e nenhum par (variedade, adubo) se repete." width="75%" />
+<p class="caption">(\#fig:glq-heatmap)Quadrado greco-latino 4 × 4: a cor e a letra romana indicam a variedade; a letra grega, o adubo. Cada variedade e cada adubo aparecem uma vez por linha e uma vez por coluna, e nenhum par (variedade, adubo) se repete.</p>
+</div>
 
 O padrão de cores reproduz exatamente o quadrado latino de variedades da seção anterior — cada cor
 (romano) ainda aparece uma vez por linha e uma vez por coluna —, mas agora cada célula também traz
@@ -2581,7 +2679,7 @@ $$
 
 com $i=1,\ldots,r$ blocos, $j=1,\ldots,a$ níveis do fator de parcela principal (irrigação),
 $k=1,\ldots,b$ níveis do fator de subparcela (variedade), $\delta_{ij}\overset{iid}\sim
-N(0,\sigma^2_\delta)$ o erro da parcela principal (a variação entre parcelas principais dentro do
+N(0,\sigma^2_\delta)$ (iid: independentes e identicamente distribuídos) o erro da parcela principal (a variação entre parcelas principais dentro do
 mesmo bloco, não explicada por irrigação) e $\varepsilon_{ijk}\overset{iid}\sim N(0,\sigma^2_\varepsilon)$
 o erro da subparcela (a variação entre subparcelas dentro da mesma parcela principal), independente
 de $\delta_{ij}$. $\rho_i$ (bloco) e $\alpha_j$ (irrigação) são efeitos fixos sujeitos às
@@ -2709,9 +2807,126 @@ Neste conjunto de dados simulado, irrigação é significativa
 ($F_{2,6}=13.3$, $p=0.006$) mas testada com apenas 6 gl de erro;
 variedade é fortemente significativa ($F_{3,27}=31.3$,
 $p<0{,}001$), testada com 27 gl de erro —
-precisão bem maior, exatamente o padrão que a análise de $\mathbb E[QM]$ previu. A interação não é
+precisão bem maior, exatamente o padrão que a análise das esperanças dos quadrados médios, $\mathbb E[QM]$, previu. A interação não é
 significativa ($p=0.97$), visível no gráfico como retas aproximadamente paralelas
 entre os três níveis de irrigação.
+
+## Controlado × não controlado: o que o bloco controla e o que só o sorteio controla {#cnc-cap4}
+
+Este capítulo acrescentou uma segunda forma de controle à aleatorização: o **controle local**.
+Vale separar com cuidado o que cada uma faz, porque num estudo observacional é tentador achar que
+"ajustar pelo bloco" equivale a ter blocado.
+
+- O **bloco** controla uma fonte de variação **conhecida e registrada** (a área do viveiro, o
+  sujeito, a máquina): cada tratamento aparece o mesmo número de vezes em cada bloco, as colunas de
+  tratamento e de bloco de $\mathbf X$ ficam ortogonais, e a variação entre blocos sai do erro.
+- O **sorteio dentro do bloco** controla tudo o que **não foi registrado** (a drenagem de cada
+  parcela, o humor do sujeito naquele dia): nenhuma característica da unidade decide qual
+  tratamento ela recebe.
+
+Um estudo observacional pode imitar a primeira forma de controle, estratificando ou ajustando pela
+variável conhecida depois da coleta. Não pode imitar a segunda.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Agricultura: adubo novo em oito áreas de viveiro</strong><br>
+Oito áreas de um viveiro (blocos), com fertilidade muito diferente entre si, têm quatro parcelas
+cada. O adubo novo (T) aumenta a altura das mudas em 3 cm em relação ao padrão (C). Cada parcela
+tem ainda uma qualidade de drenagem que <strong>ninguém mediu</strong>.
+<strong>DBCA (delineamento em blocos completos aleatorizados):</strong> em cada área, duas parcelas
+são sorteadas para T e duas para C. <strong>Observacional:</strong> o gerente do viveiro aplicou o
+adubo novo onde achou melhor: mais vezes nas áreas férteis e, dentro de cada área, nas parcelas
+que "pareciam melhores" (as bem drenadas). Com os dados observacionais, calculam-se duas
+estimativas: a diferença simples de médias e o coeficiente de T em <code>lm(y ~ trat + bloco)</code>,
+que ajusta pela área.
+</div>
+```
+
+
+``` r
+cnc4 <- cnc_cap4()                          # 3.000 viveiros em cada regime
+res4 <- resumo_estimador(cnc4$est, cnc4$tau)
+res4
+```
+
+```
+## # A tibble: 3 × 5
+##   regime                           media    vies    dp  reqm
+##   <fct>                            <dbl>   <dbl> <dbl> <dbl>
+## 1 DBCA: sorteio dentro da área      3.01 0.00672 0.879 0.879
+## 2 Observacional, sem ajuste        10.1  7.13    1.82  7.36 
+## 3 Observacional, ajustado por área  5.40 2.40    1.03  2.61
+```
+
+<div class="figure" style="text-align: center">
+<img src="04-blocos_files/figure-html/cnc-cap4-graf-1.png" alt="Efeito estimado do adubo novo em 3.000 viveiros simulados (efeito verdadeiro: 3 cm, linha tracejada). Azul: DBCA, com sorteio dentro de cada área. Laranja: dados observacionais, diferença simples de médias, contaminada pela fertilidade das áreas e pela drenagem das parcelas. Roxo: os mesmos dados observacionais ajustados por área; o ajuste remove a parte do viés que vinha da área, que foi registrada, mas não a que vinha da drenagem, que não foi." width="75%" />
+<p class="caption">(\#fig:cnc-cap4-graf)Efeito estimado do adubo novo em 3.000 viveiros simulados (efeito verdadeiro: 3 cm, linha tracejada). Azul: DBCA, com sorteio dentro de cada área. Laranja: dados observacionais, diferença simples de médias, contaminada pela fertilidade das áreas e pela drenagem das parcelas. Roxo: os mesmos dados observacionais ajustados por área; o ajuste remove a parte do viés que vinha da área, que foi registrada, mas não a que vinha da drenagem, que não foi.</p>
+</div>
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:cnc-cap4-tab)Efeito estimado do adubo novo (cm), efeito verdadeiro 3. DP = desvio-padrão entre os 3.000 viveiros; REQM = raiz do erro quadrático médio.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Estimador </th>
+   <th style="text-align:right;"> Média </th>
+   <th style="text-align:right;"> Viés </th>
+   <th style="text-align:right;"> DP </th>
+   <th style="text-align:right;"> REQM </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> DBCA: sorteio dentro da área </td>
+   <td style="text-align:right;"> 3,01 </td>
+   <td style="text-align:right;"> 0,01 </td>
+   <td style="text-align:right;"> 0,88 </td>
+   <td style="text-align:right;"> 0,88 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Observacional, sem ajuste </td>
+   <td style="text-align:right;"> 10,13 </td>
+   <td style="text-align:right;"> 7,13 </td>
+   <td style="text-align:right;"> 1,82 </td>
+   <td style="text-align:right;"> 7,36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Observacional, ajustado por área </td>
+   <td style="text-align:right;"> 5,40 </td>
+   <td style="text-align:right;"> 2,40 </td>
+   <td style="text-align:right;"> 1,03 </td>
+   <td style="text-align:right;"> 2,61 </td>
+  </tr>
+</tbody>
+</table>
+
+A tabela separa as duas camadas de controle. Ajustar pela área reduz o viés de
+7,13 para 2,40 cm: é o que um analista cuidadoso consegue
+fazer com dados observacionais quando a variável de confusão foi registrada. Os
+2,40 cm que sobram vêm da drenagem, que não está em nenhuma coluna da planilha, e
+nenhum modelo os remove. O DBCA chega a 0,01 cm de viés e ao menor desvio-padrão
+dos três: o bloco tirou do erro a variação entre áreas (precisão), e o sorteio impediu que a
+drenagem decidisse o tratamento (ausência de viés).
+
+Há ainda uma diferença de **álgebra**. No DBCA, cada área tem exatamente duas parcelas de cada
+tratamento, de modo que as colunas de tratamento e de bloco de $\mathbf X$ são ortogonais e as somas
+de quadrados de tratamento e de bloco não dependem da ordem de entrada no modelo. Nos dados
+observacionais, o número de parcelas tratadas varia de área para área, as colunas deixam de ser
+ortogonais e a estimativa do efeito do adubo passa a depender de quais termos estão no modelo, o
+mesmo fenômeno que a Seção \@ref(fwl) do Capítulo 2 descreveu com o teorema de Frisch-Waugh-Lovell.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>Em medidas repetidas, o bloco é o próprio sujeito. Num estudo observacional em que cada pessoa
+escolhe em que ordem experimenta duas terapias, o bloco "sujeito" continua ajudando? O que a falta
+de sorteio da ordem pode confundir com o efeito da terapia?</li>
+<li>O quadrado latino controla duas fontes conhecidas (linhas e colunas). Por que ele ainda precisa
+de sorteio (Seção sobre a aleatorização do quadrado latino), se as duas fontes já estão
+balanceadas?</li>
+</ol>
+</div>
+```
 
 ## Resumo do capítulo
 
@@ -2757,3 +2972,7 @@ ou mais fontes de bloqueio). O Capítulo 5 introduz o caso em que **dois ou mais
 tratamento** são cruzados deliberadamente no mesmo experimento — os arranjos fatoriais —,
 permitindo não só estimar o efeito de cada fator, mas também se o efeito de um depende do nível do
 outro.
+- **Controlado × não controlado:** o bloco (e a linha e a coluna do quadrado latino) controla
+  as fontes de variação conhecidas; o sorteio dentro do bloco controla todo o resto. Dados
+  observacionais ajustados por bloco corrigem só a primeira parte.
+

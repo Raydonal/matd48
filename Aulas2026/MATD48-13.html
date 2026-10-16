@@ -45,6 +45,18 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+No `\(2^k\)`, o pesquisador controla até a **confusão**:
+
+- **Ortogonalidade:** os `\(2^k\)` pontos são escolhidos para que todas as colunas de `\(\mathbf X\)` sejam ortogonais, e cada efeito é estimado sem contaminar os outros.
+- **Confusão planejada:** ao dividir as corridas em blocos, ele **escolhe** qual efeito sacrificar (em geral `\(ABCD\)`, a interação de ordem mais alta) e **sabe** exatamente o que ficou misturado com o bloco.
+- **Não controla:** o valor das interações que decidiu confundir; supõe que são desprezíveis.
+
+Num estudo não controlado também há confusão, mas **acidental**: ninguém escolheu o que ficou misturado com o quê.
+
+---
+
 ## Por que `\(2^k\)`?
 
 Todos os fatores em **dois níveis** (`\(-1\)`/$+1$). Popular porque:
@@ -137,7 +149,7 @@ em paralelo, uma por efeito.
 
 ## Com repetição: o erro puro sai das próprias duplicatas
 
-Com `\(r=2\)` repetições por casela existe estimativa honesta de `\(\sigma^2\)`, e nenhuma suposição de esparsidade é necessária. Cada casela dá `\(S_i^2=d_i^2/2\)` com 1 gl. Combinando as `\(g=2^k\)` caselas:
+Com `\(r=2\)` repetições por casela existe estimativa honesta de `\(\sigma^2\)`, e nenhuma suposição de esparsidade é necessária. Cada casela dá `\(S_i^2=d_i^2/2\)` com 1 grau de liberdade (gl). Combinando as `\(g=2^k\)` caselas:
 
 `$$S^2=\frac{\sum_{i=1}^{g}\nu_i S_i^2}{\sum_i \nu_i}=\frac{\sum_{i=1}^{g} d_i^2}{2g}, \qquad g \text{ graus de liberdade}$$`
 
@@ -220,6 +232,8 @@ Mesmo ranking, como barras, com a margem de erro de Lenth sobreposta.
 
 ## Margem de erro de Lenth
 
+PSE = pseudo erro-padrão (*pseudo standard error*); ME = margem de erro:
+
 `$$s_0 = 1{,}5\cdot\text{med}_i|c_i|, \qquad \text{PSE} = 1{,}5\cdot\text{med}_{\{|c_i|&lt;2{,}5s_0\}}|c_i|, \qquad \text{ME} = t_{0{,}975;\,d}\cdot\text{PSE},\ d=\tfrac{m}{3}$$`
 
 Um efeito é "grande" se `\(|c_i| &gt; \text{ME}\)` (Lenth, 1989).
@@ -243,6 +257,187 @@ colinearidade exata em `\(\mathbf{X}\)`.
 class: inverse, center, middle
 
 # Bloco 2 — Aplicação
+
+---
+
+## Os dados: 16 combinações, 2 repetições cada
+
+
+
+.pull-left[
+&lt;table class="table" style="font-size: 13px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; A &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; B &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; C &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; D &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Rend. 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Rend. 2 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 69.5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 77.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 80.5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 79.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 83.2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 82.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 81.2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 81.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 88.0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 95.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 83.1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 73.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 79.6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 86.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75.2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76.5 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+.pull-right[
+&lt;table class="table" style="font-size: 13px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; A &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; B &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; C &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; D &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Rend. 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Rend. 2 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 81.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 80.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 78.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 73.4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 82.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 80.9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 90.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 70.4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 63.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75.2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; − &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 85.1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 83.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; + &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 87.6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 89.8 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+A = razão molar, B = catalisador, C = temperatura, D = agente; rendimentos em %.
+
+Cada linha é uma combinação dos 4 fatores em dois níveis (− e +); as duas últimas colunas são as duas corridas repetidas. É a diferença entre elas que dá o erro puro.
+
+
+---
+
+## O que o desenho decidiu no biodiesel
+
+- As 16 combinações dos 4 fatores foram **todas** rodadas, duas vezes cada: é isso que dá ortogonalidade e erro puro.
+- A **ordem** das 32 corridas deveria ser sorteada, para que uma deriva do reator não se confunda com nenhum efeito.
+
+**A versão não controlada:** usar 32 lotes do histórico da usina. Os operadores mudam razão e temperatura juntas, quase nunca usam o catalisador novo com o agente antigo, e várias combinações nem aparecem. A matriz de aliases deixaria de ser feita de zeros e uns (Bloco 3).
 
 ---
 
@@ -313,7 +508,7 @@ razão:catalisador:temperatura.
 &lt;img src="MATD48-13_files/figure-html/interacao-catag-1.png" alt="" width="504" /&gt;
 
 Trocar o agente **aumenta** o rendimento com catalisador `\(-1\)` e **reduz** com catalisador `\(+1\)` —
-o sinal do efeito se inverte. É essa inversão visual que a ANOVA está formalizando.
+o sinal do efeito se inverte. É essa inversão visual que a ANOVA (análise de variância) está formalizando.
 
 ---
 
@@ -426,6 +621,27 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Confusão planejada × acidental**
+
+Confundir de propósito (`\(I=ABCD\)`, blocos) é diferente de confusão acidental: no planejado, **você escolhe** o que fica misturado e **sabe** como.
+Matriz de aliases `\(\mathbf A=(\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf X_2\)`, com `\(E[\hat{\boldsymbol\beta}_1]=\boldsymbol\beta_1+\mathbf A\boldsymbol\beta_2\)`:
+
+&lt;img src="MATD48-13_files/figure-html/cnc-a13-1.png" alt="" width="80%" /&gt;
+
+---
+
+## Lendo a matriz de aliases
+
+- **Meia fração planejada** (8 corridas): cada efeito principal herda **uma** interação tripla (`\(A\)` com `\(BCD\)`...), e nenhuma dupla.
+- **8 corridas históricas** do mesmo processo (operadores movem `\(A\)` e `\(B\)` juntos): `\(A\)` herda `\(AB\)` com peso `\(-1\)` e todas as outras interações com peso `\(\pm 0{,}5\)`.
+- Se `\(AB=3\)`: na fração planejada, `\(\hat A\)` não muda; no histórico, `\(\hat A\)` sai deslocado em -3, sem nenhum aviso do `lm()`.
+
+A fração planejada também tem confusão, mas **com mapa**: a relação definidora e a resolução dizem de antemão o que está misturado com o quê.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que a **mediana**, e não o desvio-padrão, protege o método de Lenth dos próprios efeitos
@@ -439,6 +655,14 @@ class: inverse, center, middle
 
 4. Se você tivesse orçamento para **2 repetições** de um `\(2^4\)` dividido em blocos de 8, por que
    confusão **parcial** (geradores diferentes por repetição) é preferível à total?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. "Confundir `\(ABCD\)` com o bloco" e "o dia ficou confundido com a temperatura" são confusões do mesmo tipo? O que distingue uma da outra?
+2. Se um efeito principal aparece "grande" num conjunto de 8 corridas históricas, que informação falta para saber se ele é real?
 
 ---
 
@@ -507,6 +731,7 @@ efeitos é perdido em **todas** as réplicas — a essência da confusão parcia
 - Confundir é fazer duas colunas de `\(\mathbf{X}\)` colidirem — escolha efeitos de ordem alta para
   sacrificar; use confusão parcial quando há mais de uma repetição.
 - Próxima aula: `\(3^k\)`, fracionamento e a metodologia de superfície de resposta.
+- **Controlado × não controlado:** a confusão planejada tem **mapa** (a relação definidora diz o que está misturado com o quê); a confusão de registros históricos espalha cada interação por todos os efeitos.
 
 ---
 

@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -490,32 +525,32 @@ distribucional — sua validade vem inteiramente do mecanismo de aleatorização
 aproximação excelente quando os erros são razoavelmente próximos de normais, e que tem a enorme
 vantagem prática de fornecer fórmulas fechadas em vez de exigir reembaralhamento computacional.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — comparando o teste de aleatorização com o teste F</div>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="principios-aleatorizacao.html#cb56-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
-<span id="cb56-2"><a href="principios-aleatorizacao.html#cb56-2" tabindex="-1"></a>condicao <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhuma&quot;</span>, <span class="st">&quot;Sonora&quot;</span>, <span class="st">&quot;Visual&quot;</span>)</span>
-<span id="cb56-3"><a href="principios-aleatorizacao.html#cb56-3" tabindex="-1"></a>n_por_grupo <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb56-4"><a href="principios-aleatorizacao.html#cb56-4" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="principios-aleatorizacao.html#cb56-5" tabindex="-1"></a>dados_tr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb56-6"><a href="principios-aleatorizacao.html#cb56-6" tabindex="-1"></a>  <span class="at">sujeito      =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">3</span> <span class="sc">*</span> n_por_grupo),</span>
-<span id="cb56-7"><a href="principios-aleatorizacao.html#cb56-7" tabindex="-1"></a>  <span class="at">condicao     =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(condicao, <span class="at">each =</span> n_por_grupo), <span class="at">levels =</span> condicao),</span>
-<span id="cb56-8"><a href="principios-aleatorizacao.html#cb56-8" tabindex="-1"></a>  <span class="at">tempo_reacao =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(n_por_grupo, <span class="dv">480</span>, <span class="dv">45</span>),</span>
-<span id="cb56-9"><a href="principios-aleatorizacao.html#cb56-9" tabindex="-1"></a>                    <span class="fu">rnorm</span>(n_por_grupo, <span class="dv">512</span>, <span class="dv">45</span>),</span>
-<span id="cb56-10"><a href="principios-aleatorizacao.html#cb56-10" tabindex="-1"></a>                    <span class="fu">rnorm</span>(n_por_grupo, <span class="dv">555</span>, <span class="dv">45</span>))</span>
-<span id="cb56-11"><a href="principios-aleatorizacao.html#cb56-11" tabindex="-1"></a>)</span>
-<span id="cb56-12"><a href="principios-aleatorizacao.html#cb56-12" tabindex="-1"></a></span>
-<span id="cb56-13"><a href="principios-aleatorizacao.html#cb56-13" tabindex="-1"></a>F_obs <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">aov</span>(tempo_reacao <span class="sc">~</span> condicao, <span class="at">data =</span> dados_tr))[[<span class="dv">1</span>]][[<span class="st">&quot;F value&quot;</span>]][<span class="dv">1</span>]</span>
-<span id="cb56-14"><a href="principios-aleatorizacao.html#cb56-14" tabindex="-1"></a></span>
-<span id="cb56-15"><a href="principios-aleatorizacao.html#cb56-15" tabindex="-1"></a>R_perm <span class="ot">&lt;-</span> <span class="dv">4000</span></span>
-<span id="cb56-16"><a href="principios-aleatorizacao.html#cb56-16" tabindex="-1"></a>F_perm <span class="ot">&lt;-</span> <span class="fu">replicate</span>(R_perm, {</span>
-<span id="cb56-17"><a href="principios-aleatorizacao.html#cb56-17" tabindex="-1"></a>  rotulo_embaralhado <span class="ot">&lt;-</span> <span class="fu">sample</span>(dados_tr<span class="sc">$</span>condicao)</span>
-<span id="cb56-18"><a href="principios-aleatorizacao.html#cb56-18" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">aov</span>(dados_tr<span class="sc">$</span>tempo_reacao <span class="sc">~</span> rotulo_embaralhado))[[<span class="dv">1</span>]][[<span class="st">&quot;F value&quot;</span>]][<span class="dv">1</span>]</span>
-<span id="cb56-19"><a href="principios-aleatorizacao.html#cb56-19" tabindex="-1"></a>})</span>
-<span id="cb56-20"><a href="principios-aleatorizacao.html#cb56-20" tabindex="-1"></a></span>
-<span id="cb56-21"><a href="principios-aleatorizacao.html#cb56-21" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb56-22"><a href="principios-aleatorizacao.html#cb56-22" tabindex="-1"></a>  Método   <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Teste F (teórico)&quot;</span>, <span class="st">&quot;Teste de aleatorização&quot;</span>),</span>
-<span id="cb56-23"><a href="principios-aleatorizacao.html#cb56-23" tabindex="-1"></a>  <span class="st">`</span><span class="at">Valor-p</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">pf</span>(F_obs, <span class="dv">2</span>, <span class="dv">33</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>), <span class="fu">mean</span>(F_perm <span class="sc">&gt;=</span> F_obs))</span>
-<span id="cb56-24"><a href="principios-aleatorizacao.html#cb56-24" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb56-25"><a href="principios-aleatorizacao.html#cb56-25" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Valor-p teórico vs. valor-p por aleatorização, mesmos dados&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb56-26"><a href="principios-aleatorizacao.html#cb56-26" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="principios-aleatorizacao.html#cb66-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
+<span id="cb66-2"><a href="principios-aleatorizacao.html#cb66-2" tabindex="-1"></a>condicao <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhuma&quot;</span>, <span class="st">&quot;Sonora&quot;</span>, <span class="st">&quot;Visual&quot;</span>)</span>
+<span id="cb66-3"><a href="principios-aleatorizacao.html#cb66-3" tabindex="-1"></a>n_por_grupo <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb66-4"><a href="principios-aleatorizacao.html#cb66-4" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="principios-aleatorizacao.html#cb66-5" tabindex="-1"></a>dados_tr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb66-6"><a href="principios-aleatorizacao.html#cb66-6" tabindex="-1"></a>  <span class="at">sujeito      =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">3</span> <span class="sc">*</span> n_por_grupo),</span>
+<span id="cb66-7"><a href="principios-aleatorizacao.html#cb66-7" tabindex="-1"></a>  <span class="at">condicao     =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(condicao, <span class="at">each =</span> n_por_grupo), <span class="at">levels =</span> condicao),</span>
+<span id="cb66-8"><a href="principios-aleatorizacao.html#cb66-8" tabindex="-1"></a>  <span class="at">tempo_reacao =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(n_por_grupo, <span class="dv">480</span>, <span class="dv">45</span>),</span>
+<span id="cb66-9"><a href="principios-aleatorizacao.html#cb66-9" tabindex="-1"></a>                    <span class="fu">rnorm</span>(n_por_grupo, <span class="dv">512</span>, <span class="dv">45</span>),</span>
+<span id="cb66-10"><a href="principios-aleatorizacao.html#cb66-10" tabindex="-1"></a>                    <span class="fu">rnorm</span>(n_por_grupo, <span class="dv">555</span>, <span class="dv">45</span>))</span>
+<span id="cb66-11"><a href="principios-aleatorizacao.html#cb66-11" tabindex="-1"></a>)</span>
+<span id="cb66-12"><a href="principios-aleatorizacao.html#cb66-12" tabindex="-1"></a></span>
+<span id="cb66-13"><a href="principios-aleatorizacao.html#cb66-13" tabindex="-1"></a>F_obs <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">aov</span>(tempo_reacao <span class="sc">~</span> condicao, <span class="at">data =</span> dados_tr))[[<span class="dv">1</span>]][[<span class="st">&quot;F value&quot;</span>]][<span class="dv">1</span>]</span>
+<span id="cb66-14"><a href="principios-aleatorizacao.html#cb66-14" tabindex="-1"></a></span>
+<span id="cb66-15"><a href="principios-aleatorizacao.html#cb66-15" tabindex="-1"></a>R_perm <span class="ot">&lt;-</span> <span class="dv">4000</span></span>
+<span id="cb66-16"><a href="principios-aleatorizacao.html#cb66-16" tabindex="-1"></a>F_perm <span class="ot">&lt;-</span> <span class="fu">replicate</span>(R_perm, {</span>
+<span id="cb66-17"><a href="principios-aleatorizacao.html#cb66-17" tabindex="-1"></a>  rotulo_embaralhado <span class="ot">&lt;-</span> <span class="fu">sample</span>(dados_tr<span class="sc">$</span>condicao)</span>
+<span id="cb66-18"><a href="principios-aleatorizacao.html#cb66-18" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">aov</span>(dados_tr<span class="sc">$</span>tempo_reacao <span class="sc">~</span> rotulo_embaralhado))[[<span class="dv">1</span>]][[<span class="st">&quot;F value&quot;</span>]][<span class="dv">1</span>]</span>
+<span id="cb66-19"><a href="principios-aleatorizacao.html#cb66-19" tabindex="-1"></a>})</span>
+<span id="cb66-20"><a href="principios-aleatorizacao.html#cb66-20" tabindex="-1"></a></span>
+<span id="cb66-21"><a href="principios-aleatorizacao.html#cb66-21" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb66-22"><a href="principios-aleatorizacao.html#cb66-22" tabindex="-1"></a>  Método   <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Teste F (teórico)&quot;</span>, <span class="st">&quot;Teste de aleatorização&quot;</span>),</span>
+<span id="cb66-23"><a href="principios-aleatorizacao.html#cb66-23" tabindex="-1"></a>  <span class="st">`</span><span class="at">Valor-p</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">pf</span>(F_obs, <span class="dv">2</span>, <span class="dv">33</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>), <span class="fu">mean</span>(F_perm <span class="sc">&gt;=</span> F_obs))</span>
+<span id="cb66-24"><a href="principios-aleatorizacao.html#cb66-24" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb66-25"><a href="principios-aleatorizacao.html#cb66-25" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Valor-p teórico vs. valor-p por aleatorização, mesmos dados&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb66-26"><a href="principios-aleatorizacao.html#cb66-26" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:randomizacao-vs-f">Tabela 3.1: </span>Valor-p teórico vs. valor-p por aleatorização, mesmos dados
@@ -588,19 +623,19 @@ fontes 2+3 combinadas (o que sobra) — só que agora vista sob 4.000 partiçõe
 <em>posto</em> não muda: qualquer reembaralhamento continua produzindo <span class="math inline">\(t=3\)</span> grupos não vazios (o sorteio
 apenas troca <em>quais</em> 12 unidades vão para cada grupo, nunca o número de grupos nem o tamanho de
 cada um, que ficam fixados pelo desenho). Logo <span class="math inline">\(\mathrm{posto}(\mathbf{X})=3\)</span> em toda reamostragem,
-e a contagem por subtração do diagrama de Hasse (Capítulo 2, Seção <a href="hasse.html#hasse">2.2</a>) — <span class="math inline">\(\text{gl} (\text{Trat})=t-1=2\)</span>, <span class="math inline">\(\text{gl}(\text{Erro})=N-t=33\)</span> — vale identicamente para as 4.000 partições,
+e a contagem por subtração do diagrama de Hasse (Capítulo 2, Seção <a href="hasse.html#hasse">2.2</a>) — com gl indicando graus de liberdade, <span class="math inline">\(\text{gl} (\text{Trat})=t-1=2\)</span>, <span class="math inline">\(\text{gl}(\text{Erro})=N-t=33\)</span> — vale identicamente para as 4.000 partições,
 não só para os dados observados. É exatamente por isso que a <em>forma</em> da curva de referência (uma
 <span class="math inline">\(F\)</span> com <span class="math inline">\((2,33)\)</span> graus de liberdade) é estável sob reembaralhamento, mesmo sem nenhuma suposição de
 normalidade: os graus de liberdade são uma propriedade do <strong>desenho</strong> (<span class="math inline">\(t\)</span> e <span class="math inline">\(N\)</span> fixos), não da
 distribuição dos erros — o que muda de uma reamostragem para outra é só <em>onde</em>, dentro dessa forma
 fixa, cada estatística <span class="math inline">\(F\)</span> recalculada cai.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — confirmando que os graus de liberdade vêm do posto de X, não da distribuição dos dados</div>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="principios-aleatorizacao.html#cb57-1" tabindex="-1"></a>X_dca_tr <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> condicao, <span class="at">data =</span> dados_tr)</span>
-<span id="cb57-2"><a href="principios-aleatorizacao.html#cb57-2" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="principios-aleatorizacao.html#cb57-3" tabindex="-1"></a>gl_trat_matriz <span class="ot">&lt;-</span> <span class="fu">qr</span>(X_dca_tr)<span class="sc">$</span>rank <span class="sc">-</span> <span class="dv">1</span>          <span class="co"># posto(X) - 1 (Cap. 2, Secao matriz-projecao)</span></span>
-<span id="cb57-4"><a href="principios-aleatorizacao.html#cb57-4" tabindex="-1"></a>gl_erro_matriz <span class="ot">&lt;-</span> <span class="fu">nrow</span>(dados_tr) <span class="sc">-</span> <span class="fu">qr</span>(X_dca_tr)<span class="sc">$</span>rank  <span class="co"># N - posto(X)</span></span>
-<span id="cb57-5"><a href="principios-aleatorizacao.html#cb57-5" tabindex="-1"></a></span>
-<span id="cb57-6"><a href="principios-aleatorizacao.html#cb57-6" tabindex="-1"></a><span class="fu">c</span>(<span class="at">gl_trat =</span> gl_trat_matriz, <span class="at">gl_erro =</span> gl_erro_matriz)</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="principios-aleatorizacao.html#cb67-1" tabindex="-1"></a>X_dca_tr <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> condicao, <span class="at">data =</span> dados_tr)</span>
+<span id="cb67-2"><a href="principios-aleatorizacao.html#cb67-2" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="principios-aleatorizacao.html#cb67-3" tabindex="-1"></a>gl_trat_matriz <span class="ot">&lt;-</span> <span class="fu">qr</span>(X_dca_tr)<span class="sc">$</span>rank <span class="sc">-</span> <span class="dv">1</span>          <span class="co"># posto(X) - 1 (Cap. 2, Secao matriz-projecao)</span></span>
+<span id="cb67-4"><a href="principios-aleatorizacao.html#cb67-4" tabindex="-1"></a>gl_erro_matriz <span class="ot">&lt;-</span> <span class="fu">nrow</span>(dados_tr) <span class="sc">-</span> <span class="fu">qr</span>(X_dca_tr)<span class="sc">$</span>rank  <span class="co"># N - posto(X)</span></span>
+<span id="cb67-5"><a href="principios-aleatorizacao.html#cb67-5" tabindex="-1"></a></span>
+<span id="cb67-6"><a href="principios-aleatorizacao.html#cb67-6" tabindex="-1"></a><span class="fu">c</span>(<span class="at">gl_trat =</span> gl_trat_matriz, <span class="at">gl_erro =</span> gl_erro_matriz)</span></code></pre></div>
 <pre><code>## gl_trat gl_erro 
 ##       2      33</code></pre>
 <p>Os valores batem exatamente com o <span class="math inline">\((2,33)\)</span> já usado em <code>df(..., df1 = 2, df2 = 33)</code> na Figura
@@ -650,6 +685,16 @@ Y_{ij} \;=\; \text{resposta que a unidade } j \text{ apresentaria sob o tratamen
 de cada unidade <span class="math inline">\(j\)</span> veremos <strong>uma</strong> linha apenas, a do tratamento que o sorteio lhe deu. São
 exatamente os <strong>resultados potenciais</strong> de Neyman-Rubin da Seção <a href="dca-uma-via.html#potencial-causal">3.2.3</a>, agora
 organizados como uma tabela — e é essa tabela que torna a derivação possível.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pop-conceitual-dca"></span>
+<img src="03-dca_files/figure-html/pop-conceitual-dca-1.png" alt="A população conceitual de respostas de um DCA com t = 3 tratamentos (A, B, C) e N = 9 unidades: cada célula é a resposta que a unidade j teria sob o tratamento i. Em verde, as células que um sorteio particular deixa observar — exatamente uma por coluna, porque cada unidade recebe um único tratamento." width="75%" />
+<p class="caption">
+Figura 3.3: A população conceitual de respostas de um DCA com t = 3 tratamentos (A, B, C) e N = 9 unidades: cada célula é a resposta que a unidade j teria sob o tratamento i. Em verde, as células que um sorteio particular deixa observar — exatamente uma por coluna, porque cada unidade recebe um único tratamento.
+</p>
+</div>
+<p>A Figura <a href="principios-aleatorizacao.html#fig:pop-conceitual-dca">3.3</a> torna o quadro concreto: das <span class="math inline">\(t \times N = 27\)</span> respostas
+potenciais, o experimento revela apenas <span class="math inline">\(N = 9\)</span>, uma por coluna, e <strong>qual</strong> delas aparece em cada
+coluna foi decidido pelo sorteio. Todo o resto da derivação consiste em descrever o que esse sorteio
+faz com as médias do quadro.</p>
 <p>Escreva as médias marginais <span class="math inline">\(\bar Y_{i\cdot}\)</span> (sobre unidades, para o tratamento <span class="math inline">\(i\)</span>),
 <span class="math inline">\(\bar Y_{\cdot j}\)</span> (sobre tratamentos, para a unidade <span class="math inline">\(j\)</span>) e <span class="math inline">\(\bar Y_{\cdot\cdot}\)</span> (geral). A
 identidade algébrica exata de qualquer tabela de dupla entrada é</p>
@@ -743,30 +788,30 @@ produz por construção erros correlacionados — exatamente a hipótese que o t
 <div class="caixa-r"><strong>Uso do R</strong> — verificando as três identidades por enumeração exaustiva</div>
 <p>As identidades acima não são aproximações assintóticas: valem exatamente. Com <span class="math inline">\(N\)</span> pequeno dá para
 conferir isso enumerando <strong>todas</strong> as aleatorizações possíveis, em vez de simular.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="principios-aleatorizacao.html#cb59-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb59-2"><a href="principios-aleatorizacao.html#cb59-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
-<span id="cb59-3"><a href="principios-aleatorizacao.html#cb59-3" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">3</span>); u <span class="ot">&lt;-</span> u <span class="sc">-</span> <span class="fu">mean</span>(u)          <span class="co"># efeitos de unidade (somam zero)</span></span>
-<span id="cb59-4"><a href="principios-aleatorizacao.html#cb59-4" tabindex="-1"></a>sigma2_u <span class="ot">&lt;-</span> <span class="fu">sum</span>(u<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (N <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb59-5"><a href="principios-aleatorizacao.html#cb59-5" tabindex="-1"></a></span>
-<span id="cb59-6"><a href="principios-aleatorizacao.html#cb59-6" tabindex="-1"></a><span class="co"># todas as N! atribuicoes possiveis de unidades a posicoes</span></span>
-<span id="cb59-7"><a href="principios-aleatorizacao.html#cb59-7" tabindex="-1"></a>permutacoes <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
-<span id="cb59-8"><a href="principios-aleatorizacao.html#cb59-8" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(v) <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">matrix</span>(v))</span>
-<span id="cb59-9"><a href="principios-aleatorizacao.html#cb59-9" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(v),</span>
-<span id="cb59-10"><a href="principios-aleatorizacao.html#cb59-10" tabindex="-1"></a>                        <span class="cf">function</span>(i) <span class="fu">cbind</span>(v[i], <span class="fu">permutacoes</span>(v[<span class="sc">-</span>i]))))</span>
-<span id="cb59-11"><a href="principios-aleatorizacao.html#cb59-11" tabindex="-1"></a>}</span>
-<span id="cb59-12"><a href="principios-aleatorizacao.html#cb59-12" tabindex="-1"></a>omega <span class="ot">&lt;-</span> <span class="fu">matrix</span>(u[<span class="fu">permutacoes</span>(<span class="fu">seq_len</span>(N))], <span class="at">ncol =</span> N)   <span class="co"># uma linha por aleatorizacao</span></span>
-<span id="cb59-13"><a href="principios-aleatorizacao.html#cb59-13" tabindex="-1"></a></span>
-<span id="cb59-14"><a href="principios-aleatorizacao.html#cb59-14" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb59-15"><a href="principios-aleatorizacao.html#cb59-15" tabindex="-1"></a>  <span class="at">Quantidade =</span> <span class="fu">c</span>(<span class="st">&quot;E(ω)&quot;</span>, <span class="st">&quot;Var(ω)&quot;</span>, <span class="st">&quot;Cov(ω, ω′)&quot;</span>),</span>
-<span id="cb59-16"><a href="principios-aleatorizacao.html#cb59-16" tabindex="-1"></a>  <span class="at">Enumerado  =</span> <span class="fu">c</span>(<span class="fu">mean</span>(omega[, <span class="dv">1</span>]),</span>
-<span id="cb59-17"><a href="principios-aleatorizacao.html#cb59-17" tabindex="-1"></a>                 <span class="fu">mean</span>(omega[, <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>),</span>
-<span id="cb59-18"><a href="principios-aleatorizacao.html#cb59-18" tabindex="-1"></a>                 <span class="fu">mean</span>(omega[, <span class="dv">1</span>] <span class="sc">*</span> omega[, <span class="dv">2</span>])),</span>
-<span id="cb59-19"><a href="principios-aleatorizacao.html#cb59-19" tabindex="-1"></a>  Fórmula    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
-<span id="cb59-20"><a href="principios-aleatorizacao.html#cb59-20" tabindex="-1"></a>                 (<span class="dv">1</span> <span class="sc">-</span> <span class="dv">1</span> <span class="sc">/</span> N) <span class="sc">*</span> sigma2_u,</span>
-<span id="cb59-21"><a href="principios-aleatorizacao.html#cb59-21" tabindex="-1"></a>                 <span class="sc">-</span>sigma2_u <span class="sc">/</span> N)</span>
-<span id="cb59-22"><a href="principios-aleatorizacao.html#cb59-22" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb59-23"><a href="principios-aleatorizacao.html#cb59-23" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">10</span>, <span class="at">caption =</span> <span class="st">&quot;Propriedades do erro de aleatorização, sobre todas as N! atribuições&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb59-24"><a href="principios-aleatorizacao.html#cb59-24" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="principios-aleatorizacao.html#cb69-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb69-2"><a href="principios-aleatorizacao.html#cb69-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb69-3"><a href="principios-aleatorizacao.html#cb69-3" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">3</span>); u <span class="ot">&lt;-</span> u <span class="sc">-</span> <span class="fu">mean</span>(u)          <span class="co"># efeitos de unidade (somam zero)</span></span>
+<span id="cb69-4"><a href="principios-aleatorizacao.html#cb69-4" tabindex="-1"></a>sigma2_u <span class="ot">&lt;-</span> <span class="fu">sum</span>(u<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (N <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb69-5"><a href="principios-aleatorizacao.html#cb69-5" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="principios-aleatorizacao.html#cb69-6" tabindex="-1"></a><span class="co"># todas as N! atribuicoes possiveis de unidades a posicoes</span></span>
+<span id="cb69-7"><a href="principios-aleatorizacao.html#cb69-7" tabindex="-1"></a>permutacoes <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
+<span id="cb69-8"><a href="principios-aleatorizacao.html#cb69-8" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(v) <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">matrix</span>(v))</span>
+<span id="cb69-9"><a href="principios-aleatorizacao.html#cb69-9" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(v),</span>
+<span id="cb69-10"><a href="principios-aleatorizacao.html#cb69-10" tabindex="-1"></a>                        <span class="cf">function</span>(i) <span class="fu">cbind</span>(v[i], <span class="fu">permutacoes</span>(v[<span class="sc">-</span>i]))))</span>
+<span id="cb69-11"><a href="principios-aleatorizacao.html#cb69-11" tabindex="-1"></a>}</span>
+<span id="cb69-12"><a href="principios-aleatorizacao.html#cb69-12" tabindex="-1"></a>omega <span class="ot">&lt;-</span> <span class="fu">matrix</span>(u[<span class="fu">permutacoes</span>(<span class="fu">seq_len</span>(N))], <span class="at">ncol =</span> N)   <span class="co"># uma linha por aleatorizacao</span></span>
+<span id="cb69-13"><a href="principios-aleatorizacao.html#cb69-13" tabindex="-1"></a></span>
+<span id="cb69-14"><a href="principios-aleatorizacao.html#cb69-14" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb69-15"><a href="principios-aleatorizacao.html#cb69-15" tabindex="-1"></a>  <span class="at">Quantidade =</span> <span class="fu">c</span>(<span class="st">&quot;E(ω)&quot;</span>, <span class="st">&quot;Var(ω)&quot;</span>, <span class="st">&quot;Cov(ω, ω′)&quot;</span>),</span>
+<span id="cb69-16"><a href="principios-aleatorizacao.html#cb69-16" tabindex="-1"></a>  <span class="at">Enumerado  =</span> <span class="fu">c</span>(<span class="fu">mean</span>(omega[, <span class="dv">1</span>]),</span>
+<span id="cb69-17"><a href="principios-aleatorizacao.html#cb69-17" tabindex="-1"></a>                 <span class="fu">mean</span>(omega[, <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb69-18"><a href="principios-aleatorizacao.html#cb69-18" tabindex="-1"></a>                 <span class="fu">mean</span>(omega[, <span class="dv">1</span>] <span class="sc">*</span> omega[, <span class="dv">2</span>])),</span>
+<span id="cb69-19"><a href="principios-aleatorizacao.html#cb69-19" tabindex="-1"></a>  Fórmula    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb69-20"><a href="principios-aleatorizacao.html#cb69-20" tabindex="-1"></a>                 (<span class="dv">1</span> <span class="sc">-</span> <span class="dv">1</span> <span class="sc">/</span> N) <span class="sc">*</span> sigma2_u,</span>
+<span id="cb69-21"><a href="principios-aleatorizacao.html#cb69-21" tabindex="-1"></a>                 <span class="sc">-</span>sigma2_u <span class="sc">/</span> N)</span>
+<span id="cb69-22"><a href="principios-aleatorizacao.html#cb69-22" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb69-23"><a href="principios-aleatorizacao.html#cb69-23" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">10</span>, <span class="at">caption =</span> <span class="st">&quot;Propriedades do erro de aleatorização, sobre todas as N! atribuições&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb69-24"><a href="principios-aleatorizacao.html#cb69-24" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:omega-enumeracao">Tabela 3.2: </span>Propriedades do erro de aleatorização, sobre todas as N! atribuições
@@ -825,9 +870,9 @@ Cov(ω, ω′)
 <h4><span class="header-section-number">3.1.2.5</span> Zyskind: por que ainda assim usamos mínimos quadrados ordinários<a href="principios-aleatorizacao.html#zyskind-dca" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Se <span class="math inline">\(\mathrm{Var}(\boldsymbol\omega)=\mathbf V\neq\sigma^2\mathbf I\)</span>, o teorema de Gauss-Markov não
 se aplica, e o estimador de variância mínima passa a ser o de <strong>mínimos quadrados generalizados</strong>
-de <span class="citation">Aitken (<a href="#ref-aitken1936least">1936</a>)</span>, <span class="math inline">\(\hat{\boldsymbol\beta}_{GLS}=(\mathbf X&#39;\mathbf V^{-1}\mathbf X)^{-} \mathbf X&#39;\mathbf V^{-1}\mathbf Y\)</span>. Seria desconfortável: todo o curso usa MQO.</p>
+de <span class="citation">Aitken (<a href="#ref-aitken1936least">1936</a>)</span>, <span class="math inline">\(\hat{\boldsymbol\beta}_{GLS}=(\mathbf X&#39;\mathbf V^{-1}\mathbf X)^{-} \mathbf X&#39;\mathbf V^{-1}\mathbf Y\)</span>. Seria desconfortável: todo o curso usa mínimos quadrados ordinários (MQO).</p>
 <p>O resultado que resolve a questão é de <span class="citation">Zyskind (<a href="#ref-zyskind1967canonical">1967</a>)</span>. Sob o modelo de Aitken, o estimador
-de <strong>mínimos quadrados ordinários</strong> permanece BLUE se e somente se existe uma matriz <span class="math inline">\(\mathbf Q\)</span>
+de <strong>mínimos quadrados ordinários</strong> permanece BLUE (melhor estimador linear não viesado) se e somente se existe uma matriz <span class="math inline">\(\mathbf Q\)</span>
 tal que</p>
 <p><span class="math display">\[
 \mathbf V\mathbf X=\mathbf X\mathbf Q,
@@ -841,12 +886,12 @@ e portanto <span class="math inline">\(\mathbf J\mathbf X=\mathbf 1(\mathbf 1&#3
 \mathbf V\mathbf X=\sigma_u^2\Big(\mathbf X-\tfrac1N\mathbf J\mathbf X\Big)\in\mathcal C(\mathbf X),
 \]</span></p>
 <p>e a condição de Zyskind <strong>é satisfeita</strong>.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="principios-aleatorizacao.html#cb60-1" tabindex="-1"></a>trat <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">3</span>))       <span class="co"># t=3 tratamentos, 3 replicas, N=9</span></span>
-<span id="cb60-2"><a href="principios-aleatorizacao.html#cb60-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> trat)</span>
-<span id="cb60-3"><a href="principios-aleatorizacao.html#cb60-3" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">9</span>) <span class="sc">-</span> <span class="fu">matrix</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">9</span>)       <span class="co"># sigma_u^2 fatorado (nao altera a condicao)</span></span>
-<span id="cb60-4"><a href="principios-aleatorizacao.html#cb60-4" tabindex="-1"></a></span>
-<span id="cb60-5"><a href="principios-aleatorizacao.html#cb60-5" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">qr.solve</span>(X, V <span class="sc">%*%</span> X)                <span class="co"># resolve V X = X Q em Q</span></span>
-<span id="cb60-6"><a href="principios-aleatorizacao.html#cb60-6" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(V <span class="sc">%*%</span> X <span class="sc">-</span> X <span class="sc">%*%</span> Q))              <span class="co"># zero numerico =&gt; condicao satisfeita</span></span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="principios-aleatorizacao.html#cb70-1" tabindex="-1"></a>trat <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">3</span>))       <span class="co"># t=3 tratamentos, 3 replicas, N=9</span></span>
+<span id="cb70-2"><a href="principios-aleatorizacao.html#cb70-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> trat)</span>
+<span id="cb70-3"><a href="principios-aleatorizacao.html#cb70-3" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">9</span>) <span class="sc">-</span> <span class="fu">matrix</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">9</span>)       <span class="co"># sigma_u^2 fatorado (nao altera a condicao)</span></span>
+<span id="cb70-4"><a href="principios-aleatorizacao.html#cb70-4" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="principios-aleatorizacao.html#cb70-5" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">qr.solve</span>(X, V <span class="sc">%*%</span> X)                <span class="co"># resolve V X = X Q em Q</span></span>
+<span id="cb70-6"><a href="principios-aleatorizacao.html#cb70-6" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(V <span class="sc">%*%</span> X <span class="sc">-</span> X <span class="sc">%*%</span> Q))              <span class="co"># zero numerico =&gt; condicao satisfeita</span></span></code></pre></div>
 <pre><code>## [1] 3.885781e-16</code></pre>
 <p>A conclusão é a que faltava para fechar o argumento, e merece ser dita sem rodeios: <strong>embora os
 erros de aleatorização sejam correlacionados, podemos proceder como se não fossem</strong>. Não porque a

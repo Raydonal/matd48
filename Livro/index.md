@@ -2,7 +2,7 @@
 title: "Planejamento e Análise de Experimentos"
 subtitle: "Notas de curso — MATD48"
 author: "Raydonal Ospina Martínez"
-date: "12 de outubro de 2026"
+date: "15 de outubro de 2026"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: refs.bib
@@ -78,6 +78,18 @@ capítulo após capítulo, para que o leitor veja como a mesma estrutura formal 
 blocos, interações) se manifesta em contextos muito diferentes; o Capítulo 8 é onde esse fio se
 encontra de forma mais direta com a prática atual de experimentação em ciência de dados.
 
+O segundo fio é o **coração do curso**: a diferença entre um **experimento controlado**, em que o
+pesquisador decide (por sorteio) qual unidade recebe qual tratamento, e um **estudo não controlado**
+(observacional), em que ele apenas registra o que aconteceu. Cada capítulo termina com uma seção
+*Controlado × não controlado* que pega o delineamento do capítulo e simula, com a mesma verdade, a
+versão observacional da mesma pergunta: o agricultor que escolhe as melhores parcelas (Capítulo 1),
+a variável omitida que anda junto com $\mathbf X$ (Capítulo 2), o teste $F$ sem sorteio
+(Capítulo 3), o bloco que corrige o que foi medido mas não o resto (Capítulo 4), os fatores que os
+operadores sempre movem juntos (Capítulo 5), a confusão acidental de registros históricos
+(Capítulo 6), os dados de acaso que apontam a direção errada de subida (Capítulo 7) e a adesão
+voluntária contra o teste A/B e o bandit (Capítulo 8). A pergunta é sempre a mesma: *o que este
+delineamento controla, e o que daria errado sem ele?*
+
 ## Convenções tipográficas {-}
 
 ```{=html}
@@ -91,3 +103,52 @@ próprio capítulo.</div>
 
 Todo o código usa o pacote `tidyverse` para manipulação de dados e `ggplot2` para gráficos, na
 mesma convenção já usada nos slides de aula do curso.
+
+## Siglas usadas no livro {-}
+
+Toda sigla é escrita por extenso na primeira vez em que aparece em cada capítulo. Para consulta
+rápida:
+
+| Sigla | Significado |
+|---|---|
+| AAS | Amostragem aleatória simples |
+| ANCOVA | Análise de covariância |
+| ANOVA | Análise de variância |
+| ATE | Efeito médio do tratamento (*average treatment effect*) |
+| BIB | Blocos incompletos balanceados (*balanced incomplete block*) |
+| BLUE | Melhor estimador linear não viesado (*best linear unbiased estimator*) |
+| CCD | Delineamento composto central (*central composite design*) |
+| CLD | Agrupamento por letras (*compact letter display*) |
+| DBCA | Delineamento em blocos completos aleatorizados |
+| DCA | Delineamento completamente aleatorizado |
+| DMS | Diferença mínima significativa |
+| DP | Desvio-padrão |
+| ER | Eficiência relativa |
+| FWER | Taxa de erro por família (*family-wise error rate*) |
+| FWL | Teorema de Frisch-Waugh-Lovell |
+| gl | Graus de liberdade |
+| GLS | Mínimos quadrados generalizados (*generalized least squares*) |
+| HSD | Diferença honestamente significativa de Tukey (*honestly significant difference*) |
+| IC | Intervalo de confiança |
+| ICC | Coeficiente de correlação intraclasse |
+| iid | Independentes e identicamente distribuídos |
+| IPW | Ponderação pelo inverso da probabilidade (*inverse probability weighting*) |
+| LSD | Diferença mínima significativa de Fisher (*least significant difference*) |
+| ME | Margem de erro (método de Lenth) |
+| MOLS | Quadrados latinos mutuamente ortogonais (*mutually orthogonal Latin squares*) |
+| MQO | Mínimos quadrados ordinários |
+| MSR | Metodologia de superfície de resposta |
+| OEC | Critério global de avaliação (*overall evaluation criterion*) |
+| OFAT | Um fator de cada vez (*one factor at a time*) |
+| PSE | Pseudo erro-padrão (*pseudo standard error*, método de Lenth) |
+| QL | Quadrado latino |
+| QM, QME | Quadrado médio; quadrado médio do erro |
+| REQM | Raiz do erro quadrático médio |
+| SNK | Teste de Student-Newman-Keuls |
+| SPRT | Teste sequencial da razão de probabilidades (*sequential probability ratio test*) |
+| SQ, SQE | Soma de quadrados; soma de quadrados dos erros |
+| SUTVA | Suposição de valor estável do tratamento por unidade (*stable unit treatment value assumption*) |
+| SVD | Decomposição em valores singulares (*singular value decomposition*) |
+| UCB | Limite superior de confiança (*upper confidence bound*) |
+| UE | Unidade experimental |
+| VIF | Fator de inflação da variância (*variance inflation factor*) |

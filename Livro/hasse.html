@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -472,7 +507,7 @@ aresta entre si, nem um caminho de arestas ligando um ao outro, são <strong>ort
 o outro — e é exatamente esse tipo de relação que caracteriza fatores <strong>cruzados</strong>; uma cadeia
 direta de arestas, por outro lado, caracteriza fatores <strong>aninhados</strong> (o padrão já visto na
 subamostragem do Capítulo 3, antes mesmo de termos o nome para ele).</p>
-<p>A regra para contar graus de liberdade a partir do diagrama é simples e se aplica termo a termo:
+<p>A regra para contar graus de liberdade (gl) a partir do diagrama é simples e se aplica termo a termo:
 <span class="math display">\[
 \text{gl}(v) = (\text{número de classes distintas de } v) - \sum_{u \prec v} \text{gl}(u),
 \]</span>
@@ -484,20 +519,20 @@ exatamente <span class="math inline">\(N\)</span> — a decomposição do Capít
 caso mais simples possível dessa regra, e a Seção <a href="matriz-projecao.html#matriz-projecao">2.7</a> adiante mostrará que cada
 <span class="math inline">\(\text{gl}(v)\)</span> é, algebricamente, o <strong>posto de uma matriz de projeção</strong> — o diagrama de Hasse é a
 contrapartida geométrica, expressa como uma figura em vez de uma matriz.</p>
-<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse de um DCA de um fator</div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="hasse.html#cb9-1" tabindex="-1"></a><span class="co"># Informa-se o numero de CLASSES de cada termo; os graus de liberdade saem da</span></span>
-<span id="cb9-2"><a href="hasse.html#cb9-2" tabindex="-1"></a><span class="co"># estrutura do diagrama (ver hasse_helpers.R), nao de conta digitada a mao.</span></span>
-<span id="cb9-3"><a href="hasse.html#cb9-3" tabindex="-1"></a>nos_dca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb9-4"><a href="hasse.html#cb9-4" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
-<span id="cb9-5"><a href="hasse.html#cb9-5" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">24</span>)            <span class="co"># 1 media geral; t=4 tratamentos; N=24 unidades</span></span>
-<span id="cb9-6"><a href="hasse.html#cb9-6" tabindex="-1"></a>)</span>
-<span id="cb9-7"><a href="hasse.html#cb9-7" tabindex="-1"></a>arestas_dca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">de =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>), <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>))</span>
-<span id="cb9-8"><a href="hasse.html#cb9-8" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="hasse.html#cb9-9" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb9-10"><a href="hasse.html#cb9-10" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_dca, arestas_dca,</span>
-<span id="cb9-11"><a href="hasse.html#cb9-11" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dca.svg&quot;</span>,</span>
-<span id="cb9-12"><a href="hasse.html#cb9-12" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DCA: t=4, n=6 (N=24)&quot;</span>)</span>
-<span id="cb9-13"><a href="hasse.html#cb9-13" tabindex="-1"></a>)</span></code></pre></div>
+<div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse de um delineamento completamente aleatorizado (DCA) de um fator</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="hasse.html#cb15-1" tabindex="-1"></a><span class="co"># Informa-se o numero de CLASSES de cada termo; os graus de liberdade saem da</span></span>
+<span id="cb15-2"><a href="hasse.html#cb15-2" tabindex="-1"></a><span class="co"># estrutura do diagrama (ver hasse_helpers.R), nao de conta digitada a mao.</span></span>
+<span id="cb15-3"><a href="hasse.html#cb15-3" tabindex="-1"></a>nos_dca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-4"><a href="hasse.html#cb15-4" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
+<span id="cb15-5"><a href="hasse.html#cb15-5" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">24</span>)            <span class="co"># 1 media geral; t=4 tratamentos; N=24 unidades</span></span>
+<span id="cb15-6"><a href="hasse.html#cb15-6" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="hasse.html#cb15-7" tabindex="-1"></a>arestas_dca <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">de =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>), <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>))</span>
+<span id="cb15-8"><a href="hasse.html#cb15-8" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="hasse.html#cb15-9" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb15-10"><a href="hasse.html#cb15-10" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_dca, arestas_dca,</span>
+<span id="cb15-11"><a href="hasse.html#cb15-11" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dca.svg&quot;</span>,</span>
+<span id="cb15-12"><a href="hasse.html#cb15-12" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DCA: t=4, n=6 (N=24)&quot;</span>)</span>
+<span id="cb15-13"><a href="hasse.html#cb15-13" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-dca"></span>
 <img src="figuras/hasse/dca.svg" alt="Diagrama de Hasse de um DCA com t=4 tratamentos e n=6 réplicas por tratamento (N=24). Uma cadeia simples: cada termo refina exatamente o termo anterior, sem ramificação — a assinatura de um delineamento de um único fator, sem estrutura de bloqueio." width="42%" />
 <p class="caption">
@@ -509,20 +544,20 @@ não há nenhuma outra fonte de variação estrutural além do tratamento: <span
 isso com um delineamento de <strong>dois fatores cruzados</strong> <span class="math inline">\(A \times B\)</span>, em que dois termos aparecem no
 mesmo nível — nenhum refina o outro — e só se reencontram na interação:</p>
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse de um fatorial A×B cruzado</div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="hasse.html#cb10-1" tabindex="-1"></a>nos_axb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-2"><a href="hasse.html#cb10-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A×B&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
-<span id="cb10-3"><a href="hasse.html#cb10-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> <span class="sc">*</span> <span class="dv">4</span>, <span class="dv">24</span>)  <span class="co"># a=3; b=4; ab=12 caselas; N=24 unidades</span></span>
-<span id="cb10-4"><a href="hasse.html#cb10-4" tabindex="-1"></a>)</span>
-<span id="cb10-5"><a href="hasse.html#cb10-5" tabindex="-1"></a>arestas_axb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-6"><a href="hasse.html#cb10-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A×B&quot;</span>),</span>
-<span id="cb10-7"><a href="hasse.html#cb10-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A×B&quot;</span>, <span class="st">&quot;A×B&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
-<span id="cb10-8"><a href="hasse.html#cb10-8" tabindex="-1"></a>)</span>
-<span id="cb10-9"><a href="hasse.html#cb10-9" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="hasse.html#cb10-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb10-11"><a href="hasse.html#cb10-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_axb, arestas_axb,</span>
-<span id="cb10-12"><a href="hasse.html#cb10-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/axb.svg&quot;</span>,</span>
-<span id="cb10-13"><a href="hasse.html#cb10-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Fatorial A&amp;#215;B: a=3, b=4, n=2 (N=24)&quot;</span>)</span>
-<span id="cb10-14"><a href="hasse.html#cb10-14" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="hasse.html#cb16-1" tabindex="-1"></a>nos_axb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-2"><a href="hasse.html#cb16-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A×B&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
+<span id="cb16-3"><a href="hasse.html#cb16-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> <span class="sc">*</span> <span class="dv">4</span>, <span class="dv">24</span>)  <span class="co"># a=3; b=4; ab=12 caselas; N=24 unidades</span></span>
+<span id="cb16-4"><a href="hasse.html#cb16-4" tabindex="-1"></a>)</span>
+<span id="cb16-5"><a href="hasse.html#cb16-5" tabindex="-1"></a>arestas_axb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-6"><a href="hasse.html#cb16-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A×B&quot;</span>),</span>
+<span id="cb16-7"><a href="hasse.html#cb16-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;A×B&quot;</span>, <span class="st">&quot;A×B&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
+<span id="cb16-8"><a href="hasse.html#cb16-8" tabindex="-1"></a>)</span>
+<span id="cb16-9"><a href="hasse.html#cb16-9" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="hasse.html#cb16-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb16-11"><a href="hasse.html#cb16-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_axb, arestas_axb,</span>
+<span id="cb16-12"><a href="hasse.html#cb16-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/axb.svg&quot;</span>,</span>
+<span id="cb16-13"><a href="hasse.html#cb16-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Fatorial A&amp;#215;B: a=3, b=4, n=2 (N=24)&quot;</span>)</span>
+<span id="cb16-14"><a href="hasse.html#cb16-14" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-axb"></span>
 <img src="figuras/hasse/axb.svg" alt="Diagrama de Hasse de um fatorial A×B cruzado, a=3 níveis de A, b=4 níveis de B, n=2 réplicas por casela (N=24). A e B aparecem no mesmo nível (cruzados, sem relação de refinamento entre si) e se reencontram na interação A×B, que os refina a ambos." width="62%" />
 <p class="caption">

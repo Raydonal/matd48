@@ -24,6 +24,8 @@ suppressPackageStartupMessages({
   library(broom)
   library(sf)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -37,6 +39,17 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # Bloco 1 — Teoria
+
+---
+
+## O que esta aula controla (e o que não controla)
+
+O DBCA (delineamento em blocos completos aleatorizados) junta **duas formas de controle**:
+
+- **Controle local (bloco):** agrupa unidades parecidas segundo uma fonte de variação **conhecida** (área do viveiro, paciente, máquina) e põe todos os tratamentos em cada bloco. A variação entre blocos sai do erro.
+- **Sorteio dentro do bloco:** decide qual unidade de cada bloco recebe cada tratamento, e controla o que **não** foi registrado.
+
+Bloco sem sorteio é só estratificação; sorteio sem bloco é o DCA (delineamento completamente aleatorizado). Um estudo observacional pode imitar a primeira forma de controle (ajustar pelo bloco depois), nunca a segunda.
 
 ---
 
@@ -79,10 +92,10 @@ identificável. **Isso não é uma falha de estimação, é uma falha de delinea
 
 ## O antídoto: blocos, não confusão
 
-O DBCA é o oposto desse erro: ele **agrupa** unidades por uma variável de ruído em blocos, mas
+O DBCA (delineamento em blocos completos aleatorizados) é o oposto desse erro: ele **agrupa** unidades por uma variável de ruído em blocos, mas
 **sorteia** os tratamentos dentro de cada bloco — todo tratamento aparece em todo nível de ruído.
 
-```{r confundido-mapa, echo=FALSE, fig.width=6, fig.height=4.6}
+```{r confundido-mapa, echo=FALSE, fig.width=6, fig.height=3.9}
 recife <- st_read("assets/Bairros_Recife/bairros-polygon.shp", quiet = TRUE)
 ggplot(recife) +
   geom_sf(aes(fill = factor(rpa)), color = "white", linewidth = 0.15) +
@@ -94,7 +107,7 @@ ggplot(recife) +
 
 --
 
-Cada RPA poderia ser um bloco geográfico: dentro dela, o tratamento é sorteado — não fixado pela
+Cada RPA (Região Político-Administrativa do Recife) poderia ser um bloco geográfico: dentro dela, o tratamento é sorteado — não fixado pela
 própria característica da região.
 
 ---
@@ -116,7 +129,7 @@ efeito de um tratamento é o mesmo (a menos de erro) em todo bloco.
 
 ## Como se sorteia um DBCA
 
-No DCA (Aula 04), um único sorteio distribuía os tratamentos entre **todas** as UEs. No DBCA
+No DCA (delineamento completamente aleatorizado, Aula 04), um único sorteio distribuía os tratamentos entre **todas** as unidades experimentais (UEs). No DBCA
 há **um sorteio por bloco**: dentro de cada bloco, os $t$ tratamentos são distribuídos ao acaso
 entre as $t$ UEs daquele bloco.
 
@@ -146,7 +159,7 @@ model.matrix(~ tratamento + bloco, data = dados_toy)
 
 --
 
-$\hat\beta=(X'X)^{-1}X'Y$, $H=X(X'X)^{-1}X'$: a ANOVA que segue é só uma forma de organizar
+$\hat\beta=(X'X)^{-1}X'Y$, $H=X(X'X)^{-1}X'$: a ANOVA (análise de variância) que segue é só uma forma de organizar
 $\|Y-\hat Y\|^2$ pelos blocos de colunas de $X$ (Capítulo 2).
 
 ---
@@ -192,6 +205,8 @@ foram *fixados pelo delineamento*, não sorteados; sua função é reduzir o err
 ## De onde vem o ganho da blocagem
 
 Analise os **mesmos** dados como DCA (ignorando o bloco) e como DBCA:
+
+Em somas de quadrados (SQ) e graus de liberdade (gl):
 
 $$\underbrace{SQ_{Erro}^{\,DCA}}_{t(b-1)\ \text{gl}} \;=\; \underbrace{SQ_{Bloco}}_{b-1\ \text{gl}} \;+\; \underbrace{SQ_{Erro}^{\,DBCA}}_{(t-1)(b-1)\ \text{gl}}$$
 
@@ -248,6 +263,8 @@ $$SQ_{Trat}^{ajustada} = SQ_{Trat}^{ingênua} - \frac{\left[B'_{j^*}-(t-1)\hat y
 
 Valeu a pena blocar? (Montgomery, 2017; Cochran & Cox, 1957):
 
+A eficiência relativa (ER) do DBCA frente ao DCA:
+
 $$ER(DBCA,DCA) = \frac{(gl_B+1)(gl_{E,DCA}+3)\,QM_{Bloco} + gl_{E,DCA}(gl_B+3)\,QM_{Erro}} {(gl_{E,DCA}+1)(gl_B+3)\,QM_{Erro}}$$
 
 com $gl_B=b-1$ e $gl_{E,DCA}=gl_{Erro}+gl_B$ (graus de liberdade do erro que um DCA teria tido com
@@ -278,6 +295,17 @@ diferem quanto à altura de plantas de pepino?
 --
 
 24 unidades experimentais no total: $t=8$, $b=3$.
+
+
+---
+
+## Quem decidiu o tratamento de cada parcela?
+
+Os blocos (áreas do campo) foram definidos **antes**, pela heterogeneidade conhecida do terreno, e em cada bloco os tratamentos foram **sorteados** entre as parcelas.
+
+- O bloco controla a diferença **entre áreas**; o sorteio controla a diferença entre parcelas **dentro** de cada área (sombra, drenagem, um formigueiro).
+
+**A versão não controlada:** registros de uma fazenda em que o técnico aplicou o silício onde achou melhor. Mesmo sabendo em que área estava cada planta, ajustar por área não removeria a escolha do técnico **dentro** da área.
 
 ---
 
@@ -318,7 +346,7 @@ Continua não sendo tabela de contingência: cada célula é uma altura medida.
 knitr::include_graphics("assets/images/quadro5Blocos.png")
 ```
 
-$Y_{ijk}$ = resultado (potencial) do tratamento $k$ na $j$-ésima UE do bloco $i$. Como cada bloco
+$Y_{ijk}$ = resultado (potencial) do tratamento $k$ na $j$-ésima unidade experimental (UE) do bloco $i$. Como cada bloco
 tem uma UE por tratamento, depois do sorteio sobra um índice a menos e voltamos a $Y_{ij}$: uma tabela
 bloco $\times$ tratamento, não um vetor solto de 24 números — é essa estrutura que o
 `aov(altura ~ tratamento + bloco)` a seguir está de fato ajustando.
@@ -444,6 +472,34 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Bloco controla o medido; sorteio, o resto**
+
+Adubo novo (efeito verdadeiro **3 cm**) em 8 áreas de viveiro × 4 parcelas. Cada parcela tem uma drenagem que **ninguém mediu**.
+DBCA: em cada área, 2 parcelas **sorteadas** para o adubo novo. Observacional: o gerente escolhe (áreas férteis, parcelas "bonitas").
+
+```{r cnc-a09, echo=FALSE, fig.width=8.5, fig.height=3.1, out.width="90%"}
+cnc4 <- cnc_cap4(); res4 <- resumo_estimador(cnc4$est, cnc4$tau)
+grafico_cap4(cnc4, base_size = 12)
+```
+
+---
+
+## Lendo as três estimativas
+
+```{r cnc-a09-tab, echo=FALSE}
+res4 %>% mutate(across(where(is.numeric), ~ .fmt(.x, 2))) %>%
+  kable(col.names = c("Estimador", "Média", "Viés", "DP", "REQM"), align = "lrrrr") %>%
+  kable_styling(font_size = 16)
+```
+
+- **Ajustar pela área** (o que foi medido) reduz o viés de `r .fmt(res4$vies[2])` para `r .fmt(res4$vies[3])` cm: é o máximo que dados observacionais oferecem.
+- O que sobra vem da drenagem: **nenhum modelo** remove o efeito do que não está na planilha.
+- O DBCA tem viés ≈ 0 **e** o menor DP (desvio-padrão): o bloco tira a variação entre áreas do erro (precisão); o sorteio impede a drenagem de decidir o tratamento (sem viés).
+
+---
+
 ## Perguntas para a turma
 
 1. Se $QM_{Bloco}$ tivesse sido bem maior que $QM_{Erro}$ neste experimento, o que isso indicaria
@@ -458,6 +514,14 @@ class: inverse, center, middle
 
 4. Se, em vez de uma observação, tivessem faltado duas plantas em blocos e tratamentos diferentes,
    a fórmula de Yates ainda se aplicaria diretamente? O que mudaria?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Num estudo observacional, "ajustar por bloco" na análise produz o mesmo que blocar no desenho? O que falta?
+2. Em medidas repetidas (bloco = paciente), o que o sorteio da **ordem** dos tratamentos controla que o bloco não controla?
 
 ---
 
@@ -560,6 +624,7 @@ $F_{1,13}$ praticamente zero, $p\approx0{,}86$: **nenhuma evidência de não adi
 - Valor perdido: fórmula de Yates, com ajuste em $gl_{Erro}$ e em $SQ_{Trat}$.
 - Eficiência relativa quantifica se blocar valeu a pena — não é automático.
 - Próxima aula: teste de Friedman (alternativa não paramétrica) e blocos incompletos balanceados.
+- **Controlado × não controlado:** o bloco controla a fonte de variação conhecida; o sorteio dentro do bloco, todo o resto. Dados observacionais ajustados por bloco corrigem só a primeira parte.
 
 ---
 

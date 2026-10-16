@@ -23,6 +23,8 @@ suppressPackageStartupMessages({
   library(kableExtra)
   library(broom)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -38,6 +40,16 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # Bloco 1 — Teoria
+
+---
+
+## O que esta aula controla (e o que não controla)
+
+- **Fracionados:** o pesquisador escolhe **quais** corridas fazer (os geradores) e, com isso, **qual** estrutura de alias aceitar. A resolução resume esse controle.
+- **Superfície de resposta:** o pesquisador **move as variáveis de propósito**, em combinações que o processo nunca visitaria sozinho (pontos fatoriais, axiais e centrais), para estimar a curvatura e achar o ótimo.
+- **Não controla:** o que acontece fora da região experimental. Extrapolar a superfície é sair do controle.
+
+Os registros de uma fábrica cobrem só a faixa em que o processo já opera, e os operadores compensam uma variável com a outra. São **dados de acaso** (Box): abundantes, mas pouco informativos.
 
 ---
 
@@ -177,10 +189,39 @@ class: inverse, center, middle
 
 ---
 
-## Energia de corte: velocidade × ângulo (3²)
+## Energia de corte: os dados
 
 ```{r energia-load}
 energia <- read_csv("../Livro/data/energia.csv", show_col_types = FALSE)
+```
+
+```{r energia-dados, echo=FALSE}
+energia %>% group_by(Velocidad, angulo) %>%
+  summarise(media = mean(energia), dp = sd(energia), n = n(), .groups = "drop") %>%
+  mutate(celula = paste0(formatC(media, format = "f", digits = 4, decimal.mark = ","),
+                         " (", formatC(dp, format = "f", digits = 4, decimal.mark = ","), ")")) %>%
+  select(Velocidad, angulo, celula) %>%
+  pivot_wider(names_from = angulo, values_from = celula, names_prefix = "Ângulo ") %>%
+  kable(format = "html", align = "cccc", col.names = c("Velocidade", "Ângulo 20°", "Ângulo 40°", "Ângulo 60°")) %>%
+  kable_styling(font_size = 16, full_width = FALSE)
+```
+
+Fatorial $3^2$ (velocidade de corte × ângulo de saída) com 4 repetições por combinação, 36 corridas. Cada célula: energia média (desvio-padrão). Três níveis por fator é o mínimo para estimar curvatura.
+
+
+---
+
+## Quem escolheu as condições de corte?
+
+**O pesquisador:** três velocidades × três ângulos, cada combinação 4 vezes. As duas variáveis variam **independentemente**, e por isso a curvatura em cada direção pode ser estimada.
+
+**A versão não controlada:** registros da oficina, em que o operador usa ângulo maior quando aumenta a velocidade (para não queimar a ferramenta). Os pontos cairiam sobre uma faixa estreita, velocidade e ângulo estariam fortemente correlacionados e o ponto de sela, que o desenho revela, ficaria invisível.
+
+---
+
+## Energia de corte: a superfície de segunda ordem
+
+```{r energia-fit}
 modelo_rsm <- lm(energia ~ Velocidad + angulo + I(Velocidad^2) + I(angulo^2) +
                     Velocidad:angulo, data = energia)
 round(summary(modelo_rsm)$coefficients[, c("Estimate", "Pr(>|t|)")], 4)
@@ -253,6 +294,36 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Dados de acaso**
+
+Por que rodar um CCD (delineamento composto central) se a fábrica tem anos de registros? Box chamou esses registros de **dados de acaso** (*happenstance data*):
+os operadores **compensam** a temperatura ($x_1$) mexendo no tempo ($x_2$), e os pontos caem sobre uma reta.
+
+```{r cnc-a14, echo=FALSE, fig.width=10, fig.height=3.1, out.width="100%"}
+cnc7 <- cnc_cap7()
+grafico_cap7(cnc7, base_size = 12)
+```
+
+---
+
+## Por que a direção de subida se perde
+
+Com variáveis centradas, $\text{Var}(\hat\beta_j)=\dfrac{\sigma^2}{S_{jj}(1-r_{12}^2)}$: o fator $1/(1-r_{12}^2)$ é o **VIF** (fator de inflação da variância).
+
+```{r cnc-a14-num}
+hist7 <- filter(cnc7$pontos, regime == levels(regime)[2])
+c(correlacao = cor(hist7$x1, hist7$x2), VIF = 1 / (1 - cor(hist7$x1, hist7$x2)^2))
+cnc7$est %>% group_by(regime) %>% summarise(erro_mediano = median(estimativa), erra_mais_90 = mean(estimativa > 90))
+```
+
+- No $2^2$ + centro, $r_{12}=0$ e VIF $=1$: o mínimo possível.
+- Nos registros, a direção estimada às vezes aponta **morro abaixo**. Mais registros do mesmo jeito não ajudam: a reta continua a mesma.
+- O caminho de máxima subida e o CCD funcionam porque **o pesquisador move as variáveis de propósito**.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que um fatorial $2^2$ nos mesmos dois fatores (velocidade, ângulo) jamais revelaria essa
@@ -267,6 +338,14 @@ class: inverse, center, middle
 
 4. Retrospectiva do curso: cite uma decisão de desenho (repetição, aleatorização, blocagem,
    fatorial, resolução) que você tomaria diferente hoje, comparado ao que faria na Aula 01.
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Por que um histórico de dez anos de um processo pode ser menos útil para otimizar do que 13 corridas de um CCD (delineamento composto central)?
+2. Ao fim do curso: em cada um dos delineamentos que vimos (DCA, completamente aleatorizado; DBCA, em blocos completos aleatorizados; quadrado latino, fatorial, $2^k$, superfície de resposta), o que o pesquisador controla? Responda numa linha por delineamento.
 
 ---
 
@@ -309,7 +388,7 @@ sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso
 .pull-left[
 **Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear $\mathbf{Y}=\mathbf{X}\beta+ \varepsilon$ como linguagem comum.
 
-**Cap. 3:** DCA, subamostragem, transformações, comparações múltiplas.
+**Cap. 3:** DCA (delineamento completamente aleatorizado), subamostragem, transformações, comparações múltiplas.
 ]
 .pull-right[
 **Cap. 4:** blocos, quadrados latinos e greco-latinos.
@@ -331,6 +410,7 @@ da análise posterior — determina se essa pergunta pode ser respondida com con
 - Superfície de resposta estima curvatura via termos quadráticos; o ponto estacionário pode ser
   máximo, mínimo **ou sela** — só os autovalores da Hessiana decidem.
 - Fim do curso: desenhar bem é o que torna a análise posterior quase dispensável.
+- **Controlado × não controlado:** otimizar exige mover as variáveis de propósito; os dados de acaso de um processo bem operado não têm a variação necessária e podem apontar a direção errada.
 
 ---
 

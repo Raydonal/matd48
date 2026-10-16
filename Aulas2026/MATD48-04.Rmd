@@ -24,6 +24,8 @@ suppressPackageStartupMessages({
   library(broom)
   library(pwr)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -40,14 +42,25 @@ class: inverse, center, middle
 
 ---
 
-## O que é um DCA
+## O que esta aula controla (e o que não controla)
+
+O DCA (delineamento completamente aleatorizado) é o experimento controlado **mínimo**: um único sorteio distribui os $t$ tratamentos entre as $N$ unidades experimentais.
+
+- **Controla:** tudo o que distingue as unidades antes do experimento (idade, habilidade, humor, o que for), medido ou não. O sorteio impede que essas características decidam o tratamento.
+- **Não controla:** a heterogeneidade entre as unidades, que vai inteira para o erro (a Aula 09 resolve isso com blocos), e o que acontece **depois** do sorteio (a ordem de execução, Aula 06).
+
+Hoje veremos que o próprio teste $F$ é uma consequência do sorteio: a sua distribuição de referência é a dos sorteios possíveis.
+
+---
+
+## O que é um DCA (delineamento completamente aleatorizado)
 
 O **delineamento completamente aleatorizado** é o desenho mais simples que satisfaz os três
 pilares da Aula 01:
 
 - $t$ tratamentos e $N$ unidades experimentais **homogêneas** (nada conhecido as distingue de
   antemão: por isso não há blocos);
-- decide-se quantas UEs cada tratamento recebe ($n_i$, repetição);
+- decide-se quantas unidades experimentais (UEs) cada tratamento recebe ($n_i$, repetição);
 - **sorteia-se** quais UEs recebem cada tratamento, sem nenhuma restrição (aleatorização
   completa): qualquer das $N!/(n_1!\cdots n_t!)$ alocações é igualmente provável.
 
@@ -98,6 +111,8 @@ feijao %>% arrange(Fertilizante, Parcela) %>% group_by(Fertilizante) %>% mutate(
 
 $$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \varepsilon_{ij}\overset{iid}{\sim}N(0,\sigma^2)$$
 
+(iid = independentes e identicamente distribuídos)
+
 - $i = 1,\ldots,t$ tratamentos (linhas da tabela larga); $j = 1,\ldots,n_i$ repetições
   (colunas); $N=\sum_i n_i$ = número de linhas da planilha longa.
 - $\mu_i = \mu+\tau_i$ é a média do tratamento $i$; $\sum_i n_i\tau_i = 0$.
@@ -117,7 +132,7 @@ $\hat\sigma^2=MS_E=\dfrac{1}{N-t}\sum_{i,j}(Y_{ij}-\bar Y_{i\cdot})^2$.
 $\mu_i-\mu_k$ é apenas um contraste entre parâmetros do modelo — para interpretá-lo como um
 **efeito causal**, usamos o arcabouço de resultados potenciais de Neyman e Rubin
 (Neyman, 1923; Rubin, 1974; Imbens & Rubin, 2015) (Aula 01) aplicado ao DCA: cada
-UE $u$ tem $t$ valores fixos $Y_u(1),\ldots,Y_u(t)$ (um por tratamento, sob **SUTVA** — sem
+UE $u$ tem $t$ valores fixos $Y_u(1),\ldots,Y_u(t)$ (um por tratamento, sob **SUTVA**, *stable unit treatment value assumption* — sem
 interferência entre UEs, sem versões ocultas de tratamento); só $Y_u(T_u)$ é observado. Estimando
 de interesse: $\tau_{i,k}=\frac{1}{N}\sum_u[Y_u(i)-Y_u(k)]$.
 
@@ -130,7 +145,7 @@ aleatória simples —, $E\big[\bar Y_i^{\text{obs}}-\bar Y_k^{\text{obs}}\big]=
 Complementar ao teste de aleatorização: Fisher testa a hipótese aguda $Y_u(i)=Y_u(k)\;\forall u$;
 Neyman estima/testa a hipótese fraca $\tau_{i,k}=0$ (nenhum efeito, *em média*). O que o modelo
 $Y_{ij}=\mu+\tau_i+\varepsilon_{ij}$ acrescenta não é a validade do ponto estimado — já garantida
-por Neyman — mas distribuições exatas ($t$, $F$) em amostra finita para ICs e testes.
+por Neyman — mas distribuições exatas ($t$, $F$) em amostra finita para intervalos de confiança (ICs) e testes.
 
 ---
 
@@ -144,7 +159,7 @@ cada vez, e o valor-$p$ é a proporção de reembaralhamentos tão extremos quan
 
 --
 
-A teoria normal-linear (ANOVA) que vem a seguir é uma **excelente aproximação** a esse teste
+A teoria normal-linear (ANOVA, análise de variância) que vem a seguir é uma **excelente aproximação** a esse teste
 exato — sem exigir reembaralhamento computacional (Fisher, 1935; Edgington & Onghena, 2007).
 
 ---
@@ -291,7 +306,7 @@ Todas as $N!$ atribuições, não simulação.
 
 --
 
-E, no entanto, **MQO continua BLUE** — a condição de Zyskind da Aula 03 se verifica aqui. Correlacionados, sim; mas podemos proceder como se não fossem.
+E, no entanto, **MQO (mínimos quadrados ordinários) continua BLUE** (melhor estimador linear não viesado) — a condição de Zyskind da Aula 03 se verifica aqui. Correlacionados, sim; mas podemos proceder como se não fossem.
 
 ---
 
@@ -352,7 +367,7 @@ Os dois usam o **mesmo** $MS_E$ — a ANOVA combina (*pools*) a variabilidade do
 
 ## O diagrama de Hasse deste DCA
 
-Uma cadeia simples — Média $\prec$ Tratamento $\prec$ Erro —, com os $gl$ do nosso próprio
+Uma cadeia simples — Média $\prec$ Tratamento $\prec$ Erro —, com os graus de liberdade ($gl$) do nosso próprio
 exemplo (Bloco 2, adiante): $t=3$ condições, $n=12$ voluntários por condição, $N=36$.
 
 ```{r hasse-dca-04, echo=FALSE}
@@ -419,6 +434,18 @@ dados_tr <- tibble(
 )
 ```
 
+
+---
+
+## Quem decidiu a condição de cada voluntário?
+
+**O sorteio:** os 36 voluntários foram divididos 12 a 12 entre as três condições por sorteio, antes de qualquer medida.
+
+**A versão não controlada:** deixar cada voluntário escolher em qual condição quer ser testado, ou usar os registros de um laboratório que testou a condição visual só às sextas à tarde.
+
+- Os mais lentos podem evitar as distrações; o cansaço de sexta à tarde anda junto com a condição visual.
+- A ANOVA continuaria saindo, com $F$ e valor-$p$, mas a pergunta respondida passaria a ser "estes grupos de pessoas diferem?", não "a distração tem efeito?". O Bloco 3 mede o tamanho do problema.
+
 ---
 
 ## Ajustando a ANOVA
@@ -463,6 +490,35 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**O $F$ quando ninguém sorteou**
+
+$H_0$ **verdadeira por construção**: a distração não tem efeito. 36 participantes, velocidade basal diferente.
+**Controlado:** 12 sorteados por condição. **Não controlado:** cada um escolhe a condição; os mais lentos evitam distração (força $\kappa$).
+
+```{r cnc-a04, echo=FALSE, fig.width=8.5, fig.height=3.1, out.width="90%"}
+cnc3 <- cnc_cap3()
+grafico_cap3(cnc3, base_size = 12)
+```
+
+Cada ponto: 1.000 estudos. Tracejado: os 5% nominais.
+
+---
+
+## Por que o $F$ "descobre" um efeito que não existe
+
+```{r cnc-a04-tab}
+cnc3 %>% filter(kappa %in% c(0, 0.5, 1, 2)) %>%
+  pivot_wider(names_from = regime, values_from = rejeicao)
+```
+
+- O $F$ não erra a conta: os grupos **diferem mesmo**, porque reúnem **pessoas diferentes**.
+- Ele testa "as médias dos grupos são iguais", não "a distração não tem efeito". **Só o sorteio** faz as duas frases coincidirem.
+- O valor-$p$ do DCA vem da distribuição sobre **todos os sorteios possíveis** (teste de aleatorização). Sem sorteio, não há referência.
+
+---
+
 ## Perguntas para a turma
 
 1. Os ICs de "Sonora" e "Visual" na figura anterior se sobrepõem parcialmente. Isso já basta para
@@ -477,6 +533,14 @@ class: inverse, center, middle
 
 4. O teste de aleatorização da Teoria não pressupõe normalidade. O que a ANOVA "compra" ao
    assumir normalidade, se o teste de aleatorização já é válido sem ela?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Por que o valor-$p$ do teste de aleatorização só tem sentido quando o sorteio realmente aconteceu? O que seriam as "4.000 permutações" num estudo observacional?
+2. Um aplicativo compara o tempo de reação de quem joga um jogo de treino cognitivo com o de quem não joga. Proponha um DCA que responda à mesma pergunta e diga o que o sorteio passaria a controlar.
 
 ---
 
@@ -570,6 +634,7 @@ real, sem garantia — o assunto da Aula 06.
   `pwr::pwr.anova.test()`), não há fórmula fechada.
 - Próxima aula: o que muda quando há **subamostragem** (mais de uma medição por unidade
   experimental) e quando os "tratamentos" são uma **amostra aleatória** de uma população maior.
+- **Controlado × não controlado:** o sorteio do DCA controla tudo o que as unidades trazem de antes, medido ou não. Sem sorteio, o $F$ continua calculável, mas rejeita $H_0$ verdadeira muito além dos 5%.
 
 ---
 

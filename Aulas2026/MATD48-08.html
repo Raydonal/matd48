@@ -45,14 +45,26 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+A ANCOVA (análise de covariância) é a versão planejada do "controle estatístico" da Aula 03:
+
+- **Num experimento controlado**, a covariável (medida **antes** do sorteio) não precisa corrigir viés, porque o sorteio já o eliminou. Ela retira do erro a variação explicada pela covariável e dá **precisão**.
+- **Num estudo observacional**, a mesma ANCOVA tenta **corrigir** o viés, mas só o que vem da covariável medida.
+- **Covariável medida depois do tratamento** (um mediador) é um erro nos dois casos: "ajustar" por ela apaga parte do efeito.
+
+O Kruskal-Wallis troca normalidade por postos, mas continua precisando do sorteio para testar o **tratamento**.
+
+---
+
 ## Duas situações, duas soluções
 
 Esta aula fecha o Capítulo 3 com duas ferramentas que resolvem problemas diferentes:
 
-- **ANCOVA** — os grupos foram aleatorizados, mas diferem por acaso em uma variável medida
+- **ANCOVA** (análise de covariância) — os grupos foram aleatorizados, mas diferem por acaso em uma variável medida
   *antes* do tratamento. Como ajustar por isso e ganhar precisão?
 
-- **Kruskal-Wallis** — os pressupostos de normalidade/homocedasticidade da ANOVA não se
+- **Kruskal-Wallis** — os pressupostos de normalidade/homocedasticidade da ANOVA (análise de variância) não se
   sustentam. Como comparar grupos sem depender deles?
 
 ---
@@ -179,6 +191,18 @@ head(cafeina, 3)    # uma linha por participante: tratamento, covariável, respo
 ## 2 0      50.4        81.7
 ## 3 0      54.4        85.8
 ```
+
+
+---
+
+## Por que a ANCOVA aqui ganha precisão e não corrige viés
+
+A dose foi **sorteada** entre os 40 participantes, e a atenção basal foi medida **antes** do sorteio.
+
+- O sorteio já garante que as doses não diferem, em média, na atenção basal: ajustar não muda **o que** se estima.
+- O ajuste muda **com que precisão**: a atenção basal explica parte da variação da resposta, e esse pedaço sai do erro.
+
+**A versão não controlada:** comparar quem toma muito e pouco café no dia a dia. Aí a ANCOVA tentaria corrigir as diferenças de atenção basal entre os grupos, mas não as de sono, idade ou hábito, que ninguém mediu.
 
 ---
 
@@ -447,6 +471,20 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**O que a ANCOVA corrige**
+
+A ANCOVA (análise de covariância) ajusta por uma covariável **medida**. Num experimento sorteado, ela ganha **precisão**.
+Num estudo observacional, ela corrige o viés **só da parte medida**. Exemplo (adubo em 8 áreas, Aula 09):
+
+&lt;img src="MATD48-08_files/figure-html/cnc-a08-1.png" alt="" width="78%" /&gt;
+
+Roxo: dados observacionais **ajustados** pela área. O viés cai, mas não some: a drenagem, que guiou a escolha do gerente, **não foi medida**.
+Kruskal-Wallis troca a normalidade por postos, mas também depende do sorteio para ser um teste do **tratamento**.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que é essencial que a covariável da ANCOVA seja medida **antes** do tratamento? O que dá
@@ -462,6 +500,14 @@ class: inverse, center, middle
 4. Kruskal-Wallis testa igualdade de **distribuições** (não só de médias). O que isso implica
    sobre a interpretação de uma rejeição de `\(H_0\)`, quando os grupos podem diferir em variância
    e não só em posição central?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Num experimento sorteado, se a covariável estiver desbalanceada entre os grupos por acaso, a ANCOVA corrige viés ou variância? E num estudo observacional?
+2. Por que medir a covariável **antes** do sorteio é parte do desenho, e não um detalhe de análise?
 
 ---
 
@@ -596,7 +642,8 @@ pede: com respostas discretas, ignorar empates entrega um teste conservador dema
   A média ajustada desconta o que cada grupo deve ao seu valor médio de covariável.
 - Kruskal-Wallis (`\(H\)` = dispersão dos postos médios dos grupos) testa igualdade de distribuições, sem supor normalidade — a
   alternativa quando os pressupostos da ANOVA falham e transformações não bastam.
-- Com isso, encerramos o Capítulo 3 (DCA). Próximo bloco de aulas: delineamentos com **blocos**.
+- Com isso, encerramos o Capítulo 3 (DCA, delineamento completamente aleatorizado). Próximo bloco de aulas: delineamentos com **blocos**.
+- **Controlado × não controlado:** com tratamento sorteado, a ANCOVA compra **precisão**; com dados observacionais, ela corrige só o viés do que foi medido. Covariável medida depois do tratamento não se ajusta em nenhum dos dois.
 
 ---
 

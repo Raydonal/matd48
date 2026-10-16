@@ -1,10 +1,105 @@
 # Retomada — MATD48 2026
 
-**Última atualização:** 2026-10-12 (sessão de revisão de clareza das aulas, PDF do livro e aviso
-de direitos autorais). Este arquivo existe para retomar o trabalho sem reconstruir o contexto do
-zero. Histórico completo, rodada a rodada, em `PLANO_CONTEUDO.md` (seção "Status").
+**Última atualização:** 2026-10-15 (aula 07 e Cap. 3 ampliados, figuras dos slides levadas ao
+livro, PDF do livro por LaTeX, gabaritos recuperados). Este arquivo existe para retomar o trabalho
+sem reconstruir o contexto do zero. Histórico completo, rodada a rodada, em `PLANO_CONTEUDO.md`
+(seção "Status").
 
-## Estado em que esta sessão parou (leia primeiro)
+## Atualização da noite de 15/10/2026 (leia primeiro)
+
+**2ª passada (mesma noite):** o tema também entrou na abertura do Bloco 1, nas aplicações, nas
+perguntas e no resumo de cada aula, e na abertura, nos exemplos e no resumo de cada capítulo; o
+Cap. 1 e a aula 01 citam Dean, Voss & Draguljić (2017), cujo PDF está em `cristiano/` (fora do
+git). Tudo re-renderizado e verificado (14 decks limpos; PDF 248 p.). Continua **nada commitado**.
+
+Nova rodada na cópia MEGA, **nada commitado**: fio condutor "controlado × não controlado" em todos
+os capítulos e aulas (`Livro/controle_helpers.R`, novo), siglas por extenso na 1ª ocorrência,
+legendas das 32 figuras que não tinham, revisão de clareza das aulas 10–14. Detalhes no
+PLANO_CONTEUDO.md (última entrada do Status). Arquivos a levar ao clone, além da lista abaixo:
+**todos** os `Aulas2026/MATD48-*.Rmd/.html` e `MATD48-*_files/`, todo `Livro/` (fontes, HTML,
+`*_files/`, `livro-doe.pdf`, `controle_helpers.R`), `scripts/gerar_pdf_livro.R`, `PLANO_CONTEUDO.md`.
+Nesta máquina o clone existe (`/home/raydonal/Github/Cursos/matd48`, HEAD `154205c`, 12/10) e não
+recebeu nem a rodada da manhã de 15/10 nem esta.
+
+## Estado em que esta sessão parou (leia primeiro) — 15/10/2026
+
+**Tudo pronto e verificado, NADA commitado.** O professor decidiu commitar e publicar **na máquina
+de casa**. O trabalho foi feito na cópia MEGA (`/home/raydonal/MEGA/Claude/matd48`) de outra máquina,
+que só sincroniza pelo MEGA: na máquina de casa, confira primeiro que o MEGA terminou de sincronizar
+(as datas dos arquivos abaixo devem ser de 15/10/2026).
+
+### Atenção antes de qualquer git
+
+- Na máquina desta sessão **não existia** `/home/raydonal/Github/Cursos/` (nem o clone nem os
+  arquivos privados citados abaixo). A pasta MEGA tinha um `.git` **parado em 24/08/2026**
+  (`dec7682`), que ainda rastreia `Aulas/`, `ExperimentalDesign/`, `Material/`, `ApoioLuz/` e
+  `index-2025.*` e mostra a limpeza de setembro como centenas de deleções não commitadas. **Não
+  commitar daquele `.git`** (um `git add -A` ali traria de volta o material removido do site e
+  incluiria `cristiano/`, `TERMINEI.txt` e `CLAUDE.md`).
+- Em casa: entrar no clone em dia, `git pull`, conferir com `git log -1` que é o `origin/main` de
+  outubro, e só então copiar **arquivo a arquivo** os itens da lista abaixo (nunca `rsync --delete`).
+
+### Arquivos alterados nesta sessão (copiar para o clone e commitar)
+
+```
+Aulas2026/MATD48-07.Rmd  Aulas2026/MATD48-07.html  Aulas2026/MATD48-07_files/  Aulas2026/libs/
+Listas2026/Lista07.tex  Listas2026/Lista07.pdf
+Livro/01-principios.Rmd  Livro/03-dca.Rmd  Livro/04-blocos.Rmd  Livro/06-fatoriais-avancado.Rmd
+Livro/hasse_helpers.R  Livro/comparacoes_helpers.R (NOVO)  Livro/refs.bib
+Livro/*.html  Livro/*.md  Livro/search_index.json  Livro/0*_files/  Livro/libs/  Livro/figuras/
+Livro/livro-doe.pdf
+scripts/gerar_pdf_livro.R (reescrito: LaTeX)  scripts/gerar_pdf_livro_chrome.R (antigo)
+scripts/caixas-latex.lua  scripts/livro-latex-preamble.tex  scripts/livro-latex-setup.R (NOVOS)
+PLANO_CONTEUDO.md
+CLAUDE.md  (fica no disco, é gitignored no clone: copiar, mas NÃO commitar)
+```
+
+Fora do repositório (não vai para o GitHub): `/home/raydonal/MEGA/Claude/matd48-gabaritos-privados/Listas2026/`
+— os 14 gabaritos, recuperados do histórico do git (`aca4eb2^`), porque a pasta privada original
+não existia na máquina desta sessão. Se em casa existir a pasta original
+(`/home/raydonal/Github/Cursos/matd48-gabaritos-privados/`), **compare antes de sobrescrever**: as
+únicas mudanças reais são Gabarito05 (terminologia "subamostragem") e Gabarito07 (soluções das
+questões 7 e 8).
+
+Sugestão de mensagem de commit: "Aula 07 e Cap. 3 ampliados (contrastes, FWER, Duncan passo a passo,
+polinômios); figuras dos slides levadas ao livro; Lista 07 q.7-8; PDF do livro via LaTeX".
+
+### O que foi feito (resumo; detalhes no PLANO_CONTEUDO.md)
+
+- **Aula 07** (39 → 107 slides) e **Cap. 3**: dados de cada exemplo mostrados antes dos testes,
+  contrastes normalizados com IC e cálculo à mão, contrastes não ortogonais, FWER explicado em
+  palavras e com a grade de 100 experimentos simulados, todas as réguas (LSD, Duncan, SNK, Dunnett,
+  Tukey, Bonferroni, Scheffé) nos dados, o **teste de Duncan passo a passo com dados reais de feijão**
+  (arcos de amplitude $p$, etapas, coerência, traços e letras, onde discorda do Tukey), ordenamento
+  e ranking, polinômios à mão, falta de ajuste, dose ótima, doses desiguais, ordem dos níveis.
+  Erros de conteúdo corrigidos (Bonferroni vs. Scheffé; quártico significativo; testes $F$ de
+  contrastes ortogonais não são independentes).
+- **Figuras dos slides que faltavam no livro** (pedido dos alunos): van Helmont, Priestley e a
+  senhora que toma chá (Cap. 1); população conceitual, resíduo × ordem de execução, homogeneidade
+  das inclinações (Cap. 3); população conceitual do DBCA, gl da réplica do quadrado latino (Cap. 4);
+  interação catalisador × agente (Cap. 6).
+- **Lista 07:** questões 7 (Duncan no feijão) e 8 (dedução sobre FWER de Bonferroni/Duncan/SNK).
+- **PDF do livro agora por LaTeX (xelatex)**, 232 páginas: o caminho via Chrome/pagedown travava
+  (o paged.js entrava em laço) e **apagava o PDF anterior antes de gerar**. Como funciona: CLAUDE.md,
+  parágrafo "PDF do livro (LaTeX)".
+
+### Ambiente necessário para renderizar (descoberto nesta sessão)
+
+- pandoc do sistema era 2.9 (quebra todo render): usar
+  `export RSTUDIO_PANDOC=/usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64` (ou outro pandoc >= 2.11).
+- Pacotes R que tiveram de ser instalados: `lmerTest` (Cap. 3). O PDF precisa de xelatex, Graphviz
+  (`dot`), Inkscape e o pacote R `tinytex`.
+
+### Pendências
+
+- Commitar e publicar (em casa), como acima.
+- Revisão de clareza das aulas 10–14 (lote 3) continua pendente (ver abaixo, sessão de 12/10).
+- A frase "O gabarito completo está em GabaritoNN.pdf" nas listas continua lá (perguntar ao
+  professor se quer tirar).
+- Na raiz da cópia MEGA havia um arquivo solto `porfavorFechar o claude dessa maquina.md` com
+  instruções para uma sessão do Claude; foi ignorado. Apagar se não for mais útil.
+
+## Estado em 12/10/2026 (sessão anterior, mantido como histórico)
 
 - **Tudo publicado no GitHub** (commits `a97c61a`, `d00f53f`, `31a85a9` e o commit final de 12/10
   com o aviso nos slides e listas): PDF do livro com figuras, aviso de direitos autorais no livro,

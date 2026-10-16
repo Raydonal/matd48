@@ -26,6 +26,8 @@ suppressPackageStartupMessages({
   library(MASS)
   library(gridExtra)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -42,9 +44,20 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+Os pressupostos do modelo (normalidade, variância constante, independência) não são todos do mesmo tipo:
+
+- **Independência** é, em grande parte, **fruto do desenho**: sortear o tratamento e a **ordem de execução** faz com que derivas do equipamento, cansaço do avaliador ou mudanças de clima virem erro, e não efeito de tratamento.
+- **Normalidade e variância constante** são propriedades da resposta. O sorteio não as garante, e por isso elas precisam ser **verificadas** (e, se preciso, corrigidas por transformação).
+
+Num estudo observacional, a ordem e as condições das medidas não foram decididas por ninguém, e o gráfico de resíduos × ordem perde a sua principal referência.
+
+---
+
 ## Três pressupostos, uma checagem possível
 
-A validade dos testes $F$, ICs e cálculos de tamanho amostral (Aulas 04–05) repousa em:
+A validade dos testes $F$, intervalos de confiança (ICs) e cálculos de tamanho amostral (Aulas 04–05) repousa em:
 
 1. **Independência** — garantida (ou não) pelo desenho; não se verifica nos dados.
 2. **Normalidade** dos erros.
@@ -65,7 +78,7 @@ Nem toda violação custa o mesmo:
 
 - **Independência** é a mais grave. Erros correlacionados enviesam o $MS_E$, e o teste $F$
   perde a referência (é a pseudorreplicação da Aula 05). Não há correção depois dos dados: a
-  proteção é o desenho, isto é, sortear e identificar corretamente a UE.
+  proteção é o desenho, isto é, sortear e identificar corretamente a unidade experimental (UE).
 - **Normalidade:** o teste $F$ é razoavelmente robusto, sobretudo em desenhos balanceados com $n$
   moderado, porque compara **médias**, e médias tendem à normal. O maior risco são caudas pesadas e
   pontos discrepantes, que inflam $MS_E$ e tiram poder.
@@ -110,7 +123,7 @@ $$h(Y)=\begin{cases}Y^{1-a}, & a\neq1\\ \log Y, & a=1\end{cases}$$
 
 | Relação média-variância | $a$ | Transformação | Exemplo típico |
 |---|:-:|---|---|
-| desvio-padrão $\propto$ média (CV constante) | 1 | $\log Y$ | tempos, concentrações |
+| desvio-padrão $\propto$ média | 1 | $\log Y$ | tempos, concentrações |
 | variância $\propto$ média | 1/2 | $\sqrt Y$ | contagens (Poisson) |
 | desvio-padrão $\propto$ média² | 2 | $1/Y$ | taxas, tempos muito assimétricos |
 
@@ -262,6 +275,18 @@ dados_het <- tibble(
 modelo_het <- aov(tempo ~ condicao, data = dados_het)
 ```
 
+
+---
+
+## O que o sorteio garante (e o que não garante) neste exemplo
+
+Como na Aula 04, os 45 voluntários são sorteados 15 a 15 entre as três condições. Isso garante que as diferenças **entre grupos** não vêm de quem foi parar em cada um.
+
+- O sorteio **não** torna o tempo de reação simétrico nem iguala as variâncias: o efeito multiplicativo (quem é lento varia mais) é uma propriedade da resposta.
+- Se a ordem das sessões não tivesse sido sorteada (todos os da condição visual no fim do dia, por exemplo), um padrão nos resíduos ao longo do tempo misturaria **cansaço** com **condição**.
+
+Transformar a resposta corrige a variância; **só o desenho** corrige a confusão com a ordem.
+
 ---
 
 ## Q-Q plot e boxplot dos resíduos, lado a lado
@@ -328,6 +353,23 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**A ordem de execução**
+
+Pressuposto de **independência**: o que o protege é o **sorteio da ordem** das corridas, não um teste.
+$H_0$ verdadeira, 3 tratamentos × 8 corridas, e o equipamento **deriva** ao longo do dia.
+
+```{r cnc-a06, echo=FALSE, fig.width=8.5, fig.height=3.1, out.width="90%"}
+cnc6o <- cnc_aula06()
+grafico_aula06(cnc6o, base_size = 12)
+```
+
+Ordem **sistemática** (todo A, depois B, depois C): a deriva vira "efeito de tratamento". Ordem **sorteada**: a deriva vira erro, e o teste mantém 5%.
+É por isso que o gráfico de **resíduos × ordem de execução** faz parte da verificação de pressupostos.
+
+---
+
 ## Perguntas para a turma
 
 1. O Q-Q plot mostrou desvio nas caudas, mas o teste de Levene não rejeitou homocedasticidade. Os
@@ -342,6 +384,14 @@ class: inverse, center, middle
 
 4. Um teste de Shapiro-Wilk com $n=500$ rejeita a normalidade com $p<0{,}001$, mas o Q-Q plot
    parece quase perfeito. O que fazer?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Por que "os resíduos parecem independentes" não substitui "a ordem foi sorteada"? Dê um exemplo de dependência que nenhum gráfico de resíduos detectaria.
+2. Um laboratório roda todas as amostras do tratamento A de manhã e as de B à tarde. Os resíduos passam em todos os testes de pressupostos. A comparação A × B é válida?
 
 ---
 
@@ -371,7 +421,7 @@ shapiro.test(residuals(modelo_log))
 car::leveneTest(log_tempo ~ condicao, data = dados_het)
 ```
 
-O IC de verossimilhança de $\lambda$ inclui 0: a transformação log, mais interpretável, é
+O intervalo de confiança (IC) de verossimilhança de $\lambda$ inclui 0: a transformação log, mais interpretável, é
 compatível com os dados — e resolve a não normalidade detectada antes.
 
 ---
@@ -428,7 +478,7 @@ inteiro, discorda do veredito pontual do Shapiro-Wilk.
 Com $n=20$ (5 por fertilizante), o Shapiro-Wilk tem pouco poder — um $p$ perto de $0,05$ é fácil
 de obter por acaso mesmo sob normalidade aproximada. O IC de $\lambda$ responde a uma pergunta
 melhor: "existe uma transformação claramente melhor que a escala original?" — aqui, não. **Não
-transformar** é a decisão defensável: a ANOVA em Producao já é a análise certa, e complicar a
+transformar** é a decisão defensável: a ANOVA (análise de variância) em Producao já é a análise certa, e complicar a
 interpretação com uma transformação desnecessária teria custo (a discussão da Aula 04 sobre
 médias por fertilizante fica mais direta na escala original).
 
@@ -448,9 +498,10 @@ médias por fertilizante fica mais direta na escala original).
   investigação, não descarte automático.
 - Um único teste com $p$ perto de $0,05$ não é veredito final, sobretudo em $n$ pequeno: o IC de
   $\lambda$ de Box-Cox pode discordar do Shapiro-Wilk pontual — o feijão da Aula 04 ilustrou isso.
-- Isso fecha a primeira metade do Capítulo 3 (DCA). A próxima seção trata de contrastes,
-  polinômios ortogonais, comparações múltiplas, ANCOVA e Kruskal-Wallis (Kruskal & Wallis, 1952) —
+- Isso fecha a primeira metade do Capítulo 3 (DCA, delineamento completamente aleatorizado). A próxima seção trata de contrastes,
+  polinômios ortogonais, comparações múltiplas, ANCOVA (análise de covariância) e Kruskal-Wallis (Kruskal & Wallis, 1952) —
   quando nem a transformação basta.
+- **Controlado × não controlado:** normalidade e variância constante se **verificam**; a independência se **planeja**, sorteando a ordem de execução. Com a ordem sistemática, uma deriva do equipamento vira "efeito de tratamento".
 
 ---
 

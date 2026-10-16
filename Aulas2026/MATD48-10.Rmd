@@ -23,6 +23,8 @@ suppressPackageStartupMessages({
   library(kableExtra)
   library(broom)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -39,7 +41,16 @@ class: inverse, center, middle
 
 ---
 
-## Quando o DBCA não serve
+## O que esta aula controla (e o que não controla)
+
+- **Friedman:** quando o bloco é o paciente, o que o desenho controla é a **ordem** em que cada paciente recebe as técnicas (sorteada) e o *washout* entre elas. A hipótese nula "toda ordenação dentro do bloco é igualmente provável" vem desse sorteio.
+- **BIB (blocos incompletos balanceados):** o pesquisador decide **quais tratamentos dividem cada bloco**, de modo que cada par apareça junto o mesmo número de vezes, e sorteia o resto.
+
+Sem esse planejamento, um bloco incompleto é só um conjunto de comparações desiguais: alguns pares se comparam muito, outros nunca.
+
+---
+
+## Quando o DBCA (blocos completos aleatorizados) não serve
 
 O DBCA assume $\varepsilon_{ij}\sim N(0,\sigma^2)$. Isso fica implausível quando:
 
@@ -69,7 +80,7 @@ Sob $H_0$, $F_r \overset{aprox}{\sim} \chi^2_{t-1}$.
 --
 
 Preço da robustez: quando a normalidade **de fato** vale, o teste de Friedman é menos sensível que
-a ANOVA do DBCA — ele usa só a ordem das respostas dentro de cada bloco, não seus valores exatos.
+a ANOVA (análise de variância) do DBCA — ele usa só a ordem das respostas dentro de cada bloco, não seus valores exatos.
 
 ---
 
@@ -83,7 +94,7 @@ a ANOVA do DBCA — ele usa só a ordem das respostas dentro de cada bloco, não
 
 --
 
-Um **BIB** (bloco incompleto **balanceado**) usa blocos de tamanho $k<t$, construídos para que
+Um **BIB** (*balanced incomplete block*, bloco incompleto **balanceado**) usa blocos de tamanho $k<t$, construídos para que
 **todo par de tratamentos coocorra o mesmo número $\lambda$ de vezes** (Yates, 1936) —
 preserva a comparabilidade entre quaisquer dois tratamentos. Tabelas de arranjos BIB conhecidos
 para $t$ e $k$ pequenos estão catalogadas desde os primeiros manuais de delineamento
@@ -113,11 +124,23 @@ class: inverse, center, middle
 
 ## Psicologia: bloco = paciente, medidas repetidas
 
-Três técnicas terapêuticas breves — **TCC**, **terapia interpessoal**, **ativação
+Três técnicas terapêuticas breves — **TCC** (terapia cognitivo-comportamental), **terapia interpessoal**, **ativação
 comportamental** — comparadas quanto à redução percentual de sintomas depressivos.
 
 - 12 pacientes (**bloco**), cada um recebe as 3 técnicas em ordem aleatorizada, com *washout*.
 - Resposta assimétrica à direita: normalidade questionável com só 12 blocos → Friedman.
+
+
+---
+
+## Quem decidiu a ordem das técnicas?
+
+**O sorteio:** cada paciente recebe as três técnicas numa ordem sorteada, com *washout* entre elas.
+
+**A versão não controlada:** prontuários em que cada paciente passou pelas técnicas na ordem que o terapeuta achou adequada (começando pela mais leve, por exemplo).
+
+- A técnica aplicada por último coincidiria com o paciente que já está melhorando, ou mais cansado do tratamento.
+- O bloco "paciente" continuaria removendo as diferenças entre pacientes, mas não a confusão entre **técnica** e **posição na sequência**.
 
 ---
 
@@ -140,7 +163,31 @@ dados_terapia <- expand_grid(paciente = 1:n_pac, tecnica = tecnicas) %>%
 mat <- dados_terapia %>%
   pivot_wider(names_from = tecnica, values_from = reducao) %>%
   select(-paciente) %>% as.matrix()
+```
 
+---
+
+## Como são os dados: uma linha por paciente (bloco)
+
+```{r friedman-dados, echo=FALSE}
+postos <- t(apply(mat, 1, rank))
+tibble(Paciente = 1:6) %>%
+  bind_cols(as_tibble(mat[1:6, ])) %>%
+  bind_cols(as_tibble(postos[1:6, ], .name_repair = ~ paste("posto", c("TCC", "TI", "AC")))) %>%
+  kable(format = "html", col.names = c("Paciente", "TCC", "Interpessoal", "Ativação",
+                                       "posto TCC", "posto TI", "posto AC")) %>%
+  kable_styling(font_size = 15, full_width = FALSE)
+```
+
+Primeiros 6 dos 12 pacientes. À esquerda, a redução de sintomas (%); à direita, os **postos dentro
+da linha** (1 = menor redução daquele paciente). Friedman só usa os postos: o paciente 1, que
+melhora muito com tudo, pesa o mesmo que um paciente que melhora pouco.
+
+---
+
+## O teste de Friedman
+
+```{r friedman-teste}
 friedman.test(mat)
 ```
 
@@ -149,12 +196,12 @@ friedman.test(mat)
 ## Interpretando
 
 ```{r friedman-ranks, echo=FALSE}
-ranks <- t(apply(mat, 1, rank))
+ranks <- t(apply(mat, 1, rank)); ft <- friedman.test(mat)
 tibble(Técnica = colnames(mat), `Soma de postos` = colSums(ranks)) %>%
   kable(format = "html") %>% kable_styling(font_size = 20, full_width = FALSE)
 ```
 
-$\chi^2_2=2{,}09$, $p=0{,}35$: sem evidência de diferença sistemática, apesar de a ativação
+$\chi^2_2=$ `r format(round(ft$statistic, 2), decimal.mark = ",")`, $p=$ `r format(round(ft$p.value, 2), decimal.mark = ",")`: sem evidência de diferença sistemática, apesar de a ativação
 comportamental ter a maior soma de postos (mais frequentemente "melhor" por paciente) — a
 diferença não supera a variabilidade entre pacientes com apenas 12 blocos.
 
@@ -250,13 +297,15 @@ $$Q_i = T_{i\cdot} - \frac{1}{k}\sum_{j:\,i\,\in\,\text{bloco}\,j} B_{\cdot j}, 
 
 isto é, de $T_i$ subtrai-se a **soma** dos totais dos blocos em que $i$ apareceu, dividida pelo tamanho do bloco $k$. Daí
 
+Soma de quadrados (SQ) de tratamentos ajustada, com seus graus de liberdade (gl):
+
 $$SQ_{\text{Trat(aj)}}=\frac{k\sum_i Q_i^2}{\lambda t}, \quad t-1 \text{ gl}; \qquad gl_{\text{Erro}}=N-t-b+1$$
 
 ---
 
-## O total ajustado, calculado
+## Como são os dados do painel
 
-```{r bib-dados, include=FALSE}
+```{r bib-dados, echo=FALSE}
 set.seed(10)                       # notas sensoriais simuladas para o painel
 blocos <- list(c(1,2,3), c(1,2,4), c(1,3,4), c(2,3,4))
 cafe <- map_dfr(seq_along(blocos), ~ tibble(bloco = factor(.x),
@@ -264,7 +313,22 @@ cafe <- map_dfr(seq_along(blocos), ~ tibble(bloco = factor(.x),
   mutate(nota = round(6 + as.numeric(as.character(trat)) * 0.4 +
                         as.numeric(bloco) * 0.25 + rnorm(n(), 0, 0.4), 2))
 t_ <- 4; b_ <- 4; k <- 3; r <- 3; lambda <- 2
+cafe %>% mutate(trat = paste("Café", trat)) %>%
+  pivot_wider(names_from = trat, values_from = nota) %>%
+  select(bloco, `Café 1`, `Café 2`, `Café 3`, `Café 4`) %>%
+  mutate(across(everything(), ~ ifelse(is.na(.x), "—", as.character(.x)))) %>%
+  kable(format = "html", col.names = c("Degustador (bloco)", "Café 1", "Café 2", "Café 3", "Café 4"),
+        align = "ccccc") %>%
+  kable_styling(font_size = 16, full_width = FALSE)
 ```
+
+Notas sensoriais simuladas (0 a 10). Cada degustador provou 3 dos 4 cafés: o "—" é a xícara que
+ele não provou. Como cada café ficou de fora de um degustador diferente, a média simples de cada
+coluna mistura o café com **quais** degustadores o provaram.
+
+---
+
+## O total ajustado, calculado
 
 ```{r bib-analise}
 Ti <- tapply(cafe$nota, cafe$trat, sum); Bj <- tapply(cafe$nota, cafe$bloco, sum)
@@ -278,6 +342,23 @@ c(soma_Q = sum(Q), SQ_ajustada = SQ_aj,
 ```
 
 A fórmula de papel e lápis e a soma de quadrados **sequencial** do `aov()` (bloco primeiro, tratamento depois) dão o mesmo número — não por acaso: é exatamente a mesma projeção.
+
+---
+
+## A ANOVA do BIB: bloco primeiro, tratamento ajustado depois
+
+```{r bib-anova}
+anova(aov(nota ~ bloco + trat, data = cafe))
+```
+
+```{r bib-anova-num, include=FALSE}
+tab_bib <- anova(aov(nota ~ bloco + trat, data = cafe))
+f_trat <- tab_bib["trat", "F value"]; p_trat <- tab_bib["trat", "Pr(>F)"]
+```
+
+- A linha `trat` é o teste **ajustado por bloco**: $F=$ `r format(round(f_trat, 2), decimal.mark = ",")`, $p=$ `r format(signif(p_trat, 2), decimal.mark = ",")`, com $t-1=3$ e $N-t-b+1=$ `r tab_bib["Residuals", "Df"]` gl.
+- **A ordem importa**: `nota ~ trat + bloco` daria outra SQ para tratamento, porque num bloco incompleto as colunas de bloco e de tratamento de $\mathbf X$ **não são ortogonais**. A pergunta certa é "há diferença entre cafés **depois** de descontar os degustadores?", e é por isso que o bloco entra primeiro.
+- Com só `r tab_bib["Residuals", "Df"]` gl de erro, o teste é pouco sensível: é o custo de 12 xícaras.
 
 ---
 
@@ -317,6 +398,22 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Quem monta o bloco incompleto?**
+
+Num BIB (*balanced incomplete block*), **o pesquisador** decide quais tratamentos dividem um bloco (cada par o mesmo número de vezes) e **sorteia** a ordem dentro dele.
+
+Versão não controlada: cada provador escolhe quais amostras prova, ou cada paciente escolhe a ordem das terapias.
+
+- Quem escolhe só as amostras "de que gosta" cria blocos em que o **tratamento depende do provador**: o efeito do provador deixa de ser removível.
+- Quem escolhe a ordem das terapias confunde terapia com **ordem** (cansaço, aprendizado).
+- Os totais ajustados $Q_i$ do BIB só são justos porque o balanceamento foi **imposto**, não observado.
+
+O teste de Friedman também depende disso: sob $H_0$, toda ordenação dentro do bloco é igualmente provável **porque a atribuição foi sorteada**.
+
+---
+
 ## Perguntas para a turma
 
 1. No exemplo terapêutico, o que mudaria na conclusão se, em vez de ranks, tivéssemos assumido
@@ -330,6 +427,14 @@ class: inverse, center, middle
 
 4. Seria possível montar um BIB com $t=4$ tratamentos e blocos de tamanho $k=2$? Quais valores de
    $b$, $r$ e $\lambda$ satisfariam as identidades de contagem?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Num painel sensorial em que cada degustador escolhe quais 3 dos 4 cafés vai provar, o desenho ainda é um BIB? O que se perde?
+2. Por que a validade do teste de Friedman depende do sorteio da ordem dentro do bloco, e não só da independência entre pacientes?
 
 ---
 
@@ -379,6 +484,7 @@ c(lambda_t1 = lambda * (t - 1), r_k1 = r * (k - 1))  # devem ser iguais
 - BIB: quando $k<t$, é preciso balancear a coocorrência de pares de tratamentos, não só sua
   frequência total.
 - Próxima aula: duas e três fontes de bloqueio cruzadas — quadrado latino e greco-latino.
+- **Controlado × não controlado:** num bloco incompleto, o balanceamento é **imposto** pelo pesquisador; sem ele (degustador ou terapeuta escolhendo), os totais ajustados deixam de ser justos.
 
 ---
 

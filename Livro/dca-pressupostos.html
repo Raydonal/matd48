@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -472,20 +507,25 @@ assim, com efeito multiplicativo (e não aditivo) do tipo de distração.
 </div>
 <div id="normalidade-dca" class="section level3 hasAnchor" number="3.5.1">
 <h3><span class="header-section-number">3.5.1</span> Normalidade: gráfico Q-Q e testes formais<a href="dca-pressupostos.html#normalidade-dca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="dca-pressupostos.html#cb99-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb99-2"><a href="dca-pressupostos.html#cb99-2" tabindex="-1"></a>condicao <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhuma&quot;</span>, <span class="st">&quot;Sonora&quot;</span>, <span class="st">&quot;Visual&quot;</span>)</span>
-<span id="cb99-3"><a href="dca-pressupostos.html#cb99-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">15</span></span>
-<span id="cb99-4"><a href="dca-pressupostos.html#cb99-4" tabindex="-1"></a>media_base <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">420</span>, <span class="dv">470</span>, <span class="dv">560</span>)</span>
-<span id="cb99-5"><a href="dca-pressupostos.html#cb99-5" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fl">0.28</span>  <span class="co"># erro multiplicativo: log(tempo) tem desvio-padrão constante nessa escala</span></span>
-<span id="cb99-6"><a href="dca-pressupostos.html#cb99-6" tabindex="-1"></a></span>
-<span id="cb99-7"><a href="dca-pressupostos.html#cb99-7" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb99-8"><a href="dca-pressupostos.html#cb99-8" tabindex="-1"></a>  <span class="at">sujeito  =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">3</span> <span class="sc">*</span> n),</span>
-<span id="cb99-9"><a href="dca-pressupostos.html#cb99-9" tabindex="-1"></a>  <span class="at">condicao =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(condicao, <span class="at">each =</span> n), <span class="at">levels =</span> condicao),</span>
-<span id="cb99-10"><a href="dca-pressupostos.html#cb99-10" tabindex="-1"></a>  <span class="at">tempo    =</span> <span class="fu">rep</span>(media_base, <span class="at">each =</span> n) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">rnorm</span>(<span class="dv">3</span> <span class="sc">*</span> n, <span class="dv">0</span>, cv))</span>
-<span id="cb99-11"><a href="dca-pressupostos.html#cb99-11" tabindex="-1"></a>)</span>
-<span id="cb99-12"><a href="dca-pressupostos.html#cb99-12" tabindex="-1"></a></span>
-<span id="cb99-13"><a href="dca-pressupostos.html#cb99-13" tabindex="-1"></a>modelo_het <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
-<p><img src="03-dca_files/figure-html/qqplot-boxplot-dca-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="dca-pressupostos.html#cb109-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb109-2"><a href="dca-pressupostos.html#cb109-2" tabindex="-1"></a>condicao <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Nenhuma&quot;</span>, <span class="st">&quot;Sonora&quot;</span>, <span class="st">&quot;Visual&quot;</span>)</span>
+<span id="cb109-3"><a href="dca-pressupostos.html#cb109-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb109-4"><a href="dca-pressupostos.html#cb109-4" tabindex="-1"></a>media_base <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">420</span>, <span class="dv">470</span>, <span class="dv">560</span>)</span>
+<span id="cb109-5"><a href="dca-pressupostos.html#cb109-5" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fl">0.28</span>  <span class="co"># erro multiplicativo: log(tempo) tem desvio-padrão constante nessa escala</span></span>
+<span id="cb109-6"><a href="dca-pressupostos.html#cb109-6" tabindex="-1"></a></span>
+<span id="cb109-7"><a href="dca-pressupostos.html#cb109-7" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb109-8"><a href="dca-pressupostos.html#cb109-8" tabindex="-1"></a>  <span class="at">sujeito  =</span> <span class="dv">1</span><span class="sc">:</span>(<span class="dv">3</span> <span class="sc">*</span> n),</span>
+<span id="cb109-9"><a href="dca-pressupostos.html#cb109-9" tabindex="-1"></a>  <span class="at">condicao =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(condicao, <span class="at">each =</span> n), <span class="at">levels =</span> condicao),</span>
+<span id="cb109-10"><a href="dca-pressupostos.html#cb109-10" tabindex="-1"></a>  <span class="at">tempo    =</span> <span class="fu">rep</span>(media_base, <span class="at">each =</span> n) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">rnorm</span>(<span class="dv">3</span> <span class="sc">*</span> n, <span class="dv">0</span>, cv))</span>
+<span id="cb109-11"><a href="dca-pressupostos.html#cb109-11" tabindex="-1"></a>)</span>
+<span id="cb109-12"><a href="dca-pressupostos.html#cb109-12" tabindex="-1"></a></span>
+<span id="cb109-13"><a href="dca-pressupostos.html#cb109-13" tabindex="-1"></a>modelo_het <span class="ot">&lt;-</span> <span class="fu">aov</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:qqplot-boxplot-dca"></span>
+<img src="03-dca_files/figure-html/qqplot-boxplot-dca-1.png" alt="Diagnóstico dos resíduos do DCA de tempo de reação sob distração. Esquerda: gráfico quantil-quantil (Q-Q) de todos os resíduos contra a normal, com os pontos se afastando da reta na cauda superior (assimetria à direita). Direita: boxplot dos resíduos por condição; as caixas se alongam para cima e ficam mais altas de Nenhuma para Visual, antecipando variâncias diferentes entre os grupos." width="75%" />
+<p class="caption">
+Figura 3.14: Diagnóstico dos resíduos do DCA de tempo de reação sob distração. Esquerda: gráfico quantil-quantil (Q-Q) de todos os resíduos contra a normal, com os pontos se afastando da reta na cauda superior (assimetria à direita). Direita: boxplot dos resíduos por condição; as caixas se alongam para cima e ficam mais altas de Nenhuma para Visual, antecipando variâncias diferentes entre os grupos.
+</p>
+</div>
 <p>O gráfico à esquerda é o Q-Q plot de todos os resíduos combinados; o da direita — um diagnóstico
 complementar, tão útil quanto o Q-Q e frequentemente esquecido — mostra a <strong>distribuição dos
 resíduos separada por tratamento</strong>: além de revelar o mesmo afastamento de simetria (caixas
@@ -499,7 +539,7 @@ qual parte da distribuição) o desvio da normalidade ocorre. Ele é complementa
 por um teste formal — mais útil como confirmação do que o olho já sugeriu do que como árbitro
 único, sobretudo em amostras pequenas (baixo poder) ou muito grandes (rejeita quase sempre, por
 desvios sem relevância prática):</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="dca-pressupostos.html#cb100-1" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_het))</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="dca-pressupostos.html#cb110-1" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_het))</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
@@ -513,23 +553,28 @@ consistente com o Q-Q plot.</p>
 <p>Antes do teste formal, o gráfico de <strong>resíduos contra valores ajustados</strong> é o diagnóstico visual
 mais direto de heterocedasticidade: se a dispersão vertical dos pontos aumenta sistematicamente
 da esquerda para a direita (grupos com médias maiores), a variância não é constante.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="dca-pressupostos.html#cb102-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb102-2"><a href="dca-pressupostos.html#cb102-2" tabindex="-1"></a>  <span class="at">ajustado =</span> <span class="fu">fitted</span>(modelo_het),</span>
-<span id="cb102-3"><a href="dca-pressupostos.html#cb102-3" tabindex="-1"></a>  <span class="at">residuo  =</span> <span class="fu">residuals</span>(modelo_het),</span>
-<span id="cb102-4"><a href="dca-pressupostos.html#cb102-4" tabindex="-1"></a>  <span class="at">condicao =</span> dados_het<span class="sc">$</span>condicao</span>
-<span id="cb102-5"><a href="dca-pressupostos.html#cb102-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb102-6"><a href="dca-pressupostos.html#cb102-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(ajustado, residuo, <span class="at">color =</span> condicao)) <span class="sc">+</span></span>
-<span id="cb102-7"><a href="dca-pressupostos.html#cb102-7" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;grey40&quot;</span>) <span class="sc">+</span></span>
-<span id="cb102-8"><a href="dca-pressupostos.html#cb102-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb102-9"><a href="dca-pressupostos.html#cb102-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Resíduos vs. valores ajustados&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Valor ajustado (média do grupo)&quot;</span>,</span>
-<span id="cb102-10"><a href="dca-pressupostos.html#cb102-10" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Resíduo&quot;</span>, <span class="at">color =</span> <span class="st">&quot;Condição&quot;</span>) <span class="sc">+</span></span>
-<span id="cb102-11"><a href="dca-pressupostos.html#cb102-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div>
-<p><img src="03-dca_files/figure-html/residuos-ajustados-dca-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="dca-pressupostos.html#cb112-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb112-2"><a href="dca-pressupostos.html#cb112-2" tabindex="-1"></a>  <span class="at">ajustado =</span> <span class="fu">fitted</span>(modelo_het),</span>
+<span id="cb112-3"><a href="dca-pressupostos.html#cb112-3" tabindex="-1"></a>  <span class="at">residuo  =</span> <span class="fu">residuals</span>(modelo_het),</span>
+<span id="cb112-4"><a href="dca-pressupostos.html#cb112-4" tabindex="-1"></a>  <span class="at">condicao =</span> dados_het<span class="sc">$</span>condicao</span>
+<span id="cb112-5"><a href="dca-pressupostos.html#cb112-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-6"><a href="dca-pressupostos.html#cb112-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(ajustado, residuo, <span class="at">color =</span> condicao)) <span class="sc">+</span></span>
+<span id="cb112-7"><a href="dca-pressupostos.html#cb112-7" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;grey40&quot;</span>) <span class="sc">+</span></span>
+<span id="cb112-8"><a href="dca-pressupostos.html#cb112-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb112-9"><a href="dca-pressupostos.html#cb112-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Resíduos vs. valores ajustados&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Valor ajustado (média do grupo)&quot;</span>,</span>
+<span id="cb112-10"><a href="dca-pressupostos.html#cb112-10" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Resíduo&quot;</span>, <span class="at">color =</span> <span class="st">&quot;Condição&quot;</span>) <span class="sc">+</span></span>
+<span id="cb112-11"><a href="dca-pressupostos.html#cb112-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:residuos-ajustados-dca"></span>
+<img src="03-dca_files/figure-html/residuos-ajustados-dca-1.png" alt="Resíduos contra valores ajustados (as médias de cada condição) no DCA de tempo de reação. A dispersão dos resíduos aumenta da condição com menor média (Nenhuma) para a de maior média (Visual): o leque típico de um erro multiplicativo, em que a variância cresce com a média." width="75%" />
+<p class="caption">
+Figura 3.15: Resíduos contra valores ajustados (as médias de cada condição) no DCA de tempo de reação. A dispersão dos resíduos aumenta da condição com menor média (Nenhuma) para a de maior média (Visual): o leque típico de um erro multiplicativo, em que a variância cresce com a média.
+</p>
+</div>
 <p>O leque se abre visivelmente da esquerda (condição “Nenhuma”, ajustado mais baixo) para a direita
 (condição “Visual”, ajustado mais alto): os resíduos ficam mais dispersos exatamente onde a média
 é maior — a marca registrada de um erro multiplicativo, e o mesmo padrão que o teste de Levene, a
 seguir, tentará (sem muito sucesso, dado o <span class="math inline">\(n\)</span> pequeno) capturar formalmente.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="dca-pressupostos.html#cb103-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="dca-pressupostos.html#cb113-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##       Df F value Pr(&gt;F)
 ## group  2  0.1136 0.8929
@@ -543,8 +588,81 @@ tem pouco poder para detectar diferenças de variância moderadas, mesmo quando,
 cresce com a média. É outro lembrete de que ausência de significância não é evidência de que o
 pressuposto vale — sobretudo em amostras pequenas, a inspeção gráfica continua indispensável.</p>
 </div>
-<div id="transformacoes-dca" class="section level3 hasAnchor" number="3.5.3">
-<h3><span class="header-section-number">3.5.3</span> Transformações usuais<a href="dca-pressupostos.html#transformacoes-dca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="independencia-dca" class="section level3 hasAnchor" number="3.5.3">
+<h3><span class="header-section-number">3.5.3</span> Independência: resíduos contra a ordem de execução<a href="dca-pressupostos.html#independencia-dca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A independência não se testa com um teste de normalidade ou de Levene, mas há um gráfico que
+denuncia a violação mais comum na prática — e que a maioria das análises esquece: os <strong>resíduos
+contra a ordem em que as unidades foram medidas</strong>. Se algo ligado ao tempo afeta a resposta (o
+equipamento aquece ao longo do dia, o avaliador se cansa, a temperatura do laboratório muda), os
+resíduos de unidades medidas em sequência ficam correlacionados, e o gráfico mostra uma tendência.</p>
+<p>A simulação abaixo reproduz esse cenário: 40 unidades, 4 tratamentos, a <strong>ordem de execução
+sorteada</strong>, e uma deriva linear de 0,28 unidades por medição (o equipamento aquecendo).</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="dca-pressupostos.html#cb115-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">21</span>)</span>
+<span id="cb115-2"><a href="dca-pressupostos.html#cb115-2" tabindex="-1"></a>n_ord  <span class="ot">&lt;-</span> <span class="dv">40</span></span>
+<span id="cb115-3"><a href="dca-pressupostos.html#cb115-3" tabindex="-1"></a>ordem  <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_ord</span>
+<span id="cb115-4"><a href="dca-pressupostos.html#cb115-4" tabindex="-1"></a>deriva <span class="ot">&lt;-</span> <span class="fl">0.28</span> <span class="sc">*</span> ordem                                         <span class="co"># aquecimento do equipamento</span></span>
+<span id="cb115-5"><a href="dca-pressupostos.html#cb115-5" tabindex="-1"></a>trat_o <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>), <span class="at">each =</span> <span class="dv">10</span>)))   <span class="co"># ordem de execução SORTEADA</span></span>
+<span id="cb115-6"><a href="dca-pressupostos.html#cb115-6" tabindex="-1"></a>y_o    <span class="ot">&lt;-</span> <span class="dv">50</span> <span class="sc">+</span> <span class="fu">as.numeric</span>(trat_o) <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> deriva <span class="sc">+</span> <span class="fu">rnorm</span>(n_ord, <span class="dv">0</span>, <span class="dv">2</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:plot-residuo-ordem"></span>
+<img src="03-dca_files/figure-html/plot-residuo-ordem-1.png" alt="Resíduos contra a ordem de execução, com uma curva loess (vermelho). Esquerda: modelo só com o tratamento — a tendência crescente revela uma deriva ligada ao tempo que o modelo não contém. Direita: modelo com a ordem como covariável — o padrão desaparece." width="75%" />
+<p class="caption">
+Figura 3.16: Resíduos contra a ordem de execução, com uma curva loess (vermelho). Esquerda: modelo só com o tratamento — a tendência crescente revela uma deriva ligada ao tempo que o modelo não contém. Direita: modelo com a ordem como covariável — o padrão desaparece.
+</p>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:ordem-anova-dca">Tabela 3.13: </span>Quadrado médio do erro e F do tratamento, sem e com a ordem de execução no modelo
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Modelo
+</th>
+<th style="text-align:right;">
+QM do erro
+</th>
+<th style="text-align:right;">
+F do tratamento
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+y ~ tratamento
+</td>
+<td style="text-align:right;">
+16.6
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+y ~ ordem + tratamento
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+13.7
+</td>
+</tr>
+</tbody>
+</table>
+<p>À esquerda da Figura <a href="dca-pressupostos.html#fig:plot-residuo-ordem">3.16</a>, a tendência é inequívoca; à direita, com a
+ordem no modelo, ela desaparece. A Tabela <a href="dca-pressupostos.html#tab:ordem-anova-dca">3.13</a> mostra o que isso muda, e a
+leitura tem três partes. Primeiro, como a ordem de execução foi <strong>sorteada</strong>, a deriva não favorece
+nenhum tratamento: o teste sem a ordem é <strong>válido</strong>, apenas ruidoso, porque a deriva foi parar no
+erro. Segundo, pondo a ordem no modelo, o erro encolhe e o <span class="math inline">\(F\)</span> cresce — mesmos dados, mais
+precisão. Terceiro, se a ordem <strong>não</strong> tivesse sido sorteada (todos os A primeiro, depois os B…),
+a deriva se confundiria com o tratamento, e nenhum modelo separaria uma coisa da outra — a
+confusão do Capítulo 1. A aleatorização protege a validade; o gráfico de ordem revela o que
+<strong>bloquear</strong> no próximo experimento (Capítulo 4).</p>
+</div>
+<div id="transformacoes-dca" class="section level3 hasAnchor" number="3.5.4">
+<h3><span class="header-section-number">3.5.4</span> Transformações usuais<a href="dca-pressupostos.html#transformacoes-dca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Quando a normalidade e/ou a homocedasticidade falham, a estratégia clássica é <strong>transformar</strong> a
 variável resposta para uma escala em que o modelo se comporte melhor, em vez de abandonar a ANOVA
 por um método menos eficiente. As transformações mais comuns:</p>
@@ -565,26 +683,26 @@ ANOVA ajustado a <span class="math inline">\(Y^{(\lambda)}\)</span> para uma gra
 <span class="math inline">\(-2\)</span> e <span class="math inline">\(2\)</span>). <span class="math inline">\(\lambda=1\)</span> (sem transformar), <span class="math inline">\(\lambda=0\)</span> (log) e <span class="math inline">\(\lambda=1/2\)</span> (raiz quadrada)
 são casos particulares interpretáveis dessa família.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — Box-Cox e verificação pós-transformação</div>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="dca-pressupostos.html#cb105-1" tabindex="-1"></a>bc <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">boxcox</span>(modelo_het, <span class="at">plotit =</span> <span class="cn">TRUE</span>, <span class="at">lambda =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.01</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="dca-pressupostos.html#cb116-1" tabindex="-1"></a>bc <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">boxcox</span>(modelo_het, <span class="at">plotit =</span> <span class="cn">TRUE</span>, <span class="at">lambda =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.01</span>))</span></code></pre></div>
 <p><img src="03-dca_files/figure-html/boxcox-dca-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="dca-pressupostos.html#cb106-1" tabindex="-1"></a>lambda_otimo <span class="ot">&lt;-</span> bc<span class="sc">$</span>x[<span class="fu">which.max</span>(bc<span class="sc">$</span>y)]</span>
-<span id="cb106-2"><a href="dca-pressupostos.html#cb106-2" tabindex="-1"></a>lambda_otimo</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="dca-pressupostos.html#cb117-1" tabindex="-1"></a>lambda_otimo <span class="ot">&lt;-</span> bc<span class="sc">$</span>x[<span class="fu">which.max</span>(bc<span class="sc">$</span>y)]</span>
+<span id="cb117-2"><a href="dca-pressupostos.html#cb117-2" tabindex="-1"></a>lambda_otimo</span></code></pre></div>
 <pre><code>## [1] -0.6</code></pre>
 <p>O valor que maximiza a verossimilhança perfilada é <span class="math inline">\(\hat\lambda \approx -0.6\)</span>,
 mas o intervalo de verossimilhança de 95% ao redor desse máximo é largo o bastante para incluir
 <span class="math inline">\(\lambda=0\)</span> — ou seja, a transformação <strong>logarítmica</strong>, mais simples de interpretar (diferenças
 na escala log correspondem a razões, não diferenças, na escala original), é estatisticamente
 compatível com os dados e é a escolha usual nesse tipo de situação:</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="dca-pressupostos.html#cb108-1" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> dados_het <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">log_tempo =</span> <span class="fu">log</span>(tempo))</span>
-<span id="cb108-2"><a href="dca-pressupostos.html#cb108-2" tabindex="-1"></a>modelo_log <span class="ot">&lt;-</span> <span class="fu">aov</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span>
-<span id="cb108-3"><a href="dca-pressupostos.html#cb108-3" tabindex="-1"></a></span>
-<span id="cb108-4"><a href="dca-pressupostos.html#cb108-4" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_log))</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="dca-pressupostos.html#cb119-1" tabindex="-1"></a>dados_het <span class="ot">&lt;-</span> dados_het <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">log_tempo =</span> <span class="fu">log</span>(tempo))</span>
+<span id="cb119-2"><a href="dca-pressupostos.html#cb119-2" tabindex="-1"></a>modelo_log <span class="ot">&lt;-</span> <span class="fu">aov</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span>
+<span id="cb119-3"><a href="dca-pressupostos.html#cb119-3" tabindex="-1"></a></span>
+<span id="cb119-4"><a href="dca-pressupostos.html#cb119-4" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo_log))</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
 ## data:  residuals(modelo_log)
 ## W = 0.95569, p-value = 0.08363</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="dca-pressupostos.html#cb110-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="dca-pressupostos.html#cb121-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(log_tempo <span class="sc">~</span> condicao, <span class="at">data =</span> dados_het)</span></code></pre></div>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##       Df F value Pr(&gt;F)
 ## group  2  0.0259 0.9744
@@ -596,7 +714,12 @@ conjunto de dados. As conclusões substantivas devem então ser reportadas na es
 cuidado ao traduzir de volta diferenças na escala log para razões multiplicativas na escala
 original.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — antes e depois da transformação, lado a lado</div>
-<p><img src="03-dca_files/figure-html/antes-depois-transf-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:antes-depois-transf"></span>
+<img src="03-dca_files/figure-html/antes-depois-transf-1.png" alt="Resíduos contra valores ajustados antes (esquerda, escala original) e depois (direita, escala log) da transformação. O leque que se abria da esquerda para a direita na escala original desaparece na escala log, em que a dispersão é parecida nas três condições: a transformação estabilizou a variância." width="75%" />
+<p class="caption">
+Figura 3.17: Resíduos contra valores ajustados antes (esquerda, escala original) e depois (direita, escala log) da transformação. O leque que se abria da esquerda para a direita na escala original desaparece na escala log, em que a dispersão é parecida nas três condições: a transformação estabilizou a variância.
+</p>
+</div>
 <p>O leque de dispersão que crescia da esquerda para a direita no painel “Antes” desaparece no painel
 “Depois”: na escala log, a variabilidade dos resíduos é visualmente comparável entre as três
 condições, sinal direto (mais informativo do que qualquer teste isolado) de que a transformação
@@ -607,12 +730,12 @@ estamos tentando comparar.</p>
 projeções ortogonais, herdadas diretamente do Capítulo 2; a camada <strong>causal</strong>
 (Seção <a href="dca-uma-via.html#potencial-causal">3.2.3</a>) mostra que <span class="math inline">\(\bar Y_i^{\cdot}-\bar Y_k^{\cdot}\)</span> estima um efeito de
 tratamento bem definido <em>independentemente</em> do modelo normal, só em função da aleatorização; e a
-camada <strong>distribucional</strong> (Seções <a href="dca-uma-via.html#anova-dca">3.2.5</a> a <a href="dca-pressupostos.html#transformacoes-dca">3.5.3</a>) usa a normalidade
+camada <strong>distribucional</strong> (Seções <a href="dca-uma-via.html#anova-dca">3.2.5</a> a <a href="dca-pressupostos.html#transformacoes-dca">3.5.4</a>) usa a normalidade
 para transformar essa base algébrica e causal em testes e ICs exatos em amostra finita — e para
 diagnosticar quando essa última camada, especificamente, está em risco.</p>
 <p>O restante deste capítulo trata de perguntas mais refinadas dentro do mesmo DCA — comparações
 planejadas (contrastes), tendências ao longo de níveis quantitativos (polinômios ortogonais),
-comparações múltiplas <em>a posteriori</em>, ajuste por covariáveis (ANCOVA) e a alternativa não
+comparações múltiplas <em>a posteriori</em>, ajuste por covariáveis (análise de covariância, ANCOVA) e a alternativa não
 paramétrica de Kruskal-Wallis quando nem mesmo as transformações da seção anterior bastam para
 justificar o modelo normal.</p>
 </div>

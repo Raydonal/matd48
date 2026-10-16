@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -464,18 +499,23 @@ tratamento apareça exatamente uma vez em cada linha e exatamente uma vez em cad
 <p>Suponha um talhão em que a fertilidade varia em <strong>duas direções ao mesmo tempo e
 independentemente</strong>: ao longo das linhas (por exemplo, declividade do terreno) e ao longo das
 colunas (por exemplo, um gradiente de umidade, perpendicular à declividade).</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="quadrado-latino.html#cb180-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
-<span id="cb180-2"><a href="quadrado-latino.html#cb180-2" tabindex="-1"></a>campo <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb180-3"><a href="quadrado-latino.html#cb180-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fertilidade =</span> <span class="dv">70</span> <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> linha <span class="sc">-</span> <span class="dv">4</span> <span class="sc">*</span> coluna <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">3</span>))</span>
-<span id="cb180-4"><a href="quadrado-latino.html#cb180-4" tabindex="-1"></a></span>
-<span id="cb180-5"><a href="quadrado-latino.html#cb180-5" tabindex="-1"></a><span class="fu">ggplot</span>(campo, <span class="fu">aes</span>(<span class="at">x =</span> coluna, <span class="at">y =</span> linha, <span class="at">fill =</span> fertilidade)) <span class="sc">+</span></span>
-<span id="cb180-6"><a href="quadrado-latino.html#cb180-6" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
-<span id="cb180-7"><a href="quadrado-latino.html#cb180-7" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;khaki1&quot;</span>, <span class="at">high =</span> <span class="st">&quot;olivedrab&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Fertilidade&quot;</span>) <span class="sc">+</span></span>
-<span id="cb180-8"><a href="quadrado-latino.html#cb180-8" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span></span>
-<span id="cb180-9"><a href="quadrado-latino.html#cb180-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Coluna (gradiente de umidade)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Linha (gradiente de declividade)&quot;</span>,</span>
-<span id="cb180-10"><a href="quadrado-latino.html#cb180-10" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Fertilidade sob dois gradientes ortogonais&quot;</span>) <span class="sc">+</span></span>
-<span id="cb180-11"><a href="quadrado-latino.html#cb180-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
-<p><img src="04-blocos_files/figure-html/ql-motivacao-grid-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="quadrado-latino.html#cb237-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
+<span id="cb237-2"><a href="quadrado-latino.html#cb237-2" tabindex="-1"></a>campo <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb237-3"><a href="quadrado-latino.html#cb237-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fertilidade =</span> <span class="dv">70</span> <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> linha <span class="sc">-</span> <span class="dv">4</span> <span class="sc">*</span> coluna <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">3</span>))</span>
+<span id="cb237-4"><a href="quadrado-latino.html#cb237-4" tabindex="-1"></a></span>
+<span id="cb237-5"><a href="quadrado-latino.html#cb237-5" tabindex="-1"></a><span class="fu">ggplot</span>(campo, <span class="fu">aes</span>(<span class="at">x =</span> coluna, <span class="at">y =</span> linha, <span class="at">fill =</span> fertilidade)) <span class="sc">+</span></span>
+<span id="cb237-6"><a href="quadrado-latino.html#cb237-6" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-7"><a href="quadrado-latino.html#cb237-7" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;khaki1&quot;</span>, <span class="at">high =</span> <span class="st">&quot;olivedrab&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Fertilidade&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-8"><a href="quadrado-latino.html#cb237-8" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span></span>
+<span id="cb237-9"><a href="quadrado-latino.html#cb237-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Coluna (gradiente de umidade)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Linha (gradiente de declividade)&quot;</span>,</span>
+<span id="cb237-10"><a href="quadrado-latino.html#cb237-10" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Fertilidade sob dois gradientes ortogonais&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-11"><a href="quadrado-latino.html#cb237-11" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ql-motivacao-grid"></span>
+<img src="04-blocos_files/figure-html/ql-motivacao-grid-1.png" alt="Fertilidade simulada de um campo de 8 × 8 parcelas com dois gradientes ortogonais: a fertilidade cai de cima para baixo (declividade, nas linhas) e da esquerda para a direita (umidade, nas colunas). Blocar só por linha deixaria o gradiente das colunas dentro de cada bloco, e vice-versa: é a situação que pede um quadrado latino." width="75%" />
+<p class="caption">
+Figura 4.10: Fertilidade simulada de um campo de 8 × 8 parcelas com dois gradientes ortogonais: a fertilidade cai de cima para baixo (declividade, nas linhas) e da esquerda para a direita (umidade, nas colunas). Blocar só por linha deixaria o gradiente das colunas dentro de cada bloco, e vice-versa: é a situação que pede um quadrado latino.
+</p>
+</div>
 <p>Se bloqueássemos <strong>só</strong> por linha (faixas horizontais), cada bloco ainda conteria o gradiente
 inteiro de coluna, não neutralizado; se bloqueássemos <strong>só</strong> por coluna, sobraria o gradiente de
 linha. Nenhum bloqueio de um único fator resolve os dois simultaneamente — e um DBCA com blocos
@@ -572,14 +612,18 @@ Um talhão experimental tem uma tendência de fertilidade ao longo de suas <stro
 quadrado latino $4\times4$, de modo que cada formulação apareça uma vez em cada linha e uma vez
 em cada coluna.
 </div>
+<p>Linha e coluna controlam os dois gradientes conhecidos; o sorteio do quadrado (Seção sobre a
+aleatorização, adiante) controla o que não está neles. Um produtor que aplicou cada adubo numa
+faixa do terreno e anotou declividade e umidade teria as duas medidas, mas não o balanceamento:
+o efeito de cada adubo dependeria de quais gradientes ele pegou.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — construindo e analisando um quadrado latino 4x4</div>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="quadrado-latino.html#cb181-1" tabindex="-1"></a>quad <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb181-2"><a href="quadrado-latino.html#cb181-2" tabindex="-1"></a>  <span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>,</span>
-<span id="cb181-3"><a href="quadrado-latino.html#cb181-3" tabindex="-1"></a>  <span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>,<span class="st">&quot;A&quot;</span>,</span>
-<span id="cb181-4"><a href="quadrado-latino.html#cb181-4" tabindex="-1"></a>  <span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,</span>
-<span id="cb181-5"><a href="quadrado-latino.html#cb181-5" tabindex="-1"></a>  <span class="st">&quot;D&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span></span>
-<span id="cb181-6"><a href="quadrado-latino.html#cb181-6" tabindex="-1"></a>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb181-7"><a href="quadrado-latino.html#cb181-7" tabindex="-1"></a>quad   <span class="co"># cada linha e cada coluna contém A, B, C, D exatamente uma vez</span></span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="quadrado-latino.html#cb238-1" tabindex="-1"></a>quad <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb238-2"><a href="quadrado-latino.html#cb238-2" tabindex="-1"></a>  <span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>,</span>
+<span id="cb238-3"><a href="quadrado-latino.html#cb238-3" tabindex="-1"></a>  <span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>,<span class="st">&quot;A&quot;</span>,</span>
+<span id="cb238-4"><a href="quadrado-latino.html#cb238-4" tabindex="-1"></a>  <span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,</span>
+<span id="cb238-5"><a href="quadrado-latino.html#cb238-5" tabindex="-1"></a>  <span class="st">&quot;D&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span></span>
+<span id="cb238-6"><a href="quadrado-latino.html#cb238-6" tabindex="-1"></a>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb238-7"><a href="quadrado-latino.html#cb238-7" tabindex="-1"></a>quad   <span class="co"># cada linha e cada coluna contém A, B, C, D exatamente uma vez</span></span></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4]
 ## [1,] &quot;A&quot;  &quot;B&quot;  &quot;C&quot;  &quot;D&quot; 
 ## [2,] &quot;B&quot;  &quot;C&quot;  &quot;D&quot;  &quot;A&quot; 
@@ -588,7 +632,12 @@ em cada coluna.
 <p>O arranjo abstrato de letras fica mais concreto como um diagrama: cada célula da grade
 linha<span class="math inline">\(\times\)</span>coluna recebe a cor do tratamento que lhe cabe, com a letra sobreposta para que a
 identidade do tratamento nunca dependa só da cor.</p>
-<p><img src="04-blocos_files/figure-html/ql-heatmap-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ql-heatmap"></span>
+<img src="04-blocos_files/figure-html/ql-heatmap-1.png" alt="Esquema do quadrado latino 4 × 4 usado no exemplo: cada letra (tratamento) aparece exatamente uma vez em cada linha e uma vez em cada coluna." width="75%" />
+<p class="caption">
+Figura 4.11: Esquema do quadrado latino 4 × 4 usado no exemplo: cada letra (tratamento) aparece exatamente uma vez em cada linha e uma vez em cada coluna.
+</p>
+</div>
 <p>Cada linha da grade (lida da esquerda para a direita) contém as quatro letras exatamente uma vez,
 e o mesmo vale para cada coluna (lida de cima para baixo) — é essa dupla restrição, visível de
 imediato na figura, que define um quadrado latino. Ler o diagrama por linha diz que fixação em
@@ -603,24 +652,24 @@ refina o outro), e os três convergem diretamente no Erro, pela mesma razão geo
 DBCA: sem repetição dentro de cada célula linha<span class="math inline">\(\times\)</span>coluna, não sobra grau de liberdade para
 nenhuma interação entre eles.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do quadrado latino 4x4</div>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="quadrado-latino.html#cb183-1" tabindex="-1"></a>nos_ql <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb183-2"><a href="quadrado-latino.html#cb183-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Linha&quot;</span>, <span class="st">&quot;Coluna&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
-<span id="cb183-3"><a href="quadrado-latino.html#cb183-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">16</span>)      <span class="co"># n=4 linhas, colunas e tratamentos; N=16 parcelas</span></span>
-<span id="cb183-4"><a href="quadrado-latino.html#cb183-4" tabindex="-1"></a>)</span>
-<span id="cb183-5"><a href="quadrado-latino.html#cb183-5" tabindex="-1"></a>arestas_ql <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb183-6"><a href="quadrado-latino.html#cb183-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Linha&quot;</span>, <span class="st">&quot;Coluna&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>),</span>
-<span id="cb183-7"><a href="quadrado-latino.html#cb183-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Linha&quot;</span>, <span class="st">&quot;Coluna&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
-<span id="cb183-8"><a href="quadrado-latino.html#cb183-8" tabindex="-1"></a>)</span>
-<span id="cb183-9"><a href="quadrado-latino.html#cb183-9" tabindex="-1"></a></span>
-<span id="cb183-10"><a href="quadrado-latino.html#cb183-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb183-11"><a href="quadrado-latino.html#cb183-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_ql, arestas_ql,</span>
-<span id="cb183-12"><a href="quadrado-latino.html#cb183-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/quadrado-latino.svg&quot;</span>,</span>
-<span id="cb183-13"><a href="quadrado-latino.html#cb183-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Quadrado latino: n=4 (N=16)&quot;</span>)</span>
-<span id="cb183-14"><a href="quadrado-latino.html#cb183-14" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="quadrado-latino.html#cb240-1" tabindex="-1"></a>nos_ql <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb240-2"><a href="quadrado-latino.html#cb240-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Linha&quot;</span>, <span class="st">&quot;Coluna&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>),</span>
+<span id="cb240-3"><a href="quadrado-latino.html#cb240-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">16</span>)      <span class="co"># n=4 linhas, colunas e tratamentos; N=16 parcelas</span></span>
+<span id="cb240-4"><a href="quadrado-latino.html#cb240-4" tabindex="-1"></a>)</span>
+<span id="cb240-5"><a href="quadrado-latino.html#cb240-5" tabindex="-1"></a>arestas_ql <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb240-6"><a href="quadrado-latino.html#cb240-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Linha&quot;</span>, <span class="st">&quot;Coluna&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>),</span>
+<span id="cb240-7"><a href="quadrado-latino.html#cb240-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Linha&quot;</span>, <span class="st">&quot;Coluna&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>, <span class="st">&quot;Erro&quot;</span>)</span>
+<span id="cb240-8"><a href="quadrado-latino.html#cb240-8" tabindex="-1"></a>)</span>
+<span id="cb240-9"><a href="quadrado-latino.html#cb240-9" tabindex="-1"></a></span>
+<span id="cb240-10"><a href="quadrado-latino.html#cb240-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb240-11"><a href="quadrado-latino.html#cb240-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_ql, arestas_ql,</span>
+<span id="cb240-12"><a href="quadrado-latino.html#cb240-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/quadrado-latino.svg&quot;</span>,</span>
+<span id="cb240-13"><a href="quadrado-latino.html#cb240-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Quadrado latino: n=4 (N=16)&quot;</span>)</span>
+<span id="cb240-14"><a href="quadrado-latino.html#cb240-14" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-ql"></span>
 <img src="figuras/hasse/quadrado-latino.svg" alt="Diagrama de Hasse do quadrado latino 4x4 (exemplo dos quatro adubos): n=4 linhas, n=4 colunas, n=4 tratamentos, N=n^2=16. Linha, Coluna e Tratamento aparecem no mesmo nível -- cruzados dois a dois -- e convergem direto no Erro, sem nó de interação, pela mesma razão do DBCA (seção anterior)." width="70%" />
 <p class="caption">
-Figura 4.3: Diagrama de Hasse do quadrado latino 4x4 (exemplo dos quatro adubos): n=4 linhas, n=4 colunas, n=4 tratamentos, N=n^2=16. Linha, Coluna e Tratamento aparecem no mesmo nível – cruzados dois a dois – e convergem direto no Erro, sem nó de interação, pela mesma razão do DBCA (seção anterior).
+Figura 4.12: Diagrama de Hasse do quadrado latino 4x4 (exemplo dos quatro adubos): n=4 linhas, n=4 colunas, n=4 tratamentos, N=n^2=16. Linha, Coluna e Tratamento aparecem no mesmo nível – cruzados dois a dois – e convergem direto no Erro, sem nó de interação, pela mesma razão do DBCA (seção anterior).
 </p>
 </div>
 <p>Os cinco nós somam <span class="math inline">\(1+3+3+3+6=16=n^2\)</span>: Linha, Coluna e Tratamento consomem <span class="math inline">\(n-1=3\)</span> graus de
@@ -651,35 +700,35 @@ construção cíclica <span class="math inline">\(\text{quad}[i,j] = ((i+j-2)\bm
 <li>Sortear aleatoriamente <strong>quais tratamentos reais</strong> correspondem a cada símbolo <span class="math inline">\(1,\dots,n\)</span>.</li>
 </ol>
 <div class="caixa-r"><strong>Uso do R</strong> — implementação do algoritmo de Yates (1933)</div>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="quadrado-latino.html#cb184-1" tabindex="-1"></a>aleatorizar_quadrado_latino <span class="ot">&lt;-</span> <span class="cf">function</span>(n, tratamentos, <span class="at">seed =</span> <span class="cn">NULL</span>) {</span>
-<span id="cb184-2"><a href="quadrado-latino.html#cb184-2" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(seed)) <span class="fu">set.seed</span>(seed)</span>
-<span id="cb184-3"><a href="quadrado-latino.html#cb184-3" tabindex="-1"></a>  <span class="co"># Passo 0: quadrado latino reduzido, construção cíclica</span></span>
-<span id="cb184-4"><a href="quadrado-latino.html#cb184-4" tabindex="-1"></a>  reduzido <span class="ot">&lt;-</span> <span class="fu">outer</span>(<span class="dv">0</span><span class="sc">:</span>(n <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">0</span><span class="sc">:</span>(n <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(i, j) ((i <span class="sc">+</span> j) <span class="sc">%%</span> n) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb184-5"><a href="quadrado-latino.html#cb184-5" tabindex="-1"></a></span>
-<span id="cb184-6"><a href="quadrado-latino.html#cb184-6" tabindex="-1"></a>  <span class="co"># Passos 2-3: permutar linhas e colunas independentemente</span></span>
-<span id="cb184-7"><a href="quadrado-latino.html#cb184-7" tabindex="-1"></a>  perm_linhas  <span class="ot">&lt;-</span> <span class="fu">sample</span>(n)</span>
-<span id="cb184-8"><a href="quadrado-latino.html#cb184-8" tabindex="-1"></a>  perm_colunas <span class="ot">&lt;-</span> <span class="fu">sample</span>(n)</span>
-<span id="cb184-9"><a href="quadrado-latino.html#cb184-9" tabindex="-1"></a>  design_idx   <span class="ot">&lt;-</span> reduzido[perm_linhas, perm_colunas]</span>
-<span id="cb184-10"><a href="quadrado-latino.html#cb184-10" tabindex="-1"></a></span>
-<span id="cb184-11"><a href="quadrado-latino.html#cb184-11" tabindex="-1"></a>  <span class="co"># Passo 4: atribuir tratamentos reais aos símbolos 1..n</span></span>
-<span id="cb184-12"><a href="quadrado-latino.html#cb184-12" tabindex="-1"></a>  atrib <span class="ot">&lt;-</span> <span class="fu">sample</span>(tratamentos)</span>
-<span id="cb184-13"><a href="quadrado-latino.html#cb184-13" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">matrix</span>(atrib[design_idx], <span class="at">nrow =</span> n)</span>
-<span id="cb184-14"><a href="quadrado-latino.html#cb184-14" tabindex="-1"></a></span>
-<span id="cb184-15"><a href="quadrado-latino.html#cb184-15" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">design =</span> design, <span class="at">perm_linhas =</span> perm_linhas, <span class="at">perm_colunas =</span> perm_colunas, <span class="at">atrib =</span> atrib)</span>
-<span id="cb184-16"><a href="quadrado-latino.html#cb184-16" tabindex="-1"></a>}</span>
-<span id="cb184-17"><a href="quadrado-latino.html#cb184-17" tabindex="-1"></a></span>
-<span id="cb184-18"><a href="quadrado-latino.html#cb184-18" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb184-19"><a href="quadrado-latino.html#cb184-19" tabindex="-1"></a>resultado_yates <span class="ot">&lt;-</span> <span class="fu">aleatorizar_quadrado_latino</span>(<span class="dv">4</span>, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>))</span>
-<span id="cb184-20"><a href="quadrado-latino.html#cb184-20" tabindex="-1"></a>resultado_yates<span class="sc">$</span>design</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="quadrado-latino.html#cb241-1" tabindex="-1"></a>aleatorizar_quadrado_latino <span class="ot">&lt;-</span> <span class="cf">function</span>(n, tratamentos, <span class="at">seed =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb241-2"><a href="quadrado-latino.html#cb241-2" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(seed)) <span class="fu">set.seed</span>(seed)</span>
+<span id="cb241-3"><a href="quadrado-latino.html#cb241-3" tabindex="-1"></a>  <span class="co"># Passo 0: quadrado latino reduzido, construção cíclica</span></span>
+<span id="cb241-4"><a href="quadrado-latino.html#cb241-4" tabindex="-1"></a>  reduzido <span class="ot">&lt;-</span> <span class="fu">outer</span>(<span class="dv">0</span><span class="sc">:</span>(n <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">0</span><span class="sc">:</span>(n <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(i, j) ((i <span class="sc">+</span> j) <span class="sc">%%</span> n) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb241-5"><a href="quadrado-latino.html#cb241-5" tabindex="-1"></a></span>
+<span id="cb241-6"><a href="quadrado-latino.html#cb241-6" tabindex="-1"></a>  <span class="co"># Passos 2-3: permutar linhas e colunas independentemente</span></span>
+<span id="cb241-7"><a href="quadrado-latino.html#cb241-7" tabindex="-1"></a>  perm_linhas  <span class="ot">&lt;-</span> <span class="fu">sample</span>(n)</span>
+<span id="cb241-8"><a href="quadrado-latino.html#cb241-8" tabindex="-1"></a>  perm_colunas <span class="ot">&lt;-</span> <span class="fu">sample</span>(n)</span>
+<span id="cb241-9"><a href="quadrado-latino.html#cb241-9" tabindex="-1"></a>  design_idx   <span class="ot">&lt;-</span> reduzido[perm_linhas, perm_colunas]</span>
+<span id="cb241-10"><a href="quadrado-latino.html#cb241-10" tabindex="-1"></a></span>
+<span id="cb241-11"><a href="quadrado-latino.html#cb241-11" tabindex="-1"></a>  <span class="co"># Passo 4: atribuir tratamentos reais aos símbolos 1..n</span></span>
+<span id="cb241-12"><a href="quadrado-latino.html#cb241-12" tabindex="-1"></a>  atrib <span class="ot">&lt;-</span> <span class="fu">sample</span>(tratamentos)</span>
+<span id="cb241-13"><a href="quadrado-latino.html#cb241-13" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">matrix</span>(atrib[design_idx], <span class="at">nrow =</span> n)</span>
+<span id="cb241-14"><a href="quadrado-latino.html#cb241-14" tabindex="-1"></a></span>
+<span id="cb241-15"><a href="quadrado-latino.html#cb241-15" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">design =</span> design, <span class="at">perm_linhas =</span> perm_linhas, <span class="at">perm_colunas =</span> perm_colunas, <span class="at">atrib =</span> atrib)</span>
+<span id="cb241-16"><a href="quadrado-latino.html#cb241-16" tabindex="-1"></a>}</span>
+<span id="cb241-17"><a href="quadrado-latino.html#cb241-17" tabindex="-1"></a></span>
+<span id="cb241-18"><a href="quadrado-latino.html#cb241-18" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb241-19"><a href="quadrado-latino.html#cb241-19" tabindex="-1"></a>resultado_yates <span class="ot">&lt;-</span> <span class="fu">aleatorizar_quadrado_latino</span>(<span class="dv">4</span>, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>))</span>
+<span id="cb241-20"><a href="quadrado-latino.html#cb241-20" tabindex="-1"></a>resultado_yates<span class="sc">$</span>design</span></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4]
 ## [1,] &quot;D&quot;  &quot;C&quot;  &quot;B&quot;  &quot;A&quot; 
 ## [2,] &quot;B&quot;  &quot;A&quot;  &quot;C&quot;  &quot;D&quot; 
 ## [3,] &quot;C&quot;  &quot;D&quot;  &quot;A&quot;  &quot;B&quot; 
 ## [4,] &quot;A&quot;  &quot;B&quot;  &quot;D&quot;  &quot;C&quot;</code></pre>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="quadrado-latino.html#cb186-1" tabindex="-1"></a><span class="co"># a aleatorização não pode violar a definição de quadrado latino</span></span>
-<span id="cb186-2"><a href="quadrado-latino.html#cb186-2" tabindex="-1"></a>d <span class="ot">&lt;-</span> resultado_yates<span class="sc">$</span>design</span>
-<span id="cb186-3"><a href="quadrado-latino.html#cb186-3" tabindex="-1"></a><span class="fu">c</span>(<span class="at">linhas_ok  =</span> <span class="fu">all</span>(<span class="fu">apply</span>(d, <span class="dv">1</span>, <span class="cf">function</span>(r) <span class="fu">length</span>(<span class="fu">unique</span>(r)) <span class="sc">==</span> <span class="dv">4</span>)),</span>
-<span id="cb186-4"><a href="quadrado-latino.html#cb186-4" tabindex="-1"></a>  <span class="at">colunas_ok =</span> <span class="fu">all</span>(<span class="fu">apply</span>(d, <span class="dv">2</span>, <span class="cf">function</span>(cl) <span class="fu">length</span>(<span class="fu">unique</span>(cl)) <span class="sc">==</span> <span class="dv">4</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="quadrado-latino.html#cb243-1" tabindex="-1"></a><span class="co"># a aleatorização não pode violar a definição de quadrado latino</span></span>
+<span id="cb243-2"><a href="quadrado-latino.html#cb243-2" tabindex="-1"></a>d <span class="ot">&lt;-</span> resultado_yates<span class="sc">$</span>design</span>
+<span id="cb243-3"><a href="quadrado-latino.html#cb243-3" tabindex="-1"></a><span class="fu">c</span>(<span class="at">linhas_ok  =</span> <span class="fu">all</span>(<span class="fu">apply</span>(d, <span class="dv">1</span>, <span class="cf">function</span>(r) <span class="fu">length</span>(<span class="fu">unique</span>(r)) <span class="sc">==</span> <span class="dv">4</span>)),</span>
+<span id="cb243-4"><a href="quadrado-latino.html#cb243-4" tabindex="-1"></a>  <span class="at">colunas_ok =</span> <span class="fu">all</span>(<span class="fu">apply</span>(d, <span class="dv">2</span>, <span class="cf">function</span>(cl) <span class="fu">length</span>(<span class="fu">unique</span>(cl)) <span class="sc">==</span> <span class="dv">4</span>)))</span></code></pre></div>
 <pre><code>##  linhas_ok colunas_ok 
 ##       TRUE       TRUE</code></pre>
 <p>O quadrado gerado por essa execução (D C B A na
@@ -689,24 +738,24 @@ procedimento de Yates — rodar novamente com outra semente produziria outro arr
 referência da aleatorização por trás do teste <span class="math inline">\(F\)</span>: o argumento de Neyman-Rubin da Seção
 <a href="dbca.html#dbca">4.1</a> se aplica aqui do mesmo modo, só que a aleatorização agora é restrita simultaneamente
 por linha e por coluna, não apenas por bloco.</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="quadrado-latino.html#cb188-1" tabindex="-1"></a>efeito_linha  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb188-2"><a href="quadrado-latino.html#cb188-2" tabindex="-1"></a>efeito_coluna <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb188-3"><a href="quadrado-latino.html#cb188-3" tabindex="-1"></a>efeito_trat   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">0</span>, <span class="at">B =</span> <span class="dv">3</span>, <span class="at">C =</span> <span class="dv">5</span>, <span class="at">D =</span> <span class="dv">1</span>)</span>
-<span id="cb188-4"><a href="quadrado-latino.html#cb188-4" tabindex="-1"></a></span>
-<span id="cb188-5"><a href="quadrado-latino.html#cb188-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
-<span id="cb188-6"><a href="quadrado-latino.html#cb188-6" tabindex="-1"></a>dados_ql <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb188-7"><a href="quadrado-latino.html#cb188-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb188-8"><a href="quadrado-latino.html#cb188-8" tabindex="-1"></a>    <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) quad[i, j], linha, coluna),</span>
-<span id="cb188-9"><a href="quadrado-latino.html#cb188-9" tabindex="-1"></a>                         <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>)),</span>
-<span id="cb188-10"><a href="quadrado-latino.html#cb188-10" tabindex="-1"></a>    <span class="at">linha  =</span> <span class="fu">factor</span>(linha), <span class="at">coluna =</span> <span class="fu">factor</span>(coluna),</span>
-<span id="cb188-11"><a href="quadrado-latino.html#cb188-11" tabindex="-1"></a>    <span class="at">resposta =</span> <span class="fu">round</span>(<span class="dv">20</span> <span class="sc">+</span> efeito_linha[<span class="fu">as.integer</span>(linha)] <span class="sc">+</span> efeito_coluna[<span class="fu">as.integer</span>(coluna)] <span class="sc">+</span></span>
-<span id="cb188-12"><a href="quadrado-latino.html#cb188-12" tabindex="-1"></a>                 efeito_trat[<span class="fu">as.character</span>(tratamento)] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.2</span>), <span class="dv">2</span>)</span>
-<span id="cb188-13"><a href="quadrado-latino.html#cb188-13" tabindex="-1"></a>  )</span>
-<span id="cb188-14"><a href="quadrado-latino.html#cb188-14" tabindex="-1"></a></span>
-<span id="cb188-15"><a href="quadrado-latino.html#cb188-15" tabindex="-1"></a>mod_ql <span class="ot">&lt;-</span> <span class="fu">aov</span>(resposta <span class="sc">~</span> linha <span class="sc">+</span> coluna <span class="sc">+</span> tratamento, <span class="at">data =</span> dados_ql)</span>
-<span id="cb188-16"><a href="quadrado-latino.html#cb188-16" tabindex="-1"></a><span class="fu">anova</span>(mod_ql) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb188-17"><a href="quadrado-latino.html#cb188-17" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado latino 4x4 (dados simulados)&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb188-18"><a href="quadrado-latino.html#cb188-18" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="quadrado-latino.html#cb245-1" tabindex="-1"></a>efeito_linha  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb245-2"><a href="quadrado-latino.html#cb245-2" tabindex="-1"></a>efeito_coluna <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb245-3"><a href="quadrado-latino.html#cb245-3" tabindex="-1"></a>efeito_trat   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">0</span>, <span class="at">B =</span> <span class="dv">3</span>, <span class="at">C =</span> <span class="dv">5</span>, <span class="at">D =</span> <span class="dv">1</span>)</span>
+<span id="cb245-4"><a href="quadrado-latino.html#cb245-4" tabindex="-1"></a></span>
+<span id="cb245-5"><a href="quadrado-latino.html#cb245-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb245-6"><a href="quadrado-latino.html#cb245-6" tabindex="-1"></a>dados_ql <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb245-7"><a href="quadrado-latino.html#cb245-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb245-8"><a href="quadrado-latino.html#cb245-8" tabindex="-1"></a>    <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) quad[i, j], linha, coluna),</span>
+<span id="cb245-9"><a href="quadrado-latino.html#cb245-9" tabindex="-1"></a>                         <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>)),</span>
+<span id="cb245-10"><a href="quadrado-latino.html#cb245-10" tabindex="-1"></a>    <span class="at">linha  =</span> <span class="fu">factor</span>(linha), <span class="at">coluna =</span> <span class="fu">factor</span>(coluna),</span>
+<span id="cb245-11"><a href="quadrado-latino.html#cb245-11" tabindex="-1"></a>    <span class="at">resposta =</span> <span class="fu">round</span>(<span class="dv">20</span> <span class="sc">+</span> efeito_linha[<span class="fu">as.integer</span>(linha)] <span class="sc">+</span> efeito_coluna[<span class="fu">as.integer</span>(coluna)] <span class="sc">+</span></span>
+<span id="cb245-12"><a href="quadrado-latino.html#cb245-12" tabindex="-1"></a>                 efeito_trat[<span class="fu">as.character</span>(tratamento)] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.2</span>), <span class="dv">2</span>)</span>
+<span id="cb245-13"><a href="quadrado-latino.html#cb245-13" tabindex="-1"></a>  )</span>
+<span id="cb245-14"><a href="quadrado-latino.html#cb245-14" tabindex="-1"></a></span>
+<span id="cb245-15"><a href="quadrado-latino.html#cb245-15" tabindex="-1"></a>mod_ql <span class="ot">&lt;-</span> <span class="fu">aov</span>(resposta <span class="sc">~</span> linha <span class="sc">+</span> coluna <span class="sc">+</span> tratamento, <span class="at">data =</span> dados_ql)</span>
+<span id="cb245-16"><a href="quadrado-latino.html#cb245-16" tabindex="-1"></a><span class="fu">anova</span>(mod_ql) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb245-17"><a href="quadrado-latino.html#cb245-17" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado latino 4x4 (dados simulados)&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb245-18"><a href="quadrado-latino.html#cb245-18" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ql-sim">Tabela 4.8: </span>ANOVA do quadrado latino 4x4 (dados simulados)
@@ -820,10 +869,10 @@ NA
 essa ortogonalidade de blocos de colunas é exatamente o que torna o quadrado latino “econômico”:
 ele estima três efeitos principais com <span class="math inline">\(n^2\)</span> observações porque abre mão de qualquer termo de
 interação entre linha, coluna e tratamento.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="quadrado-latino.html#cb189-1" tabindex="-1"></a>X_ql <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_ql)</span>
-<span id="cb189-2"><a href="quadrado-latino.html#cb189-2" tabindex="-1"></a><span class="fu">dim</span>(X_ql)   <span class="co"># 16 linhas, 1 + 3 (linha) + 3 (coluna) + 3 (tratamento) = 10 colunas</span></span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="quadrado-latino.html#cb246-1" tabindex="-1"></a>X_ql <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_ql)</span>
+<span id="cb246-2"><a href="quadrado-latino.html#cb246-2" tabindex="-1"></a><span class="fu">dim</span>(X_ql)   <span class="co"># 16 linhas, 1 + 3 (linha) + 3 (coluna) + 3 (tratamento) = 10 colunas</span></span></code></pre></div>
 <pre><code>## [1] 16 10</code></pre>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="quadrado-latino.html#cb191-1" tabindex="-1"></a>X_ql[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ]</span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="quadrado-latino.html#cb248-1" tabindex="-1"></a>X_ql[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ]</span></code></pre></div>
 <pre><code>##   (Intercept) linha2 linha3 linha4 coluna2 coluna3 coluna4 tratamentoB
 ## 1           1      0      0      0       0       0       0           0
 ## 2           1      0      0      0       1       0       0           1
@@ -915,30 +964,30 @@ Total
 </tbody>
 </table>
 <div class="caixa-r"><strong>Uso do R</strong> — duas réplicas independentes do mesmo quadrado latino</div>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="quadrado-latino.html#cb193-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">4</span>; p <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb193-2"><a href="quadrado-latino.html#cb193-2" tabindex="-1"></a>dados_rep <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span>p, <span class="cf">function</span>(rep_id) {</span>
-<span id="cb193-3"><a href="quadrado-latino.html#cb193-3" tabindex="-1"></a>  <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb193-4"><a href="quadrado-latino.html#cb193-4" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb193-5"><a href="quadrado-latino.html#cb193-5" tabindex="-1"></a>      <span class="at">replica    =</span> rep_id,</span>
-<span id="cb193-6"><a href="quadrado-latino.html#cb193-6" tabindex="-1"></a>      <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) quad[i, j], linha, coluna),</span>
-<span id="cb193-7"><a href="quadrado-latino.html#cb193-7" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>)),</span>
-<span id="cb193-8"><a href="quadrado-latino.html#cb193-8" tabindex="-1"></a>      <span class="at">linha_id   =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(rep_id, <span class="st">&quot;-&quot;</span>, linha)),</span>
-<span id="cb193-9"><a href="quadrado-latino.html#cb193-9" tabindex="-1"></a>      <span class="at">coluna_id  =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(rep_id, <span class="st">&quot;-&quot;</span>, coluna))</span>
-<span id="cb193-10"><a href="quadrado-latino.html#cb193-10" tabindex="-1"></a>    )</span>
-<span id="cb193-11"><a href="quadrado-latino.html#cb193-11" tabindex="-1"></a>})</span>
-<span id="cb193-12"><a href="quadrado-latino.html#cb193-12" tabindex="-1"></a></span>
-<span id="cb193-13"><a href="quadrado-latino.html#cb193-13" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">22</span>)</span>
-<span id="cb193-14"><a href="quadrado-latino.html#cb193-14" tabindex="-1"></a>dados_rep <span class="ot">&lt;-</span> dados_rep <span class="sc">%&gt;%</span></span>
-<span id="cb193-15"><a href="quadrado-latino.html#cb193-15" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb193-16"><a href="quadrado-latino.html#cb193-16" tabindex="-1"></a>    <span class="at">replica  =</span> <span class="fu">factor</span>(replica),</span>
-<span id="cb193-17"><a href="quadrado-latino.html#cb193-17" tabindex="-1"></a>    <span class="at">resposta =</span> <span class="fu">round</span>(<span class="dv">20</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span> efeito_trat[<span class="fu">as.character</span>(tratamento)] <span class="sc">+</span></span>
-<span id="cb193-18"><a href="quadrado-latino.html#cb193-18" tabindex="-1"></a>                 <span class="fu">as.numeric</span>(replica) <span class="sc">*</span> <span class="fl">1.5</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.2</span>), <span class="dv">2</span>)</span>
-<span id="cb193-19"><a href="quadrado-latino.html#cb193-19" tabindex="-1"></a>  )</span>
-<span id="cb193-20"><a href="quadrado-latino.html#cb193-20" tabindex="-1"></a></span>
-<span id="cb193-21"><a href="quadrado-latino.html#cb193-21" tabindex="-1"></a>mod_rep <span class="ot">&lt;-</span> <span class="fu">aov</span>(resposta <span class="sc">~</span> replica <span class="sc">+</span> linha_id <span class="sc">+</span> coluna_id <span class="sc">+</span> tratamento, <span class="at">data =</span> dados_rep)</span>
-<span id="cb193-22"><a href="quadrado-latino.html#cb193-22" tabindex="-1"></a><span class="fu">anova</span>(mod_rep) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb193-23"><a href="quadrado-latino.html#cb193-23" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA de duas réplicas do quadrado latino 4x4&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb193-24"><a href="quadrado-latino.html#cb193-24" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="quadrado-latino.html#cb250-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">4</span>; p <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb250-2"><a href="quadrado-latino.html#cb250-2" tabindex="-1"></a>dados_rep <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span>p, <span class="cf">function</span>(rep_id) {</span>
+<span id="cb250-3"><a href="quadrado-latino.html#cb250-3" tabindex="-1"></a>  <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb250-4"><a href="quadrado-latino.html#cb250-4" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb250-5"><a href="quadrado-latino.html#cb250-5" tabindex="-1"></a>      <span class="at">replica    =</span> rep_id,</span>
+<span id="cb250-6"><a href="quadrado-latino.html#cb250-6" tabindex="-1"></a>      <span class="at">tratamento =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) quad[i, j], linha, coluna),</span>
+<span id="cb250-7"><a href="quadrado-latino.html#cb250-7" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>)),</span>
+<span id="cb250-8"><a href="quadrado-latino.html#cb250-8" tabindex="-1"></a>      <span class="at">linha_id   =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(rep_id, <span class="st">&quot;-&quot;</span>, linha)),</span>
+<span id="cb250-9"><a href="quadrado-latino.html#cb250-9" tabindex="-1"></a>      <span class="at">coluna_id  =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(rep_id, <span class="st">&quot;-&quot;</span>, coluna))</span>
+<span id="cb250-10"><a href="quadrado-latino.html#cb250-10" tabindex="-1"></a>    )</span>
+<span id="cb250-11"><a href="quadrado-latino.html#cb250-11" tabindex="-1"></a>})</span>
+<span id="cb250-12"><a href="quadrado-latino.html#cb250-12" tabindex="-1"></a></span>
+<span id="cb250-13"><a href="quadrado-latino.html#cb250-13" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">22</span>)</span>
+<span id="cb250-14"><a href="quadrado-latino.html#cb250-14" tabindex="-1"></a>dados_rep <span class="ot">&lt;-</span> dados_rep <span class="sc">%&gt;%</span></span>
+<span id="cb250-15"><a href="quadrado-latino.html#cb250-15" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb250-16"><a href="quadrado-latino.html#cb250-16" tabindex="-1"></a>    <span class="at">replica  =</span> <span class="fu">factor</span>(replica),</span>
+<span id="cb250-17"><a href="quadrado-latino.html#cb250-17" tabindex="-1"></a>    <span class="at">resposta =</span> <span class="fu">round</span>(<span class="dv">20</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span> efeito_trat[<span class="fu">as.character</span>(tratamento)] <span class="sc">+</span></span>
+<span id="cb250-18"><a href="quadrado-latino.html#cb250-18" tabindex="-1"></a>                 <span class="fu">as.numeric</span>(replica) <span class="sc">*</span> <span class="fl">1.5</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">1.2</span>), <span class="dv">2</span>)</span>
+<span id="cb250-19"><a href="quadrado-latino.html#cb250-19" tabindex="-1"></a>  )</span>
+<span id="cb250-20"><a href="quadrado-latino.html#cb250-20" tabindex="-1"></a></span>
+<span id="cb250-21"><a href="quadrado-latino.html#cb250-21" tabindex="-1"></a>mod_rep <span class="ot">&lt;-</span> <span class="fu">aov</span>(resposta <span class="sc">~</span> replica <span class="sc">+</span> linha_id <span class="sc">+</span> coluna_id <span class="sc">+</span> tratamento, <span class="at">data =</span> dados_rep)</span>
+<span id="cb250-22"><a href="quadrado-latino.html#cb250-22" tabindex="-1"></a><span class="fu">anova</span>(mod_rep) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb250-23"><a href="quadrado-latino.html#cb250-23" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA de duas réplicas do quadrado latino 4x4&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb250-24"><a href="quadrado-latino.html#cb250-24" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ql-replicado">Tabela 4.10: </span>ANOVA de duas réplicas do quadrado latino 4x4
@@ -1071,6 +1120,16 @@ NA
 <p>Confira: <span class="math inline">\(gl_{Erro} = (n-1)[p(n-1)-1] = 3\times(2\times3-1) = 15\)</span>, exatamente o valor produzido
 pelo ajuste acima — replicar duas vezes elevou os graus de liberdade do erro de 6 para 15,
 tornando o teste sobre tratamentos bem mais sensível do que seria com um único quadrado.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:plot-gl-rep"></span>
+<img src="04-blocos_files/figure-html/plot-gl-rep-1.png" alt="Graus de liberdade do erro do quadrado latino replicado, (n-1)[p(n-1)-1], em função do número de réplicas p, para quadrados 3x3, 4x4 e 5x5; os pontos destacados são o exemplo do texto (n = 4: de 6 para 15 gl com duas réplicas)." width="75%" />
+<p class="caption">
+Figura 4.13: Graus de liberdade do erro do quadrado latino replicado, (n-1)[p(n-1)-1], em função do número de réplicas p, para quadrados 3x3, 4x4 e 5x5; os pontos destacados são o exemplo do texto (n = 4: de 6 para 15 gl com duas réplicas).
+</p>
+</div>
+<p>A Figura <a href="quadrado-latino.html#fig:plot-gl-rep">4.13</a> mostra o ganho em geral: com um quadrado <span class="math inline">\(3\times3\)</span> isolado sobram
+só 2 graus de liberdade para o erro — um teste <span class="math inline">\(F\)</span> praticamente sem poder —, e cada réplica
+acrescenta <span class="math inline">\((n-1)^2\)</span> graus de liberdade. É o que a réplica “compra”: não mais tratamentos, e sim
+uma estimativa de <span class="math inline">\(\sigma^2\)</span> em que se pode confiar.</p>
 </div>
 <div id="quantas-réplicas-uma-análise-de-poder" class="section level3 hasAnchor" number="4.4.6">
 <h3><span class="header-section-number">4.4.6</span> Quantas réplicas? Uma análise de poder<a href="quadrado-latino.html#quantas-réplicas-uma-análise-de-poder" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1081,23 +1140,23 @@ replicado segue, sob <span class="math inline">\(H_1\)</span>, uma distribuiçã
 Cohen para o fator de tratamento — a mesma convenção usada em análises de poder de ANOVA de um
 fator (<span class="math inline">\(f=0{,}10\)</span>: efeito pequeno; <span class="math inline">\(f=0{,}25\)</span>: médio; <span class="math inline">\(f=0{,}40\)</span>: grande).</p>
 <div class="caixa-r"><strong>Uso do R</strong> — poder do teste de tratamento em função do número de réplicas</div>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="quadrado-latino.html#cb194-1" tabindex="-1"></a>poder_ql_replicado <span class="ot">&lt;-</span> <span class="cf">function</span>(n, p, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">f =</span> <span class="fl">0.4</span>) {</span>
-<span id="cb194-2"><a href="quadrado-latino.html#cb194-2" tabindex="-1"></a>  gl1 <span class="ot">&lt;-</span> n <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb194-3"><a href="quadrado-latino.html#cb194-3" tabindex="-1"></a>  gl2 <span class="ot">&lt;-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (p <span class="sc">*</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb194-4"><a href="quadrado-latino.html#cb194-4" tabindex="-1"></a>  N   <span class="ot">&lt;-</span> p <span class="sc">*</span> n<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb194-5"><a href="quadrado-latino.html#cb194-5" tabindex="-1"></a>  ncp <span class="ot">&lt;-</span> N <span class="sc">*</span> f<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb194-6"><a href="quadrado-latino.html#cb194-6" tabindex="-1"></a>  f_crit <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, gl1, gl2)</span>
-<span id="cb194-7"><a href="quadrado-latino.html#cb194-7" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pf</span>(f_crit, gl1, gl2, ncp)</span>
-<span id="cb194-8"><a href="quadrado-latino.html#cb194-8" tabindex="-1"></a>}</span>
-<span id="cb194-9"><a href="quadrado-latino.html#cb194-9" tabindex="-1"></a></span>
-<span id="cb194-10"><a href="quadrado-latino.html#cb194-10" tabindex="-1"></a>tab_poder <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb194-11"><a href="quadrado-latino.html#cb194-11" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb194-12"><a href="quadrado-latino.html#cb194-12" tabindex="-1"></a>    <span class="at">gl_erro =</span> (<span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (p <span class="sc">*</span> (<span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">-</span> <span class="dv">1</span>),</span>
-<span id="cb194-13"><a href="quadrado-latino.html#cb194-13" tabindex="-1"></a>    <span class="at">poder   =</span> <span class="fu">poder_ql_replicado</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">p =</span> p, <span class="at">f =</span> <span class="fl">0.4</span>)</span>
-<span id="cb194-14"><a href="quadrado-latino.html#cb194-14" tabindex="-1"></a>  )</span>
-<span id="cb194-15"><a href="quadrado-latino.html#cb194-15" tabindex="-1"></a>tab_poder <span class="sc">%&gt;%</span></span>
-<span id="cb194-16"><a href="quadrado-latino.html#cb194-16" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">&quot;Poder do teste de tratamento vs. número de réplicas (n=4, f=0,4)&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb194-17"><a href="quadrado-latino.html#cb194-17" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="quadrado-latino.html#cb251-1" tabindex="-1"></a>poder_ql_replicado <span class="ot">&lt;-</span> <span class="cf">function</span>(n, p, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">f =</span> <span class="fl">0.4</span>) {</span>
+<span id="cb251-2"><a href="quadrado-latino.html#cb251-2" tabindex="-1"></a>  gl1 <span class="ot">&lt;-</span> n <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb251-3"><a href="quadrado-latino.html#cb251-3" tabindex="-1"></a>  gl2 <span class="ot">&lt;-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (p <span class="sc">*</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb251-4"><a href="quadrado-latino.html#cb251-4" tabindex="-1"></a>  N   <span class="ot">&lt;-</span> p <span class="sc">*</span> n<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb251-5"><a href="quadrado-latino.html#cb251-5" tabindex="-1"></a>  ncp <span class="ot">&lt;-</span> N <span class="sc">*</span> f<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb251-6"><a href="quadrado-latino.html#cb251-6" tabindex="-1"></a>  f_crit <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, gl1, gl2)</span>
+<span id="cb251-7"><a href="quadrado-latino.html#cb251-7" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pf</span>(f_crit, gl1, gl2, ncp)</span>
+<span id="cb251-8"><a href="quadrado-latino.html#cb251-8" tabindex="-1"></a>}</span>
+<span id="cb251-9"><a href="quadrado-latino.html#cb251-9" tabindex="-1"></a></span>
+<span id="cb251-10"><a href="quadrado-latino.html#cb251-10" tabindex="-1"></a>tab_poder <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-11"><a href="quadrado-latino.html#cb251-11" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb251-12"><a href="quadrado-latino.html#cb251-12" tabindex="-1"></a>    <span class="at">gl_erro =</span> (<span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (p <span class="sc">*</span> (<span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb251-13"><a href="quadrado-latino.html#cb251-13" tabindex="-1"></a>    <span class="at">poder   =</span> <span class="fu">poder_ql_replicado</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">p =</span> p, <span class="at">f =</span> <span class="fl">0.4</span>)</span>
+<span id="cb251-14"><a href="quadrado-latino.html#cb251-14" tabindex="-1"></a>  )</span>
+<span id="cb251-15"><a href="quadrado-latino.html#cb251-15" tabindex="-1"></a>tab_poder <span class="sc">%&gt;%</span></span>
+<span id="cb251-16"><a href="quadrado-latino.html#cb251-16" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">&quot;Poder do teste de tratamento vs. número de réplicas (n=4, f=0,4)&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-17"><a href="quadrado-latino.html#cb251-17" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:poder-ql-func">Tabela 4.11: </span>Poder do teste de tratamento vs. número de réplicas (n=4, f=0,4)
@@ -1184,16 +1243,21 @@ poder
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="quadrado-latino.html#cb195-1" tabindex="-1"></a><span class="fu">ggplot</span>(tab_poder, <span class="fu">aes</span>(<span class="at">x =</span> p, <span class="at">y =</span> poder)) <span class="sc">+</span></span>
-<span id="cb195-2"><a href="quadrado-latino.html#cb195-2" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;#2a78d6&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb195-3"><a href="quadrado-latino.html#cb195-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.6</span>, <span class="at">color =</span> <span class="st">&quot;#2a78d6&quot;</span>) <span class="sc">+</span></span>
-<span id="cb195-4"><a href="quadrado-latino.html#cb195-4" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.8</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;grey40&quot;</span>) <span class="sc">+</span></span>
-<span id="cb195-5"><a href="quadrado-latino.html#cb195-5" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">+</span></span>
-<span id="cb195-6"><a href="quadrado-latino.html#cb195-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Número de réplicas do quadrado (p)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Poder estatístico&quot;</span>,</span>
-<span id="cb195-7"><a href="quadrado-latino.html#cb195-7" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Poder para detectar um efeito grande (f=0,4) de tratamento&quot;</span>) <span class="sc">+</span></span>
-<span id="cb195-8"><a href="quadrado-latino.html#cb195-8" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb195-9"><a href="quadrado-latino.html#cb195-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
-<p><img src="04-blocos_files/figure-html/poder-ql-plot-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="quadrado-latino.html#cb252-1" tabindex="-1"></a><span class="fu">ggplot</span>(tab_poder, <span class="fu">aes</span>(<span class="at">x =</span> p, <span class="at">y =</span> poder)) <span class="sc">+</span></span>
+<span id="cb252-2"><a href="quadrado-latino.html#cb252-2" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;#2a78d6&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb252-3"><a href="quadrado-latino.html#cb252-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.6</span>, <span class="at">color =</span> <span class="st">&quot;#2a78d6&quot;</span>) <span class="sc">+</span></span>
+<span id="cb252-4"><a href="quadrado-latino.html#cb252-4" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.8</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;grey40&quot;</span>) <span class="sc">+</span></span>
+<span id="cb252-5"><a href="quadrado-latino.html#cb252-5" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb252-6"><a href="quadrado-latino.html#cb252-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Número de réplicas do quadrado (p)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Poder estatístico&quot;</span>,</span>
+<span id="cb252-7"><a href="quadrado-latino.html#cb252-7" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Poder para detectar um efeito grande (f=0,4) de tratamento&quot;</span>) <span class="sc">+</span></span>
+<span id="cb252-8"><a href="quadrado-latino.html#cb252-8" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb252-9"><a href="quadrado-latino.html#cb252-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:poder-ql-plot"></span>
+<img src="04-blocos_files/figure-html/poder-ql-plot-1.png" alt="Poder para detectar um efeito grande de tratamento (f = 0,4) em função do número de réplicas p do quadrado latino. A linha tracejada marca o poder convencional de 80%; com um único quadrado o poder é baixo, porque restam poucos graus de liberdade para o erro." width="75%" />
+<p class="caption">
+Figura 4.14: Poder para detectar um efeito grande de tratamento (f = 0,4) em função do número de réplicas p do quadrado latino. A linha tracejada marca o poder convencional de 80%; com um único quadrado o poder é baixo, porque restam poucos graus de liberdade para o erro.
+</p>
+</div>
 <p>Com um único quadrado (<span class="math inline">\(p=1\)</span>, <span class="math inline">\(gl_{Erro}=6\)</span>), o poder para detectar um efeito grande é de apenas
 15% — mesmo um efeito real e
 substantivo tem boa chance de passar despercebido. Duas réplicas (o exemplo acima) elevam o poder
@@ -1214,7 +1278,7 @@ quadrado latino — só que agora há <strong>duas</strong> fontes de bloqueio (
 não só “valeu a pena blocar?”, mas “qual das duas fontes carregou mais peso?”. A comparação mais
 direta aqui é, na verdade, <strong>exata</strong>, sem nenhuma aproximação: como <span class="math inline">\(SQ_{Total}\)</span> não depende de
 qual modelo foi ajustado, a soma de quadrados que um DCA hipotético (que ignorasse linha e coluna)
-atribuiria ao erro é exatamente o que sobra depois de remover só o tratamento,
+atribuiria ao erro é exatamente o que sobra depois de remover só o tratamento (QL indica o quadrado latino),
 <span class="math display">\[
 SQ_{Erro}^{(DCA)} = SQ_{Total} - SQ_{Trat} = SQ_{Linha} + SQ_{Coluna} + SQ_{Erro}^{(QL)},
 \]</span>
@@ -1237,29 +1301,29 @@ variância <em>estimada</em>, com poucos graus de liberdade, para julgar precis�
 razões são identidades algébricas exatas — seguem diretamente de como <span class="math inline">\(SQ_{Total}\)</span> se particiona
 entre fontes ortogonais, não de uma aproximação assintótica.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — eficiência relativa do quadrado latino das quatro adubações</div>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="quadrado-latino.html#cb196-1" tabindex="-1"></a>tab_ql <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_ql)</span>
-<span id="cb196-2"><a href="quadrado-latino.html#cb196-2" tabindex="-1"></a>QM_linha_ql  <span class="ot">&lt;-</span> tab_ql[<span class="st">&quot;linha&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
-<span id="cb196-3"><a href="quadrado-latino.html#cb196-3" tabindex="-1"></a>QM_coluna_ql <span class="ot">&lt;-</span> tab_ql[<span class="st">&quot;coluna&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
-<span id="cb196-4"><a href="quadrado-latino.html#cb196-4" tabindex="-1"></a>QM_erro_ql   <span class="ot">&lt;-</span> tab_ql[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
-<span id="cb196-5"><a href="quadrado-latino.html#cb196-5" tabindex="-1"></a>n_ql <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb196-6"><a href="quadrado-latino.html#cb196-6" tabindex="-1"></a></span>
-<span id="cb196-7"><a href="quadrado-latino.html#cb196-7" tabindex="-1"></a>QM_erro_dca <span class="ot">&lt;-</span> (QM_linha_ql <span class="sc">+</span> QM_coluna_ql <span class="sc">+</span> (n_ql <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> QM_erro_ql) <span class="sc">/</span> n_ql</span>
-<span id="cb196-8"><a href="quadrado-latino.html#cb196-8" tabindex="-1"></a>ER_dca      <span class="ot">&lt;-</span> QM_erro_dca <span class="sc">/</span> QM_erro_ql</span>
-<span id="cb196-9"><a href="quadrado-latino.html#cb196-9" tabindex="-1"></a></span>
-<span id="cb196-10"><a href="quadrado-latino.html#cb196-10" tabindex="-1"></a>QM_erro_dbca_linha <span class="ot">&lt;-</span> (QM_coluna_ql <span class="sc">+</span> (n_ql <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> QM_erro_ql) <span class="sc">/</span> (n_ql <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb196-11"><a href="quadrado-latino.html#cb196-11" tabindex="-1"></a>ER_dbca_linha       <span class="ot">&lt;-</span> QM_erro_dbca_linha <span class="sc">/</span> QM_erro_ql</span>
-<span id="cb196-12"><a href="quadrado-latino.html#cb196-12" tabindex="-1"></a></span>
-<span id="cb196-13"><a href="quadrado-latino.html#cb196-13" tabindex="-1"></a>QM_erro_dbca_coluna <span class="ot">&lt;-</span> (QM_linha_ql <span class="sc">+</span> (n_ql <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> QM_erro_ql) <span class="sc">/</span> (n_ql <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb196-14"><a href="quadrado-latino.html#cb196-14" tabindex="-1"></a>ER_dbca_coluna       <span class="ot">&lt;-</span> QM_erro_dbca_coluna <span class="sc">/</span> QM_erro_ql</span>
-<span id="cb196-15"><a href="quadrado-latino.html#cb196-15" tabindex="-1"></a></span>
-<span id="cb196-16"><a href="quadrado-latino.html#cb196-16" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb196-17"><a href="quadrado-latino.html#cb196-17" tabindex="-1"></a>  Comparação <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;QL vs. DCA (ignora linha e coluna)&quot;</span>,</span>
-<span id="cb196-18"><a href="quadrado-latino.html#cb196-18" tabindex="-1"></a>                 <span class="st">&quot;QL vs. DBCA (só bloqueia linha)&quot;</span>,</span>
-<span id="cb196-19"><a href="quadrado-latino.html#cb196-19" tabindex="-1"></a>                 <span class="st">&quot;QL vs. DBCA (só bloqueia coluna)&quot;</span>),</span>
-<span id="cb196-20"><a href="quadrado-latino.html#cb196-20" tabindex="-1"></a>  <span class="st">`</span><span class="at">Eficiência relativa</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(ER_dca, ER_dbca_linha, ER_dbca_coluna)</span>
-<span id="cb196-21"><a href="quadrado-latino.html#cb196-21" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb196-22"><a href="quadrado-latino.html#cb196-22" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">&quot;Eficiência relativa do quadrado latino 4x4 das quatro adubações&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb196-23"><a href="quadrado-latino.html#cb196-23" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="quadrado-latino.html#cb253-1" tabindex="-1"></a>tab_ql <span class="ot">&lt;-</span> <span class="fu">anova</span>(mod_ql)</span>
+<span id="cb253-2"><a href="quadrado-latino.html#cb253-2" tabindex="-1"></a>QM_linha_ql  <span class="ot">&lt;-</span> tab_ql[<span class="st">&quot;linha&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
+<span id="cb253-3"><a href="quadrado-latino.html#cb253-3" tabindex="-1"></a>QM_coluna_ql <span class="ot">&lt;-</span> tab_ql[<span class="st">&quot;coluna&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
+<span id="cb253-4"><a href="quadrado-latino.html#cb253-4" tabindex="-1"></a>QM_erro_ql   <span class="ot">&lt;-</span> tab_ql[<span class="st">&quot;Residuals&quot;</span>, <span class="st">&quot;Mean Sq&quot;</span>]</span>
+<span id="cb253-5"><a href="quadrado-latino.html#cb253-5" tabindex="-1"></a>n_ql <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb253-6"><a href="quadrado-latino.html#cb253-6" tabindex="-1"></a></span>
+<span id="cb253-7"><a href="quadrado-latino.html#cb253-7" tabindex="-1"></a>QM_erro_dca <span class="ot">&lt;-</span> (QM_linha_ql <span class="sc">+</span> QM_coluna_ql <span class="sc">+</span> (n_ql <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> QM_erro_ql) <span class="sc">/</span> n_ql</span>
+<span id="cb253-8"><a href="quadrado-latino.html#cb253-8" tabindex="-1"></a>ER_dca      <span class="ot">&lt;-</span> QM_erro_dca <span class="sc">/</span> QM_erro_ql</span>
+<span id="cb253-9"><a href="quadrado-latino.html#cb253-9" tabindex="-1"></a></span>
+<span id="cb253-10"><a href="quadrado-latino.html#cb253-10" tabindex="-1"></a>QM_erro_dbca_linha <span class="ot">&lt;-</span> (QM_coluna_ql <span class="sc">+</span> (n_ql <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> QM_erro_ql) <span class="sc">/</span> (n_ql <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb253-11"><a href="quadrado-latino.html#cb253-11" tabindex="-1"></a>ER_dbca_linha       <span class="ot">&lt;-</span> QM_erro_dbca_linha <span class="sc">/</span> QM_erro_ql</span>
+<span id="cb253-12"><a href="quadrado-latino.html#cb253-12" tabindex="-1"></a></span>
+<span id="cb253-13"><a href="quadrado-latino.html#cb253-13" tabindex="-1"></a>QM_erro_dbca_coluna <span class="ot">&lt;-</span> (QM_linha_ql <span class="sc">+</span> (n_ql <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> QM_erro_ql) <span class="sc">/</span> (n_ql <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb253-14"><a href="quadrado-latino.html#cb253-14" tabindex="-1"></a>ER_dbca_coluna       <span class="ot">&lt;-</span> QM_erro_dbca_coluna <span class="sc">/</span> QM_erro_ql</span>
+<span id="cb253-15"><a href="quadrado-latino.html#cb253-15" tabindex="-1"></a></span>
+<span id="cb253-16"><a href="quadrado-latino.html#cb253-16" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb253-17"><a href="quadrado-latino.html#cb253-17" tabindex="-1"></a>  Comparação <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;QL vs. DCA (ignora linha e coluna)&quot;</span>,</span>
+<span id="cb253-18"><a href="quadrado-latino.html#cb253-18" tabindex="-1"></a>                 <span class="st">&quot;QL vs. DBCA (só bloqueia linha)&quot;</span>,</span>
+<span id="cb253-19"><a href="quadrado-latino.html#cb253-19" tabindex="-1"></a>                 <span class="st">&quot;QL vs. DBCA (só bloqueia coluna)&quot;</span>),</span>
+<span id="cb253-20"><a href="quadrado-latino.html#cb253-20" tabindex="-1"></a>  <span class="st">`</span><span class="at">Eficiência relativa</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(ER_dca, ER_dbca_linha, ER_dbca_coluna)</span>
+<span id="cb253-21"><a href="quadrado-latino.html#cb253-21" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb253-22"><a href="quadrado-latino.html#cb253-22" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">&quot;Eficiência relativa do quadrado latino 4x4 das quatro adubações&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb253-23"><a href="quadrado-latino.html#cb253-23" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ql-eficiencia">Tabela 4.12: </span>Eficiência relativa do quadrado latino 4x4 das quatro adubações
@@ -1329,33 +1393,36 @@ sistematicamente tanto pela <strong>hora do dia</strong> (cinco faixas horárias
 o cenário exato de um quadrado latino $5\times5$: cada variante é exibida exatamente uma vez em
 cada faixa horária e uma vez em cada dia da semana, ao longo de 25 janelas de exibição.
 </div>
+<p>Hora e dia são as duas fontes conhecidas; o sorteio de qual variante vai a cada combinação hora ×
+dia controla o resto. Lançar uma variante por dia, na ordem em que ficaram prontas, confundiria a
+variante com o dia da semana, que é exatamente o que o quadrado latino evita.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — construção, ajuste e notação matricial do quadrado latino 5x5</div>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="quadrado-latino.html#cb197-1" tabindex="-1"></a>n5 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb197-2"><a href="quadrado-latino.html#cb197-2" tabindex="-1"></a>quad5 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(LETTERS[<span class="fu">outer</span>(<span class="dv">0</span><span class="sc">:</span>(n5<span class="dv">-1</span>), <span class="dv">0</span><span class="sc">:</span>(n5<span class="dv">-1</span>), <span class="cf">function</span>(i, j) ((i <span class="sc">+</span> j) <span class="sc">%%</span> n5) <span class="sc">+</span> <span class="dv">1</span>)], <span class="at">nrow =</span> n5)</span>
-<span id="cb197-3"><a href="quadrado-latino.html#cb197-3" tabindex="-1"></a>quad5   <span class="co"># construção cíclica: quad5[i,j] = letra ((i+j) mod 5)</span></span></code></pre></div>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="quadrado-latino.html#cb254-1" tabindex="-1"></a>n5 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb254-2"><a href="quadrado-latino.html#cb254-2" tabindex="-1"></a>quad5 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(LETTERS[<span class="fu">outer</span>(<span class="dv">0</span><span class="sc">:</span>(n5<span class="dv">-1</span>), <span class="dv">0</span><span class="sc">:</span>(n5<span class="dv">-1</span>), <span class="cf">function</span>(i, j) ((i <span class="sc">+</span> j) <span class="sc">%%</span> n5) <span class="sc">+</span> <span class="dv">1</span>)], <span class="at">nrow =</span> n5)</span>
+<span id="cb254-3"><a href="quadrado-latino.html#cb254-3" tabindex="-1"></a>quad5   <span class="co"># construção cíclica: quad5[i,j] = letra ((i+j) mod 5)</span></span></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5]
 ## [1,] &quot;A&quot;  &quot;B&quot;  &quot;C&quot;  &quot;D&quot;  &quot;E&quot; 
 ## [2,] &quot;B&quot;  &quot;C&quot;  &quot;D&quot;  &quot;E&quot;  &quot;A&quot; 
 ## [3,] &quot;C&quot;  &quot;D&quot;  &quot;E&quot;  &quot;A&quot;  &quot;B&quot; 
 ## [4,] &quot;D&quot;  &quot;E&quot;  &quot;A&quot;  &quot;B&quot;  &quot;C&quot; 
 ## [5,] &quot;E&quot;  &quot;A&quot;  &quot;B&quot;  &quot;C&quot;  &quot;D&quot;</code></pre>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="quadrado-latino.html#cb199-1" tabindex="-1"></a>ef_hora <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.2</span>, <span class="fl">0.8</span>, <span class="sc">-</span><span class="fl">0.3</span>)             <span class="co"># efeito de faixa horária (pontos percentuais)</span></span>
-<span id="cb199-2"><a href="quadrado-latino.html#cb199-2" tabindex="-1"></a>ef_dia  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="fl">0.4</span>, <span class="fl">0.2</span>, <span class="fl">0.6</span>, <span class="sc">-</span><span class="fl">0.2</span>)            <span class="co"># efeito de dia da semana</span></span>
-<span id="cb199-3"><a href="quadrado-latino.html#cb199-3" tabindex="-1"></a>ef_var  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">0</span>, <span class="at">B =</span> <span class="fl">0.9</span>, <span class="at">C =</span> <span class="fl">1.6</span>, <span class="at">D =</span> <span class="fl">0.4</span>, <span class="at">E =</span> <span class="sc">-</span><span class="fl">0.5</span>)  <span class="co"># efeito de variante</span></span>
-<span id="cb199-4"><a href="quadrado-latino.html#cb199-4" tabindex="-1"></a></span>
-<span id="cb199-5"><a href="quadrado-latino.html#cb199-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
-<span id="cb199-6"><a href="quadrado-latino.html#cb199-6" tabindex="-1"></a>dados_ec <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">hora =</span> <span class="dv">1</span><span class="sc">:</span>n5, <span class="at">dia =</span> <span class="dv">1</span><span class="sc">:</span>n5) <span class="sc">%&gt;%</span></span>
-<span id="cb199-7"><a href="quadrado-latino.html#cb199-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb199-8"><a href="quadrado-latino.html#cb199-8" tabindex="-1"></a>    <span class="at">variante =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) quad5[i, j], hora, dia), <span class="at">levels =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]),</span>
-<span id="cb199-9"><a href="quadrado-latino.html#cb199-9" tabindex="-1"></a>    <span class="at">hora =</span> <span class="fu">factor</span>(hora), <span class="at">dia =</span> <span class="fu">factor</span>(dia),</span>
-<span id="cb199-10"><a href="quadrado-latino.html#cb199-10" tabindex="-1"></a>    <span class="at">conversao =</span> <span class="fu">round</span>(<span class="dv">8</span> <span class="sc">+</span> ef_hora[<span class="fu">as.integer</span>(hora)] <span class="sc">+</span> ef_dia[<span class="fu">as.integer</span>(dia)] <span class="sc">+</span></span>
-<span id="cb199-11"><a href="quadrado-latino.html#cb199-11" tabindex="-1"></a>                 ef_var[<span class="fu">as.character</span>(variante)] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">0.35</span>), <span class="dv">3</span>)</span>
-<span id="cb199-12"><a href="quadrado-latino.html#cb199-12" tabindex="-1"></a>  )</span>
-<span id="cb199-13"><a href="quadrado-latino.html#cb199-13" tabindex="-1"></a></span>
-<span id="cb199-14"><a href="quadrado-latino.html#cb199-14" tabindex="-1"></a>mod_ec <span class="ot">&lt;-</span> <span class="fu">aov</span>(conversao <span class="sc">~</span> hora <span class="sc">+</span> dia <span class="sc">+</span> variante, <span class="at">data =</span> dados_ec)</span>
-<span id="cb199-15"><a href="quadrado-latino.html#cb199-15" tabindex="-1"></a><span class="fu">anova</span>(mod_ec) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb199-16"><a href="quadrado-latino.html#cb199-16" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado latino 5x5 (variantes de checkout)&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb199-17"><a href="quadrado-latino.html#cb199-17" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="quadrado-latino.html#cb256-1" tabindex="-1"></a>ef_hora <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.2</span>, <span class="fl">0.8</span>, <span class="sc">-</span><span class="fl">0.3</span>)             <span class="co"># efeito de faixa horária (pontos percentuais)</span></span>
+<span id="cb256-2"><a href="quadrado-latino.html#cb256-2" tabindex="-1"></a>ef_dia  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="fl">0.4</span>, <span class="fl">0.2</span>, <span class="fl">0.6</span>, <span class="sc">-</span><span class="fl">0.2</span>)            <span class="co"># efeito de dia da semana</span></span>
+<span id="cb256-3"><a href="quadrado-latino.html#cb256-3" tabindex="-1"></a>ef_var  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">0</span>, <span class="at">B =</span> <span class="fl">0.9</span>, <span class="at">C =</span> <span class="fl">1.6</span>, <span class="at">D =</span> <span class="fl">0.4</span>, <span class="at">E =</span> <span class="sc">-</span><span class="fl">0.5</span>)  <span class="co"># efeito de variante</span></span>
+<span id="cb256-4"><a href="quadrado-latino.html#cb256-4" tabindex="-1"></a></span>
+<span id="cb256-5"><a href="quadrado-latino.html#cb256-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb256-6"><a href="quadrado-latino.html#cb256-6" tabindex="-1"></a>dados_ec <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">hora =</span> <span class="dv">1</span><span class="sc">:</span>n5, <span class="at">dia =</span> <span class="dv">1</span><span class="sc">:</span>n5) <span class="sc">%&gt;%</span></span>
+<span id="cb256-7"><a href="quadrado-latino.html#cb256-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb256-8"><a href="quadrado-latino.html#cb256-8" tabindex="-1"></a>    <span class="at">variante =</span> <span class="fu">factor</span>(<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) quad5[i, j], hora, dia), <span class="at">levels =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]),</span>
+<span id="cb256-9"><a href="quadrado-latino.html#cb256-9" tabindex="-1"></a>    <span class="at">hora =</span> <span class="fu">factor</span>(hora), <span class="at">dia =</span> <span class="fu">factor</span>(dia),</span>
+<span id="cb256-10"><a href="quadrado-latino.html#cb256-10" tabindex="-1"></a>    <span class="at">conversao =</span> <span class="fu">round</span>(<span class="dv">8</span> <span class="sc">+</span> ef_hora[<span class="fu">as.integer</span>(hora)] <span class="sc">+</span> ef_dia[<span class="fu">as.integer</span>(dia)] <span class="sc">+</span></span>
+<span id="cb256-11"><a href="quadrado-latino.html#cb256-11" tabindex="-1"></a>                 ef_var[<span class="fu">as.character</span>(variante)] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="fl">0.35</span>), <span class="dv">3</span>)</span>
+<span id="cb256-12"><a href="quadrado-latino.html#cb256-12" tabindex="-1"></a>  )</span>
+<span id="cb256-13"><a href="quadrado-latino.html#cb256-13" tabindex="-1"></a></span>
+<span id="cb256-14"><a href="quadrado-latino.html#cb256-14" tabindex="-1"></a>mod_ec <span class="ot">&lt;-</span> <span class="fu">aov</span>(conversao <span class="sc">~</span> hora <span class="sc">+</span> dia <span class="sc">+</span> variante, <span class="at">data =</span> dados_ec)</span>
+<span id="cb256-15"><a href="quadrado-latino.html#cb256-15" tabindex="-1"></a><span class="fu">anova</span>(mod_ec) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb256-16"><a href="quadrado-latino.html#cb256-16" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado latino 5x5 (variantes de checkout)&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb256-17"><a href="quadrado-latino.html#cb256-17" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ql-ex2-construcao">Tabela 4.13: </span>ANOVA do quadrado latino 5x5 (variantes de checkout)
@@ -1469,15 +1536,15 @@ NA
 <span class="math inline">\(X=[\mathbf 1\mid X_{hora}\mid X_{dia}\mid X_{variante}]\)</span>, agora com <span class="math inline">\(n-1=4\)</span> colunas indicadoras
 para cada um dos três fatores (parametrização de referência): <span class="math inline">\(1+4+4+4=13\)</span> colunas para
 <span class="math inline">\(N=n^2=25\)</span> observações.</p>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="quadrado-latino.html#cb200-1" tabindex="-1"></a>X_ec <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_ec)</span>
-<span id="cb200-2"><a href="quadrado-latino.html#cb200-2" tabindex="-1"></a><span class="fu">dim</span>(X_ec)   <span class="co"># 25 linhas, 13 colunas</span></span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="quadrado-latino.html#cb257-1" tabindex="-1"></a>X_ec <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod_ec)</span>
+<span id="cb257-2"><a href="quadrado-latino.html#cb257-2" tabindex="-1"></a><span class="fu">dim</span>(X_ec)   <span class="co"># 25 linhas, 13 colunas</span></span></code></pre></div>
 <pre><code>## [1] 25 13</code></pre>
 <p>O posto de <span class="math inline">\(X\)</span> tem que ser exatamente 13 — nenhuma coluna é combinação linear das demais, porque
 não há produto cruzado entre os três blocos de colunas. A matriz de projeção
 <span class="math inline">\(H=X(X&#39;X)^{-1}X&#39;\)</span> (Capítulo 2) confirma isso diretamente: seu traço, que mede a dimensão do
 subespaço de <span class="math inline">\(\mathbb R^{25}\)</span> em que <span class="math inline">\(Y\)</span> é projetado, coincide com o posto de <span class="math inline">\(X\)</span>.</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="quadrado-latino.html#cb202-1" tabindex="-1"></a>H_ec <span class="ot">&lt;-</span> X_ec <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X_ec) <span class="sc">%*%</span> X_ec) <span class="sc">%*%</span> <span class="fu">t</span>(X_ec)</span>
-<span id="cb202-2"><a href="quadrado-latino.html#cb202-2" tabindex="-1"></a><span class="fu">c</span>(<span class="at">traco_H =</span> <span class="fu">sum</span>(<span class="fu">diag</span>(H_ec)), <span class="at">posto_X =</span> <span class="fu">qr</span>(X_ec)<span class="sc">$</span>rank)</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="quadrado-latino.html#cb259-1" tabindex="-1"></a>H_ec <span class="ot">&lt;-</span> X_ec <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X_ec) <span class="sc">%*%</span> X_ec) <span class="sc">%*%</span> <span class="fu">t</span>(X_ec)</span>
+<span id="cb259-2"><a href="quadrado-latino.html#cb259-2" tabindex="-1"></a><span class="fu">c</span>(<span class="at">traco_H =</span> <span class="fu">sum</span>(<span class="fu">diag</span>(H_ec)), <span class="at">posto_X =</span> <span class="fu">qr</span>(X_ec)<span class="sc">$</span>rank)</span></code></pre></div>
 <pre><code>## traco_H posto_X 
 ##      13      13</code></pre>
 <p>Os três testes-<span class="math inline">\(F\)</span> são significativos — hora do dia (<span class="math inline">\(F=\)</span> 9.34,
@@ -1487,16 +1554,21 @@ principalmente, variante (<span class="math inline">\(F=\)</span> 34.18,
 <span class="math inline">\(p&lt;0{,}001\)</span>) —, confirmando que as duas fontes de bloqueio de fato carregavam variação real (o
 quadrado latino não gastou seus graus de liberdade à toa) e que as variantes diferem entre si.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — médias ajustadas por variante, controlando hora e dia</div>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="quadrado-latino.html#cb204-1" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb204-2"><a href="quadrado-latino.html#cb204-2" tabindex="-1"></a>emm_var <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod_ec, <span class="sc">~</span> variante)</span>
-<span id="cb204-3"><a href="quadrado-latino.html#cb204-3" tabindex="-1"></a>emm_df  <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(emm_var)</span>
-<span id="cb204-4"><a href="quadrado-latino.html#cb204-4" tabindex="-1"></a></span>
-<span id="cb204-5"><a href="quadrado-latino.html#cb204-5" tabindex="-1"></a><span class="fu">ggplot</span>(emm_df, <span class="fu">aes</span>(<span class="at">x =</span> variante, <span class="at">y =</span> emmean)) <span class="sc">+</span></span>
-<span id="cb204-6"><a href="quadrado-latino.html#cb204-6" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL), <span class="at">color =</span> <span class="st">&quot;#2a78d6&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb204-7"><a href="quadrado-latino.html#cb204-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Variante de checkout&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Conversão média ajustada (%)&quot;</span>,</span>
-<span id="cb204-8"><a href="quadrado-latino.html#cb204-8" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Médias ajustadas por variante (IC 95%, controlando hora e dia)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb204-9"><a href="quadrado-latino.html#cb204-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
-<p><img src="04-blocos_files/figure-html/ql-ex2-emm-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="quadrado-latino.html#cb261-1" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb261-2"><a href="quadrado-latino.html#cb261-2" tabindex="-1"></a>emm_var <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod_ec, <span class="sc">~</span> variante)</span>
+<span id="cb261-3"><a href="quadrado-latino.html#cb261-3" tabindex="-1"></a>emm_df  <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(emm_var)</span>
+<span id="cb261-4"><a href="quadrado-latino.html#cb261-4" tabindex="-1"></a></span>
+<span id="cb261-5"><a href="quadrado-latino.html#cb261-5" tabindex="-1"></a><span class="fu">ggplot</span>(emm_df, <span class="fu">aes</span>(<span class="at">x =</span> variante, <span class="at">y =</span> emmean)) <span class="sc">+</span></span>
+<span id="cb261-6"><a href="quadrado-latino.html#cb261-6" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL), <span class="at">color =</span> <span class="st">&quot;#2a78d6&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb261-7"><a href="quadrado-latino.html#cb261-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Variante de checkout&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Conversão média ajustada (%)&quot;</span>,</span>
+<span id="cb261-8"><a href="quadrado-latino.html#cb261-8" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Médias ajustadas por variante (IC 95%, controlando hora e dia)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb261-9"><a href="quadrado-latino.html#cb261-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ql-ex2-emm"></span>
+<img src="04-blocos_files/figure-html/ql-ex2-emm-1.png" alt="Conversão média ajustada de cada variante de checkout no quadrado latino de e-commerce (controlando hora e dia), com intervalo de confiança de 95%. Os intervalos da variante C (a melhor) e da E (a pior) não se sobrepõem." width="75%" />
+<p class="caption">
+Figura 4.15: Conversão média ajustada de cada variante de checkout no quadrado latino de e-commerce (controlando hora e dia), com intervalo de confiança de 95%. Os intervalos da variante C (a melhor) e da E (a pior) não se sobrepõem.
+</p>
+</div>
 <p>As médias ajustadas separam claramente a variante C (10.35%,
 a melhor) da variante E (7.93%, a pior) — os intervalos
 de 95% não se sobrepõem entre as duas, evidência forte de que a diferença é real e não ruído de
@@ -1614,47 +1686,52 @@ percorrer <span class="math inline">\(0,\dots,6\)</span> e, portanto, <span clas
 <span class="math inline">\(D\)</span>: como <span class="math inline">\(D\)</span> é um conjunto de diferenças perfeito, todo par de tratamentos coocorre em exatamente
 <span class="math inline">\(\lambda=1\)</span> coluna — a propriedade (2).</p>
 <div class="caixa-r"><strong>Uso do R</strong> — construção e verificação do quadrado de Youden (7,3)</div>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="quadrado-latino.html#cb205-1" tabindex="-1"></a>v_y <span class="ot">&lt;-</span> <span class="dv">7</span>; r_y <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb205-2"><a href="quadrado-latino.html#cb205-2" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)                                  <span class="co"># resíduos quadráticos mod 7 (conjunto de diferenças)</span></span>
-<span id="cb205-3"><a href="quadrado-latino.html#cb205-3" tabindex="-1"></a>genotipos <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;G&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)</span>
-<span id="cb205-4"><a href="quadrado-latino.html#cb205-4" tabindex="-1"></a></span>
-<span id="cb205-5"><a href="quadrado-latino.html#cb205-5" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA_integer_</span>, <span class="at">nrow =</span> r_y, <span class="at">ncol =</span> v_y)</span>
-<span id="cb205-6"><a href="quadrado-latino.html#cb205-6" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>r_y) <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>(v_y <span class="sc">-</span> <span class="dv">1</span>)) Y[i, j <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> (D[i] <span class="sc">+</span> j) <span class="sc">%%</span> v_y <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb205-7"><a href="quadrado-latino.html#cb205-7" tabindex="-1"></a><span class="fu">rownames</span>(Y) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;linha&quot;</span>, <span class="dv">1</span><span class="sc">:</span>r_y); <span class="fu">colnames</span>(Y) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;data&quot;</span>, <span class="dv">1</span><span class="sc">:</span>v_y)</span>
-<span id="cb205-8"><a href="quadrado-latino.html#cb205-8" tabindex="-1"></a><span class="fu">matrix</span>(genotipos[Y], <span class="at">nrow =</span> r_y, <span class="at">dimnames =</span> <span class="fu">dimnames</span>(Y))</span></code></pre></div>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="quadrado-latino.html#cb262-1" tabindex="-1"></a>v_y <span class="ot">&lt;-</span> <span class="dv">7</span>; r_y <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb262-2"><a href="quadrado-latino.html#cb262-2" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)                                  <span class="co"># resíduos quadráticos mod 7 (conjunto de diferenças)</span></span>
+<span id="cb262-3"><a href="quadrado-latino.html#cb262-3" tabindex="-1"></a>genotipos <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;G&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)</span>
+<span id="cb262-4"><a href="quadrado-latino.html#cb262-4" tabindex="-1"></a></span>
+<span id="cb262-5"><a href="quadrado-latino.html#cb262-5" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA_integer_</span>, <span class="at">nrow =</span> r_y, <span class="at">ncol =</span> v_y)</span>
+<span id="cb262-6"><a href="quadrado-latino.html#cb262-6" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>r_y) <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>(v_y <span class="sc">-</span> <span class="dv">1</span>)) Y[i, j <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> (D[i] <span class="sc">+</span> j) <span class="sc">%%</span> v_y <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb262-7"><a href="quadrado-latino.html#cb262-7" tabindex="-1"></a><span class="fu">rownames</span>(Y) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;linha&quot;</span>, <span class="dv">1</span><span class="sc">:</span>r_y); <span class="fu">colnames</span>(Y) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;data&quot;</span>, <span class="dv">1</span><span class="sc">:</span>v_y)</span>
+<span id="cb262-8"><a href="quadrado-latino.html#cb262-8" tabindex="-1"></a><span class="fu">matrix</span>(genotipos[Y], <span class="at">nrow =</span> r_y, <span class="at">dimnames =</span> <span class="fu">dimnames</span>(Y))</span></code></pre></div>
 <pre><code>##        data1 data2 data3 data4 data5 data6 data7
 ## linha1 &quot;G2&quot;  &quot;G3&quot;  &quot;G4&quot;  &quot;G5&quot;  &quot;G6&quot;  &quot;G7&quot;  &quot;G1&quot; 
 ## linha2 &quot;G3&quot;  &quot;G4&quot;  &quot;G5&quot;  &quot;G6&quot;  &quot;G7&quot;  &quot;G1&quot;  &quot;G2&quot; 
 ## linha3 &quot;G5&quot;  &quot;G6&quot;  &quot;G7&quot;  &quot;G1&quot;  &quot;G2&quot;  &quot;G3&quot;  &quot;G4&quot;</code></pre>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="quadrado-latino.html#cb207-1" tabindex="-1"></a><span class="co"># verificação: cada linha e uma permutação dos 7 genotipos; cada par coocorre 1 vez</span></span>
-<span id="cb207-2"><a href="quadrado-latino.html#cb207-2" tabindex="-1"></a>linhas_ok <span class="ot">&lt;-</span> <span class="fu">all</span>(<span class="fu">apply</span>(Y, <span class="dv">1</span>, <span class="cf">function</span>(lin) <span class="fu">length</span>(<span class="fu">unique</span>(lin)) <span class="sc">==</span> v_y))</span>
-<span id="cb207-3"><a href="quadrado-latino.html#cb207-3" tabindex="-1"></a>pares <span class="ot">&lt;-</span> <span class="fu">combn</span>(<span class="dv">1</span><span class="sc">:</span>v_y, <span class="dv">2</span>)</span>
-<span id="cb207-4"><a href="quadrado-latino.html#cb207-4" tabindex="-1"></a>lambda_obs <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">apply</span>(pares, <span class="dv">2</span>, <span class="cf">function</span>(p) <span class="fu">sum</span>(<span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>v_y, <span class="cf">function</span>(j) <span class="fu">all</span>(p <span class="sc">%in%</span> Y[, j])))))</span>
-<span id="cb207-5"><a href="quadrado-latino.html#cb207-5" tabindex="-1"></a><span class="fu">c</span>(<span class="at">linhas_sao_permutacoes =</span> linhas_ok, <span class="at">lambda_min =</span> lambda_obs[<span class="dv">1</span>], <span class="at">lambda_max =</span> lambda_obs[<span class="dv">2</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="quadrado-latino.html#cb264-1" tabindex="-1"></a><span class="co"># verificação: cada linha e uma permutação dos 7 genotipos; cada par coocorre 1 vez</span></span>
+<span id="cb264-2"><a href="quadrado-latino.html#cb264-2" tabindex="-1"></a>linhas_ok <span class="ot">&lt;-</span> <span class="fu">all</span>(<span class="fu">apply</span>(Y, <span class="dv">1</span>, <span class="cf">function</span>(lin) <span class="fu">length</span>(<span class="fu">unique</span>(lin)) <span class="sc">==</span> v_y))</span>
+<span id="cb264-3"><a href="quadrado-latino.html#cb264-3" tabindex="-1"></a>pares <span class="ot">&lt;-</span> <span class="fu">combn</span>(<span class="dv">1</span><span class="sc">:</span>v_y, <span class="dv">2</span>)</span>
+<span id="cb264-4"><a href="quadrado-latino.html#cb264-4" tabindex="-1"></a>lambda_obs <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">apply</span>(pares, <span class="dv">2</span>, <span class="cf">function</span>(p) <span class="fu">sum</span>(<span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>v_y, <span class="cf">function</span>(j) <span class="fu">all</span>(p <span class="sc">%in%</span> Y[, j])))))</span>
+<span id="cb264-5"><a href="quadrado-latino.html#cb264-5" tabindex="-1"></a><span class="fu">c</span>(<span class="at">linhas_sao_permutacoes =</span> linhas_ok, <span class="at">lambda_min =</span> lambda_obs[<span class="dv">1</span>], <span class="at">lambda_max =</span> lambda_obs[<span class="dv">2</span>])</span></code></pre></div>
 <pre><code>## linhas_sao_permutacoes             lambda_min             lambda_max 
 ##                      1                      1                      1</code></pre>
-<p><img src="04-blocos_files/figure-html/youden-heatmap-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:youden-heatmap"></span>
+<img src="04-blocos_files/figure-html/youden-heatmap-1.png" alt="Quadrado de Youden com v = 7 genótipos em 3 linhas (posições na bancada) e 7 colunas (datas de plantio). Cada linha contém os 7 genótipos; cada coluna, só 3; e todo par de genótipos aparece junto em exatamente uma coluna." width="75%" />
+<p class="caption">
+Figura 4.16: Quadrado de Youden com v = 7 genótipos em 3 linhas (posições na bancada) e 7 colunas (datas de plantio). Cada linha contém os 7 genótipos; cada coluna, só 3; e todo par de genótipos aparece junto em exatamente uma coluna.
+</p>
+</div>
 <p>O contraste com o quadrado latino completo salta aos olhos: cada <strong>linha</strong> ainda contém todos os 7
 genótipos (lida na horizontal, a figura mostra os 7 rótulos diferentes), mas cada <strong>coluna</strong> só
 mostra 3 dos 7 (a “incompletude” que dá nome ao delineamento) — e ainda assim, por construção via o
 conjunto de diferenças, todo par de genótipos aparece junto em exatamente uma coluna.</p>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="quadrado-latino.html#cb209-1" tabindex="-1"></a>ef_trat_y  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">G1 =</span> <span class="dv">0</span>, <span class="at">G2 =</span> <span class="fl">1.5</span>, <span class="at">G3 =</span> <span class="dv">3</span>, <span class="at">G4 =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">G5 =</span> <span class="dv">2</span>, <span class="at">G6 =</span> <span class="fl">0.5</span>, <span class="at">G7 =</span> <span class="sc">-</span><span class="dv">2</span>)</span>
-<span id="cb209-2"><a href="quadrado-latino.html#cb209-2" tabindex="-1"></a>ef_linha_y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb209-3"><a href="quadrado-latino.html#cb209-3" tabindex="-1"></a>ef_col_y   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.3</span>, <span class="sc">-</span><span class="fl">0.3</span>)</span>
-<span id="cb209-4"><a href="quadrado-latino.html#cb209-4" tabindex="-1"></a></span>
-<span id="cb209-5"><a href="quadrado-latino.html#cb209-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
-<span id="cb209-6"><a href="quadrado-latino.html#cb209-6" tabindex="-1"></a>dados_youden <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span>r_y, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span>v_y) <span class="sc">%&gt;%</span></span>
-<span id="cb209-7"><a href="quadrado-latino.html#cb209-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb209-8"><a href="quadrado-latino.html#cb209-8" tabindex="-1"></a>    <span class="at">trat  =</span> <span class="fu">factor</span>(genotipos[<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) Y[i, j], linha, coluna)], <span class="at">levels =</span> genotipos),</span>
-<span id="cb209-9"><a href="quadrado-latino.html#cb209-9" tabindex="-1"></a>    <span class="at">linha =</span> <span class="fu">factor</span>(linha), <span class="at">coluna =</span> <span class="fu">factor</span>(coluna),</span>
-<span id="cb209-10"><a href="quadrado-latino.html#cb209-10" tabindex="-1"></a>    <span class="at">altura =</span> <span class="fu">round</span>(<span class="dv">30</span> <span class="sc">+</span> ef_linha_y[<span class="fu">as.integer</span>(linha)] <span class="sc">+</span> ef_col_y[<span class="fu">as.integer</span>(coluna)] <span class="sc">+</span></span>
-<span id="cb209-11"><a href="quadrado-latino.html#cb209-11" tabindex="-1"></a>               ef_trat_y[<span class="fu">as.character</span>(trat)] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">2</span>)</span>
-<span id="cb209-12"><a href="quadrado-latino.html#cb209-12" tabindex="-1"></a>  )</span>
-<span id="cb209-13"><a href="quadrado-latino.html#cb209-13" tabindex="-1"></a></span>
-<span id="cb209-14"><a href="quadrado-latino.html#cb209-14" tabindex="-1"></a>mod_youden <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> linha <span class="sc">+</span> coluna <span class="sc">+</span> trat, <span class="at">data =</span> dados_youden)</span>
-<span id="cb209-15"><a href="quadrado-latino.html#cb209-15" tabindex="-1"></a><span class="fu">anova</span>(mod_youden) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb209-16"><a href="quadrado-latino.html#cb209-16" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado de Youden (7,3): altura de plântulas de soja&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb209-17"><a href="quadrado-latino.html#cb209-17" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="quadrado-latino.html#cb266-1" tabindex="-1"></a>ef_trat_y  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">G1 =</span> <span class="dv">0</span>, <span class="at">G2 =</span> <span class="fl">1.5</span>, <span class="at">G3 =</span> <span class="dv">3</span>, <span class="at">G4 =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">G5 =</span> <span class="dv">2</span>, <span class="at">G6 =</span> <span class="fl">0.5</span>, <span class="at">G7 =</span> <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb266-2"><a href="quadrado-latino.html#cb266-2" tabindex="-1"></a>ef_linha_y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb266-3"><a href="quadrado-latino.html#cb266-3" tabindex="-1"></a>ef_col_y   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.3</span>, <span class="sc">-</span><span class="fl">0.3</span>)</span>
+<span id="cb266-4"><a href="quadrado-latino.html#cb266-4" tabindex="-1"></a></span>
+<span id="cb266-5"><a href="quadrado-latino.html#cb266-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
+<span id="cb266-6"><a href="quadrado-latino.html#cb266-6" tabindex="-1"></a>dados_youden <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">linha =</span> <span class="dv">1</span><span class="sc">:</span>r_y, <span class="at">coluna =</span> <span class="dv">1</span><span class="sc">:</span>v_y) <span class="sc">%&gt;%</span></span>
+<span id="cb266-7"><a href="quadrado-latino.html#cb266-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb266-8"><a href="quadrado-latino.html#cb266-8" tabindex="-1"></a>    <span class="at">trat  =</span> <span class="fu">factor</span>(genotipos[<span class="fu">mapply</span>(<span class="cf">function</span>(i, j) Y[i, j], linha, coluna)], <span class="at">levels =</span> genotipos),</span>
+<span id="cb266-9"><a href="quadrado-latino.html#cb266-9" tabindex="-1"></a>    <span class="at">linha =</span> <span class="fu">factor</span>(linha), <span class="at">coluna =</span> <span class="fu">factor</span>(coluna),</span>
+<span id="cb266-10"><a href="quadrado-latino.html#cb266-10" tabindex="-1"></a>    <span class="at">altura =</span> <span class="fu">round</span>(<span class="dv">30</span> <span class="sc">+</span> ef_linha_y[<span class="fu">as.integer</span>(linha)] <span class="sc">+</span> ef_col_y[<span class="fu">as.integer</span>(coluna)] <span class="sc">+</span></span>
+<span id="cb266-11"><a href="quadrado-latino.html#cb266-11" tabindex="-1"></a>               ef_trat_y[<span class="fu">as.character</span>(trat)] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">2</span>)</span>
+<span id="cb266-12"><a href="quadrado-latino.html#cb266-12" tabindex="-1"></a>  )</span>
+<span id="cb266-13"><a href="quadrado-latino.html#cb266-13" tabindex="-1"></a></span>
+<span id="cb266-14"><a href="quadrado-latino.html#cb266-14" tabindex="-1"></a>mod_youden <span class="ot">&lt;-</span> <span class="fu">aov</span>(altura <span class="sc">~</span> linha <span class="sc">+</span> coluna <span class="sc">+</span> trat, <span class="at">data =</span> dados_youden)</span>
+<span id="cb266-15"><a href="quadrado-latino.html#cb266-15" tabindex="-1"></a><span class="fu">anova</span>(mod_youden) <span class="sc">%&gt;%</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb266-16"><a href="quadrado-latino.html#cb266-16" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;ANOVA do quadrado de Youden (7,3): altura de plântulas de soja&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb266-17"><a href="quadrado-latino.html#cb266-17" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:youden-analise">Tabela 4.15: </span>ANOVA do quadrado de Youden (7,3): altura de plântulas de soja
@@ -1764,20 +1841,20 @@ NA
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="quadrado-latino.html#cb210-1" tabindex="-1"></a>lambda_y <span class="ot">&lt;-</span> r_y <span class="sc">*</span> (r_y <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (v_y <span class="sc">-</span> <span class="dv">1</span>)   <span class="co"># = 1 para (v,r) = (7,3)</span></span>
-<span id="cb210-2"><a href="quadrado-latino.html#cb210-2" tabindex="-1"></a></span>
-<span id="cb210-3"><a href="quadrado-latino.html#cb210-3" tabindex="-1"></a>T_trat  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_youden<span class="sc">$</span>altura, dados_youden<span class="sc">$</span>trat, sum)</span>
-<span id="cb210-4"><a href="quadrado-latino.html#cb210-4" tabindex="-1"></a>B_col   <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_youden<span class="sc">$</span>altura, dados_youden<span class="sc">$</span>coluna, sum)</span>
-<span id="cb210-5"><a href="quadrado-latino.html#cb210-5" tabindex="-1"></a>soma_col_do_trat <span class="ot">&lt;-</span> <span class="fu">sapply</span>(genotipos, <span class="cf">function</span>(g) {</span>
-<span id="cb210-6"><a href="quadrado-latino.html#cb210-6" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> <span class="fu">unique</span>(dados_youden<span class="sc">$</span>coluna[dados_youden<span class="sc">$</span>trat <span class="sc">==</span> g])</span>
-<span id="cb210-7"><a href="quadrado-latino.html#cb210-7" tabindex="-1"></a>  <span class="fu">sum</span>(B_col[<span class="fu">as.character</span>(cols)])</span>
-<span id="cb210-8"><a href="quadrado-latino.html#cb210-8" tabindex="-1"></a>})</span>
-<span id="cb210-9"><a href="quadrado-latino.html#cb210-9" tabindex="-1"></a></span>
-<span id="cb210-10"><a href="quadrado-latino.html#cb210-10" tabindex="-1"></a>Q_y <span class="ot">&lt;-</span> T_trat <span class="sc">-</span> soma_col_do_trat <span class="sc">/</span> r_y</span>
-<span id="cb210-11"><a href="quadrado-latino.html#cb210-11" tabindex="-1"></a>SQ_trat_ajustada_y <span class="ot">&lt;-</span> r_y <span class="sc">*</span> <span class="fu">sum</span>(Q_y<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (lambda_y <span class="sc">*</span> v_y)</span>
-<span id="cb210-12"><a href="quadrado-latino.html#cb210-12" tabindex="-1"></a></span>
-<span id="cb210-13"><a href="quadrado-latino.html#cb210-13" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_formula_Qi =</span> SQ_trat_ajustada_y,</span>
-<span id="cb210-14"><a href="quadrado-latino.html#cb210-14" tabindex="-1"></a>  <span class="at">SQ_trat_aov         =</span> <span class="fu">anova</span>(mod_youden)[<span class="st">&quot;trat&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="quadrado-latino.html#cb267-1" tabindex="-1"></a>lambda_y <span class="ot">&lt;-</span> r_y <span class="sc">*</span> (r_y <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (v_y <span class="sc">-</span> <span class="dv">1</span>)   <span class="co"># = 1 para (v,r) = (7,3)</span></span>
+<span id="cb267-2"><a href="quadrado-latino.html#cb267-2" tabindex="-1"></a></span>
+<span id="cb267-3"><a href="quadrado-latino.html#cb267-3" tabindex="-1"></a>T_trat  <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_youden<span class="sc">$</span>altura, dados_youden<span class="sc">$</span>trat, sum)</span>
+<span id="cb267-4"><a href="quadrado-latino.html#cb267-4" tabindex="-1"></a>B_col   <span class="ot">&lt;-</span> <span class="fu">tapply</span>(dados_youden<span class="sc">$</span>altura, dados_youden<span class="sc">$</span>coluna, sum)</span>
+<span id="cb267-5"><a href="quadrado-latino.html#cb267-5" tabindex="-1"></a>soma_col_do_trat <span class="ot">&lt;-</span> <span class="fu">sapply</span>(genotipos, <span class="cf">function</span>(g) {</span>
+<span id="cb267-6"><a href="quadrado-latino.html#cb267-6" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> <span class="fu">unique</span>(dados_youden<span class="sc">$</span>coluna[dados_youden<span class="sc">$</span>trat <span class="sc">==</span> g])</span>
+<span id="cb267-7"><a href="quadrado-latino.html#cb267-7" tabindex="-1"></a>  <span class="fu">sum</span>(B_col[<span class="fu">as.character</span>(cols)])</span>
+<span id="cb267-8"><a href="quadrado-latino.html#cb267-8" tabindex="-1"></a>})</span>
+<span id="cb267-9"><a href="quadrado-latino.html#cb267-9" tabindex="-1"></a></span>
+<span id="cb267-10"><a href="quadrado-latino.html#cb267-10" tabindex="-1"></a>Q_y <span class="ot">&lt;-</span> T_trat <span class="sc">-</span> soma_col_do_trat <span class="sc">/</span> r_y</span>
+<span id="cb267-11"><a href="quadrado-latino.html#cb267-11" tabindex="-1"></a>SQ_trat_ajustada_y <span class="ot">&lt;-</span> r_y <span class="sc">*</span> <span class="fu">sum</span>(Q_y<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (lambda_y <span class="sc">*</span> v_y)</span>
+<span id="cb267-12"><a href="quadrado-latino.html#cb267-12" tabindex="-1"></a></span>
+<span id="cb267-13"><a href="quadrado-latino.html#cb267-13" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SQ_trat_formula_Qi =</span> SQ_trat_ajustada_y,</span>
+<span id="cb267-14"><a href="quadrado-latino.html#cb267-14" tabindex="-1"></a>  <span class="at">SQ_trat_aov         =</span> <span class="fu">anova</span>(mod_youden)[<span class="st">&quot;trat&quot;</span>, <span class="st">&quot;Sum Sq&quot;</span>])</span></code></pre></div>
 <pre><code>## SQ_trat_formula_Qi        SQ_trat_aov 
 ##            37.2358            37.2358</code></pre>
 <p>Os dois valores coincidem, exatamente como no BIB da Seção <a href="bib.html#bib">4.3</a> — a diferença é que aqui a

@@ -23,6 +23,8 @@ suppressPackageStartupMessages({
   library(kableExtra)
   library(broom)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -36,6 +38,17 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # Bloco 1 — Teoria
+
+---
+
+## O que esta aula controla (e o que não controla)
+
+Um experimento controlado precisa dizer **em que nível** aconteceu o sorteio. Na tilápia, o probiótico foi sorteado entre **aquários**, não entre peixes.
+
+- **Controla:** as diferenças entre aquários **antes** do experimento, porque o aquário que recebe cada probiótico foi sorteado.
+- **Não controla:** nada garante que os peixes de um mesmo aquário sejam independentes (água, temperatura e alimentação são comuns). Por isso a unidade experimental (UE) é o aquário, e o peixe é **subamostra**.
+
+Analisar o peixe como se ele tivesse sido sorteado é fingir um controle que não houve. Num estudo observacional o problema é pior: muitas vezes nem se sabe em que nível a "atribuição" aconteceu.
 
 ---
 
@@ -107,7 +120,7 @@ tilapia %>% group_by(probiotico, aquario) %>% summarise(m = round(mean(ganho), 1
 
 ## Então o que é essa tabela?
 
-É **exatamente o DCA da Aula 04**: 4 tratamentos, 5 réplicas cada, com resposta = ganho médio do
+É **exatamente o DCA (delineamento completamente aleatorizado) da Aula 04**: 4 tratamentos, 5 réplicas cada, com resposta = ganho médio do
 aquário. Cada linha da tabela é um grupo de réplicas, e embaralhar os valores **dentro** de uma
 linha não muda nada na análise.
 
@@ -115,7 +128,7 @@ linha não muda nada na análise.
 
 Duas confusões comuns que esta leitura evita:
 
-- **Não é um DBCA.** No DBCA (Aula 09) as colunas são blocos reais, e o bloco 3 é o *mesmo*
+- **Não é um DBCA** (delineamento em blocos completos aleatorizados). No DBCA (Aula 09) as colunas são blocos reais, e o bloco 3 é o *mesmo*
   bloco em todos os tratamentos; aqui a "réplica 3" é um aquário diferente em cada linha. Aqui não há nada parecido.
 - **Não é um fatorial probiótico × aquário.** "Aquário" não cruza com probiótico: cada aquário
   recebe *um* probiótico só. Ele está **aninhado** em probiótico.
@@ -134,7 +147,7 @@ i=1,\ldots,t;\ j=1,\ldots,r;\ k=1,\ldots,q$$
 - $\tau_i$: efeito **fixo** do probiótico $i$, com $\sum_i\tau_i=0$.
 - $\delta_{ij}\sim N(0,\sigma_\delta^2)$: quanto o aquário $j$ do probiótico $i$ se afasta da
   média do seu probiótico (temperatura, oxigênio, hierarquia entre os peixes...). É o **erro
-  experimental**, a variação entre UEs que recebem o mesmo tratamento.
+  experimental**, a variação entre unidades experimentais (UEs) que recebem o mesmo tratamento.
 - $\varepsilon_{ijk}\sim N(0,\sigma_\varepsilon^2)$: quanto o peixe $k$ se afasta da média do seu
   aquário. É o **erro de amostragem**, a variação entre subamostras da mesma UE.
 - $\delta_{ij}$ e $\varepsilon_{ijk}$ independentes entre si.
@@ -169,7 +182,7 @@ Leitura: o probiótico 1 rende `r lado(m1-g, "menos", "mais")` que a média gera
 
 --
 
-As somas de quadrados da ANOVA são a soma, sobre **todas** as linhas da planilha, dos quadrados de
+As somas de quadrados da ANOVA (análise de variância) são a soma, sobre **todas** as linhas da planilha, dos quadrados de
 cada uma dessas três parcelas.
 
 ---
@@ -188,7 +201,7 @@ tratamento e variância do erro $\sigma^2=\sigma_\delta^2+\sigma_\varepsilon^2/q
 
 Três consequências imediatas:
 
-1. As réplicas do probiótico são os **aquários**: o erro tem $t(r-1)=16$ gl, não 77.
+1. As réplicas do probiótico são os **aquários**: o erro tem $t(r-1)=16$ graus de liberdade (gl), não 77.
 2. Mais peixes por aquário só diminuem $\sigma_\varepsilon^2/q$. O termo $\sigma_\delta^2$ fica, e
    só mais aquários o reduzem.
 3. Com $q$ igual em todos os aquários (desenho balanceado), a ANOVA das médias **é** o teste
@@ -196,7 +209,7 @@ Três consequências imediatas:
 
 ---
 
-## De onde vêm os $E[QM]$
+## De onde vêm os $E[QM]$ (esperanças dos quadrados médios)
 
 Com $q$ constante, cada quadrado médio é uma variância amostral que já conhecemos:
 
@@ -249,13 +262,13 @@ $$\mathrm{Cov}(\mathbf{Y}) = \mathbf{V} = \sigma_\delta^2\,\mathbf{Z}\mathbf{Z}'
 --
 
 Violada a hipótese, o teorema não se aplica. Então a ANOVA das médias, que usamos dois slides
-atrás, estaria errada? Precisamos de GLS?
+atrás, estaria errada? Precisamos de GLS (mínimos quadrados generalizados)?
 
 ---
 
 ## Zyskind outra vez: e o balanceamento deixa de ser detalhe
 
-Da Aula 03: com $\mathrm{Cov}(\boldsymbol\varepsilon)=\mathbf V$, o MQO continua BLUE **se e somente se** existe $\mathbf Q$ com $\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q}$. Vamos testar num desenho pequeno.
+Da Aula 03: com $\mathrm{Cov}(\boldsymbol\varepsilon)=\mathbf V$, o MQO (mínimos quadrados ordinários) continua BLUE (melhor estimador linear não viesado) **se e somente se** existe $\mathbf Q$ com $\mathbf{V}\mathbf{X}=\mathbf{X}\mathbf{Q}$. Vamos testar num desenho pequeno.
 
 ```{r zyskind-submuestreo}
 t_ <- 3; r <- 2; q <- 4                      # desenho BALANCEADO
@@ -352,8 +365,10 @@ aleatória** de uma população maior de níveis e não os níveis de interesse 
 
 $$Y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \qquad \tau_i\overset{iid}{\sim}N(0,\sigma_\tau^2)$$
 
+(iid = independentes e identicamente distribuídos)
+
 - $H_0:\sigma_\tau^2=0$ em vez de "as médias são iguais".
-- $\text{Corr}(Y_{ij},Y_{ij'}) = \sigma_\tau^2/(\sigma_\tau^2+\sigma^2)$ = ICC.
+- $\text{Corr}(Y_{ij},Y_{ij'}) = \sigma_\tau^2/(\sigma_\tau^2+\sigma^2)$ = ICC (coeficiente de correlação intraclasse).
 - Mesma tabela de ANOVA, mas $E[QM_{\text{Entre}}] = \sigma^2+n\sigma_\tau^2$ (não envolve os
   $\tau_i$ individuais), logo $\hat\sigma_\tau^2 = (QM_{\text{Entre}}-QM_E)/n$, o estimador de
   momentos clássico para componentes de variância (Montgomery, 2017).
@@ -398,6 +413,17 @@ knitr::include_graphics(c("assets/images/experimento1.png", "assets/images/sit2.
 **Situação 1**: 1 caixa/tratamento, só **3 UEs no total** e zero gl de erro entre UEs. Fatal.
 **Situação 2**: 12 vasos individuais, sem subamostragem, 9 gl de erro. **Situação 3**: 2
 caixas/tratamento, com subamostragem e 3 gl de erro. É a estrutura da tilápia em miniatura.
+
+
+---
+
+## Em cada situação, o que foi sorteado?
+
+- **Situação 1:** sorteia-se a **caixa** de cada tratamento, mas há uma só por tratamento. Qualquer diferença entre caixas (luz, posição na estufa) fica confundida com o tratamento, e não há como estimar o erro entre UEs.
+- **Situação 2:** cada **vaso** é sorteado. A UE é o vaso e o controle é completo.
+- **Situação 3:** sorteiam-se **duas caixas** por tratamento. O controle existe no nível da caixa; os vasos dentro dela são subamostras.
+
+**A versão não controlada:** usar as caixas que "já estavam" com cada tratamento numa estufa comercial. Mesmo com muitos vasos, ninguém saberia se a diferença é do tratamento ou da caixa.
 
 ---
 
@@ -512,6 +538,24 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**O que foi sorteado?**
+
+No probiótico, quem recebeu o tratamento por sorteio foi o **aquário**; os peixes só vieram junto.
+Tratar cada peixe como unidade experimental (UE) é fingir um controle que não houve: **pseudorrepetição**.
+Simulação com $H_0$ verdadeira (4 probióticos × 5 aquários × 4 peixes):
+
+```{r cnc-a05}
+cnc_aula05()      # 2.000 experimentos; proporção de rejeições de H0 a 5%
+```
+
+- Com o aquário como UE: ≈ 5%, como prometido.
+- Com o peixe como UE: o $F$ ganha gl que não existem e rejeita $H_0$ verdadeira em cerca de **metade** dos experimentos.
+- Num estudo observacional o problema é pior: muitas vezes nem se sabe **em que nível** a "atribuição" aconteceu.
+
+---
+
 ## Perguntas para a turma
 
 1. No experimento da tilápia, por que **não** seria correto tratar os 97 peixes como 97
@@ -529,6 +573,14 @@ class: inverse, center, middle
 
 5. Em que situação você trataria "tipo de distração" (Aula 04) como efeito fixo, mas "clipe
    sonoro específico" como efeito aleatório, no mesmo experimento?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Uma rede de escolas atribui um novo material didático a **escolas inteiras**, mas a análise compara os **alunos**. Qual é a unidade experimental? O que acontece com os graus de liberdade do erro?
+2. Se as escolas que receberam o material foram as que pediram para participar, o que muda na interpretação, além dos graus de liberdade?
 
 ---
 
@@ -585,6 +637,7 @@ seriam necessárias ~20.
 - Balanceado: ANOVA das médias é exata (Zyskind). Desbalanceado: `lmer`.
 - Efeitos aleatórios: mesma estrutura de covariância; o alvo passa a ser $\sigma_\tau^2$ (ICC).
 - Próxima aula: verificação dos pressupostos e transformações.
+- **Controlado × não controlado:** o controle vale no nível em que o sorteio aconteceu (o aquário). Tratar a subamostra (o peixe) como UE é fingir um controle inexistente: com $H_0$ verdadeira, rejeita-se em cerca de metade dos experimentos.
 
 ---
 

@@ -1,0 +1,41 @@
+% livro-latex-preamble.tex -- preâmbulo do PDF do livro (scripts/gerar_pdf_livro.R)
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+
+% as mesmas cores das caixas do site (Livro/style.css)
+\definecolor{aplicFundo}{HTML}{EEF7F1}\definecolor{aplicBorda}{HTML}{2E8B57}
+\definecolor{discFundo}{HTML}{FDF3E7}\definecolor{discBorda}{HTML}{D98324}
+\definecolor{rFundo}{HTML}{EEF3FB}\definecolor{rBorda}{HTML}{3B5BDB}
+\definecolor{avisoFundo}{HTML}{FFF8E1}\definecolor{avisoBorda}{HTML}{B8860B}
+\definecolor{pretaFundo}{HTML}{F2F2F2}\definecolor{pretaBorda}{HTML}{333333}
+
+\tcbset{caixalivro/.style={enhanced, breakable, boxrule=0pt, leftrule=3.5pt, arc=0pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt, before skip=8pt, after skip=8pt,
+  fontupper=\small}}
+\newtcolorbox{caixaaplicacao}{caixalivro, colback=aplicFundo, colframe=aplicBorda}
+\newtcolorbox{caixadiscussao}{caixalivro, colback=discFundo, colframe=discBorda}
+\newtcolorbox{caixar}{caixalivro, colback=rFundo, colframe=rBorda}
+\newtcolorbox{caixaaviso}{caixalivro, colback=avisoFundo, colframe=avisoBorda}
+\newtcolorbox{caixapreta}{caixalivro, colback=pretaFundo, colframe=pretaBorda}
+
+% aviso de direitos autorais no rodapé de todas as páginas
+\setlength{\headheight}{13pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\thepage}
+\fancyhead[L]{\small\nouppercase{\rightmark}}
+\fancyfoot[C]{\tiny\color{gray}© 2026 R. Ospina Martínez — UFBA · Versão preliminar, em construção · Uso exclusivo dos alunos de MATD48 · Reprodução proibida (Lei 9.610/1998)}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\tiny\color{gray}© 2026 R. Ospina Martínez — UFBA · Uso exclusivo dos alunos de MATD48}\renewcommand{\headrulewidth}{0pt}}
+
+% figuras e tabelas não "flutuam" para longe do texto que as discute
+\usepackage{float}
+\floatplacement{figure}{htbp}
+
+% a Latin Modern Math não tem o glifo que o unicode-math usa para \setminus
+\AtBeginDocument{\renewcommand{\setminus}{\mathbin{\backslash}}}
+
+% código: quebra linhas longas em vez de cortá-las na margem (mesmo problema do footgun #9 do site)
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,breakanywhere,commandchars=\\\{\}}

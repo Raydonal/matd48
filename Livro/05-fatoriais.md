@@ -16,10 +16,23 @@ essa notação por $\alpha_i, \beta_j, \gamma_k, \dots$ — uma letra grega por 
 convenção usual para desenhos fatoriais [@montgomery2017design; @dean2017design]: $\tau$ seria
 ambíguo assim que há mais de um fator, porque não indicaria a qual deles o índice pertence. A
 mudança é só de rótulo, não de conceito — $\alpha_i$ desempenha, para o fator $A$, exatamente o
-mesmo papel que $\tau_i$ desempenhava no Capítulo 3 para o único fator do DCA. A sistematização
+mesmo papel que $\tau_i$ desempenhava no Capítulo 3 para o único fator do delineamento completamente aleatorizado (DCA). A sistematização
 completa desse arranjo — o que hoje chamamos de "delineamento fatorial" — é obra de Fisher e,
 sobretudo, de Yates, que formalizou a análise e a notação de sinais $(1), a, b, ab, \dots$ que
 usaremos ao longo deste capítulo e do próximo [@yates1937design].
+
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+Um fatorial é uma decisão sobre <strong>quais combinações de níveis serão observadas</strong>. Ele
+controla o cruzamento: cada nível de um fator aparece com cada nível dos outros, o mesmo número de
+vezes, as colunas de $\mathbf X$ ficam ortogonais e a interação se torna estimável. Com o sorteio
+da combinação de cada unidade, a interação estimada é causal. O fatorial não controla as
+combinações que ficaram de fora nem os fatores que não foram variados. Nos dados que um processo
+produz sozinho, os fatores andam juntos, e o cruzamento simplesmente não existe.
+</div>
+```
 
 ## Por que cruzar fatores? {#por-que-fatorial}
 
@@ -53,6 +66,11 @@ as $2 \times 4 = 8$ combinações de níveis foram testadas, com três repetiç�
 </div>
 ```
 
+As oito combinações irrigação × silício têm três parcelas cada, com o tratamento de cada parcela
+sorteado. Em registros de produtores, quem irriga mais tende a usar mais insumos, inclusive
+silício: haveria muitas parcelas com os dois em nível alto e poucas, ou nenhuma, com irrigação
+baixa e silício alto, e a interação ficaria mal estimada ou não estimável.
+
 ## O fatorial A×B: efeitos principais e interação {#modelo-axb}
 
 Sejam dois fatores, $A$ com $a$ níveis e $B$ com $b$ níveis, cruzados em um desenho balanceado com
@@ -67,7 +85,7 @@ y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}, \qq
 \end{aligned}
 $$
 
-com $\varepsilon_{ijk} \stackrel{iid}{\sim} N(0, \sigma^2)$ e as restrições usuais de
+com $\varepsilon_{ijk} \stackrel{iid}{\sim} N(0, \sigma^2)$ (independentes e identicamente distribuídos) e as restrições usuais de
 identificabilidade $\sum_i \alpha_i = 0$, $\sum_j \beta_j = 0$, $\sum_i (\alpha\beta)_{ij} = 0$
 para todo $j$, e $\sum_j (\alpha\beta)_{ij} = 0$ para todo $i$. Os termos têm interpretação direta:
 
@@ -86,7 +104,7 @@ relação à média sobre os níveis de $A$ — não, por si só, um efeito caus
 $$
 \text{ATE}(i,i') \;=\; E\!\left[Y_u(i) - Y_u(i')\right] \;=\; \alpha_i - \alpha_{i'},
 $$
-o efeito causal médio de receber o nível $i$ em vez do nível $i'$, *marginalizado* sobre a
+o efeito causal médio (ATE, *average treatment effect*) de receber o nível $i$ em vez do nível $i'$, *marginalizado* sobre a
 distribuição de níveis de $B$ presente no experimento — uma média do efeito de $A$ que "soma
 sobre" todas as condições de $B$ observadas. A distinção importa: $\alpha_i$ depende de qual
 restrição de identificação se adotou (com casela de referência, $\alpha_i$ já *seria* um contraste
@@ -129,14 +147,17 @@ summary(modelo_axb)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-<img src="05-fatoriais_files/figure-html/pepino-interacao-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="05-fatoriais_files/figure-html/pepino-interacao-1.png" alt="Gráfico de interação do fatorial irrigação × silício do pepino: altura média em cada dose de silício, com uma linha por lâmina de irrigação. As linhas são quase paralelas, o que corresponde a uma interação fraca (p ≈ 0,09 na análise de variância)." width="80%" />
+<p class="caption">(\#fig:pepino-interacao)Gráfico de interação do fatorial irrigação × silício do pepino: altura média em cada dose de silício, com uma linha por lâmina de irrigação. As linhas são quase paralelas, o que corresponde a uma interação fraca (p ≈ 0,09 na análise de variância).</p>
+</div>
 
 As retas são quase paralelas — sinal de que a interação, embora presente na tabela ($p \approx
 0{,}09$), é discreta perto do nível de significância usual de 5%: o efeito da dose de silício
 sobre a altura parece semelhante nas duas lâminas de irrigação, e o efeito da irrigação parece
 semelhante nas quatro doses.
 
-## Tabela de ANOVA para o fatorial A×B balanceado {#anova-axb}
+## Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado {#anova-axb}
 
 A soma de quadrados total se decompõe exatamente em quatro parcelas ortogonais:
 
@@ -524,7 +545,10 @@ cada, totalizando 16 corridas.
 
 
 
-<img src="05-fatoriais_files/figure-html/cubo-base-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="05-fatoriais_files/figure-html/cubo-base-1.png" alt="O fatorial 2³ desenhado como um cubo: cada vértice é uma combinação de níveis (notação de Yates) com o rendimento médio das duas repetições. Os vértices não seguem um padrão aditivo simples; por exemplo, b é bem mais alto que seus vizinhos (1) e ab." width="80%" />
+<p class="caption">(\#fig:cubo-base)O fatorial 2³ desenhado como um cubo: cada vértice é uma combinação de níveis (notação de Yates) com o rendimento médio das duas repetições. Os vértices não seguem um padrão aditivo simples; por exemplo, b é bem mais alto que seus vizinhos (1) e ab.</p>
+</div>
 
 Cada vértice mostra o tratamento (notação de Yates [@yates1937design]) e o rendimento médio
 observado nas duas repetições. Já dá para notar, a olho, que os vértices não seguem um padrão simples: o vértice `b`
@@ -535,13 +559,19 @@ que a superfície de resposta sobre o cubo não é "plana" (efeitos puramente ad
 média da face "alta" e da face "baixa" desse fator — geometricamente, as duas faces retangulares
 opostas do cubo:
 
-<img src="05-fatoriais_files/figure-html/cubo-principais-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="05-fatoriais_files/figure-html/cubo-principais-1.png" alt="Efeitos principais do 2³ como faces opostas do cubo: em cada painel, a face do nível alto do fator e a do nível baixo, com o efeito estimado (diferença entre as médias das duas faces) no título." width="80%" />
+<p class="caption">(\#fig:cubo-principais)Efeitos principais do 2³ como faces opostas do cubo: em cada painel, a face do nível alto do fator e a do nível baixo, com o efeito estimado (diferença entre as médias das duas faces) no título.</p>
+</div>
 
 **Interações duplas como planos diagonais.** A interação $AB$ compara a diferença $B_+-B_-$
 calculada dentro de $A_+$ com a mesma diferença dentro de $A_-$ — geometricamente, dois planos
 diagonais que cruzam o cubo (cada um ligando quatro vértices alternados):
 
-<img src="05-fatoriais_files/figure-html/cubo-duplas-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="05-fatoriais_files/figure-html/cubo-duplas-1.png" alt="Interações duplas do 2³ como dois planos diagonais que cruzam o cubo, cada um ligando quatro vértices alternados; o efeito de interação estimado (diferença entre as médias dos dois planos) está no título de cada painel." width="80%" />
+<p class="caption">(\#fig:cubo-duplas)Interações duplas do 2³ como dois planos diagonais que cruzam o cubo, cada um ligando quatro vértices alternados; o efeito de interação estimado (diferença entre as médias dos dois planos) está no título de cada painel.</p>
+</div>
 
 Os dois planos de cada painel se cruzam no centro do cubo — visualmente, é exatamente essa
 sobreposição que corresponde a um efeito de interação não nulo: se as duas faixas coloridas
@@ -552,7 +582,10 @@ seria zero por construção.
 — em vez disso, os oito vértices se dividem em dois grupos de quatro, alternados, que formam dois
 tetraedros entrelaçados dentro do cubo:
 
-<img src="05-fatoriais_files/figure-html/cubo-tripla-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="05-fatoriais_files/figure-html/cubo-tripla-1.png" alt="A interação tripla ABC: os oito vértices se dividem em dois tetraedros entrelaçados, de quatro vértices cada, e o efeito é a diferença entre as médias dos dois grupos." width="80%" />
+<p class="caption">(\#fig:cubo-tripla)A interação tripla ABC: os oito vértices se dividem em dois tetraedros entrelaçados, de quatro vértices cada, e o efeito é a diferença entre as médias dos dois grupos.</p>
+</div>
 
 Neste sub-desenho real, a interação tripla ($8.91$) já é **maior em
 magnitude** do que qualquer um dos seis efeitos principais e duplos — um preview exato do que a
@@ -577,6 +610,11 @@ $3\times3\times3=27$ combinações, cada uma executada em duas injeções indepe
 (repetições), 54 corridas ao todo. A resposta é a proporção do composto recuperado.
 </div>
 ```
+
+As 27 combinações de viscosidade, salinidade e tempo foram todas rodadas, duas vezes cada. Num
+histórico de produção, os operadores ajustam o tempo conforme a viscosidade da carga, e as três
+variáveis viriam correlacionadas; as conclusões sobre aditividade (nenhuma interação
+significativa) só são possíveis porque o desenho cruzou os fatores.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — ANOVA do fatorial 3×3×3 com repetição</div>
@@ -769,7 +807,7 @@ médias marginais da Tabela acima seria enganoso? O que deveria ser reportado no
 <li>O desenho usa duas injeções por combinação de níveis (repetição verdadeira, não subamostragem —
 ver a seção sobre unidades experimentais e amostrais do Capítulo 1). O que mudaria na análise, e por que ela deixaria de ser válida, se
 houvesse apenas uma corrida por combinação?</li>
-<li>Uma equipe de produto testando cor do botão × layout × texto do CTA sobre a taxa de conversão
+<li>Uma equipe de produto testando cor do botão × layout × texto do CTA (<em>call to action</em>, o botão que convida à ação) sobre a taxa de conversão
 está, estruturalmente, no mesmo desenho A×B×C. Que cuidado adicional um teste A/B/n online exige
 que um experimento de bancada, como este, controla mais facilmente (aleatorização, ausência de
 interferência entre unidades)?</li>
@@ -799,7 +837,7 @@ com $\rho_k$ o efeito fixo do $k$-ésimo bloco ($\sum_k \rho_k = 0$) e a suposi�
 bloco **não interage** com os fatores de tratamento (a mesma suposição de aditividade do
 delineamento em blocos completos aleatorizados do Capítulo 4). Tratar cada combinação de
 tratamento do fatorial como uma "unidade de tratamento" única e blocá-la exatamente como no
-Capítulo 4 é a extensão natural do DBCA a mais de um fator [@oehlert2010first]. A soma de quadrados
+Capítulo 4 é a extensão natural do delineamento em blocos completos aleatorizados (DBCA) a mais de um fator [@oehlert2010first]. A soma de quadrados
 do erro perde $r-1$ graus de liberdade, que passam a ser explicados pelo termo de bloco:
 
 ```{=html}
@@ -866,6 +904,99 @@ ingênuo, até aumentou ligeiramente) o quadrado médio do erro, confirmando num
 visualmente, que os três blocos de terreno deste experimento específico não carregavam heterogeneidade
 suficiente para compensar os graus de liberdade gastos com eles.
 
+## Controlado × não controlado: fatores que andam juntos {#cnc-cap5}
+
+Um fatorial é, antes de tudo, uma decisão sobre **quais combinações de níveis serão observadas**: o
+pesquisador garante que cada nível de $A$ apareça com cada nível de $B$, o mesmo número de vezes.
+Nos dados que um processo industrial produz sozinho, isso quase nunca acontece. Os operadores têm
+hábitos (usam temperatura alta com o catalisador novo, baixa com o antigo), e as combinações "fora
+do hábito" são raras ou inexistentes. O problema não é só de viés, como nos capítulos anteriores:
+é de **identificabilidade e precisão** da interação.
+
+**Por que o fatorial balanceado é o melhor possível.** No modelo de médias de célula do $2\times 2$,
+a interação é o contraste $\theta = \mu_{11} - \mu_{12} - \mu_{21} + \mu_{22}$, estimado por
+$\hat\theta = \bar y_{11} - \bar y_{12} - \bar y_{21} + \bar y_{22}$, com
+$$
+\text{Var}(\hat\theta) = \sigma^2\left(\frac{1}{n_{11}} + \frac{1}{n_{12}} + \frac{1}{n_{21}} + \frac{1}{n_{22}}\right).
+$$
+Com o total $N = \sum n_{ij}$ fixo, a desigualdade entre as médias aritmética e harmônica dá
+$\sum_{ij} 1/n_{ij} \ge 16/N$, com igualdade se e somente se $n_{ij} = N/4$ para todo $ij$. O
+fatorial balanceado **minimiza** a variância da interação entre todas as alocações com o mesmo
+número de corridas; qualquer concentração de corridas numa diagonal a aumenta, e uma célula vazia
+($n_{ij}=0$) torna $\theta$ **não estimável**: nenhuma combinação linear das observações tem
+esperança $\theta$ (Seção \@ref(estimabilidade) do Capítulo 2).
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Processo químico: temperatura × catalisador em 24 corridas</strong><br>
+<strong>Planejado:</strong> um fatorial 2×2 com 6 corridas em cada combinação.
+<strong>Não controlado:</strong> 24 registros do histórico do processo, em que os operadores
+seguiram o hábito com probabilidade p (a fração de corridas "na diagonal": temperatura alta com
+catalisador novo ou baixa com antigo). Com p = 50% não há hábito nenhum; com p = 95%, quase toda
+corrida segue o hábito. Para cada p, sorteamos 5.000 históricos e registramos (i) se alguma
+combinação ficou sem corrida e (ii) quanto a variância da interação aumentou em relação ao fatorial.
+</div>
+```
+
+
+``` r
+celulas_cap5()       # um histórico típico com p = 85%, ao lado do fatorial planejado
+```
+
+```
+## # A tibble: 4 × 4
+##   Temperatura Catalisador `Planejado (fatorial)` `Registros de processo`
+##   <chr>       <chr>                        <dbl>                   <int>
+## 1 Baixa       Antigo                           6                       9
+## 2 Baixa       Novo                             6                       0
+## 3 Alta        Antigo                           6                       2
+## 4 Alta        Novo                             6                      13
+```
+
+
+``` r
+cnc5 <- cnc_cap5()
+cnc5
+```
+
+```
+## # A tibble: 6 × 4
+##   p_diag prop_vazia razao_mediana razao_q90
+##    <dbl>      <dbl>         <dbl>     <dbl>
+## 1   0.5      0.003           1.12      1.40
+## 2   0.6      0.0082          1.15      1.5 
+## 3   0.7      0.0424          1.35      2.19
+## 4   0.8      0.154           1.8       2.54
+## 5   0.9      0.501           2.54      3.28
+## 6   0.95     0.794           3.27      3.29
+```
+
+<div class="figure" style="text-align: center">
+<img src="05-fatoriais_files/figure-html/cnc-cap5-graf-1.png" alt="Históricos de processo com 24 corridas, em função da fração p de corridas que seguem o hábito dos operadores. Esquerda: fração dos históricos em que alguma combinação temperatura × catalisador não tem nenhuma corrida, e a interação não pode ser estimada. Direita: entre os históricos em que ela pode, a variância mediana da interação dividida pela do fatorial planejado (linha tracejada azul = 1). Com p = 90%, metade dos históricos não estima a interação, e a outra metade a estima com 2,5 vezes a variância." width="80%" />
+<p class="caption">(\#fig:cnc-cap5-graf)Históricos de processo com 24 corridas, em função da fração p de corridas que seguem o hábito dos operadores. Esquerda: fração dos históricos em que alguma combinação temperatura × catalisador não tem nenhuma corrida, e a interação não pode ser estimada. Direita: entre os históricos em que ela pode, a variância mediana da interação dividida pela do fatorial planejado (linha tracejada azul = 1). Com p = 90%, metade dos históricos não estima a interação, e a outra metade a estima com 2,5 vezes a variância.</p>
+</div>
+
+O histórico típico mostrado acima tem uma combinação **sem nenhuma corrida**: ninguém nunca rodou
+temperatura baixa com o catalisador novo. Esse banco de dados não diz nada sobre a interação, por
+mais corridas que acumule do mesmo jeito; e, como a Seção \@ref(tipos-sq) mostrou, mesmo quando
+todas as células têm alguma corrida, o desbalanceamento faz as somas de quadrados de tipo I, II e
+III discordarem, porque as colunas de $A$, $B$ e $AB$ deixam de ser ortogonais. Planejar o fatorial
+resolve as duas coisas de uma vez. E o sorteio da **ordem** das 24 corridas, que todo fatorial
+deve ter, protege contra o que o balanceamento não protege: uma deriva do equipamento ao longo do
+dia, que nos registros históricos andaria junto com o hábito dos operadores de cada turno.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>Com N = 24 corridas, uma célula com só 3 corridas e as outras três com 7 cada, calcule a variância relativa da interação em relação ao fatorial balanceado. Que lição
+isso dá para quem "completa" um histórico com poucas corridas novas?</li>
+<li>Os operadores usam temperatura alta com o catalisador novo porque acreditam que a combinação
+funciona melhor. Por que essa crença, mesmo que correta, impede os dados históricos de confirmá-la?</li>
+</ol>
+</div>
+```
+
 ## Resumo do capítulo
 
 - Cruzar fatores em um arranjo fatorial detecta **interação** — algo que nenhuma sequência de
@@ -882,3 +1013,8 @@ O Capítulo 6 aprofunda o caso especial (e extremamente comum na prática) em qu
 têm exatamente dois níveis — os fatoriais $2^k$ — e as técnicas específicas para analisá-los sem
 repetição, confundi-los em blocos e fracioná-los [@finney1945fractional] quando o número de
 fatores é grande demais para rodar o fatorial completo.
+- **Controlado × não controlado:** o fatorial controla o cruzamento dos fatores, e
+  $\sum_{ij}1/n_{ij}\ge 16/N$ mostra que o balanceamento minimiza a variância da interação. Nos
+  registros de processo, os fatores andam juntos, células ficam vazias e a interação deixa de ser
+  estimável.
+

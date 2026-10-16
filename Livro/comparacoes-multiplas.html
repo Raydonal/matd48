@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -456,14 +491,85 @@ de perguntas é pequeno e conhecido antes da coleta de dados. Mas frequentemente
 <strong>todos os pares de médias</strong>, ou comparar cada tratamento contra um grupo controle, sem ter
 decidido de antemão exatamente quais comparações importam. Fazer isso com testes <span class="math inline">\(t\)</span> repetidos,
 um por par, é perigoso: com <span class="math inline">\(t=4\)</span> grupos há <span class="math inline">\(\binom{4}{2}=6\)</span> comparações possíveis, e mesmo que
-<span class="math inline">\(H_0\)</span> seja verdadeira em todas elas, a probabilidade de pelo menos um falso positivo ao nível
-nominal <span class="math inline">\(\alpha=0{,}05\)</span> por teste é</p>
+<span class="math inline">\(H_0\)</span> seja verdadeira em todas elas, se os seis testes fossem independentes a probabilidade de pelo
+menos um falso positivo ao nível nominal <span class="math inline">\(\alpha=0{,}05\)</span> por teste seria</p>
 <p><span class="math display">\[P(\text{pelo menos 1 falso positivo}) = 1 - (1-\alpha)^{6} \approx 1 - 0{,}95^6 \approx 0{,}26,\]</span></p>
-<p>mais de cinco vezes o nível nominal. Essa inflação da <strong>taxa de erro por família</strong>
-(<em>family-wise error rate</em>, FWER) é o problema que os procedimentos a seguir resolvem, cada um
-com um compromisso diferente entre conservadorismo e poder.</p>
-<div id="data-snooping" class="section level3 hasAnchor" number="3.7.1">
-<h3><span class="header-section-number">3.7.1</span> O perigo do “data snooping”<a href="comparacoes-multiplas.html#data-snooping" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>mais de cinco vezes o nível nominal. Como os seis testes compartilham médias e o mesmo <span class="math inline">\(QME\)</span>, eles
+não são independentes e o valor exato é um pouco menor — a simulação da Seção
+<a href="comparacoes-multiplas.html#fwer-simulada">3.7.17</a> dá cerca de 19% —, mas a ordem de grandeza do problema é essa. Duas taxas de
+erro precisam ser distinguidas:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Taxa de erro</th>
+<th>Definição</th>
+<th>Controlada por</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>por comparação</td>
+<td><span class="math inline">\(P(\text{erro tipo I em um teste})\)</span></td>
+<td>LSD (<em>least significant difference</em>) de Fisher, testes <span class="math inline">\(t\)</span> repetidos</td>
+</tr>
+<tr class="even">
+<td>por família (FWER, <em>family-wise error rate</em>)</td>
+<td><span class="math inline">\(P(\text{pelo menos 1 erro tipo I na família})\)</span></td>
+<td>Tukey, Dunnett, Bonferroni, Scheffé</td>
+</tr>
+</tbody>
+</table>
+<p>Essa inflação da <strong>taxa de erro por família</strong> (<em>family-wise error rate</em>, FWER) é o problema que os
+procedimentos a seguir resolvem, cada um com um compromisso diferente entre conservadorismo e
+poder <span class="citation">(<a href="#ref-hsu1996multiple">Hsu, 1996</a>)</span>.</p>
+<div id="fwer" class="section level3 hasAnchor" number="3.7.1">
+<h3><span class="header-section-number">3.7.1</span> O que significa controlar a taxa de erro por família<a href="comparacoes-multiplas.html#fwer" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A sigla merece uma explicação sem fórmulas antes de qualquer procedimento. A <strong>família</strong> é o
+conjunto de todas as comparações que serão feitas e relatadas sobre um experimento — no exemplo de
+scripts, com a pergunta “quais pares diferem?”, os seis pares. A família <strong>erra</strong> quando pelo menos
+uma dessas comparações declara uma diferença que não existe; não importa qual, nem quantas. O FWER
+é a probabilidade desse evento,</p>
+<p><span class="math display">\[\text{FWER} = P(A_1 \cup A_2 \cup \cdots \cup A_m), \qquad A_k = \{\text{falso positivo na } k\text{-ésima comparação}\}.\]</span></p>
+<p>Uma analogia ajuda: uma casa com seis cômodos, cada um com um detector de fumaça que dispara à toa
+em 5% das noites. Cada detector, isoladamente, é bom; mas a chance de a casa ser acordada sem
+incêndio numa noite qualquer é de cerca de <span class="math inline">\(1-0{,}95^6 \approx 26\%\)</span>. <strong>Controlar o FWER em 5%</strong> é
+garantir que, em 95% dos experimentos, <strong>nenhuma</strong> das comparações relatadas seja um alarme falso —
+uma garantia sobre o relatório inteiro, não sobre cada linha dele.</p>
+<p>A Figura <a href="comparacoes-multiplas.html#fig:c3c-fwer-grade">3.21</a> torna isso visível. Simulamos 100 experimentos com o desenho do
+exemplo (<span class="math inline">\(t=4\)</span>, <span class="math inline">\(n=10\)</span>, <span class="math inline">\(\sigma=70\)</span> ms) em que as quatro médias verdadeiras são <strong>iguais</strong>, e em
+cada um comparamos os seis pares por testes <span class="math inline">\(t\)</span> ao nível de 5% e por Tukey.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-fwer-grade"></span>
+<img src="03-dca_files/figure-html/c3c-fwer-grade-1.png" alt="Cem experimentos simulados sem efeito nenhum (linhas) e os seis pares comparados em cada um (colunas). Vermelho: par declarado diferente (falso positivo); rosa: os demais pares de um experimento que teve algum falso positivo. Esquerda: seis testes t, cada um a 5%; direita: Tukey." width="100%" />
+<p class="caption">
+Figura 3.21: Cem experimentos simulados sem efeito nenhum (linhas) e os seis pares comparados em cada um (colunas). Vermelho: par declarado diferente (falso positivo); rosa: os demais pares de um experimento que teve algum falso positivo. Esquerda: seis testes t, cada um a 5%; direita: Tukey.
+</p>
+</div>
+<p>Cada <strong>casa</strong> vermelha é rara — cerca de 5% das casas da esquerda, como prometido por cada teste
+<span class="math inline">\(t\)</span>. Mas cada <strong>linha</strong> com alguma casa vermelha não é: 17 dos 100 experimentos produziriam
+pelo menos uma “descoberta” falsa com testes <span class="math inline">\(t\)</span> (o valor esperado é perto de 20%), contra
+7 com Tukey (esperado: 5%). E o problema cresce rapidamente com o número de tratamentos
+(Figura <a href="comparacoes-multiplas.html#fig:c3c-fwer-curva">3.22</a>): com 10 tratamentos e 45 pares, achar alguma diferença por acaso é
+quase certo.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-fwer-curva"></span>
+<img src="03-dca_files/figure-html/c3c-fwer-curva-1.png" alt="Probabilidade de pelo menos um falso positivo ao fazer todos os pares com testes t a 5%, tratados como independentes, em função do número de tratamentos; o rótulo dá o número de pares e a linha tracejada marca 5%." width="75%" />
+<p class="caption">
+Figura 3.22: Probabilidade de pelo menos um falso positivo ao fazer todos os pares com testes t a 5%, tratados como independentes, em função do número de tratamentos; o rótulo dá o número de pares e a linha tracejada marca 5%.
+</p>
+</div>
+<p>Há dois sentidos de “controlar”. O controle <strong>fraco</strong> vale só quando <strong>todas</strong> as médias são
+iguais; o controle <strong>forte</strong> vale qualquer que seja o padrão de médias iguais e diferentes — que é
+o caso relevante, porque, depois de rejeitar o <span class="math inline">\(F\)</span> global, sabemos justamente que nem todas são
+iguais. Tukey, Dunnett, Bonferroni e Scheffé controlam o FWER no sentido forte; o LSD protegido e o
+SNK (Student-Newman-Keuls), só no fraco; o Duncan, em nenhum dos dois. A Seção <a href="comparacoes-multiplas.html#fwer-simulada">3.7.17</a> mostra isso numa
+simulação com os dois cenários.</p>
+</div>
+<div id="data-snooping" class="section level3 hasAnchor" number="3.7.2">
+<h3><span class="header-section-number">3.7.2</span> O perigo do “data snooping”<a href="comparacoes-multiplas.html#data-snooping" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Antes de listar os procedimentos, vale nomear explicitamente o problema mais sutil que eles
 resolvem — não apenas “muitos testes <span class="math inline">\(t\)</span>”, mas a prática de decidir <strong>qual</strong> comparação fazer
 depois de já ter visto os dados. O método científico usual segue a ordem hipótese <span class="math inline">\(\to\)</span>
@@ -488,45 +594,140 @@ de Scheffé, a seguir, é a resposta formal a essa lacuna: ele protege simultane
 espaço infinito de contrastes lineares possíveis, de modo que, mesmo que o pesquisador escolha o
 contraste mais favorável depois de olhar os dados, o FWER continua controlado em <span class="math inline">\(\alpha\)</span>.</p>
 </div>
-<div id="método-de-scheffé" class="section level3 hasAnchor" number="3.7.2">
-<h3><span class="header-section-number">3.7.2</span> Método de Scheffé<a href="comparacoes-multiplas.html#método-de-scheffé" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="dms" class="section level3 hasAnchor" number="3.7.3">
+<h3><span class="header-section-number">3.7.3</span> A estrutura comum: a diferença mínima significativa<a href="comparacoes-multiplas.html#dms" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Com dados balanceados (<span class="math inline">\(n_i = n\)</span>), quase todos os procedimentos par a par têm a mesma forma:
+declaram <span class="math inline">\(\mu_i \ne \mu_j\)</span> quando a diferença observada <span class="math inline">\(|\bar y_{i\cdot} - \bar y_{j\cdot}|\)</span> supera
+uma <strong>diferença mínima significativa</strong> (DMS), que é um multiplicador vezes um erro-padrão. O que
+distingue os procedimentos é apenas o multiplicador — e, com ele, a garantia oferecida. Com
+<span class="math inline">\(\nu = gl_{\text{erro}}\)</span>:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Procedimento</th>
+<th>DMS</th>
+<th>Controla</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LSD de Fisher</td>
+<td><span class="math inline">\(t_{\alpha/2,\nu}\sqrt{2QME/n}\)</span></td>
+<td>taxa por comparação</td>
+</tr>
+<tr class="even">
+<td>Bonferroni (<span class="math inline">\(m\)</span> comparações)</td>
+<td><span class="math inline">\(t_{\alpha/(2m),\nu}\sqrt{2QME/n}\)</span></td>
+<td>FWER, de forma conservadora</td>
+</tr>
+<tr class="odd">
+<td>Tukey HSD (<em>honestly significant difference</em>)</td>
+<td><span class="math inline">\(q_{\alpha;\,t,\nu}\sqrt{QME/n}\)</span></td>
+<td>FWER, todos os pares</td>
+</tr>
+<tr class="even">
+<td>Dunnett</td>
+<td><span class="math inline">\(d_{\alpha;\,t-1,\nu}\sqrt{2QME/n}\)</span></td>
+<td>FWER, cada tratamento vs. controle</td>
+</tr>
+<tr class="odd">
+<td>Scheffé</td>
+<td><span class="math inline">\(\sqrt{(t-1)F_{\alpha;\,t-1,\nu}}\,\sqrt{2QME/n}\)</span></td>
+<td>FWER, todo contraste</td>
+</tr>
+<tr class="even">
+<td>SNK</td>
+<td><span class="math inline">\(q_{\alpha;\,p,\nu}\sqrt{QME/n}\)</span>, <span class="math inline">\(p\)</span> = amplitude</td>
+<td>FWER só sob <span class="math inline">\(H_0\)</span> completa</td>
+</tr>
+<tr class="odd">
+<td>Duncan</td>
+<td><span class="math inline">\(q_{\alpha_p;\,p,\nu}\sqrt{QME/n}\)</span>, <span class="math inline">\(\alpha_p = 1-(1-\alpha)^{p-1}\)</span></td>
+<td>não controla o FWER</td>
+</tr>
+</tbody>
+</table>
+<p>Ver os procedimentos como <strong>réguas</strong> de comprimentos diferentes, aplicadas às mesmas diferenças, é
+a forma mais útil de compará-los — e é o que faremos com os dados na Seção <a href="comparacoes-multiplas.html#reguas-dados">3.7.13</a>.</p>
+</div>
+<div id="lsd-de-fisher" class="section level3 hasAnchor" number="3.7.4">
+<h3><span class="header-section-number">3.7.4</span> LSD de Fisher<a href="comparacoes-multiplas.html#lsd-de-fisher" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>O procedimento mais antigo é a <em>least significant difference</em> de Fisher <span class="citation">(<a href="#ref-fisher1935design">Fisher, 1935b</a>)</span>: o
+teste <span class="math inline">\(t\)</span> de duas médias, usando o <span class="math inline">\(QME\)</span> da ANOVA como estimativa de <span class="math inline">\(\sigma^2\)</span> (o que dá mais
+graus de liberdade que um teste <span class="math inline">\(t\)</span> com só os dois grupos). Controla apenas a taxa de erro <strong>por
+comparação</strong>. Na versão <strong>protegida</strong>, o LSD só é aplicado se o <span class="math inline">\(F\)</span> global rejeitar <span class="math inline">\(H_0\)</span>; isso
+controla o FWER quando <strong>todas</strong> as médias são iguais (porque então só se chega aos pares com
+probabilidade <span class="math inline">\(\alpha\)</span>), mas não quando apenas algumas são — um ponto que a simulação da Seção
+<a href="comparacoes-multiplas.html#fwer-simulada">3.7.17</a> torna concreto.</p>
+</div>
+<div id="método-de-scheffé" class="section level3 hasAnchor" number="3.7.5">
+<h3><span class="header-section-number">3.7.5</span> Método de Scheffé<a href="comparacoes-multiplas.html#método-de-scheffé" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Controla o FWER para <strong>qualquer</strong> contraste que se queira testar, incluindo contrastes definidos
 <em>depois</em> de examinar os dados (comparações não planejadas, ou “garimpadas”, na linha da Seção
-<a href="comparacoes-multiplas.html#data-snooping">3.7.1</a>) — é o procedimento mais geral e, por isso, o mais conservador. Rejeita-se
+<a href="comparacoes-multiplas.html#data-snooping">3.7.2</a>) — é o procedimento mais geral e, por isso, o mais conservador. Rejeita-se
 <span class="math inline">\(H_0: L=0\)</span> se</p>
 <p><span class="math display">\[\frac{SQ_L}{QME} &gt; (t-1)\, F_{\alpha;\, t-1,\, gl_{\text{erro}}}.\]</span></p>
-<p>O fator <span class="math inline">\((t-1)\)</span> multiplicando o valor crítico de <span class="math inline">\(F\)</span> é o preço pago por proteger simultaneamente
-uma família infinita de contrastes possíveis <span class="citation">(<a href="#ref-scheffe1959analysis">Scheffé, 1959</a>)</span> — e é exatamente esse fator
-extra que torna Scheffé a “licença para bisbilhotar os dados” de forma estatisticamente honesta:
-qualquer contraste, planejado ou não, só é declarado significativo se for grande o bastante para
-não ser apenas o maior entre muitos desvios aleatórios possíveis.</p>
+<p>De onde vem o fator <span class="math inline">\((t-1)\)</span>? Para dados balanceados e qualquer contraste (<span class="math inline">\(\sum c_i = 0\)</span>), a
+desigualdade de Cauchy-Schwarz dá</p>
+<p><span class="math display">\[\hat L^2 = \Big(\sum_{i=1}^t c_i(\bar y_{i\cdot} - \bar y_{\cdot\cdot})\Big)^2 \le \sum_{i=1}^t c_i^2 \cdot \sum_{i=1}^t (\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2 \quad\Longrightarrow\quad SQ_L = \frac{n\hat L^2}{\sum_i c_i^2} \le n\sum_{i=1}^t(\bar y_{i\cdot}-\bar y_{\cdot\cdot})^2 = SQ_{\text{Trat}},\]</span></p>
+<p>em que a primeira igualdade usa <span class="math inline">\(\sum c_i = 0\)</span> para subtrair <span class="math inline">\(\bar y_{\cdot\cdot}\)</span> de graça. Logo, o
+maior <span class="math inline">\(F\)</span> de contraste possível — o do contraste mais favorável, escolhido depois de ver os dados —
+é</p>
+<p><span class="math display">\[\max_{\mathbf c}\ \frac{SQ_L}{QME} = \frac{SQ_{\text{Trat}}}{QME} = (t-1)\,F_{\text{obs}},\]</span></p>
+<p>atingido pelo contraste com <span class="math inline">\(c_i \propto \bar y_{i\cdot} - \bar y_{\cdot\cdot}\)</span>. (Sob uma hipótese
+geral, aplica-se o mesmo argumento a <span class="math inline">\(\bar y_{i\cdot} - \mu_i\)</span>.) Comparar cada <span class="math inline">\(SQ_L/QME\)</span> com
+<span class="math inline">\((t-1)F_{\alpha;t-1,\nu}\)</span> equivale, portanto, a exigir que o contraste supere o que o <strong>maior</strong> de
+todos os contrastes atingiria por acaso com probabilidade <span class="math inline">\(\alpha\)</span> — e o FWER fica exatamente em
+<span class="math inline">\(\alpha\)</span> sobre uma família infinita <span class="citation">(<a href="#ref-scheffe1959analysis">Scheffé, 1959</a>)</span>. Duas consequências: nenhum contraste é
+significativo por Scheffé se o <span class="math inline">\(F\)</span> global não for (o Scheffé é o teste <span class="math inline">\(F\)</span> global “desdobrado” em
+direções); e é esse fator extra que torna Scheffé a “licença para bisbilhotar os dados” de forma
+estatisticamente honesta.</p>
 </div>
-<div id="método-de-bonferroni" class="section level3 hasAnchor" number="3.7.3">
-<h3><span class="header-section-number">3.7.3</span> Método de Bonferroni<a href="comparacoes-multiplas.html#método-de-bonferroni" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="método-de-bonferroni" class="section level3 hasAnchor" number="3.7.6">
+<h3><span class="header-section-number">3.7.6</span> Método de Bonferroni<a href="comparacoes-multiplas.html#método-de-bonferroni" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>O método de Bonferroni <span class="citation">(<a href="#ref-bonferroni1936">1936</a>)</span> divide o nível de significância global <span class="math inline">\(\alpha\)</span>
-igualmente entre as <span class="math inline">\(m\)</span> comparações planejadas:
-cada teste individual é avaliado contra <span class="math inline">\(\alpha/m\)</span> (equivalentemente, cada p-valor é multiplicado
-por <span class="math inline">\(m\)</span>). É simples, aplica-se a qualquer conjunto pré-especificado de comparações (não só
-pares), mas é conservador quando <span class="math inline">\(m\)</span> é grande, perdendo poder.</p>
+igualmente entre as <span class="math inline">\(m\)</span> comparações planejadas: cada teste individual é avaliado contra <span class="math inline">\(\alpha/m\)</span>
+(equivalentemente, cada p-valor é multiplicado por <span class="math inline">\(m\)</span>). A justificativa é a desigualdade de Boole:
+se <span class="math inline">\(A_k\)</span> é o evento “erro tipo I na <span class="math inline">\(k\)</span>-ésima comparação”,</p>
+<p><span class="math display">\[\text{FWER} = P\Big(\bigcup_{k=1}^m A_k\Big) \le \sum_{k=1}^m P(A_k) = m\cdot\frac{\alpha}{m} = \alpha.\]</span></p>
+<p>É simples, aplica-se a qualquer conjunto pré-especificado de comparações (não só pares), mas é
+conservador quando <span class="math inline">\(m\)</span> é grande ou quando as comparações são correlacionadas — a desigualdade de
+Boole é estrita sempre que os eventos <span class="math inline">\(A_k\)</span> se intersectam, o que ocorre sempre que as comparações
+compartilham médias e o <span class="math inline">\(QME\)</span>.</p>
 </div>
-<div id="tukey-hsd-honestly-significant-difference" class="section level3 hasAnchor" number="3.7.4">
-<h3><span class="header-section-number">3.7.4</span> Tukey HSD (<em>honestly significant difference</em>)<a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="tukey-hsd-honestly-significant-difference" class="section level3 hasAnchor" number="3.7.7">
+<h3><span class="header-section-number">3.7.7</span> Tukey HSD (<em>honestly significant difference</em>)<a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Desenhado especificamente para <strong>todas as comparações par a par</strong> entre <span class="math inline">\(t\)</span> médias, usa a
-distribuição da <strong>amplitude estudentizada</strong> (<em>studentized range</em>) em vez da distribuição <span class="math inline">\(t\)</span>, o
-que o torna mais poderoso que Bonferroni para essa família específica de comparações
-<span class="citation">(<a href="#ref-tukey1949comparing">Tukey, 1949a</a>)</span>. É o procedimento padrão quando o objetivo é “comparar tudo com tudo” sem
-um grupo controle privilegiado.</p>
+distribuição da <strong>amplitude estudentizada</strong> (<em>studentized range</em>) em vez da distribuição <span class="math inline">\(t\)</span>
+<span class="citation">(<a href="#ref-tukey1949comparing">Tukey, 1949a</a>)</span>. Com dados balanceados, a estatística</p>
+<p><span class="math display">\[Q = \frac{\max_i(\bar y_{i\cdot}-\mu_i) - \min_i(\bar y_{i\cdot}-\mu_i)}{\sqrt{QME/n}} \sim q_{t,\nu}\]</span></p>
+<p>tem distribuição tabelada (é a amplitude de <span class="math inline">\(t\)</span> normais independentes dividida por um desvio-padrão
+independente com <span class="math inline">\(\nu\)</span> gl). O argumento de Tukey é de uma linha: se a <strong>maior</strong> das <span class="math inline">\(\binom t2\)</span>
+diferenças padronizadas fica abaixo de <span class="math inline">\(q_{\alpha;t,\nu}\)</span>, todas as outras também ficam. Logo
+<span class="math inline">\(P(\text{nenhum falso positivo}) = P(Q \le q_{\alpha;t,\nu}) = 1-\alpha\)</span> — o FWER é <strong>exatamente</strong>
+<span class="math inline">\(\alpha\)</span> para a família de todos os pares. É por isso que Tukey é mais poderoso que Bonferroni
+nessa família: Bonferroni usa uma desigualdade, Tukey usa a distribuição exata do máximo. É o
+procedimento padrão quando o objetivo é “comparar tudo com tudo” sem um grupo controle
+privilegiado.</p>
 </div>
-<div id="comparação-com-um-grupo-controle-dunnett" class="section level3 hasAnchor" number="3.7.5">
-<h3><span class="header-section-number">3.7.5</span> Comparação com um grupo controle: Dunnett<a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="comparação-com-um-grupo-controle-dunnett" class="section level3 hasAnchor" number="3.7.8">
+<h3><span class="header-section-number">3.7.8</span> Comparação com um grupo controle: Dunnett<a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Quando o interesse não é comparar todos os pares, mas sim <strong>cada tratamento contra um único grupo
 controle</strong> (como “Nenhum” no exemplo de scripts), o número de comparações cai de <span class="math inline">\(\binom{t}{2}\)</span>
 para <span class="math inline">\(t-1\)</span>, e essas comparações são correlacionadas entre si (todas compartilham o mesmo grupo
-controle). O teste de Dunnett explora essa estrutura, sendo mais poderoso que Tukey ou Bonferroni
-para esse propósito específico <span class="citation">(<a href="#ref-dunnett1955multiple">Dunnett, 1955</a>)</span>.</p>
+controle; com <span class="math inline">\(n\)</span> iguais a correlação entre duas delas é <span class="math inline">\(1/2\)</span>). O teste de Dunnett usa a
+distribuição conjunta dessas <span class="math inline">\(t-1\)</span> estatísticas <span class="math inline">\(t\)</span> (uma <span class="math inline">\(t\)</span> multivariada) para obter o valor
+crítico <span class="math inline">\(d_{\alpha;t-1,\nu}\)</span>, sendo mais poderoso que Tukey ou Bonferroni para esse propósito
+específico <span class="citation">(<a href="#ref-dunnett1955multiple">Dunnett, 1955</a>)</span>. Admite também a versão <strong>unilateral</strong>, quando a pergunta tem
+direção (“o tratamento piora?”) — desde que a direção seja fixada no protocolo, antes dos dados.</p>
 </div>
-<div id="teste-de-amplitude-múltipla-de-duncan" class="section level3 hasAnchor" number="3.7.6">
-<h3><span class="header-section-number">3.7.6</span> Teste de amplitude múltipla de Duncan<a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="teste-de-amplitude-múltipla-de-duncan" class="section level3 hasAnchor" number="3.7.9">
+<h3><span class="header-section-number">3.7.9</span> Teste de amplitude múltipla de Duncan<a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Todos os procedimentos anteriores usam um <strong>único</strong> valor crítico para julgar qualquer par de
 médias. O teste de <strong>Duncan</strong> <span class="citation">(<a href="#ref-duncan1955multiple">Duncan, 1955</a>)</span> rompe com essa ideia: ordena as <span class="math inline">\(t\)</span> médias
 amostrais, <span class="math inline">\(\bar y_{(1)} \le \cdots \le \bar y_{(t)}\)</span>, e define a <strong>amplitude</strong> <span class="math inline">\(p\)</span> de uma
@@ -534,33 +735,935 @@ comparação como o número de médias ordenadas que ela abrange (<span class="m
 <span class="math inline">\(p=t\)</span> para a maior contra a menor). Para cada amplitude <span class="math inline">\(p = 2, \ldots, t\)</span>, calcula-se um valor
 crítico próprio — a <strong>amplitude mínima significativa</strong></p>
 <p><span class="math display">\[R_p = r_{\alpha,\,p,\,gl_{\text{erro}}} \sqrt{\frac{QME}{n}},\]</span></p>
-<p>em que <span class="math inline">\(r_{\alpha,p,\nu}\)</span> vem de uma tabela específica de Duncan (implementada, por exemplo, em
-<code>agricolae::duncan.test()</code>) e cresce com <span class="math inline">\(p\)</span>: <span class="math inline">\(R_2 &lt; R_3 &lt; \cdots &lt; R_t\)</span>. A diferença
-<span class="math inline">\(\bar y_{(j)} - \bar y_{(i)}\)</span> é declarada significativa se exceder <span class="math inline">\(R_{j-i+1}\)</span> — médias adjacentes
-(<span class="math inline">\(p=2\)</span>) só precisam superar o menor valor crítico da lista, enquanto a diferença entre a maior e a
-menor média precisa superar o maior.</p>
+<p>em que <span class="math inline">\(r_{\alpha,p,\nu} = q_{\alpha_p;\,p,\nu}\)</span> vem de uma tabela específica de Duncan
+(implementada, por exemplo, em <code>agricolae::duncan.test()</code>) e cresce com <span class="math inline">\(p\)</span>:
+<span class="math inline">\(R_2 &lt; R_3 &lt; \cdots &lt; R_t\)</span>. A diferença <span class="math inline">\(\bar y_{(j)} - \bar y_{(i)}\)</span> é declarada significativa se
+exceder <span class="math inline">\(R_{j-i+1}\)</span> — médias adjacentes (<span class="math inline">\(p=2\)</span>) só precisam superar o menor valor crítico da lista,
+enquanto a diferença entre a maior e a menor média precisa superar o maior.</p>
 <p>Essa escala móvel equivale a proteger cada amplitude <span class="math inline">\(p\)</span> com um nível <span class="math inline">\(\alpha_p = 1 - (1-\alpha)^{p-1}\)</span>, que <strong>cresce</strong> com <span class="math inline">\(p\)</span> em vez de permanecer fixo em <span class="math inline">\(\alpha\)</span> — ao contrário de
 Tukey, que usa o mesmo nível <span class="math inline">\(\alpha\)</span> para toda comparação par a par, qualquer que seja sua
-amplitude. Na prática, isso torna Duncan sistematicamente mais liberal (mais poder, mais
-comparações declaradas significativas) do que Tukey, mas ao custo de <strong>não controlar o FWER</strong> no
-nível nominal <span class="math inline">\(\alpha\)</span> para o conjunto de comparações como um todo — a taxa real de pelo menos um
-falso positivo na família de testes fica acima de <span class="math inline">\(\alpha\)</span>. Por essa razão, seu uso vem sendo
-desaconselhado na literatura em favor de procedimentos que controlam o FWER de forma rigorosa
-(Tukey para pares, Dunnett contra um controle); ainda assim, permanece comum em periódicos de
-ciências agrárias, o que torna sua interpretação correta — inclusive de suas limitações —
-relevante para quem for ler ou revisar esse tipo de trabalho.</p>
+amplitude. Com <span class="math inline">\(\alpha = 0{,}05\)</span> e <span class="math inline">\(t=4\)</span>, <span class="math inline">\(\alpha_4 = 1-0{,}95^3 \approx 0{,}143\)</span>: sob <span class="math inline">\(H_0\)</span>
+completa, a chance de o Duncan declarar <strong>alguma</strong> diferença é de 14%, não de 5%. Na prática, isso
+torna Duncan sistematicamente mais liberal (mais poder, mais comparações declaradas
+significativas) do que Tukey, mas ao custo de <strong>não controlar o FWER</strong> no nível nominal <span class="math inline">\(\alpha\)</span>
+para o conjunto de comparações como um todo. Por essa razão, seu uso vem sendo desaconselhado na
+literatura em favor de procedimentos que controlam o FWER de forma rigorosa (Tukey para pares,
+Dunnett contra um controle); ainda assim, permanece comum em periódicos de ciências agrárias, o que
+torna sua interpretação correta — inclusive de suas limitações — relevante para quem for ler ou
+revisar esse tipo de trabalho.</p>
 </div>
-<div id="agrupamento-de-tratamentos-compact-letter-display" class="section level3 hasAnchor" number="3.7.7">
-<h3><span class="header-section-number">3.7.7</span> Agrupamento de tratamentos (<em>compact letter display</em>)<a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Uma forma compacta de reportar o resultado de comparações múltiplas par a par é atribuir letras
-às médias: tratamentos que compartilham pelo menos uma letra <strong>não</strong> diferem significativamente
-entre si; tratamentos sem letra em comum diferem. Essa representação (<em>compact letter display</em>,
-CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.</p>
+<div id="student-newman-keuls-snk" class="section level3 hasAnchor" number="3.7.10">
+<h3><span class="header-section-number">3.7.10</span> Student-Newman-Keuls (SNK)<a href="comparacoes-multiplas.html#student-newman-keuls-snk" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>O SNK <span class="citation">(<a href="#ref-keuls1952use">Keuls, 1952</a>; <a href="#ref-newman1939distribution">Newman, 1939</a>)</span> tem a mesma estrutura em etapas de Duncan, mas usa
+o nível <span class="math inline">\(\alpha\)</span> fixo em cada amplitude: <span class="math inline">\(R_p = q_{\alpha;\,p,\nu}\sqrt{QME/n}\)</span>. Para <span class="math inline">\(p = t\)</span> ele
+coincide com Tukey; para <span class="math inline">\(p=2\)</span>, com Duncan e com o LSD. Fica, portanto, entre os dois. O SNK
+controla o FWER sob <span class="math inline">\(H_0\)</span> <strong>completa</strong> (todas as médias iguais), porque então tudo depende do
+primeiro teste, o da amplitude <span class="math inline">\(t\)</span>, feito ao nível <span class="math inline">\(\alpha\)</span>. Mas sob <span class="math inline">\(H_0\)</span> <strong>parcial</strong> — algumas
+médias iguais, outras não — os pares de médias iguais que ficam vizinhos depois do ordenamento são
+testados, cada um, ao nível <span class="math inline">\(\alpha\)</span>, e o FWER cresce com o número desses pares.</p>
+</div>
+<div id="duncan-passo-a-passo" class="section level3 hasAnchor" number="3.7.11">
+<h3><span class="header-section-number">3.7.11</span> O teste de Duncan passo a passo, com dados reais<a href="comparacoes-multiplas.html#duncan-passo-a-passo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A descrição do Duncan acima é compacta demais para quem o vê pela primeira vez. Esta subseção o
+executa inteiro, passo a passo e com gráficos, sobre os dados <strong>reais</strong> de fertilizantes em feijão
+da Seção <a href="dca-uma-via.html#dca-feijao">3.2.7</a> — escolhidos porque, neles, Duncan e Tukey <strong>discordam</strong>, o que torna
+visível o efeito de cada escolha do procedimento. Em uma frase, o Duncan <strong>ordena as médias e
+compara cada par com uma régua que depende de quantas médias o par abrange, começando pelo par
+mais afastado e só descendo enquanto as comparações maiores forem significativas.</strong></p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3c-feij-dados">Tabela 3.18: </span>Produção de feijão (kg) nas 20 parcelas, por fertilizante
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Parcela
+</th>
+<th style="text-align:right;">
+F1
+</th>
+<th style="text-align:right;">
+F2
+</th>
+<th style="text-align:right;">
+F3
+</th>
+<th style="text-align:right;">
+F4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5.91
+</td>
+<td style="text-align:right;">
+6.81
+</td>
+<td style="text-align:right;">
+1.69
+</td>
+<td style="text-align:right;">
+8.31
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.76
+</td>
+<td style="text-align:right;">
+7.95
+</td>
+<td style="text-align:right;">
+5.69
+</td>
+<td style="text-align:right;">
+8.46
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4.04
+</td>
+<td style="text-align:right;">
+6.75
+</td>
+<td style="text-align:right;">
+7.18
+</td>
+<td style="text-align:right;">
+8.51
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5.37
+</td>
+<td style="text-align:right;">
+7.57
+</td>
+<td style="text-align:right;">
+5.70
+</td>
+<td style="text-align:right;">
+9.59
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5.68
+</td>
+<td style="text-align:right;">
+7.51
+</td>
+<td style="text-align:right;">
+7.47
+</td>
+<td style="text-align:right;">
+11.07
+</td>
+</tr>
+</tbody>
+</table>
+<p>A ANOVA da Seção <a href="dca-uma-via.html#dca-feijao">3.2.7</a> deu <span class="math inline">\(F = 9{,}21\)</span> com (3, 16) gl e
+<span class="math inline">\(QME = 1{,}982\)</span>. As médias são F1 = 4,952, F2 = 7,318,
+F3 = 5,546 e F4 = 9,188 kg, e o erro-padrão de uma média é
+<span class="math inline">\(\sqrt{QME/n} = \sqrt{1{,}982/5} = 0{,}630\)</span> kg — a unidade em que todas as réguas desta
+subseção são expressas.</p>
+<p><strong>Passo 1 — ordenar.</strong> A Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-regua">3.23</a> põe as quatro médias no eixo da produção,
+em ordem crescente, com a posição de cada uma entre parênteses. A ordem não é a dos rótulos: F3 vem
+antes de F2. As distâncias entre vizinhas são 0,59 (F3 − F1),
+1,77 (F2 − F3) e 1,87 kg (F4 − F2).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-regua"></span>
+<img src="03-dca_files/figure-html/c3c-feij-regua-1.png" alt="As quatro médias de produção de feijão (kg) ordenadas no eixo da resposta; entre parênteses, a posição de cada uma na ordenação." width="90%" />
+<p class="caption">
+Figura 3.23: As quatro médias de produção de feijão (kg) ordenadas no eixo da resposta; entre parênteses, a posição de cada uma na ordenação.
+</p>
+</div>
+<p><strong>Passo 2 — contar a amplitude.</strong> A <strong>amplitude</strong> <span class="math inline">\(p\)</span> de um par é o número de médias ordenadas que
+ele abrange, incluindo as duas pontas. Na Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-arcos">3.24</a> cada par é um arco, com
+altura e cor dadas pela amplitude: o único par de amplitude 4 é F4 − F1 (maior contra menor); os de
+amplitude 3, F2 − F1 e F4 − F3, têm uma média entre as pontas; os três de amplitude 2 são vizinhos.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-arcos"></span>
+<img src="03-dca_files/figure-html/c3c-feij-arcos-1.png" alt="Os seis pares de médias como arcos sobre o eixo das médias ordenadas; altura e cor indicam a amplitude p do par (2: vizinhas; 3: uma média entre as pontas; 4: maior contra menor)." width="95%" />
+<p class="caption">
+Figura 3.24: Os seis pares de médias como arcos sobre o eixo das médias ordenadas; altura e cor indicam a amplitude p do par (2: vizinhas; 3: uma média entre as pontas; 4: maior contra menor).
+</p>
+</div>
+<p><strong>Por que a régua deveria crescer com <span class="math inline">\(p\)</span>.</strong> A Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-intuicao">3.25</a> responde com uma
+simulação: sorteamos <span class="math inline">\(p\)</span> médias <strong>sem efeito nenhum</strong> e medimos a distância entre a maior e a menor,
+em erros-padrão. Com mais médias, os extremos se afastam só por acaso; o percentil 95% de cada
+distribuição — 3,00, 3,65 e
+4,08 para <span class="math inline">\(p = 2, 3, 4\)</span> — é exatamente o valor tabelado
+<span class="math inline">\(q_{0,05;\,p,16}\)</span> da amplitude estudentizada. Daí a ideia dos procedimentos em etapas: exigir mais
+de um par que abrange mais médias, porque ele “tem mais chance” de parecer afastado sem ser.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-intuicao"></span>
+<img src="03-dca_files/figure-html/c3c-feij-intuicao-1.png" alt="Distribuição simulada da distância entre a maior e a menor de p médias, em erros-padrão, quando todas as médias verdadeiras são iguais (16 gl para o erro); as linhas tracejadas marcam o percentil 95% de cada distribuição." width="75%" />
+<p class="caption">
+Figura 3.25: Distribuição simulada da distância entre a maior e a menor de p médias, em erros-padrão, quando todas as médias verdadeiras são iguais (16 gl para o erro); as linhas tracejadas marcam o percentil 95% de cada distribuição.
+</p>
+</div>
+<p><strong>Passo 3 — uma régua por amplitude.</strong> Para cada <span class="math inline">\(p\)</span>, <span class="math inline">\(R_p = r_p\sqrt{QME/n}\)</span>, em que o <span class="math inline">\(r_p\)</span> de
+Duncan é o quantil da amplitude estudentizada no nível <span class="math inline">\(1-\alpha_p\)</span>, com <span class="math inline">\(\alpha_p = 1-(1-\alpha)^{p-1}\)</span>
+(no R, <code>qtukey((1 - 0.05)^(p - 1), p, gl)</code>). A Tabela <a href="comparacoes-multiplas.html#tab:c3c-feij-reguas">3.19</a> traz as réguas de
+Duncan, SNK e Tukey, e a Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-escada">3.26</a> as compara.</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3c-feij-reguas">Tabela 3.19: </span>Réguas (kg) de Duncan, SNK e Tukey para os dados de feijão, por amplitude
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Amplitude p
+</th>
+<th style="text-align:center;">
+Nível de proteção αp
+</th>
+<th style="text-align:center;">
+r_p (Duncan)
+</th>
+<th style="text-align:center;">
+R_p Duncan
+</th>
+<th style="text-align:center;">
+R_p SNK
+</th>
+<th style="text-align:center;">
+Tukey (fixa)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+5,00%
+</td>
+<td style="text-align:center;">
+2,998
+</td>
+<td style="text-align:center;">
+1,887
+</td>
+<td style="text-align:center;">
+1,887
+</td>
+<td style="text-align:center;">
+2,547
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+9,75%
+</td>
+<td style="text-align:center;">
+3,144
+</td>
+<td style="text-align:center;">
+1,979
+</td>
+<td style="text-align:center;">
+2,297
+</td>
+<td style="text-align:center;">
+2,547
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+14,26%
+</td>
+<td style="text-align:center;">
+3,235
+</td>
+<td style="text-align:center;">
+2,036
+</td>
+<td style="text-align:center;">
+2,547
+</td>
+<td style="text-align:center;">
+2,547
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-escada"></span>
+<img src="03-dca_files/figure-html/c3c-feij-escada-1.png" alt="Régua (diferença mínima significativa, em kg) de Duncan, SNK e Tukey em função da amplitude p do par, para os dados de feijão." width="75%" />
+<p class="caption">
+Figura 3.26: Régua (diferença mínima significativa, em kg) de Duncan, SNK e Tukey em função da amplitude p do par, para os dados de feijão.
+</p>
+</div>
+<p>Para pares vizinhos (<span class="math inline">\(p=2\)</span>), Duncan, SNK e LSD usam a mesma régua. Com <span class="math inline">\(p\)</span> crescente, o Duncan
+cresce devagar (de 1,89 a 2,04 kg), porque relaxa o nível
+(<span class="math inline">\(\alpha_p\)</span> sobe de 5% para 14,3%); o SNK cresce mais, até alcançar Tukey em
+<span class="math inline">\(p=t\)</span>; e Tukey usa a régua máxima para todos os pares. É nos pares de amplitude intermediária e
+grande que o Duncan se afasta do Tukey.</p>
+<p><strong>Passo 4 — testar de cima para baixo.</strong> A Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-etapas">3.27</a> mostra as três etapas.
+Na primeira (<span class="math inline">\(p=4\)</span>), <span class="math inline">\(\bar y_{F4} - \bar y_{F1} = 4{,}24 &gt; R_4 = 2{,}04\)</span>: F4 e F1
+diferem, e isso libera para teste os dois pares de amplitude 3 que ficam “dentro” desse arco. Na
+segunda (<span class="math inline">\(p=3\)</span>), F2 − F1 = 2,37 e F4 − F3 = 3,64 são comparados com
+<span class="math inline">\(R_3 = 1{,}98\)</span>, e os dois diferem. Na terceira (<span class="math inline">\(p=2\)</span>), os três pares vizinhos são comparados
+com <span class="math inline">\(R_2 = 1{,}89\)</span>: F3 − F1 = 0,59, F2 − F3 = 1,77 e
+F4 − F2 = 1,870; nenhum difere. O último fica a apenas
+0,017 kg da régua — uma decisão frágil, que uma única parcela poderia inverter,
+e que por isso deve ser reportada com a diferença e seu intervalo, não só com “=”.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-etapas"></span>
+<img src="03-dca_files/figure-html/c3c-feij-etapas-1.png" alt="As três etapas do teste de Duncan nos dados de feijão. Em cada painel, os arcos da etapa corrente estão em destaque (verde: diferença significativa; vermelho: não significativa) com a diferença observada e a régua; arcos de etapas anteriores aparecem claros, coloridos pelo resultado, e os das etapas seguintes em cinza." width="95%" />
+<p class="caption">
+Figura 3.27: As três etapas do teste de Duncan nos dados de feijão. Em cada painel, os arcos da etapa corrente estão em destaque (verde: diferença significativa; vermelho: não significativa) com a diferença observada e a régua; arcos de etapas anteriores aparecem claros, coloridos pelo resultado, e os das etapas seguintes em cinza.
+</p>
+</div>
+<p><strong>A regra de coerência em ação.</strong> Nos dados reais, todas as comparações das etapas 1 e 2 foram
+significativas, e a regra de coerência não chegou a atuar. Para vê-la funcionar, imagine o mesmo
+experimento com as <strong>mesmas médias</strong>, mas muito mais ruidoso, com <span class="math inline">\(QME = 9\)</span> (Figura
+<a href="comparacoes-multiplas.html#fig:c3c-feij-coerencia">3.28</a>). Agora a comparação de ponta a ponta já falha, e os pares de
+amplitude 3 e 2 <strong>nem são testados</strong>: se nem as médias mais afastadas diferem, nenhum par contido
+entre elas pode diferir. É essa regra que impede o procedimento de produzir a contradição “F1 e F4
+são iguais, mas F1 e F2 diferem”.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-coerencia"></span>
+<img src="03-dca_files/figure-html/c3c-feij-coerencia-1.png" alt="Cenário hipotético com as mesmas médias de feijão e QME = 9: a comparação de amplitude 4 não é significativa (arco claro avermelhado) e, pela regra de coerência, os pares de amplitude 3 (roxo) e 2 não são testados." width="95%" />
+<p class="caption">
+Figura 3.28: Cenário hipotético com as mesmas médias de feijão e QME = 9: a comparação de amplitude 4 não é significativa (arco claro avermelhado) e, pela regra de coerência, os pares de amplitude 3 (roxo) e 2 não são testados.
+</p>
+</div>
+<p><strong>Passo 5 — das decisões aos traços e às letras.</strong> O resultado se resume num diagrama de <strong>traços</strong>
+(Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-tracos">3.29</a>): um traço sob um grupo de médias consecutivas indica que nenhum
+par dentro dele difere. Cada traço vira uma <strong>letra</strong> (a para o grupo que contém a maior média). Pelo
+Duncan, os grupos são {F1, F3}, {F3, F2} e {F2, F4}, donde F1 = c, F3 = bc, F2 = ab e F4 = a. Pelo
+Tukey, os grupos são {F1, F3, F2} e {F2, F4}, donde F1 = b, F3 = b, F2 = ab e F4 = a.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-tracos"></span>
+<img src="03-dca_files/figure-html/c3c-feij-tracos-1.png" alt="Diagrama de traços para os dados de feijão pelo Duncan (acima) e pelo Tukey (abaixo): médias ligadas por um mesmo traço não diferem pelo critério correspondente; ao lado de cada média, a letra resultante." width="95%" />
+<p class="caption">
+Figura 3.29: Diagrama de traços para os dados de feijão pelo Duncan (acima) e pelo Tukey (abaixo): médias ligadas por um mesmo traço não diferem pelo critério correspondente; ao lado de cada média, a letra resultante.
+</p>
+</div>
+<p>A conferência com o <code>agricolae</code> reproduz os valores de <span class="math inline">\(r_p\)</span> e <span class="math inline">\(R_p\)</span> e as letras; o que o pacote
+não mostra é o caminho — as etapas e a regra de coerência —, que é justamente o que explica o
+resultado:</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="comparacoes-multiplas.html#cb135-1" tabindex="-1"></a>dt <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">duncan.test</span>(mod_feijao, <span class="st">&quot;Fertilizante&quot;</span>, <span class="at">console =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb135-2"><a href="comparacoes-multiplas.html#cb135-2" tabindex="-1"></a>dt<span class="sc">$</span>duncan            <span class="co"># r_p (&quot;Table&quot;) e R_p (&quot;CriticalRange&quot;) para p = 2, 3, 4</span></span></code></pre></div>
+<pre><code>##      Table CriticalRange
+## 2 2.997999      1.887328
+## 3 3.143802      1.979115
+## 4 3.234945      2.036492</code></pre>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="comparacoes-multiplas.html#cb137-1" tabindex="-1"></a>dt<span class="sc">$</span>groups            <span class="co"># médias ordenadas da maior para a menor, com as letras</span></span></code></pre></div>
+<pre><code>##    Producao groups
+## F4    9.188      a
+## F2    7.318     ab
+## F3    5.546     bc
+## F1    4.952      c</code></pre>
+<p><strong>Onde Duncan e Tukey discordam.</strong> O par F2 − F1, com 2,37 kg, é
+declarado diferente pelo Duncan e pelo SNK e não pelo Tukey, pelo Bonferroni nem pelo Scheffé
+(Figura <a href="comparacoes-multiplas.html#fig:c3c-feij-discorda">3.30</a>). Os dados não mudaram; mudou a <strong>garantia</strong> pedida. O Duncan
+julga esse par com proteção <span class="math inline">\(\alpha_3 = 1-0{,}95^2 \approx 9{,}75\%\)</span>, e a família de comparações, sob
+<span class="math inline">\(H_0\)</span> completa, com <span class="math inline">\(\alpha_4 \approx 14\%\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-feij-discorda"></span>
+<img src="03-dca_files/figure-html/c3c-feij-discorda-1.png" alt="A diferença observada entre F2 e F1 (linha vermelha) contra a régua de cada procedimento: barras verdes são réguas menores que a diferença (o procedimento declara F2 diferente de F1), barras cinza, réguas maiores." width="75%" />
+<p class="caption">
+Figura 3.30: A diferença observada entre F2 e F1 (linha vermelha) contra a régua de cada procedimento: barras verdes são réguas menores que a diferença (o procedimento declara F2 diferente de F1), barras cinza, réguas maiores.
+</p>
+</div>
+<p>A leitura prática é a de sempre, agora com um exemplo concreto: o Duncan é uma ferramenta de
+<strong>triagem</strong> — útil para apontar candidatos promissores para um próximo experimento —, mas uma
+<strong>conclusão</strong> que vai virar recomendação a produtores (“F2 rende mais que F1”) precisa de um
+procedimento que controle o FWER, como Tukey, ou Dunnett se houver uma testemunha. A função
+<code>passos_amplitude()</code> de <code>comparacoes_helpers.R</code>, usada nas figuras desta subseção, devolve a tabela
+completa de etapas para qualquer conjunto de médias, com <code>metodo = "Duncan"</code> ou <code>"SNK"</code>.</p>
+</div>
+<div id="ordenamento" class="section level3 hasAnchor" number="3.7.12">
+<h3><span class="header-section-number">3.7.12</span> A questão do ordenamento: procedimentos em etapas<a href="comparacoes-multiplas.html#ordenamento" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Duncan e SNK dependem da <strong>ordem</strong> das médias observadas, e isso merece uma discussão própria,
+porque é onde mora tanto a sua lógica quanto o seu problema.</p>
+<p><strong>Por que faz sentido a régua depender da posição.</strong> Sob <span class="math inline">\(H_0\)</span>, a distância esperada entre o
+maior e o menor de <span class="math inline">\(p\)</span> valores aleatórios cresce com <span class="math inline">\(p\)</span>. Uma diferença de 70 ms entre duas médias
+vizinhas na ordenação é, portanto, mais surpreendente do que a mesma diferença entre os extremos de
+quatro médias — os extremos estão longe “por construção”. Os procedimentos em etapas exigem mais
+das amplitudes maiores por essa razão.</p>
+<p><strong>A regra de coerência.</strong> O teste começa pela amplitude <span class="math inline">\(t\)</span> (maior contra menor); uma amplitude
+menor só é examinada se <strong>todas</strong> as amplitudes que a contêm tiverem sido significativas. Isso
+evita a contradição de declarar diferentes duas médias que estão dentro de um grupo já declarado
+homogêneo.</p>
+<p><strong>O problema conceitual.</strong> A posição <span class="math inline">\(p\)</span> de um par é <strong>ela própria aleatória</strong>: depende das médias
+observadas, não de algo fixado antes dos dados. A garantia de Duncan e SNK vale para “amplitudes
+de médias ordenadas”, não para pares de tratamentos escolhidos de antemão — e é por isso que
+nenhum dos dois controla o FWER em geral. Tukey evita o problema aplicando a todos os pares a régua
+dos extremos, o pior caso.</p>
+<p><strong>Ordenar também é uma pergunta.</strong> Em muitas aplicações a pergunta não é “quais pares diferem?”,
+e sim “qual é o melhor (ou o pior) tratamento?”. Um ranking só se sustenta onde as médias se
+separam com segurança; quando duas médias vizinhas não se distinguem, a ordem entre elas é
+essencialmente aleatória. A Seção <a href="comparacoes-multiplas.html#ranking-scripts">3.7.16</a> quantifica isso nos dados.</p>
+</div>
+<div id="reguas-dados" class="section level3 hasAnchor" number="3.7.13">
+<h3><span class="header-section-number">3.7.13</span> Todos os procedimentos nos mesmos dados<a href="comparacoes-multiplas.html#reguas-dados" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Tabela <a href="comparacoes-multiplas.html#tab:c3c-difs">3.20</a> lista as seis diferenças observadas, da menor para a maior, com a
+amplitude de cada par na ordenação Nenhum &lt; Analytics &lt; Anúncios &lt; Combo.</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3c-difs">Tabela 3.20: </span>As seis diferenças entre médias, ordenadas, com a amplitude de cada par e o teste t sem correção
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Par
+</th>
+<th style="text-align:right;">
+Diferença (ms)
+</th>
+<th style="text-align:center;">
+Amplitude p
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+p (sem correção)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Combo − Anúncios
+</td>
+<td style="text-align:right;">
+33,7
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:right;">
+1,14
+</td>
+<td style="text-align:right;">
+0,2601
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Analytics − Nenhum
+</td>
+<td style="text-align:right;">
+86,2
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:right;">
+2,92
+</td>
+<td style="text-align:right;">
+0,0060
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anúncios − Analytics
+</td>
+<td style="text-align:right;">
+134,3
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:right;">
+4,56
+</td>
+<td style="text-align:right;">
+&lt; 0,0001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combo − Analytics
+</td>
+<td style="text-align:right;">
+168,1
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:right;">
+5,70
+</td>
+<td style="text-align:right;">
+&lt; 0,0001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anúncios − Nenhum
+</td>
+<td style="text-align:right;">
+220,5
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:right;">
+7,48
+</td>
+<td style="text-align:right;">
+&lt; 0,0001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combo − Nenhum
+</td>
+<td style="text-align:right;">
+254,2
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:right;">
+8,62
+</td>
+<td style="text-align:right;">
+&lt; 0,0001
+</td>
+</tr>
+</tbody>
+</table>
+<p>Todas as diferenças têm o mesmo erro-padrão, <span class="math inline">\(\sqrt{2QME/10} = 29{,}5\)</span> ms. O código a
+seguir calcula a régua (DMS) de cada procedimento nestes dados:</p>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="comparacoes-multiplas.html#cb139-1" tabindex="-1"></a>ep1 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(qme <span class="sc">/</span> <span class="dv">10</span>); ep2 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> qme <span class="sc">/</span> <span class="dv">10</span>); nu <span class="ot">&lt;-</span> <span class="dv">36</span>; tt <span class="ot">&lt;-</span> <span class="dv">4</span>; m_par <span class="ot">&lt;-</span> <span class="fu">choose</span>(<span class="dv">4</span>, <span class="dv">2</span>)</span>
+<span id="cb139-2"><a href="comparacoes-multiplas.html#cb139-2" tabindex="-1"></a>d_dunnett <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="fu">confint</span>(<span class="fu">glht</span>(mod_scripts, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">config =</span> <span class="st">&quot;Dunnett&quot;</span>)))<span class="sc">$</span>confint, <span class="st">&quot;calpha&quot;</span>)</span>
+<span id="cb139-3"><a href="comparacoes-multiplas.html#cb139-3" tabindex="-1"></a>reguas <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb139-4"><a href="comparacoes-multiplas.html#cb139-4" tabindex="-1"></a>  <span class="at">Procedimento =</span> <span class="fu">c</span>(<span class="st">&quot;LSD&quot;</span>, <span class="st">&quot;Duncan p=2&quot;</span>, <span class="st">&quot;Duncan p=3&quot;</span>, <span class="st">&quot;Duncan p=4&quot;</span>, <span class="st">&quot;SNK p=2&quot;</span>, <span class="st">&quot;SNK p=3&quot;</span>,</span>
+<span id="cb139-5"><a href="comparacoes-multiplas.html#cb139-5" tabindex="-1"></a>                   <span class="st">&quot;SNK p=4&quot;</span>, <span class="st">&quot;Dunnett&quot;</span>, <span class="st">&quot;Tukey&quot;</span>, <span class="st">&quot;Bonferroni&quot;</span>, <span class="st">&quot;Scheffé&quot;</span>),</span>
+<span id="cb139-6"><a href="comparacoes-multiplas.html#cb139-6" tabindex="-1"></a>  <span class="at">DMS =</span> <span class="fu">c</span>(<span class="fu">qt</span>(<span class="fl">0.975</span>, nu) <span class="sc">*</span> ep2,</span>
+<span id="cb139-7"><a href="comparacoes-multiplas.html#cb139-7" tabindex="-1"></a>          <span class="fu">sapply</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(p) <span class="fu">qtukey</span>(<span class="fl">0.95</span><span class="sc">^</span>(p <span class="sc">-</span> <span class="dv">1</span>), p, nu)) <span class="sc">*</span> ep1,  <span class="co"># Duncan: nível alpha_p</span></span>
+<span id="cb139-8"><a href="comparacoes-multiplas.html#cb139-8" tabindex="-1"></a>          <span class="fu">sapply</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(p) <span class="fu">qtukey</span>(<span class="fl">0.95</span>, p, nu)) <span class="sc">*</span> ep1,          <span class="co"># SNK: nível alpha fixo</span></span>
+<span id="cb139-9"><a href="comparacoes-multiplas.html#cb139-9" tabindex="-1"></a>          d_dunnett <span class="sc">*</span> ep2, <span class="fu">qtukey</span>(<span class="fl">0.95</span>, tt, nu) <span class="sc">*</span> ep1,</span>
+<span id="cb139-10"><a href="comparacoes-multiplas.html#cb139-10" tabindex="-1"></a>          <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> m_par), nu) <span class="sc">*</span> ep2, <span class="fu">sqrt</span>((tt <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">qf</span>(<span class="fl">0.95</span>, tt <span class="sc">-</span> <span class="dv">1</span>, nu)) <span class="sc">*</span> ep2))</span>
+<span id="cb139-11"><a href="comparacoes-multiplas.html#cb139-11" tabindex="-1"></a>reguas <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">DMS =</span> <span class="fu">round</span>(DMS, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span></code></pre></div>
+<pre><code>##    Procedimento  DMS
+## 1           LSD 59.8
+## 2    Duncan p=2 59.8
+## 3    Duncan p=3 62.9
+## 4    Duncan p=4 64.9
+## 5       SNK p=2 59.8
+## 6       SNK p=3 72.1
+## 7       SNK p=4 79.4
+## 8       Dunnett 72.3
+## 9         Tukey 79.4
+## 10   Bonferroni 82.3
+## 11      Scheffé 86.5</code></pre>
+<p>Do LSD (59,8 ms) ao Scheffé (86,5 ms) a régua fica
+45% mais longa. A Figura <a href="comparacoes-multiplas.html#fig:c3c-plot-reguas">3.31</a> põe todas as
+réguas contra as diferenças observadas.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-plot-reguas"></span>
+<img src="03-dca_files/figure-html/c3c-plot-reguas-1.png" alt="Diferença mínima significativa de cada procedimento (barras azuis) e as seis diferenças observadas entre médias (linhas pontilhadas laranja, rotuladas no topo). Um par é declarado diferente pelo procedimento quando sua linha pontilhada fica à direita do fim da barra." width="100%" />
+<p class="caption">
+Figura 3.31: Diferença mínima significativa de cada procedimento (barras azuis) e as seis diferenças observadas entre médias (linhas pontilhadas laranja, rotuladas no topo). Um par é declarado diferente pelo procedimento quando sua linha pontilhada fica à direita do fim da barra.
+</p>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3c-decisoes">Tabela 3.21: </span>Decisão de cada procedimento para cada par (≠: diferença declarada significativa a 5%)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Par
+</th>
+<th style="text-align:right;">
+Diferença
+</th>
+<th style="text-align:center;">
+LSD sem proteção
+</th>
+<th style="text-align:center;">
+LSD protegido
+</th>
+<th style="text-align:center;">
+Duncan
+</th>
+<th style="text-align:center;">
+SNK
+</th>
+<th style="text-align:center;">
+Tukey
+</th>
+<th style="text-align:center;">
+Bonferroni
+</th>
+<th style="text-align:center;">
+Scheffé
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Analytics − Nenhum
+</td>
+<td style="text-align:right;font-weight: bold;">
+86,2
+</td>
+<td style="text-align:center;font-weight: bold;">
+≠
+</td>
+<td style="text-align:center;font-weight: bold;">
+≠
+</td>
+<td style="text-align:center;font-weight: bold;">
+≠
+</td>
+<td style="text-align:center;font-weight: bold;">
+≠
+</td>
+<td style="text-align:center;font-weight: bold;">
+≠
+</td>
+<td style="text-align:center;font-weight: bold;">
+≠
+</td>
+<td style="text-align:center;font-weight: bold;">
+=
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anúncios − Nenhum
+</td>
+<td style="text-align:right;">
+220,5
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combo − Nenhum
+</td>
+<td style="text-align:right;">
+254,2
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anúncios − Analytics
+</td>
+<td style="text-align:right;">
+134,3
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combo − Analytics
+</td>
+<td style="text-align:right;">
+168,1
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combo − Anúncios
+</td>
+<td style="text-align:right;">
+33,7
+</td>
+<td style="text-align:center;">
+=
+</td>
+<td style="text-align:center;">
+=
+</td>
+<td style="text-align:center;">
+=
+</td>
+<td style="text-align:center;">
+=
+</td>
+<td style="text-align:center;">
+=
+</td>
+<td style="text-align:center;">
+=
+</td>
+<td style="text-align:center;">
+=
+</td>
+</tr>
+</tbody>
+</table>
+<p>Os procedimentos concordam em cinco dos seis pares: as diferenças grandes (acima de 130 ms)
+sobrevivem a qualquer correção, e Anúncios − Combo (33,7 ms) não é significativa por
+nenhum método. Toda a divergência está no par <strong>Analytics − Nenhum</strong> (86,2 ms), que
+cai entre a régua de Bonferroni (82,3 ms) e a de Scheffé (86,5 ms): é
+declarado diferente por LSD, Duncan, SNK, Dunnett, Tukey e Bonferroni, e só o Scheffé não o
+declara. O exemplo ilustra bem a hierarquia das réguas e o fato de que a escolha do procedimento só
+importa nos casos de fronteira — razão a mais para fixá-la no protocolo.</p>
+<p>A Tabela <a href="comparacoes-multiplas.html#tab:c3c-snk-passos">3.22</a> mostra o SNK aplicado passo a passo, com a regra de coerência:
+começa-se pela amplitude 4 (Combo − Nenhum); só porque ela foi significativa as amplitudes 3 são
+testadas, e só porque estas foram as vizinhas são testadas.</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:c3c-snk-passos">Tabela 3.22: </span>SNK em etapas: da maior amplitude para a menor
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Etapa
+</th>
+<th style="text-align:left;">
+Par
+</th>
+<th style="text-align:center;">
+Amplitude p
+</th>
+<th style="text-align:right;">
+Diferença
+</th>
+<th style="text-align:right;">
+DMS (SNK)
+</th>
+<th style="text-align:center;">
+Decisão
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:left;">
+Combo − Nenhum
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:right;">
+254,2
+</td>
+<td style="text-align:right;">
+79,4
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:left;">
+Anúncios − Nenhum
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:right;">
+220,5
+</td>
+<td style="text-align:right;">
+72,1
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:left;">
+Combo − Analytics
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:right;">
+168,1
+</td>
+<td style="text-align:right;">
+72,1
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:left;">
+Anúncios − Analytics
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:right;">
+134,3
+</td>
+<td style="text-align:right;">
+59,8
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:left;">
+Analytics − Nenhum
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:right;">
+86,2
+</td>
+<td style="text-align:right;">
+59,8
+</td>
+<td style="text-align:center;">
+≠
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:left;">
+Combo − Anúncios
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:right;">
+33,7
+</td>
+<td style="text-align:right;">
+59,8
+</td>
+<td style="text-align:center;">
+=
+</td>
+</tr>
+</tbody>
+</table>
+<p>E a dependência da posição fica explícita imaginando uma diferença hipotética de 75 ms: pelo SNK
+ela seria significativa entre médias vizinhas (régua de 59,8 ms) ou separadas por
+uma média (72,1 ms), mas não entre os extremos (79,4 ms); por Tukey,
+a régua é 79,4 ms para qualquer posição, e os 75 ms nunca seriam significativos.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — Tukey, Bonferroni, Scheffé, Dunnett, Duncan e agrupamento</div>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="comparacoes-multiplas.html#cb119-1" tabindex="-1"></a>emm_scripts <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod_scripts, <span class="sc">~</span> config)</span>
-<span id="cb119-2"><a href="comparacoes-multiplas.html#cb119-2" tabindex="-1"></a></span>
-<span id="cb119-3"><a href="comparacoes-multiplas.html#cb119-3" tabindex="-1"></a><span class="co"># todos os pares, três correções diferentes</span></span>
-<span id="cb119-4"><a href="comparacoes-multiplas.html#cb119-4" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="comparacoes-multiplas.html#cb141-1" tabindex="-1"></a>emm_scripts <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod_scripts, <span class="sc">~</span> config)</span>
+<span id="cb141-2"><a href="comparacoes-multiplas.html#cb141-2" tabindex="-1"></a></span>
+<span id="cb141-3"><a href="comparacoes-multiplas.html#cb141-3" tabindex="-1"></a><span class="co"># todos os pares, três correções diferentes</span></span>
+<span id="cb141-4"><a href="comparacoes-multiplas.html#cb141-4" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast             estimate   SE df t.ratio p.value
 ##  Nenhum - Analytics      -86.2 29.5 36  -2.922  0.0291
 ##  Nenhum - Anúncios      -220.5 29.5 36  -7.478 &lt;0.0001
@@ -570,7 +1673,7 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ##  Anúncios - Combo        -33.7 29.5 36  -1.144  0.6650
 ## 
 ## P value adjustment: tukey method for comparing a family of 4 estimates</code></pre>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="comparacoes-multiplas.html#cb121-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;bonferroni&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="comparacoes-multiplas.html#cb143-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;bonferroni&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast             estimate   SE df t.ratio p.value
 ##  Nenhum - Analytics      -86.2 29.5 36  -2.922  0.0359
 ##  Nenhum - Anúncios      -220.5 29.5 36  -7.478 &lt;0.0001
@@ -580,7 +1683,7 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ##  Anúncios - Combo        -33.7 29.5 36  -1.144  1.0000
 ## 
 ## P value adjustment: bonferroni method for 6 tests</code></pre>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="comparacoes-multiplas.html#cb123-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;scheffe&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="comparacoes-multiplas.html#cb145-1" tabindex="-1"></a><span class="fu">pairs</span>(emm_scripts, <span class="at">adjust =</span> <span class="st">&quot;scheffe&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast             estimate   SE df t.ratio p.value
 ##  Nenhum - Analytics      -86.2 29.5 36  -2.922  0.0511
 ##  Nenhum - Anúncios      -220.5 29.5 36  -7.478 &lt;0.0001
@@ -590,16 +1693,16 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ##  Anúncios - Combo        -33.7 29.5 36  -1.144  0.7282
 ## 
 ## P value adjustment: scheffe method with rank 3</code></pre>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="comparacoes-multiplas.html#cb125-1" tabindex="-1"></a><span class="co"># cada tratamento vs. o controle &quot;Nenhum&quot; (Dunnett)</span></span>
-<span id="cb125-2"><a href="comparacoes-multiplas.html#cb125-2" tabindex="-1"></a><span class="fu">contrast</span>(emm_scripts, <span class="at">method =</span> <span class="st">&quot;trt.vs.ctrl&quot;</span>, <span class="at">ref =</span> <span class="st">&quot;Nenhum&quot;</span>, <span class="at">adjust =</span> <span class="st">&quot;dunnettx&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="comparacoes-multiplas.html#cb147-1" tabindex="-1"></a><span class="co"># cada tratamento vs. o controle &quot;Nenhum&quot; (Dunnett)</span></span>
+<span id="cb147-2"><a href="comparacoes-multiplas.html#cb147-2" tabindex="-1"></a><span class="fu">contrast</span>(emm_scripts, <span class="at">method =</span> <span class="st">&quot;trt.vs.ctrl&quot;</span>, <span class="at">ref =</span> <span class="st">&quot;Nenhum&quot;</span>, <span class="at">adjust =</span> <span class="st">&quot;dunnettx&quot;</span>)</span></code></pre></div>
 <pre><code>##  contrast           estimate   SE df t.ratio p.value
 ##  Analytics - Nenhum     86.2 29.5 36   2.922  0.0167
 ##  Anúncios - Nenhum     220.5 29.5 36   7.478 &lt;0.0001
 ##  Combo - Nenhum        254.2 29.5 36   8.623 &lt;0.0001
 ## 
 ## P value adjustment: dunnettx method for 3 tests</code></pre>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="comparacoes-multiplas.html#cb127-1" tabindex="-1"></a><span class="co"># agrupamento compacto por letras (compact letter display)</span></span>
-<span id="cb127-2"><a href="comparacoes-multiplas.html#cb127-2" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(emm_scripts, <span class="at">Letters =</span> letters, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="comparacoes-multiplas.html#cb149-1" tabindex="-1"></a><span class="co"># agrupamento compacto por letras (compact letter display)</span></span>
+<span id="cb149-2"><a href="comparacoes-multiplas.html#cb149-2" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(emm_scripts, <span class="at">Letters =</span> letters, <span class="at">adjust =</span> <span class="st">&quot;tukey&quot;</span>)</span></code></pre></div>
 <pre><code>##  config    emmean   SE df lower.CL upper.CL .group
 ##  Nenhum       859 20.8 36      805      914  a    
 ##  Analytics    946 20.8 36      891     1000   b   
@@ -613,43 +1716,246 @@ CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos.<
 ## NOTE: If two or more means share the same grouping symbol,
 ##       then we cannot show them to be different.
 ##       But we also did not show them to be the same.</code></pre>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="comparacoes-multiplas.html#cb129-1" tabindex="-1"></a><span class="co"># Teste de Duncan (amplitude múltipla): fora do R base, via agricolae</span></span>
-<span id="cb129-2"><a href="comparacoes-multiplas.html#cb129-2" tabindex="-1"></a>duncan_scripts <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">duncan.test</span>(mod_scripts, <span class="st">&quot;config&quot;</span>, <span class="at">console =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb129-3"><a href="comparacoes-multiplas.html#cb129-3" tabindex="-1"></a>duncan_scripts<span class="sc">$</span>groups   <span class="co"># médias ordenadas + agrupamento por letras (Duncan)</span></span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="comparacoes-multiplas.html#cb151-1" tabindex="-1"></a><span class="co"># Teste de Duncan (amplitude múltipla): fora do R base, via agricolae</span></span>
+<span id="cb151-2"><a href="comparacoes-multiplas.html#cb151-2" tabindex="-1"></a>duncan_scripts <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">duncan.test</span>(mod_scripts, <span class="st">&quot;config&quot;</span>, <span class="at">console =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb151-3"><a href="comparacoes-multiplas.html#cb151-3" tabindex="-1"></a>duncan_scripts<span class="sc">$</span>groups   <span class="co"># médias ordenadas + agrupamento por letras (Duncan)</span></span></code></pre></div>
 <pre><code>##            tempo_ms groups
 ## Combo     1113.6160      a
 ## Anúncios  1079.8775      a
 ## Analytics  945.5325      b
 ## Nenhum     859.3801      c</code></pre>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="comparacoes-multiplas.html#cb153-1" tabindex="-1"></a>duncan_scripts<span class="sc">$</span>duncan   <span class="co"># amplitudes mínimas significativas R_p para p = 2, 3, 4</span></span></code></pre></div>
+<pre><code>##      Table CriticalRange
+## 2 2.868158      59.79713
+## 3 3.015218      62.86313
+## 4 3.111132      64.86280</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="comparacoes-multiplas.html#cb155-1" tabindex="-1"></a><span class="co"># Dunnett unilateral: a pergunta do protocolo é &quot;o script PIORA o tempo?&quot;</span></span>
+<span id="cb155-2"><a href="comparacoes-multiplas.html#cb155-2" tabindex="-1"></a>g_uni <span class="ot">&lt;-</span> <span class="fu">glht</span>(mod_scripts, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">config =</span> <span class="st">&quot;Dunnett&quot;</span>), <span class="at">alternative =</span> <span class="st">&quot;greater&quot;</span>)</span>
+<span id="cb155-3"><a href="comparacoes-multiplas.html#cb155-3" tabindex="-1"></a><span class="fu">summary</span>(g_uni)</span></code></pre></div>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Dunnett Contrasts
+## 
+## 
+## Fit: aov(formula = tempo_ms ~ config, data = dados_scripts)
+## 
+## Linear Hypotheses:
+##                         Estimate Std. Error t value  Pr(&gt;t)    
+## Analytics - Nenhum &lt;= 0    86.15      29.48   2.922 0.00801 ** 
+## Anúncios - Nenhum &lt;= 0    220.50      29.48   7.478 &lt; 0.001 ***
+## Combo - Nenhum &lt;= 0       254.24      29.48   8.623 &lt; 0.001 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+<p>Dois detalhes desta saída merecem comentário. Primeiro, o par Analytics − Nenhum tem p ≈ 0,017 por
+Dunnett e p ≈ 0,029 por Tukey: Dunnett corrige para três comparações (só contra o controle), Tukey
+para seis. Se a pergunta do protocolo é apenas “cada script piora em relação a nenhum?”, pagar por
+seis comparações é desperdiçar poder. Segundo, na versão unilateral o p-valor desse par cai para
+cerca de metade — legítimo aqui porque nenhum script de terceiros <strong>acelera</strong> uma página e a
+direção foi fixada antes da coleta; escolher “unilateral” depois de ver o sinal da diferença seria
+mais uma forma de <em>data snooping</em>.</p>
 <p>O agrupamento de Duncan reaparece na coluna <code>groups</code> acima: neste conjunto de dados, ele coincide
-com o <code>cld()</code> de Tukey exibido antes (mesma partição em três grupos, “a”/“b”/“c”), porque os
-quatro efeitos de configuração são grandes o bastante para que até o critério mais rigoroso de
-Tukey já os separe. A diferença entre os dois métodos fica visível justamente nos casos de
-fronteira — pares cuja diferença observada fica <strong>entre</strong> o valor crítico mais liberal de Duncan
-para aquela amplitude e o valor crítico único, mais conservador, de Tukey; nesses casos, e só
-neles, Duncan declara significativo um par que Tukey não declara, exatamente o preço, discutido
-acima, de usar valores críticos <span class="math inline">\(R_p\)</span> menores para amplitudes pequenas sem controlar
-rigorosamente o FWER no nível nominal.</p>
-<p><img src="03-dca_files/figure-html/c3b-plot-cld-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
-<p>Note que os quatro procedimentos concordam nas conclusões mais nítidas (Nenhum difere de todos os
-demais) mas divergem nos casos de fronteira: Bonferroni e Scheffé — os mais conservadores — não
-rejeitam a diferença entre “Nenhum” e “Analytics” ao nível de 5%, enquanto Tukey a considera
-significativa. Não existe um procedimento universalmente “correto”; a escolha depende de qual
-família de comparações reflete a pergunta de pesquisa.</p>
-<p><img src="03-dca_files/figure-html/c3b-plot-tukey-ic-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
-<p>Um par difere significativamente quando seu IC não cruza zero: só “Anúncios − Combo” cruza,
-confirmando <span class="math inline">\(SQ_{L_3}\)</span> não significativo da partição por contrastes ortogonais.</p>
+com o <code>cld()</code> de Tukey exibido antes (mesma partição em três grupos), porque os efeitos de
+configuração são grandes o bastante para que até o critério mais rigoroso de Tukey já os separe.
+A diferença entre os dois métodos fica visível justamente nos casos de fronteira — pares cuja
+diferença observada fica <strong>entre</strong> o valor crítico mais liberal de Duncan para aquela amplitude e o
+valor crítico único, mais conservador, de Tukey (aqui, entre 59,8 e
+79,4 ms para vizinhas); nesses casos, e só neles, Duncan declara significativo um par
+que Tukey não declara.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3b-plot-tukey-ic"></span>
+<img src="03-dca_files/figure-html/c3b-plot-tukey-ic-1.png" alt="Intervalos de confiança de 95% para as seis diferenças entre médias: simultâneos de Tukey (azul) e individuais, sem correção (laranja). Um par difere quando o intervalo não cruza o zero (linha tracejada)." width="75%" />
+<p class="caption">
+Figura 3.32: Intervalos de confiança de 95% para as seis diferenças entre médias: simultâneos de Tukey (azul) e individuais, sem correção (laranja). Um par difere quando o intervalo não cruza o zero (linha tracejada).
+</p>
+</div>
+<p>Os intervalos de Tukey são 33% mais largos que os
+individuais: é o preço de a garantia de 95% valer para os seis ao mesmo tempo. Só
+“Anúncios − Combo” cruza zero nos dois casos, confirmando o <span class="math inline">\(SQ_{L_3}\)</span> não significativo da partição
+por contrastes ortogonais.</p>
+</div>
+<div id="agrupamento-de-tratamentos-compact-letter-display" class="section level3 hasAnchor" number="3.7.14">
+<h3><span class="header-section-number">3.7.14</span> Agrupamento de tratamentos (<em>compact letter display</em>)<a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Uma forma compacta de reportar o resultado de comparações múltiplas par a par é atribuir letras
+às médias: tratamentos que compartilham pelo menos uma letra <strong>não</strong> diferem significativamente
+entre si; tratamentos sem letra em comum diferem. Essa representação (<em>compact letter display</em>,
+CLD) é extremamente comum em tabelas de resultados agronômicos e biológicos. As letras em si são
+arbitrárias — o <code>cld()</code> do <code>multcomp</code> começa pela menor média, o <code>agricolae</code> pela maior —; o que
+importa é se há letra em comum. A Figura <a href="comparacoes-multiplas.html#fig:c3c-plot-letras">3.33</a> é a forma de relatório: dados,
+médias com intervalo e letras de Tukey numa só figura.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-plot-letras"></span>
+<img src="03-dca_files/figure-html/c3c-plot-letras-1.png" alt="Tempos individuais (cinza), médias com IC de 95% (azul) e letras do agrupamento de Tukey: configurações com letra em comum não diferem a 5% (FWER)." width="75%" />
+<p class="caption">
+Figura 3.33: Tempos individuais (cinza), médias com IC de 95% (azul) e letras do agrupamento de Tukey: configurações com letra em comum não diferem a 5% (FWER).
+</p>
+</div>
+<p>O CLD tem, porém, um defeito conhecido: um tratamento pode receber <strong>duas</strong> letras (“ab”), ficando
+“igual” a dois grupos que são diferentes entre si — o que não é ambiguidade dos dados, e sim do
+procedimento, que testa pares e depois tenta resumir os resultados em grupos. Veremos isso
+acontecer nos dados de cafeína, na próxima seção.</p>
+</div>
+<div id="scott-knott" class="section level3 hasAnchor" number="3.7.15">
+<h3><span class="header-section-number">3.7.15</span> Scott-Knott: grupos que não se sobrepõem<a href="comparacoes-multiplas.html#scott-knott" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>O método de Scott e Knott <span class="citation">(<a href="#ref-scottknott1974cluster">1974</a>)</span> ataca o problema por outro caminho: em vez de
+testar pares, <strong>particiona</strong> o conjunto de médias ordenadas em grupos disjuntos, por um critério de
+máxima verossimilhança. O algoritmo é recursivo: (1) ordenar as <span class="math inline">\(k\)</span> médias; (2) entre as <span class="math inline">\(k-1\)</span>
+bipartições possíveis que respeitam a ordem, achar a que maximiza a soma de quadrados entre os dois
+grupos, <span class="math inline">\(B_0\)</span>; (3) testar se <span class="math inline">\(B_0\)</span> é grande demais para ser acaso, pela estatística</p>
+<p><span class="math display">\[\lambda=\frac{\pi}{2(\pi-2)}\cdot\frac{B_0}{\hat\sigma_0^2} \;\dot\sim\; \chi^2_{\,k/(\pi-2)}, \qquad \hat\sigma_0^2=\frac{\sum_i n_i(\bar y_i-\bar y)^2+\nu\,QME}{k+\nu};\]</span></p>
+<ol start="4" style="list-style-type: decimal">
+<li>se for, dividir e repetir o procedimento em cada parte. O algoritmo cabe em poucas linhas:</li>
+</ol>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="comparacoes-multiplas.html#cb157-1" tabindex="-1"></a>sk <span class="ot">&lt;-</span> <span class="cf">function</span>(med, n_i, QME, gl, <span class="at">alpha =</span> <span class="fl">0.05</span>) {</span>
+<span id="cb157-2"><a href="comparacoes-multiplas.html#cb157-2" tabindex="-1"></a>  grupo <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="dt">L</span>, <span class="fu">length</span>(med)); prox <span class="ot">&lt;-</span> <span class="dv">2</span><span class="dt">L</span></span>
+<span id="cb157-3"><a href="comparacoes-multiplas.html#cb157-3" tabindex="-1"></a>  parte <span class="ot">&lt;-</span> <span class="cf">function</span>(idx) {</span>
+<span id="cb157-4"><a href="comparacoes-multiplas.html#cb157-4" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">&lt;</span> <span class="dv">2</span>) <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb157-5"><a href="comparacoes-multiplas.html#cb157-5" tabindex="-1"></a>    m_ <span class="ot">&lt;-</span> med[idx]; n_ <span class="ot">&lt;-</span> n_i[idx]; k <span class="ot">&lt;-</span> <span class="fu">length</span>(idx)</span>
+<span id="cb157-6"><a href="comparacoes-multiplas.html#cb157-6" tabindex="-1"></a>    B0 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>(k <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(j) {</span>
+<span id="cb157-7"><a href="comparacoes-multiplas.html#cb157-7" tabindex="-1"></a>      T1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(n_[<span class="dv">1</span><span class="sc">:</span>j] <span class="sc">*</span> m_[<span class="dv">1</span><span class="sc">:</span>j]); T2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(n_[(j<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>k] <span class="sc">*</span> m_[(j<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>k])</span>
+<span id="cb157-8"><a href="comparacoes-multiplas.html#cb157-8" tabindex="-1"></a>      T1<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(n_[<span class="dv">1</span><span class="sc">:</span>j]) <span class="sc">+</span> T2<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(n_[(j<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>k]) <span class="sc">-</span> (T1 <span class="sc">+</span> T2)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(n_)</span>
+<span id="cb157-9"><a href="comparacoes-multiplas.html#cb157-9" tabindex="-1"></a>    })</span>
+<span id="cb157-10"><a href="comparacoes-multiplas.html#cb157-10" tabindex="-1"></a>    j <span class="ot">&lt;-</span> <span class="fu">which.max</span>(B0)</span>
+<span id="cb157-11"><a href="comparacoes-multiplas.html#cb157-11" tabindex="-1"></a>    s2_0   <span class="ot">&lt;-</span> (<span class="fu">sum</span>(n_ <span class="sc">*</span> (m_ <span class="sc">-</span> <span class="fu">mean</span>(m_))<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> gl <span class="sc">*</span> QME) <span class="sc">/</span> (k <span class="sc">+</span> gl)</span>
+<span id="cb157-12"><a href="comparacoes-multiplas.html#cb157-12" tabindex="-1"></a>    lambda <span class="ot">&lt;-</span> (pi <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> (pi <span class="sc">-</span> <span class="dv">2</span>))) <span class="sc">*</span> <span class="fu">max</span>(B0) <span class="sc">/</span> s2_0</span>
+<span id="cb157-13"><a href="comparacoes-multiplas.html#cb157-13" tabindex="-1"></a>    <span class="cf">if</span> (lambda <span class="sc">&gt;</span> <span class="fu">qchisq</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, k <span class="sc">/</span> (pi <span class="sc">-</span> <span class="dv">2</span>))) {      <span class="co"># divide e recorre</span></span>
+<span id="cb157-14"><a href="comparacoes-multiplas.html#cb157-14" tabindex="-1"></a>      novos <span class="ot">&lt;-</span> idx[(j<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>k]; grupo[novos] <span class="ot">&lt;&lt;-</span> prox; prox <span class="ot">&lt;&lt;-</span> prox <span class="sc">+</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb157-15"><a href="comparacoes-multiplas.html#cb157-15" tabindex="-1"></a>      <span class="fu">parte</span>(idx[<span class="dv">1</span><span class="sc">:</span>j]); <span class="fu">parte</span>(novos)</span>
+<span id="cb157-16"><a href="comparacoes-multiplas.html#cb157-16" tabindex="-1"></a>    }</span>
+<span id="cb157-17"><a href="comparacoes-multiplas.html#cb157-17" tabindex="-1"></a>  }</span>
+<span id="cb157-18"><a href="comparacoes-multiplas.html#cb157-18" tabindex="-1"></a>  <span class="fu">parte</span>(<span class="fu">seq_along</span>(med)); grupo</span>
+<span id="cb157-19"><a href="comparacoes-multiplas.html#cb157-19" tabindex="-1"></a>}</span>
+<span id="cb157-20"><a href="comparacoes-multiplas.html#cb157-20" tabindex="-1"></a>med_ord <span class="ot">&lt;-</span> <span class="fu">sort</span>(medias); g_sk <span class="ot">&lt;-</span> <span class="fu">sk</span>(med_ord, ns[<span class="fu">names</span>(med_ord)], qme, gl_erro)</span>
+<span id="cb157-21"><a href="comparacoes-multiplas.html#cb157-21" tabindex="-1"></a><span class="fu">tibble</span>(<span class="st">`</span><span class="at">Configuração</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">names</span>(med_ord), <span class="st">`</span><span class="at">Média (ms)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(med_ord, <span class="dv">1</span>),</span>
+<span id="cb157-22"><a href="comparacoes-multiplas.html#cb157-22" tabindex="-1"></a>       <span class="st">`</span><span class="at">Scott-Knott</span><span class="st">`</span> <span class="ot">=</span> LETTERS[<span class="fu">match</span>(g_sk, <span class="fu">unique</span>(g_sk))])</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
+##   Configuração `Média (ms)` `Scott-Knott`
+##   &lt;chr&gt;           &lt;dbl[1d]&gt; &lt;chr&gt;        
+## 1 Nenhum               859. A            
+## 2 Analytics            946. B            
+## 3 Anúncios            1080. C            
+## 4 Combo               1114. C</code></pre>
+<p>Três grupos disjuntos, os mesmos de Tukey aqui. O pacote <code>ScottKnott</code> (função <code>SK()</code>) devolve o
+mesmo resultado; implementá-lo à mão é deliberado, para que a lógica de partição fique visível.</p>
+</div>
+<div id="ranking-scripts" class="section level3 hasAnchor" number="3.7.16">
+<h3><span class="header-section-number">3.7.16</span> Ordenamento como pergunta: quem é o mais lento?<a href="comparacoes-multiplas.html#ranking-scripts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A ordem observada das médias é Combo &gt; Anúncios &gt; Analytics &gt; Nenhum. Com que segurança se pode
+dizer que o Combo é a configuração mais lenta? Uma forma simples de responder é tratar as médias
+verdadeiras como incertas, com <span class="math inline">\(\mu_i \sim N(\bar y_{i\cdot}, QME/n)\)</span> — uma aproximação de bootstrap
+paramétrico (ou a posteriori com priori plana) —, sortear muitas vezes as quatro médias e registrar
+a posição de cada configuração no ranking.</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="comparacoes-multiplas.html#cb159-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb159-2"><a href="comparacoes-multiplas.html#cb159-2" tabindex="-1"></a>sim_m <span class="ot">&lt;-</span> <span class="fu">sapply</span>(medias, <span class="cf">function</span>(mu) <span class="fu">rnorm</span>(<span class="dv">10000</span>, mu, <span class="fu">sqrt</span>(qme <span class="sc">/</span> <span class="dv">10</span>)))</span>
+<span id="cb159-3"><a href="comparacoes-multiplas.html#cb159-3" tabindex="-1"></a>pos <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(<span class="sc">-</span>sim_m, <span class="dv">1</span>, rank))       <span class="co"># posição 1 = mais lenta</span></span>
+<span id="cb159-4"><a href="comparacoes-multiplas.html#cb159-4" tabindex="-1"></a>prob_rank <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">colnames</span>(pos), <span class="cf">function</span>(cfg)</span>
+<span id="cb159-5"><a href="comparacoes-multiplas.html#cb159-5" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">config =</span> cfg, <span class="at">posicao =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">prob =</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(k) <span class="fu">mean</span>(pos[, cfg] <span class="sc">==</span> k))))</span>
+<span id="cb159-6"><a href="comparacoes-multiplas.html#cb159-6" tabindex="-1"></a><span class="fu">ggplot</span>(prob_rank, <span class="fu">aes</span>(<span class="fu">factor</span>(posicao), <span class="fu">factor</span>(config, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">names</span>(medias))), <span class="at">fill =</span> prob)) <span class="sc">+</span></span>
+<span id="cb159-7"><a href="comparacoes-multiplas.html#cb159-7" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(prob, <span class="dv">1</span>)), <span class="at">size =</span> <span class="fl">4.2</span>) <span class="sc">+</span></span>
+<span id="cb159-8"><a href="comparacoes-multiplas.html#cb159-8" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;white&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#0B4F6C&quot;</span>, <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb159-9"><a href="comparacoes-multiplas.html#cb159-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Posição no ranking (1 = mais lenta)&quot;</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-rank-prob"></span>
+<img src="03-dca_files/figure-html/c3c-rank-prob-1.png" alt="Probabilidade aproximada de cada configuração ocupar cada posição no ranking de tempo de carregamento (1 = mais lenta), obtida sorteando 10.000 vezes as médias de N(média observada, QME/n)." width="75%" />
+<p class="caption">
+Figura 3.34: Probabilidade aproximada de cada configuração ocupar cada posição no ranking de tempo de carregamento (1 = mais lenta), obtida sorteando 10.000 vezes as médias de N(média observada, QME/n).
+</p>
+</div>
+<p>Nenhum é a mais rápida e Analytics a segunda com probabilidade praticamente 1. Mas o Combo é o mais
+lento em só cerca de 88% dos sorteios: a ordem entre Combo e Anúncios não é
+sustentada pelos dados, o mesmo que dizem Tukey, o contraste <span class="math inline">\(L_3\)</span> e o intervalo de confiança da
+diferença. O ranking que os dados permitem é parcial: Nenhum &lt; Analytics &lt; {Anúncios, Combo}.</p>
+</div>
+<div id="fwer-simulada" class="section level3 hasAnchor" number="3.7.17">
+<h3><span class="header-section-number">3.7.17</span> Quanto custa ser liberal: o FWER simulado<a href="comparacoes-multiplas.html#fwer-simulada" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A discussão sobre quem controla o FWER e em que condições fica concreta com uma simulação.
+Repetimos 2.000 vezes um experimento com o mesmo desenho (<span class="math inline">\(t = 4\)</span>, <span class="math inline">\(n = 10\)</span>, <span class="math inline">\(\sigma = 70\)</span> ms) em
+dois cenários: <span class="math inline">\(H_0\)</span> completa (quatro médias iguais) e <span class="math inline">\(H_0\)</span> parcial (duas configurações iguais
+entre si, outras duas iguais entre si, com 200 ms entre os pares). Em cada repetição registramos se
+<strong>algum par de médias verdadeiramente iguais</strong> foi declarado diferente.</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="comparacoes-multiplas.html#cb160-1" tabindex="-1"></a>fwer_sim <span class="ot">&lt;-</span> <span class="cf">function</span>(mu, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">sigma =</span> <span class="dv">70</span>, <span class="at">B =</span> <span class="dv">2000</span>) {</span>
+<span id="cb160-2"><a href="comparacoes-multiplas.html#cb160-2" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="fu">length</span>(mu); pares <span class="ot">&lt;-</span> <span class="fu">combn</span>(t, <span class="dv">2</span>); nulos <span class="ot">&lt;-</span> mu[pares[<span class="dv">1</span>, ]] <span class="sc">==</span> mu[pares[<span class="dv">2</span>, ]]</span>
+<span id="cb160-3"><a href="comparacoes-multiplas.html#cb160-3" tabindex="-1"></a>  <span class="fu">rowMeans</span>(<span class="fu">replicate</span>(B, {</span>
+<span id="cb160-4"><a href="comparacoes-multiplas.html#cb160-4" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> t, <span class="fu">rep</span>(mu, <span class="at">each =</span> n), sigma), n)</span>
+<span id="cb160-5"><a href="comparacoes-multiplas.html#cb160-5" tabindex="-1"></a>    <span class="fu">sapply</span>(<span class="fu">decide_pares</span>(<span class="fu">colMeans</span>(y), <span class="fu">mean</span>(<span class="fu">apply</span>(y, <span class="dv">2</span>, var)), n, t <span class="sc">*</span> (n <span class="sc">-</span> <span class="dv">1</span>)),</span>
+<span id="cb160-6"><a href="comparacoes-multiplas.html#cb160-6" tabindex="-1"></a>           <span class="cf">function</span>(d) <span class="fu">any</span>(d[nulos]))</span>
+<span id="cb160-7"><a href="comparacoes-multiplas.html#cb160-7" tabindex="-1"></a>  }))</span>
+<span id="cb160-8"><a href="comparacoes-multiplas.html#cb160-8" tabindex="-1"></a>}</span>
+<span id="cb160-9"><a href="comparacoes-multiplas.html#cb160-9" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2027</span>)</span>
+<span id="cb160-10"><a href="comparacoes-multiplas.html#cb160-10" tabindex="-1"></a>fw <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb160-11"><a href="comparacoes-multiplas.html#cb160-11" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="fu">fwer_sim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)), <span class="st">&quot;metodo&quot;</span>, <span class="st">&quot;fwer&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">cenario =</span> <span class="st">&quot;H0 completa: 4 médias iguais&quot;</span>),</span>
+<span id="cb160-12"><a href="comparacoes-multiplas.html#cb160-12" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="fu">fwer_sim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">200</span>, <span class="dv">200</span>)), <span class="st">&quot;metodo&quot;</span>, <span class="st">&quot;fwer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb160-13"><a href="comparacoes-multiplas.html#cb160-13" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">cenario =</span> <span class="st">&quot;H0 parcial: 2 pares iguais, 200 ms entre pares&quot;</span>))</span>
+<span id="cb160-14"><a href="comparacoes-multiplas.html#cb160-14" tabindex="-1"></a><span class="fu">ggplot</span>(fw, <span class="fu">aes</span>(fwer, <span class="fu">factor</span>(metodo, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">names</span>(dec))))) <span class="sc">+</span></span>
+<span id="cb160-15"><a href="comparacoes-multiplas.html#cb160-15" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;#0B4F6C&quot;</span>, <span class="at">width =</span> <span class="fl">0.65</span>) <span class="sc">+</span></span>
+<span id="cb160-16"><a href="comparacoes-multiplas.html#cb160-16" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.05</span>, <span class="at">color =</span> <span class="st">&quot;#d98324&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb160-17"><a href="comparacoes-multiplas.html#cb160-17" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(fwer, <span class="fl">0.1</span>, <span class="at">decimal.mark =</span> <span class="st">&quot;,&quot;</span>)), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.15</span>, <span class="at">size =</span> <span class="fl">3.3</span>) <span class="sc">+</span></span>
+<span id="cb160-18"><a href="comparacoes-multiplas.html#cb160-18" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> cenario) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>)) <span class="sc">+</span></span>
+<span id="cb160-19"><a href="comparacoes-multiplas.html#cb160-19" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;FWER simulado&quot;</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c3c-sim-fwer"></span>
+<img src="03-dca_files/figure-html/c3c-sim-fwer-1.png" alt="Taxa de erro por família (FWER) estimada em 2.000 repetições do experimento para cada procedimento, sob H0 completa (esquerda) e sob H0 parcial (direita). A linha tracejada marca o nível nominal de 5%." width="75%" />
+<p class="caption">
+Figura 3.35: Taxa de erro por família (FWER) estimada em 2.000 repetições do experimento para cada procedimento, sob H0 completa (esquerda) e sob H0 parcial (direita). A linha tracejada marca o nível nominal de 5%.
+</p>
+</div>
+<p>O resultado organiza toda a discussão anterior. Sob <span class="math inline">\(H_0\)</span> completa, os testes <span class="math inline">\(t\)</span> sem correção
+erram em 20% das repetições e o Duncan em
+14% (o valor teórico é <span class="math inline">\(\alpha_4 \approx 14{,}3\%\)</span>), enquanto LSD protegido,
+SNK e Tukey ficam em torno de 5% e Bonferroni e Scheffé abaixo disso. Sob <span class="math inline">\(H_0\)</span> <strong>parcial</strong>, porém,
+LSD protegido e SNK sobem para 9%: o <span class="math inline">\(F\)</span> global é sempre significativo (há
+200 ms entre os pares), de modo que a “proteção” desaparece, e os dois pares de médias iguais, que
+ficam vizinhos na ordenação, são testados cada um ao nível de 5% — <span class="math inline">\(1-0{,}95^2 \approx 9{,}75\%\)</span>.
+Tukey, Bonferroni e Scheffé ficam abaixo de 5% nos dois cenários: é isso que significa “controlar o
+FWER em sentido forte”.</p>
+</div>
+<div id="snooping-pratica" class="section level3 hasAnchor" number="3.7.18">
+<h3><span class="header-section-number">3.7.18</span> <em>Data snooping</em> na prática<a href="comparacoes-multiplas.html#snooping-pratica" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Suponha agora que a comparação Analytics − Nenhum <strong>não</strong> estivesse no protocolo: alguém olhou a
+Figura <a href="contrastes.html#fig:c3c-plot-dados-scripts">3.18</a> e decidiu testá-la. A régua honesta para um contraste
+sugerido pelos dados é a de Scheffé.</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="comparacoes-multiplas.html#cb161-1" tabindex="-1"></a>L_an <span class="ot">&lt;-</span> medias[<span class="st">&quot;Analytics&quot;</span>] <span class="sc">-</span> medias[<span class="st">&quot;Nenhum&quot;</span>]; t_an <span class="ot">&lt;-</span> <span class="fu">unname</span>(L_an <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> qme <span class="sc">/</span> <span class="dv">10</span>))</span>
+<span id="cb161-2"><a href="comparacoes-multiplas.html#cb161-2" tabindex="-1"></a><span class="fu">c</span>(<span class="at">t_obs =</span> t_an, <span class="at">t_crit_planejado =</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">36</span>), <span class="at">t_crit_Scheffe =</span> <span class="fu">sqrt</span>(<span class="dv">3</span> <span class="sc">*</span> <span class="fu">qf</span>(<span class="fl">0.95</span>, <span class="dv">3</span>, <span class="dv">36</span>)))</span></code></pre></div>
+<pre><code>##            t_obs t_crit_planejado   t_crit_Scheffe 
+##         2.921968         2.028094         2.932370</code></pre>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="comparacoes-multiplas.html#cb163-1" tabindex="-1"></a>c_snoop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>        <span class="co"># &quot;sem anúncio&quot; vs. &quot;com anúncio&quot;, também sugerido pelo gráfico</span></span>
+<span id="cb163-2"><a href="comparacoes-multiplas.html#cb163-2" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">sum</span>(c_snoop <span class="sc">*</span> medias)) <span class="sc">/</span> <span class="fu">sqrt</span>(qme <span class="sc">*</span> <span class="fu">sum</span>(c_snoop<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## [1] 9.319104</code></pre>
+<p>Como contraste planejado, <span class="math inline">\(t = 2{,}92\)</span> passaria folgado do valor crítico
+2,03; como contraste sugerido pelos dados, o critério de Scheffé exige
+2,93, e o par fica por um fio abaixo dele. Já o contraste “sem anúncio
+vs. com anúncio”, também inspirado pelo gráfico, dá
+<span class="math inline">\(t = 9{,}3\)</span> e passa por qualquer régua. A
+lição é geral: efeitos grandes não precisam de planejamento para sobreviver a uma correção honesta;
+os de fronteira, sim.</p>
+</div>
+<div id="comparacoes-respostas" class="section level3 hasAnchor" number="3.7.19">
+<h3><span class="header-section-number">3.7.19</span> O que as comparações múltiplas respondem nestes dados<a href="comparacoes-multiplas.html#comparacoes-respostas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><strong>Quais configurações diferem entre si?</strong> Todas, exceto Anúncios e Combo (Tukey, FWER de 5%). A
+conclusão sobre Analytics × Nenhum depende do procedimento: só o Scheffé não a sustenta.</li>
+<li><strong>Cada script piora em relação a nenhum?</strong> Sim, os três (Dunnett): Analytics
++86 ms, Anúncios +220 ms, Combo +254 ms.</li>
+<li><strong>É possível ordenar as quatro configurações?</strong> Só parcialmente: Nenhum &lt; Analytics &lt;
+{Anúncios, Combo}; afirmar que “o Combo é o pior” não é sustentado.</li>
+<li><strong>Que procedimento reportar?</strong> O que responde à pergunta do protocolo — Dunnett para “contra o
+controle”, Tukey para “todos os pares”. Reportar o procedimento que produziu mais asteriscos é
+<em>data snooping</em> de procedimento.</li>
+</ol>
 <div class="caixa-discussao">
 <strong>Para discutir</strong>
 <ol>
 <li>Por que faz sentido usar Dunnett (não Tukey) quando a única pergunta de interesse é "cada
-configuração aumenta o tempo de carregamento em relação a não usar nenhum script?"</li>
+configuração aumenta o tempo de carregamento em relação a não usar nenhum script?" E por que, nesse
+caso, a versão unilateral é legítima?</li>
 <li>Um pesquisador roda a ANOVA, olha os dados, percebe uma diferença "interessante" entre dois
 grupos que não tinha planejado comparar, e testa essa diferença com um teste $t$ comum. Por que
 isso viola as premissas por trás de todos os procedimentos desta seção, mesmo que o p-valor
-reportado pareça pequeno?</li>
-<li>Em que situação prática o conservadorismo extra do método de Scheffé compensa a perda de
-poder, em vez de ser simplesmente um custo a evitar?</li>
+reportado pareça pequeno? O que muda se ele usar Scheffé?</li>
+<li>O contraste $L_3$ (Anúncios contra Combo) não foi significativo, e um gerente conclui que "o
+chat não custa nada". O que você responderia, usando o intervalo de confiança de $L_3$ e o cálculo
+de tamanho amostral?</li>
+<li>Os três contrastes "cada script contra Nenhum" somaram mais que $SQ_{Trat}$. Isso indica um erro
+de conta? O que representa a soma "a mais"?</li>
+<li>Na simulação, LSD protegido e SNK controlaram o FWER sob $H_0$ completa, mas não sob $H_0$
+parcial. Explique o mecanismo, com base no teste $F$ preliminar e na regra de coerência.</li>
 <li>O teste de Duncan é mais liberal que Tukey porque usa um nível de proteção $\alpha_p$ que
 cresce com a amplitude $p$ da comparação, em vez de manter $\alpha$ fixo. Isso é uma vantagem ou
 uma desvantagem? Em que tipo de publicação você esperaria ver Duncan preferido a Tukey, apesar de
@@ -669,8 +1975,23 @@ Duncan, D. B. (1955). Multiple range and multiple f tests. <em>Biometrics</em>, 
 <div id="ref-dunnett1955multiple" class="csl-entry">
 Dunnett, C. W. (1955). A multiple comparison procedure for comparing several treatments with a control. <em>Journal of the American Statistical Association</em>, <em>50</em>(272), 1096–1121.
 </div>
+<div id="ref-fisher1935design" class="csl-entry">
+Fisher, R. A. (1935b). <em>The design of experiments</em>. Oliver; Boyd.
+</div>
+<div id="ref-hsu1996multiple" class="csl-entry">
+Hsu, J. C. (1996). <em>Multiple comparisons: Theory and methods</em>. Chapman &amp; Hall.
+</div>
+<div id="ref-keuls1952use" class="csl-entry">
+Keuls, M. (1952). The use of the <span>“studentized range”</span> in connection with an analysis of variance. <em>Euphytica</em>, <em>1</em>, 112–122.
+</div>
+<div id="ref-newman1939distribution" class="csl-entry">
+Newman, D. (1939). The distribution of the range in samples from a normal population, expressed in terms of an independent estimate of standard deviation. <em>Biometrika</em>, <em>31</em>(1/2), 20–30.
+</div>
 <div id="ref-scheffe1959analysis" class="csl-entry">
 Scheffé, H. (1959). <em>The analysis of variance</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-scottknott1974cluster" class="csl-entry">
+Scott, A. J., &amp; Knott, M. (1974). A cluster analysis method for grouping means in the analysis of variance. <em>Biometrics</em>, <em>30</em>(3), 507–512.
 </div>
 <div id="ref-tukey1949comparing" class="csl-entry">
 Tukey, J. W. (1949a). Comparing individual means in the analysis of variance. <em>Biometrics</em>, <em>5</em>(2), 99–114.

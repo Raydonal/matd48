@@ -9,6 +9,20 @@ sofisticada que seja [@fisher1935design; @boxhunterhunter2005]. Este capítulo e
 vocabulário e os três princípios estruturais — **repetição**, **aleatorização** e
 **controle local (blocagem)** — que sustentam todo o resto do curso.
 
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O fio do livro: controlado × não controlado</strong><br>
+A pergunta que organiza todo o livro é <strong>quem decidiu qual unidade recebe qual tratamento</strong>.
+Num <strong>experimento controlado</strong>, o pesquisador atribui o tratamento, de preferência por
+sorteio; num <strong>estudo não controlado</strong> (observacional), ele só registra o que aconteceu.
+Este capítulo define os dois, mostra por que a confusão (<em>confounding</em>) é o que os separa e
+prova, com o modelo de resultados potenciais, que o sorteio resolve o problema. Cada capítulo
+seguinte retoma a mesma pergunta para o delineamento que apresenta e termina com uma seção que
+simula a versão não controlada do seu exemplo.
+</div>
+```
+
 ## O método científico e o papel do delineamento experimental {#metodo-cientifico}
 
 Antes de qualquer definição técnica, vale situar a pergunta que motiva a disciplina inteira: *por
@@ -55,6 +69,18 @@ atribuição do tratamento é decidida pelo pesquisador (por sorteio), não pela
 nenhuma característica dela — e é esse fato, formalizado com rigor na Seção \@ref(neyman-rubin),
 que permite interpretar uma diferença observada como efeito causal.
 
+Dados observacionais não são inúteis: eles costumam ser ótimos para mostrar **que existe** um
+problema, e ruins para dizer **qual é a causa** [@dean2017design]. Imagine uma estufa em que as
+mudas da bancada 3 crescem sistematicamente menos que as das outras. Os registros não distinguem
+as explicações possíveis: a bancada recebe menos luz, a bandeja de substrato veio de um lote ruim,
+ou o técnico responsável por aquela bancada rega de outra maneira. Um experimento resolve a
+questão **movendo de propósito** cada candidato a causa: trocar as bandejas de bancada (se o
+crescimento ruim acompanha a bandeja, a culpa é do substrato), trocar os técnicos entre bancadas
+(se acompanha o técnico, é a rega), e sortear essas trocas para que nenhuma outra mudança ande
+junto com elas. Por isso a **regra de atribuição** das unidades aos tratamentos é uma decisão de
+planejamento, tomada antes da coleta, e não um detalhe de análise: é ela que transforma um registro
+do que aconteceu numa comparação capaz de apontar causas.
+
 ### Uma nota histórica: quantificar, controlar, e só depois formalizar
 
 Os ingredientes que compõem o delineamento experimental não nasceram juntos. Jan Baptist van
@@ -70,6 +96,34 @@ efeito à planta e não a alguma outra mudança concomitante (temperatura, tempo
 contribuiu o primeiro ingrediente do delineamento moderno (quantificação precisa); Priestley, o
 segundo (comparação contra um controle). Faltavam ainda repetição e aleatorização — e é exatamente
 aí que entra Fisher.
+
+<div class="figure" style="text-align: center">
+<img src="../Aulas2026/assets/images/Van_Helmont_Experiment.jpg" alt="Os dois pioneiros. Esquerda: o experimento de van Helmont, um salgueiro plantado em solo previamente pesado e regado só com água por cinco anos; ao final, a árvore ganhou quase 74 kg e o solo perdeu cerca de 0,1 kg. Direita: os experimentos de Priestley com redomas de vidro: a vela sozinha apaga (1), o camundongo sozinho morre (2), a planta sozinha sobrevive (3), e, junto de uma planta, a vela queima por mais tempo (4) e o camundongo sobrevive (5)." width="48%" /><img src="../Aulas2026/assets/images/priestly.jpg" alt="Os dois pioneiros. Esquerda: o experimento de van Helmont, um salgueiro plantado em solo previamente pesado e regado só com água por cinco anos; ao final, a árvore ganhou quase 74 kg e o solo perdeu cerca de 0,1 kg. Direita: os experimentos de Priestley com redomas de vidro: a vela sozinha apaga (1), o camundongo sozinho morre (2), a planta sozinha sobrevive (3), e, junto de uma planta, a vela queima por mais tempo (4) e o camundongo sobrevive (5)." width="48%" />
+<p class="caption">(\#fig:fig-pioneiros)Os dois pioneiros. Esquerda: o experimento de van Helmont, um salgueiro plantado em solo previamente pesado e regado só com água por cinco anos; ao final, a árvore ganhou quase 74 kg e o solo perdeu cerca de 0,1 kg. Direita: os experimentos de Priestley com redomas de vidro: a vela sozinha apaga (1), o camundongo sozinho morre (2), a planta sozinha sobrevive (3), e, junto de uma planta, a vela queima por mais tempo (4) e o camundongo sobrevive (5).</p>
+</div>
+
+Os números de van Helmont cabem em quatro linhas, e é justamente essa a lição: sem a medição, a
+comparação nem existiria — "a árvore cresceu" não é uma afirmação testável; "a árvore ganhou
+73,85 kg enquanto o solo perdeu 0,1 kg" é.
+
+
+``` r
+peso_inicial_arvore <- 2.25; peso_inicial_solo <- 90.0   # kg
+peso_final_arvore   <- 76.1; peso_final_solo   <- 89.9
+c(ganho_arvore_kg = peso_final_arvore - peso_inicial_arvore,
+  perda_solo_kg   = peso_inicial_solo - peso_final_solo)
+```
+
+```
+## ganho_arvore_kg   perda_solo_kg 
+##           73.85            0.10
+```
+
+O painel de Priestley (Figura \@ref(fig:fig-pioneiros), à direita) mostra por que o controle é
+indispensável: a observação isolada "com planta, a vela voltou a queimar" não distingue o efeito da
+planta de qualquer outra mudança que aconteceria de todo modo com o passar dos dias; só a
+comparação com a redoma **sem** planta, sob as mesmas condições, permite atribuir a diferença à
+planta. Sem grupo controle, "funcionou" não quer dizer nada — funcionou *em relação a quê*?
 
 A formalização estatística de repetição, aleatorização e blocagem como resposta metodológica ao
 problema da causalidade nasce do trabalho de Ronald A. Fisher na estação agrícola experimental de
@@ -156,7 +210,7 @@ estudante. A **unidade amostral é cada prova respondida**: há duas medições 
 estudante. Se o pesquisador tratasse as 60 provas como 60 réplicas independentes do experimento,
 estaria contando cada estudante duas vezes, ignorando que as duas notas de uma mesma pessoa são
 correlacionadas — um erro clássico de pseudorreplicação (voltaremos a isso formalmente com
-subamostragem no Capítulo 3, ao tratar do DCA).
+subamostragem no Capítulo 3, ao tratar do delineamento completamente aleatorizado, o DCA).
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — simulando a distinção UE vs. unidade amostral</div>
@@ -422,7 +476,7 @@ mostra o que o experimento de fato revela depois que $Z_i$ é sorteado: exatamen
 colunas anteriores, nunca as duas.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>(\#tab:tabela-cientifica)Tabela científica (science table): apenas seis unidades ilustrativas. Cada linha tem dois resultados potenciais, mas só um é revelado ('?' marca o contrafactual). O ATE é uma média sobre uma coluna que nunca existe inteira nos dados observados.</caption>
+<caption>(\#tab:tabela-cientifica)Tabela científica (science table): apenas seis unidades ilustrativas. Cada linha tem dois resultados potenciais, mas só um é revelado ('?' marca o contrafactual). O ATE (efeito médio do tratamento, definido logo abaixo) é uma média sobre uma coluna que nunca existe inteira nos dados observados.</caption>
  <thead>
   <tr>
    <th style="text-align:center;"> Unidade </th>
@@ -589,7 +643,102 @@ Sem aleatorização — por exemplo, se as unidades se autosselecionam para o tr
 depender de $(Y_i(0), Y_i(1))$ (unidades com $Y_i(1)$ potencialmente maior podem ser justamente as
 que "escolhem" o tratamento), quebrando a igualdade $E[\bar Y_1^{\,obs}] = \bar Y(1)$: a diferença
 de médias observadas deixa de estimar o ATE e passa a misturar o efeito causal com viés de
-seleção — exatamente o problema levantado na Questão 3 da caixa de discussão a seguir.
+seleção — exatamente o que a simulação a seguir mostra com números.
+
+#### O mesmo experimento, sem sorteio: o agricultor escolhe as parcelas {#cnc-cap1}
+
+A demonstração acima diz o que o sorteio garante; falta ver, com os mesmos números, o que acontece
+quando ele não existe. Esta é a pergunta que atravessa o livro inteiro: **todo capítulo termina com
+uma seção "Controlado × não controlado"**, que pega o delineamento do capítulo e o compara com a
+versão *observacional* da mesma pergunta, em que o pesquisador apenas registra o que aconteceu. A
+verdade simulada é sempre a mesma nos dois regimes; muda só **quem decide** qual unidade recebe qual
+tratamento. As funções que geram essas comparações estão em `controle_helpers.R`, compartilhado com
+as aulas.
+
+Voltemos às 40 parcelas, com exatamente os mesmos resultados potenciais $Y_i(0)$ e $Y_i(1)$ da
+simulação anterior. No regime **controlado**, as 20 parcelas que recebem V2 são sorteadas. No regime
+**não controlado**, quem escolhe é o agricultor, que conhece a própria terra e tende a plantar a
+semente nova nas parcelas mais férteis: a probabilidade de a parcela $i$ ser escolhida é
+proporcional a $e^{0{,}5\,\text{fertilidade}_i}$. Ele não está trapaceando; está fazendo o que
+qualquer pessoa sensata faria com uma semente cara. É justamente isso que quebra a independência
+entre $Z_i$ e $(Y_i(0), Y_i(1))$.
+
+
+``` r
+cnc1 <- cnc_cap1()           # 4.000 sorteios e 4.000 escolhas do agricultor
+res1 <- resumo_estimador(cnc1$est, cnc1$ate)
+res1
+```
+
+```
+## # A tibble: 2 × 5
+##   regime                               media    vies    dp  reqm
+##   <fct>                                <dbl>   <dbl> <dbl> <dbl>
+## 1 Controlado: sorteio                   5.09 -0.0348  1.66  1.66
+## 2 Não controlado: o agricultor escolhe 10.7   5.52    1.02  5.62
+```
+
+<div class="figure" style="text-align: center">
+<img src="01-principios_files/figure-html/cnc-cap1-graf-1.png" alt="Distribuição da diferença de médias observada nos dois regimes, sobre as mesmas 40 parcelas e os mesmos resultados potenciais. Azul: as 20 parcelas de V2 são sorteadas. Laranja: o agricultor escolhe as parcelas, preferindo as mais férteis. A linha tracejada preta é o ATE verdadeiro; as linhas cheias, a média de cada distribuição. O sorteio acerta em média; a escolha do agricultor erra sempre para o mesmo lado." width="75%" />
+<p class="caption">(\#fig:cnc-cap1-graf)Distribuição da diferença de médias observada nos dois regimes, sobre as mesmas 40 parcelas e os mesmos resultados potenciais. Azul: as 20 parcelas de V2 são sorteadas. Laranja: o agricultor escolhe as parcelas, preferindo as mais férteis. A linha tracejada preta é o ATE verdadeiro; as linhas cheias, a média de cada distribuição. O sorteio acerta em média; a escolha do agricultor erra sempre para o mesmo lado.</p>
+</div>
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:cnc-cap1-tab)Diferença de médias nos dois regimes. Viés = média menos o ATE verdadeiro; DP = desvio-padrão entre as repetições; REQM = raiz do erro quadrático médio, que soma viés e variabilidade.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Regime </th>
+   <th style="text-align:right;"> Média </th>
+   <th style="text-align:right;"> Viés </th>
+   <th style="text-align:right;"> DP </th>
+   <th style="text-align:right;"> REQM </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Controlado: sorteio </td>
+   <td style="text-align:right;"> 5,09 </td>
+   <td style="text-align:right;"> -0,03 </td>
+   <td style="text-align:right;"> 1,66 </td>
+   <td style="text-align:right;"> 1,66 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Não controlado: o agricultor escolhe </td>
+   <td style="text-align:right;"> 10,65 </td>
+   <td style="text-align:right;"> 5,52 </td>
+   <td style="text-align:right;"> 1,02 </td>
+   <td style="text-align:right;"> 5,62 </td>
+  </tr>
+</tbody>
+</table>
+
+Três leituras da figura e da tabela:
+
+1. **O viés não diminui com mais dados.** O ATE verdadeiro é 5,13; a escolha do
+   agricultor estima, em média, 10,65,
+   cerca de 2,1 vezes mais. Repetir o estudo observacional mil vezes só reproduz o mesmo erro com mais
+   confiança: a parcela fértil seria produtiva com qualquer semente, e o estimador atribui à semente
+   o que é da terra.
+2. **O estudo observacional parece até mais preciso.** O desvio-padrão laranja é *menor* que o azul.
+   Precisão não é exatidão: um estimador concentrado em torno do valor errado é pior do que um
+   disperso em torno do certo, e a REQM mostra isso.
+3. **Nada nos dados observacionais denuncia o problema.** Olhando só as 20 parcelas de V2 e as 20
+   de V1, o agricultor vê duas amostras perfeitamente comuns. O viés vem do *mecanismo* que gerou
+   $Z_i$, e esse mecanismo não está escrito em nenhuma coluna da planilha. É por isso que o
+   delineamento é decidido **antes** da coleta.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>Se o agricultor medisse a fertilidade de cada parcela, uma regressão da produtividade na
+semente e na fertilidade corrigiria o viés? E se, além da fertilidade, ele também escolhesse pelas
+parcelas que "parecem bem drenadas", sem medir a drenagem?</li>
+<li>O sorteio é um procedimento, não uma propriedade dos dados. Explique por que duas planilhas
+idênticas podem sustentar conclusões causais diferentes, dependendo de como a coluna $Z$ foi gerada.</li>
+</ol>
+</div>
+```
 
 #### Quão dispersa é $\widehat{\text{ATE}}$? A fórmula de variância de Neyman
 
@@ -734,7 +883,7 @@ resumo_ab %>%
 </div>
 
 O estimador do ATE é a diferença de proporções observadas,
-$\widehat{\text{ATE}} = \hat p_B - \hat p_A \approx 0.0139$, com IC de
+$\widehat{\text{ATE}} = \hat p_B - \hat p_A \approx 0.0139$, com intervalo de confiança (IC) de
 95% que **não inclui zero** ($-0.0212$, $-0.0065$)
 e $p < 0{,}001$.
 Em linguagem simples: o layout em grade aumentou a conversão em
@@ -843,6 +992,53 @@ o "programa beta". Isso é aleatorização? Que population é representada pela 
 </div>
 ```
 
+### Os três pilares num só experimento: a senhora que toma chá {#senhora-cha}
+
+O exemplo com que Fisher abre o seu livro [@fisher1935design] mostra os três pilares funcionando
+juntos, num experimento de cozinha. Em Cambridge, nos anos 1920, a algologista Muriel Bristol
+afirmava distinguir, pelo sabor, se o leite havia sido posto na xícara antes ou depois do chá.
+Fisher propôs testá-la com **8 xícaras, 4 de cada tipo, apresentadas em ordem aleatória**; ela
+deveria separá-las em dois grupos de 4.
+
+- **Repetição:** 8 xícaras, não uma — com uma só, acertar por sorte teria probabilidade $1/2$.
+- **Aleatorização:** a ordem sorteada é o que **cria** a distribuição de referência do teste e
+  protege contra pistas involuntárias (a xícara que sempre vem primeiro, o lote preparado antes).
+- **Controle local:** mesma xícara, mesma temperatura, mesma quantidade de açúcar; a única diferença
+  deliberada entre as xícaras é a ordem do leite.
+
+A pergunta de Fisher não é "ela acertou?", e sim: **se ela estivesse apenas adivinhando, com que
+frequência acertaria tudo?** Sob $H_0$ (adivinhação), escolher 4 xícaras entre 8 é escolher uma das
+$\binom84 = 70$ partições possíveis, todas igualmente prováveis, e o número $X$ de xícaras "leite
+primeiro" corretamente identificadas tem distribuição hipergeométrica:
+
+$$P(X = k \mid H_0) = \frac{\binom4k\binom4{4-k}}{\binom84}, \qquad k = 0,\ldots,4, \qquad P(X=4\mid H_0) = \frac1{70} \approx 0{,}0143.$$
+
+<div class="figure" style="text-align: center">
+<img src="01-principios_files/figure-html/cha-dist-1.png" alt="Distribuição exata do número de xícaras corretamente identificadas quando a provadora apenas adivinha (hipergeométrica, 8 xícaras, 4 de cada tipo); a barra vermelha é o acerto total, com probabilidade 1/70." width="75%" />
+<p class="caption">(\#fig:cha-dist)Distribuição exata do número de xícaras corretamente identificadas quando a provadora apenas adivinha (hipergeométrica, 8 xícaras, 4 de cada tipo); a barra vermelha é o acerto total, com probabilidade 1/70.</p>
+</div>
+
+
+``` r
+cha <- matrix(c(4, 0, 0, 4), nrow = 2,
+              dimnames = list(Palpite = c("leite 1º", "chá 1º"),
+                              Real    = c("leite 1º", "chá 1º")))
+fisher.test(cha, alternative = "greater")$p.value   # = 1/70
+```
+
+```
+## [1] 0.01428571
+```
+
+Não há aproximação, nem normalidade, nem "$n$ grande": a distribuição de referência **é** o
+conjunto das 70 aleatorizações possíveis, todas igualmente prováveis porque foram sorteadas. Esse é
+o germe do **teste de aleatorização** que o Capítulo 3 desenvolve
+(Seção \@ref(principios-aleatorizacao)): a validade do teste vem do mecanismo de sorteio usado no
+desenho, não de suposições sobre a distribuição dos dados. Note também a natureza dos dados: a
+matriz `cha` é uma **tabela de contingência** — cada célula conta xícaras —, enquanto nos
+experimentos dos próximos capítulos cada célula de uma tabela de tratamentos guardará **medidas**
+de uma unidade experimental; a lógica do sorteio é a mesma, mas o modelo estatístico muda.
+
 ## Resumo do capítulo
 
 - O delineamento experimental é a tradução operacional do método científico: desenhar a coleta de
@@ -865,3 +1061,7 @@ o "programa beta". Isso é aleatorização? Que population é representada pela 
 
 O Capítulo 2 introduz a maquinaria formal — o modelo linear — que usaremos para expressar
 precisamente essas ideias e estimar seus parâmetros a partir de dados.
+- **Controlado × não controlado:** com as mesmas 40 parcelas e os mesmos resultados potenciais,
+  o sorteio estima o efeito médio do tratamento sem viés, e a escolha do agricultor o superestima
+  em mais do que o dobro. O viés vem do mecanismo que gerou $Z_i$, que nenhuma planilha registra.
+

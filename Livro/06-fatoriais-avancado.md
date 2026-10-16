@@ -12,7 +12,19 @@ relevante mesmo com software disponível, porque torna transparente *o que* est�
 O Capítulo 7 dá sequência a este, trocando a pergunta "o que importa?" pela pergunta "qual é o
 ótimo?" — a **metodologia de superfície de resposta**.
 
-## Fatoriais $2^k$: notação e ANOVA {#fatoriais-2k}
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+No $2^k$ o pesquisador controla até a confusão. Ele escolhe os pontos para que todas as colunas de
+$\mathbf X$ sejam ortogonais; ao dividir as corridas em blocos ou ao rodar só uma fração, escolhe
+qual efeito sacrificar e sabe exatamente o que ficou misturado com o quê (a relação definidora).
+Ele não controla o valor das interações que decidiu confundir: supõe que são desprezíveis. Num
+estudo não controlado também há confusão, mas acidental, sem mapa, como mostra a seção final.
+</div>
+```
+
+## Fatoriais $2^k$: notação e análise de variância (ANOVA) {#fatoriais-2k}
 
 Com $k$ fatores de dois níveis cada, há $2^k$ tratamentos distintos. Por convenção, codificamos
 o nível baixo como $-1$ e o alto como $+1$ (ou, na notação clássica de Yates, o nível baixo de um
@@ -43,6 +55,11 @@ purificação (<code>Agente</code>). O fatorial $2^4$ completo (16 tratamentos) 
 <strong>duas repetições</strong> (32 corridas), medindo o rendimento percentual de biodiesel.
 </div>
 ```
+
+As 16 combinações foram todas rodadas, duas vezes cada, e é isso que dá ortogonalidade e erro
+puro. A ordem das 32 corridas deve ser sorteada, para que uma deriva do reator não se confunda com
+nenhum efeito. Com 32 lotes do histórico da usina, em que os operadores mudam razão e temperatura
+juntas, várias combinações nem apareceriam.
 
 ```{=html}
 <div class="caixa-r"><strong>Uso do R</strong> — ANOVA completa do 2⁴ replicado</div>
@@ -153,6 +170,17 @@ mesmo conjunto de dados na próxima seção, mas fingindo, por um momento, que s
 **uma** repetição — o cenário mais comum na prática, porque cada corrida de um fatorial $2^k$
 completo já é cara, e dobrar o número de corridas para obter uma repetição raramente é viável
 quando $k$ é grande.
+
+<div class="figure" style="text-align: center">
+<img src="06-fatoriais-avancado_files/figure-html/biodiesel-interacao-catag-1.png" alt="Rendimento médio de biodiesel por nível do agente de purificação, separado por nível do catalisador (média sobre os demais fatores e as duas repetições): as retas se cruzam, isto é, o efeito do agente muda de sinal conforme o catalisador." width="80%" />
+<p class="caption">(\#fig:biodiesel-interacao-catag)Rendimento médio de biodiesel por nível do agente de purificação, separado por nível do catalisador (média sobre os demais fatores e as duas repetições): as retas se cruzam, isto é, o efeito do agente muda de sinal conforme o catalisador.</p>
+</div>
+
+A interação **catalisador:agente** é a mais fácil de enxergar (Figura
+\@ref(fig:biodiesel-interacao-catag)): trocar o agente de purificação **aumenta** o rendimento com o
+catalisador no nível $-1$ e o **reduz** com o catalisador no nível $+1$. O efeito do agente não tem
+um sinal único — depende do catalisador —, e é exatamente essa inversão que o termo de interação da
+ANOVA formaliza. Falar do "efeito do agente", isoladamente, seria enganoso.
 
 <div class="figure" style="text-align: center">
 <img src="06-fatoriais-avancado_files/figure-html/biodiesel-efeitos-plot-1.png" alt="Os quinze efeitos estimados do fatorial 2⁴ replicado (duas repetições cada). Barras vermelhas marcam os cinco termos com p&lt;0,05 na ANOVA completa: o efeito principal de temperatura, três interações duplas e a interação tripla dominante." width="80%" />
@@ -400,7 +428,7 @@ para ser ruído" do que não é.
 
 O método de Lenth [-@lenth1989quick] fornece uma margem de erro formal sem exigir repetição,
 usando a **mediana** dos efeitos como uma estimativa robusta de escala (pouco sensível aos
-próprios efeitos grandes que queremos detectar):
+próprios efeitos grandes que queremos detectar). O resultado é o pseudo erro-padrão (PSE, *pseudo standard error*):
 
 $$
 s_0 = 1{,}5 \cdot \text{mediana}_i |c_i|, \qquad
@@ -460,9 +488,15 @@ efeitos[abs(efeitos) > me]
 ##                           8.2875
 ```
 
-<img src="06-fatoriais-avancado_files/figure-html/biodiesel-halfnormal-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="06-fatoriais-avancado_files/figure-html/biodiesel-halfnormal-1.png" alt="Gráfico meio-normal (half-normal) dos 15 efeitos do 2⁴ do biodiesel sem repetição: valor absoluto de cada efeito contra o quantil teórico da meia-normal. Efeitos que são só ruído se alinham perto da origem; em vermelho, o efeito acima da margem de erro de Lenth, que se destaca da reta dos demais." width="80%" />
+<p class="caption">(\#fig:biodiesel-halfnormal)Gráfico meio-normal (half-normal) dos 15 efeitos do 2⁴ do biodiesel sem repetição: valor absoluto de cada efeito contra o quantil teórico da meia-normal. Efeitos que são só ruído se alinham perto da origem; em vermelho, o efeito acima da margem de erro de Lenth, que se destaca da reta dos demais.</p>
+</div>
 
-<img src="06-fatoriais-avancado_files/figure-html/biodiesel-pareto-1.png" alt="" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="06-fatoriais-avancado_files/figure-html/biodiesel-pareto-1.png" alt="Gráfico de Pareto dos mesmos 15 efeitos, em ordem de valor absoluto, com a margem de erro (ME) de Lenth tracejada. Só uma barra ultrapassa a ME; a segunda maior fica abaixo de metade dela." width="80%" />
+<p class="caption">(\#fig:biodiesel-pareto)Gráfico de Pareto dos mesmos 15 efeitos, em ordem de valor absoluto, com a margem de erro (ME) de Lenth tracejada. Só uma barra ultrapassa a ME; a segunda maior fica abaixo de metade dela.</p>
+</div>
 
 O gráfico de Pareto mostra a mesma informação do half-normal em outra forma: uma única barra
 ultrapassa a linha tracejada da margem de erro de Lenth. A segunda maior barra (a interação de
@@ -668,6 +702,11 @@ corridas). Retomaremos este mesmo conjunto de dados no capítulo sobre superfíc
 </div>
 ```
 
+As três velocidades e os três ângulos variam independentemente, cada combinação repetida, o que
+permite estimar a curvatura em cada direção. Na oficina, o operador aumenta o ângulo quando aumenta
+a velocidade, para não queimar a ferramenta; os registros cairiam sobre uma faixa estreita e a
+forma da superfície ficaria invisível.
+
 Assim como no $2^k$, dividir um $3^k$ em blocos exige confundir algum efeito com o bloco. A
 construção decompõe a interação em **componentes ortogonais de dois graus de liberdade cada**,
 $AB$ e $AB^2$ (ou, equivalentemente, $A^2B$), em vez de tratar $A{\times}B$ como um bloco único:
@@ -797,6 +836,98 @@ pergunta para "qual combinação de níveis **otimiza** a resposta?" — a metod
 superfície de resposta, que estende os fatoriais $2^k$ deste capítulo com um modelo
 polinomial de segunda ordem capaz de representar curvatura e localizar um ótimo.
 
+## Controlado × não controlado: confusão planejada e confusão acidental {#cnc-cap6}
+
+Este capítulo fez algo que, à primeira vista, contradiz o resto do livro: **confundiu efeitos de
+propósito**, ao colocar a interação $ABCD$ junto com os blocos ou ao rodar só metade de um $2^4$. A
+diferença entre essa confusão e a dos estudos observacionais não é de grau, é de natureza: na
+confusão planejada, o pesquisador **escolhe** quais efeitos ficam misturados (os que ele está
+disposto a supor desprezíveis) e **sabe exatamente** como se misturam. Na confusão acidental, quem
+escolhe é o acaso dos registros, e a mistura é um emaranhado.
+
+**A matriz de aliases.** Ajusta-se o modelo de efeitos principais
+$\mathbf Y = \mathbf X_1\boldsymbol\beta_1 + \boldsymbol\varepsilon$, mas a verdade inclui
+interações: $E[\mathbf Y] = \mathbf X_1\boldsymbol\beta_1 + \mathbf X_2\boldsymbol\beta_2$. Pelo
+mesmo argumento da variável omitida (Seção \@ref(cnc-cap2) do Capítulo 2),
+$$
+E[\hat{\boldsymbol\beta}_1] = \boldsymbol\beta_1 + \mathbf A\boldsymbol\beta_2,
+\qquad \mathbf A = (\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf X_2 .
+$$
+A linha de $\mathbf A$ correspondente ao efeito $A$ diz de quais interações a estimativa de $A$
+"herda" um pedaço, e com que peso. Na meia fração com relação definidora $I = ABCD$, a linha de $A$
+tem um único 1, na coluna $BCD$: é a afirmação "$A$ está confundido com $BCD$" escrita em álgebra.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Engenharia: quatro fatores, oito corridas</strong><br>
+<strong>Planejado:</strong> a meia fração 2<sup>4−1</sup> com <em>I = ABCD</em>.
+<strong>Não controlado:</strong> oito corridas tiradas do histórico do mesmo processo, que cobrem
+combinações da grade 2<sup>4</sup> mas foram escolhidas pelo hábito dos operadores, que costumam
+mover A e B juntos. As duas matrizes de oito linhas permitem estimar os cinco parâmetros do modelo
+de efeitos principais (intercepto, A, B, C, D). A pergunta é o que cada estimativa carrega das onze
+interações que ficaram de fora.
+</div>
+```
+
+
+``` r
+cnc6 <- cnc_cap6()
+cnc6$hist                       # as 8 corridas históricas (níveis codificados)
+```
+
+```
+##     A  B  C  D
+## 8   1  1  1 -1
+## 1  -1 -1 -1 -1
+## 5  -1 -1  1 -1
+## 16  1  1  1  1
+## 9  -1 -1 -1  1
+## 13 -1 -1  1  1
+## 12  1  1 -1  1
+## 10  1 -1 -1  1
+```
+
+``` r
+round(cnc6$A_hist, 2)           # matriz de aliases do histórico
+```
+
+```
+##   AB    AC    AD    BC    BD    CD ABC ABD   ACD   BCD  ABCD
+## I  1  0.25  0.25  0.25  0.25 -0.25   0   0 -0.25 -0.25 -0.25
+## A -1 -0.50  0.50  0.50 -0.50 -0.50   1  -1 -0.50  0.50  0.50
+## B  1  0.75 -0.25 -0.25  0.75  0.25  -1   1  0.25 -0.75 -0.75
+## C  0 -0.25 -0.25 -0.25 -0.25  0.25   1   0  0.25  0.25  0.25
+## D  0 -0.25 -0.25 -0.25 -0.25  0.25   0   1  0.25  0.25  0.25
+```
+
+<div class="figure" style="text-align: center">
+<img src="06-fatoriais-avancado_files/figure-html/cnc-cap6-graf-1.png" alt="Matriz de aliases A = (X1'X1)^{-1}X1'X2 do modelo de efeitos principais, em duas escolhas de oito corridas do mesmo processo. Cada linha é um efeito estimado; cada coluna, uma interação deixada fora do modelo; a célula é o peso com que essa interação contamina a estimativa. Em cima, a meia fração planejada com I = ABCD: cada efeito herda exatamente uma interação, de ordem três (A com BCD, B com ACD...), e nenhuma interação dupla. Embaixo, as oito corridas históricas: o efeito A herda, com peso ±1, a interação AB e duas triplas, e com peso ±0,5 todas as demais." width="80%" />
+<p class="caption">(\#fig:cnc-cap6-graf)Matriz de aliases A = (X1'X1)^{-1}X1'X2 do modelo de efeitos principais, em duas escolhas de oito corridas do mesmo processo. Cada linha é um efeito estimado; cada coluna, uma interação deixada fora do modelo; a célula é o peso com que essa interação contamina a estimativa. Em cima, a meia fração planejada com I = ABCD: cada efeito herda exatamente uma interação, de ordem três (A com BCD, B com ACD...), e nenhuma interação dupla. Embaixo, as oito corridas históricas: o efeito A herda, com peso ±1, a interação AB e duas triplas, e com peso ±0,5 todas as demais.</p>
+</div>
+
+Na prática, a diferença é a seguinte. Suponha que a interação $AB$ valha 3 unidades e todas as
+outras sejam nulas. Na fração planejada, a estimativa de $A$ não é afetada (a coluna $AB$ da linha
+$A$ é zero), e o próprio $AB$ fica confundido com $CD$, uma interação dupla que pode ser estimada se
+o modelo a incluir. No histórico, a estimativa de $A$ sai deslocada em
+$-3$ e a de $B$ em $+3$
+unidades, sem que nada na saída do `lm()` avise. A fração planejada também tem confusão, mas
+confusão **com um mapa**: a relação definidora diz de antemão o que está misturado com o quê, e a
+resolução do desenho (Seção \@ref(fracionados)) garante que os efeitos principais só se misturam
+com interações de ordem alta, as que o princípio da esparsidade dos efeitos sugere serem pequenas.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>Por que a matriz de aliases da fração planejada tem só zeros e uns, enquanto a do histórico tem
+frações como 0,25 e 0,75? Relacione com a ortogonalidade das colunas de $\mathbf X$.</li>
+<li>Ao designar um $2^k$ a blocos, o pesquisador confunde uma interação de ordem alta com os blocos.
+Por que essa confusão é preferível a deixar que a diferença entre blocos se misture, de forma
+desconhecida, com todos os efeitos?</li>
+</ol>
+</div>
+```
+
 ## Resumo do capítulo
 
 - Fatoriais $2^k$ estimam todos os efeitos com o menor número de corridas possível; cada efeito
@@ -813,4 +944,7 @@ polinomial de segunda ordem capaz de representar curvatura e localizar um ótimo
   aliasamento resultante.
 - O Capítulo 7 retoma esses mesmos fatoriais para responder a uma pergunta diferente: não "o que
   importa?", mas "qual é o ótimo?".
+- **Controlado × não controlado:** a confusão planejada tem mapa (a relação definidora e a
+  resolução dizem o que está misturado com o quê); a confusão de registros históricos espalha cada
+  interação por todos os efeitos, como mostra a matriz de aliases.
 

@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
   library(kableExtra)
   library(broom)
 })
+source("controle_helpers.R")   # fio condutor: controlado x não controlado (seção ao fim do capítulo)
 ```
 
 Os Capítulos 5 e 6 trataram fatoriais desenhados para **detectar e estimar efeitos** — a pergunta
@@ -20,6 +21,19 @@ era "quais fatores importam, e há interação?". Este capítulo muda a pergunta
 de níveis **otimiza** a resposta?" — a metodologia de superfície de resposta (MSR), um dos usos
 mais comuns de delineamento de experimentos na indústria e na ciência de dados hoje em dia (ajuste
 de hiperparâmetros, otimização de processos químicos e de manufatura, desenho de produtos).
+
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+Otimizar exige <strong>mover as variáveis de propósito</strong>: o caminho de máxima subida, o
+delineamento composto central (CCD) e as funções de desejabilidade só funcionam porque o
+pesquisador escolhe combinações que o processo, operado no dia a dia, nunca visitaria. O que não se
+controla é o que acontece fora da região experimental: extrapolar a superfície ajustada é sair do
+controle. Os registros de uma fábrica cobrem só a faixa em que o processo já opera, e os
+operadores compensam uma variável com outra; são o que Box chamou de dados de acaso.
+</div>
+```
 
 ## Introdução à superfície de resposta {#superficie-resposta}
 
@@ -63,7 +77,7 @@ superfície de segunda ordem descreve bem os dados — evidência de curvatura r
 $2^k$ nesses mesmos dois fatores nunca teria detectado, porque um desenho de apenas dois níveis
 por fator é algebricamente cego a termos quadráticos.
 
-```{r energia-superficie, fig.width=7, fig.height=6, echo=FALSE}
+```{r energia-superficie, fig.width=7, fig.height=6, echo=FALSE, fig.cap="Perspectiva tridimensional da superfície de segunda ordem ajustada para a energia de corte em função da velocidade e do ângulo de saída. A superfície sobe em algumas direções e desce em outras, sinal de que o ponto estacionário não é um mínimo nem um máximo simples."}
 grade <- expand_grid(
   Velocidad = seq(min(energia$Velocidad), max(energia$Velocidad), length.out = 40),
   angulo    = seq(min(energia$angulo), max(energia$angulo), length.out = 40)
@@ -80,7 +94,7 @@ persp(
 )
 ```
 
-```{r energia-contorno, fig.width=6.5, fig.height=5, echo=FALSE}
+```{r energia-contorno, fig.width=6.5, fig.height=5, echo=FALSE, fig.cap="Curvas de nível da mesma superfície ajustada, com os pontos do experimento em branco. É a forma mais útil para ler onde a energia predita é menor e para localizar o ponto estacionário."}
 ggplot(grade, aes(x = Velocidad, y = angulo, z = energia_pred)) +
   geom_contour_filled(alpha = 0.85) +
   geom_point(data = energia, aes(x = Velocidad, y = angulo), inherit.aes = FALSE,
@@ -260,7 +274,7 @@ B_cod <- matrix(
 y0_cod <- coef(modelo_rsm_cod)["(Intercept)"]
 ```
 
-```{r energia-ridge, fig.width=6.5, fig.height=5}
+```{r energia-ridge, fig.width=6.5, fig.height=5, fig.cap="Caminho de ridge da energia de corte: para cada raio a partir do centro do desenho (em unidades codificadas), o ponto do círculo com a menor energia predita, colorido pelo valor predito. O tracejado é o maior círculo inteiramente contido na região experimental; o caminho para nele, para não extrapolar."}
 # Ate onde o raio pode ir sem extrapolar? A regiao experimental e a CAIXA
 # [-1,1]^2 (grade 3x3 em unidades codificadas). O circulo de raio rho so fica
 # inteiramente dentro da caixa ate rho = 1 (circulo INSCRITO); a partir dai ele
@@ -321,7 +335,7 @@ $\sqrt2\approx1{,}41$ toca o desenho apenas nos quatro vértices e, em todas as 
 já está fora dos dados. Como a direção ótima $\theta$ é escolhida pelo próprio procedimento, e não
 por nós, só $\rho\le1$ garante que *nenhuma* direção escolhida seja extrapolação — que é a
 disciplina que esta seção prega e precisa praticar. (Em desenhos cuja região é esférica por
-construção, como o CCD rotacionável da próxima seção, essa distinção desaparece: lá a região *é* um
+construção, como o delineamento composto central (CCD, *central composite design*) rotacionável da próxima seção, essa distinção desaparece: lá a região *é* um
 círculo, e o raio axial $\alpha$ é o limite natural.) Segunda: em vez de relatar apenas "o mínimo
 fica na fronteira", como fizemos antes, o caminho mostra *toda a trajetória* de pontos
 ótimos-restritos, permitindo ao engenheiro escolher conscientemente um raio que equilibre ganho na
@@ -347,6 +361,11 @@ curto (onde a equipe suspeitava, sem certeza, que a retenção seria baixa), est
 primeira ordem.
 </div>
 ```
+
+Cada passo do caminho é uma corrida nova, na combinação de temperatura e tempo escolhida pela
+equipe. Um histórico de secagens, em que o operador encurta o tempo sempre que aumenta a
+temperatura (para não queimar a fruta), teria as duas variáveis quase colineares e não
+informaria a direção de subida.
 
 ```{r steepest-ascent-fatorial}
 set.seed(2026)
@@ -384,7 +403,7 @@ caminho_subida %>% select(passo, temperatura, tempo, retencao_verdadeira) %>%
   kable_styling(full_width = FALSE)
 ```
 
-```{r steepest-ascent-plot, echo=FALSE, fig.width=9, fig.height=4}
+```{r steepest-ascent-plot, echo=FALSE, fig.width=9, fig.height=4, fig.cap="Caminho de máxima subida na retenção de vitamina C. Esquerda: os pontos visitados no plano temperatura × tempo, coloridos pela retenção. Direita: a retenção observada em cada passo; ela sobe até o passo 4 e cai nos passos 5 e 6, sinal de que a região do ótimo foi alcançada e de que é hora de trocar o modelo de primeira ordem por um CCD."}
 p_caminho_espaco <- ggplot(caminho_subida, aes(temperatura, tempo, color = retencao_verdadeira)) +
   geom_path(linewidth = 1, color = "grey40") +
   geom_point(size = 3) +
@@ -450,7 +469,7 @@ $\alpha = (2^k)^{1/4}$ (para $k=2$, $\alpha=$ `r round((2^2)^(1/4), 3)`); um des
 garante que a precisão da predição não privilegia nenhuma direção do espaço de fatores, desejável
 quando não se sabe de antemão em que direção o ótimo vai estar.
 
-```{r ccd-simulacao, fig.width=5.5, fig.height=5}
+```{r ccd-simulacao, fig.width=5.5, fig.height=5, fig.cap="Estrutura do delineamento composto central (CCD) em unidades codificadas: núcleo fatorial 2² (os quatro cantos), quatro pontos axiais a distância α do centro e as repetições do ponto central."}
 set.seed(2026)
 ccd_dados <- ccd_codificado %>%
   mutate(
@@ -499,7 +518,7 @@ modelo_retencao <- lm(retencao ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2, data = ccd
 modelo_atividade <- lm(atividade_agua ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2, data = ccd_dados)
 ```
 
-```{r ccd-desejabilidade, fig.width=6.5, fig.height=5}
+```{r ccd-desejabilidade, fig.width=6.5, fig.height=5, fig.cap="Desejabilidade global D, a média geométrica das desejabilidades da retenção de vitamina C (a maximizar) e da atividade de água (a minimizar), sobre a região do CCD. O ponto vermelho é o máximo de D: um compromisso que não coincide com o ótimo isolado de nenhuma das duas respostas."}
 desej_maximizar <- function(y, L, T_alvo) pmin(pmax((y - L) / (T_alvo - L), 0), 1)
 desej_minimizar <- function(y, T_alvo, U) pmin(pmax((U - y) / (U - T_alvo), 0), 1)
 
@@ -621,7 +640,7 @@ modelo_media_r  <- lm(media ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2, data = resumo
 modelo_logvar_r <- lm(log(variancia) ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2, data = resumo_robusto)
 ```
 
-```{r robusto-plot, fig.width=6.5, fig.height=5}
+```{r robusto-plot, fig.width=6.5, fig.height=5, fig.cap="Desenho robusto: a cor mostra a variância prevista e os contornos brancos, a média prevista (14,5, 15 e 15,5 µm). O ponto vermelho é o de menor variância entre os que ficam a até 0,5 µm do alvo de 15 µm."}
 grade_robusto <- expand_grid(x1 = seq(-alpha_rot, alpha_rot, length.out = 80),
                               x2 = seq(-alpha_rot, alpha_rot, length.out = 80)) %>%
   mutate(
@@ -657,6 +676,80 @@ prevista é ordens de grandeza maior — o mesmo tipo de compromisso média-vari
 Taguchi, resolvido aqui com duas superfícies de resposta interpretáveis separadamente, em vez de
 uma razão sinal-ruído que as mistura.
 
+## Controlado × não controlado: dados de acaso e a direção de subida {#cnc-cap7}
+
+Toda fábrica tem anos de registros de processo: temperatura, tempo, pressão e rendimento de cada
+lote. Por que, então, gastar corridas num composto central (CCD, *central composite design*) em vez
+de ajustar a superfície de resposta a esse histórico? Box chamou esses registros de **dados de
+acaso** (*happenstance data*) e apontou o defeito central deles [@boxhunterhunter2005]: num processo
+bem operado, as variáveis de entrada **não variam livremente**. Os operadores corrigem umas com as
+outras para manter o produto dentro da especificação, e a correção é justamente o que impede os
+dados de revelar como cada variável afeta a resposta.
+
+**A álgebra do problema.** No modelo de primeira ordem $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon$,
+com as variáveis centradas,
+$$
+\text{Var}(\hat\beta_j) = \frac{\sigma^2}{S_{jj}\,(1 - r_{12}^2)}, \qquad j = 1, 2,
+$$
+em que $S_{jj} = \sum_i (x_{ij} - \bar x_j)^2$ e $r_{12}$ é a correlação entre $x_1$ e $x_2$ nos
+dados. O fator $1/(1 - r_{12}^2)$ é o fator de inflação da variância (VIF, *variance inflation
+factor*). No fatorial $2^2$ com pontos centrais, $r_{12} = 0$ e o VIF vale 1, o mínimo possível.
+Quando o operador compensa cada aumento de temperatura com uma redução de tempo, $r_{12}$ fica perto
+de $-1$, o VIF explode, e as duas inclinações, de que depende a direção de máxima subida
+$(\hat\beta_1, \hat\beta_2)$, ficam tão incertas que a direção estimada pode apontar para qualquer
+lado.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Processo químico: para onde subir?</strong><br>
+Em torno do ponto de operação atual, o rendimento cresce com a temperatura (x<sub>1</sub>) e com o
+tempo (x<sub>2</sub>), ambos em unidades codificadas, e a direção verdadeira de máxima subida forma
+26,6° com o eixo da temperatura. <strong>Controlado:</strong> um 2<sup>2</sup> com duas réplicas e
+quatro pontos centrais (12 corridas). <strong>Não controlado:</strong> 12 lotes do histórico, em
+que a temperatura derivou ao acaso e o operador compensou com o tempo (x<sub>2</sub> ≈ −0,95
+x<sub>1</sub>). Nos dois casos, ajusta-se o modelo de primeira ordem e mede-se quantos graus a
+direção estimada erra.
+</div>
+```
+
+```{r cnc-cap7}
+cnc7 <- cnc_cap7()                  # 3.000 conjuntos de 12 corridas em cada regime
+res7 <- cnc7$est %>% group_by(regime) %>%
+  summarise(erro_mediano = median(estimativa), erro_acima_30 = mean(estimativa > 30),
+            erro_acima_90 = mean(estimativa > 90))
+res7
+hist7 <- filter(cnc7$pontos, regime == levels(regime)[2])
+c(correlacao = cor(hist7$x1, hist7$x2), VIF = 1 / (1 - cor(hist7$x1, hist7$x2)^2))
+```
+
+```{r cnc-cap7-graf, echo=FALSE, fig.width=10, fig.height=4.6, fig.cap="Esquerda: onde estão as corridas, sobre as curvas de nível do rendimento verdadeiro; a seta é a direção verdadeira de máxima subida. O fatorial (azul) ocupa os quatro cantos e o centro; os registros do processo (laranja) se alinham sobre uma reta, porque o operador compensa a temperatura com o tempo, e essa reta corre quase paralela às curvas de nível. Direita: erro, em graus, da direção estimada em 3.000 repetições de cada regime. O fatorial erra poucos graus; os registros erram muito mais, e numa parte das vezes apontam no sentido oposto (erro perto de 180°)."}
+grafico_cap7(cnc7)
+```
+
+O resultado mais grave aparece à direita: em `r .fmt(100 * res7$erro_acima_90[2], 0)`% das
+repetições, a direção estimada a partir do histórico erra por mais de 90°, isto é, manda o
+engenheiro **descer** a superfície enquanto acredita estar subindo. Com o mesmo número de corridas,
+o fatorial nunca erra mais de 30°. No histórico do exemplo, a correlação entre temperatura e tempo é
+`r .fmt(cor(hist7$x1, hist7$x2))` e o VIF passa de `r .fmt(1 / (1 - cor(hist7$x1, hist7$x2)^2), 0)`.
+Mais lotes do mesmo histórico não resolvem: enquanto o operador continuar compensando, a nuvem de
+pontos continuará sobre a mesma reta. O caminho de máxima inclinação (Seção \@ref(steepest-ascent))
+e o CCD (Seção \@ref(ccd)) só funcionam porque o pesquisador **move as variáveis de propósito**, em
+combinações que o processo, operado no dia a dia, nunca visitaria.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>A reta dos registros é quase paralela às curvas de nível. Por que isso é o pior caso para
+estimar a direção de subida, e por que não é coincidência num processo em que o operador tenta
+manter o rendimento constante?</li>
+<li>Um engenheiro propõe usar o histórico para escolher o ponto de partida e só depois rodar o
+fatorial. Que papel legítimo os dados de acaso podem ter no planejamento, mesmo sem servirem para
+estimar efeitos?</li>
+</ol>
+</div>
+```
+
 ## Resumo do capítulo
 
 - A metodologia de superfície de resposta troca a pergunta "o que importa?" (típica dos
@@ -685,6 +778,9 @@ uma razão sinal-ruído que as mistura.
   **duas** superfícies de segunda ordem — uma para a média, outra para a log-variância —, que
   Vining e Myers mostraram serem estatisticamente mais eficientes e mais interpretáveis do que a
   razão sinal-ruído original de Taguchi.
+- **Controlado × não controlado:** otimizar exige mover as variáveis de propósito; os dados de
+  acaso de um processo bem operado não têm a variação necessária, com VIF alto, e podem apontar a
+  direção errada de subida.
 
 ## Fim do programa do semestre
 

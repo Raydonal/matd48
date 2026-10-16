@@ -23,6 +23,8 @@ suppressPackageStartupMessages({
   library(kableExtra)
   library(broom)
 })
+source("../Livro/controle_helpers.R")   # fio condutor: controlado x não controlado (Bloco 3)
+options(cnc.slide = TRUE)                # legenda dos gráficos em cima, numa linha
 ```
 
 class: inverse, center, middle
@@ -36,6 +38,18 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # Bloco 1 — Teoria
+
+---
+
+## O que esta aula controla (e o que não controla)
+
+No $2^k$, o pesquisador controla até a **confusão**:
+
+- **Ortogonalidade:** os $2^k$ pontos são escolhidos para que todas as colunas de $\mathbf X$ sejam ortogonais, e cada efeito é estimado sem contaminar os outros.
+- **Confusão planejada:** ao dividir as corridas em blocos, ele **escolhe** qual efeito sacrificar (em geral $ABCD$, a interação de ordem mais alta) e **sabe** exatamente o que ficou misturado com o bloco.
+- **Não controla:** o valor das interações que decidiu confundir; supõe que são desprezíveis.
+
+Num estudo não controlado também há confusão, mas **acidental**: ninguém escolheu o que ficou misturado com o quê.
 
 ---
 
@@ -115,7 +129,7 @@ em paralelo, uma por efeito.
 
 ## Com repetição: o erro puro sai das próprias duplicatas
 
-Com $r=2$ repetições por casela existe estimativa honesta de $\sigma^2$, e nenhuma suposição de esparsidade é necessária. Cada casela dá $S_i^2=d_i^2/2$ com 1 gl. Combinando as $g=2^k$ caselas:
+Com $r=2$ repetições por casela existe estimativa honesta de $\sigma^2$, e nenhuma suposição de esparsidade é necessária. Cada casela dá $S_i^2=d_i^2/2$ com 1 grau de liberdade (gl). Combinando as $g=2^k$ caselas:
 
 $$S^2=\frac{\sum_{i=1}^{g}\nu_i S_i^2}{\sum_i \nu_i}=\frac{\sum_{i=1}^{g} d_i^2}{2g}, \qquad g \text{ graus de liberdade}$$
 
@@ -186,6 +200,8 @@ Mesmo ranking, como barras, com a margem de erro de Lenth sobreposta.
 
 ## Margem de erro de Lenth
 
+PSE = pseudo erro-padrão (*pseudo standard error*); ME = margem de erro:
+
 $$s_0 = 1{,}5\cdot\text{med}_i|c_i|, \qquad \text{PSE} = 1{,}5\cdot\text{med}_{\{|c_i|<2{,}5s_0\}}|c_i|, \qquad \text{ME} = t_{0{,}975;\,d}\cdot\text{PSE},\ d=\tfrac{m}{3}$$
 
 Um efeito é "grande" se $|c_i| > \text{ME}$ (Lenth, 1989).
@@ -209,6 +225,47 @@ colinearidade exata em $\mathbf{X}$.
 class: inverse, center, middle
 
 # Bloco 2 — Aplicação
+
+---
+
+## Os dados: 16 combinações, 2 repetições cada
+
+```{r biodiesel-dados, include=FALSE}
+sinal <- function(x) ifelse(x > 0, "+", "−")
+tab_bio <- biodiesel %>%
+  group_by(Relacion, Catalizador, Temperatura, Agente) %>%
+  summarise(r1 = Rendimiento[1], r2 = Rendimiento[2], .groups = "drop") %>%
+  mutate(across(Relacion:Agente, sinal))
+mostra_bio <- function(linhas) tab_bio[linhas, ] %>%
+  kable(format = "html", digits = 1, align = "cccccc",
+        col.names = c("A", "B", "C", "D", "Rend. 1", "Rend. 2")) %>%
+  kable_styling(font_size = 13, full_width = FALSE)
+```
+
+.pull-left[
+```{r biodiesel-dados-1, echo=FALSE}
+mostra_bio(1:8)
+```
+]
+.pull-right[
+```{r biodiesel-dados-2, echo=FALSE}
+mostra_bio(9:16)
+```
+]
+
+A = razão molar, B = catalisador, C = temperatura, D = agente; rendimentos em %.
+
+Cada linha é uma combinação dos 4 fatores em dois níveis (− e +); as duas últimas colunas são as duas corridas repetidas. É a diferença entre elas que dá o erro puro.
+
+
+---
+
+## O que o desenho decidiu no biodiesel
+
+- As 16 combinações dos 4 fatores foram **todas** rodadas, duas vezes cada: é isso que dá ortogonalidade e erro puro.
+- A **ordem** das 32 corridas deveria ser sorteada, para que uma deriva do reator não se confunda com nenhum efeito.
+
+**A versão não controlada:** usar 32 lotes do histórico da usina. Os operadores mudam razão e temperatura juntas, quase nunca usam o catalisador novo com o agente antigo, e várias combinações nem aparecem. A matriz de aliases deixaria de ser feita de zeros e uns (Bloco 3).
 
 ---
 
@@ -240,7 +297,7 @@ biodiesel %>%
 ```
 
 Trocar o agente **aumenta** o rendimento com catalisador $-1$ e **reduz** com catalisador $+1$ —
-o sinal do efeito se inverte. É essa inversão visual que a ANOVA está formalizando.
+o sinal do efeito se inverte. É essa inversão visual que a ANOVA (análise de variância) está formalizando.
 
 ---
 
@@ -342,6 +399,30 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Confusão planejada × acidental**
+
+Confundir de propósito ($I=ABCD$, blocos) é diferente de confusão acidental: no planejado, **você escolhe** o que fica misturado e **sabe** como.
+Matriz de aliases $\mathbf A=(\mathbf X_1'\mathbf X_1)^{-1}\mathbf X_1'\mathbf X_2$, com $E[\hat{\boldsymbol\beta}_1]=\boldsymbol\beta_1+\mathbf A\boldsymbol\beta_2$:
+
+```{r cnc-a13, echo=FALSE, fig.width=10, fig.height=4.6, out.width="80%"}
+cnc6 <- cnc_cap6()
+grafico_cap6(cnc6, base_size = 11)
+```
+
+---
+
+## Lendo a matriz de aliases
+
+- **Meia fração planejada** (8 corridas): cada efeito principal herda **uma** interação tripla ($A$ com $BCD$...), e nenhuma dupla.
+- **8 corridas históricas** do mesmo processo (operadores movem $A$ e $B$ juntos): $A$ herda $AB$ com peso $-1$ e todas as outras interações com peso $\pm 0{,}5$.
+- Se $AB=3$: na fração planejada, $\hat A$ não muda; no histórico, $\hat A$ sai deslocado em `r .fmt(cnc6$A_hist["A", "AB"] * 3, 0)`, sem nenhum aviso do `lm()`.
+
+A fração planejada também tem confusão, mas **com mapa**: a relação definidora e a resolução dizem de antemão o que está misturado com o quê.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que a **mediana**, e não o desvio-padrão, protege o método de Lenth dos próprios efeitos
@@ -355,6 +436,14 @@ class: inverse, center, middle
 
 4. Se você tivesse orçamento para **2 repetições** de um $2^4$ dividido em blocos de 8, por que
    confusão **parcial** (geradores diferentes por repetição) é preferível à total?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. "Confundir $ABCD$ com o bloco" e "o dia ficou confundido com a temperatura" são confusões do mesmo tipo? O que distingue uma da outra?
+2. Se um efeito principal aparece "grande" num conjunto de 8 corridas históricas, que informação falta para saber se ele é real?
 
 ---
 
@@ -404,6 +493,7 @@ efeitos é perdido em **todas** as réplicas — a essência da confusão parcia
 - Confundir é fazer duas colunas de $\mathbf{X}$ colidirem — escolha efeitos de ordem alta para
   sacrificar; use confusão parcial quando há mais de uma repetição.
 - Próxima aula: $3^k$, fracionamento e a metodologia de superfície de resposta.
+- **Controlado × não controlado:** a confusão planejada tem **mapa** (a relação definidora diz o que está misturado com o quê); a confusão de registros históricos espalha cada interação por todos os efeitos.
 
 ---
 

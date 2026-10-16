@@ -29,6 +29,11 @@ class: center, middle, inverse, title-slide
 ---
 
 
+&lt;style type="text/css"&gt;
+/* tabela ou figura logo abaixo do título encostava no texto do título */
+.remark-slide-content h2 { margin-bottom: 0.45em; }
+&lt;/style&gt;
+
 
 
 class: inverse, center, middle
@@ -39,25 +44,57 @@ class: inverse, center, middle
 
 ---
 
+## Roteiro da aula
+
+Três ferramentas, três perguntas diferentes sobre as mesmas médias de tratamento:
+
+| Ferramenta | Pergunta típica | Exemplo da aula |
+|---|---|---|
+| **Contrastes** | "O grupo A difere da média dos grupos B e C?" (planejada) | scripts de terceiros × tempo de página |
+| **Comparações múltiplas** | "Quais pares diferem? Quem é o pior?" | os mesmos dados de scripts |
+| **Polinômios ortogonais** | "A resposta sobe, desce, tem um pico?" (níveis quantitativos) | dose de cafeína × atenção |
+
+--
+
+Para cada uma: **teoria** (Bloco 1), depois os **dados**, o **cálculo à mão**, a conferência no R,
+o **gráfico** e a **interpretação** (Bloco 2). Os dois conjuntos de dados são mostrados por inteiro
+antes de qualquer teste.
+
+---
+
 class: inverse, center, middle
 
 # Bloco 1 — Teoria
 
 ---
 
-## Além da pergunta global da ANOVA
+## O que esta aula controla (e o que não controla)
+
+Contrastes e comparações múltiplas partem de um experimento já controlado (um DCA, delineamento completamente aleatorizado) e acrescentam **outro tipo de controle**: o das **taxas de erro**.
+
+- **O sorteio** controla o **viés**: cada contraste `\(\hat L\)` estima o efeito causal correspondente.
+- **Os procedimentos de comparação múltipla** controlam a **probabilidade de falsos positivos** numa família de comparações, como o FWER (*family-wise error rate*, taxa de erro por família).
+
+As duas coisas não se substituem. Uma correção de Tukey ou de Bonferroni aplicada a dados observacionais divide `\(\alpha\)` entre comparações que já nasceram viesadas.
+
+---
+
+## Além da pergunta global da ANOVA (análise de variância)
 
 A ANOVA de um fator só responde: *existe pelo menos uma diferença entre as `\(t\)` médias?*
 
-Rejeitar `\(H_0: \mu_1 = \cdots = \mu_t\)` não diz **quais** médias diferem, nem **em que direção**.
+Rejeitar `\(H_0: \mu_1 = \cdots = \mu_t\)` não diz **quais** médias diferem, nem **em que direção**,
+nem **de quanto**.
 
 --
 
 Duas ferramentas para ir além:
 
-- **Contrastes** — perguntas específicas, planejadas a priori.
+- **Contrastes** — perguntas específicas, planejadas a priori, cada uma com 1 grau de liberdade (gl).
 - **Comparações múltiplas** — todas as comparações par a par (ou contra um controle), com
   controle da taxa de erro por família.
+
+E um caso particular de contrastes, para fatores quantitativos: **polinômios ortogonais**.
 
 ---
 
@@ -67,16 +104,17 @@ Um **contraste** é uma combinação linear das médias de tratamento
 
 `$$L = \sum_{i=1}^{t} c_i \mu_i, \qquad \sum_{i=1}^{t} c_i = 0.$$`
 
-A restrição `\(\sum c_i = 0\)` garante que `\(L\)` mede uma **diferença**, não um nível geral.
+A restrição `\(\sum c_i = 0\)` garante que `\(L\)` mede uma **diferença**, não um nível geral: somar a mesma
+constante `\(k\)` a todas as médias não muda `\(L\)`, porque `\(\sum c_i(\mu_i + k) = L + k\sum c_i = L\)`.
 
 --
 
 Estimado por `\(\hat L = \sum_i c_i \bar y_{i\cdot}\)`, com
 
-`$$E(\hat L) = L \quad \text{(não viesado)}, \qquad
-\mathrm{Var}(\hat L) = \sigma^2 \sum_{i=1}^t \frac{c_i^2}{n_i}.$$`
+`$$E(\hat L) = L \quad \text{(não viesado)}, \qquad \mathrm{Var}(\hat L) = \sigma^2 \sum_{i=1}^t \frac{c_i^2}{n_i}.$$`
 
-Balanceado (`\(n_i = n\)`): `\(\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\sum_i c_i^2\)`.
+Balanceado ( `\(n_i = n\)` ): `\(\mathrm{Var}(\hat L) = \dfrac{\sigma^2}{n}\sum_i c_i^2\)`. A variância vem de as médias
+`\(\bar y_{i\cdot}\)` serem **independentes** (unidades experimentais diferentes), cada uma com variância `\(\sigma^2/n_i\)`.
 
 ---
 
@@ -100,11 +138,37 @@ Combo. Cada pergunta científica vira um vetor `\((c_1,c_2,c_3,c_4)\)`:
 
 ---
 
+## Para interpretar: normalize o contraste
+
+Os inteiros são cômodos para testar, mas `\(\hat L = -560\)` ms (com `\((3,-1,-1,-1)\)`) **não** é um
+efeito em ms: é 3 vezes o efeito. Para ler o contraste na escala da resposta, divida os
+coeficientes pela soma dos positivos:
+
+`$$c_i^{*} = \frac{c_i}{\sum_{c_j&gt;0} c_j} \quad\Longrightarrow\quad \hat L^{*} = \bar m_{+} - \bar m_{-},$$`
+
+em que `\(\bar m_{+}\)` e `\(\bar m_{-}\)` são as médias simples das médias de tratamento de cada lado da pergunta.
+
+--
+
+Intervalo de confiança de `\(100(1-\alpha)\%\)`, válido para **um** contraste planejado:
+
+QME = quadrado médio do erro:
+
+`$$\hat L^{*} \pm t_{\alpha/2,\;gl_{\text{erro}}}\sqrt{QME\sum_i \frac{(c_i^{*})^2}{n_i}}.$$`
+
+O teste ( `\(t\)`, `\(F\)`, p-valor) é **idêntico** com `\(c_i\)` ou `\(c_i^{*}\)`; só a leitura muda. Reporte
+sempre `\(\hat L^{*}\)` e seu intervalo de confiança (IC): dizem **quanto**, não apenas **se**.
+
+---
+
 ## Leitura causal: contraste = efeito causal
 
-Em resultados potenciais, cada UE tem `\(t\)` resultados potenciais `\(Y_i(1),\ldots,Y_i(t)\)`, um por
-braço. `\(\mu_i = E[Y(i)]\)`; um contraste par a par `\(\mu_i-\mu_j\)` é literalmente um **ATE** entre
+Em resultados potenciais, cada unidade experimental (UE) tem `\(t\)` resultados potenciais `\(Y_i(1),\ldots,Y_i(t)\)`, um por
+braço. `\(\mu_i = E[Y(i)]\)`; um contraste par a par `\(\mu_i-\mu_j\)` é literalmente um **ATE** (efeito médio do tratamento) entre
 os braços `\(i\)` e `\(j\)`.
+
+Um contraste geral também é causal: `\(\mu_1 - \tfrac13(\mu_2+\mu_3+\mu_4)\)` é o ATE de "não usar
+script" contra uma **mistura uniforme** das três configurações com script.
 
 --
 
@@ -120,13 +184,15 @@ ao mesmo tempo** sobre o mesmo experimento.
 
 Sob `\(H_0: L=0\)` e normalidade,
 
-`$$F = \frac{SQ_L}{QME} \sim F_{1,\,gl_{\text{erro}}} \qquad \Longleftrightarrow \qquad
-t = \frac{\hat L}{\sqrt{QME\sum_i c_i^2/n_i}},\ \ t^2 = F.$$`
+`$$F = \frac{SQ_L}{QME} \sim F_{1,\,gl_{\text{erro}}} \qquad \Longleftrightarrow \qquad t = \frac{\hat L}{\sqrt{QME\sum_i c_i^2/n_i}},\ \ t^2 = F.$$`
 
 --
 
 Um contraste é um teste com **1 gl encaixado** dentro da ANOVA — mais específico e, em geral,
 mais poderoso que o teste F global, desde que definido **antes** de olhar os dados.
+
+**Intuição do ganho de poder:** o `\(F\)` global dilui um efeito concentrado numa direção por
+`\(t-1\)` gl; o contraste aponta direto para essa direção e não paga pelos outros `\(t-2\)`.
 
 ---
 
@@ -134,14 +200,16 @@ mais poderoso que o teste F global, desde que definido **antes** de olhar os dad
 
 Cell-means: `\(\mathbf Y=\mathbf X\boldsymbol\mu+\boldsymbol\varepsilon\)`, `\(\mathbf X'\mathbf X=\mathrm{diag}(n_1,\ldots,n_t)\)`.
 
-`$$L=\boldsymbol\lambda'\boldsymbol\mu, \quad \mathbf 1'\boldsymbol\lambda=0, \qquad
-\mathrm{Var}(\hat L)=\sigma^2\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda.$$`
+`$$L=\boldsymbol\lambda'\boldsymbol\mu, \quad \mathbf 1'\boldsymbol\lambda=0, \qquad \mathrm{Var}(\hat L)=\sigma^2\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda.$$`
 
 --
 
 `$$SQ_L = (\boldsymbol\lambda'\hat{\boldsymbol\mu})\big[\boldsymbol\lambda'(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda\big]^{-1}(\boldsymbol\lambda'\hat{\boldsymbol\mu}) = \mathbf Y'\mathbf A_{\boldsymbol\lambda}\mathbf Y,$$`
 
-forma quadrática idempotente de posto 1 (Cap. 2, formas quadráticas) `\(\Rightarrow SQ_L/\sigma^2\sim\chi^2_1\)`.
+forma quadrática idempotente de posto 1 (Cap. 2, formas quadráticas) `\(\Rightarrow SQ_L/\sigma^2\sim\chi^2_1\)` sob `\(H_0\)`.
+
+Geometricamente, `\(\mathbf A_{\boldsymbol\lambda}\)` projeta `\(\mathbf Y\)` sobre **uma única direção** do
+subespaço de tratamentos: a direção `\(\mathbf X(\mathbf X'\mathbf X)^{-1}\boldsymbol\lambda\)`.
 
 ---
 
@@ -159,21 +227,97 @@ exatamente `\(SQ_{\text{Trat}}\)`:
 
 `$$SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_{L_k}, \qquad gl_{\text{Trat}} = t-1,$$`
 
-e, sob normalidade, os `\(t-1\)` testes `\(F\)` resultantes são **independentes** entre si — porque as
-`\(t-1\)` projeções de posto 1 `\(\mathbf A_{\boldsymbol\lambda_k}\)` somam exatamente `\(\mathbf P_X - \mathbf P_{\mathbf 1}\)` (teorema de Cochran, Cap. 2).
+porque as `\(t-1\)` projeções de posto 1 `\(\mathbf A_{\boldsymbol\lambda_k}\)` somam exatamente
+`\(\mathbf P_X - \mathbf P_{\mathbf 1}\)`. Pelo teorema de Cochran (Cap. 2), as **somas de quadrados**
+`\(SQ_{L_k}\)` são independentes entre si e de `\(SQ_E\)`. Cuidado: as estatísticas `\(F_k = SQ_{L_k}/QME\)`
+**não** são independentes, porque dividem pelo mesmo `\(QME\)`.
+
+---
+
+## E se os contrastes **não** forem ortogonais?
+
+Nada impede testar contrastes não ortogonais: cada um continua sendo um teste válido de 1 gl.
+O que se perde é a **contabilidade**:
+
+- as `\(SQ_{L_k}\)` **não somam** `\(SQ_{\text{Trat}}\)` (podem passar dela ou ficar abaixo);
+- a informação de uma média entra em mais de uma pergunta, então as conclusões se **sobrepõem**.
+
+--
+
+Exemplo típico: "cada tratamento contra o controle", `\((-1,1,0,0)\)`, `\((-1,0,1,0)\)`, `\((-1,0,0,1)\)`.
+Produto interno de dois deles: `\((-1)(-1)+0+0+0 = 1 \neq 0\)` — todos reutilizam a média do controle.
+No Bloco 2 veremos que suas três somas de quadrados (`\(SQ\)`) somam **mais** que `\(SQ_{\text{Trat}}\)`.
+
+É exatamente o caso que o procedimento de **Dunnett** trata: ele não exige ortogonalidade, mas
+corrige o valor crítico pela correlação entre as comparações.
 
 ---
 
 ## O problema das comparações múltiplas
 
-Com `\(t=4\)` grupos há `\(\binom{4}{2}=6\)` pares. Mesmo sob `\(H_0\)` em todos:
+Com `\(t=4\)` grupos há `\(\binom{4}{2}=6\)` pares. Se os 6 testes fossem independentes, sob `\(H_0\)` em todos:
 
 `$$P(\text{≥ 1 falso positivo}) = 1-(1-\alpha)^6 \approx 1 - 0{,}95^6 \approx 0{,}26$$`
 
 --
 
-Mais de **5×** o nível nominal de 5%. Testes `\(t\)` repetidos, sem correção, inflam a taxa de erro
-por família (FWER).
+Mais de **5×** o nível nominal de 5%. (Como os 6 testes compartilham médias e o `\(QME\)`, o valor
+exato é um pouco menor — no Bloco 2 a simulação dá cerca de 20% — mas a ordem de grandeza é essa.)
+
+Duas taxas de erro precisam ser distinguidas:
+
+| Taxa | Definição | Quem controla |
+|---|---|---|
+| por comparação | `\(P(\text{erro tipo I num teste})\)` | LSD (*least significant difference*) de Fisher, `\(t\)` repetidos |
+| por família (FWER, *family-wise error rate*) | `\(P(\text{≥ 1 erro tipo I na família})\)` | Tukey, Dunnett, Bonferroni, Scheffé |
+
+---
+
+## FWER: o que significa, em palavras
+
+**FWER** = *family-wise error rate*, a **taxa de erro por família**.
+
+**Família** = o conjunto de **todas** as comparações que você vai fazer e relatar sobre aquele
+experimento. Com 4 configurações e a pergunta "quais pares diferem?", a família são os 6 pares.
+
+**Erro na família** = a família "errou" se **pelo menos uma** das comparações declarou diferença
+onde não havia (um falso positivo). Não importa qual, nem quantas.
+
+`$$\text{FWER} = P(\text{pelo menos um falso positivo entre as } m \text{ comparações}) = P(A_1 \cup A_2 \cup \cdots \cup A_m).$$`
+
+--
+
+**Analogia:** uma casa com 6 cômodos, cada um com um detector de fumaça que dispara à toa em 5% das
+noites. A chance de a casa ser acordada sem incêndio numa noite **não** é 5%: é perto de
+`\(1-0{,}95^6 \approx 26\%\)`. Cada detector é "bom"; a casa, não.
+
+**Controlar o FWER em 5%** significa: em 95% dos experimentos, **nenhuma** das comparações relatadas
+é um alarme falso. É uma garantia sobre o **relatório inteiro**, não sobre cada linha dele.
+
+---
+
+## FWER visto: 100 experimentos em que nada acontece
+
+&lt;img src="MATD48-07_files/figure-html/fwer-grade-1.png" alt="" width="684" /&gt;
+
+Cada linha é um experimento simulado com as **4 médias verdadeiras iguais**; cada coluna, um par.
+Vermelho = falso positivo. Com 6 testes `\(t\)` a 5%, 17 experimentos (linhas) têm pelo menos
+um alarme falso (a teoria dá ≈ 20%); com Tukey, 7 (≈ 5%). **Cada casa** vermelha é rara; **cada linha** com vermelho, não.
+
+---
+
+## O FWER cresce com o número de comparações
+
+&lt;img src="MATD48-07_files/figure-html/fwer-curva-1.png" alt="" width="648" /&gt;
+
+Fazendo todos os `\(\binom t2\)` pares com testes `\(t\)` a 5% (e tratando-os como independentes): com 4
+tratamentos, 26%; com 10, 90%. Em experimentos com muitos tratamentos — comuns em agronomia —, achar
+"alguma diferença" por acaso é quase certo. A linha tracejada (5%) é o que Tukey, Dunnett, Bonferroni
+e Scheffé garantem para a família inteira, qualquer que seja `\(t\)`.
+
+Dois sentidos de "controlar": **fraco** (só quando **todas** as médias são iguais) e **forte**
+(qualquer que seja o padrão de médias iguais e diferentes). Tukey, Dunnett, Bonferroni e Scheffé
+controlam no sentido forte; LSD protegido e SNK (Student-Newman-Keuls), só no fraco; Duncan, em nenhum dos dois.
 
 ---
 
@@ -191,32 +335,139 @@ quase sempre "parece" significativo em um teste `\(t\)` comum sobre ele isolado.
 mas isso nada prova sobre pontaria.
 
 Contrastes ortogonais, Tukey, Dunnett e Bonferroni só protegem o conjunto de comparações
-**especificado antes** de olhar os dados. Nenhum deles cobre uma comparação "descoberta" depois.
+**especificado antes** de olhar os dados. Nenhum deles cobre uma comparação "descoberta" depois —
+para isso existe Scheffé.
 
 ---
 
-## Seis respostas ao problema
+## Todos os procedimentos são uma "régua"
+
+Com dados balanceados, quase todo procedimento par a par tem a mesma forma: declara
+`\(\mu_i \ne \mu_j\)` quando `\(|\bar y_i - \bar y_j|\)` passa de uma **diferença mínima significativa** (DMS).
+O que muda é o multiplicador:
+
+| Procedimento | DMS | Controla |
+|---|---|---|
+| LSD de Fisher | `\(t_{\alpha/2,\nu}\sqrt{2QME/n}\)` | taxa por comparação |
+| Bonferroni ( `\(m\)` pares) | `\(t_{\alpha/(2m),\nu}\sqrt{2QME/n}\)` | FWER (conservador) |
+| Tukey HSD (*honestly significant difference*) | `\(q_{\alpha;\,t,\nu}\sqrt{QME/n}\)` | FWER, todos os pares |
+| Dunnett | `\(d_{\alpha;\,t-1,\nu}\sqrt{2QME/n}\)` | FWER, vs. controle |
+| Scheffé | `\(\sqrt{(t-1)F_{\alpha;\,t-1,\nu}}\,\sqrt{2QME/n}\)` | FWER, todo contraste |
+| Duncan / SNK | `\(r_p\sqrt{QME/n}\)`, depende da posição `\(p\)` | — / FWER parcial |
+
+`\(\nu = gl_{\text{erro}}\)`. No Bloco 2 cada régua é calculada nos dados, e todas são postas lado a lado.
+
+---
+
+## LSD de Fisher e Tukey: de onde vêm os valores críticos
+
+**LSD** (*least significant difference*, Fisher, 1935) é o teste `\(t\)` de duas médias com o `\(QME\)` da
+ANOVA. Na versão **protegida**, só é aplicado se o `\(F\)` global rejeitar `\(H_0\)` — isso controla o FWER
+quando **todas** as médias são iguais, mas não quando só algumas são.
+
+--
+
+**Tukey HSD** usa a **amplitude estudentizada** das `\(t\)` médias:
+
+`$$Q = \frac{\max_i(\bar y_i-\mu_i) - \min_i(\bar y_i-\mu_i)}{\sqrt{QME/n}} \sim q_{t,\nu}.$$`
+
+Se a **maior** das `\(\binom t2\)` diferenças padronizadas fica abaixo de `\(q_{\alpha;t,\nu}\)`, **todas**
+ficam. Logo `\(P(\text{nenhum falso positivo}) = P(Q \le q_{\alpha;t,\nu}) = 1-\alpha\)`: com dados
+balanceados o FWER é **exatamente** `\(\alpha\)` (Tukey, 1949). Por isso Tukey é mais poderoso que
+Bonferroni para pares: Bonferroni usa uma desigualdade, Tukey usa a distribuição exata do máximo.
+
+---
+
+## Scheffé: de onde vem o fator `\((t-1)\)`
+
+Para qualquer contraste ( `\(\sum c_i = 0\)`, `\(n_i=n\)` ), Cauchy-Schwarz dá
+
+`$$\hat L^2 = \Big(\sum_i c_i(\bar y_i - \bar y_{\cdot\cdot})\Big)^2 \le \sum_i c_i^2 \cdot \sum_i (\bar y_i-\bar y_{\cdot\cdot})^2 \;\Longrightarrow\; SQ_L \le SQ_{\text{Trat}}.$$`
+
+--
+
+Logo, o **maior** `\(F\)` de contraste possível, escolhido depois de ver os dados, é
+
+`$$\max_{\mathbf c}\; \frac{SQ_L}{QME} = \frac{SQ_{\text{Trat}}}{QME} = (t-1)\,F_{\text{obs}},$$`
+
+atingido pelo contraste com `\(c_i \propto \bar y_i - \bar y_{\cdot\cdot}\)`. Comparar cada `\(F_L\)` com
+`\((t-1)F_{\alpha;t-1,\nu}\)` garante FWER `\(=\alpha\)` sobre **infinitos** contrastes (Scheffé, 1959).
+
+**Consequência:** nenhum contraste é significativo por Scheffé se o `\(F\)` global não for — o
+Scheffé é o teste `\(F\)` global "desdobrado" em direções.
+
+---
+
+## Bonferroni: por que funciona (desigualdade de Boole)
+
+Seja `\(A_i\)` o evento "cometer erro tipo I na `\(i\)`-ésima das `\(m\)` comparações". A **desigualdade de
+Boole** (subaditividade da probabilidade) diz que
+
+`$$P\!\left(\bigcup_{i=1}^{m} A_i\right) \;\le\; \sum_{i=1}^{m} P(A_i).$$`
+
+--
+
+O FWER é justamente `\(P(\bigcup_i A_i)\)`. Se cada teste é feito ao nível `\(\alpha/m\)`, então
+
+`$$\text{FWER} \;\le\; \sum_{i=1}^{m} \frac{\alpha}{m} \;=\; \alpha .$$`
+
+--
+
+E daí sai **por que é conservador**: a desigualdade é *estrita* sempre que os `\(A_i\)` se intersectam
+com probabilidade positiva — que é o caso normal (as comparações compartilham médias e o mesmo
+`\(QME\)`). Quanto maior a dependência entre as comparações, mais folga se perde.
+
+---
+
+## A questão do ordenamento: procedimentos em etapas
+
+Duncan e Student-Newman-Keuls (SNK) **ordenam** as médias, `\(\bar y_{(1)}\le\cdots\le\bar y_{(t)}\)`, e
+chamam de **amplitude** `\(p\)` de uma comparação o número de médias ordenadas que ela abrange
+( `\(p=2\)`: vizinhas; `\(p=t\)`: maior contra menor).
+
+--
 
 .pull-left[
-**Scheffé** — protege *qualquer* contraste, mesmo definido depois de ver os dados — a resposta
-formal ao data snooping: só declara significativo o que é grande mesmo entre infinitas
-possibilidades. O mais conservador (Scheffé, 1959).
+**Por que a régua deveria depender de `\(p\)`?** Sob `\(H_0\)`, a distância entre o maior e o menor de `\(p\)`
+valores aleatórios **cresce com `\(p\)`**. Uma diferença de 70 ms entre vizinhas é mais surpreendente
+que 70 ms entre os extremos de 4 médias.
 
-**Bonferroni** (1936) — divide `\(\alpha\)` por `\(m\)` comparações. Simples, geral,
-conservador se `\(m\)` grande.
-
-**Tukey HSD** — todas as comparações par a par, via amplitude estudentizada. Mais poderoso que
-Bonferroni para essa família (Tukey, 1949).
+**Regra de coerência (step-down):** começa-se pela amplitude `\(t\)`; uma amplitude menor só é testada
+se **todas** as que a contêm foram significativas.
 ]
 .pull-right[
-**Dunnett** — cada tratamento vs. um único controle; explora a correlação entre comparações que
-compartilham o controle (Dunnett, 1955).
+| | valor crítico para amplitude `\(p\)` |
+|---|---|
+| SNK | `\(q_{\alpha;\,p,\nu}\sqrt{QME/n}\)` |
+| Duncan | `\(q_{\alpha_p;\,p,\nu}\sqrt{QME/n}\)` |
+| Tukey | `\(q_{\alpha;\,t,\nu}\sqrt{QME/n}\)` (fixo) |
 
-**Duncan** — valor crítico `\(R_p\)` **cresce com a amplitude** `\(p\)` da comparação; mais liberal que
-Tukey, mas **não controla o FWER** (Duncan, 1955).
-
-**Agrupamento (CLD)** — letras compactas: tratamentos com letra em comum não diferem.
+Com `\(p=t\)`, SNK = Tukey. Com `\(p=2\)`, SNK = Duncan = LSD.
 ]
+
+---
+
+## Por que Duncan é liberal: o nível de proteção `\(\alpha_p\)`
+
+Duncan não usa `\(\alpha\)` fixo: para amplitude `\(p\)` ele adota o *nível de proteção*
+
+`$$\alpha_p \;=\; 1 - (1-\alpha)^{\,p-1},$$`
+
+a taxa de erro de `\(p-1\)` comparações independentes ao nível `\(\alpha\)`.
+
+.pull-left[
+- `\(p=2\)`: `\(\alpha_2 = \alpha\)` — igual aos demais;
+- `\(p=t\)`: `\(\alpha_t = 1-(1-\alpha)^{t-1}\)`, que **cresce** com `\(t\)`.
+
+Com `\(\alpha=0{,}05\)` e `\(t=4\)`: `\(\alpha_4 = 1-0{,}95^{3} \approx 0{,}143\)`. Sob `\(H_0\)` completa, a chance de
+o Duncan declarar **alguma** diferença é exatamente essa: 14%, não 5%.
+]
+.pull-right[
+&lt;img src="MATD48-07_files/figure-html/duncan-alpha-p-1.png" alt="" width="331.2" /&gt;
+]
+
+E o SNK? Controla o FWER sob `\(H_0\)` **completa**, mas não sob `\(H_0\)` **parcial** (algumas médias iguais,
+outras não): cada par de vizinhas iguais é testado a `\(\alpha\)`. Veremos isso simulado no Bloco 2.
 
 ---
 
@@ -234,60 +485,8 @@ A escolha depende da **pergunta**, e deve ser feita **antes** de ver os dados:
 | Níveis quantitativos igualmente espaçados | polinômios ortogonais |
 | Agrupar médias em classes disjuntas | Scott-Knott |
 
-Duncan aparece muito na literatura aplicada, mas não controla o FWER (próximos slides): use-o
-sabendo disso.
-
----
-
-## Por que Bonferroni funciona: desigualdade de Boole
-
-Bonferroni não é uma receita — é um teorema de duas linhas. Seja `\(A_i\)` o evento "cometer erro
-tipo I na `\(i\)`-ésima das `\(m\)` comparações". A **desigualdade de Boole** (ou subaditividade da
-probabilidade) diz que
-
-`$$P\!\left(\bigcup_{i=1}^{m} A_i\right) \;\le\; \sum_{i=1}^{m} P(A_i).$$`
-
---
-
-O FWER é justamente `\(P(\bigcup_i A_i)\)`: a probabilidade de errar **em pelo menos uma**
-comparação. Se conduzirmos cada teste ao nível `\(\alpha/m\)`, então `\(P(A_i) = \alpha/m\)` e
-
-`$$\text{FWER} \;\le\; \sum_{i=1}^{m} \frac{\alpha}{m} \;=\; \alpha .$$`
-
---
-
-E daí sai também **por que é conservador**: a desigualdade de Boole é *estrita* sempre que os
-`\(A_i\)` se intersectam com probabilidade positiva — isto é, sempre que as comparações não são
-disjuntas, que é o caso normal (elas compartilham médias e o mesmo `\(QM_{\text{Res}}\)`). Quanto
-maior a dependência entre as comparações, mais folga se perde.
-
----
-
-## Por que Duncan é liberal: o nível de proteção `\(\alpha_p\)`
-
-Duncan não usa `\(\alpha\)` fixo: para comparar duas médias separadas por **amplitude** `\(p\)` (isto é,
-com `\(p-2\)` médias entre elas na ordenação), ele adota o *nível de proteção*
-
-`$$\alpha_p \;=\; 1 - (1-\alpha)^{\,p-1},$$`
-
-que é a taxa de erro de um conjunto de `\(p-1\)` comparações independentes ao nível `\(\alpha\)`.
-
---
-
-.pull-left[
-O efeito é imediato:
-
-- `\(p=2\)`: `\(\alpha_2 = \alpha\)` — igual aos demais;
-- `\(p=t\)`: `\(\alpha_t = 1-(1-\alpha)^{t-1}\)`, que **cresce** com `\(t\)`.
-
-Com `\(\alpha=0{,}05\)` e `\(t=5\)`: `\(\alpha_5 = 1-0{,}95^{4} \approx 0{,}185\)`.
-]
-.pull-right[
-&lt;img src="MATD48-07_files/figure-html/duncan-alpha-p-1.png" alt="" width="331.2" /&gt;
-]
-
-É esta equação que explica a afirmação "Duncan não controla o FWER": o procedimento **abre mão**
-disso por construção, em troca de poder nas amplitudes maiores.
+Duncan e SNK aparecem muito na literatura aplicada, mas não controlam o FWER em geral: use-os
+sabendo disso, e nunca como escolha "porque deu significativo".
 
 ---
 
@@ -296,21 +495,55 @@ disso por construção, em troca de poder nas amplitudes maiores.
 Quando os níveis do fator são **quantitativos e igualmente espaçados** (doses, concentrações),
 decompor `\(SQ_{\text{Trat}}\)` em tendência é mais informativo que comparar pares.
 
---
-
 Para `\(t=5\)` doses igualmente espaçadas, os coeficientes (o que `contr.poly(5)` dá, a menos de escala):
 
-| grau | `\(\lambda_1\)` | `\(\lambda_2\)` | `\(\lambda_3\)` | `\(\lambda_4\)` | `\(\lambda_5\)` | pergunta |
-|---|:-:|:-:|:-:|:-:|:-:|---|
-| linear | −2 | −1 | 0 | 1 | 2 | a resposta sobe (ou desce) com a dose? |
-| quadrático | 2 | −1 | −2 | −1 | 2 | há curvatura (U ou U invertido)? |
-| cúbico | −1 | 2 | 0 | −2 | 1 | a curvatura muda de sentido? |
-| quártico | 1 | −4 | 6 | −4 | 1 | — |
+| grau | `\(\lambda_1\)` | `\(\lambda_2\)` | `\(\lambda_3\)` | `\(\lambda_4\)` | `\(\lambda_5\)` | `\(\sum\lambda^2\)` | pergunta |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| linear | −2 | −1 | 0 | 1 | 2 | 10 | a resposta sobe (ou desce) com a dose? |
+| quadrático | 2 | −1 | −2 | −1 | 2 | 14 | há curvatura (U ou U invertido)? |
+| cúbico | −1 | 2 | 0 | −2 | 1 | 10 | a curvatura muda de sentido? |
+| quártico | 1 | −4 | 6 | −4 | 1 | 70 | ondulação de 4ª ordem |
 
-São os polinômios `\(1, x, x^2,\dots\)` nas doses, ortogonalizados por Gram-Schmidt.
-
-Cada grau é um contraste: `\(SQ_k = n\hat L_k^{\,2}/\sum_i\lambda_i^2\)`, 1 gl, e
+Cada grau é um contraste: `\(SQ_k = n\hat L_k^{\,2}/\sum_i\lambda_{ki}^2\)`, 1 gl, e
 `\(SQ_{\text{Trat}} = \sum_{k=1}^{t-1} SQ_k\)`.
+
+---
+
+## De onde vêm esses números
+
+Codifique a dose `\(d\)` em `\(x = (d - \bar d)/\Delta \in \{-2,-1,0,1,2\}\)`, com `\(\Delta = 50\)` mg o espaçamento, e
+ortogonalize `\(1, x, x^2, x^3, x^4\)` por Gram-Schmidt sobre esses 5 pontos:
+
+`$$P_1(x) = x, \qquad P_2(x) = x^2 - 2, \qquad P_3(x) = \tfrac{5}{6}\big(x^3 - \tfrac{17}{5}x\big), \qquad P_4(x) = \tfrac{35}{12}\big(x^4 - \tfrac{31}{7}x^2 + \tfrac{72}{35}\big).$$`
+
+--
+
+Conferindo o quadrático: `\(P_2(-2)=2\)`, `\(P_2(-1)=-1\)`, `\(P_2(0)=-2\)` — a linha da tabela. As constantes
+`\(\tfrac56\)`, `\(\tfrac{35}{12}\)` só tornam os valores inteiros.
+
+**Consequência prática:** o ajuste por polinômios ortogonais **é** uma regressão polinomial na dose.
+Com os coeficientes `\(\hat b_k = \hat L_k/\sum_i\lambda_{ki}^2\)`,
+
+`$$\hat y(x) = \bar y_{\cdot\cdot} + \hat b_1 P_1(x) + \hat b_2 P_2(x),$$`
+
+e basta substituir `\(x = (\text{dose}-100)/50\)` para voltar à escala de mg — o que faremos nos dados.
+
+---
+
+## Falta de ajuste: o polinômio basta?
+
+Com a dose como **fator** (5 médias livres), o modelo do DCA (delineamento completamente aleatorizado) é o mais flexível possível. Um
+polinômio de grau `\(g &lt; t-1\)` é um modelo **encaixado** nele. A diferença é a falta de ajuste:
+
+`$$SQ_{\text{falta}} = SQ_{\text{Trat}} - \sum_{k=1}^{g} SQ_k = \sum_{k=g+1}^{t-1} SQ_k, \qquad F_{\text{falta}} = \frac{SQ_{\text{falta}}/(t-1-g)}{QME}.$$`
+
+--
+
+- O denominador é o **erro puro** do DCA (variação entre réplicas da mesma dose) — por isso só
+  um experimento **com repetição** em cada nível permite testar a forma da curva.
+- `\(F_{\text{falta}}\)` não significativo: o polinômio de grau `\(g\)` descreve as médias tão bem quanto
+  o modelo de médias livres.
+- É a mesma soma de quadrados extra do Cap. 2: `\(\mathbf Y'(\mathbf P_{\text{fator}} - \mathbf P_{\text{grau } g})\mathbf Y\)`.
 
 ---
 
@@ -318,14 +551,16 @@ class: inverse, center, middle
 
 # Bloco 2 — Aplicação
 
+### Parte A: os dados de scripts de terceiros
+
 ---
 
 ## Ciência de dados: scripts de terceiros e carregamento
 
-**Pergunta:** quatro configurações de página — Nenhum (controle), Analytics, Anúncios, Combo —
-diferem quanto ao tempo de carregamento?
+**Pergunta:** quatro configurações de página — Nenhum (controle), Analytics, Anúncios, Combo
+(chat + anúncios) — diferem quanto ao tempo de carregamento?
 
-- 40 carregamentos, 10 por configuração (**UE = carregamento medido**).
+- 40 carregamentos, 10 por configuração (**UE = carregamento medido**), ordem sorteada.
 - Fator com 4 níveis **categóricos** — cenário natural para contrastes planejados e comparações
   múltiplas (não para polinômios: configurações não têm ordem métrica).
 
@@ -343,6 +578,219 @@ dados_scripts &lt;- tibble(
 mod_scripts &lt;- aov(tempo_ms ~ config, data = dados_scripts)
 ```
 
+
+---
+
+## Quem decidiu a configuração de cada carregamento?
+
+**O sorteio:** os 40 carregamentos foram feitos numa **ordem sorteada**, 10 por configuração, na mesma máquina e rede.
+
+**A versão não controlada:** comparar o tempo de carregamento de **sites reais** que usam ou não anúncios e chat.
+
+- Sites com anúncios tendem a ser maiores, com mais imagens e servidores diferentes.
+- Os seis contrastes e as réguas de Tukey sairiam iguais na forma, mas cada diferença misturaria **scripts** com **tipo de site**.
+
+---
+
+## Os dados: os 40 tempos de carregamento (ms)
+
+.pull-left[
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Réplica &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Nenhum &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Analytics &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Anúncios &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Combo &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 936 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 931 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1017 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1073 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 824 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 909 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1028 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1122 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 910 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 944 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 943 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1092 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 894 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 944 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1143 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1133 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 853 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 782 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1043 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1123 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 724 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1054 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1174 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1192 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 849 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1161 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1152 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 829 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 975 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1044 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1048 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 908 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 904 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1085 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1150 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 867 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1008 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1161 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1052 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+.pull-right[
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Configuração &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DP &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mín. &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Máx. &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 859.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 60.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 723.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 936.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 945.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 781.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1054.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1079.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 77.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 942.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1173.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1113.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1047.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1191.5 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Cada coluna da esquerda é um tratamento; cada linha, uma réplica (a numeração da réplica não tem
+significado: não há pareamento). Os desvios-padrão (DPs) são parecidos (47 a 77 ms), coerentes com a
+homocedasticidade que o `\(QME\)` combinado pressupõe.
+]
+
+---
+
+## Olhando antes de testar
+
+&lt;img src="MATD48-07_files/figure-html/plot-dados-scripts-1.png" alt="" width="648" /&gt;
+
+Pontos = carregamentos individuais; azul = média e IC 95% (com o `\(QME\)` combinado, 36 gl). O
+padrão salta aos olhos: Nenhum &lt; Analytics &lt; {Anúncios ≈ Combo}. Os testes a seguir dizem
+**quanto disso é ruído**.
+
+---
+
+## A ANOVA global
+
+&lt;table class="table" style="font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fonte &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; gl &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; SQ &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; QM &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p-valor &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Configuração &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 420290 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 140097 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.23 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Resíduo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 156479 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4347 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- `\(F = 32{,}23\)` com (3, 36) gl: há diferença entre configurações, sem dúvida razoável.
+- `\(R^2 = SQ_{\text{Trat}}/SQ_{\text{Total}} = 0{,}73\)`: a configuração explica cerca de
+  73% da variação dos tempos.
+- `\(\sqrt{QME} = 65{,}9\)` ms é o desvio-padrão de um carregamento dentro de uma configuração;
+  o erro-padrão de uma diferença de duas médias é `\(\sqrt{2QME/10} = 29{,}5\)` ms.
+
+Até aqui sabemos **que** há diferença. As próximas partes respondem **onde**, **quanto** e **com que garantia**.
+
+---
+
+class: inverse, center, middle
+
+# Parte B: contrastes planejados
+
 ---
 
 ## Três contrastes ortogonais planejados
@@ -355,6 +803,7 @@ mod_scripts &lt;- aov(tempo_ms ~ config, data = dados_scripts)
    &lt;th style="text-align:right;"&gt; Analytics &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Anúncios &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Combo &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Σc &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
@@ -364,13 +813,15 @@ mod_scripts &lt;- aov(tempo_ms ~ config, data = dados_scripts)
    &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; L2: Analytics vs. (Anúncios,Combo) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; L2: Analytics vs. (Anúncios, Combo) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; L3: Anúncios vs. Combo &lt;/td&gt;
@@ -378,62 +829,446 @@ mod_scripts &lt;- aov(tempo_ms ~ config, data = dados_scripts)
    &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+Ortogonalidade (n iguais), conferindo os três produtos internos:
+
+`$$L_1\cdot L_2 = 0-2+1+1 = 0, \qquad L_1\cdot L_3 = 0+0-1+1 = 0, \qquad L_2\cdot L_3 = 0+0-1+1=0.$$`
+
+As três perguntas foram escritas **antes** da coleta, a partir do desenho: o controle contra
+qualquer script; o script "leve" contra os que têm anúncio; e se o chat acrescenta algo aos anúncios.
+
+---
+
+## `\(L_1\)` calculado à mão
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Configuração &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; ȳ_i &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; c_i &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; c_i ȳ_i &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; c_i²/n_i &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 859.38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2578.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 945.53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -945.53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1079.88 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1079.88 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1113.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1113.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;"&gt; Soma &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;"&gt; -560.89 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;"&gt; 1.2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+`\(\hat L_1 = -560{,}9\)`, `\(\;EP(\hat L_1) = \sqrt{QME \times 1{,}2} = \sqrt{4.346{,}6 \times 1{,}2} = 72{,}2\)`, `\(\;t = -7{,}77\)`
+
+`\(SQ_{L_1} = \hat L_1^2 / 1{,}2 = 262.161\)`, `\(\;F = SQ_{L_1}/QME = 60{,}3 = t^2\)`, com (1, 36) gl.
+
+**Na escala de ms** (dividindo por 3): `\(\hat L_1^* = -187{,}0\)` ms — sem scripts, a página carrega
+em média 187 ms mais rápido que a média das três configurações com script.
+
+---
+
+## Os três contrastes: estimativa, IC e teste
+
 
 ``` r
-medias &lt;- with(dados_scripts, tapply(tempo_ms, config, mean))
-ns &lt;- with(dados_scripts, tapply(tempo_ms, config, length))
-qme &lt;- summary(mod_scripts)[[1]]["Residuals", "Mean Sq"]
-
 coefs &lt;- list(L1 = c(3, -1, -1, -1), L2 = c(0, 2, -1, -1), L3 = c(0, 0, 1, -1))
-sapply(coefs, function(cc) sum(cc * medias)^2 / sum(cc^2 / ns))  # SQ de cada contraste
+res_c &lt;- map_dfr(names(coefs), function(nm) {
+  cc &lt;- coefs[[nm]]; cs &lt;- cc / sum(cc[cc &gt; 0])            # versão normalizada (escala ms)
+  L &lt;- sum(cs * medias); ep &lt;- sqrt(qme * sum(cs^2 / ns))
+  SQ &lt;- sum(cc * medias)^2 / sum(cc^2 / ns)
+  tibble(contraste = nm, L_ms = L, ep = ep, li = L - qt(.975, 36) * ep,
+         ls = L + qt(.975, 36) * ep, SQ = SQ, F = SQ / qme, p = pf(SQ / qme, 1, 36, lower.tail = FALSE))
+})
 ```
 
-```
-##         L1         L2         L3 
-## 262160.712 152438.219   5691.444
-```
+&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Contraste &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; L* (ms) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; EP &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; IC 95% &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; SQ &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p-valor &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; L1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -187,0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24,1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; [-235,8; -138,1] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 262.161 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 60,31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; L2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -151,2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25,5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; [-203,0; -99,4] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 152.438 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35,07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; L3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -33,7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29,5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; [-93,5; 26,1] &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.691 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1,31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0,2601 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
-``` r
-summary(mod_scripts)[[1]]["config", "Sum Sq"]                    # soma = SQ_Trat
-```
+Soma das três `\(SQ\)`: 420.290 — igual a `\(SQ_{\text{Trat}}\)` = 420.290 da ANOVA.
 
-```
-## [1] 420290.4
-```
+---
+
+## Os contrastes num gráfico
+
+&lt;img src="MATD48-07_files/figure-html/plot-contrastes-ic-1.png" alt="" width="648" /&gt;
+
+- **L1** e **L2**: intervalos inteiramente abaixo de zero — scripts atrasam a página, e Analytics
+  atrasa bem menos que as configurações com anúncio.
+- **L3**: o IC vai de -94 a 26 ms. "Não significativo" **não** quer dizer
+  "igual": os dados são compatíveis tanto com Combo um pouco mais rápido quanto com até
+  94 ms mais lento. Para decidir se o chat "custa", faltam réplicas.
 
 ---
 
 ## A partição visual de `\(SQ_{\text{Trat}}\)`
 
-&lt;img src="MATD48-07_files/figure-html/plot-contrastes-sq-1.png" alt="" width="504" /&gt;
+&lt;img src="MATD48-07_files/figure-html/plot-contrastes-sq-1.png" alt="" width="576" /&gt;
 
-As três barras somam exatamente a linha tracejada — `\(t-1=3\)` contrastes ortogonais particionam
-`\(SQ_{\text{Trat}}\)` sem sobra nem falta, cada um com 1 gl.
+As três barras somam exatamente a linha tracejada. **Leitura:** 62% de toda a
+variação entre configurações é "ter ou não ter script"; 36% é "anúncio ou não";
+só 1% é "chat em cima do anúncio".
 
 ---
 
-## Comparações múltiplas: Tukey vs. Dunnett
+## Contrastes não ortogonais: a soma não fecha
+
+Cada configuração contra o controle — três perguntas legítimas, mas **não ortogonais**:
+
+
+``` r
+coefs_ctrl &lt;- list(`Analytics−Nenhum` = c(-1, 1, 0, 0), `Anúncios−Nenhum` = c(-1, 0, 1, 0),
+                   `Combo−Nenhum` = c(-1, 0, 0, 1))
+sq_ctrl &lt;- sapply(coefs_ctrl, function(cc) sum(cc * medias)^2 / sum(cc^2 / ns))
+round(c(sq_ctrl, soma = sum(sq_ctrl), SQ_Trat = sq_trat_s))
+```
+
+```
+## Analytics−Nenhum  Anúncios−Nenhum     Combo−Nenhum             soma 
+##            37111           243095           323180           603386 
+##          SQ_Trat 
+##           420290
+```
+
+--
+
+A soma (603.386) passa de `\(SQ_{\text{Trat}}\)` (420.290) em
+44%: a média do controle (a mais baixa) entra nas três perguntas, e
+sua distância às demais é **contada três vezes**. Cada teste segue válido isoladamente; o que não
+vale é ler as `\(SQ\)` como "fatias" da variação. E, como os três testes são correlacionados, a correção
+adequada para eles é a de Dunnett (Parte C).
+
+---
+
+## Perguntas que os contrastes respondem
+
+1. **Scripts de terceiros atrasam a página?** Sim: em média 187 ms
+   (IC 95%: 138 a 236 ms), cerca de
+   22% do tempo da página limpa.
+
+2. **Se for para ter um script, Analytics é a opção mais leve?** Sim: Analytics carrega
+   151 ms mais rápido que a média das duas opções com anúncio
+   (IC: 99 a 203 ms).
+
+3. **Acrescentar o chat aos anúncios custa caro?** Os dados não permitem afirmar: a diferença
+   estimada é de 34 ms, com IC que inclui zero. Com o DP observado, detectar
+   30 ms com poder de 80% exigiria cerca de 77
+   carregamentos por configuração (`power.t.test`), e não 10.
+
+Os três testes estão protegidos sem correção adicional porque são **planejados, ortogonais e em
+número de `\(t-1\)`**.
+
+---
+
+class: inverse, center, middle
+
+# Parte C: comparações múltiplas nos mesmos dados
+
+---
+
+## As seis diferenças observadas
+
+&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Par &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Diferença (ms) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Amplitude p &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; t &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p (sem correção) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Anúncios &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33,7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1,14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0,2601 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Analytics − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86,2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2,92 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0,0060 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios − Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 134,3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4,56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 168,1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5,70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 220,5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7,48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 254,2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8,62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Médias ordenadas: Nenhum (859) &lt; Analytics (946) &lt; Anúncios (1080) &lt;
+Combo (1114). A **amplitude** `\(p\)` de um par conta quantas médias ordenadas ele abrange.
+O erro-padrão de **toda** diferença é o mesmo: `\(\sqrt{2QME/10} = 29{,}5\)` ms.
+
+---
+
+## As réguas calculadas nestes dados
+
+
+``` r
+ep1 &lt;- sqrt(qme / 10); ep2 &lt;- sqrt(2 * qme / 10); nu &lt;- 36; tt &lt;- 4; m_par &lt;- choose(4, 2)
+d_dunnett &lt;- attr(confint(glht(mod_scripts, linfct = mcp(config = "Dunnett")))$confint, "calpha")
+reguas &lt;- tibble(
+  Procedimento = c("LSD", "Duncan p=2", "Duncan p=3", "Duncan p=4", "SNK p=2", "SNK p=3",
+                   "SNK p=4", "Dunnett", "Tukey", "Bonferroni", "Scheffé"),
+  DMS = c(qt(.975, nu) * ep2,
+          sapply(2:4, function(p) qtukey(.95^(p - 1), p, nu)) * ep1,
+          sapply(2:4, function(p) qtukey(.95, p, nu)) * ep1,
+          d_dunnett * ep2, qtukey(.95, tt, nu) * ep1,
+          qt(1 - .05 / (2 * m_par), nu) * ep2, sqrt((tt - 1) * qf(.95, tt - 1, nu)) * ep2))
+```
+
+&lt;table class="table" style="font-size: 12.5px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; LSD &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Duncan p=2 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Duncan p=3 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Duncan p=4 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; SNK p=2 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; SNK p=3 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; SNK p=4 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Dunnett &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Tukey &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Bonferroni &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Scheffé &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 62,9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 64,9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 72,1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 72,3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 82,3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 86,5 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Mesma estrutura, multiplicadores diferentes: do LSD (59,8 ms) ao Scheffé
+(86,5 ms), a régua fica 45% mais longa.
+
+---
+
+## A régua de cada método contra as diferenças observadas
+
+&lt;img src="MATD48-07_files/figure-html/plot-reguas-1.png" alt="" width="684" /&gt;
+
+Uma diferença é declarada significativa quando sua linha pontilhada está **à direita** do fim da
+barra. Tudo se decide no par **Analytics − Nenhum** (86,2 ms): ele cai entre a
+régua de Bonferroni (82,3) e a de Scheffé (86,5).
+
+---
+
+## Quadro de decisões: par × procedimento
+
+
+
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Par &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Diferença &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; LSD sem proteção &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; LSD protegido &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Duncan &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; SNK &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Tukey &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Bonferroni &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Scheffé &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; Analytics − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; 86,2 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: rgba(253, 243, 231, 1) !important;"&gt; = &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 220,5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 254,2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios − Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 134,3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Analytics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 168,1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Anúncios &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33,7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+"≠" = diferença declarada significativa a 5%. Os métodos concordam em 5 dos 6 pares: os efeitos
+grandes sobrevivem a qualquer correção. A única divergência é Analytics − Nenhum: só o Scheffé
+**não** a declara. (Anúncios − Combo não é significativa por nenhum método.)
+
+---
+
+## Tukey vs. Dunnett: escolher a família certa
 
 
 ``` r
 emm &lt;- emmeans(mod_scripts, ~ config)
-pairs(emm, adjust = "tukey")[1:2]           # todas as pares (Tukey HSD)
-```
-
-```
-##  contrast           estimate   SE df t.ratio p.value
-##  Nenhum - Analytics    -86.2 29.5 36  -2.922  0.0119
-##  Nenhum - Anúncios    -220.5 29.5 36  -7.478 &lt;0.0001
-## 
-## P value adjustment: sidak method for 2 tests
-```
-
-``` r
-contrast(emm, "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")  # vs. controle
+contrast(emm, "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")    # vs. controle
 ```
 
 ```
@@ -444,6 +1279,202 @@ contrast(emm, "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")  # vs. control
 ## 
 ## P value adjustment: dunnettx method for 3 tests
 ```
+
+``` r
+pairs(emm, adjust = "tukey")[1]                                       # o mesmo par, por Tukey
+```
+
+```
+##  contrast           estimate   SE df t.ratio p.value
+##  Nenhum - Analytics    -86.2 29.5 36  -2.922  0.0060
+```
+
+O par Analytics − Nenhum tem p = 0,017 por Dunnett e p = 0,029 por Tukey: Dunnett corrige para
+**3** comparações (só contra o controle), Tukey para **6**. Se a pergunta é só "cada script piora em
+relação a nenhum?", pagar por 6 comparações é desperdiçar poder.
+
+---
+
+## Dunnett unilateral: a pergunta tem direção
+
+A pergunta de engenharia é **"o script piora?"**, não "o script muda?". Nenhuma equipe
+consideraria um script de terceiros que **acelera** a página: a hipótese alternativa é unilateral.
+
+
+``` r
+g_uni &lt;- glht(mod_scripts, linfct = mcp(config = "Dunnett"), alternative = "greater")
+summary(g_uni)$test[c("coefficients", "pvalues")] %&gt;% as.data.frame() %&gt;% round(4)
+```
+
+```
+##                    coefficients pvalues
+## Analytics - Nenhum      86.1525  0.0081
+## Anúncios - Nenhum      220.4974  0.0000
+## Combo - Nenhum         254.2359  0.0000
+```
+
+O p-valor unilateral do par Analytics − Nenhum cai para cerca de metade do bilateral. Mas atenção:
+a direção tem de ser fixada **no protocolo**, antes dos dados — escolher "unilateral" depois de ver
+o sinal da diferença é outra forma de *data snooping*.
+
+---
+
+## Todas as comparações par a par, de uma vez
+
+Equivalente em `ggplot2` de `plot(TukeyHSD(...))`: um par difere quando o IC **simultâneo** não cruza zero.
+
+&lt;img src="MATD48-07_files/figure-html/plot-tukey-ic-1.png" alt="" width="612" /&gt;
+
+Os intervalos de confiança (ICs) de Tukey são 33% mais largos: é o preço de a garantia
+de 95% valer para os **seis ao mesmo tempo**. Só "Anúncios − Combo" cruza zero nos dois.
+
+---
+
+## O ordenamento passo a passo: SNK nos dados
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Etapa &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Par &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Amplitude p &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Diferença &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DMS (SNK) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Decisão &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 254,2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 220,5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72,1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Analytics &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 168,1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72,1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Anúncios − Analytics &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 134,3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Analytics − Nenhum &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86,2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Combo − Anúncios &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33,7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Começa-se pela amplitude 4 (Combo − Nenhum); só porque ela foi significativa as amplitudes 3 são
+testadas, e só porque estas foram as vizinhas são testadas. Se Combo − Nenhum não tivesse passado
+de 79,4 ms, **nenhum** outro par seria sequer avaliado (regra de coerência).
+
+---
+
+## As amplitudes no gráfico das médias
+
+&lt;img src="MATD48-07_files/figure-html/scripts-arcos-1.png" alt="" width="100%" /&gt;
+
+As médias no eixo, na escala de ms e em ordem crescente; cada **arco** é um par, e sua altura e cor
+indicam a **amplitude** `\(p\)` (quantas médias o arco abrange, contando as pontas). Arcos verdes ligam
+vizinhas ( `\(p=2\)` ), laranjas pulam uma média ( `\(p=3\)` ), o roxo vai de ponta a ponta ( `\(p=4\)` ). O SNK
+e o Duncan percorrem esses arcos **de cima para baixo**: primeiro o mais alto, depois os do meio,
+por fim os vizinhos. Na Parte C2 isso é feito passo a passo, com dados reais.
+
+---
+
+## A mesma diferença, veredictos diferentes
+
+Imagine uma diferença observada de **75 ms**. A conclusão depende de **onde** ela está na ordenação:
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Posição do par &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Duncan &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; SNK &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Tukey &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 75 ms por SNK &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 75 ms por Tukey &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; vizinhas (p = 2) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59,8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; uma média entre elas (p = 3) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62,9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72,1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; ≠ &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; extremos (p = 4) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64,9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79,4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; = &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- **SNK/Duncan:** a régua cresce com `\(p\)`, porque a amplitude de `\(p\)` médias aleatórias cresce com `\(p\)`.
+- **Tukey:** uma só régua, a dos extremos, para todos os pares — protege o pior caso sempre.
+
+O problema conceitual do ordenamento: a posição `\(p\)` é **ela própria aleatória** (depende das médias
+observadas). Por isso a garantia do SNK/Duncan vale para "amplitudes", não para pares fixados de antemão.
+
+---
+
+## Ordenamento: quem é de fato o mais lento?
+
+Uma pergunta comum é de **ranking**: "qual configuração é a pior?". A ordem observada é Combo &gt;
+Anúncios &gt; Analytics &gt; Nenhum — mas com que segurança?
+
+&lt;img src="MATD48-07_files/figure-html/rank-prob-1.png" alt="" width="612" /&gt;
+
+Tomando as médias verdadeiras como `\(N(\bar y_i,\,QME/n)\)` (uma aproximação simples, de bootstrap
+paramétrico): Nenhum é a mais rápida e Analytics a segunda com quase certeza; mas Combo é a mais
+lenta em só cerca de 88% das réplicas. **Ordenar** Combo e Anúncios não é
+possível com estes dados — o mesmo que dizem Tukey e o contraste L3.
 
 ---
 
@@ -491,17 +1522,31 @@ contrast(emm, "trt.vs.ctrl", ref = "Nenhum", adjust = "dunnettx")  # vs. control
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-.footnote[Médias que **compartilham letra** não se distinguem pelo critério correspondente.]
+Médias que **compartilham letra** não se distinguem pelo critério correspondente. As letras são
+arbitrárias (o `cld` começa pela menor média, o `agricolae` pela maior): o que importa é se há letra
+em comum. Leitura: três grupos — {Nenhum}, {Analytics}, {Anúncios, Combo}.
+
+---
+
+## As letras no gráfico
+
+&lt;img src="MATD48-07_files/figure-html/plot-letras-1.png" alt="" width="612" /&gt;
+
+É a figura que vai para um relatório: dados, médias com IC e letras de Tukey. Uma única figura
+responde "quem difere de quem" sem tabela de p-valores.
 
 ---
 
 ## O problema das letras que se sobrepõem
 
-O agrupamento por letras (CLD) tem um defeito conhecido: um tratamento pode receber **duas** letras, ficando "igual" a dois grupos que são diferentes entre si. Isso não é ambiguidade do dado — é do procedimento, que testa pares e depois tenta resumir em grupos.
+O agrupamento por letras (CLD, *compact letter display*) tem um defeito conhecido: um tratamento pode receber **duas** letras,
+ficando "igual" a dois grupos que são diferentes entre si (ex.: A = ab, B = a, C = b). Isso não é
+ambiguidade do dado — é do procedimento, que testa pares e depois tenta resumir em grupos.
 
 --
 
-**Scott &amp; Knott (1974)** atacam o problema de outro jeito: em vez de testar pares, **particionam** o conjunto de médias em grupos **não sobrepostos**, por um critério de máxima verossimilhança.
+**Scott &amp; Knott (1974)** atacam o problema de outro jeito: em vez de testar pares, **particionam** o
+conjunto de médias em grupos **não sobrepostos**, por um critério de máxima verossimilhança.
 
 .pull-left[
 O algoritmo, recursivo:
@@ -558,7 +1603,7 @@ med &lt;- sort(tapply(dados_scripts$tempo_ms, dados_scripts$config, mean))
 n_i &lt;- table(dados_scripts$config)[names(med)]
 
 tibble(Configuração = names(med), `Média (ms)` = round(as.numeric(med), 1),
-       `Scott-Knott` = LETTERS[sk(med, n_i, QME, gl)]) %&gt;%
+       `Scott-Knott` = LETTERS[match(sk(med, n_i, QME, gl), unique(sk(med, n_i, QME, gl)))]) %&gt;%
   kable(align = "lrc") %&gt;% kable_styling(font_size = 15, full_width = FALSE)
 ```
 
@@ -579,55 +1624,444 @@ tibble(Configuração = names(med), `Média (ms)` = round(as.numeric(med), 1),
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Analytics &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 945.5 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; C &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; B &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Anúncios &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1079.9 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Combo &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1113.6 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; C &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 --
 
-Três grupos **disjuntos** — nenhum tratamento em dois grupos ao mesmo tempo. É por isso que o procedimento domina a literatura agronômica brasileira.
+Três grupos **disjuntos**, os mesmos de Tukey aqui — nenhum tratamento em dois grupos ao mesmo
+tempo. É por isso que o procedimento domina a literatura agronômica brasileira.
 
 .footnote[Há o pacote `ScottKnott` (função `SK()`), que devolve exatamente este resultado. Implementar à mão aqui é deliberado: o algoritmo cabe em 15 linhas e a lógica de partição fica visível.]
 
 ---
 
-## Tukey vs. Duncan: aqui coincidem, mas nem sempre
+## Quanto custa ser liberal? FWER simulada
 
-&lt;img src="MATD48-07_files/figure-html/plot-scripts-1.png" alt="" width="576" /&gt;
+Repetimos o experimento 2.000 vezes ( `\(n=10\)`, `\(\sigma=70\)` ms) em dois cenários e contamos em que
+fração das repetições **algum par de médias iguais** foi declarado diferente:
 
-Aqui os dois coincidem — os efeitos são grandes o bastante para ambos os critérios. A diferença de
-Duncan aparece nos **pares de fronteira**: seus valores críticos `\(R_p\)` são menores para amplitudes
-pequenas, o que dá mais poder ao custo de **não** controlar o FWER no nível nominal (ver o slide
-sobre `\(\alpha_p = 1-(1-\alpha)^{p-1}\)`).
+&lt;img src="MATD48-07_files/figure-html/sim-fwer-1.png" alt="" width="684" /&gt;
+
+Sob `\(H_0\)` completa, LSD protegido e SNK ficam em 5% — mas sob `\(H_0\)` **parcial** sobem para ≈ 9–10%,
+como Duncan: os dois pares iguais são testados, cada um, a 5%. Tukey, Bonferroni e Scheffé ficam
+abaixo de 5% nos dois cenários.
 
 ---
 
-## Todas as comparações par a par, de uma vez
+## *Data snooping* na prática: e se o par fosse escolhido depois?
 
-Equivalente em `ggplot2` de `plot(TukeyHSD(...))`: um par difere quando o IC **não cruza zero**.
+Suponha que ninguém planejou Analytics − Nenhum; alguém olhou o gráfico e decidiu testá-lo.
 
-&lt;img src="MATD48-07_files/figure-html/plot-tukey-ic-1.png" alt="" width="576" /&gt;
 
-Só "Anúncios − Combo" cruza zero: os demais 5 pares diferem significativamente (Tukey, 95%).
+``` r
+L_an &lt;- medias["Analytics"] - medias["Nenhum"]; t_an &lt;- L_an / sqrt(2 * qme / 10)
+c(t_obs = unname(t_an), t_crit_planejado = qt(.975, 36), t_crit_Scheffe = sqrt(3 * qf(.95, 3, 36)))
+```
+
+```
+##            t_obs t_crit_planejado   t_crit_Scheffe 
+##         2.921968         2.028094         2.932370
+```
+
+--
+
+- Como contraste **planejado**, `\(t = 2{,}92\)` passa folgado de 2,03.
+- Como contraste **sugerido pelos dados**, a régua honesta é a de Scheffé, 2,93, e o
+  par fica **por um fio** abaixo dela.
+- Já "sem anúncio vs. com anúncio", `\((1,1,-1,-1)/2\)`, também sugerido pelo gráfico, dá
+  `\(t = 9{,}3\)`: passa por qualquer régua.
+
+Efeitos grandes não precisam de planejamento para sobreviver; os de fronteira, sim.
+
+---
+
+## Perguntas que as comparações múltiplas respondem
+
+1. **Quais configurações diferem entre si?** Todas, exceto Anúncios e Combo (Tukey, FWER 5%).
+   A conclusão sobre Analytics × Nenhum depende do método: só Scheffé não a sustenta.
+
+2. **Cada script piora em relação a nenhum?** Sim, os três (Dunnett): Analytics +86 ms,
+   Anúncios +220 ms, Combo +254 ms.
+
+3. **É possível ordenar as quatro?** Só parcialmente: Nenhum &lt; Analytics &lt; {Anúncios, Combo}. Dizer
+   "Combo é a pior" não é sustentado (≈ 88% de chance no bootstrap).
+
+4. **Que método reportar?** O que responde à pergunta do protocolo: Dunnett para "vs. controle",
+   Tukey para "todos os pares". Reportar o método que deu mais asteriscos é *data snooping* de
+   procedimento.
+
+---
+
+class: inverse, center, middle
+
+# Parte C2: o teste de Duncan passo a passo
+
+### Dados reais: fertilizantes na produção de feijão
+
+---
+
+## Os dados: produção de feijão (kg) por fertilizante
+
+Quatro fertilizantes (F1–F4), 20 parcelas homogêneas sorteadas em 4 grupos de 5 (**UE = parcela**).
+Dado **real** (Cap. 3 do livro, seção do DCA): ninguém conhece o efeito verdadeiro.
+
+.pull-left[
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Parcela &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F4 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.91 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.76 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.46 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.51 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.37 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.59 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.51 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.47 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.07 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+.pull-right[
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Fertilizante &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DP &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.952 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.98 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.318 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.52 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.546 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.188 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.17 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+ANOVA: `\(F = 9{,}21\)` com (3, 16) gl, `\(p = 0{,}0009\)`; `\(QME = 1{,}982\)`.
+
+Há diferença entre fertilizantes. **Quais** diferem? É aqui que entra o Duncan.
+]
+
+
+---
+
+## Feijão: o que o sorteio das parcelas garante
+
+As 20 parcelas foram **sorteadas** em quatro grupos de 5. É isso que permite ler F2 − F1 como efeito do fertilizante.
+
+- Se o agrônomo tivesse aplicado o fertilizante mais caro nas parcelas "mais bonitas", o Duncan e o Tukey continuariam dando letras, mas as letras ordenariam **parcelas**, não fertilizantes.
+- A regra de coerência, os traços e as letras só organizam decisões que o sorteio tornou honestas.
+
+---
+
+## Duncan em uma frase (e em cinco passos)
+
+&gt; Ordene as médias e compare cada par com uma régua que depende de **quantas médias o par abrange**,
+&gt; começando pelo par mais afastado e só descendo enquanto as comparações maiores forem significativas.
+
+1. **Ordenar** as médias, da menor para a maior.
+2. Para cada par, contar a **amplitude** `\(p\)`: quantas médias ordenadas ele abrange, incluindo as pontas.
+3. Calcular uma **régua** `\(R_p\)` para cada amplitude: `\(R_p = r_p\sqrt{QME/n}\)`, com `\(r_p\)` da tabela de Duncan.
+4. **Testar de cima para baixo** ( `\(p = t, t-1, \ldots, 2\)` ): o par difere se `\(\bar y_{\text{maior}} - \bar y_{\text{menor}} &gt; R_p\)`.
+   Um par só é testado se todos os pares que o **contêm** foram significativos (coerência).
+5. Traduzir as decisões em **traços** e **letras**.
+
+Nos próximos slides, cada passo é feito nos dados de feijão, com o gráfico das médias.
+
+---
+
+## Passo 1 — ordenar as médias
+
+&lt;img src="MATD48-07_files/figure-html/feij-regua-1.png" alt="" width="100%" /&gt;
+
+As quatro médias no eixo da produção (kg), em ordem crescente; entre parênteses, a **posição** na
+ordenação. A ordem não é a dos rótulos: F3 vem antes de F2.
+
+- Distâncias entre vizinhas: F3 − F1 = 0,59, F2 − F3 = 1,77,
+  F4 − F2 = 1,87 kg.
+- Todas as diferenças têm o mesmo erro-padrão de uma média, `\(\sqrt{QME/n} = \sqrt{1{,}982/5} = 0{,}630\)` kg,
+  que é a "unidade" das réguas de Duncan, SNK e Tukey.
+
+---
+
+## Passo 2 — a amplitude `\(p\)` de cada par
+
+&lt;img src="MATD48-07_files/figure-html/feij-arcos-1.png" alt="" width="100%" /&gt;
+
+| amplitude | pares | o que significa |
+|:-:|---|---|
+| `\(p = 4\)` | F4−F1 | maior contra menor: abrange as 4 médias |
+| `\(p = 3\)` | F2−F1, F4−F3 | há **uma** média entre as duas |
+| `\(p = 2\)` | F3−F1, F2−F3, F4−F2 | médias **vizinhas** na ordenação |
+
+---
+
+## Por que a régua deveria crescer com `\(p\)`?
+
+&lt;img src="MATD48-07_files/figure-html/feij-intuicao-1.png" alt="" width="684" /&gt;
+
+Simulação: sorteamos `\(p\)` médias **sem efeito nenhum** e medimos a distância entre a maior e a menor
+(em erros-padrão). Com mais médias, os extremos se afastam **só por acaso**: o percentil 95% (tracejado)
+vai de 3,00 ( `\(p=2\)` ) a 4,08 ( `\(p=4\)` ). São exatamente os valores `\(q_{0,05;\,p,16}\)` da
+amplitude estudentizada. Daí a ideia: exigir **mais** de um par que abrange mais médias.
+
+---
+
+## Passo 3 — uma régua para cada amplitude
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Amplitude p &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Nível de proteção αp &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; r_p (tabela de Duncan) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; R_p Duncan &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; R_p SNK &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Tukey (fixa) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5,00% &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,998 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1,887 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1,887 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,547 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9,75% &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3,144 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1,979 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,297 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,547 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14,26% &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3,235 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,036 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,547 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2,547 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Exemplo: `\(R_3 = r_3\sqrt{QME/n} = 3{,}144 \times 0{,}630 = 1{,}979\)` kg.
+
+- O `\(r_p\)` de Duncan é o quantil da amplitude estudentizada ao nível `\(1-\alpha_p\)` (no R: `qtukey((1 - 0.05)^(p - 1), p, gl)`).
+- Duncan cresce **devagar** com `\(p\)` (1,89 → 2,04), porque relaxa o nível
+  ( `\(\alpha_p\)` sobe); o SNK cresce mais (1,89 → 2,55); Tukey usa a régua máxima (2,55) para todos.
+
+---
+
+## As três réguas lado a lado
+
+&lt;img src="MATD48-07_files/figure-html/feij-escada-1.png" alt="" width="648" /&gt;
+
+Para pares **vizinhos** ( `\(p=2\)` ), Duncan e SNK usam a mesma régua (igual à do LSD). Quanto mais
+afastado o par na ordenação, maior a distância entre os três métodos. **É nos pares de amplitude
+intermediária e grande que o Duncan é mais liberal que o Tukey.**
+
+---
+
+## Passo 4, etapa 1 — amplitude `\(p = 4\)`
+
+&lt;img src="MATD48-07_files/figure-html/feij-etapa4-1.png" alt="" width="100%" /&gt;
+
+Só um par tem `\(p=4\)`: o maior contra o menor. `\(\bar y_{F4} - \bar y_{F1} = 4{,}24 &gt; R_4 = 2{,}04\)`:
+**F4 e F1 diferem**. Como esta comparação foi significativa, as duas de amplitude 3 que ficam
+"dentro" dela estão liberadas para teste. (Se ela **não** fosse significativa, o Duncan pararia aqui
+e declararia todas as médias iguais.)
+
+---
+
+## Passo 4, etapa 2 — amplitude `\(p = 3\)`
+
+&lt;img src="MATD48-07_files/figure-html/feij-etapa3-1.png" alt="" width="100%" /&gt;
+
+Dois pares, cada um com uma média no meio: F2−F1 = 2,37 e F4−F3 = 3,64, ambos contra
+`\(R_3 = 1{,}98\)`. **Os dois diferem.** O arco verde-claro é a etapa anterior (já ≠); os cinzas
+claros são a próxima etapa, ainda não testada. Note F2−F1: 2,37 kg passa da régua
+do Duncan, mas **não** passaria da de Tukey (2,55). Voltaremos a isso.
+
+---
+
+## Passo 4, etapa 3 — amplitude `\(p = 2\)` (vizinhas)
+
+&lt;img src="MATD48-07_files/figure-html/feij-etapa2-1.png" alt="" width="100%" /&gt;
+
+Os três pares vizinhos, contra `\(R_2 = 1{,}89\)`: F3−F1 = 0,59, F2−F3 = 1,77,
+F4−F2 = 1,870. **Nenhum difere.** F4−F2 fica a só 0,017 kg da régua:
+uma parcela a mais em F4 poderia mudar a conclusão. Decisões perto da régua são frágeis — reporte a diferença
+e o intervalo, não só "≠" ou "=".
+
+---
+
+## A regra de coerência em ação
+
+E se o experimento fosse mais ruidoso? Com as **mesmas médias** e `\(QME = 9\)` (em vez de 1,98):
+
+&lt;img src="MATD48-07_files/figure-html/feij-coerencia-1.png" alt="" width="100%" /&gt;
+
+A comparação de ponta a ponta já falha (F4−F1 = 4,24 ≤ `\(R_4\)` = 4,34): se nem
+as médias mais afastadas diferem, nenhum par **dentro** delas pode diferir. Os pares de amplitude 3 e 2
+**nem são testados** (roxo). É isso que impede o Duncan de dizer "F1 e F4 são iguais, mas F1 e F2 diferem".
+
+---
+
+## Passo 5 — das decisões aos traços e às letras
+
+&lt;img src="MATD48-07_files/figure-html/feij-tracos-1.png" alt="" width="100%" /&gt;
+
+Um **traço** sob um grupo de médias consecutivas = nenhum par dentro dele difere. Cada traço vira uma
+**letra** (a = o grupo da maior média). Duncan: {F1, F3}, {F3, F2}, {F2, F4} → F1 = c, F3 = bc, F2 = ab, F4 = a.
+Tukey: {F1, F3, F2}, {F2, F4} → F1 = b, F3 = b, F2 = ab, F4 = a.
+
+---
+
+## Conferindo com o `agricolae`
+
+
+``` r
+dt &lt;- agricolae::duncan.test(mod_feijao, "Fertilizante", console = FALSE)
+dt$duncan            # r_p ("Table") e R_p ("CriticalRange") para p = 2, 3, 4
+```
+
+```
+##      Table CriticalRange
+## 2 2.997999      1.887328
+## 3 3.143802      1.979115
+## 4 3.234945      2.036492
+```
+
+``` r
+dt$groups            # médias ordenadas da maior para a menor, com as letras
+```
+
+```
+##    Producao groups
+## F4    9.188      a
+## F2    7.318     ab
+## F3    5.546     bc
+## F1    4.952      c
+```
+
+Os valores de `\(r_p\)` e `\(R_p\)` e as letras batem com o que fizemos à mão. O `agricolae` só **não**
+mostra o caminho — as etapas e a regra de coerência —, que é o que importa para entender o resultado.
+
+---
+
+## Onde Duncan e Tukey discordam: F2 contra F1
+
+&lt;img src="MATD48-07_files/figure-html/feij-discorda-1.png" alt="" width="684" /&gt;
+
+A mesma diferença, 2,37 kg, é "significativa" para Duncan e SNK e "não significativa" para
+Tukey, Bonferroni e Scheffé. Os dados não mudaram — mudou a **garantia** pedida. O Duncan julga esse par
+com `\(\alpha_3 = 1-0{,}95^2 \approx 9{,}75\%\)` de proteção, não 5%.
+
+---
+
+## O que o Duncan diz — e o que ele não garante
+
+**O que os dados de feijão permitem dizer, pelo Duncan:** F4 rende mais que F1 e F3; F2 rende mais que
+F1; F4 e F2 não se distinguem, nem F2 e F3, nem F3 e F1.
+
+**Pelo Tukey:** F4 rende mais que F1 e F3; todo o resto é indistinguível.
+
+--
+
+**O que o Duncan não garante:** que a chance de **pelo menos um** desses "≠" ser falso fique em 5%. Sob
+`\(H_0\)` completa, com 4 médias, ela é `\(\alpha_4 = 1-0{,}95^3 \approx 14\%\)`; com 10 médias, `\(1-0{,}95^9 \approx 37\%\)`.
+
+**Leitura prática:** Duncan é uma ferramenta de **triagem** (achar candidatos promissores para um
+próximo experimento). Para uma **conclusão** que vai virar recomendação a produtores, Tukey — ou
+Dunnett, se houver uma testemunha — é o que sustenta a afirmação.
+
+---
+
+class: inverse, center, middle
+
+# Parte D: polinômios ortogonais — cafeína e atenção
 
 ---
 
 ## Psicologia: dose de cafeína e atenção sustentada
 
 **Pergunta:** 0, 50, 100, 150, 200 mg de cafeína — como a atenção sustentada responde à dose?
+Existe uma dose ótima? 40 participantes, 8 por dose (**UE = participante**).
 
-Níveis **quantitativos, igualmente espaçados** — cenário ideal para polinômios ortogonais.
+Níveis **quantitativos, igualmente espaçados** em 50 mg — cenário ideal para polinômios ortogonais.
 
 
 ``` r
@@ -644,6 +2078,198 @@ cafeina &lt;- tibble(
 )
 contrasts(cafeina$dose) &lt;- contr.poly(5)
 ```
+
+A curva verdadeira (só conhecida porque os dados são simulados) é uma **parábola** com pico em
+`\(0{,}35/(2\times 0{,}0013) \approx 135\)` mg. Guardemos isso para o fim.
+
+---
+
+## Os dados: escore de atenção dos 40 participantes
+
+.pull-left[
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Part. &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 0 mg &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 50 mg &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 100 mg &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 150 mg &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 200 mg &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 100.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 119.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 117.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 119.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 103.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 104.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 120.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 98.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 111.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 99.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 107.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 100.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 99.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 119.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 111.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 107.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 92.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 108.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 111.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.4 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+.pull-right[
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Dose (mg) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; n &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DP &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89.39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 111.97 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.11 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.67 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 150 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 116.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.84 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 200 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.37 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+A média sobe muito de 0 para 50 mg (+22.6), fica num
+platô entre 50 e 150 mg e cai em 200 mg. O grupo 0 mg é o mais disperso (DP
+8,9), mas nenhum DP é mais que o dobro de outro.
+]
+
+---
+
+## Olhando antes de testar
+
+&lt;img src="MATD48-07_files/figure-html/plot-dados-cafeina-1.png" alt="" width="648" /&gt;
+
+Agora o eixo horizontal é **métrico**: a pergunta natural já não é "que doses diferem?", e sim
+"**qual é a forma** da curva dose-resposta?".
+
+---
+
+## Por que não comparar pares aqui?
+
+&lt;table class="table" style="font-size: 15px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Dose (mg) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Média &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Tukey &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89.4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; a &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112.0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; bc &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112.3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; bc &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 150 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 117.0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; c &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 200 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105.3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; b &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+ANOVA global: `\(F = 22{,}5\)` com (4, 35) gl, `\(p &lt; 0{,}0001\)`.
+
+Tukey compara 10 pares e devolve letras sobrepostas: 0 mg difere de todos; 150 e 200 mg diferem
+entre si, mas 50 e 100 mg ficam "iguais" **aos dois** (letras "bc"). É uma resposta a uma pergunta
+que ninguém fez — e ignora que 50 mg fica **entre** 0 e 100 mg. Os polinômios usam essa ordem e essa métrica.
 
 ---
 
@@ -668,26 +2294,103 @@ round(crossprod(X_poly), 1)  # X'X diagonal -- estimativas independentes entre s
 
 Colunas ortogonais `\(\Rightarrow\)` `\(\mathbf X'\mathbf X\)` diagonal `\(\Rightarrow\)` cada `\(\hat\beta_k\)`
 (e cada `\(SQ_k\)`) se estima sem covariância com os demais — a mesma forma quadrática de posto 1.
+(O R normaliza as colunas: cada uma tem norma `\(\sqrt 8\)`, 8 réplicas × norma 1.)
 
 ---
 
-## Decompondo a tendência: linear, quadrático, ...
+## Os quatro componentes calculados à mão
+
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Grau &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; λ·ȳ (0, 50, 100, 150, 200) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; L̂ = Σλȳ &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Σλ² &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; SQ = 8L̂²/Σλ² &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p-valor &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Linear &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -2, -1, 0, 1, 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36,90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.089,4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26,42 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Quadrático &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2, -1, -2, -1, 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -64,06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.345,3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 56,87 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; &amp;lt; 0,0001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Cúbico &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -1, 2, 0, -2, 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5,97 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28,5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0,69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0,4110 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Quártico &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1, -4, 6, -4, 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -47,10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 253,6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6,15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0,0181 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Médias por dose: `\(\bar y = (89{,}39;\ 111{,}97;\ 112{,}31;\ 116{,}96;\ 105{,}35)\)`, `\(QME = 41{,}24\)` com 35 gl.
+
+Exemplo, linear: `\(\hat L_L = -2(89{,}39) - (111{,}97) + 0 + (116{,}96) + 2(105{,}35) = 36{,}90\)`, e
+`\(SQ_L = 8 \times 36{,}90^2/10 = 1.089{,}4\)`. Soma das quatro `\(SQ\)`: 3.716,8 `\(= SQ_{\text{Trat}}\)`.
+
+---
+
+## Conferência no R: a ANOVA particionada
 
 
 ``` r
-mod_poly &lt;- aov(atencao_pos ~ dose, data = cafeina)
 summary(mod_poly, split = list(dose = list(Linear = 1, Quadratic = 2,
-                                            Cubic = 3, Quartic = 4)))[[1]][1:3, ]
+                                            Cubic = 3, Quartic = 4)))[[1]][1:6, ]
 ```
 
 ```
 ##                   Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-## dose               4 3716.8  929.19  22.534 2.824e-09 ***
-##   dose: Linear     1 1089.4 1089.39  26.419 1.051e-05 ***
-##   dose: Quadratic  1 2345.3 2345.26  56.874 7.749e-09 ***
+## dose               4 3716.8  929.19 22.5336 2.824e-09 ***
+##   dose: Linear     1 1089.4 1089.39 26.4185 1.051e-05 ***
+##   dose: Quadratic  1 2345.3 2345.26 56.8744 7.749e-09 ***
+##   dose: Cubic      1   28.5   28.55  0.6923   0.41102    
+##   dose: Quartic    1  253.6  253.56  6.1491   0.01811 *  
+## Residuals         35 1443.2   41.24                      
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
+
+Bate com a conta à mão, linha a linha. Linear e quadrático muito significativos; cúbico não;
+e o **quártico também dá significativo** ( `\(p \approx 0{,}018\)` ). Isso precisa de interpretação — a seguir.
+
+---
+
+## Quanto da variação cada grau explica
+
+&lt;img src="MATD48-07_files/figure-html/plot-poly-sq-1.png" alt="" width="612" /&gt;
+
+O quadrático sozinho responde por 63% de `\(SQ_{\text{Trat}}\)`; linear e quadrático juntos,
+92%. O quártico é significativo, mas explica só 7%.
+**Leitura:** a forma dominante é um "U invertido" que sobe com a dose.
 
 ---
 
@@ -695,8 +2398,222 @@ summary(mod_poly, split = list(dose = list(Linear = 1, Quadratic = 2,
 
 &lt;img src="MATD48-07_files/figure-html/plot-poly-1.png" alt="" width="648" /&gt;
 
-A parábola já captura o essencial (salto grande de `\(R^2\)` do linear); cúbico e quártico agregam
-pouco — mesma conclusão da ANOVA particionada, agora visível a olho antes de qualquer p-valor.
+A reta erra o padrão por completo; a parábola captura o essencial (salto de `\(R^2\)`). O quártico
+passa **exatamente** pelas 5 médias (5 parâmetros, 5 pontos) — o `\(R^2\)` máximo possível com dose como fator.
+
+---
+
+## Falta de ajuste: a parábola basta?
+
+
+``` r
+anova(mod_quad_num, mod_poly)   # quadrático (encaixado) vs. dose como fator (5 médias livres)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: atencao_pos ~ d + I(d^2)
+## Model 2: atencao_pos ~ dose
+##   Res.Df    RSS Df Sum of Sq      F  Pr(&gt;F)  
+## 1     37 1725.4                              
+## 2     35 1443.2  2    282.11 3.4207 0.04396 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+
+`\(SQ_{\text{falta}} = SQ_C + SQ_4 = 28{,}5 + 253{,}6 = 282{,}1\)` com 2 gl:
+`\(F = 3{,}42\)`, `\(p = 0{,}0440\)`. Formalmente, a 5%, rejeita-se que a parábola descreva
+as cinco médias. É a mesma informação do quártico significativo, dita de outro modo.
+
+---
+
+## Onde a parábola erra
+
+&lt;img src="MATD48-07_files/figure-html/plot-desvios-1.png" alt="" width="648" /&gt;
+
+Os desvios fazem um zigue-zague **+ − +** em 50, 100 e 150 mg: exatamente o desenho do
+coeficiente quártico `\((1,-4,6,-4,1)\)` com sinal trocado. A parábola subestima o platô em 50 mg e
+superestima em 100 mg, por cerca de 4 pontos — menos que o DP de um participante ( `\(\approx\)` 6,4).
+
+---
+
+## O quártico significativo: efeito real ou acaso?
+
+Aqui temos uma vantagem rara: **sabemos** que a curva verdadeira é uma parábola. O quártico
+significativo é, portanto, um **falso positivo**. Ele era previsível?
+
+
+
+Em 2.000 réplicas simuladas do mesmo experimento: o cúbico deu `\(p&lt;0{,}05\)` em
+5,2% delas, o quártico em 5,2%, e **pelo menos um
+dos dois** em 10,3%. Testar os `\(t-1=4\)` graus é também uma família de testes.
+
+--
+
+**Como decidir na prática, sem saber a verdade:**
+
+- Plausibilidade: não há mecanismo fisiológico conhecido para uma ondulação de 4ª ordem.
+- Parcimônia e tamanho: os desvios são de ~4 pontos e explicam 7% da variação.
+- Replicação: um termo de alta ordem que é real **reaparece** num novo experimento; um acidental, não.
+
+Conclusão defensável: adotar a parábola para descrever e interpretar, **reportando** a falta de ajuste.
+
+---
+
+## De volta à escala de mg: a equação ajustada
+
+Com `\(x = (\text{dose}-100)/50\)`, `\(\hat b_1 = \hat L_L/10\)` e `\(\hat b_2 = \hat L_Q/14\)`:
+
+
+``` r
+b1 &lt;- Lk[1] / 10; b2 &lt;- Lk[2] / 14; ybar &lt;- mean(mb)
+c(ybar = ybar, b1 = b1, b2 = b2)
+```
+
+```
+##       ybar         b1         b2 
+## 107.195803   3.690166  -4.576002
+```
+
+``` r
+coef(mod_quad_num)                 # a mesma parábola, ajustada direto na dose
+```
+
+```
+##  (Intercept)            d       I(d^2) 
+## 90.663466965  0.439883451 -0.001830401
+```
+
+`$$\hat y = 107{,}20 + 3{,}690\,x -4{,}576\,(x^2-2), \qquad x = \frac{\text{dose}-100}{50}.$$`
+
+Expandindo, o coeficiente de `\(\text{dose}^2\)` é `\(-4{,}576/2500 = -0{,}001830\)` — igual ao do `lm`. Os
+polinômios ortogonais não são outro modelo: são a mesma regressão, numa base em que os termos não se confundem.
+
+---
+
+## Existe uma dose ótima?
+
+
+``` r
+b &lt;- coef(mod_quad_num); V &lt;- vcov(mod_quad_num)
+d_ot &lt;- -b[2] / (2 * b[3])                              # vértice da parábola
+grad &lt;- c(0, -1 / (2 * b[3]), b[2] / (2 * b[3]^2))      # gradiente para o método delta
+ep_ot &lt;- sqrt(drop(t(grad) %*% V %*% grad))
+c(dose_otima = unname(d_ot), ep = ep_ot, li = unname(d_ot) - qt(.975, 37) * ep_ot,
+  ls = unname(d_ot) + qt(.975, 37) * ep_ot)
+```
+
+```
+## dose_otima         ep         li         ls 
+## 120.160429   5.047698 109.932822 130.388037
+```
+
+A dose que maximiza a atenção estimada é de cerca de **120 mg** (IC 95% pelo método delta:
+110 a 130 mg), com atenção prevista de
+117,1 pontos. A dose ótima **verdadeira** é 135 mg — fora desse intervalo.
+
+---
+
+## A dose ótima é mal determinada — e por isso importa pouco
+
+&lt;img src="MATD48-07_files/figure-html/sim-vertice-1.png" alt="" width="648" /&gt;
+
+Verde: a dose ótima verdadeira; roxo tracejado: a nossa estimativa, numa cauda da distribuição (em
+~2% das réplicas a estimativa sai tão baixa). Um IC de 95% erra 5% das vezes, e esta amostra
+superestimou a curvatura ( `\(\hat\beta_2\)` = -0,00183 vs. −0,0013).
+**Intuição:** perto do pico a curva é achatada — na curva verdadeira, 120 e 135 mg diferem em
+0,28 ponto. É difícil achar o pico justamente porque errar o pico custa pouco.
+
+---
+
+## Perguntas que os dados de cafeína respondem
+
+1. **A atenção depende da dose?** Sim, `\(F_{4,35} = 22{,}5\)`.
+2. **Mais cafeína, mais atenção?** Até certo ponto: o termo linear é positivo, mas o quadrático
+   (negativo, 63% da variação) diz que a curva **sobe e depois desce**.
+3. **Existe uma dose ótima?** A parábola estima ~120 mg; o platô vai de ~50 a ~150 mg.
+4. **200 mg é pior que 150 mg?** Sim: queda de 11,6 pontos (Tukey, p ≈ 0,008) — excesso de estimulação.
+5. **Vale a pena passar de 50 mg?** 150 mg rende só 5,0 pontos a mais que 50 mg, diferença
+   não significativa: **a menor dose do platô já entrega quase todo o benefício**.
+6. **A parábola é o modelo certo?** É o modelo **plausível e parcimonioso**; a falta de ajuste
+   ( `\(p \approx 0{,}044\)` ) foi registrada e discutida, não escondida.
+
+---
+
+## Doses não igualmente espaçadas
+
+Se as doses fossem 0, 50, 100, 200 e 400 mg, os coeficientes da tabela ( `\(-2,-1,0,1,2\)` ) testariam
+uma tendência **no posto** da dose, não na dose. Os coeficientes certos dependem dos valores:
+
+
+``` r
+P_certo &lt;- contr.poly(5, scores = c(0, 50, 100, 200, 400))   # ortogonais NAS DOSES REAIS
+round(P_certo, 3)
+```
+
+```
+##          .L     .Q     .C     ^4
+## [1,] -0.474  0.546 -0.470  0.237
+## [2,] -0.316  0.035  0.422 -0.721
+## [3,] -0.158 -0.335  0.514  0.631
+## [4,]  0.158 -0.652 -0.570 -0.158
+## [5,]  0.791  0.405  0.104  0.011
+```
+
+``` r
+lin_tab &lt;- c(-2, -1, 0, 1, 2)                                 # "linear" da tabela
+round(c(cor_com_linear_real = cor(lin_tab, P_certo[, 1]),
+        cor_com_quadratico_real = cor(lin_tab, P_certo[, 2])), 2)
+```
+
+```
+##     cor_com_linear_real cor_com_quadratico_real 
+##                    0.95                   -0.31
+```
+
+O "linear" tabelado não é ortogonal ao quadrático **verdadeiro** (correlação
+-0,31): parte da curvatura vaza para o termo linear e as `\(SQ\)` deixam de
+particionar `\(SQ_{\text{Trat}}\)` com sentido. Use `contr.poly(k, scores = doses)` ou
+`lm(y ~ poly(dose_num, 2))` na variável numérica — nunca a tabela de Fisher &amp; Yates.
+
+---
+
+## Armadilha de ordenamento: a ordem dos níveis do fator
+
+`contr.poly()` atribui os coeficientes **na ordem dos níveis do fator**. Se a dose vier como texto,
+o R ordena alfabeticamente:
+
+
+``` r
+dose_txt &lt;- factor(as.character(cafeina$dose))
+levels(dose_txt)                                  # "0" "100" "150" "200" "50" -- 50 mg no fim!
+```
+
+```
+## [1] "0"   "100" "150" "200" "50"
+```
+
+``` r
+contrasts(dose_txt) &lt;- contr.poly(5)
+summary(aov(cafeina$atencao_pos ~ dose_txt),
+        split = list(dose_txt = list(L = 1, Q = 2, C = 3, Q4 = 4)))[[1]][2:5, c(2, 4, 5)]
+```
+
+```
+##                 Sum Sq F value    Pr(&gt;F)    
+##   dose_txt: L  1166.64 28.2920 6.105e-06 ***
+##   dose_txt: Q  1363.85 33.0746 1.644e-06 ***
+##   dose_txt: C  1065.71 25.8443 1.246e-05 ***
+##   dose_txt: Q4  120.55  2.9234   0.09616 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+A `\(SQ_{\text{Trat}}\)` total é a mesma, mas a partição é **lixo**: o "linear" mede outra coisa, e o
+cúbico, antes nulo, vira "significativo". Confira sempre `levels()` antes de usar polinômios.
 
 ---
 
@@ -706,25 +2623,76 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**O que o FWER garante**
+
+Controlar o **FWER** (*family-wise error rate*, taxa de erro por família) em 5% com Tukey ou Bonferroni pressupõe que cada comparação, **isolada**, já é honesta.
+Isso vem do **sorteio**. Com autosseleção (Aula 04), a comparação individual já nasce viesada:
+
+&lt;img src="MATD48-07_files/figure-html/cnc-a07-1.png" alt="" width="78%" /&gt;
+
+Nenhuma correção para comparações múltiplas conserta isso: Bonferroni divide `\(\alpha\)` entre comparações viesadas, e o viés continua lá.
+Contrastes e polinômios ortogonais herdam a mesma garantia, e a mesma dependência do sorteio.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que faz sentido usar Dunnett (não Tukey) quando a única pergunta é "cada configuração
-   piora o carregamento em relação a não usar nenhum script?"
+   piora o carregamento em relação a não usar nenhum script?" E por que unilateral?
 
 2. Um pesquisador olha os dados, nota uma diferença "interessante" que não tinha planejado
    comparar, e testa com um `\(t\)` comum. Por que isso viola as premissas de todos os procedimentos
-   desta aula, mesmo com p-valor pequeno?
+   desta aula, mesmo com p-valor pequeno? O que muda se ele usar Scheffé?
 
-3. No exemplo da cafeína, o que significaria, em termos práticos, um termo **cúbico**
-   significativo além do linear e do quadrático? Isso seria plausível fisiologicamente?
+3. No exemplo de scripts, L3 não foi significativo. Um gerente conclui: "então o chat não custa
+   nada". O que você responderia, usando o IC de L3?
 
-4. Se as cinco doses de cafeína **não** estivessem igualmente espaçadas (por exemplo, 0, 50, 100,
-   200, 400 mg), os coeficientes tabulados de polinômios ortogonais ainda poderiam ser usados
-   diretamente? Por quê?
+4. Os contrastes "cada script vs. Nenhum" somaram mais que `\(SQ_{\text{Trat}}\)`. Isso significa que há
+   um erro de conta? O que a soma "a mais" representa?
 
-5. Duncan usa um nível de proteção `\(\alpha_p\)` que cresce com a amplitude `\(p\)`, em vez de manter
-   `\(\alpha\)` fixo como Tukey. Isso é vantagem ou desvantagem? Em que tipo de publicação você
-   esperaria ver Duncan preferido a Tukey, apesar de não controlar o FWER?
+---
+
+## Perguntas para a turma (cont.)
+
+5. Sob `\(H_0\)` completa, SNK e LSD protegido ficaram em 5% na simulação; sob `\(H_0\)` parcial, em quase
+   10%. Explique por que, com base na regra de coerência e no teste `\(F\)` preliminar.
+
+6. No exemplo da cafeína o termo quártico foi significativo, mas a curva verdadeira é uma
+   parábola. Você teria como saber disso sem a simulação? Que evidência adicional pediria?
+
+7. Se as cinco doses de cafeína **não** estivessem igualmente espaçadas (por exemplo, 0, 50, 100,
+   200, 400 mg), os coeficientes tabulados ainda poderiam ser usados diretamente? Por quê?
+
+8. A dose ótima estimada (≈ 120 mg) ficou longe da verdadeira (135 mg), mas a atenção prevista nas
+   duas doses é quase igual. Para quem decide uma recomendação de consumo, qual dos dois fatos importa mais?
+
+---
+
+## Perguntas para a turma (FWER e Duncan)
+
+9. Explique, sem fórmulas, a diferença entre "cada teste tem 5% de chance de falso positivo" e
+   "o FWER é 5%". Na grade de 100 experimentos simulados, qual das duas é a coluna e qual é a linha?
+
+10. No feijão, o Duncan declarou F2 ≠ F1 e o Tukey não. Um colega diz: "então o Duncan está certo,
+    porque achou mais diferenças". O que há de errado nesse raciocínio?
+
+11. Por que o Duncan exige **menos** de pares vizinhos do que de pares afastados na ordenação? Use o
+    gráfico da distribuição da amplitude de `\(p\)` médias sob `\(H_0\)` para responder.
+
+12. Com `\(QME = 9\)`, a regra de coerência impediu qualquer comparação de amplitude 3 ou 2. Que
+    contradição apareceria se o procedimento testasse esses pares mesmo assim?
+
+13. Recalcule as etapas do Duncan se F4 tivesse média 9,30 kg (as demais iguais). Muda alguma letra?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Por que uma correção para comparações múltiplas não conserta viés de seleção? Explique com o exemplo dos sites reais.
+2. Na dose de cafeína, o que o sorteio dos participantes entre as doses garante para a curva de resposta? E se cada participante escolhesse a própria dose?
 
 ---
 
@@ -741,13 +2709,76 @@ class: inverse, center, middle
 # 1. Ajustar o modelo normalmente
 mod &lt;- aov(tempo_ms ~ config, data = dados_scripts)
 
-# 2. Calcular as médias marginais estimadas (emmeans) -- ponto de partida
-#    para QUALQUER contraste, comparação par a par ou vs. controle
+# 2. Médias marginais estimadas: ponto de partida para QUALQUER contraste ou comparação
 emm &lt;- emmeans(mod, ~ config)
 
-# 3. Escolher o procedimento pelo argumento `adjust` (pairs) ou `method` (contrast)
-#    "tukey", "bonferroni", "scheffe", "trt.vs.ctrl" (Dunnett), ...
+# 3. Contrastes planejados com coeficientes próprios
+contrast(emm, list(L1 = c(3, -1, -1, -1), L2 = c(0, 2, -1, -1), L3 = c(0, 0, 1, -1)))
 ```
+
+```
+##  contrast estimate   SE df t.ratio p.value
+##  L1         -560.9 72.2 36  -7.766 &lt;0.0001
+##  L2         -302.4 51.1 36  -5.922 &lt;0.0001
+##  L3          -33.7 29.5 36  -1.144  0.2601
+```
+
+Para pares e controle: `pairs(emm, adjust = "tukey" | "bonferroni" | "scheffe" | "none")` e
+`contrast(emm, "trt.vs.ctrl", ref = "Nenhum")`. Para hipóteses unilaterais e testes simultâneos
+gerais: `multcomp::glht(mod, mcp(config = "Dunnett"), alternative = "greater")`.
+
+---
+
+## Todos os procedimentos clássicos com `agricolae`
+
+
+``` r
+letras_de &lt;- function(teste) teste$groups %&gt;% rownames_to_column("config") %&gt;% dplyr::select(config, groups)
+list(LSD = LSD.test(mod, "config"), Duncan = duncan.test(mod, "config"),
+     SNK = SNK.test(mod, "config"), Tukey = HSD.test(mod, "config"),
+     `Scheffé` = scheffe.test(mod, "config")) %&gt;%
+  map(letras_de) %&gt;% imap(~ rename(.x, !!.y := groups)) %&gt;%
+  reduce(left_join, by = "config")
+```
+
+```
+##      config LSD Duncan SNK Tukey Scheffé
+## 1     Combo   a      a   a     a       a
+## 2  Anúncios   a      a   a     a       a
+## 3 Analytics   b      b   b     b       b
+## 4    Nenhum   c      c   c     c       b
+```
+
+Cada função devolve, em `$groups`, as médias ordenadas com as letras; em `$statistics`, o `\(QME\)` e
+a DMS. `LSD.test(..., p.adj = "bonferroni")` dá Bonferroni.
+
+---
+
+## Duncan e SNK passo a passo no R
+
+
+``` r
+source("../Livro/comparacoes_helpers.R")   # funções usadas nos gráficos desta aula
+passos_amplitude(med_f, qme_f, n = 5, nu = gl_f, metodo = "Duncan") %&gt;%
+  dplyr::select(maior, menor, p, dif, R, testado, sig) %&gt;% mutate(across(c(dif, R), ~ round(.x, 3)))
+```
+
+```
+## # A tibble: 6 × 7
+##   maior menor     p   dif     R testado sig  
+##   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;   &lt;lgl&gt;
+## 1 F4    F1        4 4.24   2.04 TRUE    TRUE 
+## 2 F2    F1        3 2.37   1.98 TRUE    TRUE 
+## 3 F4    F3        3 3.64   1.98 TRUE    TRUE 
+## 4 F3    F1        2 0.594  1.89 TRUE    FALSE
+## 5 F2    F3        2 1.77   1.89 TRUE    FALSE
+## 6 F4    F2        2 1.87   1.89 TRUE    FALSE
+```
+
+Uma linha por par, na ordem em que o procedimento os examina: amplitude `p`, diferença, régua `R`,
+se o par chegou a ser testado (coerência) e se foi declarado diferente. `metodo = "SNK"` dá o SNK;
+`R_fixo = qtukey(0.95, t, gl) * sqrt(QME/n)` dá Tukey. Os gráficos saem de `plot_arcos_amplitude()`,
+`plot_etapa()` e `plot_tracos()`.
 
 ---
 
@@ -755,8 +2786,7 @@ emm &lt;- emmeans(mod, ~ config)
 
 
 ``` r
-# contr.poly(k) gera os k-1 coeficientes ortogonais para k níveis igualmente
-# espaçados, já normalizados -- não é preciso buscar tabelas manualmente
+# coeficientes ortogonais para 5 níveis igualmente espaçados, normalizados
 round(contr.poly(5), 3)
 ```
 
@@ -770,39 +2800,58 @@ round(contr.poly(5), 3)
 ```
 
 ``` r
-# split = list(...) no summary.aov nomeia cada 1 gl com o grau do polinômio
-# correspondente, na ordem em que os níveis do fator foram declarados
+# os mesmos coeficientes em inteiros, já testados como contrastes
+contrast(emmeans(mod_poly, ~ dose), "poly")
 ```
 
-Atenção: `contr.poly()` assume níveis igualmente espaçados. Se as doses não fossem
-equidistantes, o caminho correto é ajustar `atencao_pos ~ poly(dose_num, 2)` diretamente sobre a
-variável numérica, não sobre o fator.
+```
+##  contrast  estimate    SE df t.ratio p.value
+##  linear       36.90  7.18 35   5.140 &lt;0.0001
+##  quadratic   -64.06  8.49 35  -7.542 &lt;0.0001
+##  cubic         5.97  7.18 35   0.832  0.4110
+##  quartic     -47.10 19.00 35  -2.480  0.0181
+```
+
+`split = list(...)` no `summary.aov` nomeia cada 1 gl com o grau, **na ordem dos níveis** do fator
+(confira `levels()`!). Com doses desiguais: `contr.poly(k, scores = doses)` ou
+`lm(y ~ poly(dose_num, 2))` sobre a variável numérica.
 
 ---
 
 ## Resumo da aula
 
-- Contrastes: combinação linear com `\(\sum c_i = 0\)`; `\(SQ_L\)` com 1 gl; contrastes ortogonais
-  particionam `\(SQ_{\text{Trat}}\)` e são independentes entre si.
-- "Data snooping": testar como planejada uma hipótese formulada só depois de ver os dados infla
-  o erro tipo I; Scheffé é a resposta formal, protegendo todo o espaço de contrastes possíveis.
-- Comparações múltiplas controlam a taxa de erro por família: Scheffé (mais geral e
-  conservador), Bonferroni (simples, geral), Tukey (pares), Dunnett (vs. controle), Duncan
-  (liberal, não controla FWER), CLD (agrupamento por letras).
-- Polinômios ortogonais: o caso de contrastes ortogonais para níveis quantitativos igualmente
-  espaçados, decompondo a tendência em linear, quadrático, etc.
-- Próxima aula: **ANCOVA** (ajuste por covariável) e o teste de **Kruskal-Wallis** (alternativa
+- **Contrastes:** `\(\sum c_i = 0\)`; `\(SQ_L\)` com 1 gl; normalize para ler em unidades da resposta e
+  reporte o IC. Ortogonais particionam `\(SQ_{\text{Trat}}\)`; não ortogonais não "fecham a conta".
+- **Comparações múltiplas:** todas são réguas `\(|\bar y_i - \bar y_j| &gt; \text{DMS}\)`; o multiplicador
+  define a garantia. LSD &lt; Duncan &lt; SNK &lt; Tukey &lt; Bonferroni &lt; Scheffé em tamanho da régua.
+- **FWER:** probabilidade de **pelo menos um** falso positivo no relatório inteiro; com 6 pares a 5%
+  cada, ≈ 20–26%.
+- **Ordenamento:** Duncan/SNK mudam a régua conforme a posição das médias; não controlam o FWER
+  sob `\(H_0\)` parcial. Um ranking só se sustenta onde os ICs se separam.
+- **Duncan:** ordenar, medir a amplitude `\(p\)`, régua `\(R_p\)` por amplitude, testar de cima para baixo com
+  coerência, traduzir em traços/letras; mais poder que Tukey, sem a garantia de FWER.
+- **Data snooping:** comparação escolhida depois de ver os dados exige Scheffé.
+- **Polinômios ortogonais:** contrastes para níveis quantitativos; recuperam a regressão
+  polinomial na dose; a falta de ajuste testa o grau; cuidado com espaçamento e ordem dos níveis.
+- Próxima aula: **ANCOVA** (análise de covariância, ajuste por covariável) e o teste de **Kruskal-Wallis** (alternativa
   não paramétrica).
+- **Controlado × não controlado:** o sorteio controla o **viés** de cada comparação; Tukey, Bonferroni e companhia controlam a **taxa de erro** da família. Um não substitui o outro.
 
 ---
 
 ## Referências
 
-- Scheffé, H. (1959). *The Analysis of Variance*. John Wiley &amp; Sons.
 - Bonferroni, C. E. (1936). Teoria statistica delle classi e calcolo delle probabilità. *Pubblicazioni del R Istituto Superiore di Scienze Economiche e Commerciali di Firenze*, 8, 3–62.
-- Tukey, J. W. (1949). Comparing Individual Means in the Analysis of Variance. *Biometrics*, 5(2), 99–114.
-- Dunnett, C. W. (1955). A Multiple Comparison Procedure for Comparing Several Treatments with a Control. *Journal of the American Statistical Association*, 50(272), 1096–1121.
 - Duncan, D. B. (1955). Multiple Range and Multiple F Tests. *Biometrics*, 11(1), 1–42.
+- Dunnett, C. W. (1955). A Multiple Comparison Procedure for Comparing Several Treatments with a Control. *Journal of the American Statistical Association*, 50(272), 1096–1121.
+- Fisher, R. A. (1935). *The Design of Experiments*. Oliver &amp; Boyd.
+- Fisher, R. A., &amp; Yates, F. (1938). *Statistical Tables for Biological, Agricultural and Medical Research*. Oliver &amp; Boyd.
+- Hsu, J. C. (1996). *Multiple Comparisons: Theory and Methods*. Chapman &amp; Hall.
+- Keuls, M. (1952). The use of the "studentized range" in connection with an analysis of variance. *Euphytica*, 1, 112–122.
+- Newman, D. (1939). The distribution of the range in samples from a normal population, expressed in terms of an independent estimate of standard deviation. *Biometrika*, 31(1/2), 20–30.
+- Scheffé, H. (1959). *The Analysis of Variance*. John Wiley &amp; Sons.
+- Scott, A. J., &amp; Knott, M. (1974). A cluster analysis method for grouping means in the analysis of variance. *Biometrics*, 30(3), 507–512.
+- Tukey, J. W. (1949). Comparing Individual Means in the Analysis of Variance. *Biometrics*, 5(2), 99–114.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

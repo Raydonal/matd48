@@ -43,6 +43,17 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+O modelo `\(\mathbf Y=\mathbf X\boldsymbol\beta+\boldsymbol\varepsilon\)` trata `\(\mathbf X\)` como **conhecida e fixa**. A álgebra de hoje vale para qualquer `\(\mathbf X\)`, mas o **significado** de `\(\boldsymbol\beta\)` depende de onde `\(\mathbf X\)` veio:
+
+- **Experimento controlado:** o pesquisador **escreve** `\(\mathbf X\)` antes da coleta (quantas unidades em cada tratamento, em que níveis) e sorteia quem recebe o quê. Um coeficiente de `\(\mathbf X\)` é um efeito causal.
+- **Estudo observacional:** `\(\mathbf X\)` é o que o mundo produziu. O coeficiente mede **associação**, ajustada pelas outras colunas, e pode estar contaminado pelo que ficou de fora.
+
+Mínimos quadrados não distingue os dois casos. **Quem distingue é o desenho.**
+
+---
+
 ## O modelo linear geral
 
 `$$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$$`
@@ -58,7 +69,7 @@ class: inverse, center, middle
 quadráticos, indicadoras de fator, o que for, desde que `\(\mathbf{Y}\)` seja combinação linear das
 **colunas** de `\(\mathbf{X}\)`.
 
-Dominar essa álgebra é o que permite, no Capítulo 3, *deduzir* por que a ANOVA funciona, em vez de
+Dominar essa álgebra é o que permite, no Capítulo 3, *deduzir* por que a ANOVA (análise de variância) funciona, em vez de
 apenas aplicá-la mecanicamente (Searle, 1971; Rao, 1973).
 
 ---
@@ -91,7 +102,7 @@ A linha 3, por exemplo, diz `\(Y_3=\mu+\alpha_B+\varepsilon_3\)`.
 
 --
 
-É exatamente o modelo do DCA (Aula 04), `\(Y_{ij}=\mu+\alpha_i+\varepsilon_{ij}\)`, escrito com uma
+É exatamente o modelo do DCA (delineamento completamente aleatorizado, Aula 04), `\(Y_{ij}=\mu+\alpha_i+\varepsilon_{ij}\)`, escrito com uma
 linha por observação. Toda ANOVA do curso é um `\(\mathbf X\)` como este, com mais colunas.
 
 ---
@@ -130,7 +141,7 @@ população conceitual, inteiramente hipotética, em `\(p\)` parâmetros estimá
 observada.
 
 Dois nomes, um objeto: "resultados potenciais" (Neyman-Rubin, causal) e "população conceitual de
-respostas" (Kempthorne, DOE clássico) — reconheça os dois.
+respostas" (Kempthorne, DOE clássico: *design of experiments*) — reconheça os dois.
 
 ---
 
@@ -228,7 +239,7 @@ class: inverse, center, middle
 
 ---
 
-## Tempo de resposta de uma API
+## Tempo de resposta de uma API (interface de programação de aplicações)
 
 **Cenário:** uma equipe de engenharia mede o **tempo de resposta** (ms) de uma API sob diferentes
 números de **requisições simultâneas**, em três configurações de **servidor** (A, B, C).
@@ -249,6 +260,18 @@ dados_api &lt;- tibble(
   mutate(tempo_resposta = 42 + 0.35 * requisicoes +
            c(A = 0, B = 15, C = -8)[as.character(servidor)] + rnorm(n, 0, 12))
 ```
+
+
+---
+
+## Estes dados são controlados ou observados?
+
+**Observados.** Ninguém sorteou o número de requisições: ele é o que o tráfego produziu naquele momento. O servidor também é o que estava em uso.
+
+- A inclinação de `requisicoes` mede quanto o tempo de resposta **acompanha** a carga.
+- Se os horários de pico (muita carga) forem também os de rede mais congestionada, a inclinação mistura **carga** com **congestionamento**.
+
+**A versão controlada:** um teste de carga, em que a equipe **fixa** o número de requisições em níveis escolhidos (50, 100, …, 500), **sorteia** a ordem das rodadas e o servidor de cada uma. Aí a mesma regressão estima o efeito da carga.
 
 ---
 
@@ -373,6 +396,29 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Quem escreveu a matriz `\(\mathbf X\)`?**
+
+Num experimento, `\(\mathbf X\)` é escrita **antes** da coleta. Num estudo observacional, é o que o mundo produziu.
+Exemplo: tempo de reação (ms) × horas de sono. O **estresse** também atrasa a reação e **não foi medido**.
+
+&lt;img src="MATD48-02_files/figure-html/cnc-a02-1.png" alt="" width="92%" /&gt;
+
+Sono **sorteado** (protocolo de restrição): o estresse não acompanha o sono. Sono **observado**: quem dorme menos está mais estressado.
+
+---
+
+## O que a correlação faz com `\(\hat\beta_{\text{sono}}\)`
+
+&lt;img src="MATD48-02_files/figure-html/cnc-a02-graf-1.png" alt="" width="90%" /&gt;
+
+Efeito verdadeiro: **−8 ms/h** (tracejado). Sono sorteado: média -8,00. Sono observado: média -17,03.
+
+O ajuste `lm(tr ~ sono)` é o mesmo nos dois casos; o que muda é **como a coluna do sono foi gerada**. A fórmula exata desse viés vem na Aula 03.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que o intercepto "puro" `\(\mu\)`, na codificação sobreparametrizada do servidor, não é
@@ -388,6 +434,14 @@ class: inverse, center, middle
 4. Em um estudo observacional (sem aleatorização), a matriz `\(\mathbf{X}\)` ainda pode ser escrita e
    `\(\hat{\boldsymbol{\beta}}\)` ainda pode ser calculado. O que muda na interpretação de
    `\(\hat{\boldsymbol{\beta}}\)` em relação a um experimento aleatorizado?
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. No exemplo da API, que variável não medida poderia andar junto com o número de requisições? Desenhe como ela entraria em `\(\mathbf X\)` se tivesse sido medida.
+2. Duas equipes têm a mesma matriz `\(\mathbf X\)`, uma obtida num teste de carga planejado e outra nos registros de produção. As estimativas `\(\hat{\boldsymbol\beta}\)` são idênticas. As conclusões também são?
 
 ---
 
@@ -564,6 +618,7 @@ estimabilidade já vinha usando por trás de `MASS::ginv()`.
   inversa generalizada mais simétrica — e o que `ginv()` calcula por dentro.
 - Próxima aula: Gauss-Markov/BLUE, matriz de projeção, modelo particionado e a distribuição das
   formas lineares e quadráticas — a base algébrica da ANOVA do Capítulo 3.
+- **Controlado × não controlado:** a álgebra de mínimos quadrados é a mesma para qualquer `\(\mathbf X\)`; o que dá sentido causal a `\(\hat{\boldsymbol\beta}\)` é o pesquisador ter escrito (e sorteado) `\(\mathbf X\)`.
 
 ---
 

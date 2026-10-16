@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="quadrado-greco-latino.html"/>
-<link rel="next" href="resumo-do-capítulo-3.html"/>
+<link rel="next" href="cnc-cap4.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -485,35 +520,35 @@ Y_{ijk} = \mu + \rho_i + \alpha_j + \underbrace{\delta_{ij}}_{\text{erro da parc
 + \beta_k + (\alpha\beta)_{jk} + \underbrace{\varepsilon_{ijk}}_{\text{erro da subparcela}},
 \]</span></p>
 <p>com <span class="math inline">\(i=1,\ldots,r\)</span> blocos, <span class="math inline">\(j=1,\ldots,a\)</span> níveis do fator de parcela principal (irrigação),
-<span class="math inline">\(k=1,\ldots,b\)</span> níveis do fator de subparcela (variedade), <span class="math inline">\(\delta_{ij}\overset{iid}\sim N(0,\sigma^2_\delta)\)</span> o erro da parcela principal (a variação entre parcelas principais dentro do
+<span class="math inline">\(k=1,\ldots,b\)</span> níveis do fator de subparcela (variedade), <span class="math inline">\(\delta_{ij}\overset{iid}\sim N(0,\sigma^2_\delta)\)</span> (iid: independentes e identicamente distribuídos) o erro da parcela principal (a variação entre parcelas principais dentro do
 mesmo bloco, não explicada por irrigação) e <span class="math inline">\(\varepsilon_{ijk}\overset{iid}\sim N(0,\sigma^2_\varepsilon)\)</span>
 o erro da subparcela (a variação entre subparcelas dentro da mesma parcela principal), independente
 de <span class="math inline">\(\delta_{ij}\)</span>. <span class="math inline">\(\rho_i\)</span> (bloco) e <span class="math inline">\(\alpha_j\)</span> (irrigação) são efeitos fixos sujeitos às
 restrições usuais de soma zero, assim como <span class="math inline">\(\beta_k\)</span> (variedade) e <span class="math inline">\((\alpha\beta)_{jk}\)</span>
 (interação).</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="split-plot.html#cb217-1" tabindex="-1"></a>nos_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb217-2"><a href="split-plot.html#cb217-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
-<span id="cb217-3"><a href="split-plot.html#cb217-3" tabindex="-1"></a>              <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>),</span>
-<span id="cb217-4"><a href="split-plot.html#cb217-4" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span>, <span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>)</span>
-<span id="cb217-5"><a href="split-plot.html#cb217-5" tabindex="-1"></a>)</span>
-<span id="cb217-6"><a href="split-plot.html#cb217-6" tabindex="-1"></a>arestas_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb217-7"><a href="split-plot.html#cb217-7" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>,</span>
-<span id="cb217-8"><a href="split-plot.html#cb217-8" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>),</span>
-<span id="cb217-9"><a href="split-plot.html#cb217-9" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
-<span id="cb217-10"><a href="split-plot.html#cb217-10" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>,</span>
-<span id="cb217-11"><a href="split-plot.html#cb217-11" tabindex="-1"></a>           <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>)</span>
-<span id="cb217-12"><a href="split-plot.html#cb217-12" tabindex="-1"></a>)</span>
-<span id="cb217-13"><a href="split-plot.html#cb217-13" tabindex="-1"></a></span>
-<span id="cb217-14"><a href="split-plot.html#cb217-14" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb217-15"><a href="split-plot.html#cb217-15" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sp, arestas_sp,</span>
-<span id="cb217-16"><a href="split-plot.html#cb217-16" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/split-plot.svg&quot;</span>,</span>
-<span id="cb217-17"><a href="split-plot.html#cb217-17" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Split-plot: r=4, a=3, b=4 (N=48)&quot;</span>,</span>
-<span id="cb217-18"><a href="split-plot.html#cb217-18" tabindex="-1"></a>            <span class="at">tamanho =</span> <span class="fu">c</span>(<span class="fl">5.5</span>, <span class="dv">4</span>))</span>
-<span id="cb217-19"><a href="split-plot.html#cb217-19" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="split-plot.html#cb274-1" tabindex="-1"></a>nos_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb274-2"><a href="split-plot.html#cb274-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
+<span id="cb274-3"><a href="split-plot.html#cb274-3" tabindex="-1"></a>              <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>),</span>
+<span id="cb274-4"><a href="split-plot.html#cb274-4" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span>, <span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>, <span class="dv">4</span><span class="sc">*</span><span class="dv">3</span><span class="sc">*</span><span class="dv">4</span>)</span>
+<span id="cb274-5"><a href="split-plot.html#cb274-5" tabindex="-1"></a>)</span>
+<span id="cb274-6"><a href="split-plot.html#cb274-6" tabindex="-1"></a>arestas_sp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb274-7"><a href="split-plot.html#cb274-7" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>,</span>
+<span id="cb274-8"><a href="split-plot.html#cb274-8" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>),</span>
+<span id="cb274-9"><a href="split-plot.html#cb274-9" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Bloco&quot;</span>, <span class="st">&quot;Irrigação&quot;</span>, <span class="st">&quot;Variedade&quot;</span>, <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>,</span>
+<span id="cb274-10"><a href="split-plot.html#cb274-10" tabindex="-1"></a>           <span class="st">&quot;Erro(a)</span><span class="sc">\n</span><span class="st">(parcela principal)&quot;</span>, <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>,</span>
+<span id="cb274-11"><a href="split-plot.html#cb274-11" tabindex="-1"></a>           <span class="st">&quot;Irrigação</span><span class="sc">\n</span><span class="st">×Variedade&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>, <span class="st">&quot;Erro(b)</span><span class="sc">\n</span><span class="st">(subparcela)&quot;</span>)</span>
+<span id="cb274-12"><a href="split-plot.html#cb274-12" tabindex="-1"></a>)</span>
+<span id="cb274-13"><a href="split-plot.html#cb274-13" tabindex="-1"></a></span>
+<span id="cb274-14"><a href="split-plot.html#cb274-14" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb274-15"><a href="split-plot.html#cb274-15" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sp, arestas_sp,</span>
+<span id="cb274-16"><a href="split-plot.html#cb274-16" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/split-plot.svg&quot;</span>,</span>
+<span id="cb274-17"><a href="split-plot.html#cb274-17" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;Split-plot: r=4, a=3, b=4 (N=48)&quot;</span>,</span>
+<span id="cb274-18"><a href="split-plot.html#cb274-18" tabindex="-1"></a>            <span class="at">tamanho =</span> <span class="fu">c</span>(<span class="fl">5.5</span>, <span class="dv">4</span>))</span>
+<span id="cb274-19"><a href="split-plot.html#cb274-19" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-split-plot"></span>
 <img src="figuras/hasse/split-plot.svg" alt="Diagrama de Hasse do split-plot: r=4 blocos, a=3 métodos de irrigação (parcela principal), b=4 variedades (subparcela), N=48. Note os DOIS nós de erro -- Erro(a), que fecha o estrato da parcela principal, e Erro(b), que fecha o estrato da subparcela -- em vez do único nó de Erro do DBCA (Figura anterior)." width="85%" />
 <p class="caption">
-Figura 4.4: Diagrama de Hasse do split-plot: r=4 blocos, a=3 métodos de irrigação (parcela principal), b=4 variedades (subparcela), N=48. Note os DOIS nós de erro – Erro(a), que fecha o estrato da parcela principal, e Erro(b), que fecha o estrato da subparcela – em vez do único nó de Erro do DBCA (Figura anterior).
+Figura 4.18: Diagrama de Hasse do split-plot: r=4 blocos, a=3 métodos de irrigação (parcela principal), b=4 variedades (subparcela), N=48. Note os DOIS nós de erro – Erro(a), que fecha o estrato da parcela principal, e Erro(b), que fecha o estrato da subparcela – em vez do único nó de Erro do DBCA (Figura anterior).
 </p>
 </div>
 <p>A soma de todos os <span class="math inline">\(gl\)</span> é <span class="math inline">\(1+3+2+3+6+6+27=48=N\)</span> — dois nós de erro em vez de um, exatamente porque
@@ -546,18 +581,18 @@ fator de parcela principal é estimado com <strong>menos</strong> precisão que 
 com o mesmo número de observações. É um trade-off deliberado do delineamento: ganha-se viabilidade
 logística ao custo de precisão no fator que a logística obrigou a ficar na parcela principal.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — split-plot com <code>aov(..., Error(bloco/irrigacao))</code></div>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="split-plot.html#cb218-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
-<span id="cb218-2"><a href="split-plot.html#cb218-2" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">4</span>; a <span class="ot">&lt;-</span> <span class="dv">3</span>; b <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb218-3"><a href="split-plot.html#cb218-3" tabindex="-1"></a>dados_sp <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">variedade =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>b), <span class="at">irrigacao =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>a), <span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>r))</span>
-<span id="cb218-4"><a href="split-plot.html#cb218-4" tabindex="-1"></a></span>
-<span id="cb218-5"><a href="split-plot.html#cb218-5" tabindex="-1"></a>efeito_irrig <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>)[dados_sp<span class="sc">$</span>irrigacao]</span>
-<span id="cb218-6"><a href="split-plot.html#cb218-6" tabindex="-1"></a>efeito_var   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)[dados_sp<span class="sc">$</span>variedade]</span>
-<span id="cb218-7"><a href="split-plot.html#cb218-7" tabindex="-1"></a>erro_a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(r <span class="sc">*</span> a, <span class="dv">0</span>, <span class="dv">2</span>)[<span class="fu">interaction</span>(dados_sp<span class="sc">$</span>bloco, dados_sp<span class="sc">$</span>irrigacao, <span class="at">drop =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.integer</span>()]</span>
-<span id="cb218-8"><a href="split-plot.html#cb218-8" tabindex="-1"></a></span>
-<span id="cb218-9"><a href="split-plot.html#cb218-9" tabindex="-1"></a>dados_sp<span class="sc">$</span>producao <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> efeito_irrig <span class="sc">+</span> efeito_var <span class="sc">+</span> erro_a <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dados_sp), <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb218-10"><a href="split-plot.html#cb218-10" tabindex="-1"></a></span>
-<span id="cb218-11"><a href="split-plot.html#cb218-11" tabindex="-1"></a>mod_sp <span class="ot">&lt;-</span> <span class="fu">aov</span>(producao <span class="sc">~</span> irrigacao <span class="sc">*</span> variedade <span class="sc">+</span> <span class="fu">Error</span>(bloco<span class="sc">/</span>irrigacao), <span class="at">data =</span> dados_sp)</span>
-<span id="cb218-12"><a href="split-plot.html#cb218-12" tabindex="-1"></a><span class="fu">summary</span>(mod_sp)</span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="split-plot.html#cb275-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48</span>)</span>
+<span id="cb275-2"><a href="split-plot.html#cb275-2" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">4</span>; a <span class="ot">&lt;-</span> <span class="dv">3</span>; b <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb275-3"><a href="split-plot.html#cb275-3" tabindex="-1"></a>dados_sp <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">variedade =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>b), <span class="at">irrigacao =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>a), <span class="at">bloco =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>r))</span>
+<span id="cb275-4"><a href="split-plot.html#cb275-4" tabindex="-1"></a></span>
+<span id="cb275-5"><a href="split-plot.html#cb275-5" tabindex="-1"></a>efeito_irrig <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>)[dados_sp<span class="sc">$</span>irrigacao]</span>
+<span id="cb275-6"><a href="split-plot.html#cb275-6" tabindex="-1"></a>efeito_var   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)[dados_sp<span class="sc">$</span>variedade]</span>
+<span id="cb275-7"><a href="split-plot.html#cb275-7" tabindex="-1"></a>erro_a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(r <span class="sc">*</span> a, <span class="dv">0</span>, <span class="dv">2</span>)[<span class="fu">interaction</span>(dados_sp<span class="sc">$</span>bloco, dados_sp<span class="sc">$</span>irrigacao, <span class="at">drop =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.integer</span>()]</span>
+<span id="cb275-8"><a href="split-plot.html#cb275-8" tabindex="-1"></a></span>
+<span id="cb275-9"><a href="split-plot.html#cb275-9" tabindex="-1"></a>dados_sp<span class="sc">$</span>producao <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> efeito_irrig <span class="sc">+</span> efeito_var <span class="sc">+</span> erro_a <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dados_sp), <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb275-10"><a href="split-plot.html#cb275-10" tabindex="-1"></a></span>
+<span id="cb275-11"><a href="split-plot.html#cb275-11" tabindex="-1"></a>mod_sp <span class="ot">&lt;-</span> <span class="fu">aov</span>(producao <span class="sc">~</span> irrigacao <span class="sc">*</span> variedade <span class="sc">+</span> <span class="fu">Error</span>(bloco<span class="sc">/</span>irrigacao), <span class="at">data =</span> dados_sp)</span>
+<span id="cb275-12"><a href="split-plot.html#cb275-12" tabindex="-1"></a><span class="fu">summary</span>(mod_sp)</span></code></pre></div>
 <pre><code>## 
 ## Error: bloco
 ##           Df Sum Sq Mean Sq F value Pr(&gt;F)
@@ -584,14 +619,14 @@ dois estratos de aleatorização do diagrama, não uma opção de sintaxe arbitr
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:split-plot-plot"></span>
 <img src="04-blocos_files/figure-html/split-plot-plot-1.png" alt="Produção de sorgo por variedade, separada por método de irrigação. Retas quase paralelas entre os três painéis indicam ausência de interação irrigação-variedade -- consistente com o p-valor não significativo da interação na tabela acima." width="75%" />
 <p class="caption">
-Figura 4.5: Produção de sorgo por variedade, separada por método de irrigação. Retas quase paralelas entre os três painéis indicam ausência de interação irrigação-variedade – consistente com o p-valor não significativo da interação na tabela acima.
+Figura 4.19: Produção de sorgo por variedade, separada por método de irrigação. Retas quase paralelas entre os três painéis indicam ausência de interação irrigação-variedade – consistente com o p-valor não significativo da interação na tabela acima.
 </p>
 </div>
 <p>Neste conjunto de dados simulado, irrigação é significativa
 (<span class="math inline">\(F_{2,6}=13.3\)</span>, <span class="math inline">\(p=0.006\)</span>) mas testada com apenas 6 gl de erro;
 variedade é fortemente significativa (<span class="math inline">\(F_{3,27}=31.3\)</span>,
 <span class="math inline">\(p&lt;0{,}001\)</span>), testada com 27 gl de erro —
-precisão bem maior, exatamente o padrão que a análise de <span class="math inline">\(\mathbb E[QM]\)</span> previu. A interação não é
+precisão bem maior, exatamente o padrão que a análise das esperanças dos quadrados médios, <span class="math inline">\(\mathbb E[QM]\)</span>, previu. A interação não é
 significativa (<span class="math inline">\(p=0.97\)</span>), visível no gráfico como retas aproximadamente paralelas
 entre os três níveis de irrigação.</p>
 </div>
@@ -635,7 +670,7 @@ Yates, F. (1937). <em>The design and analysis of factorial experiments</em>. Imp
         </div>
       </div>
 <a href="quadrado-greco-latino.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="resumo-do-capítulo-3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="cnc-cap4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

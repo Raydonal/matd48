@@ -28,6 +28,20 @@ introduz uma alternativa: em vez de dividir o tráfego 50/50 até o fim de um ho
 **bandit** realoca tráfego adaptativamente para o que parece estar funcionando melhor, ao custo de
 uma pergunta causal mais difícil de responder depois que o experimento termina.
 
+
+```{=html}
+<div class="caixa-aviso">
+<strong>O que este capítulo controla, e o que não controla</strong><br>
+Um teste A/B é o experimento controlado mais simples que existe: o sistema sorteia a versão de cada
+usuário, com probabilidade fixa e conhecida. Um bandit continua controlado (as probabilidades de
+atribuição são conhecidas), mas elas mudam com os resultados anteriores, o que exige cuidado na
+estimação. A adesão voluntária, em que o usuário escolhe a versão, não é controlada: quem ativa uma
+novidade tende a ser quem já compraria mais. As dificuldades próprias do digital (espiar os
+resultados, interferência entre usuários, vício do vencedor) são formas de perder controle mesmo
+depois de sortear.
+</div>
+```
+
 ## Parte I — Testes A/B como delineamento completamente aleatorizado
 
 ### Um teste A/B é um delineamento completamente aleatorizado {#ab-e-dca}
@@ -72,7 +86,7 @@ $$
 Y_i = \beta_0 + \beta_1 Z_i + \varepsilon_i, \qquad i=1,\dots,N,
 $$
 
-com $\hat\beta_1$ (o coeficiente de $Z_i$ em uma regressão OLS de $Y$ contra o indicador de
+com $\hat\beta_1$ (o coeficiente de $Z_i$ em uma regressão de mínimos quadrados ordinários (MQO) de $Y$ contra o indicador de
 tratamento) numericamente idêntico a $\hat p_1 - \hat p_0$ — a regressão com um único regressor
 binário *é* o teste de duas amostras, um fato que já usamos implicitamente no Capítulo 3 e que
 aqui simplesmente reaparece com outro nome de aplicação.
@@ -210,7 +224,7 @@ poder_ab$n
 </tbody>
 </table>
 
-O contraste é gritante: para detectar um efeito realista de UI (0,3 ponto percentual) são
+O contraste é gritante: para detectar um efeito realista de interface do usuário (UI, *user interface*; 0,3 ponto percentual) são
 necessários mais de 159,066 usuários **por grupo** — um volume que
 só faz sentido em contexto de alto tráfego, e que explica por que testes A/B de produto digital são
 projetados de forma tão diferente de um experimento de bancada com 30 ou 40 sujeitos.
@@ -451,7 +465,7 @@ o resultado se generaliza quando a mudança for lançada para 100% da base?</li>
 <li>Se um teste A/B roda só durante uma semana de dezembro (alta temporada de compras), que tipo
 de ameaça à validade externa isso introduz, além da amostragem de usuários em si?</li>
 <li>Uma plataforma com efeitos de rede (por exemplo, uma rede social, ou um marketplace de duas
-pontas) testa uma mudança que afeta a visibilidade de conteúdo. Por que a suposição SUTVA
+pontas) testa uma mudança que afeta a visibilidade de conteúdo. Por que a suposição SUTVA (<em>stable unit treatment value assumption</em>: o resultado de um usuário não depende do tratamento dos outros)
 (seção sobre o modelo de resultados potenciais, no Capítulo 1) — o resultado potencial de um usuário depende só do <em>seu</em>
 tratamento, não do tratamento dos demais — é particularmente frágil nesse tipo de produto? O que
 pode dar errado ao interpretar o teste como se SUTVA valesse?</li>
@@ -737,6 +751,113 @@ sinal-ruído) e a alternativa de Vining e Myers [-@viningmyers1990], que resolve
 com duas superfícies de resposta (média e log-variância) a partir de um único delineamento
 replicado — estatisticamente mais eficiente e mais interpretável.
 
+## Controlado × não controlado: teste A/B, bandit e adesão voluntária {#cnc-cap8}
+
+Um produto digital tem três maneiras de descobrir se o novo *checkout* (B) converte mais que o
+atual (A), e elas ocupam lugares diferentes na escala de controle:
+
+- **Teste A/B:** cada usuário é sorteado para A ou B com probabilidade fixa (aqui, 1/2). É um DCA
+  com dois tratamentos (Seção \@ref(ab-e-dca)); a diferença de taxas é não viesada.
+- **Bandit:** o usuário também é sorteado, mas a probabilidade de receber B **muda ao longo do
+  teste**, conforme os resultados anteriores (Thompson sampling, Seção \@ref(bandits-thompson)).
+  Continua sendo um experimento controlado, porque as probabilidades de atribuição são conhecidas,
+  mas a média simples de cada braço deixa de ser não viesada: um braço que teve azar no começo
+  recebe menos usuários e fica com menos chance de se recuperar do azar.
+- **Adesão voluntária:** o novo *checkout* é oferecido como opção, e cada usuário decide se o ativa.
+  Quem ativa tende a ser quem já ia comprar: é o caso do agricultor do Capítulo 1, com outro rótulo.
+
+```{=html}
+<div class="caixa-aplicacao">
+<strong>Aplicação — Ciência de dados: o novo checkout</strong><br>
+Taxas de conversão verdadeiras: 10% em A e 12% em B, uma diferença de 2 pontos percentuais (p.p.).
+Cada estudo tem 4.000 usuários. <strong>A/B:</strong> 2.000 por braço, sorteados.
+<strong>Bandit:</strong> Thompson sampling em 20 lotes de 200 usuários, com a posteriori
+atualizada entre lotes. <strong>Adesão voluntária:</strong> a propensão de comprar de cada usuário
+também aumenta a chance de ele ativar B. Em todos, a estimativa é a diferença simples entre as
+taxas observadas de B e de A, repetida em 1.000 estudos.
+</div>
+```
+
+
+``` r
+cnc8 <- cnc_cap8()
+res8 <- resumo_estimador(cnc8, 0.02) %>% mutate(across(media:reqm, ~ 100 * .x))   # em p.p.
+res8
+```
+
+```
+## # A tibble: 3 × 5
+##   regime                            media    vies    dp  reqm
+##   <fct>                             <dbl>   <dbl> <dbl> <dbl>
+## 1 Teste A/B (sorteio fixo)           1.93 -0.0684 0.990 0.992
+## 2 Bandit (sorteio adaptativo)        2.58  0.583  1.72  1.81 
+## 3 Adesão voluntária (observacional) 10.1   8.09   1.06  8.16
+```
+
+<div class="figure" style="text-align: center">
+<img src="08-ab-testing-bandits_files/figure-html/cnc-cap8-graf-1.png" alt="Diferença estimada entre as taxas de conversão de B e de A, em pontos percentuais, em 1.000 estudos de 4.000 usuários (verdade: 2 p.p., linha tracejada). Azul: teste A/B, centrado na verdade. Roxo: bandit; a média simples de cada braço é ligeiramente viesada pela alocação adaptativa, e a variabilidade é bem maior, porque o braço pior recebe poucos usuários. Laranja: adesão voluntária, que estima uma diferença cinco vezes maior que a verdadeira, porque quem ativa o novo checkout já comprava mais." width="80%" />
+<p class="caption">(\#fig:cnc-cap8-graf)Diferença estimada entre as taxas de conversão de B e de A, em pontos percentuais, em 1.000 estudos de 4.000 usuários (verdade: 2 p.p., linha tracejada). Azul: teste A/B, centrado na verdade. Roxo: bandit; a média simples de cada braço é ligeiramente viesada pela alocação adaptativa, e a variabilidade é bem maior, porque o braço pior recebe poucos usuários. Laranja: adesão voluntária, que estima uma diferença cinco vezes maior que a verdadeira, porque quem ativa o novo checkout já comprava mais.</p>
+</div>
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:cnc-cap8-tab)Diferença de conversão B − A em pontos percentuais (verdade: 2). DP = desvio-padrão entre os 1.000 estudos; REQM = raiz do erro quadrático médio.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Regime </th>
+   <th style="text-align:right;"> Média </th>
+   <th style="text-align:right;"> Viés </th>
+   <th style="text-align:right;"> DP </th>
+   <th style="text-align:right;"> REQM </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Teste A/B (sorteio fixo) </td>
+   <td style="text-align:right;"> 1,93 </td>
+   <td style="text-align:right;"> -0,07 </td>
+   <td style="text-align:right;"> 0,99 </td>
+   <td style="text-align:right;"> 0,99 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Bandit (sorteio adaptativo) </td>
+   <td style="text-align:right;"> 2,58 </td>
+   <td style="text-align:right;"> 0,58 </td>
+   <td style="text-align:right;"> 1,72 </td>
+   <td style="text-align:right;"> 1,81 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Adesão voluntária (observacional) </td>
+   <td style="text-align:right;"> 10,09 </td>
+   <td style="text-align:right;"> 8,09 </td>
+   <td style="text-align:right;"> 1,06 </td>
+   <td style="text-align:right;"> 8,16 </td>
+  </tr>
+</tbody>
+</table>
+
+A tabela ordena os três regimes pelo grau de controle. O teste A/B acerta em média, com o menor
+desvio-padrão (0,99 p.p.). O bandit tem viés de 0,58 p.p. e
+desvio-padrão 1,7 vezes maior: ele foi desenhado para **ganhar
+conversões durante o teste**, não para estimar a diferença, e cobra por isso em precisão. Como as
+probabilidades de atribuição de cada usuário são conhecidas, o viés do bandit tem conserto:
+ponderar cada observação pelo inverso da probabilidade com que ela foi atribuída (IPW, *inverse
+probability weighting*) recupera um estimador não viesado. A adesão voluntária não tem conserto
+desse tipo, porque ninguém conhece a probabilidade de cada usuário ativar B: o viés de
+8,09 p.p. é quatro vezes o próprio efeito, e a REQM é dominada por ele.
+
+```{=html}
+<div class="caixa-discussao">
+<strong>Para discutir — controlado × não controlado</strong>
+<ol>
+<li>Por que o bandit, mesmo viesado na média simples, ainda é um experimento controlado e a adesão
+voluntária não? Que informação o primeiro registra e o segundo não tem como registrar?</li>
+<li>Uma equipe compara a conversão do mês em que lançou o novo checkout com a do mês anterior (um
+"controle histórico"). Em qual dos três regimes essa comparação se encaixa, e que confusões ela
+introduz?</li>
+</ol>
+</div>
+```
+
 ## Resumo do capítulo
 
 - Um teste A/B é, estruturalmente, o delineamento completamente aleatorizado de dois tratamentos do
@@ -762,6 +883,9 @@ replicado — estatisticamente mais eficiente e mais interpretável.
   alocação passa a depender dos dados já observados.
 - A escolha entre horizonte fixo e bandit depende do objetivo: aprendizado causal limpo e reportável
   favorece o primeiro; maximização do resultado durante a própria coleta favorece o segundo.
+- **Controlado × não controlado:** teste A/B (sorteio fixo), bandit (sorteio adaptativo) e
+  adesão voluntária ocupam lugares diferentes na escala de controle; só os dois primeiros
+  permitem estimar o efeito sem viés, o bandit com ponderação pelo inverso da probabilidade (IPW).
 
 ## Encerrando o livro
 

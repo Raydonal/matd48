@@ -47,6 +47,16 @@ class: inverse, center, middle
 
 ---
 
+## O que esta aula controla (e o que não controla)
+
+- **Fracionados:** o pesquisador escolhe **quais** corridas fazer (os geradores) e, com isso, **qual** estrutura de alias aceitar. A resolução resume esse controle.
+- **Superfície de resposta:** o pesquisador **move as variáveis de propósito**, em combinações que o processo nunca visitaria sozinho (pontos fatoriais, axiais e centrais), para estimar a curvatura e achar o ótimo.
+- **Não controla:** o que acontece fora da região experimental. Extrapolar a superfície é sair do controle.
+
+Os registros de uma fábrica cobrem só a faixa em que o processo já opera, e os operadores compensam uma variável com a outra. São **dados de acaso** (Box): abundantes, mas pouco informativos.
+
+---
+
 ## Fatoriais `\(3^k\)`: a ideia geral
 
 Fatores com **três** níveis igualmente espaçados (permite estimar curvatura). Cada fator tem
@@ -284,11 +294,61 @@ class: inverse, center, middle
 
 ---
 
-## Energia de corte: velocidade × ângulo (3²)
+## Energia de corte: os dados
 
 
 ``` r
 energia &lt;- read_csv("../Livro/data/energia.csv", show_col_types = FALSE)
+```
+
+&lt;table class="table" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Velocidade &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Ângulo 20° &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Ângulo 40° &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Ângulo 60° &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2.3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0788 (0,0259) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0360 (0,0045) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0343 (0,0110) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3.4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0925 (0,0132) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0467 (0,0090) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0338 (0,0087) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4.5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0852 (0,0182) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0445 (0,0072) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0,0272 (0,0050) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Fatorial `\(3^2\)` (velocidade de corte × ângulo de saída) com 4 repetições por combinação, 36 corridas. Cada célula: energia média (desvio-padrão). Três níveis por fator é o mínimo para estimar curvatura.
+
+
+---
+
+## Quem escolheu as condições de corte?
+
+**O pesquisador:** três velocidades × três ângulos, cada combinação 4 vezes. As duas variáveis variam **independentemente**, e por isso a curvatura em cada direção pode ser estimada.
+
+**A versão não controlada:** registros da oficina, em que o operador usa ângulo maior quando aumenta a velocidade (para não queimar a ferramenta). Os pontos cairiam sobre uma faixa estreita, velocidade e ângulo estariam fortemente correlacionados e o ponto de sela, que o desenho revela, ficaria invisível.
+
+---
+
+## Energia de corte: a superfície de segunda ordem
+
+
+``` r
 modelo_rsm &lt;- lm(energia ~ Velocidad + angulo + I(Velocidad^2) + I(angulo^2) +
                     Velocidad:angulo, data = energia)
 round(summary(modelo_rsm)$coefficients[, c("Estimate", "Pr(&gt;|t|)")], 4)
@@ -344,6 +404,50 @@ class: inverse, center, middle
 
 ---
 
+## Controlado × não controlado
+
+**Dados de acaso**
+
+Por que rodar um CCD (delineamento composto central) se a fábrica tem anos de registros? Box chamou esses registros de **dados de acaso** (*happenstance data*):
+os operadores **compensam** a temperatura (`\(x_1\)`) mexendo no tempo (`\(x_2\)`), e os pontos caem sobre uma reta.
+
+&lt;img src="MATD48-14_files/figure-html/cnc-a14-1.png" alt="" width="100%" /&gt;
+
+---
+
+## Por que a direção de subida se perde
+
+Com variáveis centradas, `\(\text{Var}(\hat\beta_j)=\dfrac{\sigma^2}{S_{jj}(1-r_{12}^2)}\)`: o fator `\(1/(1-r_{12}^2)\)` é o **VIF** (fator de inflação da variância).
+
+
+``` r
+hist7 &lt;- filter(cnc7$pontos, regime == levels(regime)[2])
+c(correlacao = cor(hist7$x1, hist7$x2), VIF = 1 / (1 - cor(hist7$x1, hist7$x2)^2))
+```
+
+```
+## correlacao        VIF 
+## -0.9775087 22.4836826
+```
+
+``` r
+cnc7$est %&gt;% group_by(regime) %&gt;% summarise(erro_mediano = median(estimativa), erra_mais_90 = mean(estimativa &gt; 90))
+```
+
+```
+## # A tibble: 2 × 3
+##   regime                                erro_mediano erra_mais_90
+##   &lt;fct&gt;                                        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Controlado: 2² + pontos centrais              4.55        0    
+## 2 Não controlado: registros do processo        13.7         0.243
+```
+
+- No `\(2^2\)` + centro, `\(r_{12}=0\)` e VIF `\(=1\)`: o mínimo possível.
+- Nos registros, a direção estimada às vezes aponta **morro abaixo**. Mais registros do mesmo jeito não ajudam: a reta continua a mesma.
+- O caminho de máxima subida e o CCD funcionam porque **o pesquisador move as variáveis de propósito**.
+
+---
+
 ## Perguntas para a turma
 
 1. Por que um fatorial `\(2^2\)` nos mesmos dois fatores (velocidade, ângulo) jamais revelaria essa
@@ -358,6 +462,14 @@ class: inverse, center, middle
 
 4. Retrospectiva do curso: cite uma decisão de desenho (repetição, aleatorização, blocagem,
    fatorial, resolução) que você tomaria diferente hoje, comparado ao que faria na Aula 01.
+
+
+---
+
+## Perguntas para a turma: controlado × não controlado
+
+1. Por que um histórico de dez anos de um processo pode ser menos útil para otimizar do que 13 corridas de um CCD (delineamento composto central)?
+2. Ao fim do curso: em cada um dos delineamentos que vimos (DCA, completamente aleatorizado; DBCA, em blocos completos aleatorizados; quadrado latino, fatorial, `\(2^k\)`, superfície de resposta), o que o pesquisador controla? Responda numa linha por delineamento.
 
 ---
 
@@ -413,7 +525,7 @@ sofisticados de busca (subida/descida mais íngreme), fora do escopo deste curso
 .pull-left[
 **Cap. 1–2:** unidades, aleatorização, blocagem; o modelo linear `\(\mathbf{Y}=\mathbf{X}\beta+ \varepsilon\)` como linguagem comum.
 
-**Cap. 3:** DCA, subamostragem, transformações, comparações múltiplas.
+**Cap. 3:** DCA (delineamento completamente aleatorizado), subamostragem, transformações, comparações múltiplas.
 ]
 .pull-right[
 **Cap. 4:** blocos, quadrados latinos e greco-latinos.
@@ -435,6 +547,7 @@ da análise posterior — determina se essa pergunta pode ser respondida com con
 - Superfície de resposta estima curvatura via termos quadráticos; o ponto estacionário pode ser
   máximo, mínimo **ou sela** — só os autovalores da Hessiana decidem.
 - Fim do curso: desenhar bem é o que torna a análise posterior quase dispensável.
+- **Controlado × não controlado:** otimizar exige mover as variáveis de propósito; os dados de acaso de um processo bem operado não têm a variação necessária e podem apontar a direção errada.
 
 ---
 

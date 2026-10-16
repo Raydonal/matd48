@@ -174,6 +174,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="para-quem-é-este-livro.html"><a href="para-quem-é-este-livro.html"><i class="fa fa-check"></i>Para quem é este livro</a></li>
 <li class="chapter" data-level="" data-path="como-o-material-está-organizado.html"><a href="como-o-material-está-organizado.html"><i class="fa fa-check"></i>Como o material está organizado</a></li>
 <li class="chapter" data-level="" data-path="convenções-tipográficas.html"><a href="convenções-tipográficas.html"><i class="fa fa-check"></i>Convenções tipográficas</a></li>
+<li class="chapter" data-level="" data-path="siglas-usadas-no-livro.html"><a href="siglas-usadas-no-livro.html"><i class="fa fa-check"></i>Siglas usadas no livro</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="principios.html"><a href="principios.html"><i class="fa fa-check"></i><b>1</b> Princípios do delineamento de experimentos</a>
 <ul>
@@ -199,6 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="1.4.5" data-path="tres-aspectos.html"><a href="tres-aspectos.html#validade-externa"><i class="fa fa-check"></i><b>1.4.5</b> Validade interna e validade externa</a></li>
 <li class="chapter" data-level="1.4.6" data-path="tres-aspectos.html"><a href="tres-aspectos.html#amostragem-e-desenho"><i class="fa fa-check"></i><b>1.4.6</b> O elo entre amostragem e planejamento de experimentos</a></li>
 <li class="chapter" data-level="1.4.7" data-path="tres-aspectos.html"><a href="tres-aspectos.html#controle-local-blocagem"><i class="fa fa-check"></i><b>1.4.7</b> Controle local (blocagem)</a></li>
+<li class="chapter" data-level="1.4.8" data-path="tres-aspectos.html"><a href="tres-aspectos.html#senhora-cha"><i class="fa fa-check"></i><b>1.4.8</b> Os três pilares num só experimento: a senhora que toma chá</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="resumo-do-capítulo.html"><a href="resumo-do-capítulo.html"><i class="fa fa-check"></i><b>1.5</b> Resumo do capítulo</a></li>
 </ul></li>
@@ -218,7 +220,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.5.1" data-path="estimabilidade.html"><a href="estimabilidade.html#svd-moore-penrose"><i class="fa fa-check"></i><b>2.5.1</b> A pseudoinversa de Moore-Penrose via decomposição em valores singulares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE</a></li>
+<li class="chapter" data-level="2.6" data-path="gauss-markov.html"><a href="gauss-markov.html"><i class="fa fa-check"></i><b>2.6</b> O teorema de Gauss-Markov e o BLUE (melhor estimador linear não viesado)</a></li>
 <li class="chapter" data-level="2.7" data-path="matriz-projecao.html"><a href="matriz-projecao.html"><i class="fa fa-check"></i><b>2.7</b> A matriz de projeção</a>
 <ul>
 <li class="chapter" data-level="2.7.1" data-path="matriz-projecao.html"><a href="matriz-projecao.html#soma-quadrados-total"><i class="fa fa-check"></i><b>2.7.1</b> A soma de quadrados total como forma quadrática</a></li>
@@ -229,7 +231,8 @@ div.csl-indent {
 <li class="chapter" data-level="2.9.1" data-path="fwl.html"><a href="fwl.html#fwl-experimentos"><i class="fa fa-check"></i><b>2.9.1</b> Conexão com planejamento de experimentos: por que a ANCOVA funciona</a></li>
 </ul></li>
 <li class="chapter" data-level="2.10" data-path="formas-quadraticas.html"><a href="formas-quadraticas.html"><i class="fa fa-check"></i><b>2.10</b> Distribuição de formas lineares e quadráticas</a></li>
-<li class="chapter" data-level="2.11" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.11</b> Resumo do capítulo</a>
+<li class="chapter" data-level="2.11" data-path="cnc-cap2.html"><a href="cnc-cap2.html"><i class="fa fa-check"></i><b>2.11</b> Controlado × não controlado: a variável omitida e a matriz <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="2.12" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html"><i class="fa fa-check"></i><b>2.12</b> Resumo do capítulo</a>
 <ul>
 <li class="chapter" data-level="" data-path="resumo-do-capítulo-1.html"><a href="resumo-do-capítulo-1.html#uma-nota-sobre-notação-de-beta-genérico-a-tau-e-depois-a-alphabetagammadots"><i class="fa fa-check"></i>Uma nota sobre notação: de <span class="math inline">\(\beta\)</span> genérico a <span class="math inline">\(\tau\)</span>, e depois a <span class="math inline">\(\alpha,\beta,\gamma,\dots\)</span></a></li>
 </ul></li>
@@ -269,29 +272,55 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#normalidade-dca"><i class="fa fa-check"></i><b>3.5.1</b> Normalidade: gráfico Q-Q e testes formais</a></li>
 <li class="chapter" data-level="3.5.2" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#homocedasticidade-dca"><i class="fa fa-check"></i><b>3.5.2</b> Homogeneidade de variância</a></li>
-<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.3</b> Transformações usuais</a></li>
+<li class="chapter" data-level="3.5.3" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#independencia-dca"><i class="fa fa-check"></i><b>3.5.3</b> Independência: resíduos contra a ordem de execução</a></li>
+<li class="chapter" data-level="3.5.4" data-path="dca-pressupostos.html"><a href="dca-pressupostos.html#transformacoes-dca"><i class="fa fa-check"></i><b>3.5.4</b> Transformações usuais</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="contrastes.html"><a href="contrastes.html"><i class="fa fa-check"></i><b>3.6</b> Contrastes e comparações múltiplas</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.1</b> Definição, esperança e variância de um contraste</a></li>
-<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.2</b> Soma de quadrados de um contraste e sua distribuição</a></li>
-<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.3</b> Notação matricial: contraste como forma linear e quadrática</a></li>
-<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.4</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.1" data-path="contrastes.html"><a href="contrastes.html#dados-scripts"><i class="fa fa-check"></i><b>3.6.1</b> Os dados e a ANOVA global</a></li>
+<li class="chapter" data-level="3.6.2" data-path="contrastes.html"><a href="contrastes.html#definição-esperança-e-variância-de-um-contraste"><i class="fa fa-check"></i><b>3.6.2</b> Definição, esperança e variância de um contraste</a></li>
+<li class="chapter" data-level="3.6.3" data-path="contrastes.html"><a href="contrastes.html#contraste-normalizado"><i class="fa fa-check"></i><b>3.6.3</b> Normalização e intervalo de confiança</a></li>
+<li class="chapter" data-level="3.6.4" data-path="contrastes.html"><a href="contrastes.html#soma-de-quadrados-de-um-contraste-e-sua-distribuição"><i class="fa fa-check"></i><b>3.6.4</b> Soma de quadrados de um contraste e sua distribuição</a></li>
+<li class="chapter" data-level="3.6.5" data-path="contrastes.html"><a href="contrastes.html#notação-matricial-contraste-como-forma-linear-e-quadrática"><i class="fa fa-check"></i><b>3.6.5</b> Notação matricial: contraste como forma linear e quadrática</a></li>
+<li class="chapter" data-level="3.6.6" data-path="contrastes.html"><a href="contrastes.html#contrastes-ortogonais"><i class="fa fa-check"></i><b>3.6.6</b> Contrastes ortogonais</a></li>
+<li class="chapter" data-level="3.6.7" data-path="contrastes.html"><a href="contrastes.html#contraste-a-mao"><i class="fa fa-check"></i><b>3.6.7</b> Um contraste calculado à mão</a></li>
+<li class="chapter" data-level="3.6.8" data-path="contrastes.html"><a href="contrastes.html#contrastes-nao-ortogonais"><i class="fa fa-check"></i><b>3.6.8</b> Contrastes não ortogonais</a></li>
+<li class="chapter" data-level="3.6.9" data-path="contrastes.html"><a href="contrastes.html#contrastes-respostas"><i class="fa fa-check"></i><b>3.6.9</b> O que os contrastes respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html"><i class="fa fa-check"></i><b>3.7</b> Procedimentos de comparação múltipla</a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.1</b> O perigo do “data snooping”</a></li>
-<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.2</b> Método de Scheffé</a></li>
-<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.3</b> Método de Bonferroni</a></li>
-<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.4</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
-<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.5</b> Comparação com um grupo controle: Dunnett</a></li>
-<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.6</b> Teste de amplitude múltipla de Duncan</a></li>
-<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.7</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.1" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer"><i class="fa fa-check"></i><b>3.7.1</b> O que significa controlar a taxa de erro por família</a></li>
+<li class="chapter" data-level="3.7.2" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#data-snooping"><i class="fa fa-check"></i><b>3.7.2</b> O perigo do “data snooping”</a></li>
+<li class="chapter" data-level="3.7.3" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#dms"><i class="fa fa-check"></i><b>3.7.3</b> A estrutura comum: a diferença mínima significativa</a></li>
+<li class="chapter" data-level="3.7.4" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#lsd-de-fisher"><i class="fa fa-check"></i><b>3.7.4</b> LSD de Fisher</a></li>
+<li class="chapter" data-level="3.7.5" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-scheffé"><i class="fa fa-check"></i><b>3.7.5</b> Método de Scheffé</a></li>
+<li class="chapter" data-level="3.7.6" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#método-de-bonferroni"><i class="fa fa-check"></i><b>3.7.6</b> Método de Bonferroni</a></li>
+<li class="chapter" data-level="3.7.7" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#tukey-hsd-honestly-significant-difference"><i class="fa fa-check"></i><b>3.7.7</b> Tukey HSD (<em>honestly significant difference</em>)</a></li>
+<li class="chapter" data-level="3.7.8" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparação-com-um-grupo-controle-dunnett"><i class="fa fa-check"></i><b>3.7.8</b> Comparação com um grupo controle: Dunnett</a></li>
+<li class="chapter" data-level="3.7.9" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#teste-de-amplitude-múltipla-de-duncan"><i class="fa fa-check"></i><b>3.7.9</b> Teste de amplitude múltipla de Duncan</a></li>
+<li class="chapter" data-level="3.7.10" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#student-newman-keuls-snk"><i class="fa fa-check"></i><b>3.7.10</b> Student-Newman-Keuls (SNK)</a></li>
+<li class="chapter" data-level="3.7.11" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#duncan-passo-a-passo"><i class="fa fa-check"></i><b>3.7.11</b> O teste de Duncan passo a passo, com dados reais</a></li>
+<li class="chapter" data-level="3.7.12" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ordenamento"><i class="fa fa-check"></i><b>3.7.12</b> A questão do ordenamento: procedimentos em etapas</a></li>
+<li class="chapter" data-level="3.7.13" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#reguas-dados"><i class="fa fa-check"></i><b>3.7.13</b> Todos os procedimentos nos mesmos dados</a></li>
+<li class="chapter" data-level="3.7.14" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#agrupamento-de-tratamentos-compact-letter-display"><i class="fa fa-check"></i><b>3.7.14</b> Agrupamento de tratamentos (<em>compact letter display</em>)</a></li>
+<li class="chapter" data-level="3.7.15" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#scott-knott"><i class="fa fa-check"></i><b>3.7.15</b> Scott-Knott: grupos que não se sobrepõem</a></li>
+<li class="chapter" data-level="3.7.16" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#ranking-scripts"><i class="fa fa-check"></i><b>3.7.16</b> Ordenamento como pergunta: quem é o mais lento?</a></li>
+<li class="chapter" data-level="3.7.17" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#fwer-simulada"><i class="fa fa-check"></i><b>3.7.17</b> Quanto custa ser liberal: o FWER simulado</a></li>
+<li class="chapter" data-level="3.7.18" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#snooping-pratica"><i class="fa fa-check"></i><b>3.7.18</b> <em>Data snooping</em> na prática</a></li>
+<li class="chapter" data-level="3.7.19" data-path="comparacoes-multiplas.html"><a href="comparacoes-multiplas.html#comparacoes-respostas"><i class="fa fa-check"></i><b>3.7.19</b> O que as comparações múltiplas respondem nestes dados</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html"><i class="fa fa-check"></i><b>3.8</b> Polinômios ortogonais</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.1</b> Esperança, variância e soma de quadrados</a></li>
-<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.2</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.1" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dados-cafeina"><i class="fa fa-check"></i><b>3.8.1</b> Os dados</a></li>
+<li class="chapter" data-level="3.8.2" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#esperança-variância-e-soma-de-quadrados"><i class="fa fa-check"></i><b>3.8.2</b> Esperança, variância e soma de quadrados</a></li>
+<li class="chapter" data-level="3.8.3" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#de-onde-vêm-os-coeficientes"><i class="fa fa-check"></i><b>3.8.3</b> De onde vêm os coeficientes</a></li>
+<li class="chapter" data-level="3.8.4" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#a-matriz-de-polinômios-ortogonais-como-parte-de-mathbf-x"><i class="fa fa-check"></i><b>3.8.4</b> A matriz de polinômios ortogonais como parte de <span class="math inline">\(\mathbf X\)</span></a></li>
+<li class="chapter" data-level="3.8.5" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-a-mao"><i class="fa fa-check"></i><b>3.8.5</b> Os componentes calculados à mão</a></li>
+<li class="chapter" data-level="3.8.6" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#falta-ajuste-poly"><i class="fa fa-check"></i><b>3.8.6</b> Falta de ajuste: a parábola basta?</a></li>
+<li class="chapter" data-level="3.8.7" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#quartico-acaso"><i class="fa fa-check"></i><b>3.8.7</b> O quártico significativo: efeito real ou acaso?</a></li>
+<li class="chapter" data-level="3.8.8" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#dose-otima"><i class="fa fa-check"></i><b>3.8.8</b> De volta à escala da dose: a equação e a dose ótima</a></li>
+<li class="chapter" data-level="3.8.9" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#poly-armadilhas"><i class="fa fa-check"></i><b>3.8.9</b> Doses não igualmente espaçadas e a ordem dos níveis</a></li>
+<li class="chapter" data-level="3.8.10" data-path="polinomios-ortogonais.html"><a href="polinomios-ortogonais.html#cafeina-respostas"><i class="fa fa-check"></i><b>3.8.10</b> O que os dados de cafeína respondem</a></li>
 </ul></li>
 <li class="chapter" data-level="3.9" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>3.9</b> Análise de covariância (ANCOVA)</a>
 <ul>
@@ -303,7 +332,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.10.1" data-path="kruskal-wallis.html"><a href="kruskal-wallis.html#o-que-muda-em-relação-à-anova"><i class="fa fa-check"></i><b>3.10.1</b> O que muda em relação à ANOVA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.11</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="3.11" data-path="cnc-cap3.html"><a href="cnc-cap3.html"><i class="fa fa-check"></i><b>3.11</b> Controlado × não controlado: o teste <span class="math inline">\(F\)</span> quando ninguém sorteou</a></li>
+<li class="chapter" data-level="3.12" data-path="resumo-do-capítulo-2.html"><a href="resumo-do-capítulo-2.html"><i class="fa fa-check"></i><b>3.12</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="blocos.html"><a href="blocos.html"><i class="fa fa-check"></i><b>4</b> Delineamentos com fontes de bloqueio</a>
 <ul>
@@ -345,13 +375,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.6.1" data-path="split-plot.html"><a href="split-plot.html#dois-erros-experimentais-não-um"><i class="fa fa-check"></i><b>4.6.1</b> Dois erros experimentais, não um</a></li>
 <li class="chapter" data-level="4.6.2" data-path="split-plot.html"><a href="split-plot.html#por-que-o-teste-de-irrigação-usa-um-erro-diferente-do-teste-de-variedade"><i class="fa fa-check"></i><b>4.6.2</b> Por que o teste de irrigação usa um erro diferente do teste de variedade</a></li>
 </ul></li>
-<li class="chapter" data-level="4.7" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="4.7" data-path="cnc-cap4.html"><a href="cnc-cap4.html"><i class="fa fa-check"></i><b>4.7</b> Controlado × não controlado: o que o bloco controla e o que só o sorteio controla</a></li>
+<li class="chapter" data-level="4.8" data-path="resumo-do-capítulo-3.html"><a href="resumo-do-capítulo-3.html"><i class="fa fa-check"></i><b>4.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="fatoriais.html"><a href="fatoriais.html"><i class="fa fa-check"></i><b>5</b> Delineamentos com arranjos fatoriais</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="por-que-fatorial.html"><a href="por-que-fatorial.html"><i class="fa fa-check"></i><b>5.1</b> Por que cruzar fatores?</a></li>
 <li class="chapter" data-level="5.2" data-path="modelo-axb.html"><a href="modelo-axb.html"><i class="fa fa-check"></i><b>5.2</b> O fatorial A×B: efeitos principais e interação</a></li>
-<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de ANOVA para o fatorial A×B balanceado</a>
+<li class="chapter" data-level="5.3" data-path="anova-axb.html"><a href="anova-axb.html"><i class="fa fa-check"></i><b>5.3</b> Tabela de análise de variância (ANOVA) para o fatorial A×B balanceado</a>
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="anova-axb.html"><a href="anova-axb.html#tipos-sq"><i class="fa fa-check"></i><b>5.3.1</b> Quando as células não têm o mesmo tamanho: somas de quadrados Tipo I, II e III</a></li>
 </ul></li>
@@ -362,11 +393,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.5.2" data-path="axbxc.html"><a href="axbxc.html#hasse-axbxc"><i class="fa fa-check"></i><b>5.5.2</b> O diagrama de Hasse do fatorial 3×3×3</a></li>
 </ul></li>
 <li class="chapter" data-level="5.6" data-path="fatoriais-blocos.html"><a href="fatoriais-blocos.html"><i class="fa fa-check"></i><b>5.6</b> Fatoriais de dois fatores em blocos completos</a></li>
-<li class="chapter" data-level="5.7" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="5.7" data-path="cnc-cap5.html"><a href="cnc-cap5.html"><i class="fa fa-check"></i><b>5.7</b> Controlado × não controlado: fatores que andam juntos</a></li>
+<li class="chapter" data-level="5.8" data-path="resumo-do-capítulo-4.html"><a href="resumo-do-capítulo-4.html"><i class="fa fa-check"></i><b>5.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="fatoriais-avancado.html"><a href="fatoriais-avancado.html"><i class="fa fa-check"></i><b>6</b> Fatoriais avançados: confusão, fracionamento e superfície de resposta</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e ANOVA</a>
+<li class="chapter" data-level="6.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html"><i class="fa fa-check"></i><b>6.1</b> Fatoriais <span class="math inline">\(2^k\)</span>: notação e análise de variância (ANOVA)</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#ortogonalidade-2k"><i class="fa fa-check"></i><b>6.1.1</b> Ortogonalidade da matriz de desenho</a></li>
 <li class="chapter" data-level="6.1.2" data-path="fatoriais-2k.html"><a href="fatoriais-2k.html#algoritmo-yates"><i class="fa fa-check"></i><b>6.1.2</b> O algoritmo tabular de Yates</a></li>
@@ -387,7 +419,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="fatoriais-3k.html"><a href="fatoriais-3k.html"><i class="fa fa-check"></i><b>6.4</b> Fatoriais <span class="math inline">\(3^k\)</span>: ideia geral e confusão com <span class="math inline">\(AB^2\)</span></a></li>
 <li class="chapter" data-level="6.5" data-path="fracionados.html"><a href="fracionados.html"><i class="fa fa-check"></i><b>6.5</b> Fatoriais fracionados de dois níveis: a ideia geral</a></li>
 <li class="chapter" data-level="6.6" data-path="rumo-superficie-resposta.html"><a href="rumo-superficie-resposta.html"><i class="fa fa-check"></i><b>6.6</b> Rumo à otimização: superfície de resposta</a></li>
-<li class="chapter" data-level="6.7" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="6.7" data-path="cnc-cap6.html"><a href="cnc-cap6.html"><i class="fa fa-check"></i><b>6.7</b> Controlado × não controlado: confusão planejada e confusão acidental</a></li>
+<li class="chapter" data-level="6.8" data-path="resumo-do-capítulo-5.html"><a href="resumo-do-capítulo-5.html"><i class="fa fa-check"></i><b>6.8</b> Resumo do capítulo</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="superficie-resposta-cap.html"><a href="superficie-resposta-cap.html"><i class="fa fa-check"></i><b>7</b> Metodologia de superfície de resposta</a>
 <ul>
@@ -405,8 +438,9 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.1" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-proposta-original-de-taguchi-e-por-que-ela-foi-revista"><i class="fa fa-check"></i><b>7.5.1</b> A proposta original de Taguchi, e por que ela foi revista</a></li>
 <li class="chapter" data-level="7.5.2" data-path="desenho-robusto.html"><a href="desenho-robusto.html#a-alternativa-duas-superfícies-de-resposta-uma-única-maquinaria"><i class="fa fa-check"></i><b>7.5.2</b> A alternativa: duas superfícies de resposta, uma única maquinaria</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.6</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="7.7" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.7</b> Fim do programa do semestre</a></li>
+<li class="chapter" data-level="7.6" data-path="cnc-cap7.html"><a href="cnc-cap7.html"><i class="fa fa-check"></i><b>7.6</b> Controlado × não controlado: dados de acaso e a direção de subida</a></li>
+<li class="chapter" data-level="7.7" data-path="resumo-do-capítulo-6.html"><a href="resumo-do-capítulo-6.html"><i class="fa fa-check"></i><b>7.7</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="7.8" data-path="fim-do-programa-do-semestre.html"><a href="fim-do-programa-do-semestre.html"><i class="fa fa-check"></i><b>7.8</b> Fim do programa do semestre</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="ab-bandits.html"><a href="ab-bandits.html"><i class="fa fa-check"></i><b>8</b> Experimentação em produtos digitais: testes A/B e bandits</a>
 <ul>
@@ -425,8 +459,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.2.4" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#bandits-vs-ab"><i class="fa fa-check"></i><b>8.2.4</b> Horizonte fixo ou bandit?</a></li>
 <li class="chapter" data-level="8.2.5" data-path="parte-ii-bandits-quando-explorar-e-quando-explotar.html"><a href="parte-ii-bandits-quando-explorar-e-quando-explotar.html#outros-topicos"><i class="fa fa-check"></i><b>8.2.5</b> Outros tópicos modernos</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.3</b> Resumo do capítulo</a></li>
-<li class="chapter" data-level="8.4" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.4</b> Encerrando o livro</a></li>
+<li class="chapter" data-level="8.3" data-path="cnc-cap8.html"><a href="cnc-cap8.html"><i class="fa fa-check"></i><b>8.3</b> Controlado × não controlado: teste A/B, bandit e adesão voluntária</a></li>
+<li class="chapter" data-level="8.4" data-path="resumo-do-capítulo-7.html"><a href="resumo-do-capítulo-7.html"><i class="fa fa-check"></i><b>8.4</b> Resumo do capítulo</a></li>
+<li class="chapter" data-level="8.5" data-path="encerrando-o-livro.html"><a href="encerrando-o-livro.html"><i class="fa fa-check"></i><b>8.5</b> Encerrando o livro</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://raydonal.github.io/matd48/" target="_blank">MATD48 — Página do curso</a></li>
@@ -458,21 +493,21 @@ lote — dizemos que há <strong>subamostragem</strong>. As subamostras não sã
 réplicas da <em>medição</em> dentro de uma única aplicação do tratamento, e carregam uma fonte de
 variação a mais, que precisa ser modelada separadamente.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-ue-uo-submuestreo-1"></span>
-<img src="../Aulas2026/assets/images/experimento1.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
+<img src="../Aulas2026/assets/images/experimento1.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
 <p class="caption">
-Figura 3.7: Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento – a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente – UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento – subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.
+Figura 3.8: Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento – a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente – UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento – subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-ue-uo-submuestreo-2"></span>
-<img src="../Aulas2026/assets/images/sit2.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
+<img src="../Aulas2026/assets/images/sit2.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
 <p class="caption">
-Figura 3.8: Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento – a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente – UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento – subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.
+Figura 3.9: Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento – a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente – UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento – subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-ue-uo-submuestreo-3"></span>
-<img src="../Aulas2026/assets/images/sit3.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
+<img src="../Aulas2026/assets/images/sit3.png" alt="Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento -- a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente -- UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento -- subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1." width="95%" />
 <p class="caption">
-Figura 3.9: Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento – a caixa é a UE, cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente – UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento – subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.
+Figura 3.10: Três formas de organizar o mesmo experimento com três tratamentos (rótulos Trat. 1-3), adaptado de Hinkelmann e Kempthorne (1994). Situação Experimental 1 (esquerda): uma única caixa de 4 vasos por tratamento – a caixa é a unidade experimental (UE), cada vaso é uma subamostra, e só 3 UEs existem em todo o experimento (uma por tratamento). Situação Experimental 2 (centro): cada vaso é sorteado individualmente – UE e unidade amostral coincidem, 12 UEs verdadeiras, sem subamostragem. Situação Experimental 3 (direita): duas caixas de 2 vasos por tratamento – subamostragem como na Situação 1, mas agora com 2 UEs por tratamento em vez de 1.
 </p>
 </div>
 <p>Os três diagramas mostram o mesmo número de plantas (12 no total, três tratamentos) organizadas de
@@ -503,24 +538,28 @@ pois é nele que o probiótico é aplicado (misturado à ração de todo o aquá
 sortear o probiótico peixe a peixe dentro de um mesmo aquário. Cada aquário contém, em geral, 5
 peixes medidos individualmente — o <strong>peixe é a unidade amostral</strong> (subamostra).
 </div>
+<p>O controle aqui vale no nível em que o sorteio aconteceu: o <strong>aquário</strong>. Os peixes de um mesmo
+aquário compartilham água, temperatura e alimentação, e não foram sorteados um a um. Tratá-los como
+unidades experimentais seria fingir um controle que não houve, e, com o probiótico sem efeito,
+o teste <span class="math inline">\(F\)</span> rejeitaria <span class="math inline">\(H_0\)</span> em cerca de metade dos experimentos.</p>
 <div id="dados-submuestreo" class="section level3 hasAnchor" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Como são os dados: uma linha por subamostra<a href="dca-submuestreo.html#dados-submuestreo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Antes de qualquer modelo, convém olhar a planilha. Ela tem <strong>uma linha por peixe</strong>, não por
 aquário, e três colunas de identificação, uma para cada nível da estrutura:</p>
 <div class="caixa-r"><strong>Uso do R</strong> — lendo os dados da tilápia</div>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="dca-submuestreo.html#cb82-1" tabindex="-1"></a>mojarra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mojarra.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb82-2"><a href="dca-submuestreo.html#cb82-2" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">probiotico =</span> probiotico, <span class="at">aquario =</span> Acuario,</span>
-<span id="cb82-3"><a href="dca-submuestreo.html#cb82-3" tabindex="-1"></a>         <span class="at">peso_inicial =</span> <span class="st">`</span><span class="at">Peso Inicial</span><span class="st">`</span>, <span class="at">peso_45 =</span> <span class="st">`</span><span class="at">Peso 45</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb82-4"><a href="dca-submuestreo.html#cb82-4" tabindex="-1"></a>  <span class="fu">drop_na</span>(peso_45) <span class="sc">%&gt;%</span>                                  <span class="co"># 3 peixes morreram antes do dia 45</span></span>
-<span id="cb82-5"><a href="dca-submuestreo.html#cb82-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb82-6"><a href="dca-submuestreo.html#cb82-6" tabindex="-1"></a>    <span class="at">probiotico =</span> <span class="fu">factor</span>(probiotico),</span>
-<span id="cb82-7"><a href="dca-submuestreo.html#cb82-7" tabindex="-1"></a>    <span class="at">aquario    =</span> <span class="fu">factor</span>(aquario),</span>
-<span id="cb82-8"><a href="dca-submuestreo.html#cb82-8" tabindex="-1"></a>    <span class="at">ganho      =</span> peso_45 <span class="sc">-</span> peso_inicial</span>
-<span id="cb82-9"><a href="dca-submuestreo.html#cb82-9" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb82-10"><a href="dca-submuestreo.html#cb82-10" tabindex="-1"></a>  <span class="fu">group_by</span>(aquario) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">peixe =</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
-<span id="cb82-11"><a href="dca-submuestreo.html#cb82-11" tabindex="-1"></a></span>
-<span id="cb82-12"><a href="dca-submuestreo.html#cb82-12" tabindex="-1"></a>mojarra <span class="sc">%&gt;%</span> <span class="fu">filter</span>(aquario <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb82-13"><a href="dca-submuestreo.html#cb82-13" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(probiotico, aquario, peixe, ganho)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="dca-submuestreo.html#cb92-1" tabindex="-1"></a>mojarra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mojarra.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-2"><a href="dca-submuestreo.html#cb92-2" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">probiotico =</span> probiotico, <span class="at">aquario =</span> Acuario,</span>
+<span id="cb92-3"><a href="dca-submuestreo.html#cb92-3" tabindex="-1"></a>         <span class="at">peso_inicial =</span> <span class="st">`</span><span class="at">Peso Inicial</span><span class="st">`</span>, <span class="at">peso_45 =</span> <span class="st">`</span><span class="at">Peso 45</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-4"><a href="dca-submuestreo.html#cb92-4" tabindex="-1"></a>  <span class="fu">drop_na</span>(peso_45) <span class="sc">%&gt;%</span>                                  <span class="co"># 3 peixes morreram antes do dia 45</span></span>
+<span id="cb92-5"><a href="dca-submuestreo.html#cb92-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb92-6"><a href="dca-submuestreo.html#cb92-6" tabindex="-1"></a>    <span class="at">probiotico =</span> <span class="fu">factor</span>(probiotico),</span>
+<span id="cb92-7"><a href="dca-submuestreo.html#cb92-7" tabindex="-1"></a>    <span class="at">aquario    =</span> <span class="fu">factor</span>(aquario),</span>
+<span id="cb92-8"><a href="dca-submuestreo.html#cb92-8" tabindex="-1"></a>    <span class="at">ganho      =</span> peso_45 <span class="sc">-</span> peso_inicial</span>
+<span id="cb92-9"><a href="dca-submuestreo.html#cb92-9" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb92-10"><a href="dca-submuestreo.html#cb92-10" tabindex="-1"></a>  <span class="fu">group_by</span>(aquario) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">peixe =</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb92-11"><a href="dca-submuestreo.html#cb92-11" tabindex="-1"></a></span>
+<span id="cb92-12"><a href="dca-submuestreo.html#cb92-12" tabindex="-1"></a>mojarra <span class="sc">%&gt;%</span> <span class="fu">filter</span>(aquario <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb92-13"><a href="dca-submuestreo.html#cb92-13" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(probiotico, aquario, peixe, ganho)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 4
 ##   probiotico aquario peixe ganho
 ##   &lt;fct&gt;      &lt;fct&gt;   &lt;int&gt; &lt;dbl&gt;
@@ -647,7 +686,7 @@ réplica 5
 contingência: numa tabela de contingência cada célula conta quantas unidades caíram numa
 combinação de categorias (probiótico <span class="math inline">\(\times\)</span> sobreviveu/morreu, por exemplo), e a análise é por
 <span class="math inline">\(\chi^2\)</span> ou modelos log-lineares; aqui cada célula contém uma <strong>medida</strong>, o ganho médio de um
-aquário em gramas. Também não é um DBCA nem um fatorial probiótico <span class="math inline">\(\times\)</span> aquário: a “réplica 3”
+aquário em gramas. Também não é um DBCA (delineamento em blocos completos aleatorizados, Capítulo 4) nem um fatorial probiótico <span class="math inline">\(\times\)</span> aquário: a “réplica 3”
 do probiótico 1 e a “réplica 3” do probiótico 2 são aquários diferentes, sem nada em comum, de
 modo que não existe efeito de coluna, e embaralhar os valores dentro de uma linha não muda nada.
 O aquário não cruza com o probiótico, porque cada aquário recebe um probiótico só: ele está
@@ -704,14 +743,14 @@ perdeu um peixe, por exemplo? A condição de Zyskind (Seção <a href="principi
 verificar, e a ANOVA clássica com <code>Error()</code> deixa de ter uma base algébrica sólida — o R, nesse
 caso, geralmente avisa:</p>
 <div class="caixa-r"><strong>Uso do R</strong> — o sintoma de perder o balanceamento: <code>aov()</code> quebra, <code>lmer()</code> não</div>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="dca-submuestreo.html#cb84-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">77</span>)</span>
-<span id="cb84-2"><a href="dca-submuestreo.html#cb84-2" tabindex="-1"></a>q_desigual <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>)   <span class="co"># uma UE com 2 subamostras em vez de 4</span></span>
-<span id="cb84-3"><a href="dca-submuestreo.html#cb84-3" tabindex="-1"></a>delta_ue   <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">6</span>, <span class="dv">0</span>, <span class="fl">1.7</span>)</span>
-<span id="cb84-4"><a href="dca-submuestreo.html#cb84-4" tabindex="-1"></a>dados_desbal <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="cf">function</span>(j) {</span>
-<span id="cb84-5"><a href="dca-submuestreo.html#cb84-5" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">ue =</span> <span class="fu">factor</span>(j), <span class="at">trat =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j]),</span>
-<span id="cb84-6"><a href="dca-submuestreo.html#cb84-6" tabindex="-1"></a>         <span class="at">y  =</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j] <span class="sc">+</span> delta_ue[j] <span class="sc">+</span> <span class="fu">rnorm</span>(q_desigual[j], <span class="dv">0</span>, <span class="fl">0.9</span>))</span>
-<span id="cb84-7"><a href="dca-submuestreo.html#cb84-7" tabindex="-1"></a>})</span>
-<span id="cb84-8"><a href="dca-submuestreo.html#cb84-8" tabindex="-1"></a><span class="fu">aov</span>(y <span class="sc">~</span> trat <span class="sc">+</span> <span class="fu">Error</span>(trat<span class="sc">:</span>ue), <span class="at">data =</span> dados_desbal)   <span class="co"># emite o aviso abaixo</span></span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="dca-submuestreo.html#cb94-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">77</span>)</span>
+<span id="cb94-2"><a href="dca-submuestreo.html#cb94-2" tabindex="-1"></a>q_desigual <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>)   <span class="co"># uma UE com 2 subamostras em vez de 4</span></span>
+<span id="cb94-3"><a href="dca-submuestreo.html#cb94-3" tabindex="-1"></a>delta_ue   <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">6</span>, <span class="dv">0</span>, <span class="fl">1.7</span>)</span>
+<span id="cb94-4"><a href="dca-submuestreo.html#cb94-4" tabindex="-1"></a>dados_desbal <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="cf">function</span>(j) {</span>
+<span id="cb94-5"><a href="dca-submuestreo.html#cb94-5" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">ue =</span> <span class="fu">factor</span>(j), <span class="at">trat =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j]),</span>
+<span id="cb94-6"><a href="dca-submuestreo.html#cb94-6" tabindex="-1"></a>         <span class="at">y  =</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>)[j] <span class="sc">+</span> delta_ue[j] <span class="sc">+</span> <span class="fu">rnorm</span>(q_desigual[j], <span class="dv">0</span>, <span class="fl">0.9</span>))</span>
+<span id="cb94-7"><a href="dca-submuestreo.html#cb94-7" tabindex="-1"></a>})</span>
+<span id="cb94-8"><a href="dca-submuestreo.html#cb94-8" tabindex="-1"></a><span class="fu">aov</span>(y <span class="sc">~</span> trat <span class="sc">+</span> <span class="fu">Error</span>(trat<span class="sc">:</span>ue), <span class="at">data =</span> dados_desbal)   <span class="co"># emite o aviso abaixo</span></span></code></pre></div>
 <pre><code>## Warning in aov(y ~ trat + Error(trat:ue), data = dados_desbal): Error() model
 ## is singular</code></pre>
 <pre><code>## 
@@ -754,24 +793,24 @@ elo <em>abaixo</em> do erro experimental: a unidade experimental (aquário) é, 
 unidade amostral (peixe) dentro dela — exatamente o padrão de <strong>aninhamento</strong> que a Seção
 <a href="hasse.html#hasse">2.2</a> definiu como “uma cadeia direta de arestas, sem ramificação”.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — diagrama de Hasse do DCA com subamostragem</div>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="dca-submuestreo.html#cb87-1" tabindex="-1"></a>nos_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb87-2"><a href="dca-submuestreo.html#cb87-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>),</span>
-<span id="cb87-3"><a href="dca-submuestreo.html#cb87-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span> <span class="sc">*</span> <span class="dv">5</span>)  <span class="co"># t=4; 20 aquarios; N=100 peixes</span></span>
-<span id="cb87-4"><a href="dca-submuestreo.html#cb87-4" tabindex="-1"></a>)</span>
-<span id="cb87-5"><a href="dca-submuestreo.html#cb87-5" tabindex="-1"></a>arestas_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb87-6"><a href="dca-submuestreo.html#cb87-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>),</span>
-<span id="cb87-7"><a href="dca-submuestreo.html#cb87-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>)</span>
-<span id="cb87-8"><a href="dca-submuestreo.html#cb87-8" tabindex="-1"></a>)</span>
-<span id="cb87-9"><a href="dca-submuestreo.html#cb87-9" tabindex="-1"></a></span>
-<span id="cb87-10"><a href="dca-submuestreo.html#cb87-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb87-11"><a href="dca-submuestreo.html#cb87-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sub, arestas_sub,</span>
-<span id="cb87-12"><a href="dca-submuestreo.html#cb87-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dca-submuestreo.svg&quot;</span>,</span>
-<span id="cb87-13"><a href="dca-submuestreo.html#cb87-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DCA com subamostragem: t=4, r=5, q=5 (N=100)&quot;</span>)</span>
-<span id="cb87-14"><a href="dca-submuestreo.html#cb87-14" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="dca-submuestreo.html#cb97-1" tabindex="-1"></a>nos_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb97-2"><a href="dca-submuestreo.html#cb97-2" tabindex="-1"></a>  <span class="at">termo   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>),</span>
+<span id="cb97-3"><a href="dca-submuestreo.html#cb97-3" tabindex="-1"></a>  <span class="at">classes =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span>, <span class="dv">4</span> <span class="sc">*</span> <span class="dv">5</span> <span class="sc">*</span> <span class="dv">5</span>)  <span class="co"># t=4; 20 aquarios; N=100 peixes</span></span>
+<span id="cb97-4"><a href="dca-submuestreo.html#cb97-4" tabindex="-1"></a>)</span>
+<span id="cb97-5"><a href="dca-submuestreo.html#cb97-5" tabindex="-1"></a>arestas_sub <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb97-6"><a href="dca-submuestreo.html#cb97-6" tabindex="-1"></a>  <span class="at">de   =</span> <span class="fu">c</span>(<span class="st">&quot;Média&quot;</span>, <span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>),</span>
+<span id="cb97-7"><a href="dca-submuestreo.html#cb97-7" tabindex="-1"></a>  <span class="at">para =</span> <span class="fu">c</span>(<span class="st">&quot;Tratamento&quot;</span>, <span class="st">&quot;UE (aquário)&quot;</span>, <span class="st">&quot;Unidade amostral (peixe)&quot;</span>)</span>
+<span id="cb97-8"><a href="dca-submuestreo.html#cb97-8" tabindex="-1"></a>)</span>
+<span id="cb97-9"><a href="dca-submuestreo.html#cb97-9" tabindex="-1"></a></span>
+<span id="cb97-10"><a href="dca-submuestreo.html#cb97-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb97-11"><a href="dca-submuestreo.html#cb97-11" tabindex="-1"></a>  <span class="fu">hasse_svg</span>(nos_sub, arestas_sub,</span>
+<span id="cb97-12"><a href="dca-submuestreo.html#cb97-12" tabindex="-1"></a>            <span class="at">arquivo =</span> <span class="st">&quot;figuras/hasse/dca-submuestreo.svg&quot;</span>,</span>
+<span id="cb97-13"><a href="dca-submuestreo.html#cb97-13" tabindex="-1"></a>            <span class="at">titulo  =</span> <span class="st">&quot;DCA com subamostragem: t=4, r=5, q=5 (N=100)&quot;</span>)</span>
+<span id="cb97-14"><a href="dca-submuestreo.html#cb97-14" tabindex="-1"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hasse-submuestreo"></span>
 <img src="figuras/hasse/dca-submuestreo.svg" alt="Diagrama de Hasse do DCA com subamostragem, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós -- Média, Tratamento, UE e unidade amostral -- em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): a subamostragem insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico." width="46%" />
 <p class="caption">
-Figura 3.10: Diagrama de Hasse do DCA com subamostragem, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós – Média, Tratamento, UE e unidade amostral – em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): a subamostragem insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico.
+Figura 3.11: Diagrama de Hasse do DCA com subamostragem, exemplo mojarra: t=4 probióticos, r=5 aquários (UEs) por probiótico, q=5 peixes (unidades amostrais) por aquário, N=100. Uma cadeia de quatro nós – Média, Tratamento, UE e unidade amostral – em vez dos três nós do DCA simples do Capítulo 2 (seção sobre diagramas de Hasse): a subamostragem insere um quarto elo, aninhando a amostragem de peixes dentro de cada aquário dentro de cada probiótico.
 </p>
 </div>
 <p>Os graus de liberdade dos quatro nós somam exatamente <span class="math inline">\(N=trq=4\times5\times5=100\)</span>: <span class="math inline">\(1\)</span> (Média) <span class="math inline">\(+\, 3\)</span> (Tratamento, <span class="math inline">\(t-1\)</span>) <span class="math inline">\(+\,16\)</span> (UE dentro de tratamento, <span class="math inline">\(t(r-1)\)</span>) <span class="math inline">\(+\,80\)</span> (unidade amostral dentro
@@ -960,7 +999,12 @@ n_aquarios
 </tr>
 </tbody>
 </table>
-<p><img src="03-dca_files/figure-html/plot-hierarquia-mojarra-1.png" alt="" width="75%" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:plot-hierarquia-mojarra"></span>
+<img src="03-dca_files/figure-html/plot-hierarquia-mojarra-1.png" alt="Ganho de peso de cada peixe (pontos coloridos, um por subamostra) em cada aquário, com a média do aquário em losango preto e as cores indicando o probiótico. A dispersão entre losangos de mesma cor é o erro experimental (variação entre aquários); a dispersão dos pontos em torno do losango do próprio aquário é o erro de amostragem (variação entre peixes)." width="75%" />
+<p class="caption">
+Figura 3.12: Ganho de peso de cada peixe (pontos coloridos, um por subamostra) em cada aquário, com a média do aquário em losango preto e as cores indicando o probiótico. A dispersão entre losangos de mesma cor é o erro experimental (variação entre aquários); a dispersão dos pontos em torno do losango do próprio aquário é o erro de amostragem (variação entre peixes).
+</p>
+</div>
 <p>Cada bloco de cor agrupa os aquários de um mesmo probiótico, e dentro de cada aquário os peixes
 (pontos) se espalham em torno da média daquele aquário (losango) — a variação <em>entre</em> losangos
 dentro de uma mesma cor é o erro experimental <span class="math inline">\(\sigma_\delta^2\)</span>; a variação dos pontos <em>ao redor</em>
@@ -975,16 +1019,16 @@ Há dois caminhos defensáveis: a ANOVA de um fator sobre as médias dos aquári
 anterior, aproximada aqui porque <span class="math inline">\(q\)</span> varia pouco) e o modelo misto, que acomoda o desbalanceamento
 de forma exata.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — a análise da tilápia por médias de aquário e por modelo misto</div>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="dca-submuestreo.html#cb88-1" tabindex="-1"></a>med_aq <span class="ot">&lt;-</span> mojarra <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(probiotico, aquario) <span class="sc">%&gt;%</span></span>
-<span id="cb88-2"><a href="dca-submuestreo.html#cb88-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ganho =</span> <span class="fu">mean</span>(ganho), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
-<span id="cb88-3"><a href="dca-submuestreo.html#cb88-3" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(ganho <span class="sc">~</span> probiotico, <span class="at">data =</span> med_aq))          <span class="co"># DCA nas 20 médias de aquário</span></span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="dca-submuestreo.html#cb98-1" tabindex="-1"></a>med_aq <span class="ot">&lt;-</span> mojarra <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(probiotico, aquario) <span class="sc">%&gt;%</span></span>
+<span id="cb98-2"><a href="dca-submuestreo.html#cb98-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ganho =</span> <span class="fu">mean</span>(ganho), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb98-3"><a href="dca-submuestreo.html#cb98-3" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(ganho <span class="sc">~</span> probiotico, <span class="at">data =</span> med_aq))          <span class="co"># DCA nas 20 médias de aquário</span></span></code></pre></div>
 <pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## probiotico   3  380.1  126.71   12.88 0.000155 ***
 ## Residuals   16  157.4    9.84                     
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="dca-submuestreo.html#cb90-1" tabindex="-1"></a>modelo_sub <span class="ot">&lt;-</span> lmerTest<span class="sc">::</span><span class="fu">lmer</span>(ganho <span class="sc">~</span> probiotico <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> aquario), <span class="at">data =</span> mojarra)</span>
-<span id="cb90-2"><a href="dca-submuestreo.html#cb90-2" tabindex="-1"></a><span class="fu">anova</span>(modelo_sub)                                        <span class="co"># gl do denominador por Satterthwaite</span></span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="dca-submuestreo.html#cb100-1" tabindex="-1"></a>modelo_sub <span class="ot">&lt;-</span> lmerTest<span class="sc">::</span><span class="fu">lmer</span>(ganho <span class="sc">~</span> probiotico <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> aquario), <span class="at">data =</span> mojarra)</span>
+<span id="cb100-2"><a href="dca-submuestreo.html#cb100-2" tabindex="-1"></a><span class="fu">anova</span>(modelo_sub)                                        <span class="co"># gl do denominador por Satterthwaite</span></span></code></pre></div>
 <pre><code>## Type III Analysis of Variance Table with Satterthwaite&#39;s method
 ##            Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
 ## probiotico 685.98  228.66     3 15.949  12.945 0.0001528 ***
@@ -1011,15 +1055,15 @@ nenhuma quantidade de subamostragem elimina a variação entre unidades experime
 objetivo é reduzir a incerteza sobre o efeito do tratamento, aumentar <span class="math inline">\(r\)</span> (mais UEs) tem retorno
 direto e ilimitado; aumentar <span class="math inline">\(q\)</span> (mais subamostras por UE) tem retorno limitado por esse piso.</p>
 <div class="caixa-r"><strong>Uso do R</strong> — retorno decrescente da subamostragem</div>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="dca-submuestreo.html#cb92-1" tabindex="-1"></a>vc <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lme4<span class="sc">::</span><span class="fu">VarCorr</span>(modelo_sub))          <span class="co"># componentes estimados por REML</span></span>
-<span id="cb92-2"><a href="dca-submuestreo.html#cb92-2" tabindex="-1"></a>sigma2_delta <span class="ot">&lt;-</span> vc<span class="sc">$</span>vcov[vc<span class="sc">$</span>grp <span class="sc">==</span> <span class="st">&quot;aquario&quot;</span>]             <span class="co"># erro experimental</span></span>
-<span id="cb92-3"><a href="dca-submuestreo.html#cb92-3" tabindex="-1"></a>sigma2_eps   <span class="ot">&lt;-</span> vc<span class="sc">$</span>vcov[vc<span class="sc">$</span>grp <span class="sc">==</span> <span class="st">&quot;Residual&quot;</span>]            <span class="co"># erro de amostragem</span></span>
-<span id="cb92-4"><a href="dca-submuestreo.html#cb92-4" tabindex="-1"></a></span>
-<span id="cb92-5"><a href="dca-submuestreo.html#cb92-5" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">q =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb92-6"><a href="dca-submuestreo.html#cb92-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_media_UE =</span> sigma2_delta <span class="sc">+</span> sigma2_eps <span class="sc">/</span> q) <span class="sc">%&gt;%</span></span>
-<span id="cb92-7"><a href="dca-submuestreo.html#cb92-7" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>,</span>
-<span id="cb92-8"><a href="dca-submuestreo.html#cb92-8" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">&quot;Variância da média de uma UE conforme o número de subamostras q&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-9"><a href="dca-submuestreo.html#cb92-9" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="dca-submuestreo.html#cb102-1" tabindex="-1"></a>vc <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lme4<span class="sc">::</span><span class="fu">VarCorr</span>(modelo_sub))          <span class="co"># componentes estimados por REML</span></span>
+<span id="cb102-2"><a href="dca-submuestreo.html#cb102-2" tabindex="-1"></a>sigma2_delta <span class="ot">&lt;-</span> vc<span class="sc">$</span>vcov[vc<span class="sc">$</span>grp <span class="sc">==</span> <span class="st">&quot;aquario&quot;</span>]             <span class="co"># erro experimental</span></span>
+<span id="cb102-3"><a href="dca-submuestreo.html#cb102-3" tabindex="-1"></a>sigma2_eps   <span class="ot">&lt;-</span> vc<span class="sc">$</span>vcov[vc<span class="sc">$</span>grp <span class="sc">==</span> <span class="st">&quot;Residual&quot;</span>]            <span class="co"># erro de amostragem</span></span>
+<span id="cb102-4"><a href="dca-submuestreo.html#cb102-4" tabindex="-1"></a></span>
+<span id="cb102-5"><a href="dca-submuestreo.html#cb102-5" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">q =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb102-6"><a href="dca-submuestreo.html#cb102-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_media_UE =</span> sigma2_delta <span class="sc">+</span> sigma2_eps <span class="sc">/</span> q) <span class="sc">%&gt;%</span></span>
+<span id="cb102-7"><a href="dca-submuestreo.html#cb102-7" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb102-8"><a href="dca-submuestreo.html#cb102-8" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">&quot;Variância da média de uma UE conforme o número de subamostras q&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb102-9"><a href="dca-submuestreo.html#cb102-9" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:retorno-decrescente-sub">Tabela 3.9: </span>Variância da média de uma UE conforme o número de subamostras q
